@@ -2,8 +2,7 @@
 /**
  * Main configuration file and entry-script of PeanutCMS
  *
- * You can manually edit constants defined in this file or do it from the
- * PeanutCMS backend.
+ * This file can be used to change PeanutCMS constants.
  *
  * @package PeanutCMS
  * @since 0.1.0
