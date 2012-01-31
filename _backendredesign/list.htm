@@ -1,0 +1,76 @@
+<!doctype HTML>
+<html>
+  <head>
+    <title>PeanutCMS Backend</title>
+
+
+    <link rel="stylesheet" type="text/css" href="css/arachis/jquery-ui-1.8.17.custom.css" />
+    <link rel="stylesheet" type="text/css" href="css/backend.css" />
+
+    <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui-1.8.17.custom.min.js" type="text/javascript"></script>
+    <script src="js/tinymce/jquery.tinymce.js" type="text/javascript"></script>
+    <script src="js/jquery.hotkeys-0.7.9.min.js" type="text/javascript"></script>
+
+    <script src="js/backend.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+
+    <div id="header">
+      <div id="bar">
+        <ul class="menubar">
+          <li class="menu">
+            <div class="header item"><a href="#" data-shortcut="N">Content</a></div>
+            <ul class="items">
+              <li class="item"><a href="#" data-shortcut="A">New Page</a></li>
+              <li class="item"><a href="#" data-shortcut="O">New Post</a></li>
+              <li class="separator"></li>
+              <li class="item"><a href="#" data-shortcut="G">Manage Pages</a></li>
+              <li class="item"><a href="#" data-shortcut="S">Manage Posts</a></li>
+              <li class="separator"></li>
+              <li class="item"><a href="#" data-shortcut="T">Tags</a></li>
+              <li class="item"><a href="#" data-shortcut="C">Categories</a></li>
+            </ul>
+          </li>
+          <li class="menu">
+            <div class="header item"><a href="#" data-shortcut="P">Options</a></div>
+            <ul class="items">
+              <li class="item"><a href="#appearance" data-shortcut="A">Appearance</a></li>
+              <li class="item"><a href="#" data-shortcut="O">Modules</a></li>
+              <li class="separator"></li>
+              <li class="item"><a href="#" data-shortcut="G">Groups</a></li>
+              <li class="item"><a href="#" data-shortcut="S">Settings</a></li>
+              <li class="separator"></li>
+              <li class="item"><a href="#" data-shortcut="T">Tags</a></li>
+              <li class="item"><a href="#" data-shortcut="C">Categories</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="right">PeanutCMS</div>
+      </div>
+      <div id="shadow"></div>
+    </div>
+
+    <div id="content">
+      <div class="section">
+        <div class="container">
+          <p>
+            <label class="small">Title</label>
+            <input type="text" class="text bigtext" id="post_title" />
+          </p>
+        </div>
+      </div>
+ 
+    </div>
+    
+    <div class="footer" id="poweredby">
+      Powered by <a href="#">PeanutCMS 0.1</a>
+    </div>
+    
+    <div class="footer" id="links">
+      <a href="#">System Information</a>
+    </div>
+
+  </body>
+</html>
