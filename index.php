@@ -3,6 +3,7 @@
  * Main configuration file and entry-script of PeanutCMS
  *
  * This file can be used to change PeanutCMS constants.
+ * (Available constants can be found in includes/core.php)
  *
  * @package PeanutCMS
  * @since 0.1.0
