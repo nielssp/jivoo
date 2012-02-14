@@ -116,8 +116,10 @@ foreach ($classes as $class) {
       exit(tr('%1 was not found', PATH . INC . $classFile));
     }
   }
+  echo "Initializing $className ";
   require_once(PATH . INC . $classFile);
   $PEANUT[$class] = new $className();
+  echo "[DONE]<br/>";
   if (isset($PEANUT['hooks']))
     $PEANUT['hooks']->run($class . 'Ready');
 }
