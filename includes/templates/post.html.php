@@ -27,28 +27,28 @@ foreach ($PEANUT['posts']->post['tags'] as $name => $tag) {
 
 <?php
 while ($comment = $PEANUT['posts']->listComments()):
-?>
-
-<div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
-<a name="comment-<?php echo $comment['id']; ?>"></a>
-<p>Published by <?php
-if (empty($comment['website']))
-  echo $comment['author'];
-else
-  echo '<a href="' . $comment['website'] . '">' . $comment['author'] . '</a>';
-?> on <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $comment['date']); ?> -
-<?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $comment['date']); ?>
-</p>
-
-<?php echo $comment['content']; ?>
-<br/>
-<?php
-if ($comment['reply'] == true)
-  echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment" onclick="">Rely</a>';
-?>
-</div>
-
-<?php
+  ?>
+  
+  <div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
+  <a name="comment-<?php echo $comment['id']; ?>"></a>
+  <p>Published by <?php
+  if (empty($comment['website']))
+    echo $comment['author'];
+  else
+    echo '<a href="' . $comment['website'] . '">' . $comment['author'] . '</a>';
+  ?> on <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $comment['date']); ?> -
+  <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $comment['date']); ?>
+  </p>
+  
+  <?php echo $comment['content']; ?>
+  <br/>
+  <?php
+  if ($comment['reply'] == true)
+    echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment" onclick="">Rely</a>';
+  ?>
+  </div>
+  
+  <?php
 endwhile;
 ?>
 <a name="comment"></a>

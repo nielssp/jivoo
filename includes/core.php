@@ -61,6 +61,12 @@ if (!defined('PHP_VERSION_ID')) {
   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
+if (PHP_VERSION_ID < 50000) {
+  echo 'Sorry, but PeanutCMS does not support PHP versions below 5.0.0. You are currently using version ' . PHP_VERSION .'.';
+  echo 'You should contact your webhost.'; 
+  exit;
+}
+
 if (class_exists('DateTimeZone') AND !defined('DATETIMEZONE_AVAILABLE')) {
   /** The PHP5-class DateTimeZone is available */
   define('DATETIMEZONE_AVAILABLE', true);
@@ -90,6 +96,13 @@ if (!defined('TIMEZONE_OFFSET') AND !defined('DATETIMEZONE_AVAILABLE')) {
   }
   define('TIMEZONE_OFFSET', $offset);
 }
+
+define('PROP_R', 1);
+define('PROP_W', 2);
+define('PROP_RW', PROP_R | PROP_W);
+define('PROP_R_FUNC', 4);
+define('PROP_W_FUNC', 8);
+define('PROP_RW_FUNC', PROP_R_FUNC | PROP_W_FUNC);
 
 // Classes that has to be initialized, the order matters
 $classes = array('errors', 'hooks', 'functions', 'filters', 'i18n',

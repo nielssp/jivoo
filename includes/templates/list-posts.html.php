@@ -3,6 +3,14 @@
  * Template for blog post listing
  */
 
+include(PATH . INC . 'models/post.class.php');
+
+$post = new Post();
+$post->title = 'Hello, wrold';
+$post->content = 'Derp';
+echo $post->title;
+$post->commit();
+
 // Render the header
 $this->renderTemplate('header');
 
@@ -11,7 +19,7 @@ $this->renderTemplate('header');
 <p>Blog listing</p>
 
 <?php
-while ($post = $PEANUT['posts']->listPosts()):
+while ($post = $PEANUT['posts']->listPosts()) {
 ?>
 
 <h2><a href="<?php echo $post['link']; ?>"><?php echo $post['title']; ?></a></h2>
@@ -23,8 +31,10 @@ while ($post = $PEANUT['posts']->listPosts()):
 <?php echo $post['content']; ?>
 
 <?php
-endwhile;
+}
 ?>
+
+
 
 <?php
 // Render the footer
