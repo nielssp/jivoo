@@ -5,7 +5,7 @@
     
     <title><?php echo $PEANUT['functions']->call('themeTitle'); ?></title>
 
-    <link rel="stylesheet" type="text/css" href="<?php echo $PEANUT['theme']->getFile('style.css'); ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $PEANUT['theme']->getFile('css/style.css'); ?>" />
 
     <?php $PEANUT['theme']->outputHtml('head-bottom'); ?> 
   </head>

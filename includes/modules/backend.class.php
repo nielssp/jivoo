@@ -32,7 +32,7 @@ class Backend {
       $PEANUT['configuration']->set('backendTheme', 'blue-peanut');
     
     // Get backend controls
-    require_once(PATH . INC . 'backend-controls.php');
+    require_once(PATH . INC . 'helpers/backend-controls.php');
 
     if ($PEANUT['user']->loggedIn) {
 

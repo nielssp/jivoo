@@ -25,13 +25,6 @@ class Theme {
   var $menuList;
 
   /**
-   * Constructor
-   */
-  function Theme() {
-    return $this->__construct();
-  }
-
-  /**
    * PHP5-style constructor
    */
   function __construct() {
@@ -53,7 +46,7 @@ class Theme {
 
 
     // Get defaut theming functions
-    require_once(PATH . INC . 'templates/functions.php');
+    require_once(PATH . INC . 'helpers/theme-helpers.php');
 
     // Find and load theme
     if (!$this->load())
@@ -134,8 +127,8 @@ class Theme {
     if (isset($this->theme) AND file_exists(PATH . THEMES . $this->theme . '/' . $file)) {
       return WEBPATH . THEMES . $this->theme . '/' . $file;
     }
-    if (file_exists(PATH . INC . 'templates/' . $file)) {
-      return WEBPATH . INC . 'templates/' . $file;
+    if (file_exists(PATH . PUB . $file)) {
+      return WEBPATH . PUB . $file;
     }
   }
 

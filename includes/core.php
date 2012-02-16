@@ -38,7 +38,7 @@ if (!defined('PEANUT_URL'))
 if (!defined('LANGUAGE'))
   define('LANGUAGE', 'en');
 
-/** Directory which contains the PeanutCMS files */
+/** Directory which contains the PeanutCMS application */
 if (!defined('INC'))
   define('INC', 'includes/');
 
@@ -55,8 +55,8 @@ if (!defined('THEMES'))
   define('THEMES', 'themes/');
 
 /** Public directory (static images, stylesheets etc.) */
-if (!defined('PUBLIC'))
-  define('PUBLIC', 'public/');
+if (!defined('PUB'))
+  define('PUB', 'public/');
 
 if (!defined('PHP_VERSION_ID')) {
   $version = explode('.', PHP_VERSION);
@@ -65,8 +65,8 @@ if (!defined('PHP_VERSION_ID')) {
   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
-if (PHP_VERSION_ID < 50000) {
-  echo 'Sorry, but PeanutCMS does not support PHP versions below 5.0.0. You are currently using version ' . PHP_VERSION .'.';
+if (PHP_VERSION_ID < 50100) {
+  echo 'Sorry, but PeanutCMS does not support PHP versions below 5.1.0. You are currently using version ' . PHP_VERSION .'.';
   echo 'You should contact your webhost.'; 
   exit;
 }
@@ -101,43 +101,39 @@ if (!defined('TIMEZONE_OFFSET') AND !defined('DATETIMEZONE_AVAILABLE')) {
   define('TIMEZONE_OFFSET', $offset);
 }
 
-define('PROP_R', 1);
-define('PROP_W', 2);
-define('PROP_RW', PROP_R | PROP_W);
-define('PROP_R_FUNC', 4);
-define('PROP_W_FUNC', 8);
-define('PROP_RW_FUNC', PROP_R_FUNC | PROP_W_FUNC);
-
 // Classes that has to be initialized, the order matters
-$classes = array('errors', 'hooks', 'functions', 'filters', 'i18n',
+$modules = array('errors', 'hooks', 'functions', 'filters', 'i18n',
     'configuration', 'flatfiles', 'http', 'actions', 'templates',
     'theme', 'user', 'backend', 'posts', 'pages', 'render');
 
 // Initialize PeanutCMS-array
 $PEANUT = array();
 
-if (!file_exists(PATH . INC . 'functions.php'))
-  exit(PATH . INC . 'functions.php was not found.');
+if (!file_exists(PATH . INC . 'helpers/core-helpers.php'))
+  exit(PATH . INC . 'helpers/core-helpers.php was not found.');
 
 /** Useful functions and aliases that are not part of the PEANUT-array */
-require_once(PATH . INC . 'functions.php');
+require_once(PATH . INC . 'helpers/core-helpers.php');
 
-foreach ($classes as $class) {
-  $className = ucfirst($class);
-  $classFile = $class . '.class.php';
-  if (!file_exists(PATH . INC . $classFile)) {
-    if (isset($PEANUT['errors'])) {
+foreach ($modules as $module) {
+  $className = ucfirst($module);
+  $classFile = $module . '.class.php';
+  if (!file_exists(PATH . INC . 'modules/' . $classFile)) {
+    if (isset($PEANUT['errors']))
       $PEANUT['errors']->fatal(tr('Class missing'), tr('%1 was not found', PATH . INC . $classFile));
-    }
-    else {
-      exit(tr('%1 was not found', PATH . INC . $classFile));
-    }
+    else
+      exit(tr('%1 was not found', PATH . INC . 'modules/' . $classFile));
   }
-  echo "Initializing $className ";
-  require_once(PATH . INC . $classFile);
-  $PEANUT[$class] = new $className();
+  echo "Loading module $className ";
+  require_once(PATH . INC . 'modules/' . $classFile);
+  $PEANUT[$module] = new $className();
   echo "[DONE]<br/>";
   if (isset($PEANUT['hooks']))
-    $PEANUT['hooks']->run($class . 'Ready');
+    $PEANUT['hooks']->run($module . 'Ready');
 }
+
+
+
+
+
 

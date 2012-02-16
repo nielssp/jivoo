@@ -23,13 +23,6 @@ class Templates {
   var $templates;
 
   /**
-   * Constructor
-   */
-  function Templates() {
-    return $this->__construct();
-  }
-
-  /**
    * PHP5-style constructor
    */
   function __construct() {

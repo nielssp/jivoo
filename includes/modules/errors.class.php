@@ -160,7 +160,7 @@ class Errors {
 <title>' . $title . '</title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="' . WEBPATH . INC . 'css/basic.css" type="text/css" />
+<link rel="stylesheet" href="' . WEBPATH . PUB . 'css/basic.css" type="text/css" />
 
 </head>
 <body>

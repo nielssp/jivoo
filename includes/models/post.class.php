@@ -14,35 +14,40 @@ class Post {
   
   private $updated;
   
-  /* Getters and setters begin */
+  /* Properties begin */
   private $_getters = array('name', 'title', 'content', 'date', 'state', 'comments', 'commenting');
   private $_setters = array('name', 'title', 'content', 'date', 'state', 'commenting');
   
-  private function __get($property) {
-    if (in_array($property, $this->_setters)) {
+  /**
+   * Magic method
+   * @param string $property
+   * @throws Exception
+   */
+  public function __get($property) {
+    if (in_array($property, $this->_getters)) {
       return $this->$property;
     }
     else if (method_exists($this, '_get_' . $property))
       return call_user_func(array($this, '_get_' . $property));
-    else if (in_array($property, $this->_getters) OR method_exists($this, '_set_' . $property))
+    else if (in_array($property, $this->_setters) OR method_exists($this, '_set_' . $property))
       throw new Exception('Property "' . $property . '" is write-only.');
     else
       throw new Exception('Property "' . $property . '" is not accessible.');
   }
   
-  private function __set($property, $value) {
+  public function __set($property, $value) {
     $this->updated = true;
-    if (in_array($property, $this->_getters)) {
+    if (in_array($property, $this->_setters)) {
       $this->$property = $value;
     }
     else if (method_exists($this, '_set_' . $property))
       call_user_func(array($this, '_set_' . $property), $value);
-    else if (in_array($property, $this->_setters) OR method_exists($this, '_get_' . $property))
+    else if (in_array($property, $this->_getters) OR method_exists($this, '_get_' . $property))
       throw new Exception('Property "' . $property . '" is read-only.');
     else
       throw new Exception('Property "' . $property . '" is not accessible.');
   }
-  /* Getters and setters end */
+  /* Properties end */
 
   public function __construct() {
     $this->title = '';

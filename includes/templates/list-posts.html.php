@@ -5,7 +5,6 @@
 
 include(PATH . INC . 'models/post.class.php');
 
-
 // Render the header
 $this->renderTemplate('header');
 
