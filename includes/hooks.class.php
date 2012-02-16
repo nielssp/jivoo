@@ -17,13 +17,6 @@ class Hooks {
   var $hooks;
 
   /**
-   * Constructor
-   */
-  function Hooks() {
-    return $this->__construct();
-  }
-
-  /**
    * PHP5-style constructor
    */
   function __construct() {

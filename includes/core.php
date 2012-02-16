@@ -54,6 +54,10 @@ if (!defined('LANG'))
 if (!defined('THEMES'))
   define('THEMES', 'themes/');
 
+/** Public directory (static images, stylesheets etc.) */
+if (!defined('PUBLIC'))
+  define('PUBLIC', 'public/');
+
 if (!defined('PHP_VERSION_ID')) {
   $version = explode('.', PHP_VERSION);
 

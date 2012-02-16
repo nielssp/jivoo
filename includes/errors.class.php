@@ -15,14 +15,7 @@ class Errors {
    * debugging is turned on.
    * @var array
    */
-  var $errorLog;
-
-  /**
-   * Constructor
-   */
-  function Errors() {
-    return $this->__construct();
-  }
+  private $errorLog;
 
   /**
    * PHP5-style constructor

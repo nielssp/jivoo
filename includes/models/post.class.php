@@ -50,7 +50,7 @@ class Post {
   }
 
   public function __destruct() {
-
+    return true;
   }
   
   public function commit() {

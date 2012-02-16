@@ -5,11 +5,6 @@
 
 include(PATH . INC . 'models/post.class.php');
 
-$post = new Post();
-$post->title = 'Hello, wrold';
-$post->content = 'Derp';
-echo $post->title;
-$post->commit();
 
 // Render the header
 $this->renderTemplate('header');
