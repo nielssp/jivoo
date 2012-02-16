@@ -23,13 +23,6 @@ class I18n {
   var $languageCode;
 
   /**
-   * Constructor
-   */
-  function I18n() {
-    return $this->__construct();
-  }
-
-  /**
    * PHP5-style constructor
    */
   function __construct() {

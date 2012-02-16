@@ -17,20 +17,19 @@ class Configuration {
   var $settings;
 
   /**
-   * Constructor
-   */
-  function Configuration() {
-    return $this->__construct();
-  }
-
-  /**
    * PHP5-style constructor
    */
   function __construct() {
     global $PEANUT;
     $this->settings = array();
-    if (!is_readable(PATH . DATA . 'settings.cfg.php'))
-      $PEANUT['errors']->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', PATH . DATA. 'settings.cfg.php'));
+    if (!is_readable(PATH . DATA . 'settings.cfg.php')) {
+      // Attempt to create configuration-file
+      $file = fopen(PATH . DATA . 'settings.cfg.php', 'w');
+      if (!$file)
+        $PEANUT['errors']->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', PATH . DATA. 'settings.cfg.php'));
+      fwrite($file, "<?php exit; ?>\n");
+      fclose($file);
+    }
     if (!is_writable(PATH . DATA . 'settings.cfg.php'))
       $PEANUT['errors']->notification('warning', tr('%1 is not writable', PATH . DATA . 'settings.cfg.php'), true, 'settings-writable');
     $fileContent = file_get_contents(PATH . DATA . 'settings.cfg.php');
