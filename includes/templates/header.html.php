@@ -20,8 +20,13 @@
     <?php echo $PEANUT['templates']->getTitle('post', array('p' => '20110826085800')); ?></a>
     <a href="<?php echo WEBPATH; ?>about">About</a>
     <a href="<?php echo WEBPATH; ?>stuff/and/links">Links</a>
-    <?php if ($PEANUT['user']->loggedIn): ?>
+
+<?php if ($PEANUT['user']->loggedIn): ?>
+
     <a href="<?php echo $PEANUT['actions']->add('logout'); ?>">Log out</a>
-    <?php else: ?>
+
+<?php else: ?>
+
     <a href="<?php echo WEBPATH; ?>admin">Log in</a>
-    <?php endif; ?>
+
+<?php endif; ?>

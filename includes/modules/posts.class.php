@@ -3,7 +3,7 @@
  * Class for working with blog posts
  *
  * @package PeanutCMS
- * @version 0.1.1 [26-10-2011]
+ * @version 0.1.2 [19-02-2012]
  */
 
 /**
@@ -11,22 +11,15 @@
  */
 class Posts {
 
-  var $post;
+  private $post;
 
-  var $postList;
+  private $postList;
 
-  var $commentList;
+  private $commentList;
 
-  var $commentingErrors;
+  private $commentingErrors;
 
-  var $commentingInputs;
-
-  /**
-   * Constructor
-   */
-  function Posts() {
-    return $this->__construct();
-  }
+  private $commentingInputs;
 
   /**
    * PHP5-style constructor

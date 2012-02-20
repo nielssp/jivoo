@@ -12,10 +12,8 @@ $this->renderTemplate('header');
 
 <p>Blog listing</p>
 
-<?php
-while ($post = $PEANUT['posts']->listPosts()) {
-?>
-
+<?php while ($post = $PEANUT['posts']->listPosts()): ?>
+  
 <h2><a href="<?php echo $post['link']; ?>"><?php echo $post['title']; ?></a></h2>
 
 <p>Published <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $post['date']); ?> -
@@ -23,10 +21,8 @@ while ($post = $PEANUT['posts']->listPosts()) {
 </p>
 
 <?php echo $post['content']; ?>
-
-<?php
-}
-?>
+  
+<?php endwhile; ?>
 
 
 
