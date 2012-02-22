@@ -756,4 +756,13 @@ class Posts {
     }
     return '';
   }
+  
+  
+  public function postListController() {
+    $posts = Post::getAll();
+  }
+  
+  public function postConroller() {
+    $post = Post::getById(2);
+  }
 }
