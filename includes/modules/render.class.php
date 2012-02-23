@@ -83,11 +83,11 @@ class Render {
 
   function renderTemplate($name, $parameters = array()) {
     global $PEANUT;
-    $parameters = array_merge($parameters, $PEANUT['http']->params);
+    extract($parameters, EXTR_SKIP);
     if (isset($PEANUT['theme']->theme)
-        AND file_exists(PATH . THEMES . $PEANUT['theme']->theme . '/' . $name . '.php')) {
+        AND file_exists(PATH . THEMES . $PEANUT['theme']->theme . '/templates/' . $name . '.php')) {
       $this->setContentType($name);
-      require(PATH . THEMES . $PEANUT['theme']->theme . '/' . $name . '.php');
+      require(PATH . THEMES . $PEANUT['theme']->theme . '/templates/' . $name . '.php');
     }
     else if (file_exists(PATH . INC . 'templates/' . $name . '.php')) {
       $this->setContentType($name);

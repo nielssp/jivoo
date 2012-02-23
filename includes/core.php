@@ -65,8 +65,8 @@ if (!defined('PHP_VERSION_ID')) {
   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
-if (PHP_VERSION_ID < 50100) {
-  echo 'Sorry, but PeanutCMS does not support PHP versions below 5.1.0. You are currently using version ' . PHP_VERSION .'.';
+if (PHP_VERSION_ID < 50200) {
+  echo 'Sorry, but PeanutCMS does not support PHP versions below 5.2.0. You are currently using version ' . PHP_VERSION .'.';
   echo 'You should contact your webhost.'; 
   exit;
 }
@@ -124,10 +124,10 @@ foreach ($modules as $module) {
     else
       exit(tr('%1 was not found', PATH . INC . 'modules/' . $classFile));
   }
-  echo "Loading module $className ";
+//   echo "Loading module $className ";
   require_once(PATH . INC . 'modules/' . $classFile);
   $PEANUT[$module] = new $className();
-  echo "[DONE]<br/>";
+//   echo "[DONE]<br/>";
   if (isset($PEANUT['hooks']))
     $PEANUT['hooks']->run($module . 'Ready');
 }

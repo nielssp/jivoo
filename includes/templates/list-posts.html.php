@@ -5,9 +5,14 @@
 
 include(PATH . INC . 'models/post.class.php');
 
-
-$posts = Post::all();
-
+$posts = Post::all(
+  Selector::create()
+    ->where('state', 'unpublished')
+    ->orderBy('date')
+    ->desc()
+    ->limit(3)
+    ->offset(0)
+);
 
 // Render the header
 $this->renderTemplate('header.html');
@@ -20,8 +25,8 @@ $this->renderTemplate('header.html');
 
 <h2><a href="<?php echo $post->link; ?>"><?php echo $post->title; ?></a></h2>
 
-<p>Published <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $post->date); ?> -
-<?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $post->date); ?>
+<p>Published <?php echo $post->formatDate(); ?> @
+<?php echo $post->formatTime(); ?>
 </p>
 
 <?php echo $post->content; ?>

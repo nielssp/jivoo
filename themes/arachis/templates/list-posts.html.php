@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->renderTemplate('header');
+$this->renderTemplate('header.html');
 
 ?>
 
@@ -34,5 +34,5 @@ endwhile;
 
 <?php
 // Render the footer
-$this->renderTemplate('footer');
+$this->renderTemplate('footer.html');
 ?>

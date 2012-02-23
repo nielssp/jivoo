@@ -17,6 +17,94 @@ class BaseModel {
   }
 }
 
+class Selector {
+  private $orderBy;
+  private $descending;
+  private $limit;
+  private $where;
+  private $offset;
+  
+  /* Properties begin */
+  private $_getters = array('orderBy', 'descending', 'limit', 'where', 'offset');
+  private $_setters = array();
+  
+  /**
+   * Magic method
+   * @param string $property
+   * @throws Exception
+   */
+  public function __get($property) {
+    if (in_array($property, $this->_getters)) {
+      return $this->$property;
+    }
+    else if (method_exists($this, '_get_' . $property))
+      return call_user_func(array($this, '_get_' . $property));
+    else if (in_array($property, $this->_setters) OR method_exists($this, '_set_' . $property))
+      throw new Exception('Property "' . $property . '" is write-only.');
+    else
+      throw new Exception('Property "' . $property . '" is not accessible.');
+  }
+  
+  public function __set($property, $value) {
+    if (in_array($property, $this->_setters)) {
+      $this->$property = $value;
+    }
+    else if (method_exists($this, '_set_' . $property))
+      call_user_func(array($this, '_set_' . $property), $value);
+    else if (in_array($property, $this->_getters) OR method_exists($this, '_get_' . $property))
+      throw new Exception('Property "' . $property . '" is read-only.');
+    else
+      throw new Exception('Property "' . $property . '" is not accessible.');
+  }
+  
+  private function _get_ascending() {
+    return !$this->descending;
+  }
+  /* Properties end */
+  
+  private function __construct() {
+    $this->limit = -1;
+    $this->offset = 0;
+    $this->where = array();
+    $this->orderBy = 'id';
+    $this->descending = false;
+  }
+  
+  public static function create() {
+    return new self();
+  }
+  
+  public function limit($limit) {
+    $this->limit = $limit;
+    return $this;
+  }
+  
+  public function offset($offset) {
+    $this->offset = $offset;
+    return $this;
+  }
+  
+  public function where($column, $value) {
+    $this->where[$column] = $value;
+    return $this;
+  }
+  
+  public function orderBy($column) {
+    $this->orderBy = $column;
+    return $this;
+  }
+  
+  public function desc() {
+    $this->descending = true;
+    return $this;
+  }
+  
+  public function asc() {
+    $this->descending = false;
+    return $this;
+  }
+}
+
 class Post extends BaseModel {
   private $id;
   private $name;
@@ -26,7 +114,7 @@ class Post extends BaseModel {
   private $state;
   private $comments;
   private $commenting;
-    
+  
   private $updated;
   
   /* Properties begin */
@@ -63,10 +151,49 @@ class Post extends BaseModel {
       throw new Exception('Property "' . $property . '" is not accessible.');
   }
   
+  private function _get_path() {
+    global $PEANUT;
+    $permalink = $PEANUT['configuration']->get('postPermalink');
+    if (is_array($permalink)) {
+      $time = $this->date;
+      $replace = array('%name%' => $this->name,
+                       '%id%' => $this->id,
+                       '%year%' => $PEANUT['i18n']->date('Y', $time),
+                       '%month%' => $PEANUT['i18n']->date('m', $time),
+                       '%day%' => $PEANUT['i18n']->date('d', $time));
+      $search = array_keys($replace);
+      $replace = array_values($replace);
+      $path = array();
+      foreach ($permalink as $dir) {
+        $path[] = str_replace($search, $replace, $dir);
+      }
+      return $path;
+    }
+  }
+  
   private function _get_link() {
-    return 'http://example.com';
+    global $PEANUT;
+    return $PEANUT['http']->getLink($this->path);
   }
   /* Properties end */
+
+  private function __construct() {
+    
+  }
+  
+  public function formatTime($format = null) {
+  global $PEANUT;
+  if (!isset($format))
+  $format = $PEANUT['i18n']->timeFormat();
+  return $PEANUT['i18n']->date($format, $this->date);
+  }
+  
+  public function formatDate($format = null) {
+  global $PEANUT;
+  if (!isset($format))
+  $format = $PEANUT['i18n']->dateFormat();
+  return $PEANUT['i18n']->date($format, $this->date);
+  }
   
   
   
@@ -84,12 +211,7 @@ class Post extends BaseModel {
    * $post = Post::getById(23)
    * could also use the constructor without creating a new post
    */
-
-  private function __construct() {
-    
-  }
-  
-  public static function create($title, $content, $state = 'unpuplished', $name = null, $tags = array(), $commenting = null) {
+  public static function create($title, $content, $state = 'unpublished', $name = null, $tags = array(), $commenting = null) {
     global $PEANUT;
     $new = new Post();
     $date = time();
@@ -138,34 +260,60 @@ class Post extends BaseModel {
   
   public static function getById($id) {
     global $PEANUT;
-    $post = new Post();
+    $obj = new self();
     $row = $PEANUT['flatfiles']->getRow('posts', $id);
-    $post->id = $id;
+    $obj->id = $id;
     foreach ($row as $column => $value) {
-      $post->$column = $value;
+      $obj->$column = $value;
     }
-    return $post;
+    return $obj;
   }
   
   public static function getByName($name) {
-    
+    global $PEANUT;
+    $id = $PEANUT['flatfiles']->indexFind('posts', 'name', $name);
+    return self::getById($id);
   }
   
-  public static function all() {
+  public static function all($selector = null) {
     global $PEANUT;
-    $index = $PEANUT['flatfiles']->getIndex('posts', 'date');
-    arsort($index);
+    if (!isset($selector) OR !is_a($selector, 'Selector'))
+      $selector = Selector::create()->orderBy('date')->desc();
+    $index = $PEANUT['flatfiles']->getIndex('posts', $selector->orderBy);
+    if ($selector->descending)
+      arsort($index);
+    else
+      asort($index);
     reset($index);
     $all = array();
+    $i = 0;
     foreach ($index as $id => $date) {
-      $all[] = self::getById($id);
+      if ($i < $selector->offset) {
+        $i++;
+        continue;
+      }
+      if ($selector->limit != -1 AND ($i - $selector->offset) >= $selector->limit)
+        break;
+      $get = self::getById($id);
+      $add = true;
+      foreach ($selector->where as $column => $value) {
+        if ($get->$column != $value) {
+          $add = false;
+          break;
+        }
+      }
+      if ($add) {
+        $all[] = $get;
+        $i++;
+      }
     }
     reset($all);
     return $all;
   }
-  
   /*
    * e.g.:
+   * 
+   * $posts = Post::all(
    * 
    * $posts = Post::getAll(array('limit' => 10, 'order' => 'asc', 'by' => 'date'));
    * 
@@ -178,12 +326,8 @@ class Post extends BaseModel {
   
   public function commit() {
     if (!$this->updated)
-      return $this;
+      return;
     echo 'Updating database';
   }
-  
-  public function dies() {
-    echo "derp?";
-  } 
 
 }

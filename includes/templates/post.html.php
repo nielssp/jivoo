@@ -30,6 +30,9 @@ while ($comment = $PEANUT['posts']->listComments()):
   ?>
   
   <div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
+  <?php
+  /** @todo fix this somehow? */
+  ?>
   <a name="comment-<?php echo $comment['id']; ?>"></a>
   <p>Published by <?php
   if (empty($comment['website']))
