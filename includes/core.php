@@ -18,6 +18,9 @@ define('PEANUTCMS', TRUE);
 if (!defined('PEANUT_VERSION'))
   define('PEANUT_VERSION', '0.1.0');
 
+if (!defined('DEBUG'))
+  define('DEBUG', FALSE);
+
 /** The absolute path of this installation */
 if (!defined('PATH'))
   define('PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');
@@ -120,9 +123,9 @@ foreach ($modules as $module) {
   $classFile = $module . '.class.php';
   if (!file_exists(PATH . INC . 'modules/' . $classFile)) {
     if (isset($PEANUT['errors']))
-      $PEANUT['errors']->fatal(tr('Class missing'), tr('%1 was not found', PATH . INC . $classFile));
+      $PEANUT['errors']->fatal(tr('Module missing'), tr('%1 was not found', INC . $classFile));
     else
-      exit(tr('%1 was not found', PATH . INC . 'modules/' . $classFile));
+      exit(tr('%1 was not found', INC . 'modules/' . $classFile));
   }
 //   echo "Loading module $className ";
   require_once(PATH . INC . 'modules/' . $classFile);

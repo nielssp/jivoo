@@ -1,5 +1,5 @@
 <?php
-/* 
+/**
  * PeanutCMS core functions and aliases
  *
  * Functions and aliases to make things easier
@@ -10,7 +10,7 @@
 /**
  * Translate function alias
  *
- * %n where n is a number is used as placeholder for the additional arguments
+ * %n, where n is a number, is used as placeholder for the additional arguments
  *
  * @param string $text Text to translate
  * @param string $args,... Additional OPTIONAL arguments
@@ -58,19 +58,23 @@ function trl($single, $plural, $glue, $gluel, $pieces) {
     return call_user_func_array(array($PEANUT['i18n'], 'translateList'), $args);
   }
   else {
-    if (count($pieces) == 1)
+    if (count($pieces) == 1) {
       $text = $single;
-    else
+    }
+    else {
       $text = $plural;
+    }
 
     $list = '';
     for ($i = 0; $i < count($pieces); $i++) {
       $list .= $pieces[$i];
       if ($i != (count($pieces) - 1)) {
-        if ($i == (count($pieces) - 2))
+        if ($i == (count($pieces) - 2)) {
           $list .= $gluel;
-        else
+        }
+        else {
           $list .= $glue;
+        }
       }
     }
     $text = str_replace('%l', $list, $text);
@@ -105,10 +109,12 @@ function trn($single, $plural, $number) {
     return call_user_func_array(array($PEANUT['i18n'], 'translateNumeral'), $args);
   }
   else {
-    if ((int)$number == 1)
+    if ((int)$number == 1) {
       $text = $single;
-    else
+    }
+    else {
       $text = $plural;
+    }
 
     $numArgs = func_num_args();
     if ($numArgs > 1) {
@@ -129,9 +135,19 @@ function trn($single, $plural, $number) {
  * @param array $b
  */
 function prioritySorter($a, $b) {
-  if ($a['priority'] < $b['priority'])
+  if ($a['priority'] < $b['priority']) {
     return 1;
-  if ($a['priority'] > $b['priority'])
+  }
+  if ($a['priority'] > $b['priority']) {
     return -1;
+  }
   return 0;
 }
+
+require_once(PATH . INC . 'helpers/selector.class.php');
+
+class PropertyException extends Exception { }
+class PropertyReadOnlyException extends PropertyException { }
+class PropertyWriteOnlyException extends PropertyException { }
+class PropertyNotFoundException extends PropertyException { }
+

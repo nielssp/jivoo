@@ -29,6 +29,9 @@ class Posts {
     // Requires flatfiles
     if (!isset($PEANUT['flatfiles']))
       return;
+    
+    // Include models
+    include(PATH . INC . 'models/post.class.php');
 
     //Define templates
     $PEANUT['templates']->defineTemplate('list-posts', array($this, 'getPath'), array($this, 'getTitle'));
@@ -743,7 +746,7 @@ class Posts {
     }
   }
   
-  function addPostActions($id) {
+  private function addPostActions($id) {
     global $PEANUT;
     if ($PEANUT['user']->isLoggedIn()) {
       $buttons = '<span class="backend-buttonset">';
@@ -758,11 +761,30 @@ class Posts {
   }
   
   
-  public function postListController() {
-    $posts = Post::getAll();
+  public function postListController($parameters = array(), $contentType = 'html') {
+    global $PEANUT;
+
+    $posts = Post::getAll(
+      Selector::create()
+        ->where('state = published')
+        ->orderBy('date')
+        ->desc()
+        ->limit(5)
+        ->offset(0)
+    );
+    
+    $templateData = compact($posts);
+    
+    $PEANUT['render']->renderTemplate('list-posts.html', $templateData);
   }
   
-  public function postConroller() {
-    $post = Post::getById(2);
+  public function postController($parameters = array(), $contentType = 'html') {
+    global $PEANUT;
+    
+    $post = Post::getById($parameters['id']);
+    
+    $templateData = compact($post);
+    
+    $PEANUT['render']->renderTemplate('post.html', $templateData);
   }
 }

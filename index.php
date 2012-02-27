@@ -15,5 +15,7 @@ define('PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 /** Directory which contains the PeanutCMS files (relative to PATH) */
 define('INC', 'includes/');
 
+define('DEBUG', true);
+
 require_once(PATH . INC . 'core.php');
 

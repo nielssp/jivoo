@@ -14,29 +14,12 @@ class Filters {
    * Contains filters
    * @var array
    */
-  var $filters;
-
-  /**
-   * Constructor
-   */
-  function Filters() {
-    return $this->__construct();
-  }
-
+  private $filters;
   /**
    * PHP5-style constructor
    */
-  function __construct() {
+  public function __construct() {
     $this->filters = array();
-  }
-
-  /**
-   * PHP5-style destructor
-   *
-   * @return bool true
-   */
-  function __destruct() {
-    return true;
   }
 
   /**
@@ -46,7 +29,7 @@ class Filters {
    * @param string $filter Filter name
    * @param callback $function Function name
    */
-  function add($filter, $function, $priority = 5) {
+  public function add($filter, $function, $priority = 5) {
     if (!is_callable($function))
       return;
     $this->filters[$filter][] = $function;
@@ -57,7 +40,7 @@ class Filters {
    * @param string $filter
    * @param callback $function
    */
-  function remove($filter, $function = null) {
+  public function remove($filter, $function = null) {
     if (!isset($this->filters[$filter]) OR !is_array($this->filters[$filter]))
       return;
     if (is_null($function)) {
@@ -74,7 +57,7 @@ class Filters {
    * @param string $filter Filter name
    * @param mixed $,... Additional parameters
    */
-  function apply($filter, $variable) {
+  public function apply($filter, $variable) {
     if (!isset($this->filters[$filter]) OR !is_array($this->filters[$filter]))
       return;
     $numArgs = func_num_args();

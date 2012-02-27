@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Class for setting the template
  *
  * @package PeanutCMS
@@ -29,20 +29,38 @@ class Templates {
     global $PEANUT;
 
     // Set default settings
-    if (!$PEANUT['configuration']->exists('index'))
-      $PEANUT['configuration']->set('index', array('template' => 'list-posts',
-          'parameters' => array('sortDesc' => 'date','perPage' => 10)));
-    
-    if (!$PEANUT['configuration']->exists('menu'))
-      $PEANUT['configuration']->set('menu', array(
-          array('label' => tr('Home'), 'template' => 'list-posts',
-          'parameters' => array('sortDesc' => 'date','perPage' => 10)),
-          array('label' => tr('Links'), 'template' => 'page',
-          'parameters' => array('p' => 2)),
-          array('label' => tr('About'), 'template' => 'page',
-          'parameters' => array('p' => 1))));
-    
-    
+    if (!$PEANUT['configuration']->exists('index')) {
+      $PEANUT['configuration']->set(
+      	'index', array('template' => 'list-posts',
+        'parameters' => array('sortDesc' => 'date','perPage' => 10))
+      );
+    }
+
+    if (!$PEANUT['configuration']->exists('menu')) {
+      $PEANUT['configuration']->set(
+        'menu',
+        array(
+          'label'      => tr('Home'),
+          'template'   => 'list-posts',
+          'parameters' => array(
+            'sortDesc' => 'date',
+            'perPage'  => 10
+          )
+        ),
+        array(
+          'label'      => tr('Links'),
+          'template'   => 'page',
+          'parameters' => array('p' => 2)
+        ),
+        array(
+          'label'      => tr('About'),
+          'template'   => 'page',
+          'parameters' => array('p' => 1)
+        )
+      );
+    }
+
+
     if (count($PEANUT['http']->path) < 1) {
       $index = $PEANUT['configuration']->get('index');
       if (isset($index['template']))
@@ -73,7 +91,7 @@ class Templates {
 
   /**
    * Set the template
-   * 
+   *
    * @param string $name Name of template
    * @param int $priority Priority; can this template be overridden
    * @param array $parameters Template parameters
@@ -85,10 +103,12 @@ class Templates {
     if (!empty($this->template) AND $priority <= $this->template['priority'])
       return;
 //    $PEANUT['http']->setStatus($status);
-    $this->template = array('name' => $name,
-                            'priority' => $priority,
-                            'parameters' => $parameters,
-                            'status' => $status);
+    $this->template = array(
+      'name' => $name,
+      'priority' => $priority,
+      'parameters' => $parameters,
+      'status' => $status
+    );
   }
 
   /**
@@ -133,7 +153,7 @@ class Templates {
       $template = $this->template['name'];
     if (!isset($parameters))
       $parameters = $PEANUT['http']->params;
-    
+
     if (empty($this->templates[$template]))
       return;
     if (!isset($this->templates[$template]['pathFunction']) OR !is_callable($this->templates[$template]['pathFunction']))
@@ -154,16 +174,24 @@ class Templates {
    */
   function getTitle($template = null, $parameters = null) {
     global $PEANUT;
-    if (!isset($template))
+    if (!isset($template)) {
       $template = $this->template['name'];
-    if (!isset($parameters))
+    }
+    if (!isset($parameters)) {
       $parameters = $PEANUT['http']->params;
-    if (empty($this->templates[$template]))
+    }
+    if (empty($this->templates[$template])) {
       return;
-    if (!isset($this->templates[$template]['titleFunction']) OR !is_callable($this->templates[$template]['titleFunction']))
+    }
+    if (!isset($this->templates[$template]['titleFunction'])
+        OR !is_callable($this->templates[$template]['titleFunction'])) {
       return;
-    return call_user_func($this->templates[$template]['titleFunction'], $template, $parameters);
+    }
+    return call_user_func(
+      $this->templates[$template]['titleFunction'],
+      $template, $parameters
+    );
   }
 
-  
+
 }

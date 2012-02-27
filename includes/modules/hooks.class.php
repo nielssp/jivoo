@@ -14,22 +14,13 @@ class Hooks {
    * Contains hooks and attached functions
    * @var array
    */
-  var $hooks;
+  public $hooks;
 
   /**
    * PHP5-style constructor
    */
-  function __construct() {
+  public function __construct() {
     $this->hooks = array();
-  }
-
-  /**
-   * PHP5-style destructor
-   *
-   * @return bool true
-   */
-  function __destruct() {
-    return true;
   }
 
   /**
@@ -39,9 +30,10 @@ class Hooks {
    * @param string $hook Hook name
    * @param callback $function Function name
    */
-  function attach($hook, $function, $priority = 5) {
-    if (!is_callable($function))
+  public function attach($hook, $function, $priority = 5) {
+    if (!is_callable($function)) {
       return;
+    }
     $this->hooks[$hook][] = $function;
   }
 
@@ -50,9 +42,10 @@ class Hooks {
    * @param string $hook
    * @param callback $function
    */
-  function remove($hook, $function = null) {
-    if (!isset($this->hooks[$hook]) OR !is_array($this->hooks[$hook]))
+  public function remove($hook, $function = null) {
+    if (!isset($this->hooks[$hook]) OR !is_array($this->hooks[$hook])) {
       return;
+    }
     if (is_null($function)) {
       unset($this->hooks[$hook]);
     }
@@ -67,7 +60,7 @@ class Hooks {
    * @param string $hook Hook name
    * @param mixed $,... Additional parameters
    */
-  function run($hook) {
+  public function run($hook) {
     if (!isset($this->hooks[$hook]) OR !is_array($this->hooks[$hook]))
       return;
     $numArgs = func_num_args();

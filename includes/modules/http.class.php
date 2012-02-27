@@ -14,20 +14,13 @@ class Http {
    * The current path as an array
    * @var array
    */
-  var $path;
+  private $path;
 
   /**
-   * The current template parameters
+   * The current parameters
    * $var array
    */
-  var $params;
-
-  /**
-   * Constructor
-   */
-  function Http() {
-    return $this->__construct();
-  }
+  private $params;
 
   /**
    * PHP5-style constructor
@@ -40,12 +33,14 @@ class Http {
     $path = explode('/', str_replace(WEBPATH, '', urldecode($request['path'])));
     $this->path = array();
     foreach ($path as $dir) {
-      if (!empty($dir))
+      if (!empty($dir)) {
         $this->path[] = $dir;
+      }
     }
     // Set default settings
-    if (!$PEANUT['configuration']->exists('rewrite'))
+    if (!$PEANUT['configuration']->exists('rewrite')) {
       $PEANUT['configuration']->set('rewrite', 'off');
+    }
     // Determine if the current URL is correct
     if ($PEANUT['configuration']->get('rewrite') === 'on') {
       if ($this->path[0] == 'index.php') {
@@ -54,8 +49,9 @@ class Http {
       }
     }
     else {
-      if ($this->path[0] != 'index.php')
+      if ($this->path[0] != 'index.php') {
         $this->redirectPath($this->path, $this->params);
+      }
       array_shift($this->path);
     }
   }
@@ -80,12 +76,16 @@ class Http {
    */
   function redirect($status, $location) {
     global $PEANUT;
-    if (!$this->setStatus($status))
-      $PEANUT['errors']->fatal(tr('Redirect error'), tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>'));
+    if (!$this->setStatus($status)) {
+      $PEANUT['errors']->fatal(
+        tr('Redirect error'),
+        tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
+      );
+    }
     header('Location: ' . $location);
     exit();
   }
-  
+
   /**
    * An internal redirect
    *
@@ -97,31 +97,41 @@ class Http {
    */
   function redirectPath($path = null, $parameters = null, $moved = true, $hashtag = null, $rewrite = false) {
     global $PEANUT;
-    if (!isset($path))
+    if (!isset($path)) {
       $path = $this->path;
-    if ($moved)
+    }
+    if ($moved) {
       $status = 301;
-    else
+    }
+    else {
       $status = 303;
-    if (isset($hashtag))
+    }
+    if (isset($hashtag)) {
       $hashtag = '#' . $hashtag;
-    else
+    }
+    else {
       $hashtag = '';
+    }
     if (is_array($parameters) AND count($parameters) > 0) {
       $query = array();
       foreach ($parameters as $key => $value) {
         $query[] = urlencode($key) . '=' . urlencode($value);
       }
-      if ($PEANUT['configuration']->get('rewrite') === 'on' OR $rewrite)
-        $this->redirect($status, WEBPATH . implode('/', $path) . '?' . implode('&', $query) . $hashtag);
-      else
-        $this->redirect($status, WEBPATH . 'index.php/' . implode('/', $path) . '?' . implode('&', $query) . $hashtag);
+      $combined = implode('/', $path) . '?' . implode('&', $query) . $hashtag;
+      if ($PEANUT['configuration']->get('rewrite') === 'on' OR $rewrite) {
+        $this->redirect($status, WEBPATH . $combined);
+      }
+      else {
+        $this->redirect($status, WEBPATH . 'index.php/' . $combined);
+      }
     }
     else {
-      if ($PEANUT['configuration']->get('rewrite') === 'on' OR $rewrite)
+      if ($PEANUT['configuration']->get('rewrite') === 'on' OR $rewrite) {
         $this->redirect($status, WEBPATH . implode('/', $path) . $hashtag);
-      else
+      }
+      else {
         $this->redirect($status, WEBPATH . 'index.php/' . implode('/', $path) . $hashtag);
+      }
     }
   }
 
@@ -132,8 +142,9 @@ class Http {
    * @return void
    */
   function refreshPath($parameters = null, $hashtag = null) {
-    if (!isset($parameters))
+    if (!isset($parameters)) {
       $parameters = $this->params;
+    }
     $this->redirectPath($this->path, $parameters, false, $hashtag);
   }
 
@@ -185,30 +196,40 @@ class Http {
    */
   function getLink($path = null, $parameters = null, $hashtag = null) {
     global $PEANUT;
-    if (!isset($path))
+    if (!isset($path)) {
       $path = $this->path;
-    if (isset($hashtag))
+    }
+    if (isset($hashtag)) {
       $hashtag = '#' . $hashtag;
-    else
+    }
+    else {
       $hashtag = '';
+    }
     if (is_array($parameters) AND count($parameters) > 0) {
       $query = array();
       foreach ($parameters as $key => $value) {
-        if ($value == '')
+        if ($value == '') {
           $query[] = urlencode($key);
-        else
+        }
+        else {
           $query[] = urlencode($key) . '=' . urlencode($value);
+        }
       }
-      if ($PEANUT['configuration']->get('rewrite') === 'on')
-        return WEBPATH . implode('/', $path) . '?' . implode('&', $query) . $hashtag;
-      else
-        return WEBPATH . 'index.php/' . implode('/', $path) . '?' . implode('&', $query) . $hashtag;
+      $combined = implode('/', $path) . '?' . implode('&', $query) . $hashtag;
+      if ($PEANUT['configuration']->get('rewrite') === 'on') {
+        return WEBPATH . $combined;
+      }
+      else {
+        return WEBPATH . 'index.php/' . $combined;
+      }
     }
     else {
-      if ($PEANUT['configuration']->get('rewrite') === 'on')
+      if ($PEANUT['configuration']->get('rewrite') === 'on') {
         return WEBPATH . implode('/', $path) . $hashtag;
-      else
+      }
+      else {
         return WEBPATH . 'index.php/' . implode('/', $path) . $hashtag;
+      }
     }
   }
 
@@ -222,12 +243,82 @@ class Http {
   function appendQuery($query, $uri = null) {
     // Just in case someone puts a question mark at the beginning
     $query = ltrim($query, '?');
-    if (is_null($uri))
+    if (is_null($uri)) {
       $uri = $_SERVER['REQUEST_URI'];
-    if (strpos($uri, '?') !== false)
+    }
+    if (strpos($uri, '?') !== false) {
       return $uri . '&' . $query;
-    else
+    }
+    else {
       return $uri . '?' . $query;
+    }
   }
-  
+
+
+  /* PROPERTIES BEGIN */
+
+  /**
+   * Array of readable property names
+   * @var array
+   */
+  private $_getters = array('params', 'path');
+  /**
+   * Array of writable property names
+   * @var array
+   */
+  private $_setters = array('params');
+
+  /**
+   * Magic getter method
+   *
+   * @param string $property Property name
+   * @throws Exception
+   */
+  public function __get($property) {
+    if (in_array($property, $this->_getters)) {
+      return $this->$property;
+    }
+    else if (method_exists($this, '_get_' . $property)) {
+      return call_user_func(array($this, '_get_' . $property));
+    }
+    else if (in_array($property, $this->_setters)
+                OR method_exists($this, '_set_' . $property)) {
+      throw new PropertyWriteOnlyException(
+        tr('Property "%1" is write-only.', $property)
+      );
+    }
+    else {
+      throw new PropertyNotFoundException(
+        tr('Property "%1" is not accessible.', $property)
+      );
+    }
+  }
+
+  /**
+   * Magic setter method
+   *
+   * @param string $property Property name
+   * @param string $value New property value
+   * @throws Exception
+   */
+  public function __set($property, $value) {
+    if (in_array($property, $this->_setters)) {
+      $this->$property = $value;
+    }
+    else if (method_exists($this, '_set_' . $property)) {
+      call_user_func(array($this, '_set_' . $property), $value);
+    }
+    else if (in_array($property, $this->_getters)
+                OR method_exists($this, '_get_' . $property)) {
+      throw new PropertyReadOnlyException(
+        tr('Property "%1" is read-only.', $property)
+      );
+    }
+    else {
+      throw new PropertyNotFoundException(
+        tr('Property "%1" is not accessible.', $property)
+      );
+    }
+  }
+  /* PROPERTIES END */
 }

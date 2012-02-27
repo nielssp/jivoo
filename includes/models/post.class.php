@@ -3,106 +3,22 @@
  * @brief Blog post data model
  */
 
-class BaseModel {
-  public static function create() {
-    
-  }
+
+
+interface Selectable {
   
-  public static function getById() {
-    
-  }
+  public static function getById($id);
   
-  public static function all() {
-    
-  }
+  public static function select(Selector $selector = NULL);
+
 }
 
-class Selector {
-  private $orderBy;
-  private $descending;
-  private $limit;
-  private $where;
-  private $offset;
+abstract class BaseModel implements Selectable {
   
-  /* Properties begin */
-  private $_getters = array('orderBy', 'descending', 'limit', 'where', 'offset');
-  private $_setters = array();
-  
-  /**
-   * Magic method
-   * @param string $property
-   * @throws Exception
-   */
-  public function __get($property) {
-    if (in_array($property, $this->_getters)) {
-      return $this->$property;
-    }
-    else if (method_exists($this, '_get_' . $property))
-      return call_user_func(array($this, '_get_' . $property));
-    else if (in_array($property, $this->_setters) OR method_exists($this, '_set_' . $property))
-      throw new Exception('Property "' . $property . '" is write-only.');
-    else
-      throw new Exception('Property "' . $property . '" is not accessible.');
-  }
-  
-  public function __set($property, $value) {
-    if (in_array($property, $this->_setters)) {
-      $this->$property = $value;
-    }
-    else if (method_exists($this, '_set_' . $property))
-      call_user_func(array($this, '_set_' . $property), $value);
-    else if (in_array($property, $this->_getters) OR method_exists($this, '_get_' . $property))
-      throw new Exception('Property "' . $property . '" is read-only.');
-    else
-      throw new Exception('Property "' . $property . '" is not accessible.');
-  }
-  
-  private function _get_ascending() {
-    return !$this->descending;
-  }
-  /* Properties end */
-  
-  private function __construct() {
-    $this->limit = -1;
-    $this->offset = 0;
-    $this->where = array();
-    $this->orderBy = 'id';
-    $this->descending = false;
-  }
-  
-  public static function create() {
-    return new self();
-  }
-  
-  public function limit($limit) {
-    $this->limit = $limit;
-    return $this;
-  }
-  
-  public function offset($offset) {
-    $this->offset = $offset;
-    return $this;
-  }
-  
-  public function where($column, $value) {
-    $this->where[$column] = $value;
-    return $this;
-  }
-  
-  public function orderBy($column) {
-    $this->orderBy = $column;
-    return $this;
-  }
-  
-  public function desc() {
-    $this->descending = true;
-    return $this;
-  }
-  
-  public function asc() {
-    $this->descending = false;
-    return $this;
-  }
+  public abstract function commit();
+
+  public abstract function delete();
+
 }
 
 class Post extends BaseModel {
@@ -116,101 +32,11 @@ class Post extends BaseModel {
   private $commenting;
   
   private $updated;
-  
-  /* Properties begin */
-  private $_getters = array('id', 'name', 'title', 'content', 'date', 'state', 'comments', 'commenting');
-  private $_setters = array('name', 'title', 'content', 'date', 'state', 'commenting');
-  
-  /**
-   * Magic method
-   * @param string $property
-   * @throws Exception
-   */
-  public function __get($property) {
-    if (in_array($property, $this->_getters)) {
-      return $this->$property;
-    }
-    else if (method_exists($this, '_get_' . $property))
-      return call_user_func(array($this, '_get_' . $property));
-    else if (in_array($property, $this->_setters) OR method_exists($this, '_set_' . $property))
-      throw new Exception('Property "' . $property . '" is write-only.');
-    else
-      throw new Exception('Property "' . $property . '" is not accessible.');
-  }
-  
-  public function __set($property, $value) {
-    $this->updated = true;
-    if (in_array($property, $this->_setters)) {
-      $this->$property = $value;
-    }
-    else if (method_exists($this, '_set_' . $property))
-      call_user_func(array($this, '_set_' . $property), $value);
-    else if (in_array($property, $this->_getters) OR method_exists($this, '_get_' . $property))
-      throw new Exception('Property "' . $property . '" is read-only.');
-    else
-      throw new Exception('Property "' . $property . '" is not accessible.');
-  }
-  
-  private function _get_path() {
-    global $PEANUT;
-    $permalink = $PEANUT['configuration']->get('postPermalink');
-    if (is_array($permalink)) {
-      $time = $this->date;
-      $replace = array('%name%' => $this->name,
-                       '%id%' => $this->id,
-                       '%year%' => $PEANUT['i18n']->date('Y', $time),
-                       '%month%' => $PEANUT['i18n']->date('m', $time),
-                       '%day%' => $PEANUT['i18n']->date('d', $time));
-      $search = array_keys($replace);
-      $replace = array_values($replace);
-      $path = array();
-      foreach ($permalink as $dir) {
-        $path[] = str_replace($search, $replace, $dir);
-      }
-      return $path;
-    }
-  }
-  
-  private function _get_link() {
-    global $PEANUT;
-    return $PEANUT['http']->getLink($this->path);
-  }
-  /* Properties end */
 
   private function __construct() {
     
-  }
-  
-  public function formatTime($format = null) {
-  global $PEANUT;
-  if (!isset($format))
-  $format = $PEANUT['i18n']->timeFormat();
-  return $PEANUT['i18n']->date($format, $this->date);
-  }
-  
-  public function formatDate($format = null) {
-  global $PEANUT;
-  if (!isset($format))
-  $format = $PEANUT['i18n']->dateFormat();
-  return $PEANUT['i18n']->date($format, $this->date);
-  }
-  
-  
-  
-  /*
-   * MAYBE:
-   * 
-   * To create post:
-   * $post = Post::create('title', 'content, ...)
-   * instead of
-   * $post = new Post('title', 'content', ...)
-   * 
-   * e.g. make __construct private
-   * 
-   * then:
-   * $post = Post::getById(23)
-   * could also use the constructor without creating a new post
-   */
+  }  
+
   public static function create($title, $content, $state = 'unpublished', $name = null, $tags = array(), $commenting = null) {
     global $PEANUT;
     $new = new Post();
@@ -275,15 +101,21 @@ class Post extends BaseModel {
     return self::getById($id);
   }
   
-  public static function all($selector = null) {
+  public static function select(Selector $selector = null) {
     global $PEANUT;
-    if (!isset($selector) OR !is_a($selector, 'Selector'))
+    if (!isset($selector)) {
       $selector = Selector::create()->orderBy('date')->desc();
+    }
     $index = $PEANUT['flatfiles']->getIndex('posts', $selector->orderBy);
-    if ($selector->descending)
+    if ($index === FALSE) {
+      throw new Exception("Can't order by '" . $selector->orderBy . "' since no index exists for that column.");
+    }
+    if ($selector->descending) {
       arsort($index);
-    else
+    }
+    else {
       asort($index);
+    }
     reset($index);
     $all = array();
     $i = 0;
@@ -292,8 +124,10 @@ class Post extends BaseModel {
         $i++;
         continue;
       }
-      if ($selector->limit != -1 AND ($i - $selector->offset) >= $selector->limit)
+      if ($selector->limit != -1
+          AND ($i - $selector->offset) >= $selector->limit) {
         break;
+      }
       $get = self::getById($id);
       $add = true;
       foreach ($selector->where as $column => $value) {
@@ -310,24 +144,131 @@ class Post extends BaseModel {
     reset($all);
     return $all;
   }
-  /*
-   * e.g.:
-   * 
-   * $posts = Post::all(
-   * 
-   * $posts = Post::getAll(array('limit' => 10, 'order' => 'asc', 'by' => 'date'));
-   * 
-   * $posts = Post::all()->limit(10)->order('asc')
-   */
-
-  public function __destruct() {
-    return true;
+  
+  public function formatTime($format = null) {
+    global $PEANUT;
+    if (!isset($format)) {
+      $format = $PEANUT['i18n']->timeFormat();
+    }
+    return $PEANUT['i18n']->date($format, $this->date);
+  }
+  
+  public function formatDate($format = null) {
+    global $PEANUT;
+    if (!isset($format)) {
+      $format = $PEANUT['i18n']->dateFormat();
+    }
+    return $PEANUT['i18n']->date($format, $this->date);
   }
   
   public function commit() {
-    if (!$this->updated)
+    if (!$this->updated) {
       return;
+    }
     echo 'Updating database';
   }
+  
+  public function delete() {
+    echo 'Deletig?';
+  }
+  
+  /* PROPERTIES BEGIN { */
+  
+  /**
+   * Array of readable property names
+   * @var array
+   */
+  private $_getters = array(
+  	'id', 'name', 'title', 'content',
+  	'date', 'state', 'comments', 'commenting',
+  );
+  /**
+   * Array of writable property names
+   * @var array
+   */
+  private $_setters = array(
+  	'name', 'title', 'content', 'date',
+  	'state', 'commenting',
+  );
+  
+  /**
+   * Magic getter method
+   *
+   * @param string $property Property name
+   * @throws Exception
+   */
+  public function __get($property) {
+    if (in_array($property, $this->_getters)) {
+      return $this->$property;
+    }
+    else if (method_exists($this, '_get_' . $property)) {
+      return call_user_func(array($this, '_get_' . $property));
+    }
+    else if (in_array($property, $this->_setters)
+             OR method_exists($this, '_set_' . $property)) {
+      throw new PropertyWriteOnlyException(
+      	tr('Property "%1" is write-only.', $property)
+      );
+    }
+    else {
+      throw new PropertyNotFoundException(
+        tr('Property "%1" is not accessible.', $property)
+      ); 
+    }
+  }
+  
+  /**
+   * Magic setter method
+   *
+   * @param string $property Property name
+   * @param string $value New property value
+   * @throws Exception
+   */
+  public function __set($property, $value) {
+    $this->updated = true;
+    if (in_array($property, $this->_setters)) {
+      $this->$property = $value;
+    }
+    else if (method_exists($this, '_set_' . $property)) {
+      call_user_func(array($this, '_set_' . $property), $value);
+    }
+    else if (in_array($property, $this->_getters)
+             OR method_exists($this, '_get_' . $property)) {
+      throw new PropertyReadOnlyException(
+      	tr('Property "%1" is read-only.', $property)
+      );
+    }
+    else {
+      throw new PropertyNotFoundException(
+        tr('Property "%1" is not accessible.', $property)
+      );
+    }
+  }
+  
+  private function _get_path() {
+    global $PEANUT;
+    $permalink = $PEANUT['configuration']->get('postPermalink');
+    if (is_array($permalink)) {
+      $time = $this->date;
+      $replace = array('%name%' => $this->name,
+                       '%id%' => $this->id,
+                       '%year%' => $PEANUT['i18n']->date('Y', $time),
+                       '%month%' => $PEANUT['i18n']->date('m', $time),
+                       '%day%' => $PEANUT['i18n']->date('d', $time));
+      $search = array_keys($replace);
+      $replace = array_values($replace);
+      $path = array();
+      foreach ($permalink as $dir) {
+        $path[] = str_replace($search, $replace, $dir);
+      }
+      return $path;
+    }
+  }
+  
+  private function _get_link() {
+    global $PEANUT;
+    return $PEANUT['http']->getLink($this->path);
+  }
+  /* PROPERTIES END */
 
 }

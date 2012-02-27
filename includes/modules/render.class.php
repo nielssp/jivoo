@@ -11,28 +11,22 @@
 class Render {
 
   /**
-   * Constructor
-   */
-  function Render() {
-    return $this->__construct();
-  }
-
-  /**
    * PHP5-style constructor
    */
-  function __construct() {
+  public function __construct() {
     global $PEANUT;
-    
+
     /**
      * @todo Debugging
      */
-    if ($PEANUT['actions']->has('unset'))
+    if ($PEANUT['actions']->has('unset')) {
       session_unset();
+    }
 
     $PEANUT['hooks']->run('preRender');
-    
+
     $PEANUT['templates']->setFinal();
-    
+
     $PEANUT['hooks']->run('finalTemplate');
 
     // Render theme
@@ -41,21 +35,12 @@ class Render {
     $PEANUT['hooks']->run('postRender');
   }
 
-  /**
-   * PHP5-style destructor
-   *
-   * @return bool true
-   */
-  function __destruct() {
-    return true;
-  }
-
-  function renderPage() {
+  private function renderPage() {
     global $PEANUT;
     $this->renderTemplate($PEANUT['templates']->template['name']);
   }
-  
-  function setContentType($name) {
+
+  private function setContentType($name) {
     global $PEANUT;
     $fileName = explode('.', $name);
     $fileExt = $fileName[count($fileName) - 1];
@@ -64,8 +49,11 @@ class Render {
       case 'html':
       case 'htm':
         $contentType = "text/html";
-        $PEANUT['theme']->insertHtml('meta-charset', 'head-top', 'meta',
-          array('http-equiv' => 'content-type', 'content' => 'text/html;charset=utf-8'), '', 10);
+        $PEANUT['theme']->insertHtml(
+          'meta-charset', 'head-top', 'meta',
+          array('http-equiv' => 'content-type', 'content' => 'text/html;charset=utf-8'),
+          '', 10
+        );
         break;
       case 'css':
         $contentType = "text/css";
@@ -74,14 +62,16 @@ class Render {
         $contentType = "text/javascript";
         break;
       default:
-        $PEANUT['errors']->fatal(tr('Unsupported content type'),
-          tr('Unsupported content type: %1', $fileExt));
+        $PEANUT['errors']->fatal(
+          tr('Unsupported content type'),
+          tr('Unsupported content type: %1', $fileExt)
+        );
         break;
     }
-    header('Content-Type:' . $contentType . ';charset=utf-8');    
+    header('Content-Type:' . $contentType . ';charset=utf-8');
   }
 
-  function renderTemplate($name, $parameters = array()) {
+  public function renderTemplate($name, $parameters = array()) {
     global $PEANUT;
     extract($parameters, EXTR_SKIP);
     if (isset($PEANUT['theme']->theme)

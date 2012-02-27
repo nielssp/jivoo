@@ -14,12 +14,12 @@ class Configuration {
    * Contains all configuration settings
    * @var array
    */
-  var $settings;
+  private $settings;
 
   /**
    * PHP5-style constructor
    */
-  function __construct() {
+  public function __construct() {
     global $PEANUT;
     $this->settings = array();
     if (!is_readable(PATH . DATA . 'settings.cfg.php')) {
@@ -40,22 +40,13 @@ class Configuration {
   }
 
   /**
-   * PHP5-style destructor
-   *
-   * @return bool true
-   */
-  function __destruct() {
-    return true;
-  }
-
-  /**
    * Update a configuration key
    *
    * @param string $key The configuration key to access
    * @param mixed $value The variable to associate with the key. Could be a string/array/object etc.
    * @return bool True if successful, false if not
    */
-  function set($key, $value) {
+  public function set($key, $value) {
     if (isset($key) AND isset($value) AND $key != '')
       $this->settings[$key] = $value;
     else
@@ -81,7 +72,7 @@ class Configuration {
    * @param string $key The configuration key to delete
    * @return bool True if successful, false if not
    */
-  function delete($key) {
+  public function delete($key) {
     return $this->update($key, NULL);
   }
 
@@ -92,7 +83,7 @@ class Configuration {
    * @return mixed The content of the configuration key or false if key
    * doesn't exist
    */
-  function get($key) {
+  public function get($key) {
     if (!isset($this->settings[$key]))
       return;
     return $this->settings[$key];
@@ -104,7 +95,7 @@ class Configuration {
    * @param string $key Configuration key
    * @return bool True if it exists false if not
    */
-  function exists($key) {
+  public function exists($key) {
     return isset($this->settings[$key]);
   }
 
@@ -116,7 +107,7 @@ class Configuration {
    * @param bool $associative Return an associative array of keys and value
    * @return array Data fields in an array
    */
-  function parseData($data, $serialize = false, $associative = true) {
+  public function parseData($data, $serialize = false, $associative = true) {
     $fields = explode('|', $data);
     $dataArray = array();
     $dataKey = '';
@@ -146,7 +137,7 @@ class Configuration {
    * @param bool $serialize Wether or not to serialize arrays, if false then arrays and objects will not be included in data
    * @return string Data string
    */
-  function compileData($fields, $serialize = false, $associative = true) {
+  public function compileData($fields, $serialize = false, $associative = true) {
     $data = '';
     if (!$associative) {
       foreach ($fields[0] as $i => $key) {
@@ -180,7 +171,7 @@ class Configuration {
    * @param string $str String
    * @return bool True if string is serialized
    */
-  function isSerialized($str){
+  public function isSerialized($str){
       if (!is_string($str))
         return false;
       if (trim($str) == "")
