@@ -1,43 +1,24 @@
 <?php
-class Selector {
-  private $orderBy;
-  private $descending;
-  private $limit;
-  private $where;
-  private $offset;
+
+
+interface ISelectable {
+
+  public static function getById($id);
+
+  public static function select(Selector $selector = NULL);
+
+}
+
+class Selector extends BaseObject {
+  protected $orderBy;
+  protected $descending;
+  protected $limit;
+  protected $where;
+  protected $offset;
 
   /* Properties begin */
-  private $_getters = array('orderBy', 'descending', 'limit', 'where', 'offset');
-  private $_setters = array();
-
-  /**
-   * Magic method
-   * @param string $property
-   * @throws Exception
-   */
-  public function __get($property) {
-    if (in_array($property, $this->_getters)) {
-      return $this->$property;
-    }
-    else if (method_exists($this, '_get_' . $property))
-    return call_user_func(array($this, '_get_' . $property));
-    else if (in_array($property, $this->_setters) OR method_exists($this, '_set_' . $property))
-    throw new Exception('Property "' . $property . '" is write-only.');
-    else
-    throw new Exception('Property "' . $property . '" is not accessible.');
-  }
-
-  public function __set($property, $value) {
-    if (in_array($property, $this->_setters)) {
-      $this->$property = $value;
-    }
-    else if (method_exists($this, '_set_' . $property))
-    call_user_func(array($this, '_set_' . $property), $value);
-    else if (in_array($property, $this->_getters) OR method_exists($this, '_get_' . $property))
-    throw new Exception('Property "' . $property . '" is read-only.');
-    else
-    throw new Exception('Property "' . $property . '" is not accessible.');
-  }
+  protected $_getters = array('orderBy', 'descending', 'limit', 'where', 'offset');
+  protected $_setters = array();
 
   private function _get_ascending() {
     return !$this->descending;

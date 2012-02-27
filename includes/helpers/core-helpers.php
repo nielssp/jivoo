@@ -144,10 +144,10 @@ function prioritySorter($a, $b) {
   return 0;
 }
 
+require_once(PATH . INC . 'helpers/base-object.class.php');
+
 require_once(PATH . INC . 'helpers/selector.class.php');
 
-class PropertyException extends Exception { }
-class PropertyReadOnlyException extends PropertyException { }
-class PropertyWriteOnlyException extends PropertyException { }
-class PropertyNotFoundException extends PropertyException { }
+require_once(PATH . INC . 'helpers/base-model.class.php');
+
 
