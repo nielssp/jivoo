@@ -3,16 +3,6 @@
  * Template for blog post listing
  */
 
-
-$posts = Post::select(
-  Selector::create()
-    //->where('state', 'unpublished')
-    ->orderBy('date')
-    ->desc()
-    ->limit(3)
-    ->offset(0)
-);
-
 // Render the header
 $this->renderTemplate('header.html');
 

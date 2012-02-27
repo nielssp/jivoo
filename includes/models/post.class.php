@@ -34,7 +34,7 @@ class Post extends BaseModel {
     'state', 'commenting',
   );
 
-  private function _get_path() {
+  protected function _get_path() {
     global $PEANUT;
     $permalink = $PEANUT['configuration']->get('postPermalink');
     if (is_array($permalink)) {
@@ -54,7 +54,7 @@ class Post extends BaseModel {
     }
   }
 
-  private function _get_link() {
+  protected function _get_link() {
     global $PEANUT;
     return $PEANUT['http']->getLink($this->path);
   }

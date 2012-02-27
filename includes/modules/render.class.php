@@ -25,20 +25,13 @@ class Render {
 
     $PEANUT['hooks']->run('preRender');
 
-    $PEANUT['templates']->setFinal();
-
     $PEANUT['hooks']->run('finalTemplate');
 
-    // Render theme
-    $this->renderPage();
+    $PEANUT['routes']->callController();
 
     $PEANUT['hooks']->run('postRender');
   }
 
-  private function renderPage() {
-    global $PEANUT;
-    $this->renderTemplate($PEANUT['templates']->template['name']);
-  }
 
   private function setContentType($name) {
     global $PEANUT;

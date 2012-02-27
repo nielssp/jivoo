@@ -7,7 +7,7 @@
 $this->renderTemplate('header');
 ?>
 
-<h2><?php echo $PEANUT['posts']->post['title']; ?></h2>
+<h2><?php echo $post->title; ?></h2>
 
 <p>Published <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $PEANUT['posts']->post['date']); ?> - 
 <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $PEANUT['posts']->post['date']); ?> 

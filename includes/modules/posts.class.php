@@ -36,7 +36,10 @@ class Posts {
     //Define templates
     $PEANUT['templates']->defineTemplate('list-posts', array($this, 'getPath'), array($this, 'getTitle'));
     $PEANUT['templates']->defineTemplate('post', array($this, 'getPath'), array($this, 'getTitle'));
-
+    
+    $PEANUT['routes']->addRoute(array(), array($this, 'postListController'));
+    $PEANUT['routes']->addRoute(array('post', '*'), array($this, 'postController'));
+    
     // Create indexes
     if (!$PEANUT['flatfiles']->indexExists('posts', 'name'))
       $PEANUT['flatfiles']->buildIndex('posts', 'name');
@@ -764,27 +767,23 @@ class Posts {
   public function postListController($parameters = array(), $contentType = 'html') {
     global $PEANUT;
 
-    $posts = Post::getAll(
+    $templateData['posts'] = Post::select(
       Selector::create()
-        ->where('state = published')
+        ->where('state', 'unpublished')
         ->orderBy('date')
         ->desc()
         ->limit(5)
         ->offset(0)
     );
     
-    $templateData = compact($posts);
-    
-    $PEANUT['render']->renderTemplate('list-posts.html', $templateData);
+    $PEANUT['templates']->renderTemplate('list-posts.html', $templateData);
   }
   
   public function postController($parameters = array(), $contentType = 'html') {
     global $PEANUT;
     
-    $post = Post::getById($parameters['id']);
+    $templateData['post'] = Post::getById($parameters['id']);
     
-    $templateData = compact($post);
-    
-    $PEANUT['render']->renderTemplate('post.html', $templateData);
+    $PEANUT['templates']->renderTemplate('post.html', $templateData);
   }
 }
