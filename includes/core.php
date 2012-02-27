@@ -106,7 +106,7 @@ if (!defined('TIMEZONE_OFFSET') AND !defined('DATETIMEZONE_AVAILABLE')) {
 
 // Classes that has to be initialized, the order matters
 $modules = array('errors', 'hooks', 'functions', 'filters', 'i18n',
-    'configuration', 'flatfiles', 'http', 'actions', 'templates',
+    'configuration', 'flatfiles', 'http', 'actions', 'routes', 'templates',
     'theme', 'user', 'backend', 'posts', 'pages', 'render');
 
 // Initialize PeanutCMS-array
