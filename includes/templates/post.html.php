@@ -9,12 +9,12 @@ $this->renderTemplate('header');
 
 <h2><?php echo $post->title; ?></h2>
 
-<p>Published <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $PEANUT['posts']->post['date']); ?> - 
-<?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $PEANUT['posts']->post['date']); ?> 
+<p>Published <?php echo $post->formatDate(); ?>
+  - <?php echo $post->formatTime(); ?>
 <a href="<?php echo $PEANUT['http']->getLink(null, null, 'comment'); ?>">(<?php echo tr('Leave a comment'); ?>)</a>
 </p>
 
-<?php echo $PEANUT['posts']->post['content']; ?>
+<?php echo $post->content; ?>
 
 <h3>Tags</h3>
 <?php

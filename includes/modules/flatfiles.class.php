@@ -435,4 +435,12 @@ class Flatfiles {
     return file_exists(PATH . DATA . $table1 . '.' . $table2 . '.rel.php');
   }
   
+  public function tableExists($table) {
+    return file_exists(PATH . DATA . $table);
+  }
+  
+  public function createTable($table) {
+    return mkdir(PATH . DATA . $table);
+  }
+  
 }

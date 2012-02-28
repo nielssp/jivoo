@@ -9,7 +9,7 @@
 /**
  * Posts class
  */
-class Posts {
+class Posts extends BaseObject {
 
   private $post;
 
@@ -40,6 +40,16 @@ class Posts {
     $PEANUT['routes']->addRoute('posts', array($this, 'postListController'));
     $PEANUT['routes']->addRoute('posts/*', array($this, 'postController'));
 
+    // Create tables
+    if (!$PEANUT['flatfiles']->tableExists('posts')) {
+      $PEANUT['flatfiles']->createTable('posts');
+    }
+    if (!$PEANUT['flatfiles']->tableExists('tags')) {
+      $PEANUT['flatfiles']->createTable('tags');
+    }
+    if (!$PEANUT['flatfiles']->tableExists('comments')) {
+      $PEANUT['flatfiles']->createTable('comments');
+    }
 
     // Create indexes
     if (!$PEANUT['flatfiles']->indexExists('posts', 'name'))
@@ -79,111 +89,6 @@ class Posts {
     if (!$PEANUT['configuration']->exists('commentApproval'))
       $PEANUT['configuration']->set('commentApproval', 'off');
 
-
-    // Backend-related
-
-    // Frontend-settings
-    $permalinkFormat = implode('/', $PEANUT['configuration']->get('postPermalink'));
-    $permalinkFormats = array(
-        tr('Month') => '%year%/%month%/%name%',
-        tr('Day') => '%year%/%month%/%day%/%name%',
-        tr('Numeric') => 'blog/%id%');
-    $PEANUT['backend']->addContent('frontend', new BackendFormatSelect('frontend-post-permalink', 'post-permalink',
-            tr('Blog post permalink format'), $permalinkFormat, '', $permalinkFormats, array($this, 'getExampleFormat')));
-    $PEANUT['backend']->addContent('frontend', new BackendRadioInput('frontend-commenting-default', 'commenting-default',
-            tr('Allow comments'), $PEANUT['configuration']->get('commentingDefault'),
-            '',
-            array('off' => tr('Off'),
-                'on' => tr('On'))));
-    $PEANUT['backend']->addContent('frontend', new BackendRadioInput('frontend-anonymous-commenting', 'anonymous-commenting',
-            tr('Allow anonymous comments'), $PEANUT['configuration']->get('anonymousCommenting'),
-            '',
-            array('off' => tr('Off'),
-                'on' => tr('On'))));
-    $PEANUT['backend']->addContent('frontend', new BackendRadioInput('frontend-comment-approval', 'comment-approval',
-            tr('Manual comment approval'), $PEANUT['configuration']->get('commentApproval'),
-            '',
-            array('off' => tr('Off'),
-                'on' => tr('On'))));
-    $PEANUT['backend']->addContent('frontend', new BackendRadioInput('frontend-comment-sorting', 'comment-sorting',
-            tr('Comment sorting'), $PEANUT['configuration']->get('commentSorting'),
-            '',
-            array('asc' => tr('Ascending'),
-                'desc' => tr('Descending'))));
-    $PEANUT['backend']->addContent('frontend', new BackendRadioInput('frontend-comment-display', 'comment-display',
-            tr('Comment list'), $PEANUT['configuration']->get('commentDisplay'),
-            '',
-            array('flat' => tr('Flat'),
-                'thread' => tr('Threaded'))));
-    $PEANUT['backend']->addContent('frontend', new BackendNumericSelect('frontend-comment-level-limit',
-            'comment-level-limit', tr('Max thread level'), $PEANUT['configuration']->get('commentLevelLimit'), ''));
-    $PEANUT['backend']->addContent('frontend', new BackendRadioInput('frontend-comment-child-sorting', 'comment-child-sorting',
-            tr('Comment reply sorting'), $PEANUT['configuration']->get('commentChildSorting'),
-            '',
-            array('asc' => tr('Ascending'),
-                'desc' => tr('Descending'))));
-
-    // List posts page
-    $PEANUT['backend']->addPage('posts', tr('Posts'), tr('All blog posts.'), 'folder-collapsed', array(), null, 94);
-    $PEANUT['backend']->addContent('posts', new BackendDataTable('posts', 'date',
-            array(
-                'title' => array('label' => tr('Title')),
-                'state' => array('label' => tr('Status'), 'width' => '100'),
-                'date' => array('label' => tr('Date'), 'type' => 'date', 'width' => '150')),
-            array(
-                tr('Edit') => array('backend' => 'edit-post', 'p' => '%id%'),
-                tr('Delete') => array('backend' => 'delete-post', 'p' => '%id%'))
-            ));
-
-    // New post page
-    $PEANUT['backend']->addPage('new-post', tr('New post'), tr('Create a new blog post.'), 'document', array(
-        array('publish', tr('Publish'), 'document'),
-        array('save', tr('Save draft'), 'disk'),
-    ), array($this, 'submitPost'), 90);
-    $PEANUT['backend']->addContent('new-post', new BackendTextInput('post-title', 'title', tr('Title'), '',
-            tr('The title of your post.')));
-    if (isset($_POST['title']))
-      $permalink = strtolower(preg_replace('/[ \-]/', '-', preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $_POST['title'])));
-    else
-      $permalink = '';
-    $PEANUT['backend']->addContent('new-post', new BackendPermalinkInput('post-name', 'name', 'Permalink', $permalink,
-            tr('The absolute path to this post.'), array($this, 'getExampleLink'), 'post-title'));
-    $PEANUT['backend']->addContent('new-post', new BackendTinyMce('post-content', 'content', tr('Content')));
-    $tags = $PEANUT['flatfiles']->getRows('tags');
-    $tagList = array();
-    foreach ($tags as $tag)
-      $tagList[] = htmlentities($tag['tag'], ENT_QUOTES, 'UTF-8');
-    sort($tagList);
-    $PEANUT['backend']->addContent('new-post', new BackendAutoComplete('post-tags', 'tags', tr('Tags'), '',
-            tr('Comma-separated list of words that desscribe this post.'), $tagList, true));
-//    $PEANUT['backend']->addContent('new-post', new BackendDateInput('post-date', 'date', tr('Publish date')));
-
-    // Edit post page
-    if (isset($_GET['p']) AND ($post = $PEANUT['flatfiles']->getRow('posts', $_GET['p'])) !== false) {
-      $PEANUT['backend']->addPage('edit-post', tr('Edit post'), tr('Edit a blog post.'), 'document', array(
-          array('save', tr('Save'), 'disk')
-      ), array($this, 'editPost'), 90, false);
-      $PEANUT['backend']->addContent('edit-post', new BackendTextInput('post-title', 'title', tr('Title'), $post['title'],
-              tr('The title of your post.')));
-      $PEANUT['backend']->addContent('edit-post', new BackendTextInput('post-permalink', '', tr('Permalink'),
-              $PEANUT['http']->getLink($this->getPath('post', array('p' => $_GET['p']))),
-              tr('The absolute path to this post.')));
-      $PEANUT['backend']->addContent('edit-post', new BackendTinyMce('post-content', 'content', tr('Content'), $post['content']));
-      if ($post['state'] == 'published')
-        $state = 'published';
-      else
-        $state = 'unpublished';
-      $PEANUT['backend']->addContent('edit-post', new BackendRadioInput('post-status', 'status', tr('Status'), $state,
-              '', array('published' => tr('Published'), 'unpublished' => tr('Unpublished'))));
-      $PEANUT['backend']->addContent('edit-post', new BackendAutoComplete('post-tags', 'tags', tr('Tags'), implode(', ', $this->getTags($_GET['p'])),
-              tr('Comma-separated list of words that desscribe this post.'), $tagList, true));
-
-      $PEANUT['backend']->addPage('delete-post', tr('Delete post'), tr('Are you sure you want to delete "%1"?', $post['title']),
-              '', array(
-                  array('confirm', tr('Confirm'), 'check')
-              ), array($this, 'deletePost'), 90, false);
-    }
-
     if ($PEANUT['actions']->has('rebuild')) {
       $PEANUT['flatfiles']->buildIndex('posts', 'name');
       $PEANUT['flatfiles']->buildIndex('posts', 'date');
@@ -196,15 +101,6 @@ class Posts {
     $this->detect();
 
     $PEANUT['hooks']->attach('finalTemplate', array($this, 'isFinal'));
-  }
-
-  /**
-   * PHP5-style destructor
-   *
-   * @return bool true
-   */
-  function __destruct() {
-    return true;
   }
 
   function detect() {
@@ -788,7 +684,16 @@ class Posts {
     $templateData = array();
 
     $templateData['post'] = Post::getById($PEANUT['http']->path[1]);
-
-    $PEANUT['templates']->renderTemplate('post.html', $templateData);
+    /**
+     * Just testing...
+     * @todo JSON interface/whatever...
+     */
+    if (isset($parameters['json'])) {
+      header('Content-Type: application/json;charset=utf-8');
+      echo $templateData['post']->json();
+    }
+    else {
+      $PEANUT['templates']->renderTemplate('post.html', $templateData);
+    }
   }
 }
