@@ -8,19 +8,34 @@
 /**
  * Http class
  */
-class Http {
+class Http extends BaseObject {
 
   /**
    * The current path as an array
    * @var array
    */
-  private $path;
+  protected $path;
 
   /**
    * The current parameters
    * $var array
    */
-  private $params;
+  protected $params;
+
+  /* PROPERTIES BEGIN */
+
+  /**
+   * Array of readable property names
+   * @var array
+   */
+  protected $_getters = array('params', 'path');
+  /**
+   * Array of writable property names
+   * @var array
+   */
+  protected $_setters = array('params', 'path');
+
+  /* PROPERTIES END */
 
   /**
    * PHP5-style constructor
@@ -41,6 +56,16 @@ class Http {
     if (!$PEANUT['configuration']->exists('rewrite')) {
       $PEANUT['configuration']->set('rewrite', 'off');
     }
+
+    if (!$PEANUT['configuration']->exists('indexPath')) {
+      $PEANUT['configuration']->set(
+          	'indexPath',
+      array(
+          	  'path' => array('posts'),
+          	  'parameters' => array()
+      )
+      );
+    }
     // Determine if the current URL is correct
     if ($PEANUT['configuration']->get('rewrite') === 'on') {
       if ($this->path[0] == 'index.php') {
@@ -53,6 +78,15 @@ class Http {
         $this->redirectPath($this->path, $this->params);
       }
       array_shift($this->path);
+    }
+
+    $index = $PEANUT['configuration']->get('indexPath');
+    if (count($this->path) < 1) {
+      $this->path = $index['path'];
+      $this->params = array_merge($index['parameters'], $this->params);
+    }
+    else if ($index['path'] == $this->path) {
+      $this->redirectPath(array(), $this->params);
     }
   }
 
@@ -254,71 +288,4 @@ class Http {
     }
   }
 
-
-  /* PROPERTIES BEGIN */
-
-  /**
-   * Array of readable property names
-   * @var array
-   */
-  private $_getters = array('params', 'path');
-  /**
-   * Array of writable property names
-   * @var array
-   */
-  private $_setters = array('params');
-
-  /**
-   * Magic getter method
-   *
-   * @param string $property Property name
-   * @throws Exception
-   */
-  public function __get($property) {
-    if (in_array($property, $this->_getters)) {
-      return $this->$property;
-    }
-    else if (method_exists($this, '_get_' . $property)) {
-      return call_user_func(array($this, '_get_' . $property));
-    }
-    else if (in_array($property, $this->_setters)
-                OR method_exists($this, '_set_' . $property)) {
-      throw new PropertyWriteOnlyException(
-        tr('Property "%1" is write-only.', $property)
-      );
-    }
-    else {
-      throw new PropertyNotFoundException(
-        tr('Property "%1" is not accessible.', $property)
-      );
-    }
-  }
-
-  /**
-   * Magic setter method
-   *
-   * @param string $property Property name
-   * @param string $value New property value
-   * @throws Exception
-   */
-  public function __set($property, $value) {
-    if (in_array($property, $this->_setters)) {
-      $this->$property = $value;
-    }
-    else if (method_exists($this, '_set_' . $property)) {
-      call_user_func(array($this, '_set_' . $property), $value);
-    }
-    else if (in_array($property, $this->_getters)
-                OR method_exists($this, '_get_' . $property)) {
-      throw new PropertyReadOnlyException(
-        tr('Property "%1" is read-only.', $property)
-      );
-    }
-    else {
-      throw new PropertyNotFoundException(
-        tr('Property "%1" is not accessible.', $property)
-      );
-    }
-  }
-  /* PROPERTIES END */
 }

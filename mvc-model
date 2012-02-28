@@ -1,0 +1,19 @@
+:: MODEL-VIEW-CONTROLLER  ::
+
+path --> route --> controller --> view  --
+ ^                    |             ^    |
+ |                    |             |    |
+ |                    ----> model ---    |
+ -----------------------------------------
+
+
+path: http module
+route: routes module (....)
+contoller: posts module etc.
+model: post class etc
+view: template
+
+:: ERRORS/EXCEPTIONS ::
+
+Exceptions: For developers
+Fatal errors: For users

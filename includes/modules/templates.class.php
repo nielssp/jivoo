@@ -28,14 +28,6 @@ class Templates {
   function __construct() {
     global $PEANUT;
 
-    // Set default settings
-    if (!$PEANUT['configuration']->exists('index')) {
-      $PEANUT['configuration']->set(
-      	'index', array('template' => 'list-posts',
-        'parameters' => array('sortDesc' => 'date','perPage' => 10))
-      );
-    }
-
     if (!$PEANUT['configuration']->exists('menu')) {
       $PEANUT['configuration']->set(
         'menu',
@@ -60,24 +52,6 @@ class Templates {
       );
     }
 
-
-    if (count($PEANUT['http']->path) < 1) {
-      $index = $PEANUT['configuration']->get('index');
-      if (isset($index['template']))
-        $this->setTemplate($index['template'], 5, $index['parameters']);
-//      if (isset($index['parameters']) AND is_array($index['parameters'])) {
-//        $refresh = false;
-//        foreach ($index['parameters'] as $key => $value) {
-//          if (isset($PEANUT['http']->params[$key]) AND $PEANUT['http']->params[$key] == $value) {
-//            $refresh = true;
-//            unset($PEANUT['http']->params[$key]);
-//          }
-//        }
-//        if ($refresh)
-//          $PEANUT['http']->refreshPath();
-//        $PEANUT['http']->params = array_merge($index['parameters'], $PEANUT['http']->params);
-//      }
-    }
   }
 
   /**
@@ -193,7 +167,7 @@ class Templates {
     );
   }
 
-  
+
   private function setContentType($name) {
     global $PEANUT;
     $fileName = explode('.', $name);
@@ -224,7 +198,7 @@ class Templates {
     }
     header('Content-Type:' . $contentType . ';charset=utf-8');
   }
-  
+
   public function renderTemplate($name, $parameters = array()) {
     global $PEANUT;
     extract($parameters, EXTR_SKIP);

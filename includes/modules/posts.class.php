@@ -29,24 +29,25 @@ class Posts {
     // Requires flatfiles
     if (!isset($PEANUT['flatfiles']))
       return;
-    
+
     // Include models
     include(PATH . INC . 'models/post.class.php');
 
     //Define templates
     $PEANUT['templates']->defineTemplate('list-posts', array($this, 'getPath'), array($this, 'getTitle'));
     $PEANUT['templates']->defineTemplate('post', array($this, 'getPath'), array($this, 'getTitle'));
-    
-    $PEANUT['routes']->addRoute(array(), array($this, 'postListController'));
-    $PEANUT['routes']->addRoute(array('post', '*'), array($this, 'postController'));
-    
+
+    $PEANUT['routes']->addRoute('posts', array($this, 'postListController'));
+    $PEANUT['routes']->addRoute('posts/*', array($this, 'postController'));
+
+
     // Create indexes
     if (!$PEANUT['flatfiles']->indexExists('posts', 'name'))
       $PEANUT['flatfiles']->buildIndex('posts', 'name');
-    
+
     if (!$PEANUT['flatfiles']->indexExists('posts', 'date'))
       $PEANUT['flatfiles']->buildIndex('posts', 'date');
-    
+
     if (!$PEANUT['flatfiles']->indexExists('tags', 'name'))
       $PEANUT['flatfiles']->buildIndex('tags', 'name');
 
@@ -54,10 +55,10 @@ class Posts {
       $PEANUT['flatfiles']->buildIndex('comments', 'post');
     if (!$PEANUT['flatfiles']->indexExists('comments', 'date'))
       $PEANUT['flatfiles']->buildIndex('comments', 'date');
-    
+
     if (!$PEANUT['flatfiles']->relIndexExists('tags', 'posts'))
       $PEANUT['flatfiles']->createRelIndex('tags', 'posts');
-            
+
 
 
     // Set default settings
@@ -78,7 +79,7 @@ class Posts {
     if (!$PEANUT['configuration']->exists('commentApproval'))
       $PEANUT['configuration']->set('commentApproval', 'off');
 
-    
+
     // Backend-related
 
     // Frontend-settings
@@ -121,7 +122,7 @@ class Posts {
             '',
             array('asc' => tr('Ascending'),
                 'desc' => tr('Descending'))));
-    
+
     // List posts page
     $PEANUT['backend']->addPage('posts', tr('Posts'), tr('All blog posts.'), 'folder-collapsed', array(), null, 94);
     $PEANUT['backend']->addContent('posts', new BackendDataTable('posts', 'date',
@@ -133,7 +134,7 @@ class Posts {
                 tr('Edit') => array('backend' => 'edit-post', 'p' => '%id%'),
                 tr('Delete') => array('backend' => 'delete-post', 'p' => '%id%'))
             ));
-    
+
     // New post page
     $PEANUT['backend']->addPage('new-post', tr('New post'), tr('Create a new blog post.'), 'document', array(
         array('publish', tr('Publish'), 'document'),
@@ -156,7 +157,7 @@ class Posts {
     $PEANUT['backend']->addContent('new-post', new BackendAutoComplete('post-tags', 'tags', tr('Tags'), '',
             tr('Comma-separated list of words that desscribe this post.'), $tagList, true));
 //    $PEANUT['backend']->addContent('new-post', new BackendDateInput('post-date', 'date', tr('Publish date')));
-    
+
     // Edit post page
     if (isset($_GET['p']) AND ($post = $PEANUT['flatfiles']->getRow('posts', $_GET['p'])) !== false) {
       $PEANUT['backend']->addPage('edit-post', tr('Edit post'), tr('Edit a blog post.'), 'document', array(
@@ -176,7 +177,7 @@ class Posts {
               '', array('published' => tr('Published'), 'unpublished' => tr('Unpublished'))));
       $PEANUT['backend']->addContent('edit-post', new BackendAutoComplete('post-tags', 'tags', tr('Tags'), implode(', ', $this->getTags($_GET['p'])),
               tr('Comma-separated list of words that desscribe this post.'), $tagList, true));
-      
+
       $PEANUT['backend']->addPage('delete-post', tr('Delete post'), tr('Are you sure you want to delete "%1"?', $post['title']),
               '', array(
                   array('confirm', tr('Confirm'), 'check')
@@ -193,7 +194,7 @@ class Posts {
 
     // Detect
     $this->detect();
-    
+
     $PEANUT['hooks']->attach('finalTemplate', array($this, 'isFinal'));
   }
 
@@ -233,7 +234,7 @@ class Posts {
                     $this->post = $post;
                     $this->post['tags'] = $this->getTags($postid);
                     $this->post['content'] = $this->addPostActions($postid) . $this->post['content'];
-                    $PEANUT['templates']->setTemplate('post', 5, array('p' => $postid));
+                    $PEANUT['routes']->setRoute(array($this, 'postController'), 6);
                     return;
                   }
                 }
@@ -256,7 +257,7 @@ class Posts {
                   $this->post = $post;
                   $this->post['tags'] = $this->getTags($postid);
                   $this->post['content'] = $this->addPostActions($postid) . $this->post['content'];
-                  $PEANUT['templates']->setTemplate('post', 5, array('p' => $postid));
+                  $PEANUT['routes']->setRoute(array($this, 'postController'), 5);
                   return;
                 }
               }
@@ -275,7 +276,7 @@ class Posts {
       }
     }
   }
-  
+
   function isFinal() {
     global $PEANUT;
     if ($PEANUT['templates']->template['name'] == 'post') {
@@ -343,7 +344,7 @@ class Posts {
     }
 
   }
-  
+
   function deletePost() {
     global $PEANUT;
     $postId = $_GET['p'];
@@ -364,20 +365,20 @@ class Posts {
     $PEANUT['errors']->notification('notice', tr('The post has been deleted'), false);
     $PEANUT['http']->redirectPath(null, array('backend' => 'posts'), false);
   }
-  
+
   function editPost() {
     global $PEANUT;
     $error = '';
-   
-    
+
+
     if (!isset($_GET['p']) OR ($post = $PEANUT['flatfiles']->getRow('posts', $_GET['p'])) === false)
       $error = tr('The post was not found');
-    
+
     $tagIds = $PEANUT['flatfiles']->getRelations('tags', 'posts', null, $_GET['p']);
     foreach ($tagIds as $tagId) {
       $PEANUT['flatfiles']->removeRelation('tags', 'posts', $tagId, $_GET['p']);
     }
-    
+
     $tagInput = explode(',', $_POST['tags']);
     $tags = array();
     foreach($tagInput as $tag) {
@@ -386,12 +387,12 @@ class Posts {
         $tags[] = $tag;
       }
     }
- 
+
     if (empty($_POST['title']))
       $error = tr('The title should not be empty');
     else if (empty($_POST['content']))
       $error = tr('The content should not be empty');
-    
+
     if ($error == '') {
       if ($_POST['status'] == 'published')
         $state = 'published';
@@ -420,7 +421,7 @@ class Posts {
           $PEANUT['flatfiles']->addRelation('tags', 'posts', $tagId, $_GET['p']);
         }
       }
-      
+
       if ($state == 'unpublished')
         $PEANUT['errors']->notification('notice', tr('Your post has been saved'), false);
       else
@@ -431,12 +432,12 @@ class Posts {
       $PEANUT['errors']->notification('error', $error, false);
     }
   }
-  
+
   function submitPost() {
     global $PEANUT;
     $error = '';
-   
-    
+
+
     $tagInput = explode(',', $_POST['tags']);
     $tags = array();
     foreach($tagInput as $tag) {
@@ -445,29 +446,29 @@ class Posts {
         $tags[] = $tag;
       }
     }
-    
+
     $name = null;
     if (isset($_POST['name'])) {
       $name = strtolower(preg_replace('/[ \-]/', '-', preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $_POST['name'])));
       if (empty($name))
         $name = null;
     }
-    
+
     if (!isset($name))
       $name = strtolower(preg_replace('/[ \-]/', '-', preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $_POST['title'])));
-    
+
     $postid = $PEANUT['flatfiles']->indexFind('posts', 'name', $name);
     if ($postid !== false AND ($post = $PEANUT['flatfiles']->getRow('posts', $postid)) !== false)
       $error = tr('A post with that name already exists');
-    
+
     if (empty($name))
       $error = tr('The name should not be empty');
-    
+
     if (empty($_POST['title']))
       $error = tr('The title should not be empty');
     else if (empty($_POST['content']))
       $error = tr('The content should not be empty');
-    
+
     if ($error == '') {
       if (isset($_POST['save']))
         $state = 'unpublished';
@@ -522,7 +523,7 @@ class Posts {
     }
     return $id;
   }
-  
+
   function getTags($id) {
     global $PEANUT;
     $tagIds = $PEANUT['flatfiles']->getRelations('tags', 'posts', null, $id);
@@ -600,7 +601,7 @@ class Posts {
         break;
       default:
         break;
-      
+
     }
   }
 
@@ -748,7 +749,7 @@ class Posts {
         return -1;
     }
   }
-  
+
   private function addPostActions($id) {
     global $PEANUT;
     if ($PEANUT['user']->isLoggedIn()) {
@@ -762,10 +763,12 @@ class Posts {
     }
     return '';
   }
-  
-  
+
+
   public function postListController($parameters = array(), $contentType = 'html') {
     global $PEANUT;
+
+    $templateData = array();
 
     $templateData['posts'] = Post::select(
       Selector::create()
@@ -775,15 +778,17 @@ class Posts {
         ->limit(5)
         ->offset(0)
     );
-    
+
     $PEANUT['templates']->renderTemplate('list-posts.html', $templateData);
   }
-  
+
   public function postController($parameters = array(), $contentType = 'html') {
     global $PEANUT;
-    
-    $templateData['post'] = Post::getById($parameters['id']);
-    
+
+    $templateData = array();
+
+    $templateData['post'] = Post::getById($PEANUT['http']->path[1]);
+
     $PEANUT['templates']->renderTemplate('post.html', $templateData);
   }
 }
