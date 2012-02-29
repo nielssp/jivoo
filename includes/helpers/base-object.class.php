@@ -33,7 +33,6 @@ abstract class BaseObject {
   }
 
   public function __set($property, $value) {
-    print_r($this->_setters);
     if (in_array($property, $this->_setters)) {
       $this->$property = $value;
     }

@@ -16,8 +16,10 @@ $this->renderTemplate('header');
 
 <?php echo $post->content; ?>
 
+
 <h3>Tags</h3>
 <?php
+goto a;
 foreach ($PEANUT['posts']->post['tags'] as $name => $tag) {
   echo '<a href="#' . $name . '">' . $tag . '</a> ';
 }
@@ -86,6 +88,7 @@ if (isset($PEANUT['http']->params['reply-to']))
 </form>
 
 <?php
+a:
 // Render the footer
 $this->renderTemplate('footer');
 ?>

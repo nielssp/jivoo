@@ -1,9 +1,15 @@
 <?php
 abstract class BaseModel extends BaseObject implements ISelectable {
+    
+  public static $cache = array();
 
   public abstract function commit();
 
   public abstract function delete();
+  
+  public function addToCache() {
+    $this::$cache[$this->id] = $this;
+  } 
   
   public function json() {
     $array = array();

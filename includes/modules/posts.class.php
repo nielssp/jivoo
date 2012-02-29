@@ -37,8 +37,6 @@ class Posts extends BaseObject {
     $PEANUT['templates']->defineTemplate('list-posts', array($this, 'getPath'), array($this, 'getTitle'));
     $PEANUT['templates']->defineTemplate('post', array($this, 'getPath'), array($this, 'getTitle'));
 
-    $PEANUT['routes']->addRoute('posts', array($this, 'postListController'));
-    $PEANUT['routes']->addRoute('posts/*', array($this, 'postController'));
 
     // Create tables
     if (!$PEANUT['flatfiles']->tableExists('posts')) {
@@ -72,6 +70,8 @@ class Posts extends BaseObject {
 
 
     // Set default settings
+    if (!$PEANUT['configuration']->exists('fancyPostPermalinks'))
+      $PEANUT['configuration']->set('fancyPostPermalinks', 'on');
     if (!$PEANUT['configuration']->exists('postPermalink'))
       $PEANUT['configuration']->set('postPermalink', array('%year%', '%month%', '%name%'));
     if (!$PEANUT['configuration']->exists('commentSorting'))
@@ -97,19 +97,23 @@ class Posts extends BaseObject {
       $PEANUT['flatfiles']->buildIndex('tags', 'name');
     }
 
-    // Detect
-    $this->detect();
+    if ($PEANUT['configuration']->get('fancyPostPermalinks') == 'on') {
+      // Detect fancy post permalinks
+      $this->detectFancyPermalinks();
+    }
+    else {
+      $PEANUT['routes']->addRoute('posts/*', array($this, 'postController'));
+    }
+    $PEANUT['routes']->addRoute('posts', array($this, 'postListController'));
 
     $PEANUT['hooks']->attach('finalTemplate', array($this, 'isFinal'));
   }
 
-  function detect() {
+  function detectFancyPermalinks() {
     global $PEANUT;
     $path = $PEANUT['http']->path;
     $permalink = $PEANUT['configuration']->get('postPermalink');
     if (is_array($path)) {
-      $l = count($path) - 1;
-      $wheres = array();
       foreach ($permalink as $key => $dir) {
         if (isset($path[$key])) {
           $pos = strpos($dir, '%name%');
@@ -117,23 +121,27 @@ class Posts extends BaseObject {
           if ($pos !== false) {
             $dif = $len - ($pos + 6);
 //            echo "Pos = $pos, Len = $len, Dif = $dif, Name = ";
-            if ($dif != 0)
+            if ($dif != 0) {
               $name = substr($path[$key], $pos, -$dif);
-            else
+            }
+            else {
               $name = substr($path[$key], $pos);
+            }
             if (!empty($name)) {
-              $postid = $PEANUT['flatfiles']->indexFind('posts', 'name', $name);
-              if ($postid !== false AND ($post = $PEANUT['flatfiles']->getRow('posts', $postid)) !== false) {
-                $perma = $this->getPath('post', array('p' => $postid));
+              try {
+                $post = Post::getByName($name);
+                $perma = $post->path;
                 if ($perma !== false) {
                   if ($perma == $path) {
-                    $this->post = $post;
-                    $this->post['tags'] = $this->getTags($postid);
-                    $this->post['content'] = $this->addPostActions($postid) . $this->post['content'];
+                    $post->addToCache();
+                    $this->post = $post->id;
                     $PEANUT['routes']->setRoute(array($this, 'postController'), 6);
                     return;
                   }
                 }
+              }
+              catch (PostNotFoundException $e) {
+                
               }
             }
           }
@@ -142,20 +150,20 @@ class Posts extends BaseObject {
           if ($pos !== false) {
             $dif = $len - ($pos + 4);
 //            echo "Pos = $pos, Len = $len, Dif = $dif, Name = ";
-            if ($dif != 0)
+            if ($dif != 0) {
               $postid = substr($path[$key], $pos, -$dif);
-            else
-            $postid = substr($path[$key], $pos);
-            if ($postid !== false AND ($post = $PEANUT['flatfiles']->getRow('posts', $postid)) !== false) {
-              $perma = $this->getPath('post', array('p' => $postid));
-              if ($perma !== false) {
-                if ($perma == $path) {
-                  $this->post = $post;
-                  $this->post['tags'] = $this->getTags($postid);
-                  $this->post['content'] = $this->addPostActions($postid) . $this->post['content'];
-                  $PEANUT['routes']->setRoute(array($this, 'postController'), 5);
-                  return;
-                }
+            }
+            else {
+              $postid = substr($path[$key], $pos);
+            }
+            $post = Post::getById($postid);
+            $perma = $post->path;
+            if ($perma !== false) {
+              if ($perma == $path) {
+                $post->addToCache();
+                $this->post = $post->id;
+                $PEANUT['routes']->setRoute(array($this, 'postController'), 6);
+                return;
               }
             }
           }
@@ -163,10 +171,14 @@ class Posts extends BaseObject {
       }
       foreach ($path as $name) {
         if (!empty($name)) {
-          $postid = $PEANUT['flatfiles']->indexFind('posts', 'name', $name);
-          if ($postid !== false AND ($post = $PEANUT['flatfiles']->getRow('posts', $postid)) !== false) {
-            $PEANUT['templates']->setTemplate('post', 4, array('p' => $postid));
-//            $PEANUT['hooks']->attach('finalTemplate', array($this, 'isFinal'));
+          try {
+            $post = Post::getByName($name);
+            $post->addToCache();
+            $this->post = $post->id;
+            $PEANUT['routes']->setRoute(array($this, 'postController'), 3);
+          }
+          catch (PostNotFoundException $e) {
+            
           }
         }
       }
@@ -175,15 +187,6 @@ class Posts extends BaseObject {
 
   function isFinal() {
     global $PEANUT;
-    if ($PEANUT['templates']->template['name'] == 'post') {
-      if (!isset($this->post) AND isset($PEANUT['http']->params['p']) AND
-              ($post = $PEANUT['flatfiles']->getRow('posts', $PEANUT['http']->params['p'])) !== false) {
-        $this->post = $post;
-        $this->post['tags'] = $this->getTags($PEANUT['http']->params['p']);
-        $this->post['content'] = $this->addPostActions($PEANUT['http']->params['p']) . $this->post['content'];
-      }
-    }
-
     /**
      * @todo Rewrite the following codeblock
      */
@@ -683,7 +686,16 @@ class Posts extends BaseObject {
 
     $templateData = array();
 
-    $templateData['post'] = Post::getById($PEANUT['http']->path[1]);
+    if ($PEANUT['configuration']->get('fancyPostPermalinks') == 'on') {
+      $templateData['post'] = Post::getById($this->post);
+    }
+    else {
+      $templateData['post'] = Post::getById($PEANUT['http']->path[1]);
+    }
+    
+    if ($templateData['post']->path != $PEANUT['http']->path) {
+      $PEANUT['http']->redirectPath($templateData['post']->path);
+    }
     /**
      * Just testing...
      * @todo JSON interface/whatever...

@@ -4,6 +4,13 @@
  */
 
 class Post extends BaseModel {
+  
+  /**
+   * This is neccesary for inherited addToCache() method to properly.
+   * @var array
+   */
+  public static $cache = array();
+  
   protected $id;
   protected $name;
   protected $title;
@@ -36,21 +43,26 @@ class Post extends BaseModel {
 
   protected function _get_path() {
     global $PEANUT;
-    $permalink = $PEANUT['configuration']->get('postPermalink');
-    if (is_array($permalink)) {
-      $time = $this->date;
-      $replace = array('%name%'  => $this->name,
-                       '%id%'    => $this->id,
-                       '%year%'  => $PEANUT['i18n']->date('Y', $time),
-                       '%month%' => $PEANUT['i18n']->date('m', $time),
-                       '%day%'   => $PEANUT['i18n']->date('d', $time));
-      $search = array_keys($replace);
-      $replace = array_values($replace);
-      $path = array();
-      foreach ($permalink as $dir) {
-        $path[] = str_replace($search, $replace, $dir);
+    if ($PEANUT['configuration']->get('fancyPostPermalinks') == 'on') {
+      $permalink = $PEANUT['configuration']->get('postPermalink');
+      if (is_array($permalink)) {
+        $time = $this->date;
+        $replace = array('%name%'  => $this->name,
+                         '%id%'    => $this->id,
+                         '%year%'  => $PEANUT['i18n']->date('Y', $time),
+                         '%month%' => $PEANUT['i18n']->date('m', $time),
+                         '%day%'   => $PEANUT['i18n']->date('d', $time));
+        $search = array_keys($replace);
+        $replace = array_values($replace);
+        $path = array();
+        foreach ($permalink as $dir) {
+          $path[] = str_replace($search, $replace, $dir);
+        }
+        return $path;
       }
-      return $path;
+    }
+    else {
+      return array('posts', $this->id);
     }
   }
 
@@ -113,8 +125,14 @@ class Post extends BaseModel {
 
   public static function getById($id) {
     global $PEANUT;
+    if (isset(self::$cache[$id])) {
+      return self::$cache[$id];
+    }
     $obj = new self();
     $row = $PEANUT['flatfiles']->getRow('posts', $id);
+    if ($row == FALSE) {
+      throw new PostNotFoundException(tr('A post with id "%1" was not found.', $id));
+    }
     $obj->id = $id;
     foreach ($row as $column => $value) {
       $obj->$column = $value;
@@ -125,6 +143,9 @@ class Post extends BaseModel {
   public static function getByName($name) {
     global $PEANUT;
     $id = $PEANUT['flatfiles']->indexFind('posts', 'name', $name);
+    if ($id == FALSE) {
+      throw new PostNotFoundException(tr('A post with name "%1" was not found.', $name));
+    }
     return self::getById($id);
   }
 
@@ -200,3 +221,8 @@ class Post extends BaseModel {
   }
 
 }
+
+
+/* Exceptions */
+
+class PostNotFoundException extends Exception {}

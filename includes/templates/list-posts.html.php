@@ -6,11 +6,11 @@
 // Render the header
 $this->renderTemplate('header.html');
 
+$post = Post::getById(8);
+$post->addToCache();
+$post->title = 'From cache';
 ?>
 
-
-
-<p>Blog listing</p>
 
 <?php foreach ($posts as $post): ?>
 
