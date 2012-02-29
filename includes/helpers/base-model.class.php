@@ -1,7 +1,16 @@
 <?php
+
 abstract class BaseModel extends BaseObject implements ISelectable {
     
   public static $cache = array();
+  
+  protected function __construct() {
+    
+  }
+  
+  public static function create() {
+    
+  }
 
   public abstract function commit();
 
@@ -10,6 +19,7 @@ abstract class BaseModel extends BaseObject implements ISelectable {
   public function addToCache() {
     $this::$cache[$this->id] = $this;
   } 
+  
   
   public function json() {
     $array = array();

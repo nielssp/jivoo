@@ -11,7 +11,9 @@ $this->renderTemplate('header');
 
 <p>Published <?php echo $post->formatDate(); ?>
   - <?php echo $post->formatTime(); ?>
-<a href="<?php echo $PEANUT['http']->getLink(null, null, 'comment'); ?>">(<?php echo tr('Leave a comment'); ?>)</a>
+  <a href="<?php echo $PEANUT['http']->getLink(null, null, 'comment'); ?>">
+    (<?php echo tr('Leave a comment'); ?>)
+  </a>
 </p>
 
 <?php echo $post->content; ?>
@@ -29,7 +31,7 @@ foreach ($PEANUT['posts']->post['tags'] as $name => $tag) {
 
 <?php
 while ($comment = $PEANUT['posts']->listComments()):
-  ?>
+?>
   
   <div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
   <?php
@@ -49,7 +51,7 @@ while ($comment = $PEANUT['posts']->listComments()):
   <br/>
   <?php
   if ($comment['reply'] == true)
-    echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment" onclick="">Rely</a>';
+    echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment">Reply</a>';
   ?>
   </div>
   

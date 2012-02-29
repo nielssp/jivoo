@@ -72,10 +72,6 @@ class Post extends BaseModel {
   }
   /* PROPERTIES END */
 
-  private function __construct() {
-
-  }
-
   public static function create($title, $content, $state = 'unpublished', $name = null, $tags = array(), $commenting = null) {
     global $PEANUT;
     $new = new Post();

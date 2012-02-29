@@ -32,6 +32,8 @@ class Posts extends BaseObject {
 
     // Include models
     include(PATH . INC . 'models/post.class.php');
+    include(PATH . INC . 'models/tag.class.php');
+    include(PATH . INC . 'models/comment.class.php');
 
     //Define templates
     $PEANUT['templates']->defineTemplate('list-posts', array($this, 'getPath'), array($this, 'getTitle'));
