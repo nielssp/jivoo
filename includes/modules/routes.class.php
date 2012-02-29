@@ -76,8 +76,14 @@ class Routes {
   public function callController() {
     global $PEANUT;
     $this->mapRoute();
-    if (!is_null($this->selectedController))
+    if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
       call_user_func($this->selectedController, $PEANUT['http']->params, 'html');
+    }
+    else {
+      /** @todo Don't leave this in .... */
+      $PEANUT['errors']->fatal('You are not supposed  to see this',
+      						   'Please contact the developer and tell him, that he is and idiot...');
+    }
   }
 
   public function notFoundController($parameters = array(), $contentType = 'html') {
