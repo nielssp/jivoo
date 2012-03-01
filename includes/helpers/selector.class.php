@@ -15,10 +15,18 @@ class Selector extends BaseObject {
   protected $limit;
   protected $where;
   protected $offset;
-  protected $relations;
+  protected $relation;
 
   /* Properties begin */
-  protected $_getters = array('orderBy', 'descending', 'limit', 'where', 'offset', 'relations');
+  protected $_getters = array(
+    'orderBy',
+    'descending',
+    'limit',
+    'where',
+    'offset',
+    'relation'
+  );
+  
   protected $_setters = array();
 
   private function _get_ascending() {
@@ -30,7 +38,7 @@ class Selector extends BaseObject {
     $this->limit = -1;
     $this->offset = 0;
     $this->where = array();
-    $this->relations = array();
+    $this->relation = null;
     $this->orderBy = 'id';
     $this->descending = false;
   }
@@ -55,7 +63,9 @@ class Selector extends BaseObject {
   }
 
   public function relation($table, $id) {
-    $this->relations[$table][] = $id;
+    $this->relation = array();
+    $this->relation['table'] = $table;
+    $this->relation['id'] = $id;
     return $this;
   }
 
@@ -104,7 +114,20 @@ class SelectHelper extends BaseObject {
     if ($selector->orderBy != 'id') {
       $index = $PEANUT['flatfiles']->getIndex($this->tableName, $selector->orderBy);
     }
-
+    if (is_array($selector->relation)) {
+      $relations = $PEANUT['flatfiles']->getRelations(
+        $this->tableName,
+      	$selector->relation['table'],
+        null,
+        $selector->relation['id']
+      );
+      foreach ($index as $id => $column) {
+        if (!in_array($id, $relations)) {
+          unset($index[$id]);          
+        }
+      }
+    }
+    
     if ($selector->descending) {
       arsort($index);
     }
@@ -114,13 +137,13 @@ class SelectHelper extends BaseObject {
     reset($index);
     $all = array();
     $i = 0;
-    foreach ($index as $id => $date) {
+    foreach ($index as $id => $something) {
       if ($i < $selector->offset) {
         $i++;
         continue;
       }
       if ($selector->limit != -1
-      AND ($i - $selector->offset) >= $selector->limit) {
+          AND ($i - $selector->offset) >= $selector->limit) {
         break;
       }
       $get = call_user_func(array($this->className, 'getById'), $id);

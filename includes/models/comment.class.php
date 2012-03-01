@@ -32,8 +32,14 @@ class Comment extends BaseModel {
     
   }
   
-  public static function select(Selector $selector = NULL) {
+  public static function create() {
     
+  }
+  
+  public static function select(Selector $selector = NULL) {
+    $selectHelper = new SelectHelper(get_class(), 'comments');
+    $selectHelper->defaultSelector->orderBy('date')->asc();
+    return $selectHelper->select($selector);
   }
   
   public function commit() {

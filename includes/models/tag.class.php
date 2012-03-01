@@ -14,6 +14,10 @@ class Tag extends BaseModel {
   protected $tag;
 
   protected $_getters = array('id', 'name', 'tag');
+  
+  protected function _get_link() {
+    return '#' . $this->name;
+  }
 
   public static function getById($id) {
     global $PEANUT;
@@ -55,7 +59,6 @@ class Tag extends BaseModel {
       $new->name = $name;
       $new->tag = $tag;
       return $new;
-//      $PEANUT['flatfiles']->addRelation('tags', 'posts', $tagId, $id);
     }
   }
 
@@ -66,11 +69,12 @@ class Tag extends BaseModel {
   }
 
   public function commit() {
-
+    // Not available
   }
 
   public function delete() {
-
+    global $PEANUT;
+    $PEANUT['flatfiles']->removeRow('tags', $this->id);
   }
 }
 

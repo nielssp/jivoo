@@ -7,11 +7,6 @@ abstract class BaseModel extends BaseObject implements ISelectable {
   protected function __construct() {
     
   }
-  
-  public static function create() {
-    
-  }
-
   public abstract function commit();
 
   public abstract function delete();

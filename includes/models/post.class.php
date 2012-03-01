@@ -11,7 +11,7 @@ class Post extends BaseModel {
    */
   public static $cache = array();
 
-  private $tags = array();
+  private $tags = NULL;
 
   protected $id;
   protected $name;
@@ -74,12 +74,15 @@ class Post extends BaseModel {
   }
 
   protected function _get_tags() {
-    return Tag::select(
-      Selector::create()
-        ->relation('posts', $this->id)
-        ->orderBy('name')
-        ->desc()
-    );
+    if (!is_array($this->tags)) {
+      $this->tags = Tag::select(
+        Selector::create()
+          ->relation('posts', $this->id)
+          ->orderBy('name')
+          ->desc()
+      );
+    }
+    return $this->tags;
   }
   /* PROPERTIES END */
 
@@ -129,16 +132,7 @@ class Post extends BaseModel {
     );
     $PEANUT['flatfiles']->insertRow('posts', $id, $post);
     foreach ($tags as $tag) {
-      $tagName = strtolower(preg_replace('/[ \-]/', '-', preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $tag)));
-      $tagId = $PEANUT['flatfiles']->indexFind('tags', 'name', $tagName);
-      if ($PEANUT['flatfiles']->getRow('tags', $tagId) !== false) {
-        $PEANUT['flatfiles']->addRelation('tags', 'posts', $tagId, $id);
-      }
-      else {
-        $tagId = $PEANUT['flatfiles']->incrementId('tags');
-        $PEANUT['flatfiles']->insertRow('tags', $tagId, array('name' => $tagName, 'tag' => $tag));
-        $PEANUT['flatfiles']->addRelation('tags', 'posts', $tagId, $id);
-      }
+      $new->addTag(Tag::create($tag));
     }
     return $new;
   }
@@ -167,6 +161,16 @@ class Post extends BaseModel {
       throw new PostNotFoundException(tr('A post with name "%1" was not found.', $name));
     }
     return self::getById($id);
+  }
+  
+  public function addTag(Tag $tag) {
+    global $PEANUT;
+    $PEANUT['flatfiles']->addRelation('tags', 'posts', $tag->id, $this->id);
+  }
+  
+  public function removeTag(Tag $tag) {
+    global $PEANUT;
+    $PEANUT['flatfiles']->removeRelation('tags', 'posts', $tag->id, $this->id);
   }
 
   public static function select(Selector $selector = null) {

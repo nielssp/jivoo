@@ -6,7 +6,6 @@
 // Render the header
 $this->renderTemplate('header');
 
-//Tag::create('Test');
 ?>
 
 <h2><?php echo $post->title; ?></h2>
@@ -20,12 +19,13 @@ $this->renderTemplate('header');
 
 <?php echo $post->content; ?>
 
-
+<?php if (count($post->tags) > 0): ?>
 <h3>Tags</h3>
 <?php
 foreach ($post->tags as $tag) {
-  echo '<a href="#' . $tag->name . '">' . $tag->tag . '</a> ';
+  echo '<a href="' . $tag->link . '">' . $tag->tag . '</a> ';
 }
+endif;
 goto a;
 ?>
 
