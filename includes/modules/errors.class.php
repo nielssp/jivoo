@@ -58,7 +58,7 @@ class Errors extends BaseObject {
     switch ($type) {
       case E_USER_ERROR:
       case E_ERROR:
-        throw new ErrorException($type, $message, $file, $line);
+        throw new ErrorException($message, 0, $type, $file, $line);
         break;
 
       case E_USER_WARNING:
@@ -75,7 +75,7 @@ class Errors extends BaseObject {
         break;
 
       default:
-        throw new PhpErrorException($type, $message, $file, $line);
+        throw new ErrorException($message, 0, $type, $file, $line);
         break;
 
     }

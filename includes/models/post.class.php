@@ -4,13 +4,15 @@
  */
 
 class Post extends BaseModel {
-  
+
   /**
-   * This is neccesary for inherited addToCache() method to properly.
+   * This is neccesary for inherited addToCache() method to work properly.
    * @var array
    */
   public static $cache = array();
-  
+
+  private $tags = array();
+
   protected $id;
   protected $name;
   protected $title;
@@ -70,22 +72,44 @@ class Post extends BaseModel {
     global $PEANUT;
     return $PEANUT['http']->getLink($this->path);
   }
+
+  protected function _get_tags() {
+    return Tag::select(
+      Selector::create()
+        ->relation('posts', $this->id)
+        ->orderBy('name')
+        ->desc()
+    );
+  }
   /* PROPERTIES END */
 
-  public static function create($title, $content, $state = 'unpublished', $name = null, $tags = array(), $commenting = null) {
+  public static function create($title, $content, $state = 'unpublished',
+                                $name = null, $tags = array(),
+                                $commenting = null) {
     global $PEANUT;
     $new = new Post();
     $date = time();
     $id = $PEANUT['flatfiles']->incrementId('posts');
-    if ($id === false)
+    if ($id === false) {
       return false;
-    if (!isset($name)) // Remove all non-alphanumeric characters, replace whitespaces with dashes and convert to lowercase
-      $name = strtolower(preg_replace('/[ \-]/', '-', preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $title)));
-    if ($PEANUT['configuration']->get('commentingDefault') == 'on' AND (!isset($commenting) OR $commenting == 'off')
-        OR (isset($commenting) AND $commenting == 'on'))
+    }
+    if (!isset($name)) { // Remove all non-alphanumeric characters, replace whitespaces with dashes and convert to lowercase
+      $name = strtolower(
+        preg_replace(
+          '/[ \-]/',
+          '-',
+          preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $title)
+        )
+      );
+    }
+    if ($PEANUT['configuration']->get('commentingDefault') == 'on'
+        AND (!isset($commenting) OR $commenting == 'off')
+        OR (isset($commenting) AND $commenting == 'on')) {
       $commenting = 'on';
-    else
+    }
+    else {
       $commenting = 'off';
+    }
     $new->id = $id;
     $new->name = $name;
     $new->title = $title;
@@ -95,13 +119,13 @@ class Post extends BaseModel {
     $new->comments = 0;
     $new->content = $content;
     $post = array(
-        		'name' => $name,
-                'title' => $title,
-        		'date' => $date,
-        		'state' => $state,
-                'commenting' => $commenting,
-        		'comments' => 0,
-                'content' => $content
+      'name' => $name,
+      'title' => $title,
+      'date' => $date,
+      'state' => $state,
+      'commenting' => $commenting,
+      'comments' => 0,
+      'content' => $content
     );
     $PEANUT['flatfiles']->insertRow('posts', $id, $post);
     foreach ($tags as $tag) {
@@ -146,47 +170,9 @@ class Post extends BaseModel {
   }
 
   public static function select(Selector $selector = null) {
-    global $PEANUT;
-    if (!isset($selector)) {
-      $selector = Selector::create()->orderBy('date')->desc();
-    }
-    $index = $PEANUT['flatfiles']->getIndex('posts', $selector->orderBy);
-    if ($index === FALSE) {
-      throw new Exception("Can't order by '" . $selector->orderBy . "' since no index exists for that column.");
-    }
-    if ($selector->descending) {
-      arsort($index);
-    }
-    else {
-      asort($index);
-    }
-    reset($index);
-    $all = array();
-    $i = 0;
-    foreach ($index as $id => $date) {
-      if ($i < $selector->offset) {
-        $i++;
-        continue;
-      }
-      if ($selector->limit != -1
-          AND ($i - $selector->offset) >= $selector->limit) {
-        break;
-      }
-      $get = self::getById($id);
-      $add = true;
-      foreach ($selector->where as $column => $value) {
-        if ($get->$column != $value) {
-          $add = false;
-          break;
-        }
-      }
-      if ($add) {
-        $all[] = $get;
-        $i++;
-      }
-    }
-    reset($all);
-    return $all;
+    $selectHelper = new SelectHelper(get_class(), 'posts');
+    $selectHelper->defaultSelector->orderBy('date')->desc();
+    return $selectHelper->select($selector);
   }
 
   public function formatTime($format = null) {

@@ -1,10 +1,12 @@
 <?php
-/* 
+/*
  * Template for blog post
  */
 
 // Render the header
 $this->renderTemplate('header');
+
+//Tag::create('Test');
 ?>
 
 <h2><?php echo $post->title; ?></h2>
@@ -21,10 +23,10 @@ $this->renderTemplate('header');
 
 <h3>Tags</h3>
 <?php
-goto a;
-foreach ($PEANUT['posts']->post['tags'] as $name => $tag) {
-  echo '<a href="#' . $name . '">' . $tag . '</a> ';
+foreach ($post->tags as $tag) {
+  echo '<a href="#' . $tag->name . '">' . $tag->tag . '</a> ';
 }
+goto a;
 ?>
 
 <h3>Comments</h3>
@@ -32,7 +34,7 @@ foreach ($PEANUT['posts']->post['tags'] as $name => $tag) {
 <?php
 while ($comment = $PEANUT['posts']->listComments()):
 ?>
-  
+
   <div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
   <?php
   /** @todo fix this somehow? */
@@ -46,7 +48,7 @@ while ($comment = $PEANUT['posts']->listComments()):
   ?> on <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $comment['date']); ?> -
   <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $comment['date']); ?>
   </p>
-  
+
   <?php echo $comment['content']; ?>
   <br/>
   <?php
@@ -54,7 +56,7 @@ while ($comment = $PEANUT['posts']->listComments()):
     echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment">Reply</a>';
   ?>
   </div>
-  
+
   <?php
 endwhile;
 ?>

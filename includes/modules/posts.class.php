@@ -143,7 +143,7 @@ class Posts extends BaseObject {
                 }
               }
               catch (PostNotFoundException $e) {
-                
+
               }
             }
           }
@@ -180,7 +180,7 @@ class Posts extends BaseObject {
             $PEANUT['routes']->setRoute(array($this, 'postController'), 3);
           }
           catch (PostNotFoundException $e) {
-            
+
           }
         }
       }
@@ -694,10 +694,13 @@ class Posts extends BaseObject {
     else {
       $templateData['post'] = Post::getById($PEANUT['http']->path[1]);
     }
-    
+
     if ($templateData['post']->path != $PEANUT['http']->path) {
       $PEANUT['http']->redirectPath($templateData['post']->path);
     }
+
+    $templateData['comments'] = array();
+
     /**
      * Just testing...
      * @todo JSON interface/whatever...

@@ -80,7 +80,7 @@ class Routes {
       call_user_func($this->selectedController, $PEANUT['http']->params, 'html');
     }
     else {
-      /** @todo Don't leave this in .... */
+      /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */
       $PEANUT['errors']->fatal('You are not supposed  to see this',
       						   'Please contact the developer and tell him, that he is and idiot...');
     }
