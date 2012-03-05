@@ -126,6 +126,11 @@ $post = Post::create(array(
   'content' => 'Hello, World'
 ));
 
+// ?
+Post::create()
+  ->setTitle('Hello')
+  ->setContent('Hello, World')
+  ->save();
 
 abstract class Super {
   protected $data = 'one thing';
