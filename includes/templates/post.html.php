@@ -5,7 +5,6 @@
 
 // Render the header
 $this->renderTemplate('header');
-
 ?>
 
 <h2><?php echo $post->title; ?></h2>
@@ -35,29 +34,29 @@ goto a;
 while ($comment = $PEANUT['posts']->listComments()):
 ?>
 
-  <div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
-  <?php
-  /** @todo fix this somehow? */
-  ?>
-  <a name="comment-<?php echo $comment['id']; ?>"></a>
-  <p>Published by <?php
-  if (empty($comment['website']))
-    echo $comment['author'];
-  else
-    echo '<a href="' . $comment['website'] . '">' . $comment['author'] . '</a>';
-  ?> on <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $comment['date']); ?> -
-  <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $comment['date']); ?>
-  </p>
+<div style="border-left:1px solid #000; padding-left:10px; margin-left: <?php echo (20*$comment['level']); ?>px">
+<?php
+/** @todo fix this somehow? */
+?>
+<a name="comment-<?php echo $comment['id']; ?>"></a>
+<p>Published by <?php
+if (empty($comment['website']))
+  echo $comment['author'];
+else
+  echo '<a href="' . $comment['website'] . '">' . $comment['author'] . '</a>';
+?> on <?php echo $PEANUT['i18n']->date($PEANUT['i18n']->dateFormat(), $comment['date']); ?> -
+<?php echo $PEANUT['i18n']->date($PEANUT['i18n']->timeFormat(), $comment['date']); ?>
+</p>
 
-  <?php echo $comment['content']; ?>
-  <br/>
-  <?php
-  if ($comment['reply'] == true)
-    echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment">Reply</a>';
-  ?>
-  </div>
+<?php echo $comment['content']; ?>
+<br/>
+<?php
+if ($comment['reply'] == true)
+  echo '<a href="' . $PEANUT['http']->getLink(null, array('reply-to' => $comment['id'])) . '#comment">Reply</a>';
+?>
+</div>
 
-  <?php
+<?php
 endwhile;
 ?>
 <a name="comment"></a>
