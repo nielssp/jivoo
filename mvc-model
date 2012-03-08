@@ -21,3 +21,10 @@ Fatal errors: For user
 
 Exceptions: For developers
 Fatal errors: For userss
+
+
+Current goals:
+
+Make modules throw exceptions (when an error is caused by the developer)
+Implement a DB handler (MySQL should be good for now)
+Implement ActiveRecord for models 
