@@ -144,6 +144,36 @@ function prioritySorter($a, $b) {
   return 0;
 }
 
+function classFileName($className) {
+  $fileName = preg_replace('/([A-Z])/', '-$1', lcfirst($className));
+  return strtolower($fileName);
+}
+
+function fileClassName($fileName) {
+//  $className = preg_replace('/-([a-z])/e', strtoupper('$1'), ucfirst($fileName));
+  $className = preg_replace_callback(
+  	'/-([a-z])/',
+  	create_function('$matches','return strtolower($matches[0]);'),
+  	$fileName
+  );
+  return $className;
+}
+
+function __autoload($className) {
+  if ($className[0] == 'I') {
+    include(PATH . APP . INTERFACES . classFileName(substr($className, 1)) . '.interface.php');
+  }
+  else {
+    $fileName = classFileName($className);
+    if (file_exists(PATH . APP . CLASSES . $fileName . '.class.php')) {
+      include(PATH . APP . CLASSES . $fileName . '.class.php');
+    }
+    else {
+      include(PATH . APP . MODULES . $fileName . '.class.php');
+    }
+  }
+}
+
 // require_once(PATH . INC . 'helpers/base-object.class.php');
 
 // require_once(PATH . INC . 'helpers/selector.class.php');

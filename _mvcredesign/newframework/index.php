@@ -17,7 +17,7 @@ define('APP', 'app/');
 
 define('PUB', '../../public/');
 
-define('DEBUG', true);
+define('DEBUG', FALSE);
 
 require_once(PATH . APP . 'core.php');
 

@@ -1,18 +1,19 @@
 <?php
 
-class Errors {
-  
+class Errors implements IModule {
+
   public function __construct() {
     set_exception_handler(array($this, 'handleException'));
+    // regular error handler should be implemented aswell
   }
-  
-  public static function load(Core $core) {
-    return new Errors();
+
+  public static function getDependencies() {
+    return array();
   }
-  
+
   public function handleException(Exception $exception) {
     if (!DEBUG) {
-      $this->fatal(tr('Fatal error'), tr('An uncaught exception was thrown.'));
+      self::fatal(tr('Fatal error'), tr('An uncaught exception was thrown.'));
     }
     $file = $exception->getFile();
     $line = $exception->getLine();
@@ -20,7 +21,7 @@ class Errors {
     /* This should (!!) be a template/view instead..
      * Or should it? (What if the template is missing?) */
     $body = '<h2>' . $message . '</h2>';
-  
+
     $body .= '<p>'
     . tr('An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
                   '<strong>' . get_class($exception) . '</strong>',
@@ -42,7 +43,7 @@ class Errors {
     . '</th><th>'
     . tr('Arguments')
     . '</th></tr></thead><tbody>';
-  
+
     foreach ( $exception->getTrace() as $i => $trace ) {
       $body .= '<tr class="' . (($i % 2 == 0) ? 'even' : 'odd') . '">'
       . '<td>' . (isset($trace['file']) ? basename($trace['file']) : '') .'</td>'
@@ -62,9 +63,9 @@ class Errors {
       $body .= '</td></tr>';
     }
     $body .= '</tbody></table>';
-    $this->exceptionLayout(tr('Uncaught exception'), $body);
+    self::exceptionLayout(tr('Uncaught exception'), $body);
   }
-  
+
   /**
   * Outputs an error page and kills PeanutCMS
   *
@@ -73,9 +74,9 @@ class Errors {
   * @param string $more A longer HTML-formatted (should use paragraphs <p></p>) explanation of the error
   * @return void
   */
-  public function fatal($title, $message, $more = NULL) {
+  public static function fatal($title, $message, $more = NULL) {
     $body = '<h2>' . $message . '</h2>';
-  
+
     if (!isset($more)) {
       $body .= '<p>'
       . tr('A fatal error has prevented further execution of this request.')
@@ -85,7 +86,7 @@ class Errors {
       $body .= $more;
     }
     $body .= '<h2>' . tr('What now?') . '</h2>';
-  
+
     $body .= '<p>'
     . tr('As a <strong>user</strong> you should contact the owner of this website and notify them of this error.')
     . '</p><p>'
@@ -93,55 +94,55 @@ class Errors {
     . '</p><p>'
     . tr('As a <strong>developer</strong> you should turn on debugging to get more information about this error.')
     . '</p>';
-  
-    $this->exceptionLayout($title, $body);
+
+    self::exceptionLayout($title, $body);
   }
-  
-  private function exceptionLayout($title, $body) {
+
+  private static function exceptionLayout($title, $body) {
     ob_start();
     echo '<!DOCTYPE html>
       <html>
         <head>
           <title>' . $title . '</title>
-  
+
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <link rel="stylesheet" href="' . WEBPATH . PUB . 'css/backend.css" type="text/css" />
           <link rel="stylesheet" href="' . WEBPATH . PUB . 'css/exception.css" type="text/css" />
-  
+
         </head>
         <body>
-  
+
           <div id="header">
             <div id="bar">
               <div class="right">PeanutCMS</div>
             </div>
             <div id="shadow"></div>
           </div>
-  
+
           <div id="content">
             <div class="section">
               <div class="container">
                 <div id="sad">
-                	:-(
+           			:-(
                 </div>
                 <h1>' . $title . '</h1>
-  
+
                 <div class="clearl"></div>
-  
+
                 ' . $body . '
-  
+
               </div>
             </div>
           </div>
-  
+
           <div class="footer" id="poweredby">
             Powered by <a href="#">PeanutCMS 0.1</a>
           </div>
-  
+
           <div class="footer" id="links">
             <a href="#">About</a>
           </div>
-  
+
         </body>
       </html>';
     $output = ob_get_clean();

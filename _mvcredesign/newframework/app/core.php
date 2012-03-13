@@ -50,6 +50,10 @@ if (!defined('LANGUAGE')) {
   define('LANGUAGE', 'en');
 }
 
+if (!defined('CFG')) {
+  define('CFG', 'cfg/');
+}
+
 /** Directory which contains the PeanutCMS application */
 if (!defined('APP')) {
   define('APP', 'app/');
@@ -57,6 +61,10 @@ if (!defined('APP')) {
 
 if (!defined('CLASSES')) {
   define('CLASSES', 'classes/');
+}
+
+if (!defined('INTERFACES')) {
+  define('INTERFACES', 'interfaces/');
 }
 
 if (!defined('HELPERS')) {
@@ -80,7 +88,7 @@ if (!defined('PHP_VERSION_ID')) {
 
 if (PHP_VERSION_ID < 50200) {
   echo 'Sorry, but PeanutCMS does not support PHP versions below 5.2.0. You are currently using version ' . PHP_VERSION .'.';
-  echo 'You should contact your webhost.'; 
+  echo 'You should contact your webhost.';
   exit;
 }
 
@@ -115,7 +123,7 @@ if (!defined('TIMEZONE_OFFSET') AND !defined('DATETIMEZONE_AVAILABLE')) {
 }
 
 // Classes that has to be initialized, the order matters
-$modules = array('errors', 'hooks', 'functions', 'filters', 'i18n',
+$modules = array('errors', 'i18n',
     'configuration', 'http', 'actions', 'routes', 'templates',
     'theme', 'user', 'backend', 'posts', 'pages', 'render');
 
@@ -128,11 +136,27 @@ $modules = array('errors', 'hooks', 'functions', 'filters', 'i18n',
 /** Useful functions and aliases that are not part of the PEANUT-array */
 require_once(PATH . APP . HELPERS . 'core-helpers.php');
 
-require_once(PATH . APP . CLASSES . 'core.class.php');
-
-$core = new Core();
+$core = new Core(PATH . CFG . 'blacklist');
 
 foreach ($modules as $module) {
-  $core->loadModule($module);
+  try {
+    $core->loadModule($module);
+  }
+  catch (ModuleBlacklistedException $e) {
+    // The user has blacklisted this module, continue loading other modules
+    continue;
+  }
+  catch (ModuleNotFoundException $e) {
+    if (class_exists('Errors')) {
+      Errors::fatal(
+      	tr('Module not found'),
+        $e->getMessage(),
+        /** @todo Add useful information, might even be an idea to automatically fix the problem (depending on module) */
+        '<p>!!Information about how to fix this problem (as a webmaster) here!!</p>'
+         . '<h2>Solution 1: Blacklist missing module<h2>'
+         . '<h2>Solution 2: Reinstall "' . $module . '"<h2>'
+      );
+    }
+  }
 }
 
