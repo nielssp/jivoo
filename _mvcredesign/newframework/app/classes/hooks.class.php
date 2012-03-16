@@ -43,7 +43,7 @@ final class Hooks {
    */
   public static function run($hook) {
     if (!isset(self::$hooks[$hook]) OR !is_array(self::$hooks[$hook])) {
-      return false;
+      return;
     }
     $numArgs = func_num_args();
     $args = array();
@@ -54,7 +54,6 @@ final class Hooks {
     foreach (self::$hooks[$hook] as $function) {
       call_user_func_array($function, $args);
     }
-    return true;
   }
 }
 
