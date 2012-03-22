@@ -134,7 +134,7 @@ $modules = array('errors', 'i18n',
 //   exit(PATH . INC . 'helpers/core-helpers.php was not found.');
 
 /** Useful functions and aliases that are not part of the PEANUT-array */
-require_once(PATH . APP . HELPERS . 'core-helpers.php');
+require_once(PATH . APP . HELPERS . 'essentials.php');
 
 $core = new Core(PATH . CFG . 'blacklist');
 
@@ -153,8 +153,10 @@ foreach ($modules as $module) {
         $e->getMessage(),
         /** @todo Add useful information, might even be an idea to automatically fix the problem (depending on module) */
         '<p>!!Information about how to fix this problem (as a webmaster) here!!</p>'
-         . '<h2>Solution 1: Blacklist missing module<h2>'
-         . '<h2>Solution 2: Reinstall "' . $module . '"<h2>'
+         . '<h2>Solution 1: Blacklist "' . $module . '" module</h2>'
+         . '<p>Open the file ' . CFG . 'blacklist and add "' . $module . '" to a'
+         . 'new line. This will prevent PeanutCMS from attempting to load the module.</p>'
+         . '<h2>Solution 2: Reinstall "' . $module . '"</h2>'
       );
     }
   }

@@ -144,6 +144,24 @@ function prioritySorter($a, $b) {
   return 0;
 }
 
+/**
+* Check if a string is a serialized array (!)
+*
+* This function will only check
+*
+* @param string $str String
+* @return bool True if string is serialized
+*/
+function isSerialized($str){
+  if (!is_string($str))
+  return false;
+  if (trim($str) == "")
+  return false;
+  if (preg_match('/^(i|s|a|o|d):(.*);/si', $str) == 0)
+  return false;
+  return true;
+}
+
 function classFileName($className) {
   $fileName = preg_replace('/([A-Z])/', '-$1', lcfirst($className));
   return strtolower($fileName);

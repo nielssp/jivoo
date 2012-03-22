@@ -1,14 +1,74 @@
 <?php
 
 class Errors implements IModule {
+  
+  private $errorLog;
 
   public function __construct() {
+    set_error_handler(array($this, 'handleError'));
     set_exception_handler(array($this, 'handleException'));
-    // regular error handler should be implemented aswell
   }
 
   public static function getDependencies() {
     return array();
+  }
+  
+  /**
+  * Custom error handler replacing default PHP error handler
+  *
+  * @param int $type Error level
+  * @param string $message Error message
+  * @param string $file Filename of file in which error occured
+  * @param int $line Line number on which error occured
+  * @return void
+  */
+  public function handleError($type, $message, $file, $line) {
+    switch ($type) {
+      case E_USER_ERROR:
+      case E_ERROR:
+        throw new ErrorException($message, 0, $type, $file, $line);
+        break;
+  
+      case E_USER_WARNING:
+      case E_WARNING:
+        $this->log('warning', $message, $file, $line, $type);
+        break;
+  
+      case E_PARSE:
+      case E_NOTICE:
+      case E_USER_NOTICE:
+      case E_STRICT:
+      case E_DEPRECATED:
+        $this->log('notice', $message, $file, $line, $type);
+        break;
+  
+      default:
+        throw new ErrorException($message, 0, $type, $file, $line);
+      break;
+  
+    }
+  }
+  
+  /**
+  * Log a non-fatal error for debugging purposes
+  *
+  * Errors are saved in the errorLog-array for later use
+  *
+  * @param string $type Error type, e.g. 'error', 'warning' or 'notice'
+  * @param string $message Error message
+  * @param string $file Filename of file in which error occured
+  * @param int $line Line number on which error occured
+  * @param int $phpType PHP error level
+  * @return void
+  */
+  public function log($type, $message, $file = null, $line = null, $phpType = null) {
+    $this->errorLog[] = array(
+        'type' => $type,
+        'phpType' => $phpType,
+        'message' => $message,
+        'file' => $file,
+        'line' => $line
+    );
   }
 
   public function handleException(Exception $exception) {
