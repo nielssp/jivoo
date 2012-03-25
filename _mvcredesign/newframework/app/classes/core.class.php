@@ -28,10 +28,10 @@ class Core {
       throw new ModuleBlacklistedException(tr('The "%1" module is blacklisted', $module));
     }
     if (!isset($this->modules[$module])) {
-      if (!file_exists(PATH . APP . MODULES . $module . '.class.php')) {
+      if (!file_exists(p(MODULES . $module . '.class.php'))) {
         throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
       }
-      require_once(PATH . APP . MODULES . $module . '.class.php');
+      require_once(p(MODULES . $module . '.class.php'));
       $className = fileClassName($module);
       if (!class_exists($className)) {
         throw new ModuleInvalidException(tr('The "%1" module does not have a class', $module));

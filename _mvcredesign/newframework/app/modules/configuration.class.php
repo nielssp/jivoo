@@ -3,15 +3,15 @@
 class Configuration implements IModule {
 
   private $errors = NULL;
-  
+
   private $data = array();
-  
+
   private $file;
 
   public function __construct(Errors $errors, $cfgFile = NULL) {
     $this->errors = $errors;
     if (!isset($cfgFile)) {
-      $cfgFile = PATH . CFG . 'config.cfg.php';
+      $cfgFile = p(CFG . 'config.cfg.php');
     }
     $this->file = $cfgFile;
     if (!is_readable($this->file)) {
@@ -34,7 +34,7 @@ class Configuration implements IModule {
   public static function getDependencies() {
     return array('errors');
   }
-  
+
   /**
    * Update a configuration key
    *

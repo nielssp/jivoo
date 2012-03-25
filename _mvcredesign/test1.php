@@ -32,7 +32,7 @@ function get_called_class2() {
   if ($matches[1] == 'self' OR $matches[1] == 'parent') {
     $line = $call['line'] - 1;
     while ($line > 0 && strpos($lines[$line], 'class') === false) {
-      $line--;                   
+      $line--;
     }
     preg_match('/class[\s]+(.+?)[\s]+/si', $lines[$line], $matches);
   }
@@ -74,7 +74,7 @@ abstract class ActiveRecord {
       $this->data[$field] = NULL;
     }
   }
-  
+
   public static function create($data = array()) {
     $class = get_called_class2();
     $new = new $class();
@@ -110,7 +110,7 @@ abstract class ActiveRecord {
 ActiveRecord::addModel('Post', 'posts');
 
 class Post extends ActiveRecord {
-  
+
 }
 class Comment extends ActiveRecord {
   public static function create($array) {

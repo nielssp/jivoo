@@ -1,8 +1,10 @@
 <?php
 
 class Errors implements IModule {
-  
+
   private $errorLog;
+
+  private $notifications;
 
   public function __construct() {
     set_error_handler(array($this, 'handleError'));
@@ -12,7 +14,7 @@ class Errors implements IModule {
   public static function getDependencies() {
     return array();
   }
-  
+
   /**
   * Custom error handler replacing default PHP error handler
   *
@@ -28,12 +30,12 @@ class Errors implements IModule {
       case E_ERROR:
         throw new ErrorException($message, 0, $type, $file, $line);
         break;
-  
+
       case E_USER_WARNING:
       case E_WARNING:
         $this->log('warning', $message, $file, $line, $type);
         break;
-  
+
       case E_PARSE:
       case E_NOTICE:
       case E_USER_NOTICE:
@@ -41,14 +43,14 @@ class Errors implements IModule {
       case E_DEPRECATED:
         $this->log('notice', $message, $file, $line, $type);
         break;
-  
+
       default:
         throw new ErrorException($message, 0, $type, $file, $line);
       break;
-  
+
     }
   }
-  
+
   /**
   * Log a non-fatal error for debugging purposes
   *
@@ -69,6 +71,44 @@ class Errors implements IModule {
         'file' => $file,
         'line' => $line
     );
+  }
+
+  /**
+  * Create a notification for the user
+  *
+  * @param string $type Notification type, e.g. 'error', 'warning' or 'notice'
+  * @param string $message Notification message
+  * @param bool $global Is this notification global?
+  * @param string $uid Unique identifier
+  * @param string $readMore A link to a page where additional information about the error can be found (e.g. the manual)
+  * @return void
+  */
+  public function notification($type, $message, $global = true, $uid = null, $readMore = '') {
+    if (isset($_SESSION[SESSION_PREFIX . 'backend_notifications'])
+        AND is_array($_SESSION[SESSION_PREFIX . 'backend_notifications'])) {
+      $notifications = $_SESSION[SESSION_PREFIX . 'backend_notifications'];
+    }
+    else {
+      $notifications = array();
+    }
+    if (!is_array($notifications[$type])) {
+      $notifications[$type] = array();
+    }
+    if (isset($uid)) {
+      $notifications[$type][$uid] = array(
+        'message' => $message,
+        'global' => $global,
+        'readMore' => $readMore
+      );
+    }
+    else {
+      $notifications[$type][] = array(
+        'message' => $message,
+        'global' => $global,
+        'readMore' => $readMore
+      );
+    }
+    $_SESSION[SESSION_PREFIX . 'backend_notifications'] = $notifications;
   }
 
   public function handleException(Exception $exception) {
@@ -166,8 +206,8 @@ class Errors implements IModule {
           <title>' . $title . '</title>
 
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <link rel="stylesheet" href="' . WEBPATH . PUB . 'css/backend.css" type="text/css" />
-          <link rel="stylesheet" href="' . WEBPATH . PUB . 'css/exception.css" type="text/css" />
+          <link rel="stylesheet" href="' . w(PUB . 'css/backend.css') . '" type="text/css" />
+          <link rel="stylesheet" href="' . w(PUB . 'css/exception.css') . '" type="text/css" />
 
         </head>
         <body>

@@ -5,7 +5,13 @@
  * Functions and aliases to make things easier
  *
  * @package PeanutCMS
+ * @since 0.2.0
  */
+
+/** The PeanutCMS essentials has been included */
+define('PEANUTCMS', TRUE);
+
+require_once('constants.php');
 
 /**
  * Translate function alias
@@ -177,25 +183,39 @@ function fileClassName($fileName) {
   return $className;
 }
 
-function __autoload($className) {
-  if ($className[0] == 'I') {
-    include(PATH . APP . INTERFACES . classFileName(substr($className, 1)) . '.interface.php');
+function p($relative) {
+  if ($relative[0] == '/') {
+    return $relative;
   }
   else {
-    $fileName = classFileName($className);
-    if (file_exists(PATH . APP . CLASSES . $fileName . '.class.php')) {
-      include(PATH . APP . CLASSES . $fileName . '.class.php');
-    }
-    else {
-      include(PATH . APP . MODULES . $fileName . '.class.php');
-    }
+    return PATH . $relative;
   }
 }
 
-// require_once(PATH . INC . 'helpers/base-object.class.php');
+function w($relative) {
+  if ($relative[0] == '/') {
+    return str_replace(
+      rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/'),
+      '',
+      $relative
+    );
+  }
+  else {
+    return WEBPATH . $relative;
+  }
+}
 
-// require_once(PATH . INC . 'helpers/selector.class.php');
-
-// require_once(PATH . INC . 'helpers/base-model.class.php');
-
-
+function __autoload($className) {
+  if ($className[0] == 'I') {
+    include(p(INTERFACES . classFileName(substr($className, 1)) . '.interface.php'));
+  }
+  else {
+    $fileName = classFileName($className);
+    if (file_exists(p(CLASSES . $fileName . '.class.php'))) {
+      include(p(CLASSES . $fileName . '.class.php'));
+    }
+    else {
+      include(p(MODULES . $fileName . '.class.php'));
+    }
+  }
+}
