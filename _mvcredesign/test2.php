@@ -10,9 +10,13 @@ interface IDatabase {
   public function execute(Query $query);
   public function rawQuery($sql);
   public function insertQuery($table);
+  public function selectQuery($table = NULL);
+  public function updateQuery($table);
   public function tableName($table);
   public function tableExists($table);
   public function getColumns($table);
+  public function escapeString($string);
+  public function escapeQuery($format, $vars);
 }
 
 abstract class DatabaseDriver implements IDatabase {
@@ -37,8 +41,44 @@ abstract class DatabaseDriver implements IDatabase {
     return $query;
   }
 
+  public function selectQuery($table = NULL) {
+    $query = SelectQuery::create($table);
+    $query->setDb($this);
+    return $query;
+  }
+
+  public function updateQuery($table = NULL) {
+    $query = SelectQuery::create($table);
+    $query->setDb($this);
+    return $query;
+  }
+
   public function tableName($table) {
     return $this->tablePrefix . $table;
+  }
+
+  public function escapeQuery($format, $vars) {
+    $sqlString = '';
+    $key = 0;
+    $chars = str_split($format);
+    foreach ($chars as $offset => $char) {
+      if ($char == '?' AND (!isset($chars[$offset - 1]) OR $chars[$offset - 1] != '\\')) {
+        if (is_array($vars[$key]) AND isset($vars[$key]['table'])) {
+          $sqlString .=  $this->tableName($vars[$key]['table']);
+        }
+        else if (is_int($vars[$key])) {
+          $sqlString .= (int)$vars[$key];
+        }
+        else {
+          $sqlString .= '"' . $this->escapeString($vars[$key]) . '"';
+        }
+        $key++;
+      }
+      else if ($char != '\\' OR !isset($chars[$offset + 1]) OR $chars[$offset + 1] != '?') {
+        $sqlString .= $char;
+      }
+    }
+    return $sqlString;
   }
 }
 
@@ -59,6 +99,7 @@ class Database extends DatabaseDriver {
     if (isset($configuration['prefix'])) {
       $this->tablePrefix = $configuration['prefix'];
     }
+    $this->connection->tablePrefix = $configuration['prefix'];
     ActiveRecord::connect($this);
   }
 
@@ -84,6 +125,10 @@ class Database extends DatabaseDriver {
 
   public function getColumns($table) {
     return $this->connection->getColumns($table);
+  }
+
+  public function escapeString($string) {
+    return $this->connection->escapeString($string);
   }
 
 }
@@ -145,7 +190,7 @@ class MySql extends DatabaseDriver {
   }
 
   public function execute(Query $query) {
-    echo 'Execute: ' . $query->toSql() . '<br/>';
+    echo 'Execute: ' . $query->toSql($this) . '<br/>';
   }
 
   public function tableExists($table) {
@@ -166,6 +211,10 @@ class MySql extends DatabaseDriver {
 //       $columns[$column]= $field;
     }
     return $columns;
+  }
+
+  public function escapeString($string) {
+    return mysql_real_escape_string($string);
   }
 
 }
@@ -203,7 +252,9 @@ abstract class Query {
     }
   }
 
-  public abstract function toSql();
+  public abstract function toSql(IDatabase $db);
+
+
 }
 
 class RawQuery extends Query {
@@ -217,29 +268,20 @@ class RawQuery extends Query {
     return $query;
   }
 
-  public function setString($offset, $string) {
-    $this->vars[$offset] = '"' . $string . '"';
+  public function addTable($table) {
+    $this->vars[] = array(
+      'table' => $table
+    );
+    return $this;
   }
 
-  public function setInt($offset, $int) {
-    $this->vars[$offset] = $int;
+  public function addVar($var) {
+    $this->vars[] = $var;
+    return $this;
   }
 
-  public function toSql() {
-    $sqlString = '';
-    $offset = 1;
-    $prev = NULL;
-    foreach (str_split($this->sql) as $char) {
-      if ($char == '?' AND $prev != '\\') {
-        $sqlString .= $this->vars[$offset];
-        $offset++;
-      }
-      else {
-        $sqlString .= $char;
-      }
-      $prev = $char;
-    }
-    return $sqlString;
+  public function toSql(IDatabase $db) {
+    return $db->escapeQuery($this->sql, $this->vars);
   }
 }
 
@@ -300,12 +342,22 @@ class InsertQuery extends Query {
     return $this;
   }
 
-  public function toSql() {
-    $sqlString = 'INSERT INTO `' . $this->tableName($this->table) . '` (';
+  public function toSql(IDatabase $db) {
+    $sqlString = 'INSERT INTO ' . $db->tableName($this->table) . ' (';
     $sqlString .= implode(', ', $this->columns);
-    $sqlString .= ') VALUES ("';
-    $sqlString .= implode('", "', $this->values);
-    $sqlString .= '")';
+    $sqlString .= ') VALUES (';
+    while (($value= current($this->values)) !== FALSE) {
+      if (isset($value)) {
+        $sqlString .= '"' . $db->escapeString($value) . '"';
+      }
+      else {
+        $sqlString .= 'NULL';
+      }
+      if (next($this->values) !== FALSE) {
+        $sqlString .= ', ';
+      }
+    }
+    $sqlString .= ')';
     return $sqlString;
   }
 
@@ -316,65 +368,92 @@ class SelectQuery extends Query {
   private $descending;
   private $limit;
   private $where;
+  private $whereVars;
   private $offset;
   private $relation;
-  private $from;
+  private $table;
+  private $columns = array();
 
-  public static function create() {
+  public static function create($table = NULL) {
     $query = new self();
-    $query->limit = -1;
     $query->offset = 0;
-    $query->where = array();
-    $query->relation = null;
-    $query->orderBy = 'id';
-    $query->descending = false;
+    $query->descending = FALSE;
+    $query->table = $table;
     return $query;
   }
 
-  public function from($from) {
-    $this->from = $from;
+  public function from($table) {
+    $this->table = $table;
+    return $this;
+  }
+
+  public function addColumn($column) {
+    $this->columns[] = $column;
+    return $this;
+  }
+
+  public function addColumns($columns) {
+    if (!is_array($columns)) {
+      $columns = func_get_args();
+    }
+    foreach ($columns as $column) {
+      $this->addColumn($column);
+    }
     return $this;
   }
 
   public function limit($limit) {
-    $this->limit = $limit;
+    $this->limit = (int)$limit;
     return $this;
   }
 
   public function offset($offset) {
-    $this->offset = $offset;
+    $this->offset = (int)$offset;
     return $this;
   }
 
-  public function where($column, $value) {
-    $this->where[$column] = $value;
+  public function where($clause) {
+    $this->where = $clause;
     return $this;
   }
 
-  public function relation($table, $id) {
-    $this->relation = array();
-    $this->relation['table'] = $table;
-    $this->relation['id'] = $id;
+  public function addVar($var) {
+    $this->whereVars[] = $var;
     return $this;
   }
 
   public function orderBy($column) {
     $this->orderBy = $column;
-    return $this;
-  }
-
-  public function desc() {
-    $this->descending = true;
-    return $this;
-  }
-
-  public function asc() {
     $this->descending = false;
     return $this;
   }
 
-  public function toSql() {
-    return '';
+  public function orderByDescending($column) {
+    $this->orderBy = $column;
+    $this->descending = true;
+    return $this;
+  }
+
+  public function toSql(IDatabase $db) {
+    $sqlString = 'SELECT ';
+    if (!empty($this->columns)) {
+      $sqlString .= implode(', ', $this->columns);
+    }
+    else {
+      $sqlString .= '*';
+    }
+    $sqlString .= ' FROM ' . $db->tableName($this->table);
+    if (isset($this->where)) {
+      $sqlString .= ' WHERE ' . $db->escapeQuery($this->where, $this->whereVars);
+    }
+    if (isset($this->orderBy)) {
+      $sqlString .= ' ORDER BY ' . $this->orderBy;
+      $sqlString .= $this->descending ? ' DESC' : ' ASC';
+    }
+    if (isset($this->limit)) {
+      $sqlString .= ' LIMIT ' . $this->offset . ', ' . $this->limit;
+    }
+    return $sqlString;
   }
 }
 
@@ -391,20 +470,32 @@ $db = new Database($configuration);
 
 $db->insertQuery('table')
   ->addColumns('id', 'name')
-  ->addValues('2', 'Niels')
+  ->addValues('2', 'N"i"els')
   ->execute();
 
-$query = $db->rawQuery("SELECT * FROM table WHERE user = ? AND id = ?");
-$query->setString(1, 'Admin');
-$query->setInt(2, 23);
+$query = $db->rawQuery("SELECT * FROM ? WHERE user = ? AND id = ?");
+$query->addTable('table');
+$query->addVar('Ad"m"in');
+$query->addVar(23);
 $query->execute();
 
 // or:
 
-$query = RawQuery::create("SELECT * FROM table WHERE user = ? AND id = ?");
-$query->setString(1, 'Admin');
-$query->setInt(2, 23);
+$query = RawQuery::create("SELECT * FROM ? WHERE user = ? AND id = ?");
+$query->addTable('table');
+$query->addVar('Admin');
+$query->addVar(23);
 $db->execute($query);
+
+$query = $db->selectQuery('table')
+  ->addColumns('id', 'user')
+  ->where('user = ? AND id = ?')
+  ->addVar('Admin')
+  ->addVar(32)
+  ->orderBy('id')
+  ->limit(30)
+  ->offset(2)
+  ->execute();
 
 function get_called_class2() {
   $bt = debug_backtrace();
@@ -455,11 +546,21 @@ abstract class ActiveRecord {
   private $data;
 
   public function __set($property, $value) {
-    $this->data[$property] = $value;
+    if (array_key_exists($property, $this->data)) {
+      $this->data[$property] = $value;
+    }
+    else {
+
+    }
   }
 
   public function __get($property) {
-    return $this->data[$property];
+    if (array_key_exists($property, $this->data)) {
+      return $this->data[$property];
+    }
+    else {
+
+    }
   }
 
   private function __construct() {
@@ -467,17 +568,16 @@ abstract class ActiveRecord {
     $class = get_class($this);
     $this->table = self::$models[$class]['table'];
     if (!isset(self::$models[$class]['columns'])) {
-      self::$models[$class]['columns'] = array();
-      $columns = $db->getColumns($this->table);
-      foreach ($columns as $column) {
-        $fieldArr = explode('_', $column);
-        $field = $fieldArr[count($fieldArr) - 1];
-        self::$models[$class]['columns'][$column] = $field;
-      }
+      self::$models[$class]['columns'] = $db->getColumns($this->table);
+//       foreach ($columns as $column) {
+//         $fieldArr = explode('_', $column);
+//         $field = $fieldArr[count($fieldArr) - 1];
+//         self::$models[$class]['columns'][$column] = $field;
+//       }
     }
     $this->data = array();
-    foreach (self::$models[$class]['columns'] as $column => $field) {
-      $this->data[$field] = NULL;
+    foreach (self::$models[$class]['columns'] as $column) {
+      $this->data[$column] = NULL;
     }
   }
 
@@ -500,13 +600,17 @@ abstract class ActiveRecord {
       $new->$property = $value;
     }
     $query = $db->insertQuery($new->table);
-    foreach (self::$models[$class]['columns'] as $column => $field) {
-      if (isset($new->data[$field])) {
-        $query->addPair($column, $new->data[$field]);
-      }
-    }
-    $query->execute();
+//     foreach (self::$models[$class]['columns'] as $column => $field) {
+//       if (isset($new->data[$field])) {
+//         $query->addPair($column, $new->data[$field]);
+//       }
+//     }
+    $new->id = $query->addPairs($new->data)->execute();
     return $new;
+  }
+
+  public function save() {
+
   }
 
   public function all(SelectQuery $selector = NULL) {
@@ -545,15 +649,11 @@ class Post extends ActiveRecord {
   );
 }
 class Comment extends ActiveRecord {
-  public static function create($array) {
-    parent::create(
-      $array
-    );
-  }
+
 }
 
 
 $post = Post::create(array(
   'title' => 'Hello',
-  'content' => 'Hello, World'
+  'content' => 'Hello", World'
 ));
