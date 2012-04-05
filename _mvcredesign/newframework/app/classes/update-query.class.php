@@ -1,41 +1,37 @@
 <?php
-class SelectQuery extends Query {
+class UpdateQuery extends Query {
+
+  private $table;
   private $orderBy;
   private $descending;
   private $limit;
   private $where;
   private $whereVars;
-  private $count;
   private $offset;
-  private $relation;
-  private $table;
-  private $columns = array();
+
+  private $sets = array();
 
   public static function create($table = NULL) {
     $query = new self();
-    $query->offset = 0;
-    $query->descending = FALSE;
-    $query->count = false;
     $query->table = $table;
+    $query->descending = FALSE;
+    $query->offset = 0;
     return $query;
   }
 
-  public function from($table) {
+  public function setTable($table) {
     $this->table = $table;
     return $this;
   }
 
-  public function addColumn($column) {
-    $this->columns[] = $column;
-    return $this;
-  }
-
-  public function addColumns($columns) {
-    if (!is_array($columns)) {
-      $columns = func_get_args();
+  public function set($column, $value = null) {
+    if (is_array($column)) {
+      foreach ($column as $col => $val) {
+        $this->set($col, $val);
+      }
     }
-    foreach ($columns as $column) {
-      $this->addColumn($column);
+    else {
+      $this->sets[$column] = $value;
     }
     return $this;
   }
@@ -72,22 +68,18 @@ class SelectQuery extends Query {
     return $this;
   }
 
-  public function count() {
-    $this->count = TRUE;
-    return $this;
-  }
-
   public function toSql(IDatabase $db) {
-    $sqlString = 'SELECT ';
-    if (!empty($this->columns)) {
-      $sqlString .= $this->count ? 'COUNT(' : '';
-      $sqlString .= implode($this->count ? '), COUNT(' : ', ', $this->columns);
-      $sqlString .= $this->count ? ')' : '';
+    $sqlString = 'UPDATE ' . $db->tableName($this->table);
+    if (!empty($this->sets)) {
+      $sqlString .= ' SET';
+      reset($this->sets);
+      while (($value = current($this->sets)) !== FALSE) {
+        $sqlString .= ' ' . $db->escapeQuery(key($this->sets) . '  = ?', array($value));
+        if (next($this->sets) !== FALSE) {
+          $sqlString .= ',';
+        }
+      }
     }
-    else {
-      $sqlString .= $this->count ? 'COUNT(*)' : '*';
-    }
-    $sqlString .= ' FROM ' . $db->tableName($this->table);
     if (isset($this->where)) {
       $sqlString .= ' WHERE ' . $db->escapeQuery($this->where, $this->whereVars);
     }
@@ -100,4 +92,5 @@ class SelectQuery extends Query {
     }
     return $sqlString;
   }
+
 }

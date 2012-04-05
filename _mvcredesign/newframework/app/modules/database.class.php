@@ -11,7 +11,8 @@ class Database extends DatabaseDriver implements IModule {
       array(fileClassName($this->driver), 'connect'),
       $configuration->get('database.server'),
       $configuration->get('database.username'),
-      $configuration->get('database.password')
+      $configuration->get('database.password'),
+      $configuration->get('database.database')
     );
     if ($configuration->exists('database.table_prefix')) {
       $this->tablePrefix = $configuration->get('database.table_prefix');
@@ -25,10 +26,11 @@ class Database extends DatabaseDriver implements IModule {
   }
 
   public function close() {
-    $this->connection->close();
+    if ($this->connection)
+      $this->connection->close();
   }
 
-  public static function connect($server, $username, $password, $options = array()) {
+  public static function connect($server, $username, $password, $database, $options = array()) {
 
   }
 

@@ -206,8 +206,8 @@ function w($relative) {
 }
 
 function __autoload($className) {
-  if ($className[0] == 'I') {
-    include(p(INTERFACES . classFileName(substr($className, 1)) . '.interface.php'));
+  if ($className[0] == 'I' AND file_exists($path = p(INTERFACES . classFileName(substr($className, 1)) . '.interface.php'))) {
+    include($path);
   }
   else {
     $fileName = classFileName($className);

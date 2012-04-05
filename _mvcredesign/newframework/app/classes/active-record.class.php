@@ -3,10 +3,16 @@ abstract class ActiveRecord {
   private static $dbConnection = NULL;
   private static $models = array();
   public static function addModel($class, $table) {
-    self::$models[$class] = array('table' => $table);
+    $db = self::connection();
+    self::$models[$class] = array(
+      'table' => $table,
+      'columns' => $db->getColumns($table),
+      'primaryKey' => $db->getPrimaryKey($table)
+    );
   }
 
   private $table;
+  private $primaryKey;
   private $data;
 
   public function __set($property, $value) {
@@ -31,14 +37,7 @@ abstract class ActiveRecord {
     $db = self::connection();
     $class = get_class($this);
     $this->table = self::$models[$class]['table'];
-    if (!isset(self::$models[$class]['columns'])) {
-      self::$models[$class]['columns'] = $db->getColumns($this->table);
-      //       foreach ($columns as $column) {
-      //         $fieldArr = explode('_', $column);
-      //         $field = $fieldArr[count($fieldArr) - 1];
-      //         self::$models[$class]['columns'][$column] = $field;
-      //       }
-    }
+    $this->primaryKey = self::$models[$class]['primaryKey'];
     $this->data = array();
     foreach (self::$models[$class]['columns'] as $column) {
       $this->data[$column] = NULL;
@@ -56,48 +55,85 @@ abstract class ActiveRecord {
     self::$dbConnection = $db;
   }
 
+  private static function createFromAssoc($class, $assoc) {
+    $new = new $class();
+    foreach ($assoc as $property => $value) {
+      $new->data[$property] = $value;
+    }
+    return $new;
+  }
+
   public static function create($data = array()) {
     $db = self::connection();
-    $class = get_called_class2();
+    $class = get_called_class();
     $new = new $class();
     foreach ($data as $property => $value) {
-      $new->$property = $value;
+      $new->data[$property] = $value;
     }
     $query = $db->insertQuery($new->table);
-    //     foreach (self::$models[$class]['columns'] as $column => $field) {
-    //       if (isset($new->data[$field])) {
-    //         $query->addPair($column, $new->data[$field]);
-    //       }
-    //     }
-    $new->id = $query->addPairs($new->data)->execute();
+    $new->data[$new->primaryKey] = $query->addPairs($new->data)->execute();
     return $new;
   }
 
   public function save() {
+    $db = self::connection();
+    $query = $db->updateQuery($this->table);
+    foreach ($this->data as $column => $value) {
+      $query->set($column, $value);
+    }
+    $query->where($this->primaryKey . ' = ?');
+    $query->addVar($this->data[$this->primaryKey]);
+    $query->execute();
+  }
+
+  public static function all(SelectQuery $selector = NULL) {
+    $db = self::connection();
+    $class = get_called_class();
+    if (!isset($selector)) {
+      $selector = SelectQuery::create();
+    }
+    $selector->from(self::$models[$class]['table']);
+    $result = $db->executeSelect($selector);
+    $allArray = array();
+    while ($assoc = $result->fetchAssoc()) {
+      $allArray[] = self::createFromAssoc($class, $assoc);
+    }
+    return $allArray;
+  }
+
+  public static function find($primaryKey) {
+    $db = self::connection();
+    $class = get_called_class();
+    $query = $db->selectQuery(self::$models[$class]['table']);
+    $query->where(self::$models[$class]['primaryKey'] . ' = ?');
+    $query->addVar($primaryKey);
+    $query->limit(1);
+    $result = $query->execute();
+    if (!$result->hasRows()) {
+      return FALSE;
+    }
+    return self::createFromAssoc($class, $result->fetchAssoc());
+  }
+
+  public static function exists($primaryKey) {
+    $db = self::connection();
+    $class = get_called_class();
+    $query = $db->selectQuery();
+    $query->count();
+    $query->where(self::$models[$class]['primaryKey'] . ' = ?');
+    $query->addVar($primaryKey);
+    return $db->count(self::$models[$class]['table'], $query) > 0;
+  }
+
+  public static function first(SelectQuery $selector = NULL) {
 
   }
 
-  public function all(SelectQuery $selector = NULL) {
+  public static function last(SelectQuery $selector = NULL) {
 
   }
 
-  public function find($primaryKey = NULL) {
-
-  }
-
-  public function exists($primaryKey) {
-
-  }
-
-  public function first(SelectQuery $selector = NULL) {
-
-  }
-
-  public function last(SelectQuery $selector = NULL) {
-
-  }
-
-  public function count(SelectQuery $selector = NULL) {
+  public static function count(SelectQuery $selector = NULL) {
 
   }
 }

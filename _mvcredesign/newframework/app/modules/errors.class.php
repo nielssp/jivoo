@@ -113,7 +113,7 @@ class Errors implements IModule {
 
   public function handleException(Exception $exception) {
     if (!DEBUG) {
-      self::fatal(tr('Fatal error'), tr('An uncaught exception was thrown.'));
+      self::fatal(tr('Fatal error'), tr('A fatal error has occured'));
     }
     $file = $exception->getFile();
     $line = $exception->getLine();

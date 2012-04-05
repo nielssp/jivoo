@@ -66,7 +66,7 @@ class InsertQuery extends Query {
     $sqlString .= ') VALUES (';
     while (($value= current($this->values)) !== FALSE) {
       if (isset($value)) {
-        $sqlString .= '"' . $db->escapeString($value) . '"';
+        $sqlString .= $db->escapeQuery('?', $value);
       }
       else {
         $sqlString .= 'NULL';

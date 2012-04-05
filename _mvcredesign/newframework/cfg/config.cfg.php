@@ -5,3 +5,7 @@ theme|arachis|
 title|PeanutCMS|
 subtitle|The domesticated peanut is an amphidiploid or allotetraploid.|
 database.driver|mysql|
+database.username|peanutcms|
+database.password|peanutcms|
+database.server|localhost|
+database.database|peanutcms|

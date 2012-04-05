@@ -16,7 +16,7 @@ abstract class Query {
 
   public function execute() {
     if (isset($this->db) AND $this->db instanceof IDatabase) {
-      $this->db->execute($this);
+      return $this->db->execute($this);
     }
     else {
       throw new Exception('No database to execute on');
