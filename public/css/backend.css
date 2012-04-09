@@ -9,6 +9,24 @@ body {
   font-size:63%;
 }
 
+h1 {
+  font-size:40px;
+  color:#252830;
+  font-weight:normal;
+  line-height:150px;
+}
+
+h2 {
+  font-size:20px;
+  color:#252830;
+  font-weight:normal;
+  margin:5px 0 10px;
+}
+
+strong, em {
+  color:#540303;
+}
+
 #header {
   position:fixed;
   top:0px;
@@ -359,4 +377,28 @@ span.description {
   margin:4px 0;
   border-bottom:1px solid #222;
   font-size:0;
+}
+
+.db_driver h2 {
+  float:left;
+  width:196px;
+  height:48px;
+  line-height:48px;
+  margin:0;
+}
+
+.db_driver p {
+  float:left;
+  width:444px;
+  height:48px;
+  margin:0;
+  line-height:48px;
+  color:#383C44;
+}
+
+.db_driver .button_container {
+  float:left;
+  width:128px;
+  height:48px;
+  line-height:48px;
 }

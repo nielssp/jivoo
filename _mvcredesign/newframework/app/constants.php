@@ -75,8 +75,16 @@ if (!defined('MODULES')) {
   define('MODULES', APP . 'modules/');
 }
 
+if (!defined('MODELS')) {
+  define('MODELS', APP . 'models/');
+}
+
 if (!defined('TEMPLATES')) {
   define('TEMPLATES', APP . 'templates/');
+}
+
+if (!defined('LANG')) {
+  define('LANG', 'languages/');
 }
 
 if (!defined('THEMES')) {

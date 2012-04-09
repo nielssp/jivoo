@@ -24,10 +24,11 @@ if (PHP_VERSION_ID < 50200) {
 
 chdir(PATH);
 
-// Classes that has to be initialized, the order matters
-$modules = array('errors', 'i18n',
-    'configuration', 'database', 'http', 'actions', 'routes', 'templates',
-    'theme', 'user', 'backend', 'posts', 'pages', 'render');
+// Classes that has to be initialized, the order does not matter
+$modules = array(
+  'errors', 'configuration',  'i18n', 'http', 'templates',
+  'actions', 'routes', 'theme', 'database', 'posts'
+);
 
 $core = new Core(p(CFG . 'blacklist'));
 
@@ -54,4 +55,8 @@ foreach ($modules as $module) {
     }
   }
 }
+
+Hooks::run('preRender');
+
+Hooks::run('render');
 

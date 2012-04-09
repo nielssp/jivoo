@@ -14,23 +14,44 @@ class Routes implements IModule {
 
   private $http;
 
+  private $templates;
+
+  public function getHttp() {
+    return $this->http;
+  }
+
+  public function getErrors() {
+    return $this->errors;
+  }
+
+  public function getTemplates() {
+    return $this->templates;
+  }
+
   private $routes;
 
   private $selectedController;
 
   private $selectedControllerPriority;
 
-  public function __construct(Errors $errors, Http $http) {
-    $this->errors = $errors;
+  public function __construct(Http $http, Templates $templates) {
     $this->http = $http;
+    $this->errors = $this->http->getErrors();
+    $this->templates = $templates;
 
     $this->routes = array();
 
     $this->setRoute(array($this, 'notFoundController'), 1);
+
+    Hooks::attach('render', array($this, 'callController'));
   }
 
   public static function getDependencies() {
-    return array('errors', 'http');
+    return array('http', 'templates');
+  }
+
+  public function getPath() {
+    return $this->http->getPath();
   }
 
 
@@ -54,8 +75,9 @@ class Routes implements IModule {
 
   private function mapRoute() {
     $routes = $this->routes;
+    $path = $this->http->getPath();
     foreach ($routes as $j => $route) {
-      if (count($route['path']) != count($PEANUT['http']->path)) {
+      if (count($route['path']) != count($path)) {
         if ($route['path'][count($route['path']) - 1] != '**') {
           unset($routes[$j]);
         }
@@ -66,8 +88,8 @@ class Routes implements IModule {
         if ($fragment == '**') {
           break;
         }
-        else if (!isset($PEANUT['http']->path[$j])
-                 OR ($fragment  != $PEANUT['http']->path[$j]
+        else if (!isset($path[$j])
+                 OR ($fragment  != $path[$j]
                  AND $fragment != '*')) {
           unset($routes[$i]);
           break;
@@ -86,7 +108,7 @@ class Routes implements IModule {
   public function callController() {
     $this->mapRoute();
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
-      call_user_func($this->selectedController, $this->http->params, 'html');
+      call_user_func($this->selectedController, $this->http->getParams(), 'html');
     }
     else {
       /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */
@@ -98,6 +120,6 @@ class Routes implements IModule {
   public function notFoundController($parameters = array(), $contentType = 'html') {
     $templateData = array();
 
-    //$PEANUT['templates']->renderTemplate('404.html', $templateData);
+    $this->templates->renderTemplate('404.html', $templateData);
   }
 }

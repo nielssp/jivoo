@@ -15,7 +15,7 @@ abstract class DatabaseDriver implements IDatabase {
     return $query;
   }
 
-  public function insertQuery($table) {
+  public function insertQuery($table = NULL) {
     $query = InsertQuery::create($table);
     $query->setDb($this);
     return $query;
@@ -27,8 +27,20 @@ abstract class DatabaseDriver implements IDatabase {
     return $query;
   }
 
+  public function deleteQuery($table = NULL) {
+    $query = DeleteQuery::create($table);
+    $query->setDb($this);
+    return $query;
+  }
+
   public function updateQuery($table = NULL) {
     $query = UpdateQuery::create($table);
+    $query->setDb($this);
+    return $query;
+  }
+
+  public function createQuery($table = NULL) {
+    $query = CreateQuery::create($table);
     $query->setDb($this);
     return $query;
   }

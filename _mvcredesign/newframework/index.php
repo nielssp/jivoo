@@ -11,7 +11,7 @@
 
 define('APP', 'app/');
 
-define('PUB', '../../public/');
+//define('PUB', '../../public/');
 
 define('DEBUG', TRUE);
 

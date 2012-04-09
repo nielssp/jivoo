@@ -16,43 +16,42 @@ class Theme implements IModule {
   private $configuration;
 
   private $templates;
+
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  public function getErrors() {
+    return $this->errors;
+  }
+
+  public function getTemplates() {
+    return $this->templates;
+  }
+
   /**
    * The current theme
    * @var string
    */
   private $theme;
 
-  /**
-   * HTML-code to be inserted on page
-   * @var array
-   */
-  private $html;
-
   private $menuList;
 
   /**
    * PHP5-style constructor
    */
-  function __construct(Errors $errors, Configuration $configuration, Templates $templates) {
-    $this->errors = $errors;
-    $this->configuration = $configuration;
+  public function __construct(Templates $templates) {
     $this->templates = $templates;
-
-    $this->html = array();
+    $this->errors = $this->templates->getErrors();
+    $this->configuration = $this->templates->getConfiguration();
 
     // Set default settings
     if (!$this->configuration->exists('theme')) {
       $this->configuration->set('theme', 'arachis');
     }
-    if (!$this->configuration->exists('title')) {
-      $this->configuration->set('title', 'PeanutCMS');
-    }
-    if (!$this->configuration->exists('subtitle')) {
-      $this->configuration->set('subtitle', 'The domesticated peanut is an amphidiploid or allotetraploid.');
-    }
 
     // Create meta-tags
-    $this->insertHtml(
+    $this->templates->insertHtml(
         'meta-generator',
         'head-top',
         'meta',
@@ -60,7 +59,7 @@ class Theme implements IModule {
         '',
         8
       );
-    $this->insertHtml(
+    $this->templates->insertHtml(
         'meta-description',
         'head-top',
         'meta',
@@ -82,7 +81,7 @@ class Theme implements IModule {
   }
 
   public static function getDependencies() {
-    return array('errors', 'configuration', 'templates');
+    return array('templates');
   }
 
   /**
@@ -105,7 +104,7 @@ class Theme implements IModule {
             );
         }
         $this->theme = $theme;
-        return true;
+        return FALSE;
       }
     }
     $dir = opendir(p(THEMES));
@@ -125,94 +124,14 @@ class Theme implements IModule {
                 );
             }
             $this->theme = $theme;
-            return true;
+            return FALSE;
           }
         }
       }
       closedir($dir);
     }
+    return FALSE;
   }
 
-  function listMenu() {
-    global $PEANUT;
-    if (is_array($this->menuList))
-      return next($this->menuList);
-    $menu = $PEANUT['configuration']->get('menu');
-    $this->menuList = array();
-    foreach ($menu as $menuitem) {
-      $menuitem['link'] = $PEANUT['http']->getLink($PEANUT['templates']->getPath($menuitem['template'], $menuitem['parameters']));
-      $menuitem['selected'] = $menuitem['link'] == $PEANUT['http']->getLink();
-      $this->menuList[] = $menuitem;
-    }
-    ksort($this->menuList);
-    reset($this->menuList);
-    return current($this->menuList);
-  }
-
-  /**
-   * Return a link to a file in the current theme
-   *
-   * @param string $file File name
-   * @return string Link
-   */
-  function getFile($file) {
-    if (isset($this->theme) AND file_exists(PATH . THEMES . $this->theme . '/' . $file)) {
-      return WEBPATH . THEMES . $this->theme . '/' . $file;
-    }
-    if (file_exists(PATH . PUB . $file)) {
-      return WEBPATH . PUB . $file;
-    }
-  }
-
-  /**
-   * Insert an HTML-tag (e.g. a script, stylesheet, meta-tag etc.) on the page
-   *
-   * @param string $id Id
-   * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
-   * @param string $tag HTML-tag (e.g. 'meta', 'link', 'script', 'style' etc.)
-   * @param array $parameters HTML-parameters (e.g. array('src' => 'somescript.js'))
-   * @param string $innerhtml Optional string to be placed between start- and end-tag
-   * @param int $priority A high-priority (e.g. 10) tag will be inserted before a low-priority one (e.g 2)
-   */
-  function insertHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5) {
-    $tag = strtolower($tag);
-    if ($tag == 'script' AND !isset($parameters['type']))
-      $parameters['type'] = 'text/javascript';
-    if ($tag == 'style' AND !isset($parameters['type']))
-      $parameters['type'] = 'text/css';
-    $this->html[$location][$id] = array('tag' => $tag,
-                                        'innerhtml' => $innerhtml,
-                                        'priority' => $priority,
-                                        'parameters' => $parameters);
-  }
-
-  /**
-   * Output HTML-code attached to a location on the page
-   *
-   * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
-   */
-  function outputHtml($location) {
-    if (!isset($this->html[$location]) OR !is_array($this->html[$location]))
-      return;
-    uasort($this->html[$location], 'prioritySorter');
-    foreach ($this->html[$location] as $id => $html) {
-      echo '<' . $html['tag'];
-      foreach ($html['parameters'] as $parameter => $value)
-        echo ' ' . $parameter . '="' . addslashes($value) . '"';
-      if (empty($html['innerhtml']) AND $html['tag'] != 'script') {
-        echo ' />';
-      }
-      else {
-        echo '>';
-        if (!empty($html['innerhtml'])) {
-          $this->outputHtml($id . '-top');
-          echo $html['innerhtml'];
-          $this->outputHtml($id . '-bottom');
-        }
-        echo '</' . $html['tag'] . '>';
-      }
-      echo "\n";
-    }
-  }
 
 }

@@ -23,10 +23,10 @@ require_once('constants.php');
  * @return string Translated text
  */
 function tr($text) {
-  global $PEANUT;
+  $service = TranslationService::getService();
   $args = func_get_args();
-  if (isset($PEANUT['i18n'])) {
-    return call_user_func_array(array($PEANUT['i18n'], 'translate'), $args);
+  if ($service) {
+    return call_user_func_array(array($service, 'translate'), $args);
   }
   else {
     $numArgs = func_num_args();
@@ -58,10 +58,10 @@ function tr($text) {
  * @return string Translated text
  */
 function trl($single, $plural, $glue, $gluel, $pieces) {
-  global $PEANUT;
+  $service = TranslationService::getService();
   $args = func_get_args();
-  if (isset($PEANUT['i18n'])) {
-    return call_user_func_array(array($PEANUT['i18n'], 'translateList'), $args);
+  if ($service) {
+    return call_user_func_array(array($service, 'translateList'), $args);
   }
   else {
     if (count($pieces) == 1) {
@@ -109,10 +109,10 @@ function trl($single, $plural, $glue, $gluel, $pieces) {
  * @return string Translated text
  */
 function trn($single, $plural, $number) {
-  global $PEANUT;
+  $service = TranslationService::getService();
   $args = func_get_args();
-  if (isset($PEANUT['i18n'])) {
-    return call_user_func_array(array($PEANUT['i18n'], 'translateNumeral'), $args);
+  if ($service) {
+    return call_user_func_array(array($service, 'translateNumeral'), $args);
   }
   else {
     if ((int)$number == 1) {
@@ -131,6 +131,39 @@ function trn($single, $plural, $number) {
       }
     }
     return $text;
+  }
+}
+
+function fdate($timestamp = NULL) {
+  $service = TranslationService::getService();
+  $args = func_get_args();
+  if ($service) {
+    return call_user_func_array(array($service, 'fdate'), $args);
+  }
+  else {
+    return date('Y-m-d', $timestamp);
+  }
+}
+
+function ftime($timestamp = NULL) {
+  $service = TranslationService::getService();
+  $args = func_get_args();
+  if ($service) {
+    return call_user_func_array(array($service, 'ftime'), $args);
+  }
+  else {
+    return date('H:m:i', $timestamp);
+  }
+}
+
+function tdate($format, $timestamp = NULL) {
+  $service = TranslationService::getService();
+  $args = func_get_args();
+  if ($service) {
+    return call_user_func_array(array($service, 'date'), $args);
+  }
+  else {
+    return date($format, $timestamp);
   }
 }
 

@@ -83,7 +83,7 @@ class Errors implements IModule {
   * @param string $readMore A link to a page where additional information about the error can be found (e.g. the manual)
   * @return void
   */
-  public function notification($type, $message, $global = true, $uid = null, $readMore = '') {
+  public static function notification($type, $message, $global = true, $uid = null, $readMore = '') {
     if (isset($_SESSION[SESSION_PREFIX . 'backend_notifications'])
         AND is_array($_SESSION[SESSION_PREFIX . 'backend_notifications'])) {
       $notifications = $_SESSION[SESSION_PREFIX . 'backend_notifications'];
@@ -109,6 +109,10 @@ class Errors implements IModule {
       );
     }
     $_SESSION[SESSION_PREFIX . 'backend_notifications'] = $notifications;
+  }
+
+  public static function getNotifications() {
+    return $_SESSION[SESSION_PREFIX . 'backend_notifications'];
   }
 
   public function handleException(Exception $exception) {
@@ -153,8 +157,24 @@ class Errors implements IModule {
       . '<td>';
       if (isset($trace['args'])) {
         foreach($trace['args'] as $j => $arg) {
-          $body .= ' <span title="' . var_export($arg, true) . '">' . gettype($arg) . '</span>'
-          . ($j < count($trace['args']) -1 ? ',' : '');
+          $body .= ' <span title="';
+          //var_export($arg, true)
+//           if (!is_object($arg) AND !is_array($arg)) {
+//             ob_start();
+//             var_dump($arg);
+//             $body .= ob_get_clean();
+//           }
+          if (is_scalar($arg)) {
+            $body .= $arg;
+          }
+          else if (is_object($arg)) {
+            $body .= get_class($arg);
+          }
+          else if (is_array($arg)) {
+            $body .= count($arg);
+          }
+          $body .= '">' . gettype($arg) . '</span>'
+                . ($j < count($trace['args']) -1 ? ',' : '');
         }
       }
       else {

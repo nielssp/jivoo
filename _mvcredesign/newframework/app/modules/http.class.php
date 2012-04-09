@@ -9,10 +9,18 @@
  * Http class
  */
 class Http implements IModule {
-  
+
   private $errors;
-  
-  private $config;
+
+  private $configuration;
+
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  public function getErrors() {
+    return $this->errors;
+  }
 
   /**
    * The current path as an array
@@ -29,10 +37,11 @@ class Http implements IModule {
   /**
    * PHP5-style constructor
    */
-  public function __construct(Errors $errors, Configuration $configuration) {
+  public function __construct(Configuration $configuration) {
     global $PEANUT;
-    $this->errors = $errors;
-    $this->config = $configuration;
+    $this->configuration = $configuration;
+    $this->errors = $this->configuration->getErrors();
+
     $request = $_SERVER['REQUEST_URI'];
     $request = parse_url($request);
     $this->params = $_GET;
@@ -44,13 +53,13 @@ class Http implements IModule {
       }
     }
     // Set default settings
-    if (!$this->config->exists('rewrite')) {
-      $this->config->set('rewrite', 'off');
+    if (!$this->configuration->exists('http.rewrite')) {
+      $this->configuration->set('http.rewrite', 'off');
     }
 
-    if (!$this->config->exists('indexPath')) {
-      $this->config->set(
-          	'indexPath',
+    if (!$this->configuration->exists('http.index')) {
+      $this->configuration->set(
+          	'http.index',
             array(
               'path' => array('posts'),
               'parameters' => array()
@@ -58,7 +67,7 @@ class Http implements IModule {
       );
     }
     // Determine if the current URL is correct
-    if ($this->config->get('rewrite') === 'on') {
+    if ($this->configuration->get('rewrite') === 'on') {
       if ($this->path[0] == 'index.php') {
         array_shift($this->path);
         $this->redirectPath($this->path, $this->params);
@@ -71,7 +80,7 @@ class Http implements IModule {
       array_shift($this->path);
     }
 
-    $index = $this->config->get('indexPath');
+    $index = $this->configuration->get('http.index');
     if (count($this->path) < 1) {
       $this->path = $index['path'];
       $this->params = array_merge($index['parameters'], $this->params);
@@ -82,7 +91,20 @@ class Http implements IModule {
   }
 
   public static function getDependencies() {
-    return array('errors', 'configuration');
+    return array('configuration');
+  }
+
+
+  public function getPath() {
+    return $this->path;
+  }
+
+  public function getParams() {
+    return $this->params;
+  }
+
+  public function unsetParam($key) {
+    unset($this->params[$key]);
   }
 
   /**
@@ -96,7 +118,7 @@ class Http implements IModule {
    */
   public function redirect($status, $location) {
     global $PEANUT;
-    if (!$this->setStatus($status)) {
+    if (!Http::setStatus($status)) {
       $this->errors->fatal(
         tr('Redirect error'),
         tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
@@ -120,6 +142,10 @@ class Http implements IModule {
     if (!isset($path)) {
       $path = $this->path;
     }
+    $index = $this->configuration->get('http.index');
+    if ($index['path'] == $path) {
+      $path = array();
+    }
     if ($moved) {
       $status = 301;
     }
@@ -138,19 +164,19 @@ class Http implements IModule {
         $query[] = urlencode($key) . '=' . urlencode($value);
       }
       $combined = implode('/', $path) . '?' . implode('&', $query) . $hashtag;
-      if ($this->config->get('rewrite') === 'on' OR $rewrite) {
-        $this->redirect($status, WEBPATH . $combined);
+      if ($this->configuration->get('http.rewrite') === 'on' OR $rewrite) {
+        $this->redirect($status, w($combined));
       }
       else {
-        $this->redirect($status, WEBPATH . 'index.php/' . $combined);
+        $this->redirect($status, w('index.php/' . $combined));
       }
     }
     else {
-      if ($this->config->get('rewrite') === 'on' OR $rewrite) {
-        $this->redirect($status, WEBPATH . implode('/', $path) . $hashtag);
+      if ($this->configuration->get('http.rewrite') === 'on' OR $rewrite) {
+        $this->redirect($status, w(implode('/', $path) . $hashtag));
       }
       else {
-        $this->redirect($status, WEBPATH . 'index.php/' . implode('/', $path) . $hashtag);
+        $this->redirect($status, w('index.php/' . implode('/', $path) . $hashtag));
       }
     }
   }
@@ -168,7 +194,7 @@ class Http implements IModule {
     $this->redirectPath($this->path, $parameters, false, $hashtag);
   }
 
-  public function setStatus($status) {
+  public static function setStatus($status) {
     $phrase = Http::statusPhrase($status);
     if ($phrase === false)
       return false;
@@ -219,6 +245,10 @@ class Http implements IModule {
     if (!isset($path)) {
       $path = $this->path;
     }
+    $index = $this->configuration->get('http.index');
+    if ($index['path'] == $path) {
+      $path = array();
+    }
     if (isset($hashtag)) {
       $hashtag = '#' . $hashtag;
     }
@@ -236,19 +266,19 @@ class Http implements IModule {
         }
       }
       $combined = implode('/', $path) . '?' . implode('&', $query) . $hashtag;
-      if ($this->config->get('rewrite') === 'on') {
-        return WEBPATH . $combined;
+      if ($this->configuration->get('http.rewrite') === 'on') {
+        return w($combined);
       }
       else {
-        return WEBPATH . 'index.php/' . $combined;
+        return w('index.php/' . $combined);
       }
     }
     else {
-      if ($this->config->get('rewrite') === 'on') {
-        return WEBPATH . implode('/', $path) . $hashtag;
+      if ($this->configuration->get('http.rewrite') === 'on') {
+        return w(implode('/', $path) . $hashtag);
       }
       else {
-        return WEBPATH . 'index.php/' . implode('/', $path) . $hashtag;
+        return w('index.php/' . implode('/', $path) . $hashtag);
       }
     }
   }

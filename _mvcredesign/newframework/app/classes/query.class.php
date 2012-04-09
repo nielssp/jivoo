@@ -1,7 +1,7 @@
 <?php
 abstract class Query {
 
-  private $db;
+  protected $db;
 
   protected function __construct() {
   }

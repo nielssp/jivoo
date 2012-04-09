@@ -3,13 +3,13 @@ class Mysql extends DatabaseDriver {
 
   private $handle;
 
-  public static function connect($server, $username, $password, $database, $options = array()) {
+  public static function connect($options = array()) {
     $db = new self();
-    $db->handle = mysql_connect($server, $username, $password, true);
+    $db->handle = mysql_connect($options['server'], $options['username'], $options['password'], true);
     if (!$db->handle) {
       throw new DatabaseConnectionFailedException(mysql_error());
     }
-    if (!mysql_select_db($database, $db->handle)) {
+    if (!mysql_select_db($options['database'], $db->handle)) {
       throw new DatabaseSelectFailedException(mysql_error());
     }
     return $db;
@@ -77,15 +77,12 @@ class Mysql extends DatabaseDriver {
     $columns = array();
     while ($row = mysql_fetch_array($result)) {
       $columns[] = $row['Field'];
-//       $fieldArr = explode('_', $column);
-//       $field = $fieldArr[count($fieldArr) - 1];
-//       $columns[$column]= $field;
     }
     return $columns;
   }
 
   public function getPrimaryKey($table) {
-    $result = $this->mysqlQuery("SHOW INDEX FROM `" . $this->tableName($table) . "`");
+    $result = $this->mysqlQuery('SHOW INDEX FROM ' . $this->tableName($table) . ' WHERE Key_name = "PRIMARY"');
     $row = mysql_fetch_array($result);
     return $row['Column_name'];
   }
@@ -93,5 +90,18 @@ class Mysql extends DatabaseDriver {
   public function escapeString($string) {
     return mysql_real_escape_string($string);
   }
+
+  public static function getDriverName() {
+    return 'MySQL';
+  }
+
+  public static function getDriverDependencies() {
+    return array('mysql');
+  }
+
+  public static function getRequiredOptions() {
+    return array('server', 'username', 'database');
+  }
+
 
 }

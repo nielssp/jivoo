@@ -53,9 +53,11 @@ class InsertQuery extends Query {
   }
 
   public function addPairs($pairs) {
-    foreach ($pairs as $column => $value) {
-      $this->addColumn($column);
-      $this->addValue($value);
+    if (is_array($pairs)) {
+      foreach ($pairs as $column => $value) {
+        $this->addColumn($column);
+        $this->addValue($value);
+      }
     }
     return $this;
   }

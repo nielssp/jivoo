@@ -4,12 +4,17 @@ class Configuration implements IModule {
 
   private $errors = NULL;
 
+  public function getErrors() {
+    return $this->errors;
+  }
+
   private $data = array();
 
   private $file;
 
   public function __construct(Errors $errors, $cfgFile = NULL) {
     $this->errors = $errors;
+
     if (!isset($cfgFile)) {
       $cfgFile = p(CFG . 'config.cfg.php');
     }
@@ -17,16 +22,19 @@ class Configuration implements IModule {
     if (!is_readable($this->file)) {
       // Attempt to create configuration-file
       $file = fopen($this->file, 'w');
-      if (!$file)
-      $this->errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
+      if (!$file) {
+        $this->errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
+      }
       fwrite($file, "<?php exit; ?>\n");
       fclose($file);
     }
-    if (!is_writable($this->file))
-    $this->errors->notification('warning', tr('%1 is not writable', $this->file), true, 'settings-writable');
+    if (!is_writable($this->file)) {
+      $this->errors->notification('warning', tr('%1 is not writable', $this->file), true, 'settings-writable');
+    }
     $fileContent = file_get_contents($this->file);
-    if ($fileContent === FALSE)
-    $this->errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
+    if ($fileContent === FALSE) {
+      $this->errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
+    }
     $file = explode('?>', $fileContent);
     $this->data = $this->parseData($file[1], true);
   }
@@ -69,7 +77,7 @@ class Configuration implements IModule {
    * @return bool True if successful, false if not
    */
   public function delete($key) {
-    return $this->update($key, NULL);
+    return $this->set($key, NULL);
   }
 
   /**
@@ -80,8 +88,17 @@ class Configuration implements IModule {
    * doesn't exist
    */
   public function get($key) {
+    if ($key[($keylen = strlen($key)) - 1] == '.') {
+      $result = array();
+      foreach ($this->data as $dkey => $dval) {
+        if (substr_compare($key, $dkey, 0, $keylen) == 0) {
+          $result[substr($dkey, $keylen)] = $dval;
+        }
+      }
+      return $result;
+    }
     if (!isset($this->data[$key]))
-      return;
+      return FALSE;
     return $this->data[$key];
   }
 

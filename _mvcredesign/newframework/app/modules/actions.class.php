@@ -9,13 +9,17 @@
  * Actions class
  */
 class Actions implements IModule {
-  
+
   private $http;
+
+  public function getHttp() {
+    return $this->http;
+  }
 
   public function __construct(Http $http) {
     $this->http = $http;
   }
-  
+
   public static function getDependencies() {
     return array('http');
   }
@@ -29,8 +33,10 @@ class Actions implements IModule {
    */
   public function has($action, $getPost = 'both') {
     global $PEANUT;
-    if ($getPost != 'post' AND $getPost != 'sessionget' AND isset($PEANUT['http']->params[$action])) {
-      unset($PEANUT['http']->params[$action]);
+    $path = $this->http->getPath();
+    $params = $this->http->getParams();
+    if ($getPost != 'post' AND $getPost != 'sessionget' AND isset($params[$action])) {
+      $this->http->unsetParam($action);
       return true;
     }
     if ($getPost != 'get' AND $getPost != 'sessionget' AND isset($_POST['action']) AND $_POST['action'] == $action) {
@@ -38,8 +44,8 @@ class Actions implements IModule {
     }
     if ($getPost == 'sessionget' AND isset($_SESSION[SESSION_PREFIX . 'action']) AND $_SESSION[SESSION_PREFIX . 'action'] == $action) {
       unset($_SESSION[SESSION_PREFIX . 'action']);
-      if (isset($PEANUT['http']->params[$action])) {
-        unset($PEANUT['http']->params[$action]);
+      if (isset($params[$action])) {
+        $this->http->unsetParam($action);
         return true;
       }
     }
