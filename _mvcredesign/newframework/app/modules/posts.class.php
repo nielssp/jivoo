@@ -26,7 +26,7 @@ class Posts implements IModule{
   }
 
   public function getHttp() {
-  return $this->http;
+    return $this->http;
   }
 
   public function getDatabase() {
@@ -103,8 +103,10 @@ class Posts implements IModule{
         ->setPrimaryKey('id')
         ->addInt('post_id', TRUE)
         ->addInt('user_id', TRUE, FALSE, 0)
-        ->addInt('comment_id', TRUE, FALSE, 0)
+        ->addInt('parent_id', TRUE, FALSE, 0)
         ->addVarchar('author', 255)
+        ->addVarchar('email', 255)
+        ->addVarchar('website', 255)
         ->addText('content')
         ->addInt('date', TRUE)
         ->addIndex(FALSE, 'post_id')

@@ -28,6 +28,8 @@ abstract class ActiveRecord {
 
   protected $validate = array();
 
+  protected $defaults = array();
+
   protected $hasOne = array();
   protected $hasMany = array();
   protected $belongsTo = array();
@@ -107,13 +109,13 @@ abstract class ActiveRecord {
       }
       else if ($association ==  'hasOne' OR $association == 'belongsTo') {
         if (!isset($options['connection'])) {
-          $options['connection'] = 'this';
-//           if ($association == 'hasOne') {
-//             $options['connection'] = 'other';
-//           }
-//           else {
-//             $options['connection'] = 'this';
-//           }
+//           $options['connection'] = 'this';
+          if ($association == 'hasOne') {
+            $options['connection'] = 'other';
+          }
+          else {
+            $options['connection'] = 'this';
+          }
         }
         if ($this->isNew AND $options['connection'] == 'other') {
           return FALSE;
@@ -197,20 +199,23 @@ abstract class ActiveRecord {
       return FALSE;
     }
 
-    if ($record->isNew) {
-      return FALSE;
-    }
-
     if (isset($options['join'])) {
+      if ($record->isNew) {
+        return FALSE;
+      }
       $query = $db->insertQuery($options['join']);
       $query->addPair($options['thisKey'], $this->data[$this->primaryKey]);
       $query->addPair($options['otherKey'], $record->data[$record->primaryKey]);
       $query->execute();
+      return TRUE;
     }
     else {
       $record->data[$options['thisKey']] = $this->data[$this->primaryKey];
       $record->isSaved = FALSE;
-      $record->save();
+      if (!$record->isNew) {
+        $record->save();
+      }
+      return TRUE;
     }
 
   }
@@ -220,21 +225,24 @@ abstract class ActiveRecord {
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
-    if ($record->isNew) {
-      return FALSE;
-    }
-
     if (isset($options['join'])) {
+      if ($record->isNew) {
+        return FALSE;
+      }
       $query = $db->deleteQuery($options['join']);
       $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
       $query->addVar($this->data[$this->primaryKey]);
       $query->addVar($record->data[$record->primaryKey]);
       $query->execute();
+      return TRUE;
     }
     else {
       $record->data[$options['thisKey']] = 0;
       $record->isSaved = FALSE;
-      $record->save();
+      if (!$record->isNew) {
+        $record->save();
+      }
+      return TRUE;
     }
   }
 
@@ -309,7 +317,10 @@ abstract class ActiveRecord {
       $this->associations['set' . $class] = array('hasOne', 'set', $class);
     }
     foreach ($this->hasMany as $class => $options) {
-      $this->associations['get' . $class . 's'] = array('hasMany', 'get', $class);
+      if (!isset($options['plural'])) {
+        $options['plural'] = $class . 's';
+      }
+      $this->associations['get' . $options['plural']] = array('hasMany', 'get', $class);
       $this->associations['has' . $class] = array('hasMany', 'has', $class);
       $this->associations['add' . $class] = array('hasMany', 'add', $class);
       $this->associations['remove' . $class] = array('hasMany', 'remove', $class);
@@ -319,7 +330,10 @@ abstract class ActiveRecord {
       $this->associations['set' . $class] = array('belongsTo', 'set', $class);
     }
     foreach ($this->hasAndBelongsToMany as $class => $options) {
-      $this->associations['get' . $class . 's'] = array('hasAndBelongsToMany', 'get', $class);
+      if (!isset($options['plural'])) {
+        $options['plural'] = $class . 's';
+      }
+      $this->associations['get' . $options['plural']] = array('hasAndBelongsToMany', 'get', $class);
       $this->associations['has' . $class] = array('hasAndBelongsToMany', 'has', $class);
       $this->associations['add' . $class] = array('hasAndBelongsToMany', 'add', $class);
       $this->associations['remove' . $class] = array('hasAndBelongsToMany', 'remove', $class);
@@ -357,6 +371,7 @@ abstract class ActiveRecord {
     $new = new $class();
     $new->isNew = TRUE;
     $new->isSaved = FALSE;
+    $data = array_merge($new->defaults, $data);
     foreach ($data as $property => $value) {
       $new->data[$property] = $value;
     }

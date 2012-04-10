@@ -41,7 +41,7 @@ foreach ($post->getComments() as $comment):
 <p>
 <?php $this->linkTo($comment, '#'); ?>
 Published by <?php
-if (empty($comment->website))
+if ($comment->website == '')
   echo $comment->author;
 else
   echo '<a href="' . $comment->website . '">' . $comment->author . '</a>';

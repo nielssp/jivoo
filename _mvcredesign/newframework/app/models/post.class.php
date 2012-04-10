@@ -48,6 +48,10 @@ class Post extends ActiveRecord implements ILinkable {
   public function formatTime() {
     return ftime($this->date);
   }
+
+  public function getCommentHierachy() {
+    // recursive action here!!
+  }
 }
 
 Post::setModule($this);

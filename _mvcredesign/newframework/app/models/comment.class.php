@@ -23,6 +23,13 @@ class Comment extends ActiveRecord implements ILinkable {
                     'otherKey' => 'user_id')
   );
 
+  protected $defaults = array(
+    'user_id' => 0,
+    'parent_id' => 0,
+    'email' => '',
+    'website' => ''
+  );
+
   private static $posts;
 
   public static function setModule(Posts $postsModule) {
