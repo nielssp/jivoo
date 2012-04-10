@@ -143,12 +143,12 @@ class Database extends DatabaseDriver implements IModule {
       }
     }
     return array(
-              'driver' => $driver,
-              'name' => call_user_func(array($className, 'getDriverName')),
-              'requiredOptions' => call_user_func(array($className, 'getRequiredOptions')),
-              'isAvailable' => count($missing) < 1,
-              'link' => $this->http->getLink(NULL, array('select' => $driver)),
-              'missingExtensions' => $missing
+      'driver' => $driver,
+      'name' => call_user_func(array($className, 'getDriverName')),
+      'requiredOptions' => call_user_func(array($className, 'getRequiredOptions')),
+      'isAvailable' => count($missing) < 1,
+      'link' => $this->http->getLink(NULL, array('select' => $driver)),
+      'missingExtensions' => $missing
     );
   }
 

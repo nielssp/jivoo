@@ -2,7 +2,7 @@
 i18n.language|en|
 i18n.dateFormat|F j, Y|
 i18n.timeFormat|g:i a|
-i18n.timeZone|Europe/Copenhagen|
+i18n.timeZone|Europe/Berlin|
 http.rewrite|off|
 http.index|a:2:{s:4:"path";a:1:{i:0;s:5:"posts";}s:10:"parameters";a:0:{}}|
 site.title|PeanutCMS|
