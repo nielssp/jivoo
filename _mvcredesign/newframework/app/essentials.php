@@ -290,3 +290,10 @@ if (!function_exists('get_called_class')) {
     return $matches[1];
   }
 }
+
+if (!function_exists('lcfirst')) {
+  function lcfirst($str) {
+    $str[0] = strtolower($str[0]);
+    return $str;
+  }
+}

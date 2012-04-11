@@ -25,7 +25,17 @@ class Post extends ActiveRecord implements ILinkable {
   protected $hasOne = array(
     'Category' => array('class' => 'Tag')
   );
-
+  
+  protected $validate = array(
+      'title' => array('presence' => true,
+                       'minLength' => 4,
+                       'maxLength' => 25),
+      'name' => array('presence' => true,
+                      'minLength' => 1,
+                      'maxLength' => 25,
+      				  'match' => '/^[a-z-]+$/'),
+      'content' => array('presence' => true),
+  );
 
   private static $posts;
 
