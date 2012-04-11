@@ -54,6 +54,9 @@ class Posts implements IModule{
     if (!ActiveRecord::isConnected()) {
       throw new Exception('temporary.');
     }
+    
+    $newInstall = FALSE;
+    
     require_once(p(MODELS . 'post.class.php'));
 
     if (!$this->database->tableExists('posts')) {
@@ -70,6 +73,7 @@ class Posts implements IModule{
         ->addIndex(TRUE, 'name')
         ->addIndex(FALSE, 'date')
         ->execute();
+      $newInstall = TRUE;
     }
 
     ActiveRecord::addModel('Post', 'posts');
@@ -114,6 +118,24 @@ class Posts implements IModule{
     }
 
     ActiveRecord::addModel('Comment', 'comments');
+    
+    if ($newInstall) {
+      $post = Post::create();
+      $post->title = 'Welcome to PeanutCMS';
+      $post->name = 'welcome-to-peanutcms';
+      $post->content = '<p>Welcome to PeanutCMS.</p>';
+      $post->date = time();
+      $post->comments = 0;
+      $post->state = 'published';
+      $post->commenting = 'on';
+      $post->save();
+      $comment = Comment::create();
+      $comment->author = 'PeanutCMS';
+      $comment->content = 'Welcome to PeanutCMS.';
+      $comment->date = time();
+      $comment->setPost($post);
+      $comment->save();
+    }
 
     // Set default settings
     if (!$this->configuration->exists('posts.fancyPermalinks')) {

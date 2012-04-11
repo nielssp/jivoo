@@ -158,9 +158,11 @@ abstract class ActiveRecord {
 
     $result = $db->executeSelect($select);
     if (isset($options['count']) AND !isset($customSelect)) {
-      $this->data[$options['count']] = $result->count();
-      $this->isSaved = FALSE;
-      $this->save();
+      if ($this->data[$options['count']] != $result->count()) {
+        $this->data[$options['count']] = $result->count();
+        $this->isSaved = FALSE;
+        $this->save();
+      }
     }
     $allArray = array();
     while ($assoc = $result->fetchAssoc()) {
@@ -390,20 +392,22 @@ abstract class ActiveRecord {
       case 'isNumeric':
         return is_numeric($value) == $conditionValue;
       case 'isInteger':
-        return preg_match('/\A[+-]?\d+\Z/', $value) == $conditionValue;
+        return (preg_match('/\A[+-]?\d+\Z/', $value) == 1) == $conditionValue;
       case 'minValue':
         $value = is_float($conditionValue) ? (float) $value : (int) $value;
         return $value >= $conditionValue;
       case 'maxValue':
         $value = is_float($conditionValue) ? (float) $value : (int) $value;
         return $value <= $conditionValue;
+      case 'match':
+        return preg_match($conditionValue, $value) == 1;
       case 'custom':
         return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);
     }
     return true;
   }
 
-  public function valid() {
+  public function isValid() {
     $this->errors = array();
     foreach ($this->data as $column => $value) {
       if (!isset($this->validate[$column])) {
@@ -441,7 +445,7 @@ abstract class ActiveRecord {
     }
     $defaultOptions = array('validate' => true);
     $options = array_merge($defaultOptions, $options);
-    if ($options['validate'] AND !$this->valid()) {
+    if ($options['validate'] AND !$this->isValid()) {
       return false;
     }
     if ($this->isSaved) {
