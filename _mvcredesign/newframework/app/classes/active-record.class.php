@@ -40,7 +40,7 @@ abstract class ActiveRecord {
   private $errors = array();
 
   public function __set($property, $value) {
-    if (array_key_exists($property, $this->data)) {
+    if (array_key_exists($property, $this->data) AND $property != $this->primaryKey) {
       $this->data[$property] = $value;
       $this->changed[$property] = TRUE;
       $this->isSaved = FALSE;

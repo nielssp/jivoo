@@ -136,10 +136,7 @@ UNIQUE (
       if (isset($options['unsigned']) AND $options['unsigned']) {
         $columnStrings[$name] .= ' UNSIGNED';
       }
-      if ($options['null']) {
-        $columnStrings[$name] .= ' NULL';
-      }
-      else {
+      if (!$options['null']) {
         $columnStrings[$name] .= ' NOT NULL';
       }
       if (isset($options['default'])) {
