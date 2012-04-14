@@ -13,9 +13,26 @@ class Link extends ActiveRecord implements ILinkable {
   }
 
   public function getPath() {
+    if ($this->type == 'home') {
+      return array();
+    }
   }
 
   public function getLink() {
+    if ($this->type == 'remote') {
+      return $this->path;
+    }
+    else {
+      return self::$links->getLink($this);
+    }
+  }
+
+  public function getMenu($menu = 'main') {
+    $menu = strtolower($menu);
+    $select = SelectQuery::create()
+      ->where('menu = ?')
+      ->addVar($menu);
+    return Link::all($select);
   }
 }
 

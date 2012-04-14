@@ -28,3 +28,10 @@ else {
     <a href="<?php echo WEBPATH; ?>about">About</a>
     <a href="<?php echo WEBPATH; ?>stuff/and/links">Links</a>
 
+<ul>
+<?php foreach (Link::getMenu('main') as $link): ?>
+<li>
+<?php $this->linkTo($link, $link->title); ?>
+</li>
+<?php endforeach; ?>
+</ul>
