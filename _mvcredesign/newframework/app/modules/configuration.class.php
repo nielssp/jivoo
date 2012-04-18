@@ -87,7 +87,10 @@ class Configuration implements IModule {
    * @return mixed The content of the configuration key or false if key
    * doesn't exist
    */
-  public function get($key) {
+  public function get($key = NULL) {
+    if (!isset($key)) {
+      return $this->data;
+    }
     if ($key[($keylen = strlen($key)) - 1] == '.') {
       $result = array();
       foreach ($this->data as $dkey => $dval) {

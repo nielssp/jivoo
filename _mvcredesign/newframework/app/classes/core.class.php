@@ -55,6 +55,7 @@ class Core {
         }
       }
       $this->modules[$module] = $reflection->newInstanceArgs($arguments);
+      ModuleRegister::register($this->modules[$module]);
     }
     return $this->modules[$module];
   }

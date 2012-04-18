@@ -207,12 +207,11 @@ function classFileName($className) {
 }
 
 function fileClassName($fileName) {
-//  $className = preg_replace('/-([a-z])/e', strtoupper('$1'), ucfirst($fileName));
-  $className = preg_replace_callback(
-  	'/-([a-z])/',
-  	create_function('$matches','return strtolower($matches[0]);'),
-  	$fileName
-  );
+  $words = explode('-', $fileName);
+  $className = '';
+  foreach ($words as $word) {
+    $className .= ucfirst($word);
+  }
   return $className;
 }
 

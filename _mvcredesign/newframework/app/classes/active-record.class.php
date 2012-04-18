@@ -400,7 +400,6 @@ abstract class ActiveRecord {
         $value = is_float($conditionValue) ? (float) $value : (int) $value;
         return $value <= $conditionValue;
       case 'match':
-        echo 'preg_match(' . $conditionValue . ', ' . $value .') = ' . preg_match($conditionValue, $value) .'<br/>';
         return preg_match($conditionValue, $value) == 1;
       case 'custom':
         return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);

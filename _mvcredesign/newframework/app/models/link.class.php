@@ -16,6 +16,9 @@ class Link extends ActiveRecord implements ILinkable {
     if ($this->type == 'home') {
       return array();
     }
+    else if ($this->type == 'path') {
+      return explode('/', $this->path);
+    }
   }
 
   public function getLink() {

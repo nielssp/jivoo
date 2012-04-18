@@ -1,6 +1,5 @@
     </div>
 
-
     <div class="footer" id="poweredby">
       Powered by <a href="#">PeanutCMS 0.1</a>
     </div>

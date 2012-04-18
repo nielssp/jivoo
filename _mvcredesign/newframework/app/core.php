@@ -27,7 +27,8 @@ chdir(PATH);
 // Classes that has to be initialized, the order does not matter
 $modules = array(
   'errors', 'configuration',  'i18n', 'http', 'templates',
-  'actions', 'routes', 'theme', 'database', 'posts', 'links'
+  'actions', 'routes', 'theme', 'database', 'users', 'posts',
+  'links', 'pages'
 );
 
 $core = new Core(p(CFG . 'blacklist'));

@@ -1,4 +1,6 @@
 <?php
 require('../app/essentials.php');
 
-require('../app/classes/db-drivers/mysql.class.php');
+// Make this shit work, please!
+$core = new Core(array('http'));
+$posts = $core->loadModule('posts');
