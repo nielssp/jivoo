@@ -24,7 +24,7 @@ h2 {
 }
 
 strong, em {
-  color:#540303;
+  color:#252830;
 }
 
 #header {
@@ -199,6 +199,8 @@ div.input p.label {
   width:172px;
   line-height:21px;
   margin:0;
+  color:#252830;
+  font-size:16px;
 }
 
 div.input div.element {
