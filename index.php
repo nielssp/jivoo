@@ -3,17 +3,17 @@
  * Main configuration file and entry-script of PeanutCMS
  *
  * This file can be used to change PeanutCMS constants.
- * (Available constants can be found in includes/core.php)
+ * (Available constants can be found in app/constants.php)
  *
  * @package PeanutCMS
  * @since 0.1.0
  */
 
-/** The absolute path of this installation */
-define('PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
+define('APP', 'app/');
 
-/** Directory which contains the PeanutCMS files (relative to PATH) */
-define('INC', 'includes/');
+//define('PUB', '../../public/');
 
-require_once(PATH . INC . 'core.php');
+define('DEBUG', TRUE);
+
+require_once(APP . 'core.php');
 
