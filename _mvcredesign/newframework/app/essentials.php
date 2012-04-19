@@ -215,6 +215,21 @@ function fileClassName($fileName) {
   return $className;
 }
 
+function precondition($condition) {
+  if ($condition === TRUE) {
+    return TRUE;
+  }
+  $bt = debug_backtrace();
+  $call = $bt[0];
+  $lines = file($call['file']);
+  preg_match(
+    '/' . $call['function'] . '\((.+)\)/',
+    $lines[$call['line'] - 1],
+    $matches
+  );
+  throw new InvalidArgumentException('Precondition not met (' . $matches[1] . ').');
+}
+
 function p($relative) {
   if ($relative[0] == '/') {
     return $relative;
