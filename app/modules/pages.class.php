@@ -80,7 +80,9 @@ class Pages implements IModule{
       $page = Page::create();
       $page->title = 'About';
       $page->name = 'about';
-      $page->content = '<p>Welcome to PeanutCMS. This is a static page. You can use it to show information.</p>';
+      $page->content = '<p>';
+      $page->content .= tr('Welcome to PeanutCMS. This is a static page. You can use it to display important information.');
+      $page->content .= '</p>';
       $page->date = time();
       $page->state = 'published';
       $page->save();

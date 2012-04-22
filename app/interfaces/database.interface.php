@@ -16,6 +16,7 @@ interface IDatabase {
   public function tableExists($table);
   public function getColumns($table);
   public function getPrimaryKey($table);
+  public function getIndexes($table);
   public function escapeString($string);
   public function escapeQuery($format, $vars);
 

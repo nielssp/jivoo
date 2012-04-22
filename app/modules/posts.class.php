@@ -54,9 +54,9 @@ class Posts implements IModule{
     if (!ActiveRecord::isConnected()) {
       throw new Exception('temporary.');
     }
-    
+
     $newInstall = FALSE;
-    
+
     require_once(p(MODELS . 'post.class.php'));
 
     if (!$this->database->tableExists('posts')) {
@@ -118,7 +118,7 @@ class Posts implements IModule{
     }
 
     ActiveRecord::addModel('Comment', 'comments');
-    
+
     if ($newInstall) {
       $post = Post::create();
       $post->title = 'Welcome to PeanutCMS';
@@ -142,7 +142,7 @@ class Posts implements IModule{
       $this->configuration->set('posts.fancyPermalinks', 'on');
     }
     if (!$this->configuration->exists('posts.permalink')) {
-      $this->configuration->set('posts.permalink', array('%year%', '%month%', '%name%'));
+      $this->configuration->set('posts.permalink', '%year%/%month%/%name%');
     }
     if (!$this->configuration->exists('posts.comments.orting')) {
       $this->configuration->set('posts.comments.orting', 'desc');
@@ -186,7 +186,7 @@ class Posts implements IModule{
 
   private function detectFancyPermalinks() {
     $path = $this->routes->getPath();
-    $permalink = $this->configuration->get('postPermalink');
+    $permalink = explode('|', $this->configuration->get('postPermalink'));
     if (is_array($path)) {
       foreach ($permalink as $key => $dir) {
         if (isset($path[$key])) {
@@ -266,7 +266,7 @@ class Posts implements IModule{
     switch ($class) {
       case 'Post':
         if ($this->configuration->get('posts.fancyPermalinks') == 'on') {
-          $permalink = $this->configuration->get('posts.permalink');
+          $permalink = explode('/', $this->configuration->get('posts.permalink'));
           if (is_array($permalink)) {
             $time = $record->date;
             $replace = array('%name%'  => $record->name,
@@ -330,7 +330,7 @@ class Posts implements IModule{
     }
 
     if ($templateData['post']->getPath() != $path) {
-     $this->http->redirectPath($templateData['post']->getPath());
+      $this->http->redirectPath($templateData['post']->getPath());
     }
 
     $templateData['title'] = $templateData['post']->title;

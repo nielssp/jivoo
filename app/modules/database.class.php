@@ -121,6 +121,10 @@ class Database extends DatabaseDriver implements IModule {
     return $this->connection->getPrimaryKey($table);
   }
 
+  public function getIndexes($table) {
+    return $this->connection->getIndexes($table);
+  }
+
   public function escapeString($string) {
     return $this->connection->escapeString($string);
   }

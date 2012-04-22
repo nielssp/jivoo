@@ -87,6 +87,15 @@ class Mysql extends DatabaseDriver {
     return $row['Column_name'];
   }
 
+  public function getIndexes($table) {
+    $result = $this->mysqlQuery('SHOW INDEX FROM ' . $this->tableName($table) . ' WHERE Key_name != "PRIMARY"');
+    $indexColumns = array();
+    while ($row = mysql_fetch_array($result)) {
+      $indexColumns[] = $row['Column_name'];
+    }
+    return $indexColumns;
+  }
+
   public function escapeString($string) {
     return mysql_real_escape_string($string);
   }

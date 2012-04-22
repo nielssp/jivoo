@@ -275,7 +275,7 @@ abstract class ActiveRecord {
     if (!$result->hasRows()) {
       return FALSE;
     }
-    return self::createFromAssoc($class, $result->fetchAssoc());
+    return self::createFromAssoc($otherClass, $result->fetchAssoc());
   }
 
   private function oneSet($options, ActiveRecord $record) {
@@ -358,6 +358,9 @@ abstract class ActiveRecord {
   }
 
   private static function createFromAssoc($class, $assoc) {
+    if (!class_exists($class)) {
+      throw new Exception(tr('%1 is not a class', $class));
+    }
     $new = new $class();
     foreach ($assoc as $property => $value) {
       if (in_array($property, self::$models[$class]['columns'])) {

@@ -79,6 +79,13 @@ class Links implements IModule{
       $link->title = tr('Home');
       $link->path = '';
       $link->save();
+
+      $link = Link::create();
+      $link->menu = 'main';
+      $link->type = 'path';
+      $link->title = tr('About');
+      $link->path = 'about';
+      $link->save();
     }
   }
 

@@ -40,6 +40,10 @@ class User extends ActiveRecord implements ILinkable {
   public function getLink() {
     return self::$users->getLink($this);
   }
+
+  public function hasPermission($key) {
+    return $this->getGroup()->hasPermission($key);
+  }
 }
 
 User::setModule($this);

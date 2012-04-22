@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><?php echo $title; ?></title>
+    <title><?php echo $title; ?> | PeanutCMS</title>
 
 <?php $this->outputHtml('head-top'); ?>
 
     <link rel="stylesheet" type="text/css" href="<?php echo w(PUB . 'css/arachis/jquery-ui-1.8.17.custom.css'); ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo w(PUB . 'css/backend.css'); ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->getFile('css/backend.css'); ?>" />
 
     <script src="<?php echo w(PUB . 'js/jquery-1.7.1.min.js'); ?>" type="text/javascript"></script>
     <script src="<?php echo w(PUB . 'js/jquery-ui-1.8.17.custom.min.js'); ?>" type="text/javascript"></script>
@@ -22,17 +22,14 @@
 
 <?php $this->outputHtml('body-top'); ?>
 
+
+<?php if (!isset($noHeader) OR !$noHeader): ?>
     <div id="header">
       <div id="bar">
         <div class="right">PeanutCMS</div>
       </div>
       <div id="shadow"></div>
     </div>
+<?php endif; ?>
 
     <div id="content">
-
-    <?php
-    if ($backendMenu) {
-      echo 'to';
-    }
-    ?>
