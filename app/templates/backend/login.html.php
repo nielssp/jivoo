@@ -6,9 +6,7 @@ $this->renderTemplate('backend/header.html');
 
       <div class="section header_section">
         <div class="container narrow_container">
-          <h1><a href="#">
-            PeanutCMS
-          </a></h1>
+          <h1><?php $this->linkTo('home', 'PeanutCMS'); ?></h1>
         </div>
       </div>
 
@@ -21,9 +19,9 @@ $this->renderTemplate('backend/header.html');
             <label for="login_username" class="small">Username</label>
             <input type="text" name="login_username" class="text bigtext"
               id="login_username" <?php if (isset($loginUsername)) {
-              echo 'value="' . $loginUsername . '"';
-            }
-            ?> />
+                echo 'value="' . $loginUsername . '"';
+              }
+              ?> />
           </p>
           <p>
             <label for="login_password" class="small">Password</label>

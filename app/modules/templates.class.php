@@ -30,6 +30,8 @@ class Templates implements IModule {
 
   private $prevParameters = array();
 
+  private $parameters = array();
+
   /**
    * PHP5-style constructor
    */
@@ -104,11 +106,7 @@ class Templates implements IModule {
         $contentType = "application/json";
         break;
       default:
-        $this->errors->fatal(
-          tr('Unsupported content type'),
-          tr('Unsupported content type: %1', $fileExt)
-        );
-      break;
+        throw new Exception(tr('Unsupported content type: %1', $fileExt));
     }
     header('Content-Type:' . $contentType . ';charset=utf-8');
     $this->contentTypeSet = TRUE;
@@ -172,8 +170,24 @@ class Templates implements IModule {
     $this->theme = $templateDir;
   }
 
-  public function linkTo(ILinkable $linkable, $label) {
-    echo '<a href="' . $linkable->getLink() . '">';
+  public function linkTo($linkable, $label) {
+    if (is_a($linkable, 'ILinkable')) {
+      $link = $linkable->getLink();
+    }
+    else {
+      $http = ModuleRegister::getModule('http');
+      if (!$http) {
+        return;
+      }
+      switch ($linkable) {
+        case 'home':
+          $link = $http->getLink(array());
+          break;
+        default:
+          return;
+      }
+    }
+    echo '<a href="' . $link . '">';
     echo $label;
     echo '</a>';
   }
@@ -194,8 +208,21 @@ class Templates implements IModule {
     }
   }
 
+  public function addTemplateData($var, $value, $template = '*') {
+    if (!isset($this->parameters[$template])) {
+      $this->parameters[$template] = array();
+    }
+    $this->parameters[$template][$var] = $value;
+  }
+
   public function renderTemplate($name, $parameters = array()) {
     $this->prevParameters = array_merge($this->prevParameters, $parameters);
+    if (isset($this->parameters[$name])) {
+      extract($this->parameters[$name], EXTR_SKIP);
+    }
+    if (isset($this->parameters['*'])) {
+      extract($this->parameters['*'], EXTR_SKIP);
+    }
     extract($this->prevParameters, EXTR_SKIP);
     $site = $this->configuration->get('site.');
     if (file_exists(p($this->theme . $name. '.php'))) {

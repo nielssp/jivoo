@@ -101,8 +101,8 @@ $(function() {
       var items = $(this).parent().parent();
       $(document).bind('keydown', shortcut, function() {
         if (items.css('display') != "none") {
-          alert("Pressed " + shortcut + ": " + label);
-//          window.location.href = link.attr("href");
+//          alert("Pressed " + shortcut + ": " + label);
+          window.location.href = link.attr("href");
         }
       });
     }

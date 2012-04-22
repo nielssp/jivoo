@@ -1,7 +1,7 @@
     </div>
 
     <div class="footer" id="poweredby">
-      Powered by <a href="#">PeanutCMS 0.1</a>
+      Powered by <a href="#">PeanutCMS <?php echo PEANUT_VERSION; ?></a>
     </div>
 
     <div class="footer" id="links">

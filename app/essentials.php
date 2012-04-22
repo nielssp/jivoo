@@ -167,6 +167,24 @@ function tdate($format, $timestamp = NULL) {
   }
 }
 
+function groupObjects($objects) {
+  if (!is_array($objects) OR count($objects) < 1) {
+    return FALSE;
+  }
+  uasort($objects, 'groupSorter');
+}
+
+function groupSorter(IGroupable $a, IGroupable $b) {
+  $groupA = $a->getGroup();
+  $groupB = $b->getGroup();
+  if (is_numeric($groupA) AND is_numeric($groupB)) {
+    return $groupB - $groupA;
+  }
+  else {
+    return strcmp($groupA, $groupB);
+  }
+}
+
 /**
  * Comparison function for use with usort() and uasort()
  *
@@ -174,13 +192,7 @@ function tdate($format, $timestamp = NULL) {
  * @param array $b
  */
 function prioritySorter($a, $b) {
-  if ($a['priority'] < $b['priority']) {
-    return 1;
-  }
-  if ($a['priority'] > $b['priority']) {
-    return -1;
-  }
-  return 0;
+  return $b['priority'] - $a['priority'];
 }
 
 /**
