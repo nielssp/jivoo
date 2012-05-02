@@ -16,6 +16,8 @@ class Posts implements IModule{
   private $routes;
   private $templates;
   private $http;
+  private $backend;
+  private $users;
 
   public function getConfiguration() {
     return $this->configuration;
@@ -27,6 +29,14 @@ class Posts implements IModule{
 
   public function getHttp() {
     return $this->http;
+  }
+
+  public function getUsers() {
+    return $this->users;
+  }
+
+  public function getBackend() {
+    return $this->backend;
   }
 
   public function getDatabase() {
@@ -43,8 +53,10 @@ class Posts implements IModule{
 
   private $post;
 
-  public function __construct(Database $database) {
-    $this->database = $database;
+  public function __construct(Backend $backend) {
+    $this->backend = $backend;
+    $this->users = $backend->getUsers();
+    $this->database = $backend->getDatabase();
     $this->routes = $this->database->getRoutes();
     $this->http = $this->routes->getHttp();
     $this->templates = $this->routes->getTemplates();
@@ -181,7 +193,7 @@ class Posts implements IModule{
   }
 
   public static function getDependencies() {
-    return array('database');
+    return array('backend');
   }
 
   private function detectFancyPermalinks() {
