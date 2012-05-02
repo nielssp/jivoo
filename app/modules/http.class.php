@@ -107,6 +107,10 @@ class Http implements IModule {
     unset($this->params[$key]);
   }
 
+  public function isCurrent($path) {
+    return $path === $this->path;
+  }
+
   /**
    * Redirect the user to another page
    *

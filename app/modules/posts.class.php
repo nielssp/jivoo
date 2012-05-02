@@ -318,7 +318,7 @@ class Posts implements IModule{
   }
 
 
-  public function postListController($parameters = array(), $contentType = 'html') {
+  public function postListController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
 
     $templateData['posts'] = Post::all(
@@ -330,9 +330,8 @@ class Posts implements IModule{
     $this->templates->renderTemplate('list-posts.html', $templateData);
   }
 
-  public function postController($parameters = array(), $contentType = 'html') {
+  public function postController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
-    $path = $this->routes->getPath();
 
     if ($this->configuration->get('posts.fancyPermalinks') == 'on') {
       $templateData['post'] = Post::find($this->post);
@@ -341,7 +340,7 @@ class Posts implements IModule{
       $templateData['post'] = Post::find((int) $path[1]);
     }
 
-    if ($templateData['post']->getPath() != $path) {
+    if (!$this->http->isCurrent($templateData['post']->getPath())) {
       $this->http->redirectPath($templateData['post']->getPath());
     }
 

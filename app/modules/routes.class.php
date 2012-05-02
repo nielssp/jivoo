@@ -108,7 +108,7 @@ class Routes implements IModule {
   public function callController() {
     $this->mapRoute();
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
-      call_user_func($this->selectedController, $this->http->getParams(), 'html');
+      call_user_func($this->selectedController, $this->http->getPath(), $this->http->getParams(), 'html');
     }
     else {
       /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */

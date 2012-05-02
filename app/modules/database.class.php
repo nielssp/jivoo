@@ -170,7 +170,7 @@ class Database extends DatabaseDriver implements IModule {
     return $drivers;
   }
 
-  public function selectDriverController($parameters = array(), $contentType = 'html') {
+  public function selectDriverController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['drivers'] = $this->listDrivers();
     $templateData['backendMenu'] = FALSE;
@@ -184,7 +184,7 @@ class Database extends DatabaseDriver implements IModule {
     }
   }
 
-  public function setupDriverController($parameters = array(), $contentType = 'html') {
+  public function setupDriverController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['driver'] = $this->driverInfo;
     $templateData['cancelAction'] = $this->actions->add('unset-driver');

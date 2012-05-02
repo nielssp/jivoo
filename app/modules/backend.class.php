@@ -183,7 +183,7 @@ class Backend implements IModule, ILinkable {
     $this->templates->addTemplateData('menu', $menu, 'backend/header.html');
   }
 
-  public function dashboardController($parameters = array(), $contentType = 'html') {
+  public function dashboardController($path = array(), $parameters = array(), $contentType = 'html') {
     if (!$this->users->isLoggedIn()) {
       $this->loginController($parameters, $contentType);
       return;
@@ -195,7 +195,7 @@ class Backend implements IModule, ILinkable {
     $this->templates->renderTemplate('backend/dashboard.html', $templateData);
   }
 
-  public function loginController($parameters = array(), $contentType = 'html') {
+  public function loginController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
 
     $templateData['title'] = tr('Log in');

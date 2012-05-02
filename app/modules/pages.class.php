@@ -130,7 +130,7 @@ class Pages implements IModule{
     return $this->http->getLink($record->getPath());
   }
 
-  public function pageController($parameters = array(), $contentType = 'html') {
+  public function pageController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
 
     $templateData['page'] = Page::find($this->page);
