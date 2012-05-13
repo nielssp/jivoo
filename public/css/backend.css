@@ -135,8 +135,8 @@ strong, em {
 }
 
 .light_section {
-  padding:16px 0 16px;
-  margin:0 auto;
+  padding:8px 0;
+  margin:16px auto;
   width:832px;
   background-color:#f5f5f5;
   border-radius:4px;
@@ -144,10 +144,12 @@ strong, em {
 }
 
 .light_section .container {
+
 }
 
 .light_section h2 {
   margin-left:-8px;
+  margin-top:0px;
 }
 
 .top_shadow {

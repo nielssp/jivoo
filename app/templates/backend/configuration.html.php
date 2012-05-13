@@ -4,34 +4,26 @@ $this->renderTemplate('backend/header.html');
 ?>
 
 
-      <div class="section">
+      <div class="section light_section">
         <div class="container">
-          <h1>Configuration</h1>
+          <h2>Filter</h2>
         </div>
       </div>
       <div class="section light_section">
         <div class="container">
-          <h2>General</h2>
+          <h2>Site</h2>
           <div class="input">
-            <p class="label"><label for="post_permalink">Permalink</label></p>
+            <p class="label"><label for="post_permalink">Site Title</label></p>
             <div class="element">
-              <div class="permalink-wrapper">
-                /PeanutCMS/index.php/2012/01/<input type="text" id="post_permalink" name="permalink"
-                data-title-id="post_title" class="text permalink permalink-allow-slash" value="" />
-              </div>
+              <input type="text" class="text" />
             </div>
             <div class="clearl"></div>
           </div>
           <div class="separator"></div>
           <div class="input">
-            <p class="label">Allow Comments</p>
+            <p class="label"><label for="post_permalink">Site Subtitle</label></p>
             <div class="element">
-              <div class="radioset">
-                <input type="radio" id="allow_comments_yes" checked="checked" name="allow_comments"/>
-                <label for="allow_comments_yes">Yes</label>
-                <input type="radio" id="allow_comments_no" name="allow_comments"/>
-                <label for="allow_comments_no">No</label>
-              </div>
+              <input type="text" class="text" />
             </div>
             <div class="clearl"></div>
           </div>
