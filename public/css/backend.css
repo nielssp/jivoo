@@ -134,6 +134,22 @@ strong, em {
   margin:0;
 }
 
+.light_section {
+  padding:16px 0 16px;
+  margin:0 auto;
+  width:832px;
+  background-color:#f5f5f5;
+  border-radius:4px;
+  box-shadow:0 0 32px 0px #ccc;
+}
+
+.light_section .container {
+}
+
+.light_section h2 {
+  margin-left:-8px;
+}
+
 .top_shadow {
   background:transparent url(../img/top-shadow.png) repeat-x;
   height:16px;
@@ -195,6 +211,12 @@ div.input {
   border-bottom:1px solid #1b1f2a;
 } 
 
+.light_section .separator {
+ border-bottom:1px solid #e5e5e5;
+ margin-left:-32px;
+ margin-right:-32px;
+}
+
 div.input p.label {
   float:left;
   width:172px;
@@ -202,6 +224,15 @@ div.input p.label {
   margin:0;
   color:#252830;
   font-size:16px;
+}
+
+.light_section div.input p.label,
+.dark_section div.input p.label {
+  font-size:12px;
+}
+
+.light_section div.input p.label {
+  color:#555;
 }
 
 div.input div.element {

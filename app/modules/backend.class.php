@@ -86,7 +86,8 @@ class Backend implements IModule, ILinkable {
     $this->addLink('peanutcms', 'logout', tr('Log out'), $this->actions->add('logout'), 10);
 
     $this->addCategory('settings', 'Settings', 10);
-    $this->addPage('settings', 'configuration', tr('Configuration'), array($this, 'dashboardController'), 10);
+    $mainConfigPage = new ConfigurationPage($this);
+    $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
   }
 
   public static function getDependencies() {
