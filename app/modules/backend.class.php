@@ -81,11 +81,12 @@ class Backend implements IModule, ILinkable {
     Hooks::attach('preRender', array($this, 'createMenu'));
 
     $this->addCategory('peanutcms', 'PeanutCMS', -2);
+    $this->addLink('peanutcms', 'logout', tr('Log out'), $this->actions->add('logout'), 10);
     $this->addLink('peanutcms', 'dashboard', tr('Dashboard'), explode('/', $path), 0);
     $this->addLink('peanutcms', 'home', tr('Home'), array(), 0);
-    $this->addLink('peanutcms', 'logout', tr('Log out'), $this->actions->add('logout'), 10);
 
-    $this->addCategory('settings', 'Settings', 10);
+    $this->addCategory('settings', tr('Settings'), 10);
+    $this->addCategory('content', tr('Content'), 5);
     $mainConfigPage = new ConfigurationPage($this);
     $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
   }

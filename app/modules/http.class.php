@@ -56,16 +56,10 @@ class Http implements IModule {
     if (!$this->configuration->exists('http.rewrite')) {
       $this->configuration->set('http.rewrite', 'off');
     }
-
-    if (!$this->configuration->exists('http.index')) {
-      $this->configuration->set(
-          	'http.index',
-            array(
-              'path' => array('posts'),
-              'parameters' => array()
-            )
-      );
+    if (!$this->configuration->exists('http.index.path')) {
+      $this->configuration->set('http.index.path', 'posts');
     }
+
     // Determine if the current URL is correct
     if ($this->configuration->get('rewrite') === 'on') {
       if ($this->path[0] == 'index.php') {
@@ -80,12 +74,13 @@ class Http implements IModule {
       array_shift($this->path);
     }
 
-    $index = $this->configuration->get('http.index');
+    $path = explode('/', $this->configuration->get('http.index.path'));
+    $parameters = $this->configuration->get('http.index.parameters', TRUE);
     if (count($this->path) < 1) {
-      $this->path = $index['path'];
-      $this->params = array_merge($index['parameters'], $this->params);
+      $this->path = $path;
+      $this->params = array_merge($parameters, $this->params);
     }
-    else if ($index['path'] == $this->path) {
+    else if ($path == $this->path) {
       $this->redirectPath(array(), $this->params);
     }
   }
@@ -146,8 +141,8 @@ class Http implements IModule {
     if (!isset($path)) {
       $path = $this->path;
     }
-    $index = $this->configuration->get('http.index');
-    if ($index['path'] == $path) {
+    $index = explode('/', $this->configuration->get('http.index.path'));
+    if ($index == $path) {
       $path = array();
     }
     if ($moved) {
@@ -249,8 +244,8 @@ class Http implements IModule {
     if (!isset($path)) {
       $path = $this->path;
     }
-    $index = $this->configuration->get('http.index');
-    if ($index['path'] == $path) {
+    $index = explode('/', $this->configuration->get('http.index.path'));
+    if ($index == $path) {
       $path = array();
     }
     if (isset($hashtag)) {

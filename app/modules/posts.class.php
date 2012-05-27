@@ -63,10 +63,6 @@ class Posts implements IModule{
     $this->errors = $this->routes->getErrors();
     $this->configuration = $this->database->getConfiguration();
 
-    if (!ActiveRecord::isConnected()) {
-      throw new Exception('temporary.');
-    }
-
     $newInstall = FALSE;
 
     require_once(p(MODELS . 'post.class.php'));
@@ -156,8 +152,8 @@ class Posts implements IModule{
     if (!$this->configuration->exists('posts.permalink')) {
       $this->configuration->set('posts.permalink', '%year%/%month%/%name%');
     }
-    if (!$this->configuration->exists('posts.comments.orting')) {
-      $this->configuration->set('posts.comments.orting', 'desc');
+    if (!$this->configuration->exists('posts.comments.sorting')) {
+      $this->configuration->set('posts.comments.sorting', 'desc');
     }
     if (!$this->configuration->exists('posts.comments.childSorting')) {
       $this->configuration->set('posts.comments.childSorting', 'asc');
@@ -190,6 +186,8 @@ class Posts implements IModule{
     $this->routes->addRoute('posts', array($this, 'postListController'));
     //$this->routes->addRoute('tags', array($this, ''));
     //$this->routes->addRoute('tags/*', array($this, ''));
+    
+    $this->backend->addPage('content', 'add-post', tr('Add Post'), array($this, 'addPostController'), 2);
   }
 
   public static function getDependencies() {
@@ -359,5 +357,12 @@ class Posts implements IModule{
     else {
       $this->templates->renderTemplate('post.html', $templateData);
     }
+  }
+
+
+  public function addPostController($path = array(), $parameters = array(), $contentType = 'html') {
+    $templateData = array();
+    $templateData['title'] = tr('New Post');
+    $this->templates->renderTemplate('backend/edit-post.html', $templateData);
   }
 }

@@ -224,7 +224,7 @@ class Templates implements IModule {
       extract($this->parameters['*'], EXTR_SKIP);
     }
     extract($this->prevParameters, EXTR_SKIP);
-    $site = $this->configuration->get('site.');
+    $site = $this->configuration->get('site');
     if (file_exists(p($this->theme . $name. '.php'))) {
       $this->setContentType($name);
       require(p($this->theme . $name . '.php'));

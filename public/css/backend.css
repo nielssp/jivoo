@@ -201,6 +201,10 @@ input.text:focus, textarea:focus {
   box-shadow:0 0 16px 0px #aaa;
 }
 
+.light_section input.text:focus, .light_section textarea:focus {
+  box-shadow:0 0 16px 0px #999;
+}
+
 div.input {
   margin:8px 0;
 }

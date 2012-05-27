@@ -167,7 +167,7 @@ function tdate($format, $timestamp = NULL) {
   }
 }
 
-function groupObjects($objects) {
+function groupObjects(&$objects) {
   if (!is_array($objects) OR count($objects) < 1) {
     return FALSE;
   }
@@ -178,7 +178,7 @@ function groupSorter(IGroupable $a, IGroupable $b) {
   $groupA = $a->getGroup();
   $groupB = $b->getGroup();
   if (is_numeric($groupA) AND is_numeric($groupB)) {
-    return $groupB - $groupA;
+    return $groupA - $groupB;
   }
   else {
     return strcmp($groupA, $groupB);

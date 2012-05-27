@@ -65,7 +65,7 @@ class Database extends DatabaseDriver implements IModule {
       try {
         $this->connection = call_user_func(
           array(fileClassName($this->driver), 'connect'),
-          $this->configuration->get('database.')
+          $this->configuration->get('database')
         );
       }
       catch (DatabaseConnectionFailedException $exception) {
