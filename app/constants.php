@@ -15,6 +15,19 @@ if (!defined('DEBUG')) {
   define('DEBUG', FALSE);
 }
 
+if (!defined('HIDE_LEVEL')) {
+  /**
+   * How much to hide the identity of PeanutCMS
+   * 0 : Reports version and name ("PeanutCMS " . PEANUT_VERSION)
+   * 1 : Only reports name ("PeanutCMS")
+   * 2 : Will hide everything
+   * Level can be increased using the following configuration keys as well:
+   *  - system.hide.identity (on/off)
+   *  - system.hide.version (on/off)
+   */
+  define('HIDE_LEVEL', 0);
+}
+
 /** The absolute path of this installation */
 if (!defined('PATH')) {
   define('PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');

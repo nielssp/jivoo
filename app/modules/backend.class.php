@@ -70,6 +70,7 @@ class Backend implements IModule, ILinkable {
     }
 
     $path = $this->configuration->get('backend.path');
+    $aboutPath = $path . '/about';
 
     if ($this->users->isLoggedIn()) {
       $this->routes->addRoute($path, array($this, 'dashboardController'));
@@ -77,16 +78,23 @@ class Backend implements IModule, ILinkable {
     else {
       $this->routes->addRoute($path, array($this, 'loginController'));
     }
+    if (!$this->templates->hideIdentity() OR $this->users->isLoggedIn()) {
+      $this->routes->addRoute($aboutPath, array($this, 'aboutController'));
+      $this->templates->addTemplateData('aboutLink', $this->http->getLink(explode('/', $aboutPath)), 'backend/footer.html');
+    }
+    else {
+      $this->routes->addRoute($aboutPath, array($this, 'loginController'));
+    }
 
     Hooks::attach('preRender', array($this, 'createMenu'));
 
     $this->addCategory('peanutcms', 'PeanutCMS', -2);
     $this->addLink('peanutcms', 'logout', tr('Log out'), $this->actions->add('logout'), 10);
     $this->addLink('peanutcms', 'dashboard', tr('Dashboard'), explode('/', $path), 0);
+    $this->addLink('peanutcms', 'about', tr('About'), explode('/', $aboutPath), 8);
     $this->addLink('peanutcms', 'home', tr('Home'), array(), 0);
 
     $this->addCategory('settings', tr('Settings'), 10);
-    $this->addCategory('content', tr('Content'), 5);
     $mainConfigPage = new ConfigurationPage($this);
     $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
   }
@@ -103,14 +111,35 @@ class Backend implements IModule, ILinkable {
     $this->http->getLink($this->getPath());
   }
 
-  private function createShortcut($title) {
+  private function createShortcut($title, $category = NULL) {
     $titleArr = str_split($title);
     foreach ($titleArr as $char) {
       $shortcut = strtoupper($char);
-      if (!in_array($shortcut, $this->shortcuts)) {
-        $this->shortcuts[] = $shortcut;
-        return $shortcut;
+      if (in_array($shortcut, $this->shortcuts['root'])) {
+        continue;
       }
+      if ($category == NULL AND in_array($shortcut, $this->shortcuts)) {
+        continue;
+      }
+      if ($category != NULL) {
+        if (is_array($this->shortcuts[$category])
+            AND in_array($shortcut, $this->shortcuts[$category])) {
+          continue;
+        }
+        if (is_array($this->shortcuts['root'])
+            AND in_array($shortcut, $this->shortcuts['root'])) {
+          continue;
+        }
+        if (!is_array($this->shortcuts[$category])) {
+          $this->shortcuts[$category] = array();
+        }
+        $this->shortcuts[$category][] = $shortcut;
+      }
+      else {
+        $this->shortcuts['root'] = $shortcut;
+      }
+      $this->shortcuts[] = $shortcut;
+      return $shortcut;
     }
     return NULL;
   }
@@ -135,7 +164,7 @@ class Backend implements IModule, ILinkable {
     $this->categories[$categoryId]->links[$pageId]->id = $pageId;
     $this->categories[$categoryId]->links[$pageId]->title = $pageTitle;
     $this->categories[$categoryId]->links[$pageId]->group = $group;
-    $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle);
+    $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle, $categoryId);
     if (is_array($path)) {
       $this->categories[$categoryId]->links[$pageId]->path = $path;
       $this->categories[$categoryId]->links[$pageId]->link = $this->http->getLink($path);
@@ -167,7 +196,7 @@ class Backend implements IModule, ILinkable {
     $this->categories[$categoryId]->links[$pageId]->id = $pageId;
     $this->categories[$categoryId]->links[$pageId]->title = $pageTitle;
     $this->categories[$categoryId]->links[$pageId]->group = $group;
-    $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle);
+    $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle, $categoryId);
     $this->categories[$categoryId]->links[$pageId]->path = $path;
     $this->categories[$categoryId]->links[$pageId]->link = $this->http->getLink($path);
   }
@@ -187,7 +216,7 @@ class Backend implements IModule, ILinkable {
 
   public function dashboardController($path = array(), $parameters = array(), $contentType = 'html') {
     if (!$this->users->isLoggedIn()) {
-      $this->loginController($parameters, $contentType);
+      $this->loginController($path, $parameters, $contentType);
       return;
     }
     $templateData = array();
@@ -195,6 +224,18 @@ class Backend implements IModule, ILinkable {
     $templateData['title'] = tr('Dashboard');
 
     $this->templates->renderTemplate('backend/dashboard.html', $templateData);
+  }
+
+  public function aboutController($path = array(), $parameters = array(), $contentType = 'html') {
+    if (!$this->users->isLoggedIn() AND $this->templates->hideIdentity()) {
+      $this->loginController($path, $parameters, $contentType);
+      return;
+    }
+    $templateData = array();
+
+    $templateData['title'] = tr('About');
+
+    $this->templates->renderTemplate('backend/about.html', $templateData);
   }
 
   public function loginController($path = array(), $parameters = array(), $contentType = 'html') {

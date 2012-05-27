@@ -64,6 +64,9 @@ class Configuration implements IModule {
     $arrayRef =& $this->data;
     foreach ($keyArray as $part) {
       if (!empty($part)) {
+        if (!is_array($arrayRef)) {
+          $arrayRef = array();
+        }
         $arrayRef =& $arrayRef[$part];
       }
     }

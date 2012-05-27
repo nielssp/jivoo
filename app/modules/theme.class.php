@@ -37,39 +37,43 @@ class Theme implements IModule {
 
   private $menuList;
 
-  /**
-   * PHP5-style constructor
-   */
   public function __construct(Templates $templates) {
     $this->templates = $templates;
     $this->errors = $this->templates->getErrors();
     $this->configuration = $this->templates->getConfiguration();
 
     // Set default settings
-    if (!$this->configuration->exists('theme')) {
-      $this->configuration->set('theme', 'arachis');
+    if (!$this->configuration->exists('theme.name')) {
+      $this->configuration->set('theme.name', 'arachis');
     }
 
     // Create meta-tags
-    $this->templates->insertHtml(
+    if (!$this->templates->hideIdentity()) {
+      $this->templates->insertHtml(
         'meta-generator',
         'head-top',
         'meta',
-        array('name' => 'generator', 'content' => 'PeanutCMS ' . PEANUT_VERSION),
+        array(
+          'name' => 'generator',
+          'content' => 'PeanutCMS' . ($this->templates->hideVersion() ? '' : ' ' . PEANUT_VERSION)
+        ),
         '',
         8
       );
-    $this->templates->insertHtml(
+    }
+    if ($this->configuration->exists('site.description')) {
+      $this->templates->insertHtml(
         'meta-description',
         'head-top',
         'meta',
         array(
           'name' => 'description',
-          'content' => $this->configuration->get('subtitle')
+          'content' => $this->configuration->get('site.description')
         ),
         '',
         6
       );
+    }
 
     // Find and load theme
     if ($this->load()) {

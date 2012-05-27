@@ -1,3 +1,4 @@
+<?php $this->setHtmlIndent(4); ?>
 <!DOCTYPE html>
 <html>
   <head>

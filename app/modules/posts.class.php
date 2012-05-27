@@ -187,7 +187,11 @@ class Posts implements IModule{
     //$this->routes->addRoute('tags', array($this, ''));
     //$this->routes->addRoute('tags/*', array($this, ''));
     
-    $this->backend->addPage('content', 'add-post', tr('Add Post'), array($this, 'addPostController'), 2);
+    $this->backend->addCategory('content', tr('Content'), 2);
+    $this->backend->addPage('content', 'new-post', tr('New Post'), array($this, 'addPostController'), 2);
+    $this->backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'addPostController'), 4);
+    $this->backend->addPage('content', 'tags', tr('Tags'), array($this, 'addPostController'), 8);
+    $this->backend->addPage('content', 'categories', tr('Categories'), array($this, 'addPostController'), 8);
   }
 
   public static function getDependencies() {

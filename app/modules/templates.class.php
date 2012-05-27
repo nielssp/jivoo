@@ -26,11 +26,23 @@ class Templates implements IModule {
 
   private $html = array();
 
+  private $indentation = 0;
+
   private $contentTypeSet = FALSE;
 
   private $prevParameters = array();
 
   private $parameters = array();
+
+  private $hideLevel = HIDE_LEVEL;
+
+  public function hideVersion() {
+    return $this->hideLevel > 0;
+  }
+
+  public function hideIdentity() {
+    return $this->hideLevel > 1;
+  }
 
   /**
    * PHP5-style constructor
@@ -49,30 +61,15 @@ class Templates implements IModule {
 
     $this->setTheme(TEMPLATES);
 
-//     if (!$PEANUT['configuration']->exists('menu')) {
-//       $PEANUT['configuration']->set(
-//         'menu',
-//         array(
-//           'label'      => tr('Home'),
-//           'template'   => 'list-posts',
-//           'parameters' => array(
-//             'sortDesc' => 'date',
-//             'perPage'  => 10
-//           )
-//         ),
-//         array(
-//           'label'      => tr('Links'),
-//           'template'   => 'page',
-//           'parameters' => array('p' => 2)
-//         ),
-//         array(
-//           'label'      => tr('About'),
-//           'template'   => 'page',
-//           'parameters' => array('p' => 1)
-//         )
-//       );
-//     }
-
+    if ($this->configuration->exists('system.hide')) {
+      $hide = $this->configuration->get('system.hide');
+      if ($hide['identity'] == 'on') {
+        $this->hideLevel = 2;
+      }
+      else if ($hide['version'] == 'on' AND $this->hideLevel < 1) {
+        $this->hideLevel = 1;
+      }
+    }
   }
 
   public static function getDependencies() {
@@ -122,7 +119,7 @@ class Templates implements IModule {
   * @param string $innerhtml Optional string to be placed between start- and end-tag
   * @param int $priority A high-priority (e.g. 10) tag will be inserted before a low-priority one (e.g 2)
   */
-  function insertHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5) {
+  public function insertHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5) {
     $tag = strtolower($tag);
     if ($tag == 'script' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/javascript';
@@ -136,18 +133,22 @@ class Templates implements IModule {
                                           'parameters' => $parameters);
   }
 
+  public function setHtmlIndent($indentation = 0) {
+    $this->indentation = $indentation;
+  }
+
   /**
    * Output HTML-code attached to a location on the page
    *
    * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
    */
-  function outputHtml($location) {
+  public function outputHtml($location, $linePrefix = '') {
     if (!isset($this->html[$location]) OR !is_array($this->html[$location])) {
       return;
     }
     uasort($this->html[$location], 'prioritySorter');
     foreach ($this->html[$location] as $id => $html) {
-      echo '<' . $html['tag'];
+      echo str_repeat(' ', $this->indentation) . '<' . $html['tag'];
       foreach ($html['parameters'] as $parameter => $value)
       echo ' ' . $parameter . '="' . addslashes($value) . '"';
       if (empty($html['innerhtml']) AND $html['tag'] != 'script') {
