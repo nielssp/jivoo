@@ -232,6 +232,10 @@ div.input p.label {
   font-size:16px;
 }
 
+.dark_section div.input p.label {
+  color:#fff;
+}
+
 .light_section div.input p.label,
 .dark_section div.input p.label {
   font-size:12px;

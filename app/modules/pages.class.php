@@ -101,6 +101,10 @@ class Pages implements IModule{
     }
 
     $this->detectFancyPermalinks();
+
+    $this->backend->addCategory('content', tr('Content'), 2);
+    $this->backend->addPage('content', 'new-page', tr('New Page'), array($this, 'addPageController'), 2);
+    $this->backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 
   public static function getDependencies() {
@@ -138,5 +142,11 @@ class Pages implements IModule{
     $templateData['title'] = $templateData['page']->title;
 
     $this->templates->renderTemplate('page.html', $templateData);
+  }
+
+  public function addPageController($path = array(), $parameters = array(), $contentType = 'html') {
+    $templateData = array();
+    $templateData['title'] = tr('New Page');
+    $this->templates->renderTemplate('backend/edit-post.html', $templateData);
   }
 }

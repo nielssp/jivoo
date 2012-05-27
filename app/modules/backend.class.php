@@ -97,6 +97,9 @@ class Backend implements IModule, ILinkable {
     $this->addCategory('settings', tr('Settings'), 10);
     $mainConfigPage = new ConfigurationPage($this);
     $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
+    $this->addLink('settings', 'themes', tr('Themes'), array(), 2);
+    $this->addLink('settings', 'extensions', tr('Extensions'), array(), 2);
+    $this->addLink('settings', 'modules', tr('Modules'), array(), 2);
   }
 
   public static function getDependencies() {
@@ -126,16 +129,15 @@ class Backend implements IModule, ILinkable {
             AND in_array($shortcut, $this->shortcuts[$category])) {
           continue;
         }
-        if (is_array($this->shortcuts['root'])
-            AND in_array($shortcut, $this->shortcuts['root'])) {
-          continue;
-        }
         if (!is_array($this->shortcuts[$category])) {
           $this->shortcuts[$category] = array();
         }
         $this->shortcuts[$category][] = $shortcut;
       }
       else {
+        if (!is_array($this->shortcuts['root'])) {
+          $this->shortcuts['root'] = array();
+        }
         $this->shortcuts['root'] = $shortcut;
       }
       $this->shortcuts[] = $shortcut;
@@ -151,7 +153,9 @@ class Backend implements IModule, ILinkable {
     $this->categories[$categoryId]->id = $categoryId;
     $this->categories[$categoryId]->title = $categoryTitle;
     $this->categories[$categoryId]->group = $group;
-    $this->categories[$categoryId]->shortcut = $this->createShortcut($categoryTitle);
+    if (!isset($this->categories[$categoryId]->shortcut)) {
+      $this->categories[$categoryId]->shortcut = $this->createShortcut($categoryTitle);
+    }
   }
 
   public function addLink($categoryId, $pageId, $pageTitle, $path, $group = 0, $shortcut = NULL) {
@@ -201,6 +205,8 @@ class Backend implements IModule, ILinkable {
     $this->categories[$categoryId]->links[$pageId]->link = $this->http->getLink($path);
   }
 
+  /** @todo In case of overflow; combine remaining categories under one "More"-category */
+  /** @todo actually... it should be handled in the theme... */
   public function createMenu() {
     if (!$this->users->isLoggedIn()) {
       return;
