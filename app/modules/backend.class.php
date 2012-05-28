@@ -76,7 +76,6 @@ class Backend implements IModule, ILinkable {
     $mainConfigPage = new ConfigurationPage($this, $this->templates);
     $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
     $this->addLink('settings', 'themes', tr('Themes'), array(), 2);
-    $this->addLink('settings', 'extensions', tr('Extensions'), array(), 2);
     $this->addLink('settings', 'modules', tr('Modules'), array(), 2);
   }
 

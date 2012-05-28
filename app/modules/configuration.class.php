@@ -196,7 +196,6 @@ class Configuration implements IModule {
    * @return string Data string
    */
   public static function compileData($fields, $serialize = false, $associative = true, $tree = true, $parent = '') {
-    $data = '';
     if (!$associative) {
       foreach ($fields[0] as $i => $key) {
         $value = $fields[1][$i];
@@ -215,12 +214,12 @@ class Configuration implements IModule {
           if (is_array($value)) {
             $data .= Configuration::compileData($value, false, true, true, $parent . $key . '.');
           }
-          else if ($value != NULL) {
+          else if (isset($value)) {
             $value = str_replace('|', '&#124;', htmlentities($value, ENT_NOQUOTES, 'UTF-8'));
             $data .= $parent . $key . '|' . $value . "|\n";
           }
         }
-        else if ($value != NULL) {
+        else if (isset($value)) {
           $value = str_replace('|', '&#124;', htmlentities($value, ENT_NOQUOTES, 'UTF-8'));
           $data .= $key . '|' . $value . "|\n";
         }

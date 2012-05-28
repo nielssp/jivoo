@@ -28,8 +28,8 @@ chdir(PATH);
 // Modules that has to be initialized, the order does not matter
 $modules = array(
   'errors', 'configuration',  'i18n', 'http', 'templates',
-  'actions', 'routes', 'theme', 'database', 'users', 'backend', 'posts',
-  'links', 'pages'
+  'actions', 'routes', 'theme', 'database', 'users', 'backend',
+  'extensions', 'posts', 'links', 'pages'
 );
 
 $core = new Core(p(CFG . 'blacklist'));

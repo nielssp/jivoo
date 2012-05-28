@@ -33,6 +33,15 @@ class Core {
     return $this->modules[$module];
   }
 
+  public function requestModule($module) {
+    try {
+      return $this->$module;
+    }
+    catch (ModuleNotLoadedException $e) {
+      return FALSE;
+    }
+  }
+
   public static function getModuleInfo($module) {
     if (isset(self::$info[$module])) {
       return self::$info[$module];

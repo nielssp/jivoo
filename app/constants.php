@@ -28,6 +28,10 @@ if (!defined('HIDE_LEVEL')) {
   define('HIDE_LEVEL', 0);
 }
 
+if (!defined('PREINSTALL_EXTENSIONS')) {
+  define('PREINSTALL_EXTENSIONS', 'tinymce jquery');
+}
+
 /** The absolute path of this installation */
 if (!defined('PATH')) {
   define('PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');

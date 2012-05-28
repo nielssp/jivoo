@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS template system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration
+// Dependencies   : errors configuration http
 
 /**
  * Class for setting the template
@@ -20,6 +20,7 @@ class Templates implements IModule {
   private $core;
   private $errors;
   private $configuration;
+  private $http;
 
   private $theme;
 
@@ -50,6 +51,7 @@ class Templates implements IModule {
     $this->core = $core;
     $this->configuration = $this->core->configuration;
     $this->errors = $this->core->errors;
+    $this->http = $this->core->http;
 
 
     if (!$this->configuration->exists('site.title')) {
@@ -172,13 +174,9 @@ class Templates implements IModule {
       $link = $linkable->getLink();
     }
     else {
-      $http = ModuleRegister::getModule('http');
-      if (!$http) {
-        return;
-      }
       switch ($linkable) {
         case 'home':
-          $link = $http->getLink(array());
+          $link = $this->http->getLink(array());
           break;
         default:
           return;
