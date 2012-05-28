@@ -1,4 +1,12 @@
 <?php
+// Module
+// Name           : Links
+// Version        : 0.2.0
+// Description    : The PeanutCMS graphical menu system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration database routes templates http
+//                  users backend
+
 /*
  * Menu system
  *
@@ -10,6 +18,7 @@
  */
 class Links implements IModule{
 
+  private $core;
   private $errors;
   private $configuration;
   private $database;
@@ -19,47 +28,17 @@ class Links implements IModule{
   private $users;
   private $backend;
 
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getHttp() {
-    return $this->http;
-  }
-
-  public function getDatabase() {
-    return $this->database;
-  }
-
-  public function getUsers() {
-    return $this->users;
-  }
-
-  public function getBackend() {
-    return $this->backend;
-  }
-
-  public function getRoutes() {
-    return $this->routes;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
-
-  public function __construct(Backend $backend) {
-    $this->backend = $backend;
-    $this->users = $this->backend->getUsers();
-    $this->database = $this->backend->getDatabase();
-    $this->routes = $this->database->getRoutes();
-    $this->http = $this->routes->getHttp();
-    $this->templates = $this->routes->getTemplates();
-    $this->errors = $this->routes->getErrors();
-    $this->configuration = $this->database->getConfiguration();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->database = $this->core->database;
+    $this->actions = $this->core->actions;
+    $this->routes = $this->core->routes;
+    $this->http = $this->core->http;
+    $this->templates = $this->core->templates;
+    $this->errors = $this->core->errors;
+    $this->configuration = $this->core->configuration;
+    $this->users = $this->core->users;
+    $this->backend = $this->core->backend;
 
     if (!ActiveRecord::isConnected()) {
       throw new Exception('temporary.');
@@ -107,10 +86,6 @@ class Links implements IModule{
 
   public function getLink(Link $record) {
     return $this->http->getLink($record->getPath());
-  }
-
-  public static function getDependencies() {
-    return array('backend');
   }
 
 }

@@ -1,4 +1,11 @@
 <?php
+// Module
+// Name           : Routes
+// Version        : 0.2.0
+// Description    : The PeanutCMS routing system
+// Author         : PeanutCMS
+// Dependencies   : errors http templates
+
 /**
  * Handling routes
  *
@@ -10,23 +17,10 @@
  */
 class Routes implements IModule {
 
+  private $core;
   private $errors;
-
   private $http;
-
   private $templates;
-
-  public function getHttp() {
-    return $this->http;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
 
   private $routes;
 
@@ -34,20 +28,17 @@ class Routes implements IModule {
 
   private $selectedControllerPriority;
 
-  public function __construct(Http $http, Templates $templates) {
-    $this->http = $http;
-    $this->errors = $this->http->getErrors();
-    $this->templates = $templates;
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->http = $this->core->http;
+    $this->errors = $this->core->errors;
+    $this->templates = $this->core->templates;
 
     $this->routes = array();
 
     $this->setRoute(array($this, 'notFoundController'), 1);
 
     Hooks::attach('render', array($this, 'callController'));
-  }
-
-  public static function getDependencies() {
-    return array('http', 'templates');
   }
 
   public function getPath() {

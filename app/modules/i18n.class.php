@@ -1,4 +1,11 @@
 <?php
+// Module
+// Name           : I18n
+// Version        : 0.2.0
+// Description    : The PeanutCMS internationalization and localization system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration
+
 /*
  * Internationalization and localization of PeanutCMS
  *
@@ -10,16 +17,9 @@
  */
 class I18n extends TranslationService implements IModule {
 
+  private $core;
   private $configuration;
   private $errors;
-
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
 
   /**
    * Contains the translation strings of the current language
@@ -36,9 +36,10 @@ class I18n extends TranslationService implements IModule {
   /**
    * PHP5-style constructor
    */
-  public function __construct(Configuration $configuration) {
-    $this->configuration = $configuration;
-    $this->errors = $this->configuration->getErrors();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->configuration = $this->core->configuration;
+    $this->errors = $this->core->errors;
 
     TranslationService::setService($this);
 
@@ -49,10 +50,6 @@ class I18n extends TranslationService implements IModule {
     }
     // Get default language
     $this->configure();
-  }
-
-  public static function getDependencies() {
-    return array('configuration');
   }
 
   /**

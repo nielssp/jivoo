@@ -1,4 +1,11 @@
 <?php
+// Module
+// Name           : Templates
+// Version        : 0.2.0
+// Description    : The PeanutCMS template system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration
+
 /**
  * Class for setting the template
  *
@@ -10,17 +17,9 @@
  */
 class Templates implements IModule {
 
+  private $core;
   private $errors;
-
   private $configuration;
-
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
 
   private $theme;
 
@@ -47,9 +46,10 @@ class Templates implements IModule {
   /**
    * PHP5-style constructor
    */
-  function __construct(Configuration $configuration) {
-    $this->configuration = $configuration;
-    $this->errors = $this->configuration->getErrors();
+  function __construct(Core $core) {
+    $this->core = $core;
+    $this->configuration = $this->core->configuration;
+    $this->errors = $this->core->errors;
 
 
     if (!$this->configuration->exists('site.title')) {
@@ -70,10 +70,6 @@ class Templates implements IModule {
         $this->hideLevel = 1;
       }
     }
-  }
-
-  public static function getDependencies() {
-    return array('configuration');
   }
 
   private function setContentType($name) {
@@ -192,7 +188,6 @@ class Templates implements IModule {
     echo $label;
     echo '</a>';
   }
-
 
   /**
   * Return a link to a file in the current theme

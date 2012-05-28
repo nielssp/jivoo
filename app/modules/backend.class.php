@@ -1,5 +1,13 @@
 <?php
-/*
+// Module
+// Name           : Backend
+// Version        : 0.2.0
+// Description    : The PeanutCMS administration system
+// Author         : PeanutCMS
+// Dependencies   : database users errors actions configuration routes
+//                  templates http
+
+/**
  * PeanutCMS backend
  *
  * @package PeanutCMS
@@ -10,6 +18,7 @@
  */
 class Backend implements IModule, ILinkable {
 
+  private $core;
   private $database;
   private $users;
   private $errors;
@@ -19,51 +28,20 @@ class Backend implements IModule, ILinkable {
   private $templates;
   private $http;
 
-  public function getDatabase() {
-    return $this->database;
-  }
-
-  public function getUsers() {
-    return $this->users;
-  }
-
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getActions() {
-    return $this->actions;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getHttp() {
-    return $this->http;
-  }
-
-  public function getRoutes() {
-    return $this->routes;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
-
   private $categories = array();
 
   private $shortcuts = array();
 
-  public function __construct(Users $users) {
-    $this->users = $users;
-    $this->database = $this->users->getDatabase();
-    $this->actions = $this->database->getActions();
-    $this->routes = $this->database->getRoutes();
-    $this->http = $this->routes->getHttp();
-    $this->templates = $this->routes->getTemplates();
-    $this->errors = $this->routes->getErrors();
-    $this->configuration = $this->http->getConfiguration();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->database = $this->core->database;
+    $this->actions = $this->core->actions;
+    $this->routes = $this->core->routes;
+    $this->http = $this->core->http;
+    $this->templates = $this->core->templates;
+    $this->errors = $this->core->errors;
+    $this->configuration = $this->core->configuration;
+    $this->users = $this->core->users;
 
     if (!$this->configuration->exists('backend.path')) {
       $this->configuration->set('backend.path', 'admin');
@@ -95,15 +73,11 @@ class Backend implements IModule, ILinkable {
     $this->addLink('peanutcms', 'home', tr('Home'), array(), 0);
 
     $this->addCategory('settings', tr('Settings'), 10);
-    $mainConfigPage = new ConfigurationPage($this);
+    $mainConfigPage = new ConfigurationPage($this, $this->templates);
     $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
     $this->addLink('settings', 'themes', tr('Themes'), array(), 2);
     $this->addLink('settings', 'extensions', tr('Extensions'), array(), 2);
     $this->addLink('settings', 'modules', tr('Modules'), array(), 2);
-  }
-
-  public static function getDependencies() {
-    return array('users');
   }
 
   public function getPath() {

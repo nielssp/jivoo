@@ -1,5 +1,13 @@
 <?php
+// Module
+// Name           : Database
+// Version        : 0.2.0
+// Description    : The PeanutCMS database system
+// Author         : PeanutCMS
+// Dependencies   : configuration routes templates actions errors http
+
 class Database extends DatabaseDriver implements IModule {
+  private $core;
   private $configuration;
   private $routes;
   private $templates;
@@ -7,41 +15,18 @@ class Database extends DatabaseDriver implements IModule {
   private $errors;
   private $http;
 
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getRoutes() {
-    return $this->routes;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
-
-  public function getActions() {
-    return $this->actions;
-  }
-
-  public function getHttp() {
-    return $this->http;
-  }
-
   private $driver;
   private $driverInfo;
   private $connection;
 
-  public function __construct(Routes $routes, Actions $actions) {
-    $this->routes = $routes;
-    $this->actions = $actions;
-    $this->templates = $this->routes->getTemplates();
-    $this->configuration = $this->templates->getConfiguration();
-    $this->errors = $this->configuration->getErrors();
-    $this->http = $this->routes->getHttp();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->routes = $this->core->routes;
+    $this->actions = $this->core->actions;
+    $this->templates = $this->core->templates;
+    $this->configuration = $this->core->configuration;
+    $this->errors = $this->core->errors;
+    $this->http = $this->core->http;
 
     if (!$this->configuration->exists('database.driver')) {
       $this->routes->setRoute(array($this, 'selectDriverController'), 10);
@@ -81,10 +66,6 @@ class Database extends DatabaseDriver implements IModule {
       }
       ActiveRecord::connect($this);
     }
-  }
-
-  public static function getDependencies() {
-    return array('routes', 'actions');
   }
 
   public function close() {

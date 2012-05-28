@@ -1,4 +1,11 @@
 <?php
+// Module
+// Name           : Theme
+// Version        : 0.2.0
+// Description    : The PeanutCMS theme system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration templates
+
 /*
  * Class for loading and manipulating the theme
  *
@@ -10,24 +17,10 @@
  */
 class Theme implements IModule {
 
-
+  private $core;
   private $errors;
-
   private $configuration;
-
   private $templates;
-
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
 
   /**
    * The current theme
@@ -37,10 +30,11 @@ class Theme implements IModule {
 
   private $menuList;
 
-  public function __construct(Templates $templates) {
-    $this->templates = $templates;
-    $this->errors = $this->templates->getErrors();
-    $this->configuration = $this->templates->getConfiguration();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->templates = $this->core->templates;
+    $this->errors = $this->core->errors;
+    $this->configuration = $this->core->configuration;
 
     // Set default settings
     if (!$this->configuration->exists('theme.name')) {
@@ -82,10 +76,6 @@ class Theme implements IModule {
     else {
       $this->errors->notification('warning', tr('Please install a theme'), true, 'theme-missing', 'http://google.com');
     }
-  }
-
-  public static function getDependencies() {
-    return array('templates');
   }
 
   /**
@@ -139,3 +129,4 @@ class Theme implements IModule {
 
 
 }
+

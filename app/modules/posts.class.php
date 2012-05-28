@@ -1,4 +1,12 @@
 <?php
+// Module
+// Name           : Posts
+// Version        : 0.2.0
+// Description    : The PeanutCMS blogging system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration database routes templates http
+//                  users backend
+
 /*
  * Class for working with blog posts
  *
@@ -10,6 +18,7 @@
  */
 class Posts implements IModule{
 
+  private $core;
   private $errors;
   private $configuration;
   private $database;
@@ -19,49 +28,19 @@ class Posts implements IModule{
   private $backend;
   private $users;
 
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getHttp() {
-    return $this->http;
-  }
-
-  public function getUsers() {
-    return $this->users;
-  }
-
-  public function getBackend() {
-    return $this->backend;
-  }
-
-  public function getDatabase() {
-    return $this->database;
-  }
-
-  public function getRoutes() {
-    return $this->routes;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
-
   private $post;
 
-  public function __construct(Backend $backend) {
-    $this->backend = $backend;
-    $this->users = $backend->getUsers();
-    $this->database = $backend->getDatabase();
-    $this->routes = $this->database->getRoutes();
-    $this->http = $this->routes->getHttp();
-    $this->templates = $this->routes->getTemplates();
-    $this->errors = $this->routes->getErrors();
-    $this->configuration = $this->database->getConfiguration();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->database = $this->core->database;
+    $this->actions = $this->core->actions;
+    $this->routes = $this->core->routes;
+    $this->http = $this->core->http;
+    $this->templates = $this->core->templates;
+    $this->errors = $this->core->errors;
+    $this->configuration = $this->core->configuration;
+    $this->users = $this->core->users;
+    $this->backend = $this->core->backend;
 
     $newInstall = FALSE;
 
@@ -192,10 +171,6 @@ class Posts implements IModule{
     $this->backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'addPostController'), 4);
     $this->backend->addPage('content', 'tags', tr('Tags'), array($this, 'addPostController'), 8);
     $this->backend->addPage('content', 'categories', tr('Categories'), array($this, 'addPostController'), 8);
-  }
-
-  public static function getDependencies() {
-    return array('backend');
   }
 
   private function detectFancyPermalinks() {

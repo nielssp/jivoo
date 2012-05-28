@@ -1,4 +1,10 @@
 <?php
+// Module
+// Name           : Actions
+// Version        : 0.2.0
+// Description    : The PeanutCMS action system
+// Author         : PeanutCMS
+// Dependencies   : http
 /*
  * Class for acting on url actions
  *
@@ -10,20 +16,13 @@
  */
 class Actions implements IModule {
 
+  private $core;
   private $http;
 
-  public function getHttp() {
-    return $this->http;
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->http = $core->http;
   }
-
-  public function __construct(Http $http) {
-    $this->http = $http;
-  }
-
-  public static function getDependencies() {
-    return array('http');
-  }
-
   /**
    * Check if an action is present in the url and/or post data
    *
@@ -32,7 +31,6 @@ class Actions implements IModule {
    * @return bool
    */
   public function has($action, $getPost = 'both') {
-    global $PEANUT;
     $path = $this->http->getPath();
     $params = $this->http->getParams();
     if ($getPost != 'post' AND $getPost != 'sessionget' AND isset($params[$action])) {
@@ -53,7 +51,6 @@ class Actions implements IModule {
   }
 
   public function add($action) {
-    global $PEANUT;
     unset($_GET[$action]);
     return $this->http->getLink(null, array_merge($_GET, array($action => '')));
   }

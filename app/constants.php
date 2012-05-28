@@ -45,6 +45,11 @@ if (!defined('WEBPATH')) {
   );
 }
 
+if (!defined('META_MAX_LINES')) {
+  /** How many lines to read before giving up looking for meta info in file (@see readFileMeta()) */
+  define('META_MAX_LINES', 50);
+}
+
 /** Prefix for session-variables initialized by PeanutCMS */
 if (!defined('SESSION_PREFIX')) {
   define('SESSION_PREFIX', 'peanut_');

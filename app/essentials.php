@@ -185,6 +185,60 @@ function groupSorter(IGroupable $a, IGroupable $b) {
   }
 }
 
+function readFileMeta($file) {
+  $file = fopen($file, 'r');
+
+  if (!$file) {
+    return FALSE;
+  }
+
+  $readingMeta = FALSE;
+
+  $metaData = array();
+  $lines = 0;
+  $currentKey = NULL;
+
+  while ($line = fgets($file)) {
+    $trimmed = trim($line);
+    if (substr($trimmed, 0, 2) != '//') {
+      if ($readingMeta) {
+        break;
+      }
+      $lines++;
+      if ($lines > META_MAX_LINES) {
+        return FALSE;
+      }
+      continue;
+    }
+    $trimmed = trim(substr($trimmed, 2));
+    if ($readingMeta) {
+      $split = explode(':', $trimmed, 2);
+      if(count($split) > 1) {
+        $currentKey = strtolower(trim($split[0]));
+        $metaData[$currentKey] = trim($split[1]);
+      }
+      else if ($currentKey != NULL) {
+        $metaData[$currentKey] = trim($metaData[$currentKey] . ' ' . trim($split[0]));
+      }
+    }
+    else {
+      $type = strtolower($trimmed);
+      if ($type == 'module' OR
+          $type == 'dbdriver' OR
+          $type == 'theme' OR
+          $type == 'extension') {
+        $readingMeta = TRUE;
+        $metaData['type'] = $type;
+      }
+    }
+  }
+  fclose($file);
+  if (!$readingMeta) {
+    return FALSE;
+  }
+  return $metaData;
+}
+
 /**
  * Comparison function for use with usort() and uasort()
  *

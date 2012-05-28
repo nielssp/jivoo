@@ -1,4 +1,11 @@
 <?php
+// Module
+// Name           : Users
+// Version        : 0.2.0
+// Description    : The PeanutCMS user system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration templates actions database routes http
+
 /*
  * Static pages
  *
@@ -10,6 +17,7 @@
  */
 class Users implements IModule{
 
+  private $core;
   private $errors;
   private $configuration;
   private $actions;
@@ -18,44 +26,17 @@ class Users implements IModule{
   private $templates;
   private $http;
 
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getActions() {
-    return $this->actions;
-  }
-
-  public function getHttp() {
-    return $this->http;
-  }
-
-  public function getDatabase() {
-    return $this->database;
-  }
-
-  public function getRoutes() {
-    return $this->routes;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
-
   private $user;
 
-  public function __construct(Database $database) {
-    $this->database = $database;
-    $this->actions = $this->database->getActions();
-    $this->routes = $this->database->getRoutes();
-    $this->http = $this->routes->getHttp();
-    $this->templates = $this->routes->getTemplates();
-    $this->errors = $this->routes->getErrors();
-    $this->configuration = $this->database->getConfiguration();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->database = $this->core->database;
+    $this->actions = $this->core->actions;
+    $this->routes = $this->core->routes;
+    $this->http = $this->core->http;
+    $this->templates = $this->core->templates;
+    $this->errors = $this->core->errors;
+    $this->configuration = $this->core->configuration;
 
     if (!ActiveRecord::isConnected()) {
       throw new Exception('temporary.');
@@ -139,10 +120,6 @@ class Users implements IModule{
       $this->http->refreshPath();
     }
 
-  }
-
-  public static function getDependencies() {
-    return array('database');
   }
 
   public function getLink(User $record) {

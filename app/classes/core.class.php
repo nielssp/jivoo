@@ -2,6 +2,7 @@
 
 class Core {
   private $modules = array();
+  private static $info = array();
   private $blacklist = array();
 
   public function __construct($blacklist = NULL) {
@@ -16,6 +17,65 @@ class Core {
           $this->blacklist[] = $line;
         }
       }
+    }
+  }
+
+  public function __get($module) {
+    if (!isset($this->modules[$module])) {
+      $backtrace = debug_backtrace();
+      $class = classFileName($backtrace[1]['class']);
+      throw new ModuleNotLoadedException(tr(
+        'The "%1" module requests the "%2" module, which is not loaded',
+        $class,
+        $module
+      ));
+    }
+    return $this->modules[$module];
+  }
+
+  public static function getModuleInfo($module) {
+    if (isset(self::$info[$module])) {
+      return self::$info[$module];
+    }
+    $meta = readFileMeta(p(MODULES . $module . '.class.php'));
+    if (!$meta OR $meta['type'] != 'module') {
+      return FALSE;
+    }
+    if (!isset($meta['name'])) {
+      $meta['name'] = fileClassName($module);
+    }
+    if (!isset($meta['dependencies'])) {
+      $meta['dependencies'] = array();
+    }
+    else {
+      $meta['dependencies'] = explode(' ', $meta['dependencies']);
+    }
+    self::$info[$mdoule] = $meta;
+    return $meta;
+  }
+
+  public function checkDependencies($module) {
+    if (is_subclass_of($module, 'IModule')) {
+      $info = self::getModuleInfo(classFileName(get_class($module)));
+    }
+    else {
+      $info = self::getModuleInfo($module);
+    }
+    if (!$info) {
+      throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
+    }
+    $missing = array();
+    foreach ($info['dependencies'] as $dependency) {
+      if (!isset($this->modules[$dependency])) {
+        $missing[] = $dependency;
+      }
+    }
+    if (count($missing) > 0) {
+      throw new ModuleMissingDependencyException(trl(
+        'The "%1" module depends on the "%l" module',
+        'The "%1" module depends on the "%l" modules',
+        '", "', '" and "', $missing, $info['name']
+      ));
     }
   }
 
@@ -34,13 +94,17 @@ class Core {
       require_once(p(MODULES . $module . '.class.php'));
       $className = fileClassName($module);
       if (!class_exists($className)) {
-        throw new ModuleInvalidException(tr('The "%1" module does not have a class', $module));
+        throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
       }
       $reflection = new ReflectionClass($className);
       if (!$reflection->implementsInterface('IModule')) {
         throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
       }
-      $dependencies = call_user_func(array($className, 'getDependencies'), $this);
+      $info = self::getModuleInfo($module);
+      if (!$info) {
+        throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
+      }
+      $dependencies = $info['dependencies'];
       $arguments = array();
       foreach ($dependencies as $dependency) {
         try {
@@ -54,13 +118,13 @@ class Core {
           ));
         }
       }
-      $this->modules[$module] = $reflection->newInstanceArgs($arguments);
-      ModuleRegister::register($this->modules[$module]);
+      $this->modules[$module] = $reflection->newInstanceArgs(array($this));
     }
     return $this->modules[$module];
   }
 }
 
+class ModuleNotLoadedException extends Exception { }
 class ModuleNotFoundException extends Exception { }
 class ModuleInvalidException extends Exception { }
 class ModuleMissingDependencyException extends ModuleNotFoundException { }

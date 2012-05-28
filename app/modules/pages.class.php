@@ -1,4 +1,12 @@
 <?php
+// Module
+// Name           : Pages
+// Version        : 0.2.0
+// Description    : The PeanutCMS content page system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration database routes templates http
+//                  users backend
+
 /*
  * Static pages
  *
@@ -10,6 +18,7 @@
  */
 class Pages implements IModule{
 
+  private $core;
   private $errors;
   private $configuration;
   private $database;
@@ -19,49 +28,19 @@ class Pages implements IModule{
   private $users;
   private $backend;
 
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
-
-  public function getBackend() {
-    return $this->backend;
-  }
-
-  public function getUsers() {
-    return $this->users;
-  }
-
-  public function getHttp() {
-    return $this->http;
-  }
-
-  public function getDatabase() {
-    return $this->database;
-  }
-
-  public function getRoutes() {
-    return $this->routes;
-  }
-
-  public function getTemplates() {
-    return $this->templates;
-  }
-
   private $page;
 
-  public function __construct(Backend $backend) {
-    $this->backend = $backend;
-    $this->users = $this->backend->getUsers();
-    $this->database = $this->backend->getDatabase();
-    $this->routes = $this->database->getRoutes();
-    $this->http = $this->routes->getHttp();
-    $this->templates = $this->routes->getTemplates();
-    $this->errors = $this->routes->getErrors();
-    $this->configuration = $this->database->getConfiguration();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->database = $this->core->database;
+    $this->actions = $this->core->actions;
+    $this->routes = $this->core->routes;
+    $this->http = $this->core->http;
+    $this->templates = $this->core->templates;
+    $this->errors = $this->core->errors;
+    $this->configuration = $this->core->configuration;
+    $this->users = $this->core->users;
+    $this->backend = $this->core->backend;
 
     if (!ActiveRecord::isConnected()) {
       throw new Exception('temporary.');
@@ -105,10 +84,6 @@ class Pages implements IModule{
     $this->backend->addCategory('content', tr('Content'), 2);
     $this->backend->addPage('content', 'new-page', tr('New Page'), array($this, 'addPageController'), 2);
     $this->backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
-  }
-
-  public static function getDependencies() {
-    return array('backend');
   }
 
   private function detectFancyPermalinks() {

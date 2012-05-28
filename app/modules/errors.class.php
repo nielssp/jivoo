@@ -1,18 +1,23 @@
 <?php
+// Module
+// Name           : Database
+// Version        : 0.2.0
+// Description    : The PeanutCMS error system
+// Author         : PeanutCMS
 
 class Errors implements IModule {
+
+  private $core;
 
   private $errorLog;
 
   private $notifications;
 
-  public function __construct() {
+  public function __construct(Core $core) {
+    $this->core = $core;
+
     set_error_handler(array($this, 'handleError'));
     set_exception_handler(array($this, 'handleException'));
-  }
-
-  public static function getDependencies() {
-    return array();
   }
 
   /**

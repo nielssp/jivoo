@@ -1,12 +1,15 @@
 <?php
+// Module
+// Name           : Configuration
+// Version        : 0.2.0
+// Description    : The PeanutCMS configuration system
+// Author         : PeanutCMS
+// Dependencies   : errors
 
 class Configuration implements IModule {
 
+  private $core = NULL;
   private $errors = NULL;
-
-  public function getErrors() {
-    return $this->errors;
-  }
 
   private $data = array();
 
@@ -14,8 +17,9 @@ class Configuration implements IModule {
 
   private $file;
 
-  public function __construct(Errors $errors, $cfgFile = NULL, Configuration $subsetOf = NULL) {
-    $this->errors = $errors;
+  public function __construct(Core $core, $cfgFile = NULL, Configuration $subsetOf = NULL) {
+    $this->core = $core;
+    $this->errors = $this->core->errors;
 
     if (!isset($cfgFile)) {
       $cfgFile = p(CFG . 'config.cfg.php');
@@ -44,10 +48,6 @@ class Configuration implements IModule {
     }
     $file = explode('?>', $fileContent);
     $this->data = $this->parseData($file[1], true);
-  }
-
-  public static function getDependencies() {
-    return array('errors');
   }
 
   public function getSubset($key) {

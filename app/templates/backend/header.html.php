@@ -11,10 +11,9 @@
 
     <script src="<?php echo w(PUB . 'js/jquery-1.7.1.min.js'); ?>" type="text/javascript"></script>
     <script src="<?php echo w(PUB . 'js/jquery-ui-1.8.17.custom.min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php echo w(PUB . 'js/tinymce/jquery.tinymce.js'); ?>" type="text/javascript"></script>
     <script src="<?php echo w(PUB . 'js/jquery.hotkeys-0.7.9.min.js'); ?>" type="text/javascript"></script>
 
-    <script src="<?php echo w(PUB . 'js/backend.js'); ?>" type="text/javascript"></script>
+    <script src="<?php echo $this->getFile('js/backend.js'); ?>" type="text/javascript"></script>
 
 <?php $this->outputHtml('head-bottom'); ?>
 

@@ -5,9 +5,9 @@ class ConfigurationPage {
   private $backend;
   private $templates;
 
-  public function __construct(Backend $backend) {
+  public function __construct(Backend $backend, Templates $templates) {
     $this->backend = $backend;
-    $this->templates = $this->backend->getTemplates();
+    $this->templates = $templates;
   }
 
 

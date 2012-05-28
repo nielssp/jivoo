@@ -1,4 +1,11 @@
 <?php
+// Module
+// Name           : HTTP
+// Version        : 0.2.0
+// Description    : The PeanutCMS http system
+// Author         : PeanutCMS
+// Dependencies   : errors configuration
+
 /*
  * Class for working with HTTP headers, redirects etc.
  *
@@ -10,17 +17,9 @@
  */
 class Http implements IModule {
 
+  private $core;
   private $errors;
-
   private $configuration;
-
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function getErrors() {
-    return $this->errors;
-  }
 
   /**
    * The current path as an array
@@ -37,10 +36,10 @@ class Http implements IModule {
   /**
    * PHP5-style constructor
    */
-  public function __construct(Configuration $configuration) {
-    global $PEANUT;
-    $this->configuration = $configuration;
-    $this->errors = $this->configuration->getErrors();
+  public function __construct(Core $core) {
+    $this->core = $core;
+    $this->configuration = $this->core->configuration;
+    $this->errors = $this->core->errors;
 
     $request = $_SERVER['REQUEST_URI'];
     $request = parse_url($request);
@@ -85,11 +84,6 @@ class Http implements IModule {
     }
   }
 
-  public static function getDependencies() {
-    return array('configuration');
-  }
-
-
   public function getPath() {
     return $this->path;
   }
@@ -116,7 +110,6 @@ class Http implements IModule {
    * @return void
    */
   public function redirect($status, $location) {
-    global $PEANUT;
     if (!Http::setStatus($status)) {
       $this->errors->fatal(
         tr('Redirect error'),
@@ -137,7 +130,6 @@ class Http implements IModule {
    * @return void
    */
   public function redirectPath($path = null, $parameters = null, $moved = true, $hashtag = null, $rewrite = false) {
-    global $PEANUT;
     if (!isset($path)) {
       $path = $this->path;
     }
@@ -240,7 +232,6 @@ class Http implements IModule {
    * @return string Link
    */
   public function getLink($path = null, $parameters = null, $hashtag = null) {
-    global $PEANUT;
     if (!isset($path)) {
       $path = $this->path;
     }

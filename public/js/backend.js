@@ -34,12 +34,8 @@ $(function() {
   }
 
   $(".button").button();
-
+/*
   $('textarea.wysiwyg').tinymce({
-    // Location of TinyMCE script
-    /**
-     * @todo FIX!!
-     */
     script_url : "js/tinymce/tiny_mce.js",
 
     // General options
@@ -75,7 +71,7 @@ $(function() {
       staffid : "991234"
     }
   });
-
+*/
   $(document).bind('keydown', 'esc', function () {
     $(".menubar").find(".items").hide();
   });
@@ -99,9 +95,17 @@ $(function() {
     $(this).prepend('<div class="key">' + shortcut + '</div>');
     if (!$(this).parent().hasClass('header')) {
       var items = $(this).parent().parent();
-      $(document).bind('keydown', shortcut, function() {
+      var keystate = false;
+      $(document).bind('keydown keyup', shortcut, function(event) {
+        if (keystate && event.type == 'keydown')
+          return;
+        if (!keystate && event.type == 'keyup')
+          return;
+        keystate = event.type == 'keydown';
+        if (!keystate)
+          return;
         if (items.css('display') != "none") {
-//          alert("Pressed " + shortcut + ": " + label);
+//          console.log("Pressed " + shortcut + ": " + label);
           window.location.href = link.attr("href");
         }
       });
@@ -122,7 +126,17 @@ $(function() {
         items.hide();
       }
     });
-    $(document).bind('keydown', key, function () {
+//    console.log("Binding " + key + "...");
+    var keystate = false;
+    $(document).bind('keydown keyup', key, function (event) {
+      if (keystate && event.type == 'keydown')
+        return;
+      if (!keystate && event.type == 'keyup')
+        return;
+      keystate = event.type == 'keydown';
+      if (!keystate)
+        return;
+//      console.log("Pressed " + key);
       if (inputFocus)
         return;
       if (items.css('display') == "none") {
