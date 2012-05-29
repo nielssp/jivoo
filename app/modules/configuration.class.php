@@ -51,7 +51,7 @@ class Configuration implements IModule {
   }
 
   public function getSubset($key) {
-    $config = new Configuration($this->errors, $this->file, $this);
+    $config = new Configuration($this->core, $this->file, $this);
     $config->parentKey = $key;
     return $config;
   }

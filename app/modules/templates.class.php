@@ -193,7 +193,7 @@ class Templates implements IModule {
   * @param string $file File name
   * @return string Link
   */
-  function getFile($file) {
+  public function getFile($file) {
     if (isset($this->theme) AND file_exists(p(THEMES . $this->theme . '/' . $file))) {
       return w(THEMES . $this->theme . '/' . $file);
     }

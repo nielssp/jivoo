@@ -109,6 +109,10 @@ if (!defined('LANG')) {
   define('LANG', 'languages/');
 }
 
+if (!defined('EXTENSIONS')) {
+  define('EXTENSIONS', 'extensions/');
+}
+
 if (!defined('THEMES')) {
   define('THEMES', 'themes/');
 }

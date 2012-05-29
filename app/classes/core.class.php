@@ -59,7 +59,7 @@ class Core {
     else {
       $meta['dependencies'] = explode(' ', $meta['dependencies']);
     }
-    self::$info[$mdoule] = $meta;
+    self::$info[$module] = $meta;
     return $meta;
   }
 
