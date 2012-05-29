@@ -414,7 +414,8 @@ span.description {
 .menubar .menu .item .key {
   float:right;
   color:#666;
-  margin-right:24px;
+  margin-right:20px;
+  font-family:Verdana, sans-serif; /* hm.. segoe ui has some weird inconsistencies with character placement */
 }
 
 .menubar .menu .items .separator {
