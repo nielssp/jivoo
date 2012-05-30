@@ -58,14 +58,26 @@ class Extensions implements IModule {
     $this->installed = explode(
       ' ', $this->configuration->get('extensions.installed')
     );
+
+    $this->backend->addPage('settings', 'extensions', tr('Extensions'), array($this, 'extensionsController'), 2);
     
+    // Load installed extensions when all modules are loaded and initialized
+    Hooks::attach('modulesLoaded', array($this, 'loadExtensions'));
+  }
+  
+  public function loadExtensions() {
     foreach ($this->installed as $extension) {
       if (!empty($extension)) {
         $this->loadExtension($extension);
       }
     }
-
-    $this->backend->addPage('settings', 'extensions', tr('Extensions'), array($this, 'extensionsController'), 2);
+  }
+  
+  public function request($extension) {
+    if (!isset($this->extensions[$extension])) {
+      return FALSE;
+    }
+    return $this->extensions[$extension];
   }
   
   private function loadExtension($extension) {
@@ -86,11 +98,13 @@ class Extensions implements IModule {
       if (!$info) {
         throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
       }
-      $dependencies = $info['dependencies'];
+      $dependencies = $info['dependencies']['modules'];
       $arguments = array();
-      foreach ($dependencies as $dependency) {
+      foreach ($dependencies as $dependency => $versionInfo) {
         $module = $this->core->requestModule($dependency);
-        if ($module !== FALSE) {
+        /** @todo Do this when installing.. */
+        // $version = $this->core->getVersion($dependency);
+        if ($module !== FALSE) { // AND compareDependencyVersions($version, $versionInfo)) {
           $arguments[$dependency] = $module; 
         }
         else {
@@ -120,12 +134,6 @@ class Extensions implements IModule {
     }
     if (!isset($meta['name'])) {
       $meta['name'] = fileClassName($extension);
-    }
-    if (!isset($meta['dependencies'])) {
-      $meta['dependencies'] = array();
-    }
-    else {
-      $meta['dependencies'] = explode(' ', $meta['dependencies']);
     }
     $this->info[$extension] = $meta;
     return $meta;

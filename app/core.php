@@ -58,6 +58,8 @@ foreach ($modules as $module) {
   }
 }
 
+Hooks::run('modulesLoaded');
+
 Hooks::run('preRender');
 
 Hooks::run('render');

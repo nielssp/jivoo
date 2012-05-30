@@ -236,7 +236,78 @@ function readFileMeta($file) {
   if (!$readingMeta) {
     return FALSE;
   }
+  if (!isset($metaData['dependencies'])) {
+    $metaData['dependencies'] = '';
+  }
+  $metaData['dependencies'] = readDependencies($metaData['dependencies']);
+  if (!isset($metaData['version'])) {
+    $metaData['version'] = '0.0.0';
+  }
   return $metaData;
+}
+
+function readDependencies($dependencies) {
+  $depArray = explode(' ', $dependencies);
+  $result = array(
+    'modules' => array(),
+    'extensions' => array(),
+  	'php' => array()
+  );
+  foreach ($depArray as $dependency) {
+    if (!empty($dependency)) {
+      $dependency = strtolower($dependency);
+      if (strpos($dependency, ';') === FALSE) {
+        if (($matches = matchDependencyVersion($dependency)) !== FALSE) {
+          if (!isset($result['modules'][$matches[1]])) {
+            $result['modules'][$matches[1]] = array();
+          }
+          $result['modules'][$matches[1]][$matches[2]] = $matches[3];
+        }
+        else {
+          $result['modules'][$dependency] = array();
+        }
+      }
+      else {
+        $split = explode(';', $dependency, 2);
+        if ($split[0] == 'ext') {
+          if (($matches = matchDependencyVersion($split[1])) !== FALSE) {
+            if (!isset($result['extensions'][$matches[1]])) {
+              $result['extensions'][$matches[1]] = array();
+            }
+            $result['extensions'][$matches[1]][$matches[2]] = $matches[3];
+          }
+          else {
+            $result['extensions'][$split[1]] = array();
+          }
+        }
+        else if ($split[0] == 'php') {
+          $result['php'][$split[1]] = array();
+        }
+      }
+    }
+  }
+  return $result;
+}
+
+function matchDependencyVersion($dependency) {
+  if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches) == 1) {
+    return $matches;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+function compareDependencyVersions($versionStr, $versionInfo) {
+  if (!is_array($comparisonArray)) {
+    return FALSE;
+  }
+  foreach ($comparisonArray as $operator => $version) {
+    if (!version_compare($versionStr, $version, $operator)) {
+      return FALSE;
+    }
+  }
+  return TRUE;
 }
 
 /**
@@ -333,6 +404,7 @@ function __autoload($className) {
   }
 }
 
+// PHP 5.2 compatibility
 if (!function_exists('get_called_class')) {
   function get_called_class() {
     $bt = debug_backtrace();
@@ -371,6 +443,7 @@ if (!function_exists('get_called_class')) {
   }
 }
 
+// PHP 5.2 compatibility
 if (!function_exists('lcfirst')) {
   function lcfirst($str) {
     $str[0] = strtolower($str[0]);

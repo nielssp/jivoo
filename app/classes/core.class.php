@@ -41,6 +41,14 @@ class Core {
       return FALSE;
     }
   }
+  
+  public function getVersion($module) {
+    $info = self::getModuleInfo($module);
+    if ($info !== FALSE) {
+      return $info['version'];
+    }
+    return FALSE;
+  }
 
   public static function getModuleInfo($module) {
     if (isset(self::$info[$module])) {
@@ -52,12 +60,6 @@ class Core {
     }
     if (!isset($meta['name'])) {
       $meta['name'] = fileClassName($module);
-    }
-    if (!isset($meta['dependencies'])) {
-      $meta['dependencies'] = array();
-    }
-    else {
-      $meta['dependencies'] = explode(' ', $meta['dependencies']);
     }
     self::$info[$module] = $meta;
     return $meta;
@@ -113,9 +115,9 @@ class Core {
       if (!$info) {
         throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
       }
-      $dependencies = $info['dependencies'];
+      $dependencies = $info['dependencies']['modules'];
       $arguments = array();
-      foreach ($dependencies as $dependency) {
+      foreach ($dependencies as $dependency => $versionInfo) {
         try {
           $arguments[] = $this->loadModule($dependency);
         }

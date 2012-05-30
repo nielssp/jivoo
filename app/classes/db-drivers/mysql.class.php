@@ -1,4 +1,10 @@
 <?php
+// DBDriver
+// Name              : MySQL
+// Dependencies      : php;mysql database>3.6 ext;fancybox<=2.5
+// PHPVersion        : 5.2.0
+// Options           : server username database
+
 class Mysql extends DatabaseDriver {
 
   private $handle;
