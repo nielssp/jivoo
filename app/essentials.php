@@ -281,7 +281,15 @@ function readDependencies($dependencies) {
           }
         }
         else if ($split[0] == 'php') {
-          $result['php'][$split[1]] = array();
+          if (($matches = matchDependencyVersion($split[1])) !== FALSE) {
+            if (!isset($result['php'][$matches[1]])) {
+              $result['php'][$matches[1]] = array();
+            }
+            $result['php'][$matches[1]][$matches[2]] = $matches[3];
+          }
+          else {
+            $result['php'][$split[1]] = array();
+          }
         }
       }
     }
