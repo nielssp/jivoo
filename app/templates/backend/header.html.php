@@ -9,13 +9,12 @@
     <link rel="stylesheet" type="text/css" href="<?php echo w(PUB . 'css/arachis/jquery-ui-1.8.17.custom.css'); ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo $this->getFile('css/backend.css'); ?>" />
 
-    <script src="<?php echo w(PUB . 'js/jquery-1.7.1.min.js'); ?>" type="text/javascript"></script>
+<?php $this->outputHtml('head-bottom'); ?>
+
     <script src="<?php echo w(PUB . 'js/jquery-ui-1.8.17.custom.min.js'); ?>" type="text/javascript"></script>
     <script src="<?php echo w(PUB . 'js/jquery.hotkeys-0.7.9.min.js'); ?>" type="text/javascript"></script>
 
     <script src="<?php echo $this->getFile('js/backend.js'); ?>" type="text/javascript"></script>
-
-<?php $this->outputHtml('head-bottom'); ?>
 
   </head>
   <body>

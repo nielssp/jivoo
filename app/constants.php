@@ -49,6 +49,10 @@ if (!defined('WEBPATH')) {
   );
 }
 
+if (!defined('ALLOW_REDIRECT')) {
+  define('ALLOW_REDIRECT', TRUE);
+}
+
 if (!defined('META_MAX_LINES')) {
   /** How many lines to read before giving up looking for meta info in file (@see readFileMeta()) */
   define('META_MAX_LINES', 50);

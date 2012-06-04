@@ -116,8 +116,10 @@ class Http implements IModule {
         tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
       );
     }
-    header('Location: ' . $location);
-    exit();
+    if (defined('ALLOW_REDIRECT') AND ALLOW_REDIRECT) {
+      header('Location: ' . $location);
+      exit();
+    }
   }
 
   /**

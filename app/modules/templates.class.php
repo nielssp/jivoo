@@ -26,6 +26,8 @@ class Templates implements IModule {
 
   private $html = array();
 
+  private $availableHtml = array();
+
   private $indentation = 0;
 
   private $contentTypeSet = FALSE;
@@ -107,17 +109,49 @@ class Templates implements IModule {
     $this->contentTypeSet = TRUE;
   }
 
-  /**
-  * Insert an HTML-tag (e.g. a script, stylesheet, meta-tag etc.) on the page
-  *
-  * @param string $id Id
-  * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
-  * @param string $tag HTML-tag (e.g. 'meta', 'link', 'script', 'style' etc.)
-  * @param array $parameters HTML-parameters (e.g. array('src' => 'somescript.js'))
-  * @param string $innerhtml Optional string to be placed between start- and end-tag
-  * @param int $priority A high-priority (e.g. 10) tag will be inserted before a low-priority one (e.g 2)
-  */
-  public function insertHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5) {
+  public function addScript($id, $file, $dependencies = array()) {
+    $this->addHtml(
+      $id, 'head-bottom', 'script',
+      array(
+        'type' => 'text/javascript',
+        'src' => $file
+      ), '', 10, $dependencies
+    );
+  }
+
+  public function addStyle($id, $file, $dependencies = array()) {
+    $this->addHtml(
+      $id, 'head-bottom', 'link',
+      array(
+        'rel' => 'stylesheet',
+        'type' => 'text/css',
+        'href' => $file
+      ), '', 20, $dependencies
+    );
+  }
+
+  public function insertScript($id, $file, $dependencies = array()) {
+    $this->insertHtml(
+      $id, 'head-bottom', 'script',
+      array(
+        'type' => 'text/javascript',
+        'src' => $file
+      ), '', 10, $dependencies
+    );
+  }
+
+  public function insertStyle($id, $file, $dependencies = array()) {
+    $this->insertHtml(
+      $id, 'head-bottom', 'link',
+      array(
+        'rel' => 'stylesheet',
+        'type' => 'text/css',
+        'href' => $file
+      ), '', 20, $dependencies
+    );
+  }
+
+  public function addHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5, $dependencies = array()) {
     $tag = strtolower($tag);
     if ($tag == 'script' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/javascript';
@@ -125,10 +159,36 @@ class Templates implements IModule {
     if ($tag == 'style' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/css';
     }
-    $this->html[$location][$id] = array('tag' => $tag,
-                                          'innerhtml' => $innerhtml,
-                                          'priority' => $priority,
-                                          'parameters' => $parameters);
+    $this->availableHtml[$id] = array(
+      'tag' => $tag,
+      'location' => $location,
+      'innerhtml' => $innerhtml,
+      'priority' => $priority,
+      'parameters' => $parameters,
+      'dependencies' => $dependencies
+     );
+  }
+
+  /**
+  * Insert an HTML-tag (e.g. a script, stylesheet, meta-tag etc.) on the page
+  *
+  * @param string $id A uniqie identifier
+  * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
+  * @param string $tag HTML-tag (e.g. 'meta', 'link', 'script', 'style' etc.)
+  * @param array $parameters HTML-parameters (e.g. array('src' => 'somescript.js'))
+  * @param string $innerhtml Optional string to be placed between start- and end-tag
+  * @param int $priority A high-priority (e.g. 10) tag will be inserted before a low-priority one (e.g 2)
+  */
+  public function insertHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5, $dependencies = array()) {
+    $tag = strtolower($tag);
+    if ($tag == 'script' AND !isset($parameters['type'])) {
+      $parameters['type'] = 'text/javascript';
+    }
+    if ($tag == 'style' AND !isset($parameters['type'])) {
+      $parameters['type'] = 'text/css';
+    }
+    $this->addHtml($id, $location, $tag, $parameters, $innerhtml, $priority, $dependencies);
+    $this->html[$location][$id] = FALSE;
   }
 
   public function setHtmlIndent($indentation = 0) {
@@ -145,10 +205,12 @@ class Templates implements IModule {
       return;
     }
     uasort($this->html[$location], 'prioritySorter');
-    foreach ($this->html[$location] as $id => $html) {
+    foreach ($this->html[$location] as $id => $shown) {
+      $html = $this->availableHtml[$id];
       echo str_repeat(' ', $this->indentation) . '<' . $html['tag'];
-      foreach ($html['parameters'] as $parameter => $value)
-      echo ' ' . $parameter . '="' . addslashes($value) . '"';
+      foreach ($html['parameters'] as $parameter => $value) {
+        echo ' ' . $parameter . '="' . addslashes($value) . '"';
+      }
       if (empty($html['innerhtml']) AND $html['tag'] != 'script') {
         echo ' />';
       }

@@ -98,9 +98,8 @@ class Extensions implements IModule {
       if (!$info) {
         throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
       }
-      $dependencies = $info['dependencies']['modules'];
       $arguments = array();
-      foreach ($dependencies as $dependency => $versionInfo) {
+      foreach ($info['dependencies']['modules'] as $dependency => $versionInfo) {
         $module = $this->core->requestModule($dependency);
         /** @todo Do this when installing.. */
         // $version = $this->core->getVersion($dependency);
