@@ -122,8 +122,18 @@ class Users implements IModule{
 
   }
 
+  private function genSalt() {
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $max = strlen($chars) - 1;
+    $salt = '';
+    for ($i = 0; $i < 22; $i++) {
+      $salt .= $chars[mt_rand(0, $max)];
+    }
+    return '$2a$08$' . $salt;
+  }
+
   private function hash($string) {
-    return crypt($string);
+    return crypt($string, genSalt());
   }
 
   private function compareHash($string, $hash) {
