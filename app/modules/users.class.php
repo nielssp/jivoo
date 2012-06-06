@@ -122,6 +122,14 @@ class Users implements IModule{
 
   }
 
+  private function hash($string) {
+    return crypt($string);
+  }
+
+  private function compareHash($string, $hash) {
+    return crypt($string, $hash) == $hash;
+  }
+
   public function getLink(User $record) {
     return $this->http->getLink($record->getPath());
   }
@@ -202,11 +210,13 @@ class Users implements IModule{
   public function logIn($username, $password, $remember = FALSE) {
     $user = User::first(
       SelectQuery::create()
-        ->where('username = ? AND password = ?')
+        ->where('username = ?')
         ->addVar($username)
-        ->addVar(sha1($password))
     );
     if (!$user) {
+      return FALSE;
+    }
+    if (!$this->compareHash($password, $user->password)) {
       return FALSE;
     }
     $this->user = $user;
