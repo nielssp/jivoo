@@ -43,29 +43,15 @@ class Theme implements IModule {
 
     // Create meta-tags
     if (!$this->templates->hideIdentity()) {
-      $this->templates->insertHtml(
-        'meta-generator',
-        'head-top',
-        'meta',
-        array(
-          'name' => 'generator',
-          'content' => 'PeanutCMS' . ($this->templates->hideVersion() ? '' : ' ' . PEANUT_VERSION)
-        ),
-        '',
-        8
+      $this->templates->insertMeta(
+        'generator',
+        'PeanutCMS' . ($this->templates->hideVersion() ? '' : ' ' . PEANUT_VERSION)
       );
     }
     if ($this->configuration->exists('site.description')) {
-      $this->templates->insertHtml(
-        'meta-description',
-        'head-top',
-        'meta',
-        array(
-          'name' => 'description',
-          'content' => $this->configuration->get('site.description')
-        ),
-        '',
-        6
+      $this->templates->insertMeta(
+        'description',
+        $this->configuration->get('site.description')
       );
     }
 

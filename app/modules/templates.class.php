@@ -65,6 +65,15 @@ class Templates implements IModule {
 
     $this->setTheme(TEMPLATES);
 
+    if ($this->configuration->exists('site.meta')) {
+      $meta = $this->configuration->get('site.meta');
+      if (is_array($meta)) {
+        foreach ($meta as $name => $content) {
+          $this->insertMeta($name, $content);
+        }
+      }
+    }
+
     if ($this->configuration->exists('system.hide')) {
       $hide = $this->configuration->get('system.hide');
       if ($hide['identity'] == 'on') {
@@ -88,9 +97,9 @@ class Templates implements IModule {
       case 'htm':
         $contentType = "text/html";
         $this->insertHtml(
-            'meta-charset', 'head-top', 'meta',
-        array('http-equiv' => 'content-type', 'content' => 'text/html;charset=utf-8'),
-            '', 10
+          'meta-charset', 'head-meta', 'meta',
+          array('http-equiv' => 'content-type', 'content' => 'text/html;charset=utf-8'),
+          '', 10
         );
         break;
       case 'css':
@@ -111,7 +120,7 @@ class Templates implements IModule {
 
   public function addScript($id, $file, $dependencies = array()) {
     $this->addHtml(
-      $id, 'head-bottom', 'script',
+      $id, 'head-scripts', 'script',
       array(
         'type' => 'text/javascript',
         'src' => $file
@@ -121,7 +130,7 @@ class Templates implements IModule {
 
   public function addStyle($id, $file, $dependencies = array()) {
     $this->addHtml(
-      $id, 'head-bottom', 'link',
+      $id, 'head-styles', 'link',
       array(
         'rel' => 'stylesheet',
         'type' => 'text/css',
@@ -132,7 +141,7 @@ class Templates implements IModule {
 
   public function insertScript($id, $file, $dependencies = array()) {
     $this->insertHtml(
-      $id, 'head-bottom', 'script',
+      $id, 'head-scripts', 'script',
       array(
         'type' => 'text/javascript',
         'src' => $file
@@ -142,12 +151,22 @@ class Templates implements IModule {
 
   public function insertStyle($id, $file, $dependencies = array()) {
     $this->insertHtml(
-      $id, 'head-bottom', 'link',
+      $id, 'head-styles', 'link',
       array(
         'rel' => 'stylesheet',
         'type' => 'text/css',
         'href' => $file
       ), '', 20, $dependencies
+    );
+  }
+
+  public function insertMeta($name, $content) {
+    $this->insertHtml(
+      $name, 'head-meta', 'meta',
+      array(
+        'name' => $name,
+        'content' => $content
+      )
     );
   }
 
@@ -166,7 +185,27 @@ class Templates implements IModule {
       'priority' => $priority,
       'parameters' => $parameters,
       'dependencies' => $dependencies
-     );
+    );
+  }
+
+  public function requestHtml($id, $priority = 0) {
+    if (isset($this->availableHtml[$id])) {
+      $location = $this->availableHtml[$id]['location'];
+      if (!isset($this->html[$location][$id])) {
+        foreach ($this->availableHtml[$id]['dependencies'] as $dependency) {
+          $request = $this->requestHtml($dependency, $priority + 1);
+          if (is_int($request) AND $request <= $priority) {
+//            echo "old:$priority;new:$request - 1;";
+            $priority = $request - 1;
+          }
+        }
+        $this->html[$location][$id] = array(
+          'priority' => $priority
+        );
+      }
+      return $this->html[$location][$id]['priority'];
+    }
+    return FALSE;
   }
 
   /**
@@ -188,7 +227,7 @@ class Templates implements IModule {
       $parameters['type'] = 'text/css';
     }
     $this->addHtml($id, $location, $tag, $parameters, $innerhtml, $priority, $dependencies);
-    $this->html[$location][$id] = FALSE;
+    $this->requestHtml($id);
   }
 
   public function setHtmlIndent($indentation = 0) {

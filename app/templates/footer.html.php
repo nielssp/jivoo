@@ -1,5 +1,4 @@
 
-
-    <?php $this->outputHtml('body-bottom'); ?>
+<?php $this->outputHtml('body-bottom'); ?>
   </body>
 </html>

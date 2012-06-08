@@ -1,26 +1,22 @@
-<?php $this->setHtmlIndent(4); ?>
+<?php
+$this->setHtmlIndent(4);
+$this->insertScript('backend-js', $this->getFile('js/backend.js'), array('jquery-ui', 'jquery-hotkeys'));
+$this->insertStyle('backend-css', $this->getFile('css/backend.css'));
+?>
 <!DOCTYPE html>
 <html>
   <head>
     <title><?php echo $title; ?> | PeanutCMS</title>
 
-<?php $this->outputHtml('head-top'); ?>
+<?php $this->outputHtml('head-meta'); ?>
 
-    <link rel="stylesheet" type="text/css" href="<?php echo w(PUB . 'css/arachis/jquery-ui-1.8.17.custom.css'); ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->getFile('css/backend.css'); ?>" />
+<?php $this->outputHtml('head-styles'); ?>
 
-<?php $this->outputHtml('head-bottom'); ?>
-
-    <script src="<?php echo w(PUB . 'js/jquery-ui-1.8.17.custom.min.js'); ?>" type="text/javascript"></script>
-    <script src="<?php echo w(PUB . 'js/jquery.hotkeys-0.7.9.min.js'); ?>" type="text/javascript"></script>
-
-    <script src="<?php echo $this->getFile('js/backend.js'); ?>" type="text/javascript"></script>
+<?php $this->outputHtml('head-scripts'); ?>
 
   </head>
   <body>
-
 <?php $this->outputHtml('body-top'); ?>
-
 
 <?php if (!isset($noHeader) OR !$noHeader): ?>
     <div id="header">

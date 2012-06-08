@@ -28,6 +28,15 @@ class Users implements IModule{
 
   private $user;
 
+  private $hashTypes = array(
+    'sha512',
+    'sha256',
+    'blowfish',
+    'md5',
+    'ext_des',
+    'std_des'
+  );
+
   public function __construct(Core $core) {
     $this->core = $core;
     $this->database = $this->core->database;
@@ -115,6 +124,15 @@ class Users implements IModule{
       $this->configuration->set('users.defaultGroups.registered', 'users');
     }
 
+    if (!$this->configuration->exists('users.hashType')) {
+      foreach ($this->hashTypes as $hashType) {
+        if (constant('CRYPT_' . strtoupper($hashType)) === 1) {
+          $this->configuration->set('users.hashType', $hashType);
+          break;
+        }
+      }
+    }
+
     if ($this->actions->has('logout')) {
       $this->logOut();
       $this->http->refreshPath();
@@ -122,21 +140,55 @@ class Users implements IModule{
 
   }
 
-  private function genSalt() {
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  public function genSalt($hashType = NULL) {
+    if (!isset($hashType)) {
+      $hashType = $this->configuration->get('users.hashType');
+    }
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./';
     $max = strlen($chars) - 1;
     $salt = '';
-    for ($i = 0; $i < 22; $i++) {
+    switch (strtolower($hashType)) {
+      case 'sha512':
+        $saltLength = 16;
+        // rounds from 1000 to 999,999,999
+        $prefix = '$6$rounds=999999999';
+        break;
+      case 'sha256':
+        $saltLength = 16;
+        // rounds from 1000 to 999,999,999
+        $prefix = '$5$rounds=5000$';
+        break;
+      case 'blowfish':
+        $saltLength = 22;
+        // cost (second param) from 04 to 31
+        $prefix = '$2a$08$';
+        break;
+      case 'md5':
+        $saltLength = 8;
+        $prefix = '$1$';
+        break;
+      case 'ext_des':
+        $saltLength = 4;
+        // iterations (4 characters after _) from .... to zzzz
+        $prefix = '_J9..';
+        break;
+      case 'std_des':
+      default:
+        $saltLength = 2;
+        $prefix = '';
+        break;
+    }
+    for ($i = 0; $i < $saltLength; $i++) {
       $salt .= $chars[mt_rand(0, $max)];
     }
-    return '$2a$08$' . $salt;
+    return $prefix . $salt;
   }
 
-  private function hash($string) {
-    return crypt($string, genSalt());
+  public function hash($string, $hashType = NULL) {
+    return crypt($string, $this->genSalt($hashType));
   }
 
-  private function compareHash($string, $hash) {
+  public function compareHash($string, $hash) {
     return crypt($string, $hash) == $hash;
   }
 

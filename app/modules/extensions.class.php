@@ -81,7 +81,7 @@ class Extensions implements IModule {
   }
   
   private function loadExtension($extension) {
-    if (!isset($this->modules[$module])) {
+    if (!isset($this->extensions[$module])) {
       if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.class.php'))) {
         throw new ExtensionNotFoundException(tr('The "%1" extension could not be found', $extension));
       }
@@ -99,6 +99,19 @@ class Extensions implements IModule {
         throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
       }
       $arguments = array();
+      foreach ($info['dependencies']['extensions'] as $dependency => $versionInfo) {
+        if ($dependency == $extension) {
+          throw new ExtensionInvalidException(tr('The "%1" extension depends on itself', $extension));
+        }
+
+        try {
+          $this->loadExtension($dependency);
+        }
+        catch (ExtensionNotFoundException $ex) {
+          $this->uninstall($extension);
+          return FALSE;
+        }
+      }
       foreach ($info['dependencies']['modules'] as $dependency => $versionInfo) {
         $module = $this->core->requestModule($dependency);
         /** @todo Do this when installing.. */

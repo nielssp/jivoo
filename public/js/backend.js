@@ -34,7 +34,7 @@ $(function() {
   }
 
   $(".button").button();
-/*
+ /*
   $('textarea.wysiwyg').tinymce({
     script_url : "js/tinymce/tiny_mce.js",
 
@@ -71,7 +71,7 @@ $(function() {
       staffid : "991234"
     }
   });
-*/
+// */
   $(document).bind('keydown', 'esc', function () {
     $(".menubar").find(".items").hide();
   });
