@@ -81,7 +81,7 @@ class Extensions implements IModule {
   }
   
   private function loadExtension($extension) {
-    if (!isset($this->extensions[$module])) {
+    if (!isset($this->extensions[$extension])) {
       if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.class.php'))) {
         throw new ExtensionNotFoundException(tr('The "%1" extension could not be found', $extension));
       }
@@ -90,10 +90,10 @@ class Extensions implements IModule {
       if (!class_exists($className)) {
         throw new ExtensionInvalidException(tr('The "%1" extension does not have a main class', $extension));
       }
-      $reflection = new ReflectionClass($className);
-      if (!$reflection->isSubclassOf('ExtensionBase')) {
-        throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
-      }
+//      $reflection = new ReflectionClass($className);
+//      if (!$reflection->isSubclassOf('ExtensionBase')) {
+//        throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
+//      }
       $info = $this->getInfo($extension);
       if (!$info) {
         throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
@@ -125,7 +125,8 @@ class Extensions implements IModule {
         }
       }
       $config = $this->configuration->getSubset('extensions.config.' . $extension);
-      $this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
+      //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
+      $this->extensions[$extension] = new $className($arguments, $config);
     }
     return $this->extensions[$extension];
   }

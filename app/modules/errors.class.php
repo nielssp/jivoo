@@ -56,6 +56,10 @@ class Errors implements IModule {
     }
   }
 
+  public function getErrorLog() {
+    return $this->errorLog;
+  }
+
   /**
   * Log a non-fatal error for debugging purposes
   *

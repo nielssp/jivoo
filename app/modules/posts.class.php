@@ -167,16 +167,16 @@ class Posts implements IModule{
     //$this->routes->addRoute('tags/*', array($this, ''));
     
     $this->backend->addCategory('content', tr('Content'), 2);
-    $this->backend->addPage('content', 'new-post', tr('New Post'), array($this, 'addPostController'), 2);
-    $this->backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'addPostController'), 4);
-    $this->backend->addPage('content', 'tags', tr('Tags'), array($this, 'addPostController'), 8);
-    $this->backend->addPage('content', 'categories', tr('Categories'), array($this, 'addPostController'), 8);
+    $this->backend->addPage('content', 'new-post', tr('New Post'), array($this, 'newPostController'), 2);
+    $this->backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
+    $this->backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
+    $this->backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
   }
 
   private function detectFancyPermalinks() {
     $path = $this->routes->getPath();
-    $permalink = explode('|', $this->configuration->get('postPermalink'));
-    if (is_array($path)) {
+    $permalink = explode('/', $this->configuration->get('posts.permalink'));
+    if (is_array($path) AND is_array($permalink)) {
       foreach ($permalink as $key => $dir) {
         if (isset($path[$key])) {
           $pos = strpos($dir, '%name%');
@@ -210,7 +210,7 @@ class Posts implements IModule{
           }
           $pos = strpos($dir, '%id%');
           $len = strlen($dir);
-          if ($pos !== false) {
+          if ($pos !== FALSE) {
             $dif = $len - ($pos + 4);
             if ($dif != 0) {
               $postid = substr($path[$key], $pos, -$dif);
@@ -258,11 +258,13 @@ class Posts implements IModule{
           $permalink = explode('/', $this->configuration->get('posts.permalink'));
           if (is_array($permalink)) {
             $time = $record->date;
+            $id = $record->id;
+            $id = !isset($id) ? 0 : $record->id;
             $replace = array('%name%'  => $record->name,
-                                       '%id%'    => $record->id,
-                                       '%year%'  => date('Y', $time),
-                                       '%month%' => date('m', $time),
-                                       '%day%'   => date('d', $time));
+                             '%id%'    => $id,
+                             '%year%'  => date('Y', $time),
+                             '%month%' => date('m', $time),
+                             '%day%'   => date('d', $time));
             $search = array_keys($replace);
             $replace = array_values($replace);
             $path = array();
@@ -339,9 +341,35 @@ class Posts implements IModule{
   }
 
 
-  public function addPostController($path = array(), $parameters = array(), $contentType = 'html') {
+  public function newPostController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['title'] = tr('New Post');
+    $templateData['action'] = $this->http->getLink();
+
+    $examplePost = Post::create();
+    $examplePost->name = '%name%';
+    $examplePost->date = time();
+    $exampleLink = explode('%name%', $examplePost->getLink());
+    $examplePost = NULL;
+    $templateData['nameInPermalink'] = count($exampleLink) >= 2;
+    $templateData['beforePermalink'] = $exampleLink[0];
+    $templateData['afterPermalink'] = $exampleLink[1];
+
+    $templateData['values'] = array();
+    $templateData['values']['title'] = '';
+    $templateData['values']['content'] = '';
+    $templateData['values']['tags'] = '';
+    $templateData['values']['permalink'] = '';
+    $templateData['values']['allow_comments'] = TRUE;
+    if (isset($_POST['save'])) {
+      $this->templates->insertHtml('message', 'body-bottom', 'div', array(), 'Saving...');
+      $templateData['values']['title'] = $_POST['title'];
+      $templateData['values']['content'] = $_POST['content'];
+      $templateData['values']['tags'] = $_POST['tags'];
+    }
+    else if (isset($_POST['publish'])) {
+      $this->templates->insertHtml('message', 'body-bottom', 'div', array(), 'Publishing...');
+    }
     $this->templates->renderTemplate('backend/edit-post.html', $templateData);
   }
 }

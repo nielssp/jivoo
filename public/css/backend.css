@@ -415,7 +415,7 @@ span.description {
   float:right;
   color:#666;
   margin-right:20px;
-  font-family:Verdana, sans-serif; /* hm.. segoe ui has some weird inconsistencies with character placement */
+  font-family: Verdana, sans-serif; /* hm.. segoe ui has some weird inconsistencies with character placement */
 }
 
 .menubar .menu .items .separator {
@@ -446,4 +446,32 @@ span.description {
   width:128px;
   height:48px;
   line-height:48px;
+}
+
+.notification {
+  color:#000;
+  border-radius:8px;
+  padding:4px 16px;
+  font-size:1.2em;
+}
+
+.notification-error {
+  color:#fff;
+  background-color:#a22121;
+  box-shadow:0 0 8px 0px #a22121;
+}
+
+.notification-warning {
+  background-color:#DD9F3B; /*#DF9113*/
+  box-shadow:0 0 8px 0px #DD9F3B;
+}
+
+.notification-notice {
+  background-color:#86DA81;/*#7EDB79;*/
+  box-shadow:0 0 8px 0px #86DA81;
+}
+
+.notification strong{
+  color:inherit;
+  margin-right:16px;
 }

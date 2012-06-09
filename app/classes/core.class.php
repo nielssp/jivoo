@@ -102,15 +102,15 @@ class Core {
       if (!file_exists(p(MODULES . $module . '.class.php'))) {
         throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
       }
-      require_once(p(MODULES . $module . '.class.php'));
+      require(p(MODULES . $module . '.class.php'));
       $className = fileClassName($module);
       if (!class_exists($className)) {
         throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
       }
-      $reflection = new ReflectionClass($className);
-      if (!$reflection->implementsInterface('IModule')) {
-        throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
-      }
+      //$reflection = new ReflectionClass($className);
+      //if (!$reflection->implementsInterface('IModule')) {
+      //  throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
+      //}
       $info = self::getModuleInfo($module);
       if (!$info) {
         throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
@@ -129,7 +129,8 @@ class Core {
           ));
         }
       }
-      $this->modules[$module] = $reflection->newInstanceArgs(array($this));
+      //$this->modules[$module] = $reflection->newInstanceArgs(array($this));
+      $this->modules[$module] = new $className($this);
     }
     return $this->modules[$module];
   }

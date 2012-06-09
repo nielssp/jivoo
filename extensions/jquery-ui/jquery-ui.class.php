@@ -14,12 +14,12 @@ class JqueryUi extends ExtensionBase {
       $this->config->set('theme', 'arachis');
     }
     $this->theme = $this->config->get('theme');
-    $this->templates->addScript(
+    $this->m->templates->addScript(
       'jquery-ui',
       $this->getLink('js/jquery-ui-1.8.17.custom.min.js'),
       array('jquery', 'jquery-ui-css')
     );
-    $this->templates->addStyle(
+    $this->m->templates->addStyle(
       'jquery-ui-css',
       $this->getLink('css/' . $this->theme . '/jquery-ui-1.8.17.custom.css')
     );

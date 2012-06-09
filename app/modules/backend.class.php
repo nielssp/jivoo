@@ -52,6 +52,7 @@ class Backend implements IModule, ILinkable {
 
     if ($this->users->isLoggedIn()) {
       $this->routes->addRoute($path, array($this, 'dashboardController'));
+      $this->templates->addTemplateData('notifications', $this->errors->getNotifications());
     }
     else {
       $this->routes->addRoute($path, array($this, 'loginController'));
@@ -91,27 +92,29 @@ class Backend implements IModule, ILinkable {
     $titleArr = str_split($title);
     foreach ($titleArr as $char) {
       $shortcut = strtoupper($char);
-      if (in_array($shortcut, $this->shortcuts['root'])) {
+      if (isset($this->shortcuts['root']) AND in_array($shortcut, $this->shortcuts['root'])) {
         continue;
       }
       if ($category == NULL AND in_array($shortcut, $this->shortcuts)) {
         continue;
       }
       if ($category != NULL) {
-        if (is_array($this->shortcuts[$category])
+        if (isset($this->shortcuts[$category])
+            AND is_array($this->shortcuts[$category])
             AND in_array($shortcut, $this->shortcuts[$category])) {
           continue;
         }
-        if (!is_array($this->shortcuts[$category])) {
+        if (!isset($this->shortcuts[$category]) OR
+            !is_array($this->shortcuts[$category])) {
           $this->shortcuts[$category] = array();
         }
         $this->shortcuts[$category][] = $shortcut;
       }
       else {
-        if (!is_array($this->shortcuts['root'])) {
+        if (!isset($this->shortcuts['root']) OR !is_array($this->shortcuts['root'])) {
           $this->shortcuts['root'] = array();
         }
-        $this->shortcuts['root'] = $shortcut;
+        $this->shortcuts['root'][] = $shortcut;
       }
       $this->shortcuts[] = $shortcut;
       return $shortcut;

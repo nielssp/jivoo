@@ -6,7 +6,7 @@
 class Test extends ExtensionBase {
   protected function init() {
     
-    $this->templates->insertHtml(
+    $this->m->templates->insertHtml(
       'test-output',
       'body-bottom',
       'div',

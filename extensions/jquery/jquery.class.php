@@ -8,7 +8,7 @@
 
 class Jquery extends ExtensionBase {
   protected function init() {
-    $this->templates->addScript(
+    $this->m->templates->addScript(
       'jquery',
       $this->getLink('js/jquery-1.7.1.min.js')
     );

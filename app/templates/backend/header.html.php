@@ -58,3 +58,14 @@ $this->insertStyle('backend-css', $this->getFile('css/backend.css'));
 <?php endif; ?>
 
     <div id="content">
+
+<?php foreach ($notifications['warning'] as $notification): ?>
+
+<div class="section">
+  <div class="container notification notification-warning">
+    <strong>Warning</strong>
+    <?php  echo $notification['message']; ?>
+  </div>
+</div>
+
+<?php endforeach; ?>

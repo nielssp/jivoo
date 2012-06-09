@@ -70,8 +70,8 @@ class Theme implements IModule {
    * @return bool False if no theme could be loaded
    */
   private function load() {
-    if ($this->configuration->exists('theme')) {
-      $theme = $this->configuration->get('theme');
+    if ($this->configuration->exists('theme.name')) {
+      $theme = $this->configuration->get('theme.name');
       if (file_exists(p(THEMES . $theme . '/functions.php'))) {
         ob_start();
         require_once(p(THEMES . $theme . '/functions.php'));
@@ -86,6 +86,9 @@ class Theme implements IModule {
         $this->theme = $theme;
         return FALSE;
       }
+    }
+    if (!is_dir(p(THEMES))) {
+      return FALSE;
     }
     $dir = opendir(p(THEMES));
     if ($dir) {

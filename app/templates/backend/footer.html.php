@@ -1,5 +1,18 @@
 <?php $this->setHtmlIndent(4); ?>
+
+<?php
+if (DEBUG) {
+  foreach ($this->errors->getErrorLog() as $error) {
+    echo '<div class="section"><div class="container notification notification-' . $error['type'] .'">'; 
+    echo '<strong>' . ucfirst($error['type']) . '</strong> ';
+    echo $error['message'] . ' in ' . $error['file'] . ' on line ' . $error['line'];
+    echo '</div></div>';
+  }
+}
+?>
+
     </div>
+
 
 <?php if (isset($aboutLink)): ?>
     <div class="footer" id="poweredby">

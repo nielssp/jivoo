@@ -4,16 +4,12 @@ abstract class ExtensionBase {
 
   private $extensionDir;
   
-  protected $modules = array();
+  protected $m = NULL;
   
   protected $config = NULL;
   
-  protected final function __get($module) {
-    return $this->modules[$module];
-  }
-  
   public final function __construct($modules, Configuration $config) {
-    $this->modules = $modules;
+    $this->m = new Dictionary($modules, TRUE);
     $this->config = $config;
     $this->extensionDir = classFileName(get_class($this));
     $this->init();
