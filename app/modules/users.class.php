@@ -210,6 +210,10 @@ class Users implements IModule{
     return FALSE;
   }
 
+  public function getUser() {
+    return $this->isLoggedIn() ? $this->user : FALSE;
+  }
+
   protected function checkSession() {
     if (isset($_SESSION[SESSION_PREFIX . 'username'])) {
       $sid = session_id();

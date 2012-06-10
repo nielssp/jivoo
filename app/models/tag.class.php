@@ -26,6 +26,16 @@ class Tag extends ActiveRecord implements ILinkable {
   public function getLink() {
     return self::$posts->getLink($this);
   }
+
+  public static function createName($title) {
+    return strtolower(
+      preg_replace(
+        '/[ \-]/', '-', preg_replace(
+          '/[^(a-zA-Z0-9 \-)]/', '', $title
+        )
+      )
+    );
+  }
 }
 
 Tag::setModule($this);

@@ -57,8 +57,10 @@ class Posts implements IModule{
         ->addInt('comments', TRUE)
         ->addVarchar('state', 10)
         ->addVarchar('commenting', 10)
+        ->addInt('user_id', TRUE)
         ->addIndex(TRUE, 'name')
         ->addIndex(FALSE, 'date')
+        ->addIndex(FALSE, 'user_id')
         ->execute();
       $newInstall = TRUE;
     }
@@ -361,14 +363,43 @@ class Posts implements IModule{
     $templateData['values']['tags'] = '';
     $templateData['values']['permalink'] = '';
     $templateData['values']['allow_comments'] = TRUE;
-    if (isset($_POST['save'])) {
-      $templateData['values']['title'] = $_POST['title'];
-      $templateData['values']['content'] = $_POST['content'];
-      $templateData['values']['tags'] = $_POST['tags'];
-      new LocalNotice('Saving...');
-    }
-    else if (isset($_POST['publish'])) {
-      new LocalNotice('Publishing...');
+    if (isset($_POST['save']) OR isset($_POST['publish'])) {
+      $post = Post::create();
+      $post->date = time();
+      $post->title = $_POST['title'];
+      $post->name = Post::createName($_POST['permalink']);
+      if ($post->name == '') {
+        $post->name = Post::createName($_POST['title']);
+      }
+      $post->content = $_POST['content'];
+      $post->commenting = $_POST['allow_comments'] == 'yes' ? 'yes' : 'no';
+
+      $templateData['values']['title'] = addslashes($_POST['title']);
+      $templateData['values']['content'] = addslashes($_POST['content']);
+      $templateData['values']['tags'] = addslashes($_POST['tags']);
+      $templateData['values']['permalink'] = addslashes($post->name);
+      $templateData['values']['allow_comments'] = $post->commenting == 'yes' ? TRUE : FALSE;
+
+      if (!$post->isValid()) {
+        $templateData['errors'] = $post->getErrors();
+        foreach ($templateData['errors'] as $field => $error) {
+          new LocalWarning(tr('The "%1" is invalid. (%2)', $field, $error));
+        }
+      }
+      else {
+        if (isset($_POST['save'])) {
+          $post->state = 'draft';
+          new LocalNotice(tr('The post has been saved'));
+        }
+        else {
+          $post->state = 'published';
+          new LocalNotice(tr('The post has been published'));
+        }
+        $post->setUser($this->users->getUser());
+        $post->save();
+        $post->createAndAddTags($_POST['tags']);
+        $this->http->redirectPath();
+      }
     }
     $this->templates->renderTemplate('backend/edit-post.html', $templateData);
   }

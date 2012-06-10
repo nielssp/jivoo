@@ -387,8 +387,10 @@ abstract class ActiveRecord {
     return $new;
   }
 
-  protected function validateValue($value, $conditionKey, $conditionValue) {
+  protected function validateValue($column, $value, $conditionKey, $conditionValue) {
     $validate = array();
+    $db = self::connection();
+    $class = get_class($this);
     switch ($conditionKey) {
       case 'presence':
         return empty($value) != $conditionValue;
@@ -408,6 +410,13 @@ abstract class ActiveRecord {
         return $value <= $conditionValue;
       case 'match':
         return preg_match($conditionValue, $value) == 1;
+      case 'unique':
+        $result = $db->selectQuery(self::$models[$class]['table'])
+          ->where($column . ' = ?')
+          ->addVar($value)
+          ->limit(1)
+          ->execute();
+        return $result->hasRows() != $conditionValue;
       case 'custom':
         return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);
     }
@@ -421,7 +430,7 @@ abstract class ActiveRecord {
         continue;
       }
       foreach ($this->validate[$column] as $conditionKey => $conditionValue) {
-        $validate = $this->validateValue($value, $conditionKey, $conditionValue);
+        $validate = $this->validateValue($column, $value, $conditionKey, $conditionValue);
         if (!$validate) {
           $this->errors[$column] = $conditionKey;
           break;

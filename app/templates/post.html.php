@@ -11,6 +11,9 @@ $this->renderTemplate('header');
 
 <p>Published <?php echo $post->formatDate(); ?>
   - <?php echo $post->formatTime(); ?>
+  <?php if ($author = $post->getUser()): ?>
+  by <?php echo $author->username; ?>
+  <?php endif; ?>
   <a href="#comment">
     (<?php echo tr('Leave a comment'); ?>)
   </a>
