@@ -11,10 +11,10 @@ class Errors implements IModule {
 
   private $errorLog;
 
-  private $notifications;
-
   public function __construct(Core $core) {
     $this->core = $core;
+
+    require(p(CLASSES . 'notification.class.php'));
 
     set_error_handler(array($this, 'handleError'));
     set_exception_handler(array($this, 'handleException'));
@@ -80,48 +80,6 @@ class Errors implements IModule {
         'file' => $file,
         'line' => $line
     );
-  }
-
-  /**
-  * Create a notification for the user
-  *
-  * @param string $type Notification type, e.g. 'error', 'warning' or 'notice'
-  * @param string $message Notification message
-  * @param bool $global Is this notification global?
-  * @param string $uid Unique identifier
-  * @param string $readMore A link to a page where additional information about the error can be found (e.g. the manual)
-  * @return void
-  */
-  public static function notification($type, $message, $global = true, $uid = null, $readMore = '') {
-    if (isset($_SESSION[SESSION_PREFIX . 'backend_notifications'])
-        AND is_array($_SESSION[SESSION_PREFIX . 'backend_notifications'])) {
-      $notifications = $_SESSION[SESSION_PREFIX . 'backend_notifications'];
-    }
-    else {
-      $notifications = array();
-    }
-    if (!is_array($notifications[$type])) {
-      $notifications[$type] = array();
-    }
-    if (isset($uid)) {
-      $notifications[$type][$uid] = array(
-        'message' => $message,
-        'global' => $global,
-        'readMore' => $readMore
-      );
-    }
-    else {
-      $notifications[$type][] = array(
-        'message' => $message,
-        'global' => $global,
-        'readMore' => $readMore
-      );
-    }
-    $_SESSION[SESSION_PREFIX . 'backend_notifications'] = $notifications;
-  }
-
-  public static function getNotifications() {
-    return $_SESSION[SESSION_PREFIX . 'backend_notifications'];
   }
 
   public function handleException(Exception $exception) {

@@ -2,13 +2,6 @@
 // Render the header
 $this->renderTemplate('backend/header.html');
 ?>
-
-<div class="section">
-  <div class="container notification notification-error">
-    <strong>Error</strong>
-    The force is not with you today.
-  </div>
-</div>
       
     <form action="<?php echo $action; ?>" method="post">
 

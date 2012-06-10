@@ -60,7 +60,7 @@ class Theme implements IModule {
       $this->templates->setTheme(p(THEMES . $this->theme . 'templates/'));
     }
     else {
-      $this->errors->notification('warning', tr('Please install a theme'), true, 'theme-missing', 'http://google.com');
+      new GlobalWarning(tr('Please install a theme'), 'theme-missing');
     }
   }
 

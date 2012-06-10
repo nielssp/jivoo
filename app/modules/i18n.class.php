@@ -44,10 +44,8 @@ class I18n extends TranslationService implements IModule {
     TranslationService::setService($this);
 
     $this->language = array();
-    if (defined('DATETIMEZONE_AVAILABLE')) {
-      if (!date_default_timezone_get())
-        date_default_timezone_set('UTC');
-    }
+    if (!date_default_timezone_get())
+      date_default_timezone_set('UTC');
     // Get default language
     $this->configure();
   }
@@ -74,19 +72,8 @@ class I18n extends TranslationService implements IModule {
     }
 
     // Set time zone
-    if (defined('DATETIMEZONE_AVAILABLE')) {
-      if (!date_default_timezone_set($this->configuration->get('i18n.timeZone')))
-        date_default_timezone_set('UTC');
-    }
-    else {
-      if (!defined('LOCAL_TIMEZONE_OFFSET')) {
-        $timeZoneOffset = $this->configuration->get('i18n.timeZone');
-        if (is_int($timeZoneOffset))
-          define('LOCAL_TIMEZONE_OFFSET', $timeZoneOffset);
-        else
-          define('LOCAL_TIMEZONE_OFFSET', 0);
-      }
-    }
+    if (!date_default_timezone_set($this->configuration->get('i18n.timeZone')))
+      date_default_timezone_set('UTC');
   }
 
   /**
@@ -103,15 +90,23 @@ class I18n extends TranslationService implements IModule {
         return;
       }
       else {
-        $this->errors->notification('warning', tr('The language, "%1", is missing', $language), true, 'language-missing');
+        new GlobalWarning(
+          tr('The language "%1", is missing', $language),
+          'language-missing'
+        );
       }
     }
     if (!defined('LANGUAGE')) {
-      $this->errors->notification('warning', tr('No default language has been defined'), true, 'default-language');
+      new GlobalWarning(
+        tr('No default language has been defined'), 'default-language'
+      );
       return;
     }
     if(!file_exists(PATH . LANG . LANGUAGE . '.lng.php')) {
-      $this->errors->notification('warning', tr('The default language, "%1", is missing', LANGUAGE), true, 'default-language-missing');
+      new GlobalWarning(
+        tr('The default language, "%1", is missing', LANGUAGE),
+        'default-language-missing'
+      );
       return;
     }
     include(PATH . LANG . LANGUAGE . '.lng.php');

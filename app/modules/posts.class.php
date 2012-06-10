@@ -262,9 +262,9 @@ class Posts implements IModule{
             $id = !isset($id) ? 0 : $record->id;
             $replace = array('%name%'  => $record->name,
                              '%id%'    => $id,
-                             '%year%'  => date('Y', $time),
-                             '%month%' => date('m', $time),
-                             '%day%'   => date('d', $time));
+                             '%year%'  => tdate('Y', $time),
+                             '%month%' => tdate('m', $time),
+                             '%day%'   => tdate('d', $time));
             $search = array_keys($replace);
             $replace = array_values($replace);
             $path = array();
@@ -362,13 +362,13 @@ class Posts implements IModule{
     $templateData['values']['permalink'] = '';
     $templateData['values']['allow_comments'] = TRUE;
     if (isset($_POST['save'])) {
-      $this->templates->insertHtml('message', 'body-bottom', 'div', array(), 'Saving...');
       $templateData['values']['title'] = $_POST['title'];
       $templateData['values']['content'] = $_POST['content'];
       $templateData['values']['tags'] = $_POST['tags'];
+      new LocalNotice('Saving...');
     }
     else if (isset($_POST['publish'])) {
-      $this->templates->insertHtml('message', 'body-bottom', 'div', array(), 'Publishing...');
+      new LocalNotice('Publishing...');
     }
     $this->templates->renderTemplate('backend/edit-post.html', $templateData);
   }

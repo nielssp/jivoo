@@ -40,7 +40,7 @@ class Configuration implements IModule {
       fclose($file);
     }
     if (!is_writable($this->file)) {
-      $this->errors->notification('warning', tr('%1 is not writable', $this->file), true, 'settings-writable');
+      new GlobalWarning(tr('%1 is not writable', $this->file), 'settings-writable');
     }
     $fileContent = file_get_contents($this->file);
     if ($fileContent === FALSE) {

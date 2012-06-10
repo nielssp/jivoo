@@ -59,13 +59,17 @@ $this->insertStyle('backend-css', $this->getFile('css/backend.css'));
 
     <div id="content">
 
-<?php foreach ($notifications['warning'] as $notification): ?>
+<?php foreach (LocalNotification::all() as $notification): ?>
 
 <div class="section">
-  <div class="container notification notification-warning">
-    <strong>Warning</strong>
-    <?php  echo $notification['message']; ?>
+  <div class="container notification notification-<?php echo $notification->type; ?>">
+    <strong>
+      <?php echo $notification->label; ?>
+    </strong>
+    <?php  echo $notification->message; ?>
   </div>
 </div>
+
+<?php $notification->delete(); ?>
 
 <?php endforeach; ?>

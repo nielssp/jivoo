@@ -52,7 +52,7 @@ class Backend implements IModule, ILinkable {
 
     if ($this->users->isLoggedIn()) {
       $this->routes->addRoute($path, array($this, 'dashboardController'));
-      $this->templates->addTemplateData('notifications', $this->errors->getNotifications());
+      $this->templates->addTemplateData('notifications', LocalNotification::all());
     }
     else {
       $this->routes->addRoute($path, array($this, 'loginController'));
