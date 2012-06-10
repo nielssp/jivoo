@@ -30,7 +30,7 @@ class Link extends ActiveRecord implements ILinkable {
     }
   }
 
-  public function getMenu($menu = 'main') {
+  public static function getMenu($menu = 'main') {
     $menu = strtolower($menu);
     $select = SelectQuery::create()
       ->where('menu = ?')

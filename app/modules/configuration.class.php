@@ -196,6 +196,7 @@ class Configuration implements IModule {
    * @return string Data string
    */
   public static function compileData($fields, $serialize = false, $associative = true, $tree = true, $parent = '') {
+    $data = '';
     if (!$associative) {
       foreach ($fields[0] as $i => $key) {
         $value = $fields[1][$i];

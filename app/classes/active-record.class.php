@@ -92,6 +92,10 @@ abstract class ActiveRecord {
         // if table does not exist
       }
 
+      if (!isset($arguments[0])) {
+        $arguments[0] = NULL;
+      }
+
       if ($association == 'hasMany' OR $association == 'hasAndBelongsToMany') {
         if ($this->isNew) {
           return FALSE;
@@ -498,7 +502,7 @@ abstract class ActiveRecord {
 
   public function addToCache() {
     $class = get_class($this);
-    if (!is_array(self::$cache[$class])) {
+    if (!isset(self::$cache[$class]) OR !is_array(self::$cache[$class])) {
       self::$cache[$class] = array();
     }
     self::$cache[$class][$this->data[$this->primaryKey]] = $this;

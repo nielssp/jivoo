@@ -15,6 +15,10 @@ if (!defined('DEBUG')) {
   define('DEBUG', FALSE);
 }
 
+if (!defined('LOG_ERRORS')) {
+  define('LOG_ERRORS', FALSE);
+}
+
 if (!defined('HIDE_LEVEL')) {
   /**
    * How much to hide the identity of PeanutCMS
@@ -125,6 +129,9 @@ if (!defined('PUB')) {
   define('PUB', 'public/');
 }
 
+if (!defined('LOG')) {
+  define('LOG', 'log/');
+}
 
 
 /** URL of current PeanutCMS installation */

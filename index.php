@@ -15,5 +15,7 @@ define('APP', 'app/');
 
 define('DEBUG', TRUE);
 
+define('LOG_ERRORS', TRUE);
+
 require_once(APP . 'core.php');
 

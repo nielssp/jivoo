@@ -80,6 +80,22 @@ class Errors implements IModule {
         'file' => $file,
         'line' => $line
     );
+    if (LOG_ERRORS) {
+      $this->logToFile($message . ' in ' . $file . ' on line ' . $line);
+    }
+  }
+
+  public function logToFile($message) {
+    if (!is_writable(p(LOG . 'error.log'))) {
+      GlobalWarning(tr('Unable to write to log file'));
+    }
+    else {
+      $file = fopen(p(LOG . 'error.log'), 'a');
+      if ($file) {
+        fwrite($file, tdate('c') . ' ' . $message . PHP_EOL);
+        fclose($file);
+      }
+    }
   }
 
   public function handleException(Exception $exception) {

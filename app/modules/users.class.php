@@ -126,7 +126,8 @@ class Users implements IModule{
 
     if (!$this->configuration->exists('users.hashType')) {
       foreach ($this->hashTypes as $hashType) {
-        if (constant('CRYPT_' . strtoupper($hashType)) === 1) {
+        $constant = 'CRYPT_' . strtoupper($hashType);
+        if (defined($constant) AND constant($constant) == 1) {
           $this->configuration->set('users.hashType', $hashType);
           break;
         }
