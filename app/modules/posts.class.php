@@ -382,8 +382,39 @@ class Posts implements IModule{
 
       if (!$post->isValid()) {
         $templateData['errors'] = $post->getErrors();
-        foreach ($templateData['errors'] as $field => $error) {
-          new LocalWarning(tr('The "%1" is invalid. (%2)', $field, $error));
+        foreach ($templateData['errors'] as $column => $error) {
+          switch ($column) {
+            case 'title':
+              switch ($error) {
+                case 'presence':
+                  new LocalWarning(tr('The title of the post cannot be empty.'));
+                  break;
+                case 'maxLength':
+                  new LocalWarning(tr('The title should not be longer than 25 characters.'));
+                  break;
+                default:
+                  break;
+              }
+              break;
+            case 'name':
+              switch ($error) {
+                case 'presence':
+                  new LocalWarning(tr('The permalink of the post cannot be empty.'));
+                  break;
+                case 'unique':
+                  new LocalWarning(tr('The permalink is not unique.'));
+                  break;
+                default:
+                  new LocalWarning(tr('The permalink should be a string consisting of bewteen 1 and 25 alphanumerics characters and dashes.'));
+                  break;
+              }
+              break;
+            case 'content':
+              new LocalWarning(tr('The content of the post cannot be empty.'));
+              break;
+            default:
+              break;
+          }
         }
       }
       else {

@@ -61,13 +61,13 @@ class Http implements IModule {
 
     // Determine if the current URL is correct
     if ($this->configuration->get('rewrite') === 'on') {
-      if ($this->path[0] == 'index.php') {
+      if (isset($this->path[0]) AND $this->path[0] == 'index.php') {
         array_shift($this->path);
         $this->redirectPath($this->path, $this->params);
       }
     }
     else {
-      if ($this->path[0] != 'index.php') {
+      if (!isset($this->path[0]) OR $this->path[0] != 'index.php') {
         $this->redirectPath($this->path, $this->params);
       }
       array_shift($this->path);
