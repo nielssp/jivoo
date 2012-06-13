@@ -28,11 +28,11 @@ class Post extends ActiveRecord implements ILinkable {
   
   protected $validate = array(
     'title' => array('presence' => true,
-                     'maxLength' => 25),
+                     'maxLength' => 50),
     'name' => array('presence' => true,
                     'unique' => true,
                     'minLength' => 1,
-                    'maxLength' => 25,
+                    'maxLength' => 50,
                     'match' => '/^[a-z0-9-]+$/'),
     'content' => array('presence' => true),
   );

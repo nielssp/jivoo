@@ -9,12 +9,12 @@
 // To hell with those "magic quotes"!
 ini_set('magic_quotes_runtime', 0);
 
-session_start();
-
 if (!require_once('essentials.php')) {
   echo 'Essential PeanutCMS files are missing. You should probably reinstall.';
   exit;
 }
+
+session_start();
 
 if (PHP_VERSION_ID < 50200) {
   echo 'Sorry, but PeanutCMS does not support PHP versions below 5.2.0. ';

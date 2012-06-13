@@ -14,8 +14,6 @@ class Errors implements IModule {
   public function __construct(Core $core) {
     $this->core = $core;
 
-    require(p(CLASSES . 'notification.class.php'));
-
     set_error_handler(array($this, 'handleError'));
     set_exception_handler(array($this, 'handleException'));
   }

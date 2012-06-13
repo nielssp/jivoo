@@ -58,7 +58,7 @@ $this->insertStyle('backend-css', $this->getFile('css/backend.css'));
 <?php endif; ?>
 
     <div id="content">
-
+  
 <?php foreach (LocalNotification::all() as $notification): ?>
 
 <div class="section">
