@@ -9,9 +9,9 @@ abstract class ExtensionBase {
   protected $config = NULL;
   
   public final function __construct($modules, Configuration $config) {
-    $this->m = new Dictionary($modules, TRUE);
     $this->config = $config;
-    $this->extensionDir = classFileName(get_class($this));
+    $this->m = new Dictionary($modules, TRUE);
+    $this->extensionDir = get_class($this);
     $this->init();
   }
 

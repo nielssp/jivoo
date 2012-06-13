@@ -16,38 +16,19 @@
 /**
  * Posts class
  */
-class Posts implements IModule{
-
-  private $core;
-  private $errors;
-  private $configuration;
-  private $database;
-  private $routes;
-  private $templates;
-  private $http;
-  private $backend;
-  private $users;
-
+class Posts extends ModuleBase {
   private $post;
+  
+  private $controller;
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->database = $this->core->database;
-    $this->actions = $this->core->actions;
-    $this->routes = $this->core->routes;
-    $this->http = $this->core->http;
-    $this->templates = $this->core->templates;
-    $this->errors = $this->core->errors;
-    $this->configuration = $this->core->configuration;
-    $this->users = $this->core->users;
-    $this->backend = $this->core->backend;
+  protected function init() {
 
     $newInstall = FALSE;
 
     require_once(p(MODELS . 'Post.php'));
 
-    if (!$this->database->tableExists('posts')) {
-      $this->database->createQuery('posts')
+    if (!$this->m->Database->tableExists('posts')) {
+      $this->m->Database->createQuery('posts')
         ->addInt('id', TRUE, TRUE)
         ->setPrimaryKey('id')
         ->addVarchar('name', 255)
@@ -69,8 +50,8 @@ class Posts implements IModule{
 
     require_once(p(MODELS . 'Tag.php'));
 
-    if (!$this->database->tableExists('tags')) {
-      $this->database->createQuery('tags')
+    if (!$this->m->Database->tableExists('tags')) {
+      $this->m->Database->createQuery('tags')
         ->addInt('id', TRUE, TRUE)
         ->setPrimaryKey('id')
         ->addVarchar('tag', 255)
@@ -78,8 +59,8 @@ class Posts implements IModule{
         ->addIndex(TRUE, 'name')
         ->execute();
     }
-    if (!$this->database->tableExists('posts_tags')) {
-      $this->database->createQuery('posts_tags')
+    if (!$this->m->Database->tableExists('posts_tags')) {
+      $this->m->Database->createQuery('posts_tags')
         ->addInt('post_id', TRUE)
         ->addInt('tag_id', TRUE)
         ->setPrimaryKey('post_id', 'tag_id')
@@ -90,8 +71,8 @@ class Posts implements IModule{
 
     require_once(p(MODELS . 'Comment.php'));
 
-    if (!$this->database->tableExists('comments')) {
-      $this->database->createQuery('comments')
+    if (!$this->m->Database->tableExists('comments')) {
+      $this->m->Database->createQuery('comments')
         ->addInt('id', TRUE, TRUE)
         ->setPrimaryKey('id')
         ->addInt('post_id', TRUE)
@@ -127,57 +108,61 @@ class Posts implements IModule{
     }
 
     // Set default settings
-    if (!$this->configuration->exists('posts.fancyPermalinks')) {
-      $this->configuration->set('posts.fancyPermalinks', 'on');
+    if (!$this->m->Configuration->exists('posts.fancyPermalinks')) {
+      $this->m->Configuration->set('posts.fancyPermalinks', 'on');
     }
-    if (!$this->configuration->exists('posts.permalink')) {
-      $this->configuration->set('posts.permalink', '%year%/%month%/%name%');
+    if (!$this->m->Configuration->exists('posts.permalink')) {
+      $this->m->Configuration->set('posts.permalink', '%year%/%month%/%name%');
     }
-    if (!$this->configuration->exists('posts.comments.sorting')) {
-      $this->configuration->set('posts.comments.sorting', 'desc');
+    if (!$this->m->Configuration->exists('posts.comments.sorting')) {
+      $this->m->Configuration->set('posts.comments.sorting', 'desc');
     }
-    if (!$this->configuration->exists('posts.comments.childSorting')) {
-      $this->configuration->set('posts.comments.childSorting', 'asc');
+    if (!$this->m->Configuration->exists('posts.comments.childSorting')) {
+      $this->m->Configuration->set('posts.comments.childSorting', 'asc');
     }
-    if (!$this->configuration->exists('posts.comments.display')) {
-      $this->configuration->set('posts.comments.display', 'thread');
+    if (!$this->m->Configuration->exists('posts.comments.display')) {
+      $this->m->Configuration->set('posts.comments.display', 'thread');
     }
-    if (!$this->configuration->exists('posts.comments.levelLimit')) {
-      $this->configuration->set('posts.comments.levelLimit', '2');
+    if (!$this->m->Configuration->exists('posts.comments.levelLimit')) {
+      $this->m->Configuration->set('posts.comments.levelLimit', '2');
     }
-    if (!$this->configuration->exists('posts.commentingDefault')) {
-      $this->configuration->set('posts.commentingDefault', 'on');
+    if (!$this->m->Configuration->exists('posts.commentingDefault')) {
+      $this->m->Configuration->set('posts.commentingDefault', 'on');
     }
-    if (!$this->configuration->exists('posts.anonymousCommenting')) {
-      $this->configuration->set('posts.anonymousCommenting', 'off');
+    if (!$this->m->Configuration->exists('posts.anonymousCommenting')) {
+      $this->m->Configuration->set('posts.anonymousCommenting', 'off');
     }
-    if (!$this->configuration->exists('posts.commentApproval')) {
-      $this->configuration->set('posts.commentApproval', 'off');
+    if (!$this->m->Configuration->exists('posts.commentApproval')) {
+      $this->m->Configuration->set('posts.commentApproval', 'off');
     }
+    
+    $this->controller = new PostsController($this->Core);
+    
+    $this->controller->addRoute('posts', 'index');
 
-    if ($this->configuration->get('posts.fancyPermalinks') == 'on') {
+    if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
       // Detect fancy post permalinks
       $this->detectFancyPermalinks();
     }
     else {
-      $this->routes->addRoute('posts/*', array($this, 'postController'));
+      $this->m->Routes->addRoute('posts/*', array($this, 'postController'));
       //$this->routes->addRoute('posts/*/comments', array($this, ''));
       //$this->routes->addRoute('posts/*/comments/*', array($this, ''));
     }
-    $this->routes->addRoute('posts', array($this, 'postListController'));
+    //$this->m->Routes->addRoute('posts', array($this, 'postListController'));
     //$this->routes->addRoute('tags', array($this, ''));
     //$this->routes->addRoute('tags/*', array($this, ''));
     
-    $this->backend->addCategory('content', tr('Content'), 2);
-    $this->backend->addPage('content', 'new-post', tr('New Post'), array($this, 'newPostController'), 2);
-    $this->backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
-    $this->backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
-    $this->backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
+    $this->m->Backend->addCategory('content', tr('Content'), 2);
+    $this->m->Backend->addPage('content', 'new-post', tr('New Post'), array($this, 'newPostController'), 2);
+    $this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
+    $this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
+    $this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
   }
 
   private function detectFancyPermalinks() {
-    $path = $this->routes->getPath();
-    $permalink = explode('/', $this->configuration->get('posts.permalink'));
+    $path = $this->m->Routes->getPath();
+    $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
     if (is_array($path) AND is_array($permalink)) {
       foreach ($permalink as $key => $dir) {
         if (isset($path[$key])) {
@@ -203,7 +188,7 @@ class Posts implements IModule{
                   if ($perma == $path) {
                     $post->addToCache();
                     $this->post = $post->id;
-                    $this->routes->setRoute(array($this, 'postController'), 6);
+                    $this->m->Routes->setRoute(array($this, 'postController'), 6);
                     return;
                   }
                 }
@@ -227,7 +212,7 @@ class Posts implements IModule{
                 if ($perma == $path) {
                   $post->addToCache();
                   $this->post = $post->id;
-                  $this->routes->setRoute(array($this, 'postController'), 6);
+                  $this->m->Routes->setRoute(array($this, 'postController'), 6);
                   return;
                 }
               }
@@ -245,7 +230,7 @@ class Posts implements IModule{
           if ($post !== FALSE) {
             $post->addToCache();
             $this->post = $post->id;
-            $this->routes->setRoute(array($this, 'postController'), 3);
+            $this->m->Routes->setRoute(array($this, 'postController'), 3);
           }
         }
       }
@@ -256,8 +241,8 @@ class Posts implements IModule{
     $class = get_class($record);
     switch ($class) {
       case 'Post':
-        if ($this->configuration->get('posts.fancyPermalinks') == 'on') {
-          $permalink = explode('/', $this->configuration->get('posts.permalink'));
+        if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
+          $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
           if (is_array($permalink)) {
             $time = $record->date;
             $id = $record->id;
@@ -295,34 +280,21 @@ class Posts implements IModule{
   }
 
   public function getLink(ILinkable $record) {
-    return $this->http->getLink($this->getPath($record));
-  }
-
-
-  public function postListController($path = array(), $parameters = array(), $contentType = 'html') {
-    $templateData = array();
-
-    $templateData['posts'] = Post::all(
-      SelectQuery::create()
-        ->orderByDescending('date')
-        ->limit(5)
-    );
-
-    $this->templates->renderTemplate('list-posts.html', $templateData);
+    return $this->m->Http->getLink($this->getPath($record));
   }
 
   public function postController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
 
-    if ($this->configuration->get('posts.fancyPermalinks') == 'on') {
+    if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
       $templateData['post'] = Post::find($this->post);
     }
     else {
       $templateData['post'] = Post::find((int) $path[1]);
     }
 
-    if (!$this->http->isCurrent($templateData['post']->getPath())) {
-      $this->http->redirectPath($templateData['post']->getPath());
+    if (!$this->m->Http->isCurrent($templateData['post']->getPath())) {
+      $this->m->Http->redirectPath($templateData['post']->getPath());
     }
 
     $templateData['title'] = $templateData['post']->title;
@@ -338,7 +310,7 @@ class Posts implements IModule{
       echo $templateData['post']->json();
     }
     else {
-      $this->templates->renderTemplate('post.html', $templateData);
+      $this->m->Templates->renderTemplate('post.html', $templateData);
     }
   }
 
@@ -346,7 +318,7 @@ class Posts implements IModule{
   public function newPostController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['title'] = tr('New Post');
-    $templateData['action'] = $this->http->getLink();
+    $templateData['action'] = $this->m->Http->getLink();
 
     $examplePost = Post::create();
     $examplePost->name = '%name%';
@@ -429,9 +401,9 @@ class Posts implements IModule{
         $post->setUser($this->users->getUser());
         $post->save();
         $post->createAndAddTags($_POST['tags']);
-        $this->http->refreshPath();
+        $this->m->Http->refreshPath();
       }
     }
-    $this->templates->renderTemplate('backend/edit-post.html', $templateData);
+    $this->m->Templates->renderTemplate('backend/edit-post.html', $templateData);
   }
 }

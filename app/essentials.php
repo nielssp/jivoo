@@ -258,26 +258,28 @@ function readDependencies($dependencies) {
       $dependency = strtolower($dependency);
       if (strpos($dependency, ';') === FALSE) {
         if (($matches = matchDependencyVersion($dependency)) !== FALSE) {
+          $matches[1] = className($matches[1]);
           if (!isset($result['modules'][$matches[1]])) {
             $result['modules'][$matches[1]] = array();
           }
           $result['modules'][$matches[1]][$matches[2]] = $matches[3];
         }
         else {
-          $result['modules'][$dependency] = array();
+          $result['modules'][className($dependency)] = array();
         }
       }
       else {
         $split = explode(';', $dependency, 2);
         if ($split[0] == 'ext') {
           if (($matches = matchDependencyVersion($split[1])) !== FALSE) {
+            $matches[1] = className($matches[1]);
             if (!isset($result['extensions'][$matches[1]])) {
               $result['extensions'][$matches[1]] = array();
             }
             $result['extensions'][$matches[1]][$matches[2]] = $matches[3];
           }
           else {
-            $result['extensions'][$split[1]] = array();
+            $result['extensions'][className($split[1])] = array();
           }
         }
         else if ($split[0] == 'php') {
@@ -417,6 +419,9 @@ function __autoload($className) {
     $fileName = className($className) . '.php';
     if (file_exists(p(CLASSES . $fileName))) {
       include(p(CLASSES . $fileName));
+    }
+    else if (file_exists(p(CONTROLLERS . $fileName))) {
+      include(p(CONTROLLERS . $fileName));
     }
     else {
       include(p(MODULES . $fileName));

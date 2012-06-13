@@ -119,10 +119,11 @@ class Core {
         throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
       }
       $dependencies = $info['dependencies']['modules'];
-      $arguments = array();
+      $modules = array();
       foreach ($dependencies as $dependency => $versionInfo) {
+        $dependency = className($dependency);
         try {
-          $arguments[] = $this->loadModule($dependency);
+          $modules[$dependency] = $this->loadModule($dependency);
         }
         catch (ModuleNotFoundException $e) {
           throw new ModuleMissingDependencyException(tr(
@@ -133,7 +134,12 @@ class Core {
         }
       }
       //$this->modules[$module] = $reflection->newInstanceArgs(array($this));
-      $this->modules[$module] = new $module($this);
+      if (is_subclass_of($module, 'ModuleBase')) {
+        $this->modules[$module] = new $module($modules, $this);
+      }
+      else {
+        $this->modules[$module] = new $module($this);
+      }
     }
     return $this->modules[$module];
   }

@@ -8,7 +8,7 @@
 
 class Tinymce extends ExtensionBase {
   protected function init() {
-    $this->m->templates->addScript(
+    $this->m->Templates->addScript(
       'tinymce',
       $this->getLink('js/jquery.tinymce.js'),
       array('jquery', 'jquery-ui')

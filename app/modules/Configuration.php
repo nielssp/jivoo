@@ -6,10 +6,7 @@
 // Author         : PeanutCMS
 // Dependencies   : errors
 
-class Configuration implements IModule {
-
-  private $core = NULL;
-  private $errors = NULL;
+class Configuration extends ModuleBase {
 
   private $data = array();
 
@@ -17,10 +14,7 @@ class Configuration implements IModule {
 
   private $file;
 
-  public function __construct(Core $core, $cfgFile = NULL, Configuration $subsetOf = NULL) {
-    $this->core = $core;
-    $this->errors = $this->core->errors;
-
+  protected function init($cfgFile = NULL, Configuration $subsetOf = NULL) {
     if (!isset($cfgFile)) {
       $cfgFile = p(CFG . 'config.cfg.php');
     }
@@ -34,7 +28,7 @@ class Configuration implements IModule {
       // Attempt to create configuration-file
       $file = fopen($this->file, 'w');
       if (!$file) {
-        $this->errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
+        $this->m->Errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
       }
       fwrite($file, "<?php exit; ?>\n");
       fclose($file);
@@ -44,14 +38,14 @@ class Configuration implements IModule {
     }
     $fileContent = file_get_contents($this->file);
     if ($fileContent === FALSE) {
-      $this->errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
+      $this->m->Errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
     }
     $file = explode('?>', $fileContent);
     $this->data = $this->parseData($file[1], true);
   }
 
   public function getSubset($key) {
-    $config = new Configuration($this->core, $this->file, $this);
+    $config = new Configuration(array($this->m->Errors), $this->Core, $this->file, $this);
     $config->parentKey = $key;
     return $config;
   }

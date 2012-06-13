@@ -5,15 +5,11 @@
 // Description    : The PeanutCMS error system
 // Author         : PeanutCMS
 
-class Errors implements IModule {
-
-  private $core;
+class Errors extends ModuleBase {
 
   private $errorLog;
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-
+  protected function init() {
     set_error_handler(array($this, 'handleError'));
     set_exception_handler(array($this, 'handleException'));
   }

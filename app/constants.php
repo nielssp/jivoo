@@ -93,6 +93,10 @@ if (!defined('CLASSES')) {
   define('CLASSES', APP . 'classes/');
 }
 
+if (!defined('CONTROLLERS')) {
+  define('CONTROLLERS', APP . 'controllers/');
+}
+
 if (!defined('INTERFACES')) {
   define('INTERFACES', APP . 'interfaces/');
 }

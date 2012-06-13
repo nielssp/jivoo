@@ -5,7 +5,7 @@ class Dictionary {
   private $readOnly = FALSE;
 
   public function __get($key) {
-    if (array_key_exists($key, $this->array)) {
+    if (isset($this->array[$key])) {
       return $this->array[$key];
     }
     else {

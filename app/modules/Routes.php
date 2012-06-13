@@ -15,12 +15,7 @@
 /**
  * Routes class
  */
-class Routes implements IModule {
-
-  private $core;
-  private $errors;
-  private $http;
-  private $templates;
+class Routes extends ModuleBase {
 
   private $routes;
 
@@ -28,12 +23,7 @@ class Routes implements IModule {
 
   private $selectedControllerPriority;
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->http = $this->core->http;
-    $this->errors = $this->core->errors;
-    $this->templates = $this->core->templates;
-
+  protected function init() {
     $this->routes = array();
 
     $this->setRoute(array($this, 'notFoundController'), 1);
@@ -42,7 +32,7 @@ class Routes implements IModule {
   }
 
   public function getPath() {
-    return $this->http->getPath();
+    return $this->m->Http->getPath();
   }
 
 
@@ -66,7 +56,7 @@ class Routes implements IModule {
 
   private function mapRoute() {
     $routes = $this->routes;
-    $path = $this->http->getPath();
+    $path = $this->m->Http->getPath();
     foreach ($routes as $j => $route) {
       if (count($route['path']) != count($path)) {
         if ($route['path'][count($route['path']) - 1] != '**') {
@@ -99,7 +89,7 @@ class Routes implements IModule {
   public function callController() {
     $this->mapRoute();
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
-      call_user_func($this->selectedController, $this->http->getPath(), $this->http->getParams(), 'html');
+      call_user_func($this->selectedController, $this->m->Http->getPath(), $this->m->Http->getParams(), 'html');
     }
     else {
       /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */
@@ -111,6 +101,6 @@ class Routes implements IModule {
   public function notFoundController($parameters = array(), $contentType = 'html') {
     $templateData = array();
 
-    $this->templates->renderTemplate('404.html', $templateData);
+    $this->m->Templates->renderTemplate('404.html', $templateData);
   }
 }

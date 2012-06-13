@@ -16,37 +16,15 @@
 /**
  * Extensions class
  */
-class Extensions implements IModule {
-
-  private $core;
-  private $errors;
-  private $configuration;
-  private $database;
-  private $routes;
-  private $templates;
-  private $http;
-  private $users;
-  private $backend;
-  
+class Extensions extends ModuleBase {
   private $info = array();
   private $installed = array();
   
   private $extensions = array();
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->database = $this->core->database;
-    $this->actions = $this->core->actions;
-    $this->routes = $this->core->routes;
-    $this->http = $this->core->http;
-    $this->templates = $this->core->templates;
-    $this->errors = $this->core->errors;
-    $this->configuration = $this->core->configuration;
-    $this->users = $this->core->users;
-    $this->backend = $this->core->backend;
-
-    if (!$this->configuration->exists('extensions.installed')) {
-      $this->configuration->set('extensions.installed', '');
+  protected function init() {
+    if (!$this->m->Configuration->exists('extensions.installed')) {
+      $this->m->Configuration->set('extensions.installed', '');
       $preinstall = explode(' ', PREINSTALL_EXTENSIONS);
       foreach ($preinstall as $extension) {
         if (!empty($extension)) {
@@ -56,10 +34,10 @@ class Extensions implements IModule {
     }
     
     $this->installed = explode(
-      ' ', $this->configuration->get('extensions.installed')
+      ' ', $this->m->Configuration->get('extensions.installed')
     );
 
-    $this->backend->addPage('settings', 'extensions', tr('Extensions'), array($this, 'extensionsController'), 2);
+    $this->m->Backend->addPage('settings', 'extensions', tr('Extensions'), array($this, 'extensionsController'), 2);
     
     // Load installed extensions when all modules are loaded and initialized
     Hooks::attach('modulesLoaded', array($this, 'loadExtensions'));
@@ -113,7 +91,7 @@ class Extensions implements IModule {
         }
       }
       foreach ($info['dependencies']['modules'] as $dependency => $versionInfo) {
-        $module = $this->core->requestModule($dependency);
+        $module = $this->Core->requestModule($dependency);
         /** @todo Do this when installing.. */
         // $version = $this->core->getVersion($dependency);
         if ($module !== FALSE) { // AND compareDependencyVersions($version, $versionInfo)) {
@@ -124,7 +102,7 @@ class Extensions implements IModule {
           return FALSE;
         }
       }
-      $config = $this->configuration->getSubset('extensions.config.' . $extension);
+      $config = $this->m->Configuration->getSubset('extensions.config.' . $extension);
       //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
       $this->extensions[$extension] = new $extension($arguments, $config);
     }
@@ -132,7 +110,7 @@ class Extensions implements IModule {
   }
   
   private function updateConfig() {
-    $this->configuration->set(
+    $this->m->Configuration->set(
       'extensions.installed', implode(' ', $this->installed)
     );
   }
@@ -181,13 +159,13 @@ class Extensions implements IModule {
   }
   
   public function unconfigure($extension) {
-    $this->configuration->delete('extensions.config.' . $extension);
+    $this->m->Configuration->delete('extensions.config.' . $extension);
   }
   
   public function extensionsController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['title'] = tr('Extensions');
-    $this->templates->renderTemplate('backend/about.html', $templateData);
+    $this->m->Templates->renderTemplate('backend/about.html', $templateData);
   }
 
 }
