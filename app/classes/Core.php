@@ -14,16 +14,17 @@ class Core {
       foreach ($blacklistFile as $line) {
         $line = trim($line);
         if ($line[0] != '#') {
-          $this->blacklist[] = $line;
+          $this->blacklist[] = className($line);
         }
       }
     }
   }
 
   public function __get($module) {
+    $module = className($module);
     if (!isset($this->modules[$module])) {
       $backtrace = debug_backtrace();
-      $class = classFileName($backtrace[1]['class']);
+      $class = $backtrace[1]['class'];
       throw new ModuleNotLoadedException(tr(
         'The "%1" module requests the "%2" module, which is not loaded',
         $class,
@@ -34,6 +35,7 @@ class Core {
   }
 
   public function requestModule($module) {
+    $module = className($module);
     try {
       return $this->$module;
     }
@@ -54,12 +56,12 @@ class Core {
     if (isset(self::$info[$module])) {
       return self::$info[$module];
     }
-    $meta = readFileMeta(p(MODULES . $module . '.class.php'));
+    $meta = readFileMeta(p(MODULES . className($module) . '.php'));
     if (!$meta OR $meta['type'] != 'module') {
       return FALSE;
     }
     if (!isset($meta['name'])) {
-      $meta['name'] = fileClassName($module);
+      $meta['name'] = className($module);
     }
     self::$info[$module] = $meta;
     return $meta;
@@ -67,7 +69,7 @@ class Core {
 
   public function checkDependencies($module) {
     if (is_subclass_of($module, 'IModule')) {
-      $info = self::getModuleInfo(classFileName(get_class($module)));
+      $info = self::getModuleInfo(get_class($module));
     }
     else {
       $info = self::getModuleInfo($module);
@@ -91,20 +93,21 @@ class Core {
   }
 
   public function onBlacklist($module) {
+    $module = className($module);
     return in_array($module, $this->blacklist);
   }
 
   public function loadModule($module) {
+    $module = className($module);
     if ($this->onBlacklist($module)) {
       throw new ModuleBlacklistedException(tr('The "%1" module is blacklisted', $module));
     }
     if (!isset($this->modules[$module])) {
-      if (!file_exists(p(MODULES . $module . '.class.php'))) {
+      if (!file_exists(p(MODULES . $module . '.php'))) {
         throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
       }
-      require(p(MODULES . $module . '.class.php'));
-      $className = fileClassName($module);
-      if (!class_exists($className)) {
+      require(p(MODULES . $module . '.php'));
+      if (!class_exists($module)) {
         throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
       }
       //$reflection = new ReflectionClass($className);
@@ -130,7 +133,7 @@ class Core {
         }
       }
       //$this->modules[$module] = $reflection->newInstanceArgs(array($this));
-      $this->modules[$module] = new $className($this);
+      $this->modules[$module] = new $module($this);
     }
     return $this->modules[$module];
   }

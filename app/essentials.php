@@ -346,6 +346,18 @@ function isSerialized($str){
   return true;
 }
 
+function className($name) {
+  if (ucfirst($name) == $name) {
+    return $name;
+  }
+  $words = explode('-', $name);
+  $className = '';
+  foreach ($words as $word) {
+    $className .= ucfirst($word);
+  }
+  return $className;
+}
+
 function classFileName($className) {
   $fileName = preg_replace('/([A-Z])/', '-$1', lcfirst($className));
   return strtolower($fileName);
@@ -398,16 +410,16 @@ function w($relative) {
 }
 
 function __autoload($className) {
-  if ($className[0] == 'I' AND file_exists($path = p(INTERFACES . classFileName(substr($className, 1)) . '.interface.php'))) {
+  if ($className[0] == 'I' AND file_exists($path = p(INTERFACES . className($className) . '.php'))) {
     include($path);
   }
   else {
-    $fileName = classFileName($className);
-    if (file_exists(p(CLASSES . $fileName . '.class.php'))) {
-      include(p(CLASSES . $fileName . '.class.php'));
+    $fileName = className($className) . '.php';
+    if (file_exists(p(CLASSES . $fileName))) {
+      include(p(CLASSES . $fileName));
     }
     else {
-      include(p(MODULES . $fileName . '.class.php'));
+      include(p(MODULES . $fileName));
     }
   }
 }
