@@ -429,7 +429,7 @@ class Posts implements IModule{
         $post->setUser($this->users->getUser());
         $post->save();
         $post->createAndAddTags($_POST['tags']);
-        $this->http->redirectPath();
+        $this->http->refreshPath();
       }
     }
     $this->templates->renderTemplate('backend/edit-post.html', $templateData);

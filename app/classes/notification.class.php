@@ -93,11 +93,3 @@ abstract class Notification {
   }
 }
 
-abstract class LocalNotification extends Notification { }
-abstract class GlobalNotification extends Notification { }
-
-class LocalWarning extends LocalNotification { }
-class GlobalWarning extends GlobalNotification { }
-
-class LocalNotice extends LocalNotification { }
-class GlobalNotice extends GlobalNotification { }

@@ -33,7 +33,7 @@ if (!defined('HIDE_LEVEL')) {
 }
 
 if (!defined('PREINSTALL_EXTENSIONS')) {
-  define('PREINSTALL_EXTENSIONS', 'tinymce jquery');
+  define('PREINSTALL_EXTENSIONS', 'tinymce jquery jquery-ui jquery-hotkeys');
 }
 
 /** The absolute path of this installation */
