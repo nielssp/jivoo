@@ -46,7 +46,7 @@ class Links implements IModule{
 
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'link.class.php'));
+    require_once(p(MODELS . 'Link.php'));
 
     if (!$this->database->tableExists('links')) {
       $this->database->createQuery('links')

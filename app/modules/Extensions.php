@@ -81,13 +81,13 @@ class Extensions implements IModule {
   }
   
   private function loadExtension($extension) {
+    $extension = className($extension);
     if (!isset($this->extensions[$extension])) {
-      if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.class.php'))) {
+      if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.php'))) {
         throw new ExtensionNotFoundException(tr('The "%1" extension could not be found', $extension));
       }
-      require_once(p(EXTENSIONS . $extension . '/' . $extension . '.class.php'));
-      $className = fileClassName($extension);
-      if (!class_exists($className)) {
+      require_once(p(EXTENSIONS . $extension . '/' . $extension . '.php'));
+      if (!class_exists($extension)) {
         throw new ExtensionInvalidException(tr('The "%1" extension does not have a main class', $extension));
       }
 //      $reflection = new ReflectionClass($className);
@@ -126,7 +126,7 @@ class Extensions implements IModule {
       }
       $config = $this->configuration->getSubset('extensions.config.' . $extension);
       //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
-      $this->extensions[$extension] = new $className($arguments, $config);
+      $this->extensions[$extension] = new $extension($arguments, $config);
     }
     return $this->extensions[$extension];
   }
@@ -138,15 +138,16 @@ class Extensions implements IModule {
   }
   
   public function getInfo($extension) {
+    $extension = className($extension);
     if (isset($this->info[$extension])) {
       return $this->info[$extension];
     }
-    $meta = readFileMeta(p(EXTENSIONS . $extension . '/' . $extension . '.class.php'));
+    $meta = readFileMeta(p(EXTENSIONS . $extension . '/' . $extension . '.php'));
     if (!$meta OR $meta['type'] != 'extension') {
       return FALSE;
     }
     if (!isset($meta['name'])) {
-      $meta['name'] = fileClassName($extension);
+      $meta['name'] = $extension;
     }
     $this->info[$extension] = $meta;
     return $meta;

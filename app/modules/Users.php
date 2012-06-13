@@ -53,7 +53,7 @@ class Users implements IModule{
 
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'user.class.php'));
+    require_once(p(MODELS . 'User.php'));
 
     if (!$this->database->tableExists('users')) {
       $this->database->createQuery('users')
@@ -73,7 +73,7 @@ class Users implements IModule{
 
     ActiveRecord::addModel('User', 'users');
 
-    require_once(p(MODELS . 'group.class.php'));
+    require_once(p(MODELS . 'Group.php'));
 
     if (!$this->database->tableExists('groups')) {
       $this->database->createQuery('groups')

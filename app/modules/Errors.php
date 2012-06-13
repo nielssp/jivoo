@@ -85,7 +85,7 @@ class Errors implements IModule {
 
   public function logToFile($message) {
     if (!is_writable(p(LOG . 'error.log'))) {
-      GlobalWarning(tr('Unable to write to log file'));
+      new GlobalWarning(tr('Unable to write to log file'));
     }
     else {
       $file = fopen(p(LOG . 'error.log'), 'a');

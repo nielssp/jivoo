@@ -49,7 +49,7 @@ class Database extends DatabaseDriver implements IModule {
       }
       try {
         $this->connection = call_user_func(
-          array(fileClassName($this->driver), 'connect'),
+          array(className($this->driver), 'connect'),
           $this->configuration->get('database')
         );
       }
@@ -111,16 +111,12 @@ class Database extends DatabaseDriver implements IModule {
   }
 
   public function checkDriver($driver) {
-    if (!file_exists(p(CLASSES . 'db-drivers/' . $driver . '.class.php'))) {
+    $driver = className($driver);
+    if (!file_exists(p(CLASSES . 'db-drivers/' . $driver . '.php'))) {
       return FALSE;
     }
-    require_once(p(CLASSES . 'db-drivers/' . $driver . '.class.php'));
-    $className = fileClassName($driver);
-    $reflection = new ReflectionClass($className);
-    if (!$reflection->implementsInterface('IDatabase')) {
-      continue;
-    }
-    $dependencies = call_user_func(array($className, 'getDriverDependencies'));
+    require_once(p(CLASSES . 'db-drivers/' . $driver . '.php'));
+    $dependencies = call_user_func(array($driver, 'getDriverDependencies'));
     $missing = array();
     foreach ($dependencies as $dependency) {
       if (!extension_loaded($dependency)) {
@@ -129,8 +125,8 @@ class Database extends DatabaseDriver implements IModule {
     }
     return array(
       'driver' => $driver,
-      'name' => call_user_func(array($className, 'getDriverName')),
-      'requiredOptions' => call_user_func(array($className, 'getRequiredOptions')),
+      'name' => call_user_func(array($driver, 'getDriverName')),
+      'requiredOptions' => call_user_func(array($driver, 'getRequiredOptions')),
       'isAvailable' => count($missing) < 1,
       'link' => $this->http->getLink(NULL, array('select' => $driver)),
       'missingExtensions' => $missing
@@ -141,8 +137,8 @@ class Database extends DatabaseDriver implements IModule {
     $drivers = array();
     $dir = opendir(p(CLASSES . 'db-drivers/'));
     while ($file = readdir($dir)) {
-      if (substr($file, -10) == '.class.php') {
-        $driver = substr($file, 0, -10);
+      if (substr($file, -4) == '.php') {
+        $driver = substr($file, 0, -4);
         if ($driverInfo = $this->checkDriver($driver)) {
           $drivers[$driver] = $driverInfo;
         }

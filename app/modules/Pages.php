@@ -48,7 +48,7 @@ class Pages implements IModule{
 
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'page.class.php'));
+    require_once(p(MODELS . 'Page.php'));
 
     if (!$this->database->tableExists('pages')) {
       $this->database->createQuery('pages')

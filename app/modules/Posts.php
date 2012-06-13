@@ -44,7 +44,7 @@ class Posts implements IModule{
 
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'post.class.php'));
+    require_once(p(MODELS . 'Post.php'));
 
     if (!$this->database->tableExists('posts')) {
       $this->database->createQuery('posts')
@@ -67,7 +67,7 @@ class Posts implements IModule{
 
     ActiveRecord::addModel('Post', 'posts');
 
-    require_once(p(MODELS . 'tag.class.php'));
+    require_once(p(MODELS . 'Tag.php'));
 
     if (!$this->database->tableExists('tags')) {
       $this->database->createQuery('tags')
@@ -88,7 +88,7 @@ class Posts implements IModule{
 
     ActiveRecord::addModel('Tag', 'tags');
 
-    require_once(p(MODELS . 'comment.class.php'));
+    require_once(p(MODELS . 'Comment.php'));
 
     if (!$this->database->tableExists('comments')) {
       $this->database->createQuery('comments')
