@@ -19,6 +19,10 @@ abstract class ApplicationController {
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
     $this->actions = array_diff($classMethods, $parentMethods);
+    
+//     $reflect = new ReflectionMethod(get_class($this), 'view');
+//     var_dump($reflect->getNumberOfRequiredParameters());
+//     exit;
   }
   
   public function __get($name) {
@@ -40,6 +44,14 @@ abstract class ApplicationController {
   
   public function addRoute($path, $action) {
     $this->Routes->addRoute($path, array($this, $action));
+  }
+  
+  protected function redirect() {
+    
+  }
+  
+  protected function refresh() {
+    
   }
   
   protected function render($template) {

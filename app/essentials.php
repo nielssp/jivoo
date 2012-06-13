@@ -423,8 +423,11 @@ function __autoload($className) {
     else if (file_exists(p(CONTROLLERS . $fileName))) {
       include(p(CONTROLLERS . $fileName));
     }
-    else {
+    else if (file_exists(p(MODULES . $fileName))) {
       include(p(MODULES . $fileName));
+    }
+    else {
+      throw new Exception();
     }
   }
 }

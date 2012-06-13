@@ -271,7 +271,7 @@ class Templates implements IModule {
   }
 
   public function linkTo($linkable, $label) {
-    if (is_a($linkable, 'ILinkable')) {
+    if (is_object($linkable) AND is_a($linkable, 'ILinkable')) {
       $link = $linkable->getLink();
     }
     else {

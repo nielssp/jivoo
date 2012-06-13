@@ -398,7 +398,7 @@ class Posts extends ModuleBase {
           $post->state = 'published';
           new LocalNotice(tr('The post has been published'));
         }
-        $post->setUser($this->users->getUser());
+        $post->setUser($this->m->Users->getUser());
         $post->save();
         $post->createAndAddTags($_POST['tags']);
         $this->m->Http->refreshPath();

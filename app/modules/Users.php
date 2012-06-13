@@ -144,6 +144,14 @@ class Users implements IModule{
   public function genSalt($hashType = NULL) {
     if (!isset($hashType)) {
       $hashType = $this->configuration->get('users.hashType');
+      if ($hashType == 'auto') {
+        foreach ($this->hashTypes as $t) {
+          $constant = 'CRYPT_' . strtoupper($t);
+          if (defined($constant) AND constant($constant) == 1) {
+            $hashType = $t;
+          }
+        }
+      }
     }
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./';
     $max = strlen($chars) - 1;
@@ -152,7 +160,7 @@ class Users implements IModule{
       case 'sha512':
         $saltLength = 16;
         // rounds from 1000 to 999,999,999
-        $prefix = '$6$rounds=999999999';
+        $prefix = '$6$rounds=5000$';
         break;
       case 'sha256':
         $saltLength = 16;

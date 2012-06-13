@@ -21,7 +21,7 @@ class PostsController extends ApplicationController {
       $templateData['post'] = Post::find($this->post);
     }
     else {
-      $templateData['post'] = Post::find((int) $path[1]);
+      $templateData['post'] = Post::find($post);
     }
     
     if (!$this->m->Http->isCurrent($templateData['post']->getPath())) {
