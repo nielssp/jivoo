@@ -432,6 +432,8 @@ function __autoload($className) {
   }
 }
 
+spl_autoload_register('__autoload');
+
 // PHP 5.2 compatibility
 if (!function_exists('get_called_class')) {
   function get_called_class() {

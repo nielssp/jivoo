@@ -46,7 +46,12 @@ class PostsController extends ApplicationController {
   }
   
   public function create() {
-    
+    $form = new Form('create-post');
+    $form->add(new InputText('title'));
+    $form->add(new InputTextarea('content'));
+    $form->add(new InputText('tags'));
+    $form->add(new InputText('name'));
+    $form->add(new InputBoolean('commenting'));
   }
   
 }
