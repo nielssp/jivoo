@@ -5,9 +5,6 @@
 
 // Render the header
 $this->renderTemplate('header.html');
-
-$path = array('posts', '*', 'view', '**');
-$parameters = array('23', 'ass', 'dick', 'derp');
 ?>
 
 <?php foreach ($posts as $post): ?>

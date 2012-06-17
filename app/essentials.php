@@ -11,6 +11,9 @@
 /** The PeanutCMS essentials has been included */
 define('PEANUTCMS', TRUE);
 
+// To hell with those "magic quotes"!
+ini_set('magic_quotes_runtime', 0);
+
 require_once('constants.php');
 
 /**
@@ -186,6 +189,7 @@ function groupSorter(IGroupable $a, IGroupable $b) {
 }
 
 function readFileMeta($file) {
+  /** @todo cache.. cache.. cache */
   $file = fopen($file, 'r');
 
   if (!$file) {

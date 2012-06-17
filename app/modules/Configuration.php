@@ -117,12 +117,16 @@ class Configuration extends ModuleBase {
   public function setDefault($key, $value = NULL) {
     if (is_array($key)) {
       $array = $key;    
+      $this->save = FALSE;
+      $changed = FALSE;
       foreach ($array as $key => $value) {
-        $this->save = FALSE;
         if (!$this->exists($key)) {
           $this->set($key, $value);
+          $changed = TRUE;
         }
-        $this->save = TRUE;
+      }
+      $this->save = TRUE;
+      if ($changed) {
         $this->save();
       }
     }

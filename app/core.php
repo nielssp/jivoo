@@ -6,9 +6,6 @@
  * @since 0.2.0
  */
 
-// To hell with those "magic quotes"!
-ini_set('magic_quotes_runtime', 0);
-
 if (!require_once('essentials.php')) {
   echo 'Essential PeanutCMS files are missing. You should probably reinstall.';
   exit;
