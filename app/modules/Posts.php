@@ -108,41 +108,27 @@ class Posts extends ModuleBase {
     }
 
     // Set default settings
-    if (!$this->m->Configuration->exists('posts.fancyPermalinks')) {
-      $this->m->Configuration->set('posts.fancyPermalinks', 'on');
-    }
-    if (!$this->m->Configuration->exists('posts.permalink')) {
-      $this->m->Configuration->set('posts.permalink', '%year%/%month%/%name%');
-    }
-    if (!$this->m->Configuration->exists('posts.comments.sorting')) {
-      $this->m->Configuration->set('posts.comments.sorting', 'desc');
-    }
-    if (!$this->m->Configuration->exists('posts.comments.childSorting')) {
-      $this->m->Configuration->set('posts.comments.childSorting', 'asc');
-    }
-    if (!$this->m->Configuration->exists('posts.comments.display')) {
-      $this->m->Configuration->set('posts.comments.display', 'thread');
-    }
-    if (!$this->m->Configuration->exists('posts.comments.levelLimit')) {
-      $this->m->Configuration->set('posts.comments.levelLimit', '2');
-    }
-    if (!$this->m->Configuration->exists('posts.commentingDefault')) {
-      $this->m->Configuration->set('posts.commentingDefault', 'on');
-    }
-    if (!$this->m->Configuration->exists('posts.anonymousCommenting')) {
-      $this->m->Configuration->set('posts.anonymousCommenting', 'off');
-    }
-    if (!$this->m->Configuration->exists('posts.commentApproval')) {
-      $this->m->Configuration->set('posts.commentApproval', 'off');
-    }
+    $this->m->Configuration->setDefault(array(
+      'posts.fancyPermalinks' => 'on',
+      'posts.permalink' => '%year%/%month%/%name%',
+      'posts.comments.sorting' => 'desc',
+      'posts.comments.childSorting' => 'asc',
+      'posts.comments.display' => 'thread',
+      'posts.comments.levelLimit' => '2',
+      'posts.commentingDefault' => 'on',
+      'posts.anonymousCommenting' => 'off',
+      'posts.commentApproval' => 'off'
+    ));
     
-    $this->controller = new PostsController($this->Core);
-    
+    // Create controller
+    $this->controller = new PostsController($this->m->Templates, $this->m->Routes);
+
     $this->controller->addRoute('posts', 'index');
 
     if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
       // Detect fancy post permalinks
       $this->detectFancyPermalinks();
+      $this->m->Routes->addPath('Posts', 'view', array($this, 'getFancyPath'));
     }
     else {
       $this->m->Routes->addRoute('posts/*', array($this, 'postController'));
@@ -161,7 +147,7 @@ class Posts extends ModuleBase {
   }
 
   private function detectFancyPermalinks() {
-    $path = $this->m->Routes->getPath();
+    $path = $this->m->Http->getPath();
     $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
     if (is_array($path) AND is_array($permalink)) {
       foreach ($permalink as $key => $dir) {
@@ -187,8 +173,7 @@ class Posts extends ModuleBase {
                 if ($perma !== false) {
                   if ($perma == $path) {
                     $post->addToCache();
-                    $this->post = $post->id;
-                    $this->m->Routes->setRoute(array($this, 'postController'), 6);
+                    $this->controller->setRoute('view', 6, array($post->id));
                     return;
                   }
                 }
@@ -211,8 +196,7 @@ class Posts extends ModuleBase {
               if ($perma !== false) {
                 if ($perma == $path) {
                   $post->addToCache();
-                  $this->post = $post->id;
-                  $this->m->Routes->setRoute(array($this, 'postController'), 6);
+                  $this->controller->setRoute('view', 6, array($post->id));
                   return;
                 }
               }
@@ -229,12 +213,35 @@ class Posts extends ModuleBase {
           );
           if ($post !== FALSE) {
             $post->addToCache();
-            $this->post = $post->id;
-            $this->m->Routes->setRoute(array($this, 'postController'), 3);
+            $this->controller->setRoute('view', 3, array($post->id));
           }
         }
       }
     }
+  }
+
+  public function getFancyPath($parameters) {
+    $id = $parameters[0];
+    if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
+      $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
+      if (is_array($permalink)) {
+        $record = Post::find($id);
+        $time = $record->date;
+        $replace = array('%name%'  => $record->name,
+                         '%id%'    => $id,
+                         '%year%'  => tdate('Y', $time),
+                         '%month%' => tdate('m', $time),
+                         '%day%'   => tdate('d', $time));
+        $search = array_keys($replace);
+        $replace = array_values($replace);
+        $path = array();
+        foreach ($permalink as $dir) {
+          $path[] = str_replace($search, $replace, $dir);
+        }
+        return $path;
+      }
+    }
+    return FALSE;
   }
 
   public function getPath(ActiveRecord $record) {

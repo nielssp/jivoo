@@ -87,7 +87,7 @@ class Pages implements IModule{
   }
 
   private function detectFancyPermalinks() {
-    $path = $this->routes->getPath();
+    $path = $this->http->getPath();
     if (!is_array($path)) {
       return;
     }

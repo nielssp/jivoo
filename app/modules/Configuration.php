@@ -14,6 +14,8 @@ class Configuration extends ModuleBase {
 
   private $file;
 
+  private $save = TRUE;
+
   protected function init($cfgFile = NULL, Configuration $subsetOf = NULL) {
     if (!isset($cfgFile)) {
       $cfgFile = p(CFG . 'config.cfg.php');
@@ -28,7 +30,7 @@ class Configuration extends ModuleBase {
       // Attempt to create configuration-file
       $file = fopen($this->file, 'w');
       if (!$file) {
-        $this->m->Errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
+        Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
       }
       fwrite($file, "<?php exit; ?>\n");
       fclose($file);
@@ -38,7 +40,7 @@ class Configuration extends ModuleBase {
     }
     $fileContent = file_get_contents($this->file);
     if ($fileContent === FALSE) {
-      $this->m->Errors->fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
+      Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
     }
     $file = explode('?>', $fileContent);
     $this->data = $this->parseData($file[1], true);
@@ -80,16 +82,22 @@ class Configuration extends ModuleBase {
       $ref = $value;
     else
       $ref = NULL;
+    return $this->save();
+  }
 
+  private function save() {
+    if ($this->save == FALSE) {
+      return FALSE;
+    }
     if (!is_writable($this->file))
-      return false;
+      return FALSE;
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
-      return false;
+      return FALSE;
     $data = Configuration::compileData($this->data);
     fwrite($filePointer, "<?php exit(); ?>\n" . $data);
     fclose($filePointer);
-    return true;
+    return TRUE;
   }
 
   /**
@@ -103,6 +111,26 @@ class Configuration extends ModuleBase {
    */
   public function delete($key) {
     return $this->set($key, NULL);
+  }
+
+
+  public function setDefault($key, $value = NULL) {
+    if (is_array($key)) {
+      $array = $key;    
+      foreach ($array as $key => $value) {
+        $this->save = FALSE;
+        if (!$this->exists($key)) {
+          $this->set($key, $value);
+        }
+        $this->save = TRUE;
+        $this->save();
+      }
+    }
+    else {
+      if (!$this->exists($key)) {
+        $this->set($key, $value);
+      }
+    }
   }
 
   /**

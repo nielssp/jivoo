@@ -16,40 +16,15 @@
 /**
  * Links class
  */
-class Links implements IModule{
+class Links extends ModuleBase {
 
-  private $core;
-  private $errors;
-  private $configuration;
-  private $database;
-  private $routes;
-  private $templates;
-  private $http;
-  private $users;
-  private $backend;
-
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->database = $this->core->database;
-    $this->actions = $this->core->actions;
-    $this->routes = $this->core->routes;
-    $this->http = $this->core->http;
-    $this->templates = $this->core->templates;
-    $this->errors = $this->core->errors;
-    $this->configuration = $this->core->configuration;
-    $this->users = $this->core->users;
-    $this->backend = $this->core->backend;
-
-    if (!ActiveRecord::isConnected()) {
-      throw new Exception('temporary.');
-    }
-
+  protected function init() {
     $newInstall = FALSE;
 
     require_once(p(MODELS . 'Link.php'));
 
-    if (!$this->database->tableExists('links')) {
-      $this->database->createQuery('links')
+    if (!$this->m->Database->tableExists('links')) {
+      $this->m->Database->createQuery('links')
         ->addInt('id', TRUE, TRUE)
         ->setPrimaryKey('id')
         ->addVarchar('menu', 255)
@@ -85,7 +60,7 @@ class Links implements IModule{
   }
 
   public function getLink(Link $record) {
-    return $this->http->getLink($record->getPath());
+    return $this->m->Http->getLink($record->getPath());
   }
 
 }
