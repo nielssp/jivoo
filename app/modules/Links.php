@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Links
-// Version        : 0.2.0
+// Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
 // Author         : PeanutCMS
 // Dependencies   : errors configuration database routes templates http

@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Routes
-// Version        : 0.2.0
+// Version        : 0.3.0
 // Description    : The PeanutCMS routing system
 // Author         : PeanutCMS
 // Dependencies   : errors http templates
@@ -56,18 +56,33 @@ class Routes extends ModuleBase {
     return $result;
   }
 
-  public function getPath($controller, $action = 'index', $parameters = array()) {
+  public function getPath($controller = NULL, $action = 'index', $parameters = array()) {
+    if (!isset($controller) {
+      return NULL;
+    }
     $controller = className($controller) . 'Controller';
     if (isset($this->paths[$controller][$action])) {
       $function = $this->paths[$controller][$action]['function'];
       $additional = $this->paths[$controller][$action]['parameters'];
       return call_user_func($function, $parameters, $additional);
     }
-    return FALSE;
+    return NULL;
   }
 
-  public function getLink($controller, $action = 'index', $parameters = array()) {
+  public function getLink($controller = NULL, $action = 'index', $parameters = array()) {
     return $this->m->Http->getLink($this->getPath($controller, $action, $parameters));
+  }
+
+  public function redirect($controller = NULL, $action = 'index', $paramters = array(), $query = NULL, $hashtag = NULL) {
+    $this->m->Http->redirectPath($this->getPath($controller, $action, $parameters), $query, FALSE, $hashtag);
+  }
+
+  public function moved($controller = NULL, $action = 'index', $paramters = array(), $query = NULL, $hashtag = NULL) {
+    $this->m->Http->redirectPath($this->getPath($controller, $action, $parameters), $query, TRUE, $hashtag);
+  }
+
+  public function refresh($query = NULL, $hashtag = NULL) {
+    $this->m->Http->refreshPath($query, $hashtag);
   }
 
   public function addRoute($path, $controller, $priority = 5) {

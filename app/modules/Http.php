@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : HTTP
-// Version        : 0.2.0
+// Version        : 0.3.0
 // Description    : The PeanutCMS http system
 // Author         : PeanutCMS
 // Dependencies   : errors configuration
@@ -22,16 +22,23 @@ class Http extends ModuleBase {
    */
   private $path;
 
+  private $request;
+
   /**
    * The current parameters
    * $var array
    */
   private $params;
 
+  public function getRequest() {
+    return $this->request;
+  }
+
   /**
    * PHP5-style constructor
    */
   protected function init() {
+    $this->request = new Request();
     $request = $_SERVER['REQUEST_URI'];
     $request = parse_url($request);
     $this->params = $_GET;

@@ -138,6 +138,9 @@ function trn($single, $plural, $number) {
 }
 
 function fdate($timestamp = NULL) {
+  if (!isset($timestamp)) {
+    $timestamp = time();
+  }
   $service = TranslationService::getService();
   $args = func_get_args();
   if ($service) {
@@ -149,6 +152,9 @@ function fdate($timestamp = NULL) {
 }
 
 function ftime($timestamp = NULL) {
+  if (!isset($timestamp)) {
+    $timestamp = time();
+  }
   $service = TranslationService::getService();
   $args = func_get_args();
   if ($service) {
@@ -160,6 +166,9 @@ function ftime($timestamp = NULL) {
 }
 
 function tdate($format, $timestamp = NULL) {
+  if (!isset($timestamp)) {
+    $timestamp = time();
+  }
   $service = TranslationService::getService();
   $args = func_get_args();
   if ($service) {
@@ -416,7 +425,8 @@ function w($relative) {
 }
 
 function h($string) {
-  return htmlentities($string, ENT_COMPAT, 'UTF-8'); 
+  //  return htmlentities($string, ENT_COMPAT, 'UTF-8'); 
+  return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
 
 function __autoload($className) {

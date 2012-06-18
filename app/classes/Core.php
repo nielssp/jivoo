@@ -103,12 +103,14 @@ class Core {
       throw new ModuleBlacklistedException(tr('The "%1" module is blacklisted', $module));
     }
     if (!isset($this->modules[$module])) {
-      if (!file_exists(p(MODULES . $module . '.php'))) {
-        throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
-      }
-      require(p(MODULES . $module . '.php'));
       if (!class_exists($module)) {
-        throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
+        if (!file_exists(p(MODULES . $module . '.php'))) {
+          throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
+        }
+        require(p(MODULES . $module . '.php'));
+        if (!class_exists($module)) {
+          throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
+        }
       }
       //$reflection = new ReflectionClass($className);
       //if (!$reflection->implementsInterface('IModule')) {
