@@ -1,9 +1,5 @@
 <?php
 
-if (!is_a($this, 'Posts')) {
-  exit('This model should be loaded from the Posts module.');
-}
-
 class Comment extends ActiveRecord implements ILinkable {
 
   protected $hasMany = array(
@@ -30,18 +26,12 @@ class Comment extends ActiveRecord implements ILinkable {
     'website' => ''
   );
 
-  private static $posts;
-
-  public static function setModule(Posts $postsModule) {
-    self::$posts = $postsModule;
-  }
-
-  public function getPath() {
-    return self::$posts->getPath($this);
-  }
-
   public function getLink() {
-    return self::$posts->getLink($this);
+    return array(
+      'controller' => 'Posts',
+      'action' => 'viewComment',
+      'parameters' => array($this->post_id, $this->id)
+    );
   }
 
   public function formatDate() {
@@ -52,5 +42,3 @@ class Comment extends ActiveRecord implements ILinkable {
     return ftime($this->date);
   }
 }
-
-Comment::setModule($this);

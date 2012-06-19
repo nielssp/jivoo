@@ -62,6 +62,10 @@ abstract class ActiveRecord {
       );
     }
   }
+  
+  public function __isset($property) {
+    return isset($this->data[$property]);
+  }
 
   public function __call($method, $arguments) {
     if (isset($this->associations[$method])) {

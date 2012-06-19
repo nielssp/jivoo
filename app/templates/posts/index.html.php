@@ -10,7 +10,7 @@ $this->renderTemplate('header.html');
 <?php foreach ($posts as $post): ?>
 
 <h2>
-  <?php echo $Html->link(h($post->title), 'Posts', 'view', array($post->id)); ?>
+  <?php echo $Html->link(h($post->title), $post); ?>
 </h2>
 
 <p>

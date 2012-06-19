@@ -1,9 +1,5 @@
 <?php
 
-if (!is_a($this, 'Posts')) {
-  exit('This model should be loaded from the Posts module.');
-}
-
 class Tag extends ActiveRecord implements ILinkable {
 
   protected $hasAndBelongsToMany = array(
@@ -13,18 +9,12 @@ class Tag extends ActiveRecord implements ILinkable {
   	                'thisKey' => 'tag_id'),
   );
 
-  private static $posts;
-
-  public static function setModule(Posts $postsModule) {
-    self::$posts = $postsModule;
-  }
-
-  public function getPath() {
-    return self::$posts->getPath($this);
-  }
-
   public function getLink() {
-    return self::$posts->getLink($this);
+    return array(
+      'controller' => 'Posts',
+      'action' => 'viewTag',
+      'parameters' => array($this->name)
+    );
   }
 
   public static function createName($title) {
@@ -38,4 +28,3 @@ class Tag extends ActiveRecord implements ILinkable {
   }
 }
 
-Tag::setModule($this);

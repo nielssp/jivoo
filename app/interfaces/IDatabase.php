@@ -19,8 +19,4 @@ interface IDatabase {
   public function getIndexes($table);
   public function escapeString($string);
   public function escapeQuery($format, $vars);
-
-  public static function getDriverName();
-  public static function getDriverDependencies();
-  public static function getRequiredOptions();
 }

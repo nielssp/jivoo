@@ -15,7 +15,7 @@ $this->renderTemplate('header.html');
 <?php echo $page->content; ?>
 
 <p>
-<?php $this->linkTo($page, 'Permalink'); ?>
+<?php echo $Html->link('Permalink', $page); ?>
 </p>
 
 <?php

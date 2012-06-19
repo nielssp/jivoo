@@ -125,19 +125,21 @@ class Posts extends ModuleBase {
 
     $this->controller->addRoute('posts', 'index');
 
+    $this->controller->addRoute('tags', 'tagIndex');
+    $this->controller->addRoute('tags/*', 'viewTag');
+
     if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
       // Detect fancy post permalinks
       $this->detectFancyPermalinks();
       $this->m->Routes->addPath('Posts', 'view', array($this, 'getFancyPath'));
+      $this->m->Routes->addPath('Posts', 'commentIndex', array($this, 'getFancyPath'));
+      $this->m->Routes->addPath('Posts', 'viewComment', array($this, 'getFancyPath'));
     }
     else {
-      $this->m->Routes->addRoute('posts/*', array($this, 'postController'));
-      //$this->routes->addRoute('posts/*/comments', array($this, ''));
-      //$this->routes->addRoute('posts/*/comments/*', array($this, ''));
+      $this->controller->addRoute('posts/*', 'view');
+      $this->controller->addRoute('posts/*/comments', 'commentIndex');
+      $this->controller->addRoute('posts/*/comments/*', 'viewComment');
     }
-    //$this->m->Routes->addRoute('posts', array($this, 'postListController'));
-    //$this->routes->addRoute('tags', array($this, ''));
-    //$this->routes->addRoute('tags/*', array($this, ''));
     
     $this->m->Backend->addCategory('content', tr('Content'), 2);
     $this->m->Backend->addPage('content', 'new-post', tr('New Post'), array($this, 'newPostController'), 2);
@@ -169,7 +171,7 @@ class Posts extends ModuleBase {
                   ->addVar($name)
               );
               if ($post !== FALSE) {
-                $perma = $post->getPath();
+                $perma = $this->getFancyPath($post);
                 if ($perma !== false) {
                   if ($perma == $path) {
                     $post->addToCache();
@@ -192,7 +194,7 @@ class Posts extends ModuleBase {
             }
             $post = Post::find($postid);
             if ($post !== FALSE) {
-              $perma = $post->getPath();
+              $perma = $this->getFancyPath($post);
               if ($perma !== false) {
                 if ($perma == $path) {
                   $post->addToCache();
@@ -221,27 +223,33 @@ class Posts extends ModuleBase {
   }
 
   public function getFancyPath($parameters) {
-    $id = $parameters[0];
-    if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
-      $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
-      if (is_array($permalink)) {
-        $record = Post::find($id);
-        $time = $record->date;
-        $replace = array('%name%'  => $record->name,
-                         '%id%'    => $id,
-                         '%year%'  => tdate('Y', $time),
-                         '%month%' => tdate('m', $time),
-                         '%day%'   => tdate('d', $time));
-        $search = array_keys($replace);
-        $replace = array_values($replace);
-        $path = array();
-        foreach ($permalink as $dir) {
-          $path[] = str_replace($search, $replace, $dir);
-        }
-        return $path;
+    $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
+    if (is_array($permalink)) {
+      if (is_object($parameters) AND is_a($parameters, 'Post')) {
+        $record = $parameters;
       }
+      else {
+        $record = Post::find($parameters[0]);
+      }
+      $time = $record->date;
+      $replace = array('%name%'  => $record->name,
+                       '%id%'    => (isset($record->id)) ? $record->id : 0,
+                       '%year%'  => tdate('Y', $time),
+                       '%month%' => tdate('m', $time),
+                       '%day%'   => tdate('d', $time));
+      $search = array_keys($replace);
+      $replace = array_values($replace);
+      $path = array();
+      foreach ($permalink as $dir) {
+        $path[] = str_replace($search, $replace, $dir);
+      }
+      return $path;
     }
     return FALSE;
+  }
+
+  public function getFancyLink($parameters) {
+    return $this->m->Http->getLink($this->getFancyPath($parameters));
   }
 
   public function getPath(ActiveRecord $record) {
@@ -286,10 +294,6 @@ class Posts extends ModuleBase {
     }
   }
 
-  public function getLink(ILinkable $record) {
-    return $this->m->Http->getLink($this->getPath($record));
-  }
-
   public function postController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
 
@@ -330,7 +334,7 @@ class Posts extends ModuleBase {
     $examplePost = Post::create();
     $examplePost->name = '%name%';
     $examplePost->date = time();
-    $exampleLink = explode('%name%', $examplePost->getLink());
+    $exampleLink = explode('%name%', $this->getFancyLink($examplePost));
     $examplePost = NULL;
     $templateData['nameInPermalink'] = count($exampleLink) >= 2;
     $templateData['beforePermalink'] = $exampleLink[0];

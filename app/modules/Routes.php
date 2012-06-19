@@ -37,6 +37,10 @@ class Routes extends ModuleBase {
 
     Hooks::attach('render', array($this, 'callController'));
   }
+  
+  public function getRequest() {
+    return $this->m->Http->getRequest();
+  }
 
   public function insertParameters($parameters, $additional) {
     $path = $additional[0];
@@ -60,24 +64,52 @@ class Routes extends ModuleBase {
     if (!isset($controller)) {
       return NULL;
     }
-    $controller = className($controller) . 'Controller';
+    if (is_object($controller)) {
+      $controller = get_class($controller);
+    }
+    else {
+      $controller = className($controller);
+      if (substr($controller, -10) != 'Controller') {
+        $controller .= 'Controller';
+      }
+    }
     if (isset($this->paths[$controller][$action])) {
       $function = $this->paths[$controller][$action]['function'];
-      $additional = $this->paths[$controller][$action]['parameters'];
+      $additional = $this->paths[$controller][$action]['additional'];
       return call_user_func($function, $parameters, $additional);
     }
     return NULL;
   }
 
   public function getLink($controller = NULL, $action = 'index', $parameters = array()) {
+    if (is_array($controller)) {
+      if (isset($controller['url'])) {
+        return $controller['url'];
+      }
+      if (isset($controller['path'])) {
+        return $this->m->Http->getLink($controller['path']);
+      }
+      if (!isset($controller['controller'])) {
+        return $this->m->Http->getLink(array());
+      }
+      $parameters = $controller['parameters'];
+      $action = $controller['action'];
+      $controller = $controller['controller'];
+    }
+    if (is_object($controller) AND is_a($controller, 'ILinkable')) {
+      return $this->getLink($controller->getLink());
+    }
+    if (strpos($controller, '/') !== FALSE) {
+      return $controller;
+    }
     return $this->m->Http->getLink($this->getPath($controller, $action, $parameters));
   }
 
-  public function redirect($controller = NULL, $action = 'index', $paramters = array(), $query = NULL, $hashtag = NULL) {
+  public function redirect($controller = NULL, $action = 'index', $parameters = array(), $query = NULL, $hashtag = NULL) {
     $this->m->Http->redirectPath($this->getPath($controller, $action, $parameters), $query, FALSE, $hashtag);
   }
 
-  public function moved($controller = NULL, $action = 'index', $paramters = array(), $query = NULL, $hashtag = NULL) {
+  public function moved($controller = NULL, $action = 'index', $parameters = array(), $query = NULL, $hashtag = NULL) {
     $this->m->Http->redirectPath($this->getPath($controller, $action, $parameters), $query, TRUE, $hashtag);
   }
 
@@ -107,7 +139,7 @@ class Routes extends ModuleBase {
     }
     $this->paths[$controller][$action] = array(
       'function' => $pathFunction,
-      'parameters' => $additional
+      'additional' => $additional
     );
   }
 
@@ -158,13 +190,20 @@ class Routes extends ModuleBase {
 
   public function callController() {
     $this->mapRoute();
+    
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
+      $currentPath = $this->m->Http->getPath();
+      $actionPath = $this->getPath($this->selectedController[0], $this->selectedController[1], $this->selectedControllerParameters);
+      if ($currentPath != $actionPath AND is_array($actionPath)) {
+        $this->m->Http->redirectPath($actionPath);
+      }
       call_user_func_array($this->selectedController, $this->selectedControllerParameters);
     }
     else {
       /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */
-      $this->m->Errors->fatal('Controller unavailable',
-        tr('Hm...: %1', var_dump($this->selectedController)));
+      $this->m->Errors->fatal('Invalid controller',
+        tr('%1::%2 is not valid', get_class($this->selectedController[0]), $this->selectedController[1])
+      );
     }
   }
 }

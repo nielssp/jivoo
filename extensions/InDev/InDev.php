@@ -20,7 +20,7 @@ class InDev extends ExtensionBase {
           'build-number', 'body-bottom', 'div',
           array(
               'style' => 'position:fixed;bottom:30px;right:10px;font-family:Candara, sans-serif;font-size:12px;text-align:right;'
-          ), 'DEVELOPMENT VERSION<br/>BUILD ' . $build
+          ), 'DEVELOPMENT VERSION<br/>VERSION ' . PEANUT_VERSION . '<br/>BUILD ' . $build
       );
     }
   }

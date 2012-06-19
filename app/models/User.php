@@ -1,9 +1,4 @@
 <?php
-
-if (!is_a($this, 'Users')) {
-  exit('This model should be loaded from the Users module.');
-}
-
 class User extends ActiveRecord implements ILinkable {
 
   protected $hasMany = array(
@@ -27,23 +22,15 @@ class User extends ActiveRecord implements ILinkable {
                      'maxLength' => 255),
   );
 
-  private static $users;
-
-  public static function setModule(Users $usersModule) {
-    self::$users = $usersModule;
-  }
-
-  public function getPath() {
-    return array('users', $this->username);
-  }
-
   public function getLink() {
-    return self::$users->getLink($this);
+    return array(
+      'controller' => 'Users',
+      'action' => 'view',
+      'parameters' => array($this->username)
+    );
   }
 
   public function hasPermission($key) {
     return $this->getGroup()->hasPermission($key);
   }
 }
-
-User::setModule($this);

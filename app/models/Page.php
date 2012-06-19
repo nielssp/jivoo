@@ -1,9 +1,5 @@
 <?php
 
-if (!is_a($this, 'Pages')) {
-  exit('This model should be loaded from the Pages module.');
-}
-
 class Page extends ActiveRecord implements ILinkable {
 
 //   protected $hasMany = array(
@@ -31,18 +27,12 @@ class Page extends ActiveRecord implements ILinkable {
       'content' => array('presence' => true),
   );
 
-  private static $pages;
-
-  public static function setModule(Pages $pagesModule) {
-    self::$pages = $pagesModule;
-  }
-
-  public function getPath() {
-    return explode('/', $this->name);
-  }
-
   public function getLink() {
-    return self::$pages->getLink($this);
+    return array(
+      'controller' => 'Pages',
+      'action' => 'view',
+      'parameters' => array($this->id)
+    );
   }
 
   public function formatDate() {
@@ -53,5 +43,3 @@ class Page extends ActiveRecord implements ILinkable {
     return ftime($this->date);
   }
 }
-
-Page::setModule($this);

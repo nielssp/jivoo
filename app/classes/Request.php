@@ -9,8 +9,8 @@ class Request {
   private $data;
 
   public function __construct() {
-    $request = $_SERVER['REQUEST_URI'];
-    $request = parse_url($request);
+    $uri = $_SERVER['REQUEST_URI'];
+    $request = parse_url($uri);
     $path = urldecode($request['path']);
     if (WEBPATH != '/') {
       $path = str_replace(WEBPATH, '', $path);
@@ -22,9 +22,9 @@ class Request {
         $this->path[] = $dir;
       }
     }
-
-    $query = $_GET;
-    $data = $_POST;
+    
+    $this->query = $_GET;
+    $this->data = $_POST;
   }
 
   public function __get($name) {
@@ -33,6 +33,23 @@ class Request {
       case 'data':
       case 'query':
         return $this->$name;
+    }
+  }
+  
+  public function __set($name, $value) {
+    switch ($name) {
+      case 'path':
+      case 'query':
+        $this->$name = $value;
+    }
+  }
+  
+  public function unsetQuery($key = NULL) {
+    if (isset($key)) {
+      $this->query = array();
+    }
+    else {
+      unset($this->query[$key]);
     }
   }
 

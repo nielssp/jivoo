@@ -5,19 +5,23 @@ class ApplicationController {
   private $name;
 
   protected $m = NULL;
-  private $Templates = NULL;
-  private $Routes = NULL;
+  protected $request = NULL;
+  
   private $actions = array();
+  
   
   private $data = array();
 
-  protected $helpers = array();
+  protected $helpers = array('Html');
   private $helperObjects = array();
+  
   
   public final function __construct(Templates $templates, Routes $routes) {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
     $this->m->Routes = $routes;
+    
+    $this->request = $routes->getRequest();
     
     $this->name = str_replace('-controller', '', classFileName(get_class($this)));
     
@@ -88,7 +92,7 @@ class ApplicationController {
   }
   
   protected function refresh() {
-    
+    $this->m->Routes->refresh();
   }
   
   protected function render($template = NULL) {

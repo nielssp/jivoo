@@ -27,8 +27,7 @@ $this->renderTemplate('header');
 <h3>Tags</h3>
 <?php
 foreach ($tags as $tag) {
-  $this->linkTo($tag, $tag->tag);
-  echo ' ';
+  echo $Html->link(h($tag->tag), $tag) . ' ';
 }
 endif;
 ?>
@@ -42,7 +41,7 @@ foreach ($post->getComments() as $comment):
 <div style="border-left:1px solid #000; padding-left:10px; margin-left: 20px">
 
 <p>
-<?php $this->linkTo($comment, '#'); ?>
+<?php echo $Html->link('#', $comment); ?>
 Published by <?php
 if ($comment->website == '')
   echo $comment->author;

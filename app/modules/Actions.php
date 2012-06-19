@@ -14,14 +14,12 @@
 /**
  * Actions class
  */
-class Actions implements IModule {
+class Actions extends ModuleBase {
 
-  private $core;
-  private $http;
+  private $request;
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->http = $core->http;
+  protected function init() {
+    $this->request = $this->m->Http->getRequest();
   }
   /**
    * Check if an action is present in the url and/or post data
@@ -31,10 +29,11 @@ class Actions implements IModule {
    * @return bool
    */
   public function has($action, $getPost = 'both') {
-    $path = $this->http->getPath();
-    $params = $this->http->getParams();
-    if ($getPost != 'post' AND $getPost != 'sessionget' AND isset($params[$action])) {
-      $this->http->unsetParam($action);
+    $path = $this->request->path;
+    $query = $this->request->query;
+    $post = $this->request->data;
+    if ($getPost != 'post' AND $getPost != 'sessionget' AND isset($query[$action])) {
+      $this->request->unsetQuery($action);
       return true;
     }
     if ($getPost != 'get' AND $getPost != 'sessionget' AND isset($_POST['action']) AND $_POST['action'] == $action) {
@@ -42,17 +41,13 @@ class Actions implements IModule {
     }
     if ($getPost == 'sessionget' AND isset($_SESSION[SESSION_PREFIX . 'action']) AND $_SESSION[SESSION_PREFIX . 'action'] == $action) {
       unset($_SESSION[SESSION_PREFIX . 'action']);
-      if (isset($params[$action])) {
-        $this->http->unsetParam($action);
-        return true;
-      }
     }
     return false;
   }
 
   public function add($action) {
     unset($_GET[$action]);
-    return $this->http->getLink(null, array_merge($_GET, array($action => '')));
+    return $this->m->Http->getLink(null, array_merge($_GET, array($action => '')));
   }
 
 }

@@ -38,66 +38,48 @@ class Http extends ModuleBase {
    * PHP5-style constructor
    */
   protected function init() {
-    $this->request = new Request();
-    $request = $_SERVER['REQUEST_URI'];
-    $request = parse_url($request);
-    $this->params = $_GET;
-    $path = urldecode($request['path']);
-    if (WEBPATH != '/') {
-      $path = str_replace(WEBPATH, '', $path);
-    }
-    $path = explode('/', $path);
-    $this->path = array();
-    foreach ($path as $dir) {
-      if (!empty($dir)) {
-        $this->path[] = $dir;
-      }
-    }
     // Set default settings
     $this->m->Configuration->setDefault(array(
       'http.rewrite' => 'off',
       'http.index.path' => 'posts'
     ));
 
+    $this->request = new Request();
+
     // Determine if the current URL is correct
     if ($this->m->Configuration->get('rewrite') === 'on') {
-      if (isset($this->path[0]) AND $this->path[0] == 'index.php') {
-        array_shift($this->path);
-        $this->redirectPath($this->path, $this->params);
+      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {
+        array_shift($this->request->path);
+        $this->redirectPath($this->request->path, $this->request->query);
       }
     }
     else {
-      if (!isset($this->path[0]) OR $this->path[0] != 'index.php') {
-        $this->redirectPath($this->path, $this->params);
+      if (!isset($this->request->path[0]) OR $this->request->path[0] != 'index.php') {
+        $this->redirectPath($this->request->path, $this->request->query);
       }
-      array_shift($this->path);
+      $path = $this->request->path;
+      array_shift($path);
+      $this->request->path = $path;
     }
 
     $path = explode('/', $this->m->Configuration->get('http.index.path'));
-    $parameters = $this->m->Configuration->get('http.index.parameters', TRUE);
-    if (count($this->path) < 1) {
-      $this->path = $path;
-      $this->params = array_merge($parameters, $this->params);
+    $query = $this->m->Configuration->get('http.index.query', TRUE);
+    if (count($this->request->path) < 1) {
+      $this->request->path = $path;
+      $this->request->query = array_merge($query, $this->request->query);
     }
-    else if ($path == $this->path) {
-      $this->redirectPath(array(), $this->params);
+    else if ($path == $this->request->path) {
+      $this->redirectPath(array(), $this->request->query);
     }
+    
   }
 
   public function getPath() {
-    return $this->path;
-  }
-
-  public function getParams() {
-    return $this->params;
-  }
-
-  public function unsetParam($key) {
-    unset($this->params[$key]);
+    return $this->request->path;
   }
 
   public function isCurrent($path) {
-    return $path === $this->path;
+    return $path === $this->request->path;
   }
 
   /**
@@ -133,7 +115,7 @@ class Http extends ModuleBase {
    */
   public function redirectPath($path = null, $parameters = null, $moved = true, $hashtag = null, $rewrite = false) {
     if (!isset($path)) {
-      $path = $this->path;
+      $path = $this->request->path;
     }
     $index = explode('/', $this->m->Configuration->get('http.index.path'));
     if ($index == $path) {
@@ -182,9 +164,9 @@ class Http extends ModuleBase {
    */
   public function refreshPath($parameters = null, $hashtag = null) {
     if (!isset($parameters)) {
-      $parameters = $this->params;
+      $parameters = $this->request->query;
     }
-    $this->redirectPath($this->path, $parameters, false, $hashtag);
+    $this->redirectPath($this->request->path, $parameters, false, $hashtag);
   }
 
   public static function setStatus($status) {
@@ -235,7 +217,7 @@ class Http extends ModuleBase {
    */
   public function getLink($path = null, $parameters = null, $hashtag = null) {
     if (!isset($path)) {
-      $path = $this->path;
+      $path = $this->request->path;
     }
     $index = explode('/', $this->m->Configuration->get('http.index.path'));
     if ($index == $path) {

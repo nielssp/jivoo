@@ -16,8 +16,8 @@ class HtmlHelper extends ApplicationHelper {
     return $this->endTags[$tag];
   }
 
-  public function link($label, $controller, $action = 'index', $paramters = array()) {
-    $url = $this->m->Routes->getLink($controller, $action, $paramters);
+  public function link($label, $controller = NULL, $action = 'index', $parameters = array()) {
+    $url = $this->m->Routes->getLink($controller, $action, $parameters);
     return '<a href="' . $url . '">' . $label . '</a>';
   }
 

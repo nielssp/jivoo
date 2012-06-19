@@ -1,9 +1,4 @@
 <?php
-
-if (!is_a($this, 'Users')) {
-  exit('This model should be loaded from the Users module.');
-}
-
 class Group extends ActiveRecord {
 
   protected $hasMany = array(
@@ -11,12 +6,6 @@ class Group extends ActiveRecord {
   );
 
   private $permissions;
-
-  private static $users;
-
-  public static function setModule(Users $usersModule) {
-    self::$users = $usersModule;
-  }
 
   private function fetchPermissions() {
     $db = self::connection();
@@ -77,5 +66,3 @@ class Group extends ActiveRecord {
     }
   }
 }
-
-Group::setModule($this);

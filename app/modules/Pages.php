@@ -16,42 +16,17 @@
 /**
  * Pages class
  */
-class Pages implements IModule{
+class Pages extends ModuleBase {
 
-  private $core;
-  private $errors;
-  private $configuration;
-  private $database;
-  private $routes;
-  private $templates;
-  private $http;
-  private $users;
-  private $backend;
-
-  private $page;
-
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->database = $this->core->database;
-    $this->actions = $this->core->actions;
-    $this->routes = $this->core->routes;
-    $this->http = $this->core->http;
-    $this->templates = $this->core->templates;
-    $this->errors = $this->core->errors;
-    $this->configuration = $this->core->configuration;
-    $this->users = $this->core->users;
-    $this->backend = $this->core->backend;
-
-    if (!ActiveRecord::isConnected()) {
-      throw new Exception('temporary.');
-    }
-
+  private $controller;
+  
+  protected function init() {
     $newInstall = FALSE;
 
     require_once(p(MODELS . 'Page.php'));
 
-    if (!$this->database->tableExists('pages')) {
-      $this->database->createQuery('pages')
+    if (!$this->m->Database->tableExists('pages')) {
+      $this->m->Database->createQuery('pages')
         ->addInt('id', TRUE, TRUE)
         ->setPrimaryKey('id')
         ->addVarchar('name', 255)
@@ -78,16 +53,19 @@ class Pages implements IModule{
       $page->state = 'published';
       $page->save();
     }
+    
+    $this->controller = new PagesController($this->m->Templates, $this->m->Routes);
 
     $this->detectFancyPermalinks();
+    $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
-    $this->backend->addCategory('content', tr('Content'), 2);
-    $this->backend->addPage('content', 'new-page', tr('New Page'), array($this, 'addPageController'), 2);
-    $this->backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
+    $this->m->Backend->addCategory('content', tr('Content'), 2);
+    $this->m->Backend->addPage('content', 'new-page', tr('New Page'), array($this, 'addPageController'), 2);
+    $this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 
   private function detectFancyPermalinks() {
-    $path = $this->http->getPath();
+    $path = $this->m->Http->getPath();
     if (!is_array($path)) {
       return;
     }
@@ -101,27 +79,22 @@ class Pages implements IModule{
       return;
     }
     $page->addToCache();
-    $this->page = $page->id;
-    $this->routes->setRoute(array($this, 'pageController'), 6);
+    $this->controller->setRoute('view', 6, array($page->id));
   }
-
-  public function getLink(Page $record) {
-    return $this->http->getLink($record->getPath());
-  }
-
-  public function pageController($path = array(), $parameters = array(), $contentType = 'html') {
-    $templateData = array();
-
-    $templateData['page'] = Page::find($this->page);
-
-    $templateData['title'] = $templateData['page']->title;
-
-    $this->templates->renderTemplate('page.html', $templateData);
+  
+  public function getFancyPath($parameters) {
+    if (is_object($parameters) AND is_a($parameters, 'Page')) {
+      $record = $parameters;
+    }
+    else {
+      $record = Page::find($parameters[0]);
+    }
+    return explode('/', $record->name);
   }
 
   public function addPageController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['title'] = tr('New Page');
-    $this->templates->renderTemplate('backend/edit-post.html', $templateData);
+    $this->m->Templates->renderTemplate('backend/edit-post.html', $templateData);
   }
 }

@@ -25,11 +25,11 @@ else {
   <body>
 <?php $this->outputHtml('body-top'); ?>
 
-    <h1><?php echo $site['title']; ?></h1>
+    <h1><?php echo $Html->link($site['title'], array()); ?></h1>
     <h2><?php echo $site['subtitle']; ?></h2>
 
 <?php foreach (Link::getMenu('main') as $link): ?>
 
-    <?php $this->linkTo($link, $link->title); ?>
+    <?php echo $Html->link(h($link->title), $link); ?>
 
 <?php endforeach; ?>

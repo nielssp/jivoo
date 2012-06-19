@@ -5,11 +5,13 @@ class PostsController extends ApplicationController {
   protected $helpers = array('Html');
 
   public function index() {
-    $this->posts = Post::all(
-      SelectQuery::create()
-        ->orderByDescending('date')
-        ->limit(5)
-    );
+    $select = SelectQuery::create()
+      ->orderByDescending('date')
+      ->limit(5);
+    if (isset($this->request->query['offset'])) {
+      $select->offset($this->request->query['offset']);
+    }
+    $this->posts = Post::all($select);
 
     $this->render();
   }
@@ -21,9 +23,25 @@ class PostsController extends ApplicationController {
   }
   
   public function add() {
-    if ($this->Request->isPost()) {
+    if ($this->request->isPost()) {
     }
     $this->render();
+  }
+
+  public function tagIndex() {
+    $this->render('not-implemented.html');
+  }
+  
+  public function viewTag($tag) {
+    $this->render('not-implemented.html');
+  }
+  
+  public function commentIndex($post) {
+    $this->render('not-implemented.html');
+  }
+  
+  public function viewComment($post, $comment) {
+    $this->render('not-implemented.html');
   }
   
 }

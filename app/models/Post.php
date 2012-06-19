@@ -1,9 +1,5 @@
 <?php
 
-if (!is_a($this, 'Posts')) {
-  exit('This model should be loaded from the Posts module.');
-}
-
 class Post extends ActiveRecord implements ILinkable {
 
   protected $hasAndBelongsToMany = array(
@@ -42,18 +38,12 @@ class Post extends ActiveRecord implements ILinkable {
     'user_id' => 0
   );
 
-  private static $posts;
-
-  public static function setModule(Posts $postsModule) {
-    self::$posts = $postsModule;
-  }
-
-  public function getPath() {
-    return self::$posts->getPath($this);
-  }
-
   public function getLink() {
-    return self::$posts->getLink($this);
+    return array(
+      'controller' => 'Posts',
+      'action' => 'view',
+      'parameters' => array($this->id)
+    );
   }
 
   public static function createName($title) {
@@ -112,4 +102,3 @@ class Post extends ActiveRecord implements ILinkable {
   }
 }
 
-Post::setModule($this);
