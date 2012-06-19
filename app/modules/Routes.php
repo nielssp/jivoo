@@ -57,7 +57,7 @@ class Routes extends ModuleBase {
   }
 
   public function getPath($controller = NULL, $action = 'index', $parameters = array()) {
-    if (!isset($controller) {
+    if (!isset($controller)) {
       return NULL;
     }
     $controller = className($controller) . 'Controller';

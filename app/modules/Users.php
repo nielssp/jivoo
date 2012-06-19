@@ -55,6 +55,7 @@ class Users implements IModule{
 
     require_once(p(MODELS . 'User.php'));
 
+    /** @todo Give me createOrUpdateTable('users') */
     if (!$this->database->tableExists('users')) {
       $this->database->createQuery('users')
         ->addInt('id', TRUE, TRUE)

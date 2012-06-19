@@ -55,8 +55,7 @@ class Templates implements IModule {
     $this->errors = $this->core->errors;
     $this->http = $this->core->http;
 
-
-    if (!$this->configuration->exists('site.title')) {
+    if (!$this->configuration->exists('site.title')) {      
       $this->configuration->set('site.title', 'PeanutCMS');
     }
     if (!$this->configuration->exists('site.subtitle')) {
