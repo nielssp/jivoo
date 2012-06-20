@@ -282,9 +282,7 @@ class Templates implements IModule {
           return;
       }
     }
-    echo '<a href="' . $link . '">';
-    echo $label;
-    echo '</a>';
+    echo '<a href="' . $link . '">deprecated</a>';
   }
 
   /**
@@ -300,6 +298,10 @@ class Templates implements IModule {
     if (file_exists(p(PUB . $file))) {
       return w(PUB . $file);
     }
+  }
+  
+  public function link($label, $controller = NULL, $action = 'index', $parameters = array()) {
+    return $this->core->routes->getLink($controller, $action, $parameters);
   }
 
   public function addTemplateData($var, $value, $template = '*') {

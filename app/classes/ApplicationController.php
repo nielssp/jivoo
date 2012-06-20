@@ -98,7 +98,7 @@ class ApplicationController {
   protected function render($template = NULL) {
     //$template = new Template();
     if (!isset($template)) {
-      $template= $this->name . '/';
+      $template = $this->name . '/';
       list( , $caller) = debug_backtrace(false);
       $template .= $caller['function'] . '.html';
     }

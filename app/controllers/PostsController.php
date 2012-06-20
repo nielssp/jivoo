@@ -18,6 +18,10 @@ class PostsController extends ApplicationController {
 
   public function view($post) {
     $this->post = Post::find($post);
+    if (!$this->post) {
+      $this->render('404.html');
+      return;
+    }
     $this->title = $this->post->title;
     $this->render();
   }
