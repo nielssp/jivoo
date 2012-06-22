@@ -1,22 +1,22 @@
 <?php
-$this->setHtmlIndent(4);
-$this->insertScript('backend-js', $this->getFile('js/backend.js'), array('jquery-ui', 'jquery-hotkeys'));
-$this->insertStyle('backend-css', $this->getFile('css/backend.css'));
+$this->setIndent(4);
+$this->insertScript('backend-js', $this->file('js/backend.js'), array('jquery-ui', 'jquery-hotkeys'));
+$this->insertStyle('backend-css', $this->file('css/backend.css'));
 ?>
 <!DOCTYPE html>
 <html>
   <head>
     <title><?php echo $title; ?> | PeanutCMS</title>
 
-<?php $this->outputHtml('head-meta'); ?>
+<?php $this->output('head-meta'); ?>
 
-<?php $this->outputHtml('head-styles'); ?>
+<?php $this->output('head-styles'); ?>
 
-<?php $this->outputHtml('head-scripts'); ?>
+<?php $this->output('head-scripts'); ?>
 
   </head>
   <body>
-<?php $this->outputHtml('body-top'); ?>
+<?php $this->output('body-top'); ?>
 
 <?php if (!isset($noHeader) OR !$noHeader): ?>
     <div id="header">

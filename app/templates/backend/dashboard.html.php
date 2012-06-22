@@ -1,6 +1,6 @@
 <?php
 // Render the header
-$this->renderTemplate('backend/header.html');
+$this->render('backend/header.html');
 ?>
 
 
@@ -13,6 +13,6 @@ $this->renderTemplate('backend/header.html');
       </div>
 
 <?php
-$this->renderTemplate('backend/footer.html');
+$this->render('backend/footer.html');
 ?>
 

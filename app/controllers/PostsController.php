@@ -17,6 +17,8 @@ class PostsController extends ApplicationController {
   }
 
   public function view($post) {
+    $this->reroute();
+
     $this->post = Post::find($post);
     $this->title = $this->post->title;
     $this->render();

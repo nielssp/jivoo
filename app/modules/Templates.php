@@ -309,31 +309,35 @@ class Templates implements IModule {
     $this->parameters[$template][$var] = $value;
   }
 
-  public function renderTemplate($name, $parameters = array()) {
-    $this->prevParameters = array_merge($this->prevParameters, $parameters);
-    if (isset($this->parameters[$name])) {
-      extract($this->parameters[$name], EXTR_SKIP);
-    }
-    if (isset($this->parameters['*'])) {
-      extract($this->parameters['*'], EXTR_SKIP);
-    }
-    extract($this->prevParameters, EXTR_SKIP);
-    $site = $this->configuration->get('site');
+
+  public function getTemplate($name) {
     if (file_exists(p($this->theme . $name. '.php'))) {
       $this->setContentType($name);
-      require(p($this->theme . $name . '.php'));
+      return p($this->theme . $name . '.php');
     }
     else if (file_exists(p(TEMPLATES . $name . '.php'))) {
       $this->setContentType($name);
-      require(p(TEMPLATES . $name . '.php'));
+      return p(TEMPLATES . $name . '.php');
     }
     else if (strpos($name, '.') === false) {
-      $this->renderTemplate($name . '.html', $parameters);
+      return $this->getTemplate($name . '.html');
     }
-    else {
-      echo '<p>' . tr('The template "%1" could not be found', $name) . '</p>';
-    }
-    //    $this->renderTemplate('default.html', array('content' => tr('The template "%1" could not be found', $name)));
+    return FALSE;
+  }
+
+  public function getTemplateData($name) {
+    $data = array_merge($this->parameters['*'], $this->parameters[$name]);
+    $data['site'] = $this->configuration->get('site');
+    return $data;
+  }
+
+  /**
+   * @deprecated Replaced by the Template/class
+   */
+  public function renderTemplate($name, $parameters = array()) {
+    $template = new Template($this, $this->core->routes);
+    $template->set($parameters);
+    $template->render($name);
   }
 
 }

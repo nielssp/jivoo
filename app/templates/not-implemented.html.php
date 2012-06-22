@@ -1,6 +1,6 @@
 <?php
 // Render the header
-$this->renderTemplate('header');
+$this->render('header');
 ?>
 
 <h2 ><?php echo tr('Not implemented'); ?></h2>
@@ -9,5 +9,5 @@ $this->renderTemplate('header');
 
 <?php
 // Render the footer
-$this->renderTemplate('footer');
+$this->render('footer');
 ?>

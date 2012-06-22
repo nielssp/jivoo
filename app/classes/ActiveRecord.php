@@ -535,7 +535,9 @@ abstract class ActiveRecord {
     if (!$result->hasRows()) {
       return FALSE;
     }
-    return self::createFromAssoc($class, $result->fetchAssoc());
+    $record = self::createFromAssoc($class, $result->fetchAssoc());
+    $record->addToCache();
+    return $record;
   }
 
   public static function exists($primaryKey) {

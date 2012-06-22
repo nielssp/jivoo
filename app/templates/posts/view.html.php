@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->renderTemplate('header');
+$this->render('header');
 ?>
 
 <h2><?php echo h($post->title); ?></h2>
@@ -60,5 +60,5 @@ endforeach;
 
 <?php
 // Render the footer
-$this->renderTemplate('footer');
+$this->render('footer');
 ?>

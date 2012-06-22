@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->renderTemplate('header.html');
+$this->render('header.html');
 ?>
 
 <h2>
@@ -20,5 +20,5 @@ $this->renderTemplate('header.html');
 
 <?php
 // Render the footer
-$this->renderTemplate('footer.html');
+$this->render('footer.html');
 ?>

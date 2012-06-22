@@ -7,7 +7,7 @@
 
 class Errors extends ModuleBase {
 
-  private $errorLog;
+  private $errorLog = array();
 
   protected function init() {
     set_error_handler(array($this, 'handleError'));

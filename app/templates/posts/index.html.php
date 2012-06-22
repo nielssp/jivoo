@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->renderTemplate('header.html');
+$this->render('header.html');
 ?>
 
 <?php foreach ($posts as $post): ?>
@@ -26,5 +26,5 @@ $this->renderTemplate('header.html');
 
 <?php
 // Render the footer
-$this->renderTemplate('footer.html');
+$this->render('footer.html');
 ?>

@@ -86,6 +86,11 @@ class ApplicationController {
   public function setRoute($action, $priority = 5, $parameters = array()) {
     $this->m->Routes->setRoute(array($this, $action), $priority, $parameters);
   }
+
+  protected function reroute() {
+    list( , $caller) = debug_backtrace(false);
+    $this->m->Routes->reroute($this->name, $caller['function'], $caller['args']);
+  }
   
   protected function redirect() {
     
@@ -95,15 +100,16 @@ class ApplicationController {
     $this->m->Routes->refresh();
   }
   
-  protected function render($template = NULL) {
-    //$template = new Template();
-    if (!isset($template)) {
-      $template= $this->name . '/';
+  protected function render($templateName = NULL) {
+    $template = new Template($this->m->Templates, $this->m->Routes, $this->name);
+    if (!isset($templateName)) {
+      $templateName = $this->name . '/';
       list( , $caller) = debug_backtrace(false);
-      $template .= $caller['function'] . '.html';
+      $templateName .= $caller['function'] . '.html';
     }
     $templateData = array_merge($this->data, $this->helperObjects);
-    $this->m->Templates->renderTemplate($template, $templateData);
+    $template->set($templateData);
+    $template->render($templateName);
   }
 
   public function notFound() {

@@ -1,16 +1,16 @@
 <?php
 // Render the header
-$this->renderTemplate('backend/header.html');
+$this->render('backend/header.html');
 ?>
 
 
       <div class="section header_section">
         <div class="container narrow_container">
-          <h1><?php $this->linkTo('home', 'PeanutCMS'); ?></h1>
+          <h1><?php echo $Html->link('PeanutCMS', array()); ?></h1>
         </div>
       </div>
 
-      <form action="<?php echo $loginAction; ?>" method="post">
+      <form action="<?php echo $this->link(); ?>" method="post">
 
       <div class="top_shadow"></div>
       <div class="section dark_section">
@@ -44,6 +44,6 @@ $this->renderTemplate('backend/header.html');
       </form>
 
 <?php
-$this->renderTemplate('backend/footer.html');
+$this->render('backend/footer.html');
 ?>
 

@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->renderTemplate('backend/header.html');
+$this->render('backend/header.html');
 ?>
 
     <form action="<?php echo $saveAction; ?>" method="post">
@@ -56,6 +56,6 @@ $this->renderTemplate('backend/header.html');
       </form>
 
 <?php
-$this->renderTemplate('backend/footer.html');
+$this->render('backend/footer.html');
 ?>
 

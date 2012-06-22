@@ -1,6 +1,6 @@
 <?php
-$this->setHtmlIndent(4);
-$this->insertStyle('theme-style', $this->getFile('css/style.css'));
+$this->setIndent(4);
+$this->insertStyle('theme-style', $this->file('css/style.css'));
 ?>
 <!DOCTYPE html>
 <html>
@@ -16,14 +16,14 @@ else {
 ?>
    </title>
 
-<?php $this->outputHtml('head-meta'); ?>
+<?php $this->output('head-meta'); ?>
 
-<?php $this->outputHtml('head-styles'); ?>
+<?php $this->output('head-styles'); ?>
 
-<?php $this->outputHtml('head-scripts'); ?>
+<?php $this->output('head-scripts'); ?>
   </head>
   <body>
-<?php $this->outputHtml('body-top'); ?>
+<?php $this->output('body-top'); ?>
 
     <h1><?php echo $Html->link($site['title'], array()); ?></h1>
     <h2><?php echo $site['subtitle']; ?></h2>

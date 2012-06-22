@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->renderTemplate('backend/header.html');
+$this->render('backend/header.html');
 ?>
 
 
@@ -38,6 +38,6 @@ foreach ($drivers as $driver) {
       </div>
 
 <?php
-$this->renderTemplate('backend/footer.html');
+$this->render('backend/footer.html');
 ?>
 

@@ -192,11 +192,6 @@ class Routes extends ModuleBase {
     $this->mapRoute();
     
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
-      $currentPath = $this->m->Http->getPath();
-      $actionPath = $this->getPath($this->selectedController[0], $this->selectedController[1], $this->selectedControllerParameters);
-      if ($currentPath != $actionPath AND is_array($actionPath)) {
-        $this->m->Http->redirectPath($actionPath);
-      }
       call_user_func_array($this->selectedController, $this->selectedControllerParameters);
     }
     else {
@@ -204,6 +199,14 @@ class Routes extends ModuleBase {
       $this->m->Errors->fatal('Invalid controller',
         tr('%1::%2 is not valid', get_class($this->selectedController[0]), $this->selectedController[1])
       );
+    }
+  }
+
+  public function reroute($controller, $action, $parameters = array()) {
+    $currentPath = $this->m->Http->getPath();
+    $actionPath = $this->getPath($controller, $action, $parameters);
+    if ($currentPath != $actionPath AND is_array($actionPath)) {
+      $this->m->Http->redirectPath($actionPath, $this->m->Http->getRequest()->query);
     }
   }
 }
