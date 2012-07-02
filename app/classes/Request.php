@@ -61,4 +61,8 @@ class Request {
     return $_SERVER['REQUEST_METHOD'] == 'POST';
   }
 
+  public function isAjax() {
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+  }
+
 }

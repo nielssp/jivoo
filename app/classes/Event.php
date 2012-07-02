@@ -1,7 +1,8 @@
 <?php
 
-class Event {
+class Event implements arrayaccess {
   private $functions = array();
+
   public function attach($function) {
     $this->functions[] = $function;
   }
@@ -13,49 +14,31 @@ class Event {
     }
   }
 
-  public function update($object, EventArgs $args) {
+  public function trigger($object, EventArgs $args) {
     foreach ($this->functions as $function) {
       call_user_func($function, $object, $args);
     }
   }
-}
 
-class EventArgs {
-  private $value;
-
-  public function __construct($value) {
-    $this->value = $value;
+  public function offsetExists($offset) {
+    return isset($this->functions[$offset]);
   }
 
-  public function getValue() {
-    return $this->value;
+  public function offsetGet($offset) {
+    return isset($this->functions[$offset])
+      ? $this->functions['offset'] : NULL;
   }
 
-}
-
-class Publisher {
-  public $temperatureUpdateEvent;
-
-  private $temperature;
-
-  public function __construct() {
-    $this->temperatureUpdateEvent = new Event();
+  public function offsetSet($offset, $value) {
+    if (is_null($offset)) {
+      $this->attach($value);
+    }
+    else {
+      $this->functions[$offset] = $value;
+    }
   }
 
-  public function setTemperature($new) {
-    $this->temperature = $new;
-    $this->temperatureUpdateEvent->update($this, new EventArgs($new));
+  public function offsetUnset($offset) {
+    unset($this->functions[$offset]);
   }
-
 }
-
-function updated($object, EventArgs $args) {
-  echo "New temp: " . $args->getValue();
-}
-
-
-$publisher = new Publisher();
-
-$publisher->temperatureUpdateEvent->attach('updated');
-
-$publisher->setTemperature(32);

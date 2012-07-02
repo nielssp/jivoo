@@ -22,6 +22,8 @@ class Extensions extends ModuleBase {
   
   private $extensions = array();
 
+  private $loading = array();
+
   protected function init() {
     if (!$this->m->Configuration->exists('extensions.installed')) {
       $this->m->Configuration->set('extensions.installed', '');
@@ -61,6 +63,10 @@ class Extensions extends ModuleBase {
   private function loadExtension($extension) {
     $extension = className($extension);
     if (!isset($this->extensions[$extension])) {
+      if (isset($this->loading[$extension])) {
+        throw new ExtensionInvalidException(tr('Circular dependency detected when attempting to load the "%1" extension.', $extension));
+      }
+      $this->loading[$extension] = TRUE;
       if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.php'))) {
         throw new ExtensionNotFoundException(tr('The "%1" extension could not be found', $extension));
       }
@@ -76,14 +82,14 @@ class Extensions extends ModuleBase {
       if (!$info) {
         throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
       }
-      $arguments = array();
+      $modules = array();
+      $extensions = array();
       foreach ($info['dependencies']['extensions'] as $dependency => $versionInfo) {
         if ($dependency == $extension) {
           throw new ExtensionInvalidException(tr('The "%1" extension depends on itself', $extension));
         }
-
         try {
-          $this->loadExtension($dependency);
+          $extensions[className($dependency)] = $this->loadExtension($dependency);
         }
         catch (ExtensionNotFoundException $ex) {
           $this->uninstall($extension);
@@ -95,7 +101,7 @@ class Extensions extends ModuleBase {
         /** @todo Do this when installing.. */
         // $version = $this->core->getVersion($dependency);
         if ($module !== FALSE) { // AND compareDependencyVersions($version, $versionInfo)) {
-          $arguments[$dependency] = $module; 
+          $modules[$dependency] = $module; 
         }
         else {
           $this->uninstall($extension);
@@ -104,7 +110,7 @@ class Extensions extends ModuleBase {
       }
       $config = $this->m->Configuration->getSubset('extensions.config.' . $extension);
       //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
-      $this->extensions[$extension] = new $extension($arguments, $config);
+      $this->extensions[$extension] = new $extension($modules, $extensions, $config);
     }
     return $this->extensions[$extension];
   }

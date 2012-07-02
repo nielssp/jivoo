@@ -90,7 +90,7 @@ class Templates implements IModule {
     }
     $fileName = explode('.', $name);
     $fileExt = $fileName[count($fileName) - 1];
-    $contentType = null;
+    $contentType = NULL;
     switch ($fileExt) {
       case 'html':
       case 'htm':
@@ -109,6 +109,12 @@ class Templates implements IModule {
         break;
       case 'json':
         $contentType = "application/json";
+        break;
+      case 'rss':
+        $contentType = "application/rss+xml";
+        break;
+      case 'xml':
+        $contentType = "application/xml";
         break;
       default:
         throw new Exception(tr('Unsupported content type: %1', $fileExt));
@@ -269,24 +275,6 @@ class Templates implements IModule {
     $this->theme = $templateDir;
   }
 
-  public function linkTo($linkable, $label) {
-    if (is_object($linkable) AND is_a($linkable, 'ILinkable')) {
-      $link = $linkable->getLink();
-    }
-    else {
-      switch ($linkable) {
-        case 'home':
-          $link = $this->http->getLink(array());
-          break;
-        default:
-          return;
-      }
-    }
-    echo '<a href="' . $link . '">';
-    echo $label;
-    echo '</a>';
-  }
-
   /**
   * Return a link to a file in the current theme
   *
@@ -302,6 +290,9 @@ class Templates implements IModule {
     }
   }
 
+  /**
+   * @deprecated Use Templates::set()
+   */
   public function addTemplateData($var, $value, $template = '*') {
     if (!isset($this->parameters[$template])) {
       $this->parameters[$template] = array();
@@ -309,8 +300,14 @@ class Templates implements IModule {
     $this->parameters[$template][$var] = $value;
   }
 
+  public function set($name, $value, $template = '*') {
+    if (!isset($this->parameters[$template])) {
+      $this->parameters[$template] = array();
+    }
+    $this->parameters[$template][$name] = $value;
+  }
 
-  public function getTemplate($name) {
+  public function getTemplate($name, $additionalPaths = array()) {
     if (file_exists(p($this->theme . $name. '.php'))) {
       $this->setContentType($name);
       return p($this->theme . $name . '.php');
@@ -319,14 +316,31 @@ class Templates implements IModule {
       $this->setContentType($name);
       return p(TEMPLATES . $name . '.php');
     }
-    else if (strpos($name, '.') === false) {
-      return $this->getTemplate($name . '.html');
+    else {
+      foreach ($additionalPaths as $path) {
+        if (substr($path, -1, 1) != '/') {
+          $path .= '/';
+        }
+        if (file_exists($path . $name . '.php')) {
+          $this->setContentType($name);
+          return $path . $name . '.php';
+        }
+      }
+      if (strpos($name, '.') === false) {
+        return $this->getTemplate($name . '.html');
+      }
     }
     return FALSE;
   }
 
   public function getTemplateData($name) {
-    $data = array_merge($this->parameters['*'], $this->parameters[$name]);
+    $data = array();
+    if (isset($this->parameters['*'])) {
+      $data = array_merge($data, $this->parameters['*']);
+    }
+    if (isset($this->parameters[$name])) {
+      $data = array_merge($data, $this->parameters[$name]);
+    }
     $data['site'] = $this->configuration->get('site');
     return $data;
   }

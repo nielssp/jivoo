@@ -21,11 +21,23 @@ class PostsController extends ApplicationController {
 
     $this->post = Post::find($post);
     $this->title = $this->post->title;
-    $this->render();
+    if ($this->request->isAjax()) {
+      if ($this->request->isPost()) {
+        echo json_encode($this->request->data);
+      }
+      else {
+        echo json_encode($this->request->query);
+      }
+//      echo $this->post->json();
+    }
+    else {
+      $this->render();
+    }
   }
   
   public function add() {
     if ($this->request->isPost()) {
+      $this->request->form['post'];
     }
     $this->render();
   }

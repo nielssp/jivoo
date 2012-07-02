@@ -5,10 +5,12 @@ class ApplicationController {
   private $name;
 
   protected $m = NULL;
+  protected $e = NULL;
   protected $request = NULL;
   
   private $actions = array();
   
+  private $templatePaths = array();
   
   private $data = array();
 
@@ -20,6 +22,8 @@ class ApplicationController {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
     $this->m->Routes = $routes;
+
+    $this->e = new Dictionary();
     
     $this->request = $routes->getRequest();
     
@@ -55,6 +59,11 @@ class ApplicationController {
   public function addModule($object) {
     $class = get_class($object);
     $this->m->$class = $object;
+  }
+
+  public function addExtension($object) {
+    $class = get_class($object);
+    $this->e->$class = $object;
   }
   
   public function autoRoute() {
@@ -99,9 +108,14 @@ class ApplicationController {
   protected function refresh() {
     $this->m->Routes->refresh();
   }
+
+  public function addTemplatePath($path) {
+    $this->templatePaths[] = $path;
+  }
   
   protected function render($templateName = NULL) {
     $template = new Template($this->m->Templates, $this->m->Routes, $this->name);
+    $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
       $templateName = $this->name . '/';
       list( , $caller) = debug_backtrace(false);

@@ -143,7 +143,7 @@ class Backend extends ModuleBase implements ILinkable {
       $this->m->Routes->addRoute($backend . '/' . $categoryId . '/' . $pageId, $pageController);
     }
     else {
-      $this->m->Routes->addRoute($backend . '/' . $categoryId . '/' . $pageId, array($this, 'loginController'));
+      $this->controller->addRoute($backend . '/' . $categoryId . '/' . $pageId, 'login');
     }
     $path = array_merge(
       explode('/', $backend),

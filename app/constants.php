@@ -24,7 +24,7 @@ if (!defined('HIDE_LEVEL')) {
    * How much to hide the identity of PeanutCMS
    * 0 : Reports version and name ("PeanutCMS " . PEANUT_VERSION)
    * 1 : Only reports name ("PeanutCMS")
-   * 2 : Will hide everything
+   * 2 : Will (try to) hide everything
    * Level can be increased using the following configuration keys as well:
    *  - system.hide.identity (on/off)
    *  - system.hide.version (on/off)

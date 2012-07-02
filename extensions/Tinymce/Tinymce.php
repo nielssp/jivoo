@@ -4,9 +4,9 @@
 // Category     : JavaScript WYSIWYG editor
 // Website      : http://tinymce.com
 // Version      : 3.4.4 
-// Dependencies : templates ext;jquery ext;jquery-ui
+// Dependencies : templates ext;jquery ext;jquery-ui 
 
-class Tinymce extends ExtensionBase {
+class Tinymce extends ExtensionBase implements IEditor {
   protected function init() {
     $this->m->Templates->addScript(
       'tinymce',
@@ -14,4 +14,9 @@ class Tinymce extends ExtensionBase {
       array('jquery', 'jquery-ui')
     );
   } 
+
+  public function doSomething() {
+    return "HELLO";
+  }
+
 }

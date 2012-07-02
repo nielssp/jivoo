@@ -6,6 +6,8 @@ abstract class ApplicationTemplate {
 
   private $controller = NULL;
 
+  private $templatePaths = array();
+
   public $data = array();
 
   public final function __construct(Templates $templates, Routes $routes, $controller = NULL) {
@@ -31,7 +33,7 @@ abstract class ApplicationTemplate {
     return NULL;
   }
 
-  public function set($name, $value) {
+  public function set($name, $value = NULL) {
     if (is_array($name)) {
       foreach ($name as $n => $value) {
         $this->set($n, $value);
@@ -70,8 +72,12 @@ abstract class ApplicationTemplate {
     $this->m->Templates->outputHtml($location, $linePrefix);
   }
 
+  public function setTemplatePaths($paths) {
+    $this->templatePaths = $paths;
+  }
+
   protected function getTemplate($template) {
-    return $this->m->Templates->getTemplate($template);
+    return $this->m->Templates->getTemplate($template, $this->templatePaths);
   }
 
   protected function getTemplateData($template) {

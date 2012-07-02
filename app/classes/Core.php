@@ -5,7 +5,17 @@ class Core {
   private static $info = array();
   private $blacklist = array();
 
+  /* EVENTS BEGIN */
+  private $events = NULL;
+
+  public function onModulesLoaded($handler) { $this->events->attach($handler); }
+  public function onRendering($handler) { $this->events->attach($handler); }
+  public function onRender($handler) { $this->events->attach($handler); }
+  /* EVENTS END */
+
   public function __construct($blacklist = NULL) {
+    $this->events = new Events($this);
+
     if (is_array($blacklist)) {
       $this->blacklist = $blacklist;
     }
@@ -144,6 +154,35 @@ class Core {
       }
     }
     return $this->modules[$module];
+  }
+
+  public static function main($modules) {
+    $core = new Core(p(CFG . 'blacklist'));
+
+    foreach ($modules as $module) {
+      try {
+        $core->loadModule($module);
+      }
+      catch (ModuleBlacklistedException $e) {
+        // The user has blacklisted this module, continue loading other modules
+        continue;
+      }
+      catch (ModuleNotFoundException $e) {
+        if (class_exists('Errors')) {
+          Errors::fatal(
+            tr('Module not found'),
+            $e->getMessage(),
+            /** @todo Add useful information, might even be an idea to automatically fix the problem (depending on module) */
+            '<p>!!Information about how to fix this problem (as a webmaster) here!!</p>'
+             . '<h2>Solution 1: Blacklist "' . $module . '" module</h2>'
+             . '<p>Open the file ' . w(CFG . 'blacklist') . ' and add "' . $module . '" to a '
+             . 'new line. This will prevent PeanutCMS from attempting to load the module.</p>'
+             . '<h2>Solution 2: Reinstall "' . $module . '"</h2>'
+          );
+        }
+      }
+    }
+    $core->events->trigger('onModulesLoaded');
   }
 }
 
