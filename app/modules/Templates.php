@@ -289,6 +289,10 @@ class Templates implements IModule {
       return w(PUB . $file);
     }
   }
+  
+  public function link($label, $controller = NULL, $action = 'index', $parameters = array()) {
+    return $this->core->routes->getLink($controller, $action, $parameters);
+  }
 
   /**
    * @deprecated Use Templates::set()

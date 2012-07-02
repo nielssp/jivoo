@@ -11,6 +11,8 @@
 /** The PeanutCMS essentials has been included */
 define('PEANUTCMS', TRUE);
 
+define('PEANUTCMS_START', microtime(TRUE));
+
 // To hell with those "magic quotes"!
 ini_set('magic_quotes_runtime', 0);
 
