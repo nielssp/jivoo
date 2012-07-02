@@ -26,20 +26,31 @@ class Errors extends ModuleBase {
   public function handleError($type, $message, $file, $line) {
     switch ($type) {
       case E_USER_ERROR:
+        $backtrace = debug_backtrace();
+        $file = $backtrace[2]['file'];
+        $line = $backtrace[2]['line'];
       case E_ERROR:
+      case E_RECOVERABLE_ERROR:
         throw new ErrorException($message, 0, $type, $file, $line);
         break;
 
       case E_USER_WARNING:
+      case E_USER_DEPRECATED:
+        $backtrace = debug_backtrace();
+        $file = $backtrace[2]['file'];
+        $line = $backtrace[2]['line'];
       case E_WARNING:
+      case E_DEPRECATED:
         $this->log('warning', $message, $file, $line, $type);
         break;
 
+      case E_USER_NOTICE:
+        $backtrace = debug_backtrace();
+        $file = $backtrace[2]['file'];
+        $line = $backtrace[2]['line'];
       case E_PARSE:
       case E_NOTICE:
-      case E_USER_NOTICE:
       case E_STRICT:
-      case E_DEPRECATED:
         $this->log('notice', $message, $file, $line, $type);
         break;
 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @deprecated Since build 3670. Use events instead
+ */
 final class Hooks {
   private static $hooks = array();
 
@@ -12,6 +15,7 @@ final class Hooks {
    * @param callback $function Function name
    */
   public static function attach($hook, $function, $priority = 5) {
+    trigger_error('Use of Hooks is deprecated.', E_USER_DEPRECATED);
     if (!is_callable($function)) {
       throw new FunctionNotCallableException('The function is not callable');
     }
@@ -24,6 +28,7 @@ final class Hooks {
    * @param callback $function
    */
   public static function remove($hook, $function = null) {
+    trigger_error('Use of Hooks is deprecated.', E_USER_DEPRECATED);
     if (!isset(self::$hooks[$hook]) OR !is_array(self::$hooks[$hook])) {
       return false;
     }
@@ -42,6 +47,7 @@ final class Hooks {
    * @param mixed $,... Additional parameters
    */
   public static function run($hook) {
+    trigger_error('Use of Hooks is deprecated.', E_USER_DEPRECATED);
     if (!isset(self::$hooks[$hook]) OR !is_array(self::$hooks[$hook])) {
       return;
     }
