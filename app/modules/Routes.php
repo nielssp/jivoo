@@ -29,13 +29,20 @@ class Routes extends ModuleBase {
 
   private $parameters;
 
+  private $events;
+
+  public function onRendering($h) { $this->events->attach($h); }
+  public function onRendered($h) { $this->events->attach($h); }
+
   protected function init() {
+    $this->events = new Events($this);
+
     $controller = new ApplicationController($this->m->Templates, $this);
     $controller->setRoute('notFound', 1);
     
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
-    Hooks::attach('render', array($this, 'callController'));
+    $this->Core->onRender(array($this, 'callController'));
   }
   
   public function getRequest() {
@@ -188,7 +195,9 @@ class Routes extends ModuleBase {
     }
   }
 
-  public function callController() {
+  public function callController($sender, $eventArgs) {
+    $this->events->trigger('onRendering');
+
     $this->mapRoute();
     
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
@@ -200,6 +209,8 @@ class Routes extends ModuleBase {
         tr('%1::%2 is not valid', get_class($this->selectedController[0]), $this->selectedController[1])
       );
     }
+
+    $this->events->trigger('onRendered');
   }
 
   public function reroute($controller, $action, $parameters = array()) {

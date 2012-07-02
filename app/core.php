@@ -32,9 +32,4 @@ $modules = array(
 
 Core::main($modules);
 
-Hooks::run('modulesLoaded');
-
-Hooks::run('preRender');
-
-Hooks::run('render');
 

@@ -36,21 +36,20 @@ class Backend extends ModuleBase implements ILinkable {
 
     if ($this->m->Users->isLoggedIn()) {
       $this->controller->addRoute($path, 'dashboard');
-      $this->m->Templates->addTemplateData('notifications', LocalNotification::all());
+      $this->m->Templates->set('notifications', LocalNotification::all());
     }
     else {
       $this->controller->addRoute($path, 'login');
     }
     if (!$this->m->Templates->hideIdentity() OR $this->m->Users->isLoggedIn()) {
       $this->controller->addRoute($aboutPath, 'about');
-      $this->m->Templates->addTemplateData('aboutLink', $this->m->Http->getLink(explode('/', $aboutPath)), 'backend/footer.html');
+      $this->m->Templates->set('aboutLink', $this->m->Http->getLink(explode('/', $aboutPath)), 'backend/footer.html');
     }
     else {
       $this->controller->addRoute($aboutPath, 'login');
     }
 
-    Hooks::attach('preRender', array($this, 'createMenu'));
-    
+    $this->m->Routes->onRendering(array($this, 'createMenu'));
 
     $this->addCategory('peanutcms', 'PeanutCMS', -2);
     $this->addLink('peanutcms', 'logout', tr('Log out'), $this->m->Actions->add('logout'), 10);
@@ -166,7 +165,7 @@ class Backend extends ModuleBase implements ILinkable {
 
   /** @todo In case of overflow; combine remaining categories under one "More"-category */
   /** @todo actually... it should be handled in the theme... */
-  public function createMenu() {
+  public function createMenu($sender, $eventArgs) {
     if (!$this->m->Users->isLoggedIn()) {
       return;
     }
@@ -176,7 +175,7 @@ class Backend extends ModuleBase implements ILinkable {
       $menu[] = $category;
     }
     groupObjects($menu);
-    $this->m->Templates->addTemplateData('menu', $menu, 'backend/header.html');
+    $this->m->Templates->set('menu', $menu, 'backend/header.html');
   }
 }
 

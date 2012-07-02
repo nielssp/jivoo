@@ -9,7 +9,6 @@ class Core {
   private $events = NULL;
 
   public function onModulesLoaded($handler) { $this->events->attach($handler); }
-  public function onRendering($handler) { $this->events->attach($handler); }
   public function onRender($handler) { $this->events->attach($handler); }
   /* EVENTS END */
 
@@ -183,6 +182,7 @@ class Core {
       }
     }
     $core->events->trigger('onModulesLoaded');
+    $core->events->trigger('onRender');
   }
 }
 

@@ -294,16 +294,6 @@ class Templates implements IModule {
     return $this->core->routes->getLink($controller, $action, $parameters);
   }
 
-  /**
-   * @deprecated Use Templates::set()
-   */
-  public function addTemplateData($var, $value, $template = '*') {
-    if (!isset($this->parameters[$template])) {
-      $this->parameters[$template] = array();
-    }
-    $this->parameters[$template][$var] = $value;
-  }
-
   public function set($name, $value, $template = '*') {
     if (!isset($this->parameters[$template])) {
       $this->parameters[$template] = array();
