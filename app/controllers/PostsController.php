@@ -2,15 +2,15 @@
 
 class PostsController extends ApplicationController {
 
-  protected $helpers = array('Html');
+  protected $helpers = array('Html', 'Pagination');
 
   public function index() {
     $select = SelectQuery::create()
-      ->orderByDescending('date')
-      ->limit(5);
-    if (isset($this->request->query['offset'])) {
-      $select->offset($this->request->query['offset']);
-    }
+      ->orderByDescending('date');
+    $this->Pagination->setCount(Post::count());
+    
+    $this->Pagination->paginate($select);
+
     $this->posts = Post::all($select);
 
     $this->render();

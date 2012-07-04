@@ -215,7 +215,7 @@ class Http extends ModuleBase {
    * @param array $path Path as an array
    * @return string Link
    */
-  public function getLink($path = null, $parameters = null, $hashtag = null) {
+  public function getLink($path = NULL, $query = NULL, $fragment = NULL) {
     if (!isset($path)) {
       $path = $this->request->path;
     }
@@ -223,23 +223,23 @@ class Http extends ModuleBase {
     if ($index == $path) {
       $path = array();
     }
-    if (isset($hashtag)) {
-      $hashtag = '#' . $hashtag;
+    if (isset($fragment)) {
+      $fragment = '#' . $fragment;
     }
     else {
-      $hashtag = '';
+      $fragment = '';
     }
-    if (is_array($parameters) AND count($parameters) > 0) {
-      $query = array();
-      foreach ($parameters as $key => $value) {
+    if (is_array($query) AND count($query) > 0) {
+      $queryStrings = array();
+      foreach ($query as $key => $value) {
         if ($value == '') {
-          $query[] = urlencode($key);
+          $queryStrings[] = urlencode($key);
         }
         else {
-          $query[] = urlencode($key) . '=' . urlencode($value);
+          $queryStrings[] = urlencode($key) . '=' . urlencode($value);
         }
       }
-      $combined = implode('/', $path) . '?' . implode('&', $query) . $hashtag;
+      $combined = implode('/', $path) . '?' . implode('&', $queryStrings) . $fragment;
       if ($this->m->Configuration->get('http.rewrite') === 'on') {
         return w($combined);
       }
@@ -249,10 +249,10 @@ class Http extends ModuleBase {
     }
     else {
       if ($this->m->Configuration->get('http.rewrite') === 'on') {
-        return w(implode('/', $path) . $hashtag);
+        return w(implode('/', $path) . $fragment);
       }
       else {
-        return w('index.php/' . implode('/', $path) . $hashtag);
+        return w('index.php/' . implode('/', $path) . $fragment);
       }
     }
   }

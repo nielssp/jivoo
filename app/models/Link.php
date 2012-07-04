@@ -1,22 +1,13 @@
 <?php
 
 class Link extends ActiveRecord implements ILinkable {
-
-  public function getPath() {
-    if ($this->type == 'home') {
-      return array();
-    }
-    else if ($this->type == 'path') {
-      return explode('/', $this->path);
-    }
-  }
   
-  public function getLink() {
+  public function getRoute() {
     switch ($this->type) {
       case 'remote':
-        return array('url' => $this->path);
+        return $this->path;
       case 'home':
-        return array();
+        return NULL;
       default:
         $path = explode('/', $this->path);
         if ($this->type == 'action') {

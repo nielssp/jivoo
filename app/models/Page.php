@@ -27,7 +27,7 @@ class Page extends ActiveRecord implements ILinkable {
       'content' => array('presence' => true),
   );
 
-  public function getLink() {
+  public function getRoute() {
     return array(
       'controller' => 'Pages',
       'action' => 'view',

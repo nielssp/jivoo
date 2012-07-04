@@ -37,7 +37,7 @@ class ApplicationController {
       $name = className($helper);
       $class = $name . 'Helper';
       if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($templates, $routes, $this->name);
+        $this->helperObjects[$name] = new $class($templates, $routes, $this);
       }
     }
     
@@ -114,7 +114,7 @@ class ApplicationController {
   }
   
   protected function render($templateName = NULL) {
-    $template = new Template($this->m->Templates, $this->m->Routes, $this->name);
+    $template = new Template($this->m->Templates, $this->m->Routes, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
       $templateName = $this->name . '/';

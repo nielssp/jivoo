@@ -39,7 +39,7 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
               <li class="separator"></li>
 <?php endif; ?>
               <li class="item">
-                <a href="<?php echo $link->getLink(); ?>"
+                <a href="<?php echo $this->link($link); ?>"
                   data-shortcut="<?php echo $link->shortcut; ?>">
                   <?php echo $link->title; ?>
                 </a>

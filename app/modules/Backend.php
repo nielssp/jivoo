@@ -64,7 +64,7 @@ class Backend extends ModuleBase implements ILinkable {
     $this->addLink('settings', 'modules', tr('Modules'), array(), 2);
   }
 
-  public function getLink() {
+  public function getRoute() {
     return array(
       'path' => explode('/', $this->m->Configuration->get('backend.path'))
     );
@@ -197,18 +197,13 @@ class BackendLink implements IGroupable, ILinkable {
   public $title;
   public $group;
   public $path;
-  public $link;
   public $shortcut;
 
   public function getGroup() {
     return $this->group;
   }
 
-  public function getPath() {
-    return $this->path;
-  }
-
-  public function getLink() {
-    return $this->link;
+  public function getRoute() {
+    return array('path' => $this->path);
   }
 }

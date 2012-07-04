@@ -26,7 +26,7 @@ class Comment extends ActiveRecord implements ILinkable {
     'website' => ''
   );
 
-  public function getLink() {
+  public function getRoute() {
     return array(
       'controller' => 'Posts',
       'action' => 'viewComment',

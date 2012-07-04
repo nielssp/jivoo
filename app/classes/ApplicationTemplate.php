@@ -8,7 +8,7 @@ abstract class ApplicationTemplate {
 
   private $templatePaths = array();
 
-  public $data = array();
+  protected $data = array();
 
   public final function __construct(Templates $templates, Routes $routes, $controller = NULL) {
     $this->m = new Dictionary();
@@ -44,8 +44,8 @@ abstract class ApplicationTemplate {
     }
   }
 
-  protected function link($controller = NULL, $action = 'index', $parameters = array()) {
-    return $this->m->Routes->getLink($controller, $action, $parameters);
+  protected function link($route = NULL) {
+    return $this->m->Routes->getLink($route);
   }
 
   protected function file($file) {

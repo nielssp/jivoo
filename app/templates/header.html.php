@@ -25,7 +25,7 @@ else {
   <body>
 <?php $this->output('body-top'); ?>
 
-    <h1><?php echo $Html->link($site['title'], array()); ?></h1>
+    <h1><?php echo $Html->link($site['title']); ?></h1>
     <h2><?php echo $site['subtitle']; ?></h2>
 
 <?php foreach (Link::getMenu('main') as $link): ?>

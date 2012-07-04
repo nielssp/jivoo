@@ -2,7 +2,9 @@
 
 abstract class ApplicationHelper {
 
+  
   protected $m = NULL;
+  protected $request = NULL;
 
   protected $controller = NULL;
 
@@ -10,6 +12,8 @@ abstract class ApplicationHelper {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
     $this->m->Routes = $routes;
+    
+    $this->request = $routes->getRequest();
 
     $this->controller = $controller;
 
@@ -17,6 +21,10 @@ abstract class ApplicationHelper {
   }
 
   protected function init() {
+  }
+  
+  protected function getLink($route) {
+    return $this->m->Routes->getLink($route);
   }
 
 }

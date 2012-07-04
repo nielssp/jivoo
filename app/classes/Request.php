@@ -5,12 +5,17 @@ class Request {
   private $path;
 
   private $query;
+  
+  private $fragment = NULL;
 
   private $data;
 
   public function __construct() {
-    $uri = $_SERVER['REQUEST_URI'];
-    $request = parse_url($uri);
+    $url = $_SERVER['REQUEST_URI'];
+    $request = parse_url($url);
+    if (isset($request['fragment'])) {
+      $this->fragment = $request['fragment'];
+    }
     $path = urldecode($request['path']);
     if (WEBPATH != '/') {
       $path = str_replace(WEBPATH, '', $path);
@@ -32,6 +37,7 @@ class Request {
       case 'path':
       case 'data':
       case 'query':
+      case 'fragment':
         return $this->$name;
     }
   }
@@ -40,6 +46,7 @@ class Request {
     switch ($name) {
       case 'path':
       case 'query':
+      case 'fragment':
         $this->$name = $value;
     }
   }

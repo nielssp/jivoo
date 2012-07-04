@@ -22,7 +22,7 @@ class User extends ActiveRecord implements ILinkable {
                      'maxLength' => 255),
   );
 
-  public function getLink() {
+  public function getRoute() {
     return array(
       'controller' => 'Users',
       'action' => 'view',

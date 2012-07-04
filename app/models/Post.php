@@ -38,7 +38,7 @@ class Post extends ActiveRecord implements ILinkable {
     'user_id' => 0
   );
 
-  public function getLink() {
+  public function getRoute() {
     return array(
       'controller' => 'Posts',
       'action' => 'view',

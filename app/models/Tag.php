@@ -9,7 +9,7 @@ class Tag extends ActiveRecord implements ILinkable {
   	                'thisKey' => 'tag_id'),
   );
 
-  public function getLink() {
+  public function getRoute() {
     return array(
       'controller' => 'Posts',
       'action' => 'viewTag',

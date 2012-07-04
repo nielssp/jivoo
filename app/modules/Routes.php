@@ -29,8 +29,8 @@ class Routes extends ModuleBase {
 
   private $parameters;
 
+  /* Events */
   private $events;
-
   public function onRendering($h) { $this->events->attach($h); }
   public function onRendered($h) { $this->events->attach($h); }
 
@@ -88,28 +88,38 @@ class Routes extends ModuleBase {
     return NULL;
   }
 
-  public function getLink($controller = NULL, $action = 'index', $parameters = array()) {
-    if (is_array($controller)) {
-      if (isset($controller['url'])) {
-        return $controller['url'];
-      }
-      if (isset($controller['path'])) {
-        return $this->m->Http->getLink($controller['path']);
-      }
-      if (!isset($controller['controller'])) {
-        return $this->m->Http->getLink(array());
-      }
-      $parameters = $controller['parameters'];
-      $action = $controller['action'];
-      $controller = $controller['controller'];
+  public function getLink($route = NULL) {
+    if (!isset($route)) {
+      return $this->m->Http->getLink(array());
     }
-    if (is_object($controller) AND is_a($controller, 'ILinkable')) {
-      return $this->getLink($controller->getLink());
+    else if (is_object($route) AND is_a($route, 'ILinkable')) {
+      return $this->getLink($route->getRoute());
     }
-    if (strpos($controller, '/') !== FALSE) {
-      return $controller;
+    else if (is_array($route)) {
+      $default = array(
+        'path' => NULL,
+        'query' => NULL,
+        'fragment' => NULL,
+        'controller' => $this->selectedController[0],
+        'action' => $this->selectedController[1],
+        'parameters' => $this->selectedControllerParameters
+      );
+      if (isset($route['controller'])) {
+        $default['action'] = 'index';
+        $default['parameters'] = array();
+      }
+      $route = array_merge($default, $route);
+      if (isset($route['path'])) {
+        return $this->m->Http->getLink($route['path'], $route['query'], $route['fragment']);
+      }
+      return $this->m->Http->getLink(
+        $this->getPath($route['controller'], $route['action'], $route['parameters']),
+        $route['query'], $route['fragment']
+      );
     }
-    return $this->m->Http->getLink($this->getPath($controller, $action, $parameters));
+    else {
+      return $route;
+    }
   }
 
   public function redirect($controller = NULL, $action = 'index', $parameters = array(), $query = NULL, $hashtag = NULL) {

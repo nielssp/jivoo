@@ -3,7 +3,7 @@
 $this->render('backend/header.html');
 ?>
       
-    <form action="<?php echo $this->link(); ?>" method="post">
+    <form action="<?php echo $this->link(array()); ?>" method="post">
 
       <div class="section">
         <div class="container">
