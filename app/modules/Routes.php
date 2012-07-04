@@ -122,16 +122,16 @@ class Routes extends ModuleBase {
     }
   }
 
-  public function redirect($controller = NULL, $action = 'index', $parameters = array(), $query = NULL, $hashtag = NULL) {
-    $this->m->Http->redirectPath($this->getPath($controller, $action, $parameters), $query, FALSE, $hashtag);
+  public function redirect($route = NULL) {
+    $this->m->Http->redirect(303, $this->getLink($route));
   }
 
-  public function moved($controller = NULL, $action = 'index', $parameters = array(), $query = NULL, $hashtag = NULL) {
-    $this->m->Http->redirectPath($this->getPath($controller, $action, $parameters), $query, TRUE, $hashtag);
+  public function moved($route = NULL) {
+    $this->m->Http->redirect(301, $this->getLink($route));
   }
 
-  public function refresh($query = NULL, $hashtag = NULL) {
-    $this->m->Http->refreshPath($query, $hashtag);
+  public function refresh($query = NULL, $fragment = NULL) {
+    $this->m->Http->refreshPath($query, $fragment);
   }
 
   public function addRoute($path, $controller, $priority = 5) {
@@ -224,10 +224,10 @@ class Routes extends ModuleBase {
   }
 
   public function reroute($controller, $action, $parameters = array()) {
-    $currentPath = $this->m->Http->getPath();
+    $currentPath = $this->getRequest()->path;
     $actionPath = $this->getPath($controller, $action, $parameters);
     if ($currentPath != $actionPath AND is_array($actionPath)) {
-      $this->m->Http->redirectPath($actionPath, $this->m->Http->getRequest()->query);
+      $this->m->Http->redirectPath($actionPath, $this->getRequest()->query);
     }
   }
 }

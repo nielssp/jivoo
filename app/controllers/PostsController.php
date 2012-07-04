@@ -20,6 +20,7 @@ class PostsController extends ApplicationController {
     $this->reroute();
 
     $this->post = Post::find($post);
+
     if (!$this->post) {
       $this->render('404.html');
       return;

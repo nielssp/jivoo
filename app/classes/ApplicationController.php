@@ -101,8 +101,8 @@ class ApplicationController {
     $this->m->Routes->reroute($this->name, $caller['function'], $caller['args']);
   }
   
-  protected function redirect() {
-    
+  protected function redirect($route = NULL) {
+    $this->m->Routes->redirect($route);
   }
   
   protected function refresh() {

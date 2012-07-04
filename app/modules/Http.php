@@ -16,19 +16,8 @@
  * Http class
  */
 class Http extends ModuleBase {
-  /**
-   * The current path as an array
-   * @var array
-   */
-  private $path;
 
   private $request;
-
-  /**
-   * The current parameters
-   * $var array
-   */
-  private $params;
 
   public function getRequest() {
     return $this->request;
@@ -74,11 +63,15 @@ class Http extends ModuleBase {
     
   }
 
+  /** @deprecated Use the request-object instead */
   public function getPath() {
+    trigger_error('Use of Http::getPath() is deprecated', E_USER_DEPRECATED);
     return $this->request->path;
   }
 
+  /** @deprecated Use the request-object instead */
   public function isCurrent($path) {
+    trigger_error('Use of Http::isCurrent() is deprecated', E_USER_DEPRECATED);
     return $path === $this->request->path;
   }
 
@@ -113,47 +106,9 @@ class Http extends ModuleBase {
    * if false then a 303 status code will be used
    * @return void
    */
-  public function redirectPath($path = null, $parameters = null, $moved = true, $hashtag = null, $rewrite = false) {
-    if (!isset($path)) {
-      $path = $this->request->path;
-    }
-    $index = explode('/', $this->m->Configuration->get('http.index.path'));
-    if ($index == $path) {
-      $path = array();
-    }
-    if ($moved) {
-      $status = 301;
-    }
-    else {
-      $status = 303;
-    }
-    if (isset($hashtag)) {
-      $hashtag = '#' . $hashtag;
-    }
-    else {
-      $hashtag = '';
-    }
-    if (is_array($parameters) AND count($parameters) > 0) {
-      $query = array();
-      foreach ($parameters as $key => $value) {
-        $query[] = urlencode($key) . '=' . urlencode($value);
-      }
-      $combined = implode('/', $path) . '?' . implode('&', $query) . $hashtag;
-      if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
-        $this->redirect($status, w($combined));
-      }
-      else {
-        $this->redirect($status, w('index.php/' . $combined));
-      }
-    }
-    else {
-      if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
-        $this->redirect($status, w(implode('/', $path) . $hashtag));
-      }
-      else {
-        $this->redirect($status, w('index.php/' . implode('/', $path) . $hashtag));
-      }
-    }
+  public function redirectPath($path = NULL, $query = NULL, $moved = TRUE, $fragment = NULL, $rewrite = FALSE) {
+    $status = $moved ? 301 : 303;
+    $this->redirect($status, $this->getLink($path, $query, $fragment));
   }
 
   /**
@@ -162,11 +117,11 @@ class Http extends ModuleBase {
    * @param array $parameters Optional alternative parameters-array
    * @return void
    */
-  public function refreshPath($parameters = null, $hashtag = null) {
-    if (!isset($parameters)) {
-      $parameters = $this->request->query;
+  public function refreshPath($query = NULL, $fragment = NULL) {
+    if (!isset($query)) {
+      $query = $this->request->query;
     }
-    $this->redirectPath($this->request->path, $parameters, false, $hashtag);
+    $this->redirectPath($this->request->path, $query, FALSE, $fragment);
   }
 
   public static function setStatus($status) {
@@ -215,7 +170,7 @@ class Http extends ModuleBase {
    * @param array $path Path as an array
    * @return string Link
    */
-  public function getLink($path = NULL, $query = NULL, $fragment = NULL) {
+  public function getLink($path = NULL, $query = NULL, $fragment = NULL, $rewrite = FALSE) {
     if (!isset($path)) {
       $path = $this->request->path;
     }
@@ -240,7 +195,7 @@ class Http extends ModuleBase {
         }
       }
       $combined = implode('/', $path) . '?' . implode('&', $queryStrings) . $fragment;
-      if ($this->m->Configuration->get('http.rewrite') === 'on') {
+      if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
         return w($combined);
       }
       else {
@@ -248,7 +203,7 @@ class Http extends ModuleBase {
       }
     }
     else {
-      if ($this->m->Configuration->get('http.rewrite') === 'on') {
+      if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
         return w(implode('/', $path) . $fragment);
       }
       else {
