@@ -3,7 +3,7 @@
 $this->render('backend/header.html');
 ?>
       
-    <form action="<?php echo $this->link(array()); ?>" method="post">
+    <?php echo $Form->begin(); ?>
 
       <div class="section">
         <div class="container">
@@ -75,7 +75,7 @@ $this->render('backend/header.html');
           </div>
         </div>
       </div>
-    </form>
+    <?php echo $Form->end(); ?>
 
 <?php
 $this->render('backend/footer.html');

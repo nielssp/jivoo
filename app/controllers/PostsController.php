@@ -2,7 +2,7 @@
 
 class PostsController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Pagination');
+  protected $helpers = array('Html', 'Pagination', 'Form');
 
   public function index() {
     $select = SelectQuery::create()
@@ -43,7 +43,7 @@ class PostsController extends ApplicationController {
     if ($this->request->isPost()) {
       $this->request->form['post'];
     }
-    $this->render();
+    $this->render('backend/edit-post.html');
   }
 
   public function tagIndex() {
