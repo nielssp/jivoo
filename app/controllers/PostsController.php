@@ -44,6 +44,7 @@ class PostsController extends ApplicationController {
     if ($this->request->isPost()) {
       $this->request->form['post'];
     }
+    $this->title = tr('New post');
     $this->render('backend/edit-post.html');
   }
 

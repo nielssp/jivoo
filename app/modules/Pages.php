@@ -65,7 +65,7 @@ class Pages extends ModuleBase {
   }
 
   private function detectFancyPermalinks() {
-    $path = $this->m->Http->getPath();
+    $path = $this->m->Http->getRequest()->path;
     if (!is_array($path)) {
       return;
     }

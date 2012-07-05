@@ -170,7 +170,7 @@ class Routes extends ModuleBase {
 
   private function mapRoute() {
     $routes = $this->routes;
-    $path = $this->m->Http->getPath();
+    $path = $this->getRequest()->path;
     foreach ($routes as $j => $route) {
       if (count($route['path']) != count($path)) {
         if ($route['path'][count($route['path']) - 1] != '**') {

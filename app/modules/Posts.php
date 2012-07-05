@@ -149,7 +149,7 @@ class Posts extends ModuleBase {
   }
 
   private function detectFancyPermalinks() {
-    $path = $this->m->Http->getPath();
+    $path = $this->m->Http->getRequest()->path;
     $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
     if (is_array($path) AND is_array($permalink)) {
       foreach ($permalink as $key => $dir) {
