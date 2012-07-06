@@ -6,7 +6,7 @@ class PaginationHelper extends ApplicationHelper {
   
   private $count = 0;
   
-  private $pages = 0;
+  private $pages = 1;
   
   private $page = 1;
   
@@ -15,6 +15,7 @@ class PaginationHelper extends ApplicationHelper {
   }
   
   public function setLimit($limit) {
+    precondition($limit > 0);
     $this->limit = $limit;
   }
   

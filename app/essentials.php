@@ -391,7 +391,7 @@ function fileClassName($fileName) {
 
 function precondition($condition) {
   if ($condition === TRUE) {
-    return TRUE;
+    return;
   }
   $bt = debug_backtrace();
   $call = $bt[0];
