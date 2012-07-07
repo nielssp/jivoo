@@ -1,6 +1,7 @@
 <?php
 $this->setindent(4);
-$this->insertstyle('theme-style', $this->file('style.css'));
+$this->requestScript('jquery');
+$this->insertStyle('theme-style', $this->file('style.css'));
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,6 +22,12 @@ else {
 <?php $this->output('head-styles'); ?>
 
 <?php $this->output('head-scripts'); ?>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // jQuery
+      });
+    </script>
   </head>
   <body>
 <?php $this->output('body-top'); ?>

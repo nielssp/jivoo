@@ -17,8 +17,6 @@
  */
 class Http extends ModuleBase {
 
-  private $request;
-
   public function getRequest() {
     return $this->request;
   }

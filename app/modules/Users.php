@@ -15,16 +15,7 @@
 /**
  * Pages class
  */
-class Users implements IModule{
-
-  private $core;
-  private $errors;
-  private $configuration;
-  private $actions;
-  private $database;
-  private $routes;
-  private $templates;
-  private $http;
+class Users extends ModuleBase {
 
   private $user;
 
@@ -37,27 +28,14 @@ class Users implements IModule{
     'std_des'
   );
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->database = $this->core->database;
-    $this->actions = $this->core->actions;
-    $this->routes = $this->core->routes;
-    $this->http = $this->core->http;
-    $this->templates = $this->core->templates;
-    $this->errors = $this->core->errors;
-    $this->configuration = $this->core->configuration;
-
-    if (!ActiveRecord::isConnected()) {
-      throw new Exception('temporary.');
-    }
-
+  protected function init() {
     $newInstall = FALSE;
 
     require_once(p(MODELS . 'User.php'));
 
     /** @todo Give me createOrUpdateTable('users') */
-    if (!$this->database->tableExists('users')) {
-      $this->database->createQuery('users')
+    if (!$this->m->Database->tableExists('users')) {
+      $this->m->Database->createQuery('users')
         ->addInt('id', TRUE, TRUE)
         ->setPrimaryKey('id')
         ->addVarchar('username', 255)
@@ -76,8 +54,8 @@ class Users implements IModule{
 
     require_once(p(MODELS . 'Group.php'));
 
-    if (!$this->database->tableExists('groups')) {
-      $this->database->createQuery('groups')
+    if (!$this->m->Database->tableExists('groups')) {
+      $this->m->Database->createQuery('groups')
       ->addInt('id', TRUE, TRUE)
       ->setPrimaryKey('id')
       ->addVarchar('name', 255)
@@ -89,8 +67,8 @@ class Users implements IModule{
 
     ActiveRecord::addModel('Group', 'groups');
 
-    if (!$this->database->tableExists('groups_permissions')) {
-      $this->database->createQuery('groups_permissions')
+    if (!$this->m->Database->tableExists('groups_permissions')) {
+      $this->m->Database->createQuery('groups_permissions')
       ->addInt('group_id', TRUE, TRUE)
       ->addVarchar('permission', 255)
       ->setPrimaryKey('group_id', 'permission')
@@ -117,34 +95,31 @@ class Users implements IModule{
       $group->setPermission('content.comments.create', TRUE);
     }
 
-    if (!$this->configuration->exists('users.defaultGroups.unregistered')) {
-      $this->configuration->set('users.defaultGroups.unregistered', 'guests');
-    }
+    $this->m->Configuration->setDefault(array(
+      'users.defaultGroups.unregistered' => 'guests',
+      'users.defaultGroups.registered' => 'users'
+    ));
 
-    if (!$this->configuration->exists('users.defaultGroups.registered')) {
-      $this->configuration->set('users.defaultGroups.registered', 'users');
-    }
-
-    if (!$this->configuration->exists('users.hashType')) {
+    if (!$this->m->Configuration->exists('users.hashType')) {
       foreach ($this->hashTypes as $hashType) {
         $constant = 'CRYPT_' . strtoupper($hashType);
         if (defined($constant) AND constant($constant) == 1) {
-          $this->configuration->set('users.hashType', $hashType);
+          $this->m->Configuration->set('users.hashType', $hashType);
           break;
         }
       }
     }
 
-    if ($this->actions->has('logout')) {
+    if ($this->m->Actions->has('logout')) {
       $this->logOut();
-      $this->http->refreshPath();
+      $this->m->Http->refreshPath();
     }
 
   }
 
   public function genSalt($hashType = NULL) {
     if (!isset($hashType)) {
-      $hashType = $this->configuration->get('users.hashType');
+      $hashType = $this->m->Configuration->get('users.hashType');
       if ($hashType == 'auto') {
         foreach ($this->hashTypes as $t) {
           $constant = 'CRYPT_' . strtoupper($t);
@@ -200,10 +175,6 @@ class Users implements IModule{
 
   public function compareHash($string, $hash) {
     return crypt($string, $hash) == $hash;
-  }
-
-  public function getLink(User $record) {
-    return $this->http->getLink($record->getPath());
   }
 
   public function isLoggedIn() {

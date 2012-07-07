@@ -64,6 +64,14 @@ abstract class ApplicationTemplate {
     $this->m->Templates->insertScript($id, $file, $dependencies);
   }
 
+  protected function requestScript($id) {
+    return $this->m->Templates->requestHtml($id);
+  }
+
+  protected function requestStyle($id) {
+    return $this->m->Templates->requestHtml($id);
+  }
+
   protected function insertStyle($id, $file, $dependencies = array()) {
     $this->m->Templates->insertStyle($id, $file, $dependencies);
   }

@@ -16,10 +16,7 @@
  */
 class Actions extends ModuleBase {
 
-  private $request;
-
   protected function init() {
-    $this->request = $this->m->Http->getRequest();
   }
   /**
    * Check if an action is present in the url and/or post data

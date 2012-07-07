@@ -29,8 +29,6 @@ class Routes extends ModuleBase {
 
   private $parameters;
 
-  private $request;
-
   /* Events */
   private $events;
   public function onRendering($h) { $this->events->attach($h); }
@@ -38,8 +36,6 @@ class Routes extends ModuleBase {
 
   protected function init() {
     $this->events = new Events($this);
-
-    $this->request = $this->m->Http->getRequest();
 
     $controller = new ApplicationController($this->m->Templates, $this);
     $controller->setRoute('notFound', 1);

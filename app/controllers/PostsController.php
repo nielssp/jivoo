@@ -49,12 +49,24 @@ class PostsController extends ApplicationController {
     }
   }
   
+  public function manage() {
+    $this->render('not-implemented.html');
+  }
+
   public function add() {
     if ($this->request->isPost()) {
       $this->request->form['post'];
     }
     $this->title = tr('New post');
     $this->render('backend/edit-post.html');
+  }
+
+  public function edit($post) {
+    $this->render('not-implemented.html');
+  }
+
+  public function delete($post) {
+    $this->render('not-implemented.html');
   }
 
   public function tagIndex() {
