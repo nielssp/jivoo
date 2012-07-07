@@ -15,12 +15,7 @@
 /**
  * Templates class
  */
-class Templates implements IModule {
-
-  private $core;
-  private $errors;
-  private $configuration;
-  private $http;
+class Templates extends ModuleBase {
 
   private $theme;
 
@@ -46,26 +41,16 @@ class Templates implements IModule {
     return $this->hideLevel > 1;
   }
 
-  /**
-   * PHP5-style constructor
-   */
-  function __construct(Core $core) {
-    $this->core = $core;
-    $this->configuration = $this->core->configuration;
-    $this->errors = $this->core->errors;
-    $this->http = $this->core->http;
-
-    if (!$this->configuration->exists('site.title')) {      
-      $this->configuration->set('site.title', 'PeanutCMS');
-    }
-    if (!$this->configuration->exists('site.subtitle')) {
-      $this->configuration->set('site.subtitle', 'The domesticated peanut is an amphidiploid or allotetraploid.');
-    }
+  protected function init() {
+    $this->m->Configuration->setDefault(array(
+      'site.title' => 'PeanutCMS',
+      'site.subtitle' => 'The domesticated peanut is an amphidiploid or allotetraploid.'
+    ));
 
     $this->setTheme(TEMPLATES);
 
-    if ($this->configuration->exists('site.meta')) {
-      $meta = $this->configuration->get('site.meta');
+    if ($this->m->Configuration->exists('site.meta')) {
+      $meta = $this->m->Configuration->get('site.meta');
       if (is_array($meta)) {
         foreach ($meta as $name => $content) {
           $this->insertMeta($name, $content);
@@ -73,8 +58,8 @@ class Templates implements IModule {
       }
     }
 
-    if ($this->configuration->exists('system.hide')) {
-      $hide = $this->configuration->get('system.hide');
+    if ($this->m->Configuration->exists('system.hide')) {
+      $hide = $this->m->Configuration->get('system.hide');
       if ($hide['identity'] == 'on') {
         $this->hideLevel = 2;
       }
@@ -84,6 +69,7 @@ class Templates implements IModule {
     }
   }
 
+  /** @todo Move to Http module !! */
   private function setContentType($name) {
     if ($this->contentTypeSet) {
       return;
@@ -271,8 +257,8 @@ class Templates implements IModule {
     }
   }
 
-  public function setTheme($templateDir) {
-    $this->theme = $templateDir;
+  public function setTheme($themeDir) {
+    $this->theme = $themeDir;
   }
 
   /**
@@ -282,8 +268,8 @@ class Templates implements IModule {
   * @return string Link
   */
   public function getFile($file) {
-    if (isset($this->theme) AND file_exists(p(THEMES . $this->theme . '/' . $file))) {
-      return w(THEMES . $this->theme . '/' . $file);
+    if (isset($this->theme) AND file_exists(p($this->theme . $file))) {
+      return w($this->theme . $file);
     }
     if (file_exists(p(PUB . $file))) {
       return w(PUB . $file);
@@ -291,7 +277,7 @@ class Templates implements IModule {
   }
   
   public function link($label, $controller = NULL, $action = 'index', $parameters = array()) {
-    return $this->core->routes->getLink($controller, $action, $parameters);
+    return $this->Core->Routes->getLink($controller, $action, $parameters);
   }
 
   public function set($name, $value, $template = '*') {
@@ -302,9 +288,9 @@ class Templates implements IModule {
   }
 
   public function getTemplate($name, $additionalPaths = array()) {
-    if (file_exists(p($this->theme . $name. '.php'))) {
+    if (file_exists(p($this->theme . 'templates/' . $name. '.php'))) {
       $this->setContentType($name);
-      return p($this->theme . $name . '.php');
+      return p($this->theme . 'templates/' . $name . '.php');
     }
     else if (file_exists(p(TEMPLATES . $name . '.php'))) {
       $this->setContentType($name);
@@ -335,7 +321,7 @@ class Templates implements IModule {
     if (isset($this->parameters[$name])) {
       $data = array_merge($data, $this->parameters[$name]);
     }
-    $data['site'] = $this->configuration->get('site');
+    $data['site'] = $this->m->Configuration->get('site');
     return $data;
   }
 
@@ -343,7 +329,7 @@ class Templates implements IModule {
    * @deprecated Replaced by the Template/class
    */
   public function renderTemplate($name, $parameters = array()) {
-    $template = new Template($this, $this->core->routes);
+    $template = new Template($this, $this->Core->Routes);
     $template->set($parameters);
     $template->render($name);
   }

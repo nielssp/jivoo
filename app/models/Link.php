@@ -22,6 +22,39 @@ class Link extends ActiveRecord implements ILinkable {
         return array('path' => $path);
     }
   }
+
+  public function setRoute($route = NULL) {
+    if (!isset($route)) {
+      $this->path = '';
+      $this->type = 'home';
+    }
+    else if (is_object($route) AND is_a($route, 'ILinkable')) {
+      $this->setRoute($route->getRoute());
+    }
+    else if (is_array($route)) {
+      if (isset($route['path'])) {
+        $this->path = implode('/', $route['path']);
+        $this->type = 'path';
+      }
+      else if (isset($route['controller'])) {
+        $this->type = 'action';
+        $this->path = $route['controller'];
+        if (isset($route['action'])) {
+          $this->path .= '/' . $route['action'];
+          if (isset($route['parameters'])) {
+            $this->path .= '/' . implode('/', $route['parameters']);
+          }
+        }
+      }
+    }
+    else if (is_string ($route)) {
+      $this->path = $route;
+      $this->type = 'remote';
+    }
+    else {
+      throw new InvalidArgumentException(tr('Invalid route.'));
+    }
+  }
   
 
   public static function getMenu($menu = 'main') {

@@ -2,6 +2,8 @@
 
 class Request {
 
+  private $realPath;
+
   private $path;
 
   private $query;
@@ -27,6 +29,8 @@ class Request {
         $this->path[] = $dir;
       }
     }
+
+    $this->realPath = $this->path;
     
     $this->query = $_GET;
     $this->data = $_POST;
@@ -35,6 +39,7 @@ class Request {
   public function __get($name) {
     switch ($name) {
       case 'path':
+      case 'realPath':
       case 'data':
       case 'query':
       case 'fragment':

@@ -8,12 +8,21 @@ class PostsController extends ApplicationController {
     $select = SelectQuery::create()
       ->orderByDescending('date');
     $this->Pagination->setCount(Post::count());
-    
+
     $this->Pagination->paginate($select);
 
     $this->posts = Post::all($select);
 
-    $this->render();
+    if ($this->request->isAjax()) {
+      $jsonPosts = array();
+      foreach ($this->posts as $post) {
+        $jsonPosts[] = $post->json();
+      }
+      echo '[' . implode(',', $jsonPosts) . ']';
+    }
+    else {
+      $this->render();
+    }
   }
 
   public function view($post) {

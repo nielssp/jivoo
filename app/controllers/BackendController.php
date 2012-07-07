@@ -1,6 +1,8 @@
 <?php
 
 class BackendController extends ApplicationController {
+
+  protected $helpers = array('Html', 'Form');
   
   public function dashboard() {
     if (!$this->m->Users->isLoggedIn()) {
@@ -30,7 +32,7 @@ class BackendController extends ApplicationController {
       }
       else {
         $this->loginError = TRUE;
-        $this->loginUsername = htmlentities($this->request->data['login_username']);
+        $this->loginUsername = h($this->request->data['login_username']);
       }
     }
     $this->render();

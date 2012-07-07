@@ -56,7 +56,7 @@ class Pages extends ModuleBase {
     
     $this->controller = new PagesController($this->m->Templates, $this->m->Routes);
 
-    $this->detectFancyPermalinks();
+    $this->detectFancyPath();
     $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
     $this->m->Backend->addCategory('content', tr('Content'), 2);
@@ -64,9 +64,9 @@ class Pages extends ModuleBase {
     $this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 
-  private function detectFancyPermalinks() {
+  private function detectFancyPath() {
     $path = $this->m->Http->getRequest()->path;
-    if (!is_array($path)) {
+    if (!is_array($path) OR count($path) < 1) {
       return;
     }
     $name = implode('/', $path);

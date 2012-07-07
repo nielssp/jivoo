@@ -8,12 +8,16 @@ abstract class ApplicationTemplate {
 
   private $templatePaths = array();
 
+  private $request;
+
   protected $data = array();
 
   public final function __construct(Templates $templates, Routes $routes, $controller = NULL) {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
     $this->m->Routes = $routes;
+
+    $this->request = $this->m->Routes->getRequest();
 
     $this->controller = $controller;
   }
@@ -46,6 +50,10 @@ abstract class ApplicationTemplate {
 
   protected function link($route = NULL) {
     return $this->m->Routes->getLink($route);
+  }
+
+  protected function isCurrent($route = NULL) {
+    return $this->m->Routes->isCurrent($route);
   }
 
   protected function file($file) {

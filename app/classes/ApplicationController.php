@@ -27,7 +27,7 @@ class ApplicationController {
     
     $this->request = $routes->getRequest();
     
-    $this->name = str_replace('-controller', '', classFileName(get_class($this)));
+    $this->name = substr(get_class($this), 0, -10);
     
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
@@ -71,11 +71,12 @@ class ApplicationController {
       $reflect = new ReflectionMethod(get_class($this), 'view');
       $required = $reflect->getNumberOfRequiredParameters();
       $total = $reflect->getNumberOfParameters();
+      $controller = classFileName($this->name);
       $action = classFileName($action);
       if ($action == 'index') {
-        $this->addRoute($this->name, $action);
+        $this->addRoute($controller, $action);
       }
-      $path = $this->name . '/' . $action;
+      $path = $controller . '/' . $action;
       if ($required < 1) {
         $this->addRoute($path, $action);
       }
@@ -117,7 +118,7 @@ class ApplicationController {
     $template = new Template($this->m->Templates, $this->m->Routes, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
-      $templateName = $this->name . '/';
+      $templateName = classFileName($this->name) . '/';
       list( , $caller) = debug_backtrace(false);
       $templateName .= $caller['function'] . '.html';
     }

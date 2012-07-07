@@ -15,12 +15,7 @@
 /**
  * Theme class
  */
-class Theme implements IModule {
-
-  private $core;
-  private $errors;
-  private $configuration;
-  private $templates;
+class Theme extends ModuleBase {
 
   /**
    * The current theme
@@ -30,34 +25,27 @@ class Theme implements IModule {
 
   private $menuList;
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->templates = $this->core->templates;
-    $this->errors = $this->core->errors;
-    $this->configuration = $this->core->configuration;
-
+  protected function init() {
     // Set default settings
-    if (!$this->configuration->exists('theme.name')) {
-      $this->configuration->set('theme.name', 'arachis');
-    }
+    $this->m->Configuration->setDefault('theme.name', 'arachis');
 
     // Create meta-tags
-    if (!$this->templates->hideIdentity()) {
-      $this->templates->insertMeta(
+    if (!$this->m->Templates->hideIdentity()) {
+      $this->m->Templates->insertMeta(
         'generator',
-        'PeanutCMS' . ($this->templates->hideVersion() ? '' : ' ' . PEANUT_VERSION)
+        'PeanutCMS' . ($this->m->Templates->hideVersion() ? '' : ' ' . PEANUT_VERSION)
       );
     }
-    if ($this->configuration->exists('site.description')) {
-      $this->templates->insertMeta(
+    if ($this->m->Configuration->exists('site.description')) {
+      $this->m->Templates->insertMeta(
         'description',
-        $this->configuration->get('site.description')
+        $this->m->Configuration->get('site.description')
       );
     }
 
     // Find and load theme
     if ($this->load()) {
-      $this->templates->setTheme(p(THEMES . $this->theme . 'templates/'));
+      $this->m->Templates->setTheme(THEMES . $this->theme . '/');
     }
     else {
       new GlobalWarning(tr('Please install a theme'), 'theme-missing');
@@ -70,21 +58,11 @@ class Theme implements IModule {
    * @return bool False if no theme could be loaded
    */
   private function load() {
-    if ($this->configuration->exists('theme.name')) {
-      $theme = $this->configuration->get('theme.name');
-      if (file_exists(p(THEMES . $theme . '/functions.php'))) {
-        ob_start();
-        require_once(p(THEMES . $theme . '/functions.php'));
-        $theme_output = ob_get_clean();
-        if ($theme_output != '') {
-          $this->errors->log(
-              'warning',
-              tr('The theme "%1" produced output too early', $theme),
-              p(THEMES . $theme . '/functions.php')
-            );
-        }
+    if ($this->m->Configuration->exists('theme.name')) {
+      $theme = $this->m->Configuration->get('theme.name');
+      if (file_exists(p(THEMES . $theme . '/themeinfo'))) {
         $this->theme = $theme;
-        return FALSE;
+        return TRUE;
       }
     }
     if (!is_dir(p(THEMES))) {
@@ -94,20 +72,10 @@ class Theme implements IModule {
     if ($dir) {
       while (($theme = readdir($dir)) !== false) {
         if (is_dir(p(THEMES . $theme)) AND $theme != '.' AND $theme != '..') {
-          if (file_exists(p(THEMES . $theme . '/functions.php'))) {
-            $this->configuration->set('theme', $theme);
-            ob_start();
-            require_once(p(THEMES . $theme . '/functions.php'));
-            $theme_output = ob_get_clean();
-            if ($theme_output != '') {
-              $this->errors->log(
-                  'warning',
-                  tr('The theme "%1" produced output too early', $theme),
-                  p(THEMES . $theme . '/functions.php')
-                );
-            }
+          if (file_exists(p(THEMES . $theme . '/themeinfo'))) {
+            $this->m->Configuration->set('theme', $theme);
             $this->theme = $theme;
-            return FALSE;
+            return TRUE;
           }
         }
       }

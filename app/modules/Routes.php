@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS routing system
 // Author         : PeanutCMS
-// Dependencies   : errors http templates
+// Dependencies   : errors http templates configuration
 
 /**
  * Handling routes
@@ -29,6 +29,8 @@ class Routes extends ModuleBase {
 
   private $parameters;
 
+  private $request;
+
   /* Events */
   private $events;
   public function onRendering($h) { $this->events->attach($h); }
@@ -37,6 +39,8 @@ class Routes extends ModuleBase {
   protected function init() {
     $this->events = new Events($this);
 
+    $this->request = $this->m->Http->getRequest();
+
     $controller = new ApplicationController($this->m->Templates, $this);
     $controller->setRoute('notFound', 1);
     
@@ -44,9 +48,25 @@ class Routes extends ModuleBase {
 
     $this->Core->onRender(array($this, 'callController'));
   }
+
+  protected function controllerName($controller, $withSuffix = FALSE) {
+    if (is_object($controller)) {
+      $controller = get_class($controller);
+    }
+    $substr = substr($controller, -10);
+    if ($withSuffix AND $substr != 'Controller') {
+      return $controller . 'Controller';
+    }
+    else if (!$withSuffix AND $substr == 'Controller'){
+      return substr($controller, 0, -10);
+    }
+    else {
+      return $controller;
+    }
+  }
   
   public function getRequest() {
-    return $this->m->Http->getRequest();
+    return $this->request;
   }
 
   public function insertParameters($parameters, $additional) {
@@ -71,21 +91,47 @@ class Routes extends ModuleBase {
     if (!isset($controller)) {
       return NULL;
     }
-    if (is_object($controller)) {
-      $controller = get_class($controller);
-    }
-    else {
-      $controller = className($controller);
-      if (substr($controller, -10) != 'Controller') {
-        $controller .= 'Controller';
-      }
-    }
+    $controller = $this->controllerName($controller, TRUE);
     if (isset($this->paths[$controller][$action])) {
       $function = $this->paths[$controller][$action]['function'];
       $additional = $this->paths[$controller][$action]['additional'];
       return call_user_func($function, $parameters, $additional);
     }
     return NULL;
+  }
+
+  public function isCurrent($route = NULL) {
+    if (!isset($route)) {
+      $path = explode('/', $this->m->Configuration->get('http.index.path'));
+      return $path == $this->request->path;
+    }
+    else if (is_object($route) AND is_a($route, 'ILinkable')) {
+      return $this->isCurrent($route->getRoute());
+    }
+    else if (is_array($route)) {
+      $default = array(
+        'path' => NULL,
+        'query' => NULL,
+        'fragment' => NULL,
+        'controller' => $this->selectedController[0],
+        'action' => $this->selectedController[1],
+        'parameters' => $this->selectedControllerParameters
+      );
+      if (isset($route['controller'])) {
+        $default['action'] = 'index';
+        $default['parameters'] = array();
+      }
+      $route = array_merge($default, $route);
+      if (isset($route['path'])) {
+        return $this->request->path == $route['path'];
+      }
+      return $this->controllerName($this->selectedController[0]) == $route['controller']
+        AND ($route['action'] == '*' OR $this->selectedController[1] == $route['action'])
+        AND ($route['parameters'] == '*' OR $this->selectedControllerParameters == $route['parameters']);
+    }
+    else {
+      return FALSE;
+    }
   }
 
   public function getLink($route = NULL) {

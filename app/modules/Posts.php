@@ -130,7 +130,7 @@ class Posts extends ModuleBase {
 
     if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
       // Detect fancy post permalinks
-      $this->detectFancyPermalinks();
+      $this->detectFancyPath();
       $this->m->Routes->addPath('Posts', 'view', array($this, 'getFancyPath'));
       $this->m->Routes->addPath('Posts', 'commentIndex', array($this, 'getFancyPath'));
       $this->m->Routes->addPath('Posts', 'viewComment', array($this, 'getFancyPath'));
@@ -148,76 +148,71 @@ class Posts extends ModuleBase {
     $this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
   }
 
-  private function detectFancyPermalinks() {
+  private function detectFancyPath() {
     $path = $this->m->Http->getRequest()->path;
     $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
-    if (is_array($path) AND is_array($permalink)) {
-      foreach ($permalink as $key => $dir) {
-        if (isset($path[$key])) {
-          $pos = strpos($dir, '%name%');
-          $len = strlen($dir);
-          if ($pos !== false) {
-            $dif = $len - ($pos + 6);
-            if ($dif != 0) {
-              $name = substr($path[$key], $pos, -$dif);
-            }
-            else {
-              $name = substr($path[$key], $pos);
-            }
-            if (!empty($name)) {
-              $post = Post::first(
-                SelectQuery::create()
-                  ->where('name = ?')
-                  ->addVar($name)
-              );
-              if ($post !== FALSE) {
-                $perma = $this->getFancyPath($post);
-                if ($perma !== false) {
-                  if ($perma == $path) {
-                    $post->addToCache();
-                    $this->controller->setRoute('view', 6, array($post->id));
-                    return;
-                  }
-                }
-              }
-            }
-          }
-          $pos = strpos($dir, '%id%');
-          $len = strlen($dir);
-          if ($pos !== FALSE) {
-            $dif = $len - ($pos + 4);
-            if ($dif != 0) {
-              $postid = substr($path[$key], $pos, -$dif);
-            }
-            else {
-              $postid = substr($path[$key], $pos);
-            }
-            $post = Post::find($postid);
-            if ($post !== FALSE) {
-              $perma = $this->getFancyPath($post);
-              if ($perma !== false) {
-                if ($perma == $path) {
-                  $post->addToCache();
-                  $this->controller->setRoute('view', 6, array($post->id));
-                  return;
-                }
-              }
-            }
-          }
-        }
+    if (!is_array($path) OR !is_array($permalink)) {
+      return;
+    }
+    if (count($path) != count($permalink)) {
+      return;
+    }
+    $name = '';
+    $id = 0;
+    foreach ($permalink as $key => $dir) {
+      if (empty($path[$key])) {
+        return;
       }
-      foreach ($path as $name) {
-        if (!empty($name)) {
-          $post = Post::first(
-            SelectQuery::create()
-              ->where('name = ?')
-              ->addVar($name)
-          );
-          if ($post !== FALSE) {
-            $post->addToCache();
-            $this->controller->setRoute('view', 3, array($post->id));
+      switch ($dir) {
+        case '%year%':
+          if (preg_match('/^[0-9]{4}$/', $path[$key]) !== 1) {
+            return;
           }
-        }
+          break;
+        case '%month%':
+          if (preg_match('/^[0-9]{2}$/', $path[$key]) !== 1) {
+            return;
+          }
+          break;
+        case '%day%':
+          if (preg_match('/^[0-9]{2}$/', $path[$key]) !== 1) {
+            return;
+          }
+          break;
+        case '%name%':
+          $name = $path[$key];
+          break;
+        case '%id%':
+          if (preg_match('/^[0-9]+$/', $path[$key]) !== 1) {
+            return;
+          }
+          $id = $path[$key];
+          break;
+        default:
+          if ($dir != $path[$key]) {
+            return;
+          }
+          break;
+      }
+    }
+    if ($id > 0) {
+      $post = Post::find($id);
+      if ($post !== FALSE) {
+        $post->addToCache();
+        $this->controller->setRoute('view', 6, array($post->id));
+        return;
+      }
+    }
+    else if (!empty($name)) {
+      $post = Post::first(
+        SelectQuery::create()
+          ->where('name = ?')
+          ->addVar($name)
+      );
+      if ($post !== FALSE) {
+        $post->addToCache();
+        $this->controller->setRoute('view', 6, array($post->id));
+        return;
       }
     }
   }
@@ -247,84 +242,6 @@ class Posts extends ModuleBase {
     }
     return FALSE;
   }
-
-  public function getFancyLink($parameters) {
-    return $this->m->Http->getLink($this->getFancyPath($parameters));
-  }
-
-  public function getPath(ActiveRecord $record) {
-    $class = get_class($record);
-    switch ($class) {
-      case 'Post':
-        if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
-          $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
-          if (is_array($permalink)) {
-            $time = $record->date;
-            $id = $record->id;
-            $id = !isset($id) ? 0 : $record->id;
-            $replace = array('%name%'  => $record->name,
-                             '%id%'    => $id,
-                             '%year%'  => tdate('Y', $time),
-                             '%month%' => tdate('m', $time),
-                             '%day%'   => tdate('d', $time));
-            $search = array_keys($replace);
-            $replace = array_values($replace);
-            $path = array();
-            foreach ($permalink as $dir) {
-              $path[] = str_replace($search, $replace, $dir);
-            }
-            return $path;
-          }
-        }
-        else {
-          return array('posts', $record->id);
-        }
-        break;
-      case 'Tag':
-        return array('tags', $record->name);
-        break;
-      case 'Comment':
-        return array_merge(
-          $this->getPath(Post::find($record->post_id)),
-          array('comments', $record->id)
-        );
-        break;
-      default:
-        return false;
-    }
-  }
-
-  public function postController($path = array(), $parameters = array(), $contentType = 'html') {
-    $templateData = array();
-
-    if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
-      $templateData['post'] = Post::find($this->post);
-    }
-    else {
-      $templateData['post'] = Post::find((int) $path[1]);
-    }
-
-    if (!$this->m->Http->isCurrent($templateData['post']->getPath())) {
-      $this->m->Http->redirectPath($templateData['post']->getPath());
-    }
-
-    $templateData['title'] = $templateData['post']->title;
-
-    $templateData['comments'] = array();
-
-    /**
-     * Just testing...
-     * @todo JSON interface/whatever...
-     */
-    if (isset($parameters['json'])) {
-      header('Content-Type: application/json;charset=utf-8');
-      echo $templateData['post']->json();
-    }
-    else {
-      $this->m->Templates->renderTemplate('post.html', $templateData);
-    }
-  }
-
 
   public function newPostController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();

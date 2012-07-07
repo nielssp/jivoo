@@ -4,7 +4,7 @@
  */
 
 // Render the header
-$this->render('header');
+$this->render('header.html');
 ?>
 
 <h2 ><?php echo tr('Page not found'); ?></h2>
@@ -13,5 +13,5 @@ $this->render('header');
 
 <?php
 // Render the footer
-$this->render('footer');
+$this->render('footer.html');
 ?>

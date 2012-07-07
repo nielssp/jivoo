@@ -41,16 +41,26 @@ class Links extends ModuleBase {
     if ($newInstall) {
       $link = Link::create();
       $link->menu = 'main';
-      $link->type = 'home';
       $link->title = tr('Home');
-      $link->path = '';
+      $link->setRoute();
       $link->save();
 
       $link = Link::create();
       $link->menu = 'main';
-      $link->type = 'path';
       $link->title = tr('About');
-      $link->path = 'about';
+      $link->setRoute(array('path' => array('about')));
+      $link->save();
+
+      $link = Link::create();
+      $link->menu = 'main';
+      $link->title = tr('Get help');
+      $link->setRoute('http://apakoh.dk');
+      $link->save();
+
+      $link = Link::create();
+      $link->menu = 'main';
+      $link->title = tr('Admin');
+      $link->setRoute($this->m->Backend);
       $link->save();
     }
   }
