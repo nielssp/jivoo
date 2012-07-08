@@ -1,12 +1,12 @@
 <?php
 class SelectQuery extends Query {
   protected $orderBy;
-  protected $descending;
+  protected $descending = FALSE;
   protected $limit;
   protected $where;
   protected $whereVars;
-  protected $count;
-  protected $offset;
+  protected $count = FALSE;
+  protected $offset = 0;
   protected $relation;
   protected $table;
   protected $join;
@@ -14,9 +14,6 @@ class SelectQuery extends Query {
 
   public static function create($table = NULL) {
     $query = new self();
-    $query->offset = 0;
-    $query->descending = FALSE;
-    $query->count = false;
     $query->table = $table;
     return $query;
   }
@@ -53,6 +50,13 @@ class SelectQuery extends Query {
 
   public function where($clause) {
     $this->where = $clause;
+    if (func_num_args() > 1) {
+      $args = func_get_args();
+      array_shift($args);
+      foreach ($args as $arg) {
+        $this->addVar($arg);
+      }
+    }
     return $this;
   }
 
@@ -85,15 +89,6 @@ class SelectQuery extends Query {
       'right' => $rightColumn
     );
     return $this;
-  }
-
-  public function execute() {
-    if (isset($this->db) AND $this->db instanceof IDatabase) {
-      return $this->db->executeSelect($this);
-    }
-    else {
-      throw new Exception('No database to execute on');
-    }
   }
 
   public function count() {

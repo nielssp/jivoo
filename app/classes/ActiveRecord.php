@@ -1,23 +1,18 @@
 <?php
 abstract class ActiveRecord {
-  private static $dbConnection = NULL;
   private static $models = array();
-  public static function addModel($class, $table) {
-    $db = self::connection();
-    if ($db->tableExists($table)) {
-      self::$models[$class] = array(
-        'table' => $table,
-        'columns' => $db->getColumns($table),
-        'primaryKey' => $db->getPrimaryKey($table)
-      );
-    }
-    else {
-      throw new TableNotFoundException(tr('The table "%1" does not exist.', $table));
-    }
+  public static function addModel($class, IDataSource $dataSource) {
+    self::$models[$class] = array(
+      'source' => $dataSource,
+      'table' => $dataSource->getName(),
+      'columns' => $dataSource->getColumns(),
+      'primaryKey' => $dataSource->getPrimaryKey()
+    );
   }
   private static $cache = array();
 
   private $table;
+  private $dataSource;
   private $primaryKey;
   private $data;
   private $changed;
@@ -144,7 +139,6 @@ abstract class ActiveRecord {
   }
 
   private function manyGet($options, SelectQuery $customSelect = NULL) {
-    $db = self::connection();
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -160,11 +154,10 @@ abstract class ActiveRecord {
       $select->join($options['join'], $otherPrimaryKey, $options['otherKey']);
     }
 
-    $select->from(self::$models[$otherClass]['table']);
     $select->where($options['thisKey'] . ' = ?');
     $select->addVar($this->data[$this->primaryKey]);
 
-    $result = $db->executeSelect($select);
+    $result = $this->dataSource->select($select);
     if (isset($options['count']) AND !isset($customSelect)) {
       if ($this->data[$options['count']] != $result->count()) {
         $this->data[$options['count']] = $result->count();
@@ -180,28 +173,29 @@ abstract class ActiveRecord {
   }
 
   private function manyHas($options, ActiveRecord $record) {
-    $db = self::connection();
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
     $otherPrimaryKey = self::$models[$otherClass]['primaryKey'];
 
-    $query = $db->selectQuery();
+    $query = SelectQuery::create();
     if (isset($options['join'])) {
-      $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
-      $query->addVar($this->data[$this->primaryKey]);
-      $query->addVar($record->data[$record->primaryKey]);
-      return $db->count($options['join'], $query) > 0;
+      if ($this->dataSource instanceof ITable) {
+        $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
+        $query->addVar($this->data[$this->primaryKey]);
+        $query->addVar($record->data[$record->primaryKey]);
+        /** @todo Maybe find some better way of doing this.... */
+        return $this->dataSource->getOwner()->getTable($options['join'])->count($query) > 0;
+      }
     }
     else {
       $query->where($options['thisKey'] . ' = ?');
       $query->addVar($this->data[$this->primaryKey]);
-      return $db->count($record->table, $query) > 0;
+      return $this->dataSource->count($query) > 0;
     }
   }
 
   private function manyAdd($options, ActiveRecord $record) {
-    $db = self::connection();
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -213,11 +207,14 @@ abstract class ActiveRecord {
       if ($record->isNew) {
         return FALSE;
       }
-      $query = $db->insertQuery($options['join']);
-      $query->addPair($options['thisKey'], $this->data[$this->primaryKey]);
-      $query->addPair($options['otherKey'], $record->data[$record->primaryKey]);
-      $query->execute();
-      return TRUE;
+      if ($this->dataSource instanceof ITable) {
+        $query = $this->dataSource->getOwner()->getTable($options['join'])->insert();
+        $query->addPair($options['thisKey'], $this->data[$this->primaryKey]);
+        $query->addPair($options['otherKey'], $record->data[$record->primaryKey]);
+        $query->execute();
+        return TRUE;
+      }
+      return FALSE;
     }
     else {
       $record->data[$options['thisKey']] = $this->data[$this->primaryKey];
@@ -231,7 +228,6 @@ abstract class ActiveRecord {
   }
 
   private function manyRemove($options, ActiveRecord $record) {
-    $db = self::connection();
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -239,12 +235,15 @@ abstract class ActiveRecord {
       if ($record->isNew) {
         return FALSE;
       }
-      $query = $db->deleteQuery($options['join']);
-      $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
-      $query->addVar($this->data[$this->primaryKey]);
-      $query->addVar($record->data[$record->primaryKey]);
-      $query->execute();
-      return TRUE;
+      if ($this->dataSource instanceof ITable) {
+        $query = $this->dataSource->getOwner()->getTable($options['join'])->delete();
+        $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
+        $query->addVar($this->data[$this->primaryKey]);
+        $query->addVar($record->data[$record->primaryKey]);
+        $query->execute();
+        return TRUE;
+      }
+      return FALSE;
     }
     else {
       $record->data[$options['thisKey']] = 0;
@@ -257,7 +256,6 @@ abstract class ActiveRecord {
   }
 
   private function oneGet($options) {
-    $db = self::connection();
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -269,17 +267,17 @@ abstract class ActiveRecord {
       if (isset(self::$cache[$otherClass][$primaryKey])) {
         return self::$cache[$otherClass][$primaryKey];
       }
-      $query = $db->selectQuery(self::$models[$otherClass]['table']);
+      $query = self::connection($otherClass)->select();
       $query->where(self::$models[$otherClass]['primaryKey'] . ' = ?');
     }
     else {
       $primaryKey = $this->data[$this->primaryKey];
-      $query = $db->selectQuery(self::$models[$otherClass]['table']);
+      $query = self::connection($otherClass)->select();
       $query->where($options['thisKey'] . ' = ?');
     }
     $query->addVar($primaryKey);
     $query->limit(1);
-    $result = $db->execute($query);
+    $result = $query->execute();
     if (!$result->hasRows()) {
       return FALSE;
     }
@@ -287,7 +285,6 @@ abstract class ActiveRecord {
   }
 
   private function oneSet($options, ActiveRecord $record) {
-    $db = self::connection();
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -311,11 +308,11 @@ abstract class ActiveRecord {
   }
 
   private function __construct() {
-    $db = self::connection();
     $class = get_class($this);
     if (!isset(self::$models[$class])) {
       throw new InvalidModelException(tr('The model "%1" has not been added to ActiveRecord.', $class));
     }
+    $this->dataSource = self::$models[$class]['source'];
     $this->table = self::$models[$class]['table'];
     $this->primaryKey = self::$models[$class]['primaryKey'];
     $this->data = array();
@@ -350,19 +347,11 @@ abstract class ActiveRecord {
     }
   }
 
-  protected static function connection() {
-    if (!isset(self::$dbConnection)) {
-      throw new DatabaseNotConnectedException('ActiveRecord is not connected to a database.');
+  protected static function connection($class) {
+    if (!isset(self::$models[$class])) {
+      throw new DatabaseNotConnectedException('This ActiveRecord is not connected to a database.');
     }
-    return self::$dbConnection;
-  }
-
-  public static function connect(IDatabase $db) {
-    self::$dbConnection = $db;
-  }
-
-  public static function isConnected() {
-    return isset(self::$dbConnection);
+    return self::$models[$class]['source'];
   }
 
   private static function createFromAssoc($class, $assoc) {
@@ -393,7 +382,6 @@ abstract class ActiveRecord {
 
   protected function validateValue($column, $value, $conditionKey, $conditionValue) {
     $validate = array();
-    $db = self::connection();
     $class = get_class($this);
     switch ($conditionKey) {
       case 'presence':
@@ -415,7 +403,7 @@ abstract class ActiveRecord {
       case 'match':
         return preg_match($conditionValue, $value) == 1;
       case 'unique':
-        $result = $db->selectQuery(self::$models[$class]['table'])
+        $result = $this->dataSource->select()
           ->where($column . ' = ?')
           ->addVar($value)
           ->limit(1)
@@ -471,13 +459,12 @@ abstract class ActiveRecord {
     if ($this->isSaved) {
       return true;
     }
-    $db = self::connection();
     if ($this->isNew) {
-      $query = $db->insertQuery($this->table);
+      $query = $this->dataSource->insert();
       $this->data[$this->primaryKey] = $query->addPairs($this->data)->execute();
     }
     else {
-      $query = $db->updateQuery($this->table);
+      $query = $this->dataSource->update();
       foreach ($this->data as $column => $value) {
         $query->set($column, $value);
       }
@@ -491,21 +478,19 @@ abstract class ActiveRecord {
   }
 
   public function delete() {
-    $db = self::connection();
-    $db->deleteQuery($this->table)
+    $this->dataSource->delete()
       ->where($this->primaryKey . ' = ?')
       ->addVar($this->data[$this->primaryKey])
       ->execute();
   }
 
   public static function all(SelectQuery $selector = NULL) {
-    $db = self::connection();
     $class = get_called_class();
+    $dataSource = self::connection($class);
     if (!isset($selector)) {
       $selector = SelectQuery::create();
     }
-    $selector->from(self::$models[$class]['table']);
-    $result = $db->executeSelect($selector);
+    $result = $dataSource->select($selector);
     $allArray = array();
     while ($assoc = $result->fetchAssoc()) {
       $allArray[] = self::createFromAssoc($class, $assoc);
@@ -522,16 +507,16 @@ abstract class ActiveRecord {
   }
 
   public static function find($primaryKey) {
-    $db = self::connection();
     $class = get_called_class();
+    $dataSource = self::connection($class);
     if (isset(self::$cache[$class][$primaryKey])) {
       return self::$cache[$class][$primaryKey];
     }
-    $query = $db->selectQuery(self::$models[$class]['table']);
-    $query->where(self::$models[$class]['primaryKey'] . ' = ?');
-    $query->addVar($primaryKey);
-    $query->limit(1);
-    $result = $db->execute($query);
+    $result = $dataSource->select()
+      ->where(self::$models[$class]['primaryKey'] . ' = ?')
+      ->addVar($primaryKey)
+      ->limit(1)
+      ->execute();
     if (!$result->hasRows()) {
       return FALSE;
     }
@@ -541,24 +526,22 @@ abstract class ActiveRecord {
   }
 
   public static function exists($primaryKey) {
-    $db = self::connection();
     $class = get_called_class();
-    $query = $db->selectQuery();
-    $query->count();
-    $query->where(self::$models[$class]['primaryKey'] . ' = ?');
-    $query->addVar($primaryKey);
-    return $db->count(self::$models[$class]['table'], $query) > 0;
+    $dataSource = self::connection($class);
+    $query = SelectQuery::create()
+      ->where(self::$models[$class]['primaryKey'] . ' = ?')
+      ->addVar($primaryKey);
+    return $dataSource->count($query) > 0;
   }
 
   public static function first(SelectQuery $selector = NULL) {
-    $db = self::connection();
     $class = get_called_class();
+    $dataSource = self::connection($class);
     if (!isset($selector)) {
       $selector = SelectQuery::create();
     }
-    $selector->from(self::$models[$class]['table']);
     $selector->limit(1);
-    $result = $db->executeSelect($selector);
+    $result = $dataSource->select($selector);
     if (!$result->hasRows()) {
       return FALSE;
     }
@@ -566,14 +549,14 @@ abstract class ActiveRecord {
   }
 
   public static function last(SelectQuery $selector = NULL) {
-    $db = self::connection();
     $class = get_called_class();
+    $dataSource = self::connection($class);
     if (!isset($selector)) {
       $selector = SelectQuery::create();
     }
-    $selector->from(self::$models[$class]['table']);
+    $selector->limit(1);
     $selector->reverseOrder()->limit(1);
-    $result = $db->executeSelect($selector);
+    $result = $dataSource->select($selector);
     if (!$result->hasRows()) {
       return FALSE;
     }
@@ -581,9 +564,9 @@ abstract class ActiveRecord {
   }
 
   public static function count(SelectQuery $selector = NULL) {
-    $db = self::connection();
     $class = get_called_class();
-    return $db->count(self::$models[$class]['table'], $selector);
+    $dataSource = self::connection($class);
+    return $dataSource->count($selector);
   }
 
   public function json() {

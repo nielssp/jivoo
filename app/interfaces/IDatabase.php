@@ -1,5 +1,14 @@
 <?php
+interface IDatabase {
+  public function __get($table);
+  public function __isset($table);
+  public function close();
+  public function getTable($name);
+  public function tableExists($name);
+  public function migrate(IMigration $migration);
+}
 
+/*
 interface IDatabase {
   public static function connect($options = array());
   public function close();
@@ -19,4 +28,4 @@ interface IDatabase {
   public function getIndexes($table);
   public function escapeString($string);
   public function escapeQuery($format, $vars);
-}
+} */

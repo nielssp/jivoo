@@ -239,7 +239,7 @@ function readFileMeta($file) {
     else {
       $type = strtolower($trimmed);
       if ($type == 'module' OR
-          $type == 'dbdriver' OR
+          $type == 'database' OR
           $type == 'theme' OR
           $type == 'extension') {
         $readingMeta = TRUE;

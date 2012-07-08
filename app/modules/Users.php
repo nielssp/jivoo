@@ -50,7 +50,7 @@ class Users extends ModuleBase {
         ->execute();
     }
 
-    ActiveRecord::addModel('User', 'users');
+    ActiveRecord::addModel('User', $this->m->Database->users);
 
     require_once(p(MODELS . 'Group.php'));
 
@@ -65,7 +65,7 @@ class Users extends ModuleBase {
       $newInstall = TRUE;
     }
 
-    ActiveRecord::addModel('Group', 'groups');
+    ActiveRecord::addModel('Group', $this->m->Database->groups);
 
     if (!$this->m->Database->tableExists('groups_permissions')) {
       $this->m->Database->createQuery('groups_permissions')

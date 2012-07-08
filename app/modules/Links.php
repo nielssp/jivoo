@@ -36,7 +36,7 @@ class Links extends ModuleBase {
       $newInstall = TRUE;
     }
 
-    ActiveRecord::addModel('Link', 'links');
+    ActiveRecord::addModel('Link', $this->m->Database->links);
 
     if ($newInstall) {
       $link = Link::create();

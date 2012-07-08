@@ -6,65 +6,21 @@
 // Author         : PeanutCMS
 // Dependencies   : configuration routes templates actions errors http
 
-class Database extends DatabaseDriver implements IModule {
-  private $core;
-  private $configuration;
-  private $routes;
-  private $templates;
-  private $actions;
-  private $errors;
-  private $http;
-
+class Database extends ModuleBase implements IDatabase  {
   private $driver;
   private $driverInfo;
   private $connection;
 
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->routes = $this->core->routes;
-    $this->actions = $this->core->actions;
-    $this->templates = $this->core->templates;
-    $this->configuration = $this->core->configuration;
-    $this->errors = $this->core->errors;
-    $this->http = $this->core->http;
-
-    if (!$this->configuration->exists('database.driver')) {
-      $this->routes->setRoute(array($this, 'selectDriverController'), 10);
-      $this->routes->callController();
-      exit;
+  /* Begin IDatabase implementation */
+  public function __get($table) {
+    if ($this->connection) {
+      return $this->connection->__get($table);
     }
-    else {
-      $this->driver = $this->configuration->get('database.driver');
-      $this->driverInfo = $this->checkDriver($this->driver);
-      if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
-        $this->configuration->delete('database.driver');
-        $this->http->refreshPath();
-      }
-      foreach ($this->driverInfo['requiredOptions'] as $option) {
-        if (!$this->configuration->exists('database.' . $option)) {
-          $this->routes->setRoute(array($this, 'setupDriverController'), 10);
-          $this->routes->callController();
-          exit;
-        }
-      }
-      try {
-        $this->connection = call_user_func(
-          array(className($this->driver), 'connect'),
-          $this->configuration->get('database')
-        );
-      }
-      catch (DatabaseConnectionFailedException $exception) {
-        $this->errors->fatal(
-          tr('Database connection failed'),
-          tr('Could not connect to the database.'),
-          '<p>' . $exception->getMessage() . '</p>'
-        );
-      }
-      if ($this->configuration->exists('database.tablePrefix')) {
-        $this->tablePrefix = $this->configuration->get('database.tablePrefix');
-        $this->connection->tablePrefix = $this->tablePrefix;
-      }
-      ActiveRecord::connect($this);
+  }
+
+  public function __isset($table) {
+    if ($this->connection) {
+      return $this->connection->__isset($table);
     }
   }
 
@@ -74,68 +30,84 @@ class Database extends DatabaseDriver implements IModule {
     }
   }
 
-  public static function connect($options = array()) {
-
-  }
-
-  public function execute(Query $query) {
-    return $this->connection->execute($query);
-  }
-
-  public function executeSelect(Query $query) {
-    return $this->connection->executeSelect($query);
-  }
-
-  public function count($table, SelectQuery $query = NULL) {
-    return $this->connection->count($table, $query);
+  public function getTable($table) {
+    if ($this->connection) {
+      return $this->connection->getTable($table);
+    }
   }
 
   public function tableExists($table) {
-    return $this->connection->tableExists($table);
+    if ($this->connection) {
+      return $this->connection->tableExists($table);
+    }
   }
 
-  public function getColumns($table) {
-    return $this->connection->getColumns($table);
+  public function migrate(IMigration $migration) {
+    if ($this->connection) {
+      return $this->connection->migrate($migration);
+    }
   }
+  /* End IDatabase implementation */
 
-  public function getPrimaryKey($table) {
-    return $this->connection->getPrimaryKey($table);
-  }
-
-  public function getIndexes($table) {
-    return $this->connection->getIndexes($table);
-  }
-
-  public function escapeString($string) {
-    return $this->connection->escapeString($string);
+  protected function init() {
+    if (!$this->m->Configuration->exists('database.driver')) {
+      $this->m->Routes->setRoute(array($this, 'selectDriverController'), 10);
+      $this->m->Routes->callController();
+      exit;
+    }
+    else {
+      $this->driver = $this->m->Configuration->get('database.driver');
+      $this->driverInfo = $this->checkDriver($this->driver);
+      if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
+        $this->m->Configuration->delete('database.driver');
+        $this->m->Http->refreshPath();
+      }
+      foreach ($this->driverInfo['requiredOptions'] as $option) {
+        if (!$this->m->Configuration->exists('database.' . $option)) {
+          $this->m->Routes->setRoute(array($this, 'setupDriverController'), 10);
+          $this->m->Routes->callController();
+          exit;
+        }
+      }
+      require(p(CLASSES . 'database/' . $this->driver . '.php'));
+      try {
+        $this->connection = new $this->driver($this->m->Configuration->get('database'));
+      }
+      catch (DatabaseConnectionFailedException $exception) {
+        Errors::fatal(
+          tr('Database connection failed'),
+          tr('Could not connect to the database.'),
+          '<p>' . $exception->getMessage() . '</p>'
+        );
+      }
+    }
   }
 
   public function checkDriver($driver) {
     $driver = className($driver);
-    if (!file_exists(p(CLASSES . 'db-drivers/' . $driver . '.php'))) {
+    if (!file_exists(p(CLASSES . 'database/' . $driver . '.php'))) {
       return FALSE;
     }
-    require_once(p(CLASSES . 'db-drivers/' . $driver . '.php'));
-    $dependencies = call_user_func(array($driver, 'getDriverDependencies'));
+    $meta = readFileMeta(p(CLASSES . 'database/' . $driver . '.php'));
     $missing = array();
-    foreach ($dependencies as $dependency) {
+    foreach ($meta['dependencies']['php'] as $dependency => $versionInfo) {
       if (!extension_loaded($dependency)) {
         $missing[] = $dependency;
       }
     }
     return array(
       'driver' => $driver,
-      'name' => call_user_func(array($driver, 'getDriverName')),
-      'requiredOptions' => call_user_func(array($driver, 'getRequiredOptions')),
+      'name' => $meta['name'],
+      'requiredOptions' => $meta['required'],
       'isAvailable' => count($missing) < 1,
-      'link' => $this->http->getLink(NULL, array('select' => $driver)),
+      'link' => $this->m->Http->getLink(NULL, array('select' => $driver)),
       'missingExtensions' => $missing
     );
   }
 
   public function listDrivers() {
     $drivers = array();
-    $dir = opendir(p(CLASSES . 'db-drivers/'));
+    $dir = opendir(p(CLASSES . 'database/'));
     while ($file = readdir($dir)) {
       if (substr($file, -4) == '.php') {
         $driver = substr($file, 0, -4);
@@ -153,11 +125,11 @@ class Database extends DatabaseDriver implements IModule {
     $templateData['backendMenu'] = FALSE;
     $templateData['title'] = tr('Welcome to PeanutCMS');
     if (isset($_GET['select']) AND isset($templateData['drivers'][$_GET['select']])) {
-      $this->configuration->set('database.driver', $_GET['select']);
-      $this->http->refreshPath(array());
+      $this->m->Configuration->set('database.driver', $_GET['select']);
+      $this->m->Http->refreshPath(array());
     }
     else {
-      $this->templates->renderTemplate('backend/select-driver.html', $templateData);
+      $this->m->Templates->renderTemplate('backend/select-driver.html', $templateData);
     }
   }
 
@@ -167,31 +139,19 @@ class Database extends DatabaseDriver implements IModule {
     $templateData['cancelAction'] = $this->actions->add('unset-driver');
     $templateData['saveAction'] = $this->actions->add('save');
     $templateData['title'] = tr('Welcome to PeanutCMS');
-    if ($this->actions->has('unset-driver')) {
-      $this->configuration->delete('database.driver');
-      $this->http->refreshPath();
+    if ($this->m->Actions->has('unset-driver')) {
+      $this->m->Configuration->delete('database.driver');
+      $this->m->Http->refreshPath();
     }
-    if ($this->actions->has('save')) {
-      $this->configuration->set('database.server', $_POST['server']);
-      $this->configuration->set('database.username', $_POST['username']);
-      $this->configuration->set('database.password', $_POST['password']);
-      $this->configuration->set('database.database', $_POST['database']);
-      $this->configuration->set('database.tablePrefix', $_POST['tablePrefix']);
-      $this->http->refreshPath();
+    if ($this->m->Actions->has('save')) {
+      $this->m->Configuration->set('database.server', $_POST['server']);
+      $this->m->Configuration->set('database.username', $_POST['username']);
+      $this->m->Configuration->set('database.password', $_POST['password']);
+      $this->m->Configuration->set('database.database', $_POST['database']);
+      $this->m->Configuration->set('database.tablePrefix', $_POST['tablePrefix']);
+      $this->m->Http->refreshPath();
     }
-    $this->templates->renderTemplate('backend/setup-driver.html', $templateData);
-  }
-
-  public static function getDriverName() {
-    return '';
-  }
-
-  public static function getDriverDependencies() {
-    return array();
-  }
-
-  public static function getRequiredOptions() {
-    return array();
+    $this->m->Templates->renderTemplate('backend/setup-driver.html', $templateData);
   }
 
 }

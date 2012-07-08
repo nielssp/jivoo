@@ -1,21 +1,18 @@
 <?php
 class UpdateQuery extends Query {
 
-  private $table;
-  private $orderBy;
-  private $descending;
-  private $limit;
-  private $where;
-  private $whereVars;
-  private $offset;
-
-  private $sets = array();
+  protected $table;
+  protected $orderBy;
+  protected $descending = FALSE;
+  protected $limit;
+  protected $where;
+  protected $whereVars;
+  protected $offset = 0;
+  protected $sets = array();
 
   public static function create($table = NULL) {
     $query = new self();
     $query->table = $table;
-    $query->descending = FALSE;
-    $query->offset = 0;
     return $query;
   }
 
@@ -48,6 +45,13 @@ class UpdateQuery extends Query {
 
   public function where($clause) {
     $this->where = $clause;
+    if (func_num_args() > 1) {
+      $args = func_get_args();
+      array_shift($args);
+      foreach ($args as $arg) {
+        $this->addVar($arg);
+      }
+    }
     return $this;
   }
 

@@ -40,7 +40,7 @@ class Pages extends ModuleBase {
       $newInstall = TRUE;
     }
 
-    ActiveRecord::addModel('Page', 'pages');
+    ActiveRecord::addModel('Page', $this->m->Database->pages);
 
     if ($newInstall) {
       $page = Page::create();

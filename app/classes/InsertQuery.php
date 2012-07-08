@@ -3,8 +3,8 @@ class InsertQuery extends Query {
 
   private $table;
 
-  private $columns = array();
-  private $values = array();
+  protected $columns = array();
+  protected $values = array();
 
   public static function create($table = NULL) {
     $query = new self();

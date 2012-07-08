@@ -46,7 +46,7 @@ class Posts extends ModuleBase {
       $newInstall = TRUE;
     }
 
-    ActiveRecord::addModel('Post', 'posts');
+    ActiveRecord::addModel('Post', $this->m->Database->posts);
 
     require_once(p(MODELS . 'Tag.php'));
 
@@ -67,7 +67,7 @@ class Posts extends ModuleBase {
         ->execute();
     }
 
-    ActiveRecord::addModel('Tag', 'tags');
+    ActiveRecord::addModel('Tag', $this->m->Database->tags);
 
     require_once(p(MODELS . 'Comment.php'));
 
@@ -87,7 +87,7 @@ class Posts extends ModuleBase {
         ->execute();
     }
 
-    ActiveRecord::addModel('Comment', 'comments');
+    ActiveRecord::addModel('Comment', $this->m->Database->comments);
 
     if ($newInstall) {
       $post = Post::create();
