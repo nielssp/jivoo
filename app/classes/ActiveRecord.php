@@ -370,6 +370,11 @@ abstract class ActiveRecord {
         if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
           $this->validate[$column]['unique'] = TRUE;
         }
+        if (isset($info['default'])) {
+          if (!isset($this->defaults['column'])) {
+            $this->defaults['column'] = $info['default'];
+          }
+        }
       }
     }
     foreach ($this->hasOne as $class => $options) {
