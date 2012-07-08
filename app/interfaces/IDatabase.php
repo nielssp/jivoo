@@ -5,8 +5,10 @@ interface IDatabase {
   public function close();
   public function getTable($name);
   public function tableExists($name);
-  public function migrate(IMigration $migration);
+  public function migrate(Schema $schema);
 }
+
+class DatabaseQueryFailedException extends Exception { } 
 
 /*
 interface IDatabase {

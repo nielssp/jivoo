@@ -132,9 +132,6 @@ class MysqlDatabase extends SqlDatabase {
     return $result->count() >= 1;
   }
 
-  public function migrate(IMigration $migration) {
-  }
-
   public function rawQuery($sql) {
     $result = mysql_query($sql, $this->handle);
     if (!$result) {
@@ -149,5 +146,149 @@ class MysqlDatabase extends SqlDatabase {
     else {
       return mysql_affected_rows($this->handle);
     }
+  }
+
+  public function createTable(Schema $schema) {
+    $sql = 'CREATE TABLE ' . $this->tableName($schema->getName()) . '(';
+    $columns = $schema->getColumns();
+    $first = TRUE;
+    foreach ($columns as $column) {
+      $options = $schema->$column;
+      if (!$first) {
+        $sql .= ', ';
+      }
+      else {
+        $first = FALSE;
+      }
+      $sql .= $column;
+      $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
+      if (!$options['null']) {
+        $sql .= ' NOT';
+      }
+      $sql .= ' NULL';
+      if (isset($options['default'])) {
+        $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
+      }
+      if (isset($options['autoIncrement'])) {
+        $sql .= ' AUTO_INCREMENT';
+      }
+    }
+    foreach ($schema->indexes as $index => $options) {
+      $sql .= ', ';
+      if ($index == 'PRIMARY') {
+        $sql .= 'PRIMARY KEY (';
+      }
+      else if ($options['unique']) {
+        $sql .= 'UNIQUE (';
+      }
+      else {
+        $sql .= 'INDEX (';
+      }
+      $sql .= implode(', ', $options['columns']) . ')';
+    }
+    $sql .= ')';
+    $this->rawQuery($sql);
+  }
+
+  public function dropTable($table) {
+    $sql = 'DROP TABLE ' . $this->tableName($table);
+    $this->rawQuery($sql);
+  }
+
+  public function addColumn($table, $column, $options = array()) {
+    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' ADD ' . $column;
+    $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
+    if (!$options['null']) {
+      $sql .= ' NOT';
+    }
+    $sql .= ' NULL';
+    if (isset($options['default'])) {
+      $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
+    }
+    if (isset($options['autoIncrement'])) {
+      $sql .= ' AUTO_INCREMENT';
+    }
+    $this->rawQuery($sql);
+  }
+
+  public function deleteColumn($table, $column) {
+    // ALTER TABLE  `posts` DROP  `testing`
+    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' DROP ' . $column;
+    $this->rawQuery($sql);
+  }
+
+  public function alterColumn($table, $column, $options = array()) {
+    // ALTER TABLE  `posts` CHANGE  `testing`  `testing` INT( 12 ) NOT NULL
+    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column . ' ' . $column;
+    $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
+    if (!$options['null']) {
+      $sql .= ' NOT';
+    }
+    $sql .= ' NULL';
+    if (isset($options['default'])) {
+      $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
+    }
+    if (isset($options['autoIncrement'])) {
+      $sql .= ' AUTO_INCREMENT';
+    }
+    if (isset($options['key'])) {
+      if ($options['key'] == 'primary') {
+        $sql .= ' PRIMARY';
+      }
+    }
+    $this->rawQuery($sql);
+  }
+
+  public function createIndex($table, $index, $options = array()) {
+    $sql = 'ALTER TABLE ' . $this->tableName($table);
+    if ($index == 'PRIMARY') {
+      $sql .= ' ADD PRIMARY KEY';
+    }
+    else if ($options['unique']) {
+      $sql .= ' ADD UNIQUE ' . $index;
+    }
+    else {
+      $sql .= ' ADD INDEX ' . $index;
+    }
+    $sql .= ' (';
+    $sql .= implode(', ', $options['columns']);
+    $sql .= ')';
+    $this->rawQuery($sql);
+  }
+
+  public function deleteIndex($table, $index) {
+    // ALTER TABLE  `posts` DROP INDEX  `name_2`
+    $sql = 'ALTER TABLE ' . $this->tableName($table);
+    if ($index == 'PRIMARY') {
+      $sql .= ' DROP PRIMARY KEY';
+    }
+    else {
+      $sql .= ' DROP INDEX ' . $index;
+    }
+    $this->rawQuery($sql);
+  }
+
+  public function alterIndex($table, $index, $options = array()) {
+    $sql = 'ALTER TABLE ' . $this->tableName($table);
+    if ($index == 'PRIMARY') {
+      $sql .= ' DROP PRIMARY KEY';
+    }
+    else {
+      $sql .= ' DROP INDEX ' . $index;
+    }
+    $sql .= ', ';
+    if ($index == 'PRIMARY') {
+      $sql .= ' ADD PRIMARY KEY';
+    }
+    else if ($options['unique']) {
+      $sql .= ' ADD UNIQUE ' . $index;
+    }
+    else {
+      $sql .= ' ADD INDEX ' . $index;
+    }
+    $sql .= ' (';
+    $sql .= implode(', ', $options['columns']);
+    $sql .= ')';
+    $this->rawQuery($sql);
   }
 }

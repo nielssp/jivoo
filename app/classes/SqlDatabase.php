@@ -66,5 +66,67 @@ abstract class SqlDatabase implements IDatabase {
     }
     return $sqlString;
   }
+
+  public function migrate(Schema $schema) {
+    $table = $schema->getName();
+    if ($this->tableExists($table)) {
+      $oldSchema = $this->getSchema($table);
+      $allColumns = array_unique(array_merge($schema->getColumns(), $oldSchema->getColumns()));
+      $status = 'unchanged';
+      foreach ($allColumns as $column) {
+        if (!isset($oldSchema->$column)) {
+          $this->addColumn($table, $column, $schema->$column);
+          $status = 'updated';
+        }
+        else if (!isset($schema->$column)) {
+          $this->deleteColumn($table, $column);
+          $status = 'updated';
+        }
+        else if ($schema->$column != $oldSchema->$column) {
+          $this->alterColumn($table, $column, $schema->$column);
+          $status = 'updated';
+        }
+      }
+      $indexes = array_keys($schema->indexes);
+      $oldIndexes = array_keys($oldSchema->indexes);
+      $allIndexes = array_unique(array_merge($indexes, $oldIndexes));
+      foreach ($allIndexes as $index) {
+        if (!isset($oldSchema->indexes[$index])) {
+          $this->createIndex($table, $index, $schema->indexes[$index]);
+          $status = 'updated';
+        }
+        else if (!isset($schema->indexes[$index])) {
+          $this->deleteIndex($table, $index);
+          $status = 'updated';
+        }
+        else if ($schema->indexes[$index] != $oldSchema->indexes[$index]) {
+          $this->alterIndex($table, $index, $schema->indexes[$index]);
+          $status = 'updated';
+        }
+      }
+      return $status;
+    }
+    else {
+      $this->createTable($schema);
+      return 'new';
+    }
+  }
+
+  public abstract function createTable(Schema $schema);
+
+  public abstract function dropTable($table);
+
+  public abstract function addColumn($table, $column, $options = array());
+
+  public abstract function deleteColumn($table, $column);
+
+  public abstract function alterColumn($table, $column, $options = array());
+
+  public abstract function createIndex($table, $index, $options = array());
+
+  public abstract function deleteIndex($table, $index);
+
+  public abstract function alterIndex($table, $index, $options = array());
+
 }
 

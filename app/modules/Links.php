@@ -21,22 +21,13 @@ class Links extends ModuleBase {
   protected function init() {
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'Link.php'));
+    $linksSchema = new linksSchema();
 
-    if (!$this->m->Database->tableExists('links')) {
-      $this->m->Database->createQuery('links')
-        ->addInt('id', TRUE, TRUE)
-        ->setPrimaryKey('id')
-        ->addVarchar('menu', 255)
-        ->addVarchar('type', 10)
-        ->addVarchar('title', 255)
-        ->addText('path')
-        ->addIndex(FALSE, 'menu')
-        ->execute();
-      $newInstall = TRUE;
-    }
+    $newInstall = $this->m->Database->migrate($linksSchema) == 'new';
 
-    ActiveRecord::addModel('Link', $this->m->Database->links);
+    $this->m->Database->links->setSchema($linksSchema);
+
+    Link::connect($this->m->Database->links);
 
     if ($newInstall) {
       $link = Link::create();

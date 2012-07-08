@@ -6,79 +6,89 @@ include p(CLASSES . 'database/MysqlDatabase.php');
 class postsSchema extends Schema {
   public $id = array(
     'type' => 'integer',
+    'length' => 10,
     'key' => 'primary',
-    'autoIncrement' => TRUE,
-    'null' => FALSE
+    'autoIncrement' => true,
+    'null' => false,
   );
 
   public $name = array(
     'type' => 'string',
-    'legnth' => 255,
-    'key' => 'unique'
+    'length' => 255,
+    'key' => 'unique',
+    'null' => false,
   );
 
   public $title = array(
     'type' => 'string',
-    'length' => 255
+    'length' => 255,
+    'null' => false,
   );
 
   public $content = array(
-    'type' => 'text'
+    'type' => 'text',
+    'null' => false,
   );
 
   public $date = array(
-    'type' => 'timestamp',
-    'key' => 'index'
+    'type' => 'integer',
+    'length' => 10,
+    'key' => 'index',
+    'null' => false,
   );
 
   public $comments = array(
-    'type' => 'integer'
+    'type' => 'integer',
+    'length' => 11,
+    'null' => false,
   );
 
   public $state = array(
-    'type' => 'string'
+    'type' => 'string',
+    'length' => 255,
+    'null' => false,
   );
 
   public $commenting = array(
-    'type' => 'string'
+    'type' => 'string',
+    'length' => 255,
+    'null' => false,
   );
 
   public $user_id = array(
     'type' => 'integer',
-    'key' => 'index'
+    'length' => 11,
+    'null' => false,
   );
-
 
   public $indexes = array(
     'PRIMARY' => array(
       'columns' => array('id'),
-      'unique' => TRUE
+      'unique' => true
     ),
     'name' => array(
       'columns' => array('name'),
-      'unique' => TRUE
+      'unique' => true
     ),
     'date' => array(
       'columns' => array('date'),
-      'unique' => FALSE
-    )
+      'unique' => false
+    ),
   );
 }
-
 echo '<pre>';
 
 
 $options = array(
   'server' => 'localhost',
-  'username' => 'peanutcms',
-  'password' => 'peanutcms',
-  'database' => 'peanutcms'
+  'username' => 'peanutcms-test',
+  'password' => 'peanutcms-test',
+  'database' => 'peanutcms-testing'
 );
 
 $db = new MysqlDatabase($options);
 
-$table = 'tags';
 
-$schema = $db->getTable($table)->getSchema();
+var_dump($db->migrate(new postsSchema()));
 
 echo '</pre>';

@@ -42,11 +42,20 @@ class Database extends ModuleBase implements IDatabase  {
     }
   }
 
-  public function migrate(IMigration $migration) {
-    if ($this->m->Configuration->get('migration.version')) {
+  public function migrate(Schema $schema) {
+    if ($schema->getName() == 'undefined') {
+      return FALSE;
+    }
+    $name = $schema->getName();
+    if ($this->m->Configuration->exists('database.migration.' . $name)) {
+      if ($this->m->Configuration->get('database.migration.' . $name) == PEANUT_VERSION) {
+        return 'unchanged';
+      }
     }
     if ($this->connection) {
-      return $this->connection->migrate($migration);
+      $status = $this->connection->migrate($schema);
+      $this->m->Configuration->set('database.migration.' . $name, PEANUT_VERSION);
+      return $status;
     }
   }
   /* End IDatabase implementation */

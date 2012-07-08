@@ -30,6 +30,11 @@ class Posts extends ModuleBase {
     $posts_tagsSchema = new posts_tagsSchema();
     $commentsSchema = new commentsSchema();
 
+    $newInstall = $this->m->Database->migrate($postsSchema) == 'new';
+    $this->m->Database->migrate($tagsSchema);
+    $this->m->Database->migrate($posts_tagsSchema);
+    $this->m->Database->migrate($commentsSchema);
+
     $this->m->Database->posts->setSchema($postsSchema);
     $this->m->Database->tags->setSchema($tagsSchema);
     $this->m->Database->posts_tags->setSchema($posts_tagsSchema);

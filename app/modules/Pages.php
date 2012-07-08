@@ -23,24 +23,14 @@ class Pages extends ModuleBase {
   protected function init() {
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'Page.php'));
 
-    if (!$this->m->Database->tableExists('pages')) {
-      $this->m->Database->createQuery('pages')
-        ->addInt('id', TRUE, TRUE)
-        ->setPrimaryKey('id')
-        ->addVarchar('name', 255)
-        ->addVarchar('title', 255)
-        ->addText('content')
-        ->addInt('date', TRUE)
-        ->addVarchar('state', 10)
-        ->addIndex(TRUE, 'name')
-        ->addIndex(FALSE, 'date')
-        ->execute();
-      $newInstall = TRUE;
-    }
+    $pagesSchema = new pagesSchema();
 
-    ActiveRecord::addModel('Page', $this->m->Database->pages);
+    $newInstall = $this->m->Database->migrate($pagesSchema) == 'new';
+
+    $this->m->Database->pages->setSchema($pagesSchema);
+
+    Page::connect($this->m->Database->pages);
 
     if ($newInstall) {
       $page = Page::create();

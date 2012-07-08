@@ -34,6 +34,10 @@ class Schema {
     }
   }
 
+  public function __isset($column) {
+    return isset($this->_schema[$column]);
+  }
+
   public function getName() {
     return $this->_name;
   }
@@ -93,11 +97,11 @@ class Schema {
   public function export() {
     $source = '<?php' . PHP_EOL;
     $source .= '/**' . PHP_EOL;
-    $source .= ' * Automatically generated schema for ' . $this->name . ' table' . PHP_EOL;
+    $source .= ' * Automatically generated schema for ' . $this->_name . ' table' . PHP_EOL;
     $source .= ' */' . PHP_EOL;
-    $source .= 'class ' . $this->name . 'Schema extends Schema {' . PHP_EOL;
+    $source .= 'class ' . $this->_name . 'Schema extends Schema {' . PHP_EOL;
 
-    foreach ($this->schema as $column => $info) {
+    foreach ($this->_schema as $column => $info) {
       $source .= '  public $' . $column . ' = array(' . PHP_EOL;
       foreach ($info as $key => $value) {
         $source .= "    '" . $key . "' => " . var_export($value, TRUE) . ',' . PHP_EOL;
