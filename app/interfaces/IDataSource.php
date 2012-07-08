@@ -2,6 +2,12 @@
 interface IDataSource {
   public function getName();
   /**
+   * @return Schema
+   */
+  public function getSchema();
+
+  public function setSchema(Schema $schema = NULL);
+  /**
    * The C of CRUD (Create).
    * @since 0.3.0
    * @param InsertQuery $query The insert query

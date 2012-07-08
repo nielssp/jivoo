@@ -43,6 +43,8 @@ class Database extends ModuleBase implements IDatabase  {
   }
 
   public function migrate(IMigration $migration) {
+    if ($this->m->Configuration->get('migration.version')) {
+    }
     if ($this->connection) {
       return $this->connection->migrate($migration);
     }

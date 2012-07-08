@@ -28,9 +28,7 @@ abstract class SqlDatabase implements IDatabase {
     return $this->tablePrefix . $name;
   }
 
-  public abstract function getColumns($table);
-
-  public abstract function getPrimaryKey($table);
+  public abstract function getSchema($table);
 
   public abstract function escapeString($string);
 

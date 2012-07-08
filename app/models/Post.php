@@ -1,5 +1,26 @@
 <?php
 
+/**
+ * Post model
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $title
+ * @property string $content
+ * @property int $date Timestamp
+ * @method Tag[] getTags() Retrieve all tags associated with post
+ * @method bool hasTag(Tag $tag) Check if a tag belongs to post
+ * @method void addTag(Tag $tag) Add a tag to post
+ * @method void removeTag(Tag $tag) Remove tag from post
+ * @method Comment[] getComments() Retrieve all comments associated with post
+ * @method bool hasComment(Comment $comment) Check if a comment belongs to post
+ * @method void addComment(Comment $comment) Add a comment to post
+ * @method void removeComment(Comment $comment) Remove a comment from post
+ * @method User getUser() Retrieve the user associeated with post
+ * @method void setUser(User $user) Set the user
+ * @method Category getCategory()
+ * @method void setCategory(Category $category)
+ */
 class Post extends ActiveRecord implements ILinkable {
 
   protected $hasAndBelongsToMany = array(

@@ -2,6 +2,7 @@
 class SqlTable implements ITable {
   private $owner = NULL;
   private $name = '';
+  private $schema = NULL;
 
   public function __construct(SqlDatabase $database, $table) {
     $this->owner = $database;
@@ -10,6 +11,17 @@ class SqlTable implements ITable {
 
   public function getName() {
     return $this->name;
+  }
+
+  public function getSchema() {
+    if (!isset($this->schema)) {
+      $this->schema = $this->owner->getSchema($this->name);
+    }
+    return $this->schema;
+  }
+
+  public function setSchema(Schema $schema = NULL) {
+    $this->schema = $schema;
   }
 
   public function getOwner() {
@@ -135,11 +147,11 @@ class SqlTable implements ITable {
   }
 
   public function getcolumns() {
-    return $this->owner->getColumns($this->name);
+    return $this->getSchema()->getColumns();
   }
 
   public function getPrimaryKey() {
-    return $this->owner->getPrimaryKey($this->name);
+    return $this->getSchema()->getPrimaryKey();
   }
 }
 

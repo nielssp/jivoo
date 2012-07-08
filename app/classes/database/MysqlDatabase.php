@@ -26,19 +26,106 @@ class MysqlDatabase extends SqlDatabase {
     mysql_close($this->handle);
   }
 
-  public function getColumns($table) {
-    $result = $this->rawQuery('SHOW COLUMNS FROM ' . $this->tableName($table));
-    $columns = array();
-    while ($row = $result->fetchAssoc()) {
-      $columns[] = $row['Field'];
+
+  public function fromSchematype($type, $length = NULL) {
+    switch ($type) {
+      case 'string':
+        $type = 'varchar';
+        if (!isset($length)) $length = 255;
+        break;
+      case 'integer':
+        $type = 'int';
+        break;
+      case 'binary':
+        $type = 'blob';
+        break;
+      case 'float':
+        $type = 'double';
+        break;
+      default:
+        $type = 'text';
+        break;
     }
-    return $columns;
+    if (isset($length)) {
+      $type .= '(' . $length . ')';
+    }
+    return $type;
   }
 
-  public function getPrimaryKey($table) {
-    $result = $this->rawQuery('SHOW INDEX FROM ' . $this->tableName($table) . ' WHERE Key_name = "PRIMARY"');
-    $row = $result->fetchAssoc();
-    return $row['Column_name'];
+  public function toSchemaType($type) {
+    $length = NULL;
+    if (strpos($type, '(') !== FALSE) {
+      list($type, $right) = explode('(', $type);
+      list($length) = explode(')', $right);
+      $length = (int)$length;
+    }
+    if (strpos($type, 'char') !== FALSE) {
+      $type = 'string';
+    }
+    else if (strpos($type, 'int') !== FALSE) {
+      $type = 'integer';
+    }
+    else if (strpos($type, 'blob') !== FALSE OR $type === 'binary') {
+      $type = 'binary';
+    }
+    else if (strpos($type, 'float') !== FALSE OR strpos($type, 'double') !== FALSE
+      OR strpos($type, 'decimal') !== FALSE) {
+      $type = 'float';
+    }
+    else {
+      $type = 'text';
+    }
+    return array($type, $length);
+  }
+
+  public function getSchema($table) {
+    if (file_exists(p(APP . 'schemas/' . $table . 'Schema.php'))) {
+      include(p(APP . 'schemas/' . $table . 'Schema.php'));
+      $className = $table . 'Schema';
+      return new $className();
+    }
+    $schema = new Schema($table);
+    $result = $this->rawQuery('SHOW COLUMNS FROM ' . $this->tableName($table));
+    while ($row = $result->fetchAssoc()) {
+      $info = array();
+      $column = $row['Field'];
+      $type = $this->toSchemaType($row['Type']);
+      $info['type'] = $type[0];
+      if (isset($type[1])) {
+        $info['length'] = $type[1];
+      }
+      if (isset($row['Key'])) {
+        if ($row['Key'] == 'PRI') {
+          $info['key'] = 'primary';
+        }
+        else if ($row['Key'] == 'UNI') {
+          $info['key'] = 'unique';
+        }
+        else if ($row['Key'] == 'MUL') {
+          $info['key'] = 'index';
+        }
+      }
+      if (isset($row['Extra'])) {
+        if (strpos($row['Extra'], 'auto_increment') !== FALSE) {
+          $info['autoIncrement'] = TRUE;
+        }
+      }
+      if (isset($row['Default'])) {
+        $info['default'] = $row['Default'];
+      }
+      if (isset($row['Null'])) {
+        $info['null'] = $row['Null'] != 'NO';
+      }
+      $schema->addColumn($column, $info);
+    }
+    $result = $this->rawQuery('SHOW INDEX FROM ' . $this->tableName($table));
+    while ($row = $result->fetchAssoc()) {
+      $index = $row['Key_name'];
+      $column = $row['Column_name'];
+      $unique = $row['Non_unique'] == 0 ? TRUE : FALSE;
+      $schema->addIndex($index, $column, $unique);
+    }
+    return $schema;
   }
 
   public function escapeString($string) {

@@ -3,30 +3,82 @@ include '../app/essentials.php';
 
 include p(CLASSES . 'database/MysqlDatabase.php');
 
+class postsSchema extends Schema {
+  public $id = array(
+    'type' => 'integer',
+    'key' => 'primary',
+    'autoIncrement' => TRUE,
+    'null' => FALSE
+  );
+
+  public $name = array(
+    'type' => 'string',
+    'legnth' => 255,
+    'key' => 'unique'
+  );
+
+  public $title = array(
+    'type' => 'string',
+    'length' => 255
+  );
+
+  public $content = array(
+    'type' => 'text'
+  );
+
+  public $date = array(
+    'type' => 'timestamp',
+    'key' => 'index'
+  );
+
+  public $comments = array(
+    'type' => 'integer'
+  );
+
+  public $state = array(
+    'type' => 'string'
+  );
+
+  public $commenting = array(
+    'type' => 'string'
+  );
+
+  public $user_id = array(
+    'type' => 'integer',
+    'key' => 'index'
+  );
+
+
+  public $indexes = array(
+    'PRIMARY' => array(
+      'columns' => array('id'),
+      'unique' => TRUE
+    ),
+    'name' => array(
+      'columns' => array('name'),
+      'unique' => TRUE
+    ),
+    'date' => array(
+      'columns' => array('date'),
+      'unique' => FALSE
+    )
+  );
+}
+
 echo '<pre>';
+
 
 $options = array(
   'server' => 'localhost',
-  'username' => 'peanutcms-test',
-  'password' => 'peanutcms-test',
-  'database' => 'peanutcms-testing'
+  'username' => 'peanutcms',
+  'password' => 'peanutcms',
+  'database' => 'peanutcms'
 );
 
 $db = new MysqlDatabase($options);
-var_dump($db->tableExists('posts'));
-var_dump($db->tableExists('users'));
 
-var_dump(isset($db->posts));
-var_dump(isset($db->users));
+$table = 'tags';
 
-var_dump($table = $db->posts);
-
-var_dump($table->getColumns());
-
-var_dump($db->posts->count(SelectQuery::create()->where('name LIKE ?', 'test%')));
-
-var_dump($db->posts->update(UpdateQuery::create()->set('content', 'testing2')->where('name  = ?', 'test2')));
-
-var_dump($db->posts->update()->set('title', 'Test no. 2')->where('name = ?', 'test2')->execute());
+$schema = $db->getTable($table)->getSchema();
 
 echo '</pre>';
