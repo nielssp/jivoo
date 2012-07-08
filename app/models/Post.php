@@ -57,10 +57,14 @@ class Post extends ActiveRecord implements ILinkable {
         'message' => 'Only lowercase letters, numbers and dashes allowed.'
       ),
     ),
+    'content' => array(
+      'presence' => TRUE,
+    ),
   );
 
   protected $defaults = array(
     'comments' => 0,
+    'date' => array('time'),
     'user_id' => 0
   );
 

@@ -328,9 +328,49 @@ abstract class ActiveRecord {
     $this->dataSource = self::$models[$class]['source'];
     $this->table = self::$models[$class]['table'];
     $this->primaryKey = self::$models[$class]['primaryKey'];
+    $schema = self::$models[$class]['schema'];
     $this->data = array();
     foreach (self::$models[$class]['columns'] as $column) {
       $this->data[$column] = NULL;
+      if ($column == $this->primaryKey) {
+        continue;
+      }
+      if (!isset($this->validate[$column])) {
+        $this->validate[$column] = array();
+      }
+      if (isset($schema->$column)) {
+        $info = $schema->$column;
+        if ($info['type'] == 'integer') {
+          /** @todo Handle signed integers */
+          $this->validate[$column]['isInteger'] = TRUE;
+          if (isset($this->validate[$column]['maxValue'])) {
+            $this->validate[$column]['maxValue'] = min($this->validate[$column]['maxValue'], 4294967295);
+          }
+          else {
+            $this->validate[$column]['maxValue'] = 4294967295;
+          }
+          if (isset($this->validate[$column]['minValue'])) {
+            $this->validate[$column]['minValue'] = max(0, $this->validate[$column]['minValue']);
+          }
+          else {
+            $this->validate[$column]['minValue'] = 0;
+          }
+        }
+        else if ($info['type'] == 'float') {
+          $this->validate[$column]['isFloat'] = TRUE;
+        }
+        if (isset($info['length']) AND $info['type'] != 'float' AND $info['type'] != 'integer') {
+          if (isset($this->validate[$column]['maxLength'])) {
+            $this->validate[$column]['maxLength'] = min($this->validate[$column]['maxLength'], $info['length']);
+          }
+          else {
+            $this->validate[$column]['maxLength'] = $info['length'];
+          }
+        }
+        if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
+          $this->validate[$column]['unique'] = TRUE;
+        }
+      }
     }
     foreach ($this->hasOne as $class => $options) {
       $this->associations['get' . $class] = array('hasOne', 'get', $class);
@@ -388,7 +428,15 @@ abstract class ActiveRecord {
     $new->isSaved = FALSE;
     $data = array_merge($new->defaults, $data);
     foreach ($data as $property => $value) {
-      $new->data[$property] = $value;
+      if (is_array($value)) {
+        if (is_callable($value[0])) {
+          $function = array_shift($value);
+          $new->data[$property] = call_user_func_array($function, $value);
+        }
+      }
+      else {
+        $new->data[$property] = $value;
+      }
     }
     return $new;
   }
@@ -416,6 +464,8 @@ abstract class ActiveRecord {
         return is_numeric($value) == $conditionValue;
       case 'isInteger':
         return (preg_match('/\A[+-]?\d+\Z/', $value) == 1) == $conditionValue;
+      case 'isFloat':
+        return (preg_match('/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/', $value) == 1) == $conditionValue;
       case 'minValue':
         $value = is_float($conditionValue) ? (float) $value : (int) $value;
         return $value >= $conditionValue;
@@ -455,6 +505,8 @@ abstract class ActiveRecord {
         return $value ? tr('Must be numeric.') : tr('Must not be numeric.');
       case 'isInteger':
         return $value ? tr('Must be an integer.') : tr('Must not be an integer.');
+      case 'isFloat':
+        return $value ? tr('Must be a decimal number.') : tr('Must not be a decimal number.');
       case 'minValue':
         return tr('Minimum value of %1.', $value);
       case 'maxValue':

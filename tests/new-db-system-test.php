@@ -93,7 +93,9 @@ Post::connect($db->posts);
 
 $post = Post::create();
 $post->name = '2';
-$post->title = 'abcdsf';
+$post->title = '1.22415215';
+
+var_dump($post->date);
 
 var_dump($post->isValid());
 
