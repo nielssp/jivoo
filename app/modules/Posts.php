@@ -25,69 +25,19 @@ class Posts extends ModuleBase {
 
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'Post.php'));
+    $postsSchema = new postsSchema();
+    $tagsSchema = new tagsSchema();
+    $posts_tagsSchema = new posts_tagsSchema();
+    $commentsSchema = new commentsSchema();
 
-    if (!$this->m->Database->tableExists('posts')) {
-      $this->m->Database->createQuery('posts')
-        ->addInt('id', TRUE, TRUE)
-        ->setPrimaryKey('id')
-        ->addVarchar('name', 255)
-        ->addVarchar('title', 255)
-        ->addText('content')
-        ->addInt('date', TRUE)
-        ->addInt('comments', TRUE)
-        ->addVarchar('state', 10)
-        ->addVarchar('commenting', 10)
-        ->addInt('user_id', TRUE)
-        ->addIndex(TRUE, 'name')
-        ->addIndex(FALSE, 'date')
-        ->addIndex(FALSE, 'user_id')
-        ->execute();
-      $newInstall = TRUE;
-    }
+    $this->m->Database->posts->setSchema($postsSchema);
+    $this->m->Database->tags->setSchema($tagsSchema);
+    $this->m->Database->posts_tags->setSchema($posts_tagsSchema);
+    $this->m->Database->comments->setSchema($commentsSchema);
 
-    ActiveRecord::addModel('Post', $this->m->Database->posts);
-
-    require_once(p(MODELS . 'Tag.php'));
-
-    if (!$this->m->Database->tableExists('tags')) {
-      $this->m->Database->createQuery('tags')
-        ->addInt('id', TRUE, TRUE)
-        ->setPrimaryKey('id')
-        ->addVarchar('tag', 255)
-        ->addVarchar('name', 255)
-        ->addIndex(TRUE, 'name')
-        ->execute();
-    }
-    if (!$this->m->Database->tableExists('posts_tags')) {
-      $this->m->Database->createQuery('posts_tags')
-        ->addInt('post_id', TRUE)
-        ->addInt('tag_id', TRUE)
-        ->setPrimaryKey('post_id', 'tag_id')
-        ->execute();
-    }
-
-    ActiveRecord::addModel('Tag', $this->m->Database->tags);
-
-    require_once(p(MODELS . 'Comment.php'));
-
-    if (!$this->m->Database->tableExists('comments')) {
-      $this->m->Database->createQuery('comments')
-        ->addInt('id', TRUE, TRUE)
-        ->setPrimaryKey('id')
-        ->addInt('post_id', TRUE)
-        ->addInt('user_id', TRUE, FALSE, 0)
-        ->addInt('parent_id', TRUE, FALSE, 0)
-        ->addVarchar('author', 255)
-        ->addVarchar('email', 255)
-        ->addVarchar('website', 255)
-        ->addText('content')
-        ->addInt('date', TRUE)
-        ->addIndex(FALSE, 'post_id')
-        ->execute();
-    }
-
-    ActiveRecord::addModel('Comment', $this->m->Database->comments);
+    Post::connect($this->m->Database->posts);
+    Tag::connect($this->m->Database->tags);
+    Comment::connect($this->m->Database->comments);
 
     if ($newInstall) {
       $post = Post::create();

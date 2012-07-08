@@ -9,6 +9,15 @@ abstract class ActiveRecord {
       'primaryKey' => $dataSource->getPrimaryKey()
     );
   }
+  public static function connect(IDataSource $dataSource) {
+    $class = get_called_class();
+    self::$models[$class] = array(
+      'source' => $dataSource,
+      'table' => $dataSource->getName(),
+      'columns' => $dataSource->getColumns(),
+      'primaryKey' => $dataSource->getPrimaryKey()
+    );
+  }
   private static $cache = array();
 
   private $table;
@@ -157,7 +166,7 @@ abstract class ActiveRecord {
     $select->where($options['thisKey'] . ' = ?');
     $select->addVar($this->data[$this->primaryKey]);
 
-    $result = $this->dataSource->select($select);
+    $result = self::$models[$otherClass]['source']->select($select);
     if (isset($options['count']) AND !isset($customSelect)) {
       if ($this->data[$options['count']] != $result->count()) {
         $this->data[$options['count']] = $result->count();
@@ -369,7 +378,6 @@ abstract class ActiveRecord {
   }
 
   public static function create($data = array()) {
-    $db = self::connection();
     $class = get_called_class();
     $new = new $class();
     $new->isNew = TRUE;

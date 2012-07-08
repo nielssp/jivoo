@@ -113,6 +113,10 @@ if (!defined('MODELS')) {
   define('MODELS', APP . 'models/');
 }
 
+if (!defined('SCHEMAS')) {
+  define('SCHEMAS', APP . 'schemas/');
+}
+
 if (!defined('TEMPLATES')) {
   define('TEMPLATES', APP . 'templates/');
 }

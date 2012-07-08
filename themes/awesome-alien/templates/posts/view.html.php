@@ -38,7 +38,6 @@ if ($post->comments > 0):
 ?>
 <h1><?php echo trn('%1 comment', '%1 comments', $post->comments); ?></h1>
 
-
 <ul class="comments">
 <?php
 $level = -1;

@@ -79,11 +79,6 @@ class MysqlDatabase extends SqlDatabase {
   }
 
   public function getSchema($table) {
-    if (file_exists(p(APP . 'schemas/' . $table . 'Schema.php'))) {
-      include(p(APP . 'schemas/' . $table . 'Schema.php'));
-      $className = $table . 'Schema';
-      return new $className();
-    }
     $schema = new Schema($table);
     $result = $this->rawQuery('SHOW COLUMNS FROM ' . $this->tableName($table));
     while ($row = $result->fetchAssoc()) {

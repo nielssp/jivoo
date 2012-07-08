@@ -52,10 +52,10 @@ class Backend extends ModuleBase implements ILinkable {
     $this->m->Routes->onRendering(array($this, 'createMenu'));
 
     $this->addCategory('peanutcms', 'PeanutCMS', -2);
-    $this->addLink('peanutcms', 'logout', tr('Log out'), $this->m->Actions->add('logout'), 10);
-    $this->addLink('peanutcms', 'dashboard', tr('Dashboard'), explode('/', $path), 0);
-    $this->addLink('peanutcms', 'about', tr('About'), explode('/', $aboutPath), 8);
-    $this->addLink('peanutcms', 'home', tr('Home'), array(), 0);
+    $this->addLink('peanutcms', 'logout', tr('Log out'), array('query' => array('logout' => '')), 10);
+    $this->addLink('peanutcms', 'dashboard', tr('Dashboard'), array('path' => explode('/', $path)), 0);
+    $this->addLink('peanutcms', 'about', tr('About'), array('path' => explode('/', $aboutPath)), 8);
+    $this->addLink('peanutcms', 'home', tr('Home'), NULL, 0);
 
     $this->addCategory('settings', tr('Settings'), 10);
     $mainConfigPage = new ConfigurationPage($this, $this->m->Templates);
@@ -116,7 +116,7 @@ class Backend extends ModuleBase implements ILinkable {
     }
   }
 
-  public function addLink($categoryId, $pageId, $pageTitle, $path, $group = 0, $shortcut = NULL) {
+  public function addLink($categoryId, $pageId, $pageTitle, $route, $group = 0, $shortcut = NULL) {
     if (!isset($this->categories[$categoryId])) {
       $this->addCategory($categoryId, ucfirst($categoryId));
     }
@@ -127,13 +127,7 @@ class Backend extends ModuleBase implements ILinkable {
     $this->categories[$categoryId]->links[$pageId]->title = $pageTitle;
     $this->categories[$categoryId]->links[$pageId]->group = $group;
     $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle, $categoryId);
-    if (is_array($path)) {
-      $this->categories[$categoryId]->links[$pageId]->path = $path;
-      $this->categories[$categoryId]->links[$pageId]->link = $this->m->Http->getLink($path);
-    }
-    else {
-      $this->categories[$categoryId]->links[$pageId]->link = $path;
-    }
+    $this->categories[$categoryId]->links[$pageId]->route = $route;
   }
 
   public function addPage($categoryId, $pageId, $pageTitle, $pageController, $group = 0, $shortcut = NULL) {
@@ -159,8 +153,7 @@ class Backend extends ModuleBase implements ILinkable {
     $this->categories[$categoryId]->links[$pageId]->title = $pageTitle;
     $this->categories[$categoryId]->links[$pageId]->group = $group;
     $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle, $categoryId);
-    $this->categories[$categoryId]->links[$pageId]->path = $path;
-    $this->categories[$categoryId]->links[$pageId]->link = $this->m->Http->getLink($path);
+    $this->categories[$categoryId]->links[$pageId]->route = array('path' => $path);
   }
 
   /** @todo In case of overflow; combine remaining categories under one "More"-category */
@@ -196,7 +189,7 @@ class BackendLink implements IGroupable, ILinkable {
   public $id;
   public $title;
   public $group;
-  public $path;
+  public $route;
   public $shortcut;
 
   public function getGroup() {
@@ -204,6 +197,6 @@ class BackendLink implements IGroupable, ILinkable {
   }
 
   public function getRoute() {
-    return array('path' => $this->path);
+    return $this->route;
   }
 }

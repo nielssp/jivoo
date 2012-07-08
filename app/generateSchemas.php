@@ -28,7 +28,7 @@ $tables = array(
 foreach ($tables as $table) {
   echo 'Generating schema for ' . $table . '...' . PHP_EOL;
   $schema = $db->$table->getSchema();
-  $file = fopen(p(APP . 'schemas/' . $table . 'Schema.php'), 'w');
+  $file = fopen(p(SCHEMAS . $table . 'Schema.php'), 'w');
   fwrite($file, $schema->export());
   fclose($file);
 }

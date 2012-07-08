@@ -432,11 +432,11 @@ function h($string) {
 }
 
 function __autoload($className) {
-  if ($className[0] == 'I' AND file_exists($path = p(INTERFACES . className($className) . '.php'))) {
+  if ($className[0] == 'I' AND file_exists($path = p(INTERFACES . $className . '.php'))) {
     include($path);
   }
   else {
-    $fileName = className($className) . '.php';
+    $fileName = $className . '.php';
     if (file_exists(p(CLASSES . $fileName))) {
       include(p(CLASSES . $fileName));
     }
@@ -446,8 +446,14 @@ function __autoload($className) {
     else if (file_exists(p(CONTROLLERS . $fileName))) {
       include(p(CONTROLLERS . $fileName));
     }
+    else if (file_exists(p(MODELS . $fileName))) {
+      include(p(MODELS . $fileName));
+    }
     else if (file_exists(p(MODULES . $fileName))) {
       include(p(MODULES . $fileName));
+    }
+    else if (file_exists(p(SCHEMAS . $fileName))) {
+      include(p(SCHEMAS . $fileName));
     }
   }
 }
