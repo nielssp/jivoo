@@ -364,6 +364,7 @@ abstract class ActiveRecord {
         $new->data[$property] = $value;
       }
     }
+    $new->addToCache();
     return $new;
   }
 

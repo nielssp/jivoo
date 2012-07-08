@@ -8,14 +8,17 @@ class Group extends ActiveRecord {
   private $permissions;
 
   private function fetchPermissions() {
-    $db = self::connection();
-    $result = $db->selectQuery('groups_permissions')
-      ->where('group_id = ?')
-      ->addVar($this->id)
-      ->execute();
-    $this->permissions = array();
-    while ($row = $result->fetchAssoc()) {
-      $this->permissions[$row['permission']] = TRUE;
+    $dataSource = self::connection('Group');
+    if ($dataSource instanceof ITable) {
+      $dataSource = $dataSource->getOwner()->groups_permissions;
+      $result = $dataSource->select()
+        ->where('group_id = ?')
+        ->addVar($this->id)
+        ->execute();
+      $this->permissions = array();
+      while ($row = $result->fetchAssoc()) {
+        $this->permissions[$row['permission']] = TRUE;
+      }
     }
   }
 
