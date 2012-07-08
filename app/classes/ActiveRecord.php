@@ -2,20 +2,24 @@
 abstract class ActiveRecord {
   private static $models = array();
   public static function addModel($class, IDataSource $dataSource) {
+    $schema = $dataSource->getSchema();
     self::$models[$class] = array(
       'source' => $dataSource,
       'table' => $dataSource->getName(),
-      'columns' => $dataSource->getColumns(),
-      'primaryKey' => $dataSource->getPrimaryKey()
+      'schema' => $schema,
+      'columns' => $schema->getColumns(),
+      'primaryKey' => $schema->getPrimaryKey()
     );
   }
   public static function connect(IDataSource $dataSource) {
     $class = get_called_class();
+    $schema = $dataSource->getSchema();
     self::$models[$class] = array(
       'source' => $dataSource,
       'table' => $dataSource->getName(),
-      'columns' => $dataSource->getColumns(),
-      'primaryKey' => $dataSource->getPrimaryKey()
+      'schema' => $schema,
+      'columns' => $schema->getColumns(),
+      'primaryKey' => $schema->getPrimaryKey()
     );
   }
   private static $cache = array();
@@ -392,9 +396,18 @@ abstract class ActiveRecord {
   protected function validateValue($column, $value, $conditionKey, $conditionValue) {
     $validate = array();
     $class = get_class($this);
+    if (is_int($conditionKey) AND is_array($conditionValue)) {
+      foreach ($conditionValue as $subConditionKey => $subConditionValue) {
+        $validate = $this->validateValue($column, $value, $subConditionKey, $subConditionValue);
+        if (!$validate) {
+          return FALSE;
+        }
+      }
+      return TRUE;
+    }
     switch ($conditionKey) {
       case 'presence':
-        return empty($value) != $conditionValue;
+        return (!empty($value) OR is_numeric($value)) == $conditionValue;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -418,10 +431,41 @@ abstract class ActiveRecord {
           ->limit(1)
           ->execute();
         return $result->hasRows() != $conditionValue;
-      case 'custom':
+      case 'callback':
         return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);
     }
-    return true;
+    return TRUE;
+  }
+
+  protected function getMessage($rule, $value) {
+    if (is_int($rule) AND is_array($value)) {
+      if (isset($value['message'])) {
+        return tr($value['message']);
+      }
+      return tr('Invalid value.');
+    }
+    switch ($rule) {
+      case 'presence':
+        return $value ? tr('Must not be empty.') : tr('Must be empty.');
+      case 'minLength':
+        return trn('Minimum length of %1 character.', 'Minimum length of %1 characters.', $value);
+      case 'maxLength':
+        return trn('Maximum length of %1 character.', 'Maximum length of %1 characters.', $value);
+      case 'isNumeric':
+        return $value ? tr('Must be numeric.') : tr('Must not be numeric.');
+      case 'isInteger':
+        return $value ? tr('Must be an integer.') : tr('Must not be an integer.');
+      case 'minValue':
+        return tr('Minimum value of %1.', $value);
+      case 'maxValue':
+        return tr('Maximum value of %1.', $value);
+      case 'unique':
+        return $value ? tr('Must be unique.') : tr('Must not be unique.');
+      case 'match':
+      case 'callback':
+      default:
+        return tr('Invalid value.');
+    }
   }
 
   public function isValid() {
@@ -433,15 +477,15 @@ abstract class ActiveRecord {
       foreach ($this->validate[$column] as $conditionKey => $conditionValue) {
         $validate = $this->validateValue($column, $value, $conditionKey, $conditionValue);
         if (!$validate) {
-          $this->errors[$column] = $conditionKey;
+          $this->errors[$column] = $this->getMessage($conditionKey, $conditionValue);
           break;
         }
       }
     }
     if (count($this->errors) < 1) {
-      return true;
+      return TRUE;
     }
-    return false;
+    return FALSE;
   }
 
   public function getErrors() {

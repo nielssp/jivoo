@@ -145,13 +145,5 @@ class SqlTable implements ITable {
     $row = $result->fetchRow();
     return $row[0];
   }
-
-  public function getcolumns() {
-    return $this->getSchema()->getColumns();
-  }
-
-  public function getPrimaryKey() {
-    return $this->getSchema()->getPrimaryKey();
-  }
 }
 

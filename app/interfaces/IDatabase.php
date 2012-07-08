@@ -8,6 +8,8 @@ interface IDatabase {
   public function migrate(Schema $schema);
 }
 
+class DatabaseConnectionFailedException extends Exception { }
+class DatabaseSelectFailedException extends Exception { }
 class DatabaseQueryFailedException extends Exception { } 
 
 /*

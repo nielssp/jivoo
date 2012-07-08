@@ -37,7 +37,5 @@ interface IDataSource {
    */
   public function delete(DeleteQuery $query = NULL);
   public function count(SelectQuery $query = NULL);
-  public function getColumns();
-  public function getPrimaryKey();
 }
 

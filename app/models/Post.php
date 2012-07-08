@@ -42,16 +42,21 @@ class Post extends ActiveRecord implements ILinkable {
   protected $hasOne = array(
     'Category' => array('class' => 'Tag')
   );
-  
+
   protected $validate = array(
-    'title' => array('presence' => true,
-                     'maxLength' => 50),
-    'name' => array('presence' => true,
-                    'unique' => true,
-                    'minLength' => 1,
-                    'maxLength' => 50,
-                    'match' => '/^[a-z0-9-]+$/'),
-    'content' => array('presence' => true),
+    'title' => array(
+      'presence' => TRUE,
+    ),
+    'name' => array(
+      'presence' => TRUE,
+      'unique' => TRUE,
+      'minLength' => 1,
+      'maxLength' => 50,
+      array(
+        'match' => '/^[a-z0-9-]+$/',
+        'message' => 'Only lowercase letters, numbers and dashes allowed.'
+      ),
+    ),
   );
 
   protected $defaults = array(

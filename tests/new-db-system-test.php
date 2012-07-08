@@ -89,6 +89,14 @@ $options = array(
 $db = new MysqlDatabase($options);
 
 
-var_dump($db->migrate(new postsSchema()));
+Post::connect($db->posts);
+
+$post = Post::create();
+$post->name = '2';
+$post->title = 'abcdsf';
+
+var_dump($post->isValid());
+
+var_dump($post->getErrors());
 
 echo '</pre>';
