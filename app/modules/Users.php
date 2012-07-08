@@ -31,49 +31,20 @@ class Users extends ModuleBase {
   protected function init() {
     $newInstall = FALSE;
 
-    require_once(p(MODELS . 'User.php'));
+    $usersSchema = new usersSchema();
+    $groupsSchema = new groupsSchema();
+    $groups_permissionsSchema = new groups_permissionsSchema();
 
-    /** @todo Give me createOrUpdateTable('users') */
-    if (!$this->m->Database->tableExists('users')) {
-      $this->m->Database->createQuery('users')
-        ->addInt('id', TRUE, TRUE)
-        ->setPrimaryKey('id')
-        ->addVarchar('username', 255)
-        ->addVarchar('password', 255)
-        ->addVarchar('email', 255)
-        ->addVarchar('session', 255)
-        ->addVarchar('cookie', 255)
-        ->addVarchar('ip', 255)
-        ->addInt('group_id', TRUE)
-        ->addIndex(TRUE, 'username')
-        ->addIndex(TRUE, 'email')
-        ->execute();
-    }
+    $this->m->Database->migrate($usersSchema);
+    $newInstall = $this->m->Database->migrate($groupsSchema) == 'new';
+    $this->m->Database->migrate($groups_permissionsSchema);
 
-    ActiveRecord::addModel('User', $this->m->Database->users);
+    $this->m->Database->users->setSchema($usersSchema);
+    $this->m->Database->groups->setSchema($groupsSchema);
+    $this->m->Database->groups_permissions->setSchema($groups_permissionsSchema);
 
-    require_once(p(MODELS . 'Group.php'));
-
-    if (!$this->m->Database->tableExists('groups')) {
-      $this->m->Database->createQuery('groups')
-      ->addInt('id', TRUE, TRUE)
-      ->setPrimaryKey('id')
-      ->addVarchar('name', 255)
-      ->addVarchar('title', 255)
-      ->addIndex(TRUE, 'name')
-      ->execute();
-      $newInstall = TRUE;
-    }
-
-    ActiveRecord::addModel('Group', $this->m->Database->groups);
-
-    if (!$this->m->Database->tableExists('groups_permissions')) {
-      $this->m->Database->createQuery('groups_permissions')
-      ->addInt('group_id', TRUE, TRUE)
-      ->addVarchar('permission', 255)
-      ->setPrimaryKey('group_id', 'permission')
-      ->execute();
-    }
+    User::connect($this->m->Database->users);
+    Group::connect($this->m->Database->groups);
 
     if ($newInstall) {
       $group = Group::create();
