@@ -9,11 +9,13 @@
  * @property string $content
  * @property int $date Timestamp
  * @property string $tags Comma-separated list of tags (virtual)
- * @method Tag[] getTags() Retrieve all tags associated with post
+ * @method Tag[] getTags(SelectQuery $select = NULL) Retrieve all tags associated with post
+ * @method int countTags(SelectQuery $select = NULL) Count all tags associated with post
  * @method bool hasTag(Tag $tag) Check if a tag belongs to post
  * @method void addTag(Tag $tag) Add a tag to post
  * @method void removeTag(Tag $tag) Remove tag from post
- * @method Comment[] getComments() Retrieve all comments associated with post
+ * @method Comment[] getComments(SelectQuery $select = NULL) Retrieve all comments associated with post
+ * @method int countComments(SelectQuery $select = NULL) Count all comments associated with post
  * @method bool hasComment(Comment $comment) Check if a comment belongs to post
  * @method void addComment(Comment $comment) Add a comment to post
  * @method void removeComment(Comment $comment) Remove a comment from post

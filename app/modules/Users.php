@@ -221,7 +221,10 @@ class Users extends ModuleBase {
     $this->user->session = $sid;
     $this->user->cookie = $cookie;
     $this->user->ip = $ip;
-    $this->user->save();
+    if (!$this->user->save()) {
+      var_dump($this->user->getErrors());
+      exit;
+    }
 
   }
 
@@ -235,6 +238,7 @@ class Users extends ModuleBase {
       return FALSE;
     }
     if (!$this->compareHash($password, $user->password)) {
+      echo 'Invalid password' . PHP_EOL;
       return FALSE;
     }
     $this->user = $user;

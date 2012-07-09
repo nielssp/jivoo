@@ -538,11 +538,16 @@ abstract class ActiveRecord implements IModel {
       case 'match':
         return preg_match($conditionValue, $value) == 1;
       case 'unique':
-        $result = $this->dataSource->select()
-          ->where($column . ' = ?')
-          ->addVar($value)
-          ->limit(1)
-          ->execute();
+        $query = $this->dataSource->select()
+          ->limit(1);
+        if (!$this->isNew()) {
+          $query->where($this->primaryKey . ' != ? AND ' . $column . ' = ?')
+            ->addVar($this->data[$this->primaryKey]);
+        }
+        else {
+          $query->where($column . ' = ?');
+        }
+        $result = $query->addVar($value)->execute();
         return $result->hasRows() != $conditionValue;
       case 'callback':
         return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);
