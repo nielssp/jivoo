@@ -5,7 +5,7 @@ class FormHelper extends ApplicationHelper {
   private $record = NULL;
   private $currentForm = '';
 
-  public function begin(ActiveRecord $record) {
+  public function begin(IModel $record) {
     $this->record = $record;
     $this->currentForm = strtolower(get_class($record));
     return '<form action="' . $this->getLink(array()) . '" method="post">';

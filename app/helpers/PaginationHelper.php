@@ -54,4 +54,12 @@ class PaginationHelper extends ApplicationHelper {
   public function nextLink() {
     return $this->getLink(array('query' => array('page' => $this->page + 1)));
   }
+
+  public function firstLink() {
+    return $this->getLink(array('query' => array('page' => 1)));
+  }
+  
+  public function lastLink() {
+    return $this->getLink(array('query' => array('page' => $this->pages)));
+  }
 }

@@ -50,7 +50,7 @@ class Pages extends ModuleBase {
     $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
     $this->m->Backend->addCategory('content', tr('Content'), 2);
-    $this->m->Backend->addPage('content', 'new-page', tr('New Page'), array($this, 'addPageController'), 2);
+    $this->m->Backend->addPage('content', 'new-page', tr('New Page'), array($this->controller, 'add'), 2);
     $this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 

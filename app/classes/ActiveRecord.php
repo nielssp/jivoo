@@ -1,5 +1,5 @@
 <?php
-abstract class ActiveRecord {
+abstract class ActiveRecord implements IModel {
   private static $models = array();
   public static function addModel($class, IDataSource $dataSource) {
     $schema = $dataSource->getSchema();
@@ -463,7 +463,7 @@ abstract class ActiveRecord {
         }
       }
       catch (RecordPropertyNotFoundException $ex) {
-        // ignor
+        // ignore
       }
     }
     return $new;
@@ -570,6 +570,13 @@ abstract class ActiveRecord {
       return TRUE;
     }
     return FALSE;
+  }
+
+
+  public function getFields() {
+    $fields = array_keys($this->data);
+    $virtualFields = array_keys($this->virtuals);
+    return array_unique(array_merge($fields, $virtualFields));
   }
 
   public function getFieldType($field) {

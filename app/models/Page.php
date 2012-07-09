@@ -17,14 +17,27 @@ class Page extends ActiveRecord implements ILinkable {
 //   );
 
   protected $validate = array(
-      'title' => array('presence' => true,
-                       'minLength' => 4,
-                       'maxLength' => 25),
-      'name' => array('presence' => true,
-                      'minLength' => 1,
-                      'maxLength' => 25,
-      				  'match' => '/^[a-z-]+$/'),
-      'content' => array('presence' => true),
+    'title' => array(
+      'presence' => true,
+      'minLength' => 4,
+      'maxLength' => 25,
+    ),
+    'name' => array(
+      'presence' => true,
+      'minLength' => 1,
+      'maxLength' => 25,
+      array(
+        'match' => '/^[a-z-\/]+$/',
+        'message' => 'Only lowercase letters, numbers, dashes and slashes allowed.'
+      ),
+    ),
+    'content' => array(
+      'presence' => true,
+    ),
+  );
+
+  protected $defaults = array(
+    'date' => array('time'),
   );
 
   public function getRoute() {
