@@ -238,7 +238,6 @@ class Users extends ModuleBase {
       return FALSE;
     }
     if (!$this->compareHash($password, $user->password)) {
-      echo 'Invalid password' . PHP_EOL;
       return FALSE;
     }
     $this->user = $user;
