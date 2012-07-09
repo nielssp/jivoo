@@ -180,7 +180,12 @@ abstract class ActiveRecord {
     $select->where($options['thisKey'] . ' = ?');
     $select->addVar($this->data[$this->primaryKey]);
 
+    if ($select->count) {
+      return self::$models[$otherClass]['source']->count($select);
+    }
+
     $result = self::$models[$otherClass]['source']->select($select);
+
     if (isset($options['count']) AND !isset($customSelect)) {
       if ($this->data[$options['count']] != $result->count()) {
         $this->data[$options['count']] = $result->count();

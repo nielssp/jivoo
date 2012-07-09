@@ -74,7 +74,7 @@ $this->render('backend/header.html');
           </div>
           <div class="aright">
             <?php echo $Form->submit(tr('Save draft'), 'save'); ?>
-            <?php echo $Form->submit(tr('Save draft'), 'publish', array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Publish'), 'publish', array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>

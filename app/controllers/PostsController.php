@@ -64,11 +64,22 @@ class PostsController extends ApplicationController {
     $this->afterPermalink = $exampleLink[1];
     if ($this->request->isPost()) {
       $this->post = Post::create($this->request->data['post']);
+      if (isset($this->request->data['publish'])) {
+        $this->post->state = 'published';
+      }
+      else {
+        $this->post->state = 'draft';
+      }
       if ($this->post->isValid()) {
         $this->post->save();
         $this->post->createAndAddTags($this->post->tags);
-        new LocalNotice(tr('Post succesfully created'));
-        $this->refresh();
+        if ($this->post->state == 'published') {
+          $this->redirect($this->post);
+        }
+        else {
+          new LocalNotice(tr('Post successfully created'));
+          $this->refresh();
+        }
       }
       else {
         foreach ($this->post->getErrors() as $field => $error) {
@@ -96,7 +107,30 @@ class PostsController extends ApplicationController {
   }
   
   public function viewTag($tag) {
-    $this->render('not-implemented.html');
+    $this->tag = Tag::first(SelectQuery::create()
+      ->where('name = ?', $tag)
+    );
+    $count = $this->tag->getPosts(SelectQuery::create()->count());
+
+    $this->Pagination->setCount($count);
+
+    $select = SelectQuery::create()
+      ->orderByDescending('date');
+
+    $this->Pagination->paginate($select);
+
+    $this->posts = $this->tag->getPosts($select);
+
+    if ($this->request->isAjax()) {
+      $jsonPosts = array();
+      foreach ($this->posts as $post) {
+        $jsonPosts[] = $post->json();
+      }
+      echo '[' . implode(',', $jsonPosts) . ']';
+    }
+    else {
+      $this->render('posts/index.html');
+    }
   }
   
   public function commentIndex($post) {
