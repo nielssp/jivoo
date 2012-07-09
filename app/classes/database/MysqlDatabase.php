@@ -33,6 +33,9 @@ class MysqlDatabase extends SqlDatabase {
         $type = 'varchar';
         if (!isset($length)) $length = 255;
         break;
+      case 'boolean':
+        $type = 'bool';
+        break;
       case 'integer':
         $type = 'int';
         break;
@@ -61,6 +64,9 @@ class MysqlDatabase extends SqlDatabase {
     }
     if (strpos($type, 'char') !== FALSE) {
       $type = 'string';
+    }
+    else if (strpos($type, 'tinyint') !== FALSE OR strpos($type, 'bool') !== FALSE) {
+      $type = 'boolean';
     }
     else if (strpos($type, 'int') !== FALSE) {
       $type = 'integer';

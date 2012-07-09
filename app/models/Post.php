@@ -8,6 +8,7 @@
  * @property string $title
  * @property string $content
  * @property int $date Timestamp
+ * @property string $tags Comma-separated list of tags (virtual)
  * @method Tag[] getTags() Retrieve all tags associated with post
  * @method bool hasTag(Tag $tag) Check if a tag belongs to post
  * @method void addTag(Tag $tag) Add a tag to post
@@ -62,17 +63,29 @@ class Post extends ActiveRecord implements ILinkable {
     ),
   );
 
+  protected $virtuals = array(
+    'tags' => array(
+      'get' => 'virtualGetTags',
+      'set' => 'virtualSetTags'
+    ),
+  );
+
   protected $defaults = array(
     'comments' => 0,
+    'commenting' => 'yes',
     'date' => array('time'),
-    'user_id' => 0
+    'user_id' => 0,
+    'state' => 'draft',
   );
+
+
+  private $virtualTags = NULL;
 
   public function getRoute() {
     return array(
       'controller' => 'Posts',
       'action' => 'view',
-      'parameters' => array($this->id)
+      'parameters' => $this
     );
   }
 
@@ -93,6 +106,35 @@ class Post extends ActiveRecord implements ILinkable {
   public function formatTime() {
     return ftime($this->date);
   }
+
+
+  public function virtualGetTags() {
+    if (isset($this->virtualTags)) {
+      return $this->virtualTags;
+    }
+    else if (!$this->isNew()) {
+      $tags = $this->getTags();
+      $csv = '';
+      $first = TRUE;
+      foreach ($tags as $tag) {
+        if ($first) {
+          $first = FALSE;
+        }
+        else {
+          $csv .= ', ';
+        }
+        $csv .= $tag->tag;
+      }
+      return $csv;
+    }
+    else {
+      return '';
+    }
+  }
+
+  public function virtualSetTags($csvTags) {
+    $this->virtualTags = $csvTags;
+  } 
 
   public function removeAllTags() {
     $tags = $this->getTags();

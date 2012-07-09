@@ -3,23 +3,21 @@
 $this->render('backend/header.html');
 ?>
       
-    <?php echo $Form->begin(); ?>
+    <?php echo $Form->begin($post); ?>
 
       <div class="section">
         <div class="container">
           <p>
-            <label class="small">Title</label>
-            <input type="text" name="title" class="text bigtext"
-              id="post_title" value="<?php echo $values['title']; ?>" />
+            <?php echo $Form->label(tr('Title'), 'title', array('class' => 'small')); ?>
+            <?php echo $Form->field('title', array('class' => 'text bigtext')); ?>
           </p>
           <p>
-            <label class="small">Content</label>
-            <textarea id="text" name="content" class="wysiwyg" cols="50" rows="15"><?php echo $values['content']; ?></textarea>
+            <?php echo $Form->label(tr('Content'), 'content', array('class' => 'small')); ?>
+            <?php echo $Form ->field('content'); ?>
           </p>
           <p>
-            <label class="small">Tags</label>
-            <input type="text" name="tags" class="text"
-              id="post_tags" value="<?php echo $values['tags']; ?>" />
+            <?php echo $Form->label(tr('Tags'), 'tags', array('class' => 'small')); ?>
+            <?php echo $Form ->field('tags'); ?>
             <span class="description">Comma-separated list of tags</span>
           </p>
         </div>
@@ -30,31 +28,35 @@ $this->render('backend/header.html');
         <div class="section dark_section">
           <div class="container">
             <div class="input">
-              <p class="label"><label for="post_permalink">Permalink</label></p>
+              <p class="label">
+                <?php echo $Form->label(tr('Permalink'), name); ?>
+              </p>
               <div class="element">
                 <div class="permalink-wrapper">
                   <?php echo $beforePermalink;
-                        if ($nameInPermalink): ?><input type="text" id="post_permalink" name="permalink"
-                      data-title-id="post_title" class="text permalink permalink-allow-slash"
-                      value="<?php echo $values['permalink']; ?>" /><?php endif;
-                        echo $afterPermalink; ?>
+                  if ($nameInPermalink) {
+                    echo $Form->field('name', array(
+                      'class' => 'text permalink',
+                      'data-title-id' => $Form->fieldId('title')
+                    ));
+                  }
+                  echo $afterPermalink;
+                  ?>
                 </div>
               </div>
               <div class="clearl"></div>
             </div>
             <div class="separator"></div>
             <div class="input">
-              <p class="label">Allow Comments</p>
+              <p class="label">
+                <?php echo tr('Allow comments'); ?>
+              </p>
               <div class="element">
                 <div class="radioset">
-                  <input type="radio" id="allow_comments_yes" value="yes"
-                    <?php echo $values['allow_comments'] ? 'checked="checked"' : ''; ?>
-                    name="allow_comments"/>
-                  <label for="allow_comments_yes">Yes</label>
-                  <input type="radio" id="allow_comments_no" value="no"
-                    <?php echo !$values['allow_comments'] ? 'checked="checked"' : ''; ?>
-                    name="allow_comments"/>
-                  <label for="allow_comments_no">No</label>
+                  <?php echo $Form->radio('commenting', 'yes'); ?>
+                  <?php echo $Form->label(tr('Yes'), 'commenting_yes'); ?>
+                  <?php echo $Form->radio('commenting', 'no'); ?>
+                  <?php echo $Form->label(tr('No'), 'commenting_no'); ?>
                 </div>
               </div>
               <div class="clearl"></div>
@@ -67,11 +69,12 @@ $this->render('backend/header.html');
       <div class="section">
         <div class="container">
           <div class="left">
-            <input type="checkbox" class="button" id="check_settings" /> <label for="check_settings">Settings</label>
+            <input type="checkbox" class="button" id="check_settings" />
+            <label for="check_settings">Settings</label>
           </div>
           <div class="aright">
-            <input type="submit" name="save" class="button" value="Save draft" />
-            <input type="submit" name="publish" class="button publish" value="Publish" />
+            <?php echo $Form->submit(tr('Save draft'), 'save'); ?>
+            <?php echo $Form->submit(tr('Save draft'), 'publish', array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>

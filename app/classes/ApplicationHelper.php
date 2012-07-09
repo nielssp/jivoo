@@ -8,6 +8,10 @@ abstract class ApplicationHelper {
 
   protected $controller = NULL;
 
+  protected $helpers = array();
+
+  private $helperObjects = array();
+
   public final function __construct(Templates $templates, Routes $routes, $controller = NULL) {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
@@ -16,8 +20,22 @@ abstract class ApplicationHelper {
     $this->request = $routes->getRequest();
 
     $this->controller = $controller;
+    
+    foreach ($this->helpers as $helper) {
+      $name = className($helper);
+      $class = $name . 'Helper';
+      if (class_exists($class)) {
+        $this->helperObjects[$name] = new $class($templates, $routes, $this);
+      }
+    }
 
     $this->init();
+  }
+
+  public function __get($name) {
+    if (isset($this->helperObjects[$name])) {
+      return $this->helperObjects[$name];
+    }
   }
 
   protected function init() {

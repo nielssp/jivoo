@@ -54,8 +54,30 @@ class PostsController extends ApplicationController {
   }
 
   public function add() {
+    $examplePost = Post::create();
+    $examplePost->name = '%name%';
+    $examplePost->date = time();
+    $exampleLink = explode('%name%', $this->m->Routes->getLink($examplePost));
+    $examplePost = NULL;
+    $this->nameInPermalink = count($exampleLink) >= 2;
+    $this->beforePermalink = $exampleLink[0];
+    $this->afterPermalink = $exampleLink[1];
     if ($this->request->isPost()) {
-      $this->request->form['post'];
+      $this->post = Post::create($this->request->data['post']);
+      if ($this->post->isValid()) {
+        $this->post->save();
+        $this->post->createAndAddTags($this->post->tags);
+        new LocalNotice(tr('Post succesfully created'));
+        $this->refresh();
+      }
+      else {
+        foreach ($this->post->getErrors() as $field => $error) {
+          new LocalWarning($field . ': ' . $error);
+        }
+      }
+    }
+    else {
+      $this->post = Post::create();
     }
     $this->title = tr('New post');
     $this->render('backend/edit-post.html');

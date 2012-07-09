@@ -25,6 +25,7 @@ abstract class ActiveRecord {
   private static $cache = array();
 
   private $table;
+  private $schema;
   private $dataSource;
   private $primaryKey;
   private $data;
@@ -38,6 +39,8 @@ abstract class ActiveRecord {
 
   protected $defaults = array();
 
+  protected $virtuals = array();
+
   protected $hasOne = array();
   protected $hasMany = array();
   protected $belongsTo = array();
@@ -48,7 +51,10 @@ abstract class ActiveRecord {
   private $errors = array();
 
   public function __set($property, $value) {
-    if (array_key_exists($property, $this->data) AND $property != $this->primaryKey) {
+    if (isset($this->virtuals[$property]) AND isset($this->virtuals[$property]['set'])) {
+      call_user_func(array($this, $this->virtuals[$property]['set']), $value);
+    }
+    else if (array_key_exists($property, $this->data) AND $property != $this->primaryKey) {
       $this->data[$property] = $value;
       $this->changed[$property] = TRUE;
       $this->isSaved = FALSE;
@@ -61,7 +67,10 @@ abstract class ActiveRecord {
   }
 
   public function __get($property) {
-    if (array_key_exists($property, $this->data)) {
+    if (isset($this->virtuals[$property]) AND isset($this->virtuals[$property]['get'])) {
+      return call_user_func(array($this, $this->virtuals[$property]['get']));
+    }
+    else if (array_key_exists($property, $this->data)) {
       return $this->data[$property];
     }
     else {
@@ -72,7 +81,8 @@ abstract class ActiveRecord {
   }
   
   public function __isset($property) {
-    return isset($this->data[$property]);
+    return isset($this->data[$property])
+      OR isset($this->virtuals[$property]);
   }
 
   public function __call($method, $arguments) {
@@ -328,7 +338,7 @@ abstract class ActiveRecord {
     $this->dataSource = self::$models[$class]['source'];
     $this->table = self::$models[$class]['table'];
     $this->primaryKey = self::$models[$class]['primaryKey'];
-    $schema = self::$models[$class]['schema'];
+    $this->schema = self::$models[$class]['schema'];
     $this->data = array();
     foreach (self::$models[$class]['columns'] as $column) {
       $this->data[$column] = NULL;
@@ -338,8 +348,8 @@ abstract class ActiveRecord {
       if (!isset($this->validate[$column])) {
         $this->validate[$column] = array();
       }
-      if (isset($schema->$column)) {
-        $info = $schema->$column;
+      if (isset($this->schema->$column)) {
+        $info = $this->schema->$column;
         if ($info['type'] == 'integer') {
           /** @todo Handle signed integers */
           $this->validate[$column]['isInteger'] = TRUE;
@@ -359,7 +369,10 @@ abstract class ActiveRecord {
         else if ($info['type'] == 'float') {
           $this->validate[$column]['isFloat'] = TRUE;
         }
-        if (isset($info['length']) AND $info['type'] != 'float' AND $info['type'] != 'integer') {
+        else if ($info['type'] == 'boolean') {
+          $this->validate[$column]['isBoolean'] = TRUE;
+        }
+        if (isset($info['length']) AND $info['type'] != 'float' AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
           if (isset($this->validate[$column]['maxLength'])) {
             $this->validate[$column]['maxLength'] = min($this->validate[$column]['maxLength'], $info['length']);
           }
@@ -433,14 +446,19 @@ abstract class ActiveRecord {
     $new->isSaved = FALSE;
     $data = array_merge($new->defaults, $data);
     foreach ($data as $property => $value) {
-      if (is_array($value)) {
-        if (is_callable($value[0])) {
-          $function = array_shift($value);
-          $new->data[$property] = call_user_func_array($function, $value);
+      try {
+        if (is_array($value)) {
+          if (is_callable($value[0])) {
+            $function = array_shift($value);
+            $new->$property = call_user_func_array($function, $value);
+          }
+        }
+        else {
+          $new->$property = $value;
         }
       }
-      else {
-        $new->data[$property] = $value;
+      catch (RecordPropertyNotFoundException $ex) {
+        // ignor
       }
     }
     return $new;
@@ -471,6 +489,8 @@ abstract class ActiveRecord {
         return (preg_match('/\A[+-]?\d+\Z/', $value) == 1) == $conditionValue;
       case 'isFloat':
         return (preg_match('/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/', $value) == 1) == $conditionValue;
+      case 'isBoolean':
+        return ($value == 1 OR $value == 0) == $conditionValue;
       case 'minValue':
         $value = is_float($conditionValue) ? (float) $value : (int) $value;
         return $value >= $conditionValue;
@@ -512,6 +532,8 @@ abstract class ActiveRecord {
         return $value ? tr('Must be an integer.') : tr('Must not be an integer.');
       case 'isFloat':
         return $value ? tr('Must be a decimal number.') : tr('Must not be a decimal number.');
+      case 'isBoolean':
+        return $value ? tr('Must be boolean (1 or 0).') : tr('Must not be boolean.');
       case 'minValue':
         return tr('Minimum value of %1.', $value);
       case 'maxValue':
@@ -543,6 +565,13 @@ abstract class ActiveRecord {
       return TRUE;
     }
     return FALSE;
+  }
+
+  public function getFieldType($field) {
+    if (isset($this->schema->$field)) {
+      $field = $this->schema->$field;
+      return $field['type'];
+    }
   }
 
   public function getErrors() {

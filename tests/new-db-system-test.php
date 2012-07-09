@@ -94,8 +94,9 @@ Post::connect($db->posts);
 $post = Post::create();
 $post->name = '2';
 $post->title = '1.22415215';
+$post->allow_comments = 'true';
 
-var_dump($post->date);
+var_dump($post->allow_comments);
 
 var_dump($post->isValid());
 
