@@ -13,16 +13,7 @@ class PostsController extends ApplicationController {
 
     $this->posts = Post::all($select);
 
-    if ($this->request->isAjax()) {
-      $jsonPosts = array();
-      foreach ($this->posts as $post) {
-        $jsonPosts[] = $post->json();
-      }
-      echo '[' . implode(',', $jsonPosts) . ']';
-    }
-    else {
-      $this->render();
-    }
+    $this->render();
   }
 
   public function view($post) {
@@ -35,18 +26,7 @@ class PostsController extends ApplicationController {
       return;
     }
     $this->title = $this->post->title;
-    if ($this->request->isAjax()) {
-      if ($this->request->isPost()) {
-        echo json_encode($this->request->data);
-      }
-      else {
-        echo json_encode($this->request->query);
-      }
-//      echo $this->post->json();
-    }
-    else {
-      $this->render();
-    }
+    $this->render();
   }
   
   public function manage() {
@@ -109,9 +89,8 @@ class PostsController extends ApplicationController {
     $this->tag = Tag::first(SelectQuery::create()
       ->where('name = ?', $tag)
     );
-    $count = $this->tag->getPosts(SelectQuery::create()->count());
 
-    $this->Pagination->setCount($count);
+    $this->Pagination->setCount($this->tag->countPosts());
 
     $select = SelectQuery::create()
       ->orderByDescending('date');
@@ -120,16 +99,7 @@ class PostsController extends ApplicationController {
 
     $this->posts = $this->tag->getPosts($select);
 
-    if ($this->request->isAjax()) {
-      $jsonPosts = array();
-      foreach ($this->posts as $post) {
-        $jsonPosts[] = $post->json();
-      }
-      echo '[' . implode(',', $jsonPosts) . ']';
-    }
-    else {
-      $this->render('posts/index.html');
-    }
+    $this->render('posts/index.html');
   }
   
   public function commentIndex($post) {

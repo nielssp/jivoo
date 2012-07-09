@@ -126,6 +126,8 @@ abstract class ActiveRecord implements IModel {
         switch ($procedure) {
           case 'get':
             return $this->manyGet($options, $arguments[0]);
+          case 'count':
+            return $this->manyCount($options, $arguments[0]);
           case 'has':
             return $this->manyHas($options, $arguments[0]);
           case 'add':
@@ -181,10 +183,6 @@ abstract class ActiveRecord implements IModel {
     $select->where($options['thisKey'] . ' = ?');
     $select->addVar($this->data[$this->primaryKey]);
 
-    if ($select->count) {
-      return self::$models[$otherClass]['source']->count($select);
-    }
-
     $result = self::$models[$otherClass]['source']->select($select);
 
     if (isset($options['count']) AND !isset($customSelect)) {
@@ -199,6 +197,38 @@ abstract class ActiveRecord implements IModel {
       $allArray[] = self::createFromAssoc($otherClass, $assoc);
     }
     return $allArray;
+  }
+
+  private function manyCount($options, SelectQuery $customSelect = NULL) {
+    $thisClass = get_class($this);
+    $otherClass = $options['class'];
+
+    $otherPrimaryKey = self::$models[$otherClass]['primaryKey'];
+
+    if (!isset($customSelect)) {
+      $select = SelectQuery::create();
+    }
+    else {
+      $select = $customSelect;
+    }
+    $select->count();
+    if (isset($options['join'])) {
+      $select->join($options['join'], $otherPrimaryKey, $options['otherKey']);
+    }
+
+    $select->where($options['thisKey'] . ' = ?');
+    $select->addVar($this->data[$this->primaryKey]);
+
+    $result = self::$models[$otherClass]['source']->count($select);
+
+    if (isset($options['count']) AND !isset($customSelect)) {
+      if ($this->data[$options['count']] != $result) {
+        $this->data[$options['count']] = $result;
+        $this->isSaved = FALSE;
+        $this->save();
+      }
+    }
+    return $result;
   }
 
   private function manyHas($options, ActiveRecord $record) {
@@ -405,6 +435,7 @@ abstract class ActiveRecord implements IModel {
         $options['plural'] = $class . 's';
       }
       $this->associations['get' . $options['plural']] = array('hasMany', 'get', $class);
+      $this->associations['count' . $options['plural']] = array('hasMany', 'count', $class);
       $this->associations['has' . $class] = array('hasMany', 'has', $class);
       $this->associations['add' . $class] = array('hasMany', 'add', $class);
       $this->associations['remove' . $class] = array('hasMany', 'remove', $class);
@@ -418,6 +449,7 @@ abstract class ActiveRecord implements IModel {
         $options['plural'] = $class . 's';
       }
       $this->associations['get' . $options['plural']] = array('hasAndBelongsToMany', 'get', $class);
+      $this->associations['count' . $options['plural']] = array('hasAndBelongsToMany', 'count', $class);
       $this->associations['has' . $class] = array('hasAndBelongsToMany', 'has', $class);
       $this->associations['add' . $class] = array('hasAndBelongsToMany', 'add', $class);
       $this->associations['remove' . $class] = array('hasAndBelongsToMany', 'remove', $class);

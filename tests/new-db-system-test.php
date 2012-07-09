@@ -25,8 +25,7 @@ Tag::connect($db->tags);
 $post = Post::find(1);
 $tag = Tag::find(1);
 
-var_dump($post->title);
-var_dump($tag->name);
-
+var_dump($post->countTags());
+var_dump($tag->countPosts());
 
 echo '</pre>';
