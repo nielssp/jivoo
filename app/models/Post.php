@@ -66,7 +66,8 @@ class Post extends ActiveRecord implements ILinkable {
   protected $virtuals = array(
     'tags' => array(
       'get' => 'virtualGetTags',
-      'set' => 'virtualSetTags'
+      'set' => 'virtualSetTags',
+      'save' => 'virtualSaveTags'
     ),
   );
 
@@ -134,6 +135,14 @@ class Post extends ActiveRecord implements ILinkable {
 
   public function virtualSetTags($csvTags) {
     $this->virtualTags = $csvTags;
+  } 
+
+  public function virtualSaveTags() {
+    if (!isset($this->virtualTags)) {
+      return;
+    }
+    $this->removeAllTags();
+    $this->createAndAddTags($this->virtualTags);
   } 
 
   public function removeAllTags() {

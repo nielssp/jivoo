@@ -7,7 +7,7 @@ class FormHelper extends ApplicationHelper {
 
   public function begin(IModel $record) {
     $this->record = $record;
-    $this->currentForm = strtolower(get_class($record));
+    $this->currentForm = classFileName(get_class($record));
     return '<form action="' . $this->getLink(array()) . '" method="post">';
   }
 
@@ -28,7 +28,7 @@ class FormHelper extends ApplicationHelper {
     if (isset($options['class'])) {
       $html .= ' class="' . $options['class'] . '"';
     }
-    $html .= '>' . $label . '</label>';
+    $html .= '>' . $label . '</label>' . PHP_EOL;
     return $html;
   }
 
@@ -70,7 +70,7 @@ class FormHelper extends ApplicationHelper {
     if ($this->fieldValue($field) != '') {
       $html .= ' value="' . $this->fieldValue($field) . '"';
     }
-    $html .= ' />';
+    $html .= ' />' . PHP_EOL;
     return $html;
   }
 
@@ -82,7 +82,7 @@ class FormHelper extends ApplicationHelper {
     if ($this->fieldValue($field) == $value) {
       $html .= ' checked="checked"';
     }
-    $html .= ' /> ';
+    $html .= ' /> ' . PHP_EOL;
     return $html;
   }
 
@@ -93,7 +93,7 @@ class FormHelper extends ApplicationHelper {
       $options['class'] = 'text';
     }
     $html .= $this->addAttributes($options);
-    $html .= ' />';
+    $html .= ' />' . PHP_EOL;
     return $html;
   }
 
@@ -105,7 +105,7 @@ class FormHelper extends ApplicationHelper {
     if ($this->fieldValue($field) != '') {
       $html .= $this->fieldValue($field);
     }
-    $html .= '</textarea>';
+    $html .= '</textarea>' . PHP_EOL;
     return $html;
   }
 
@@ -117,7 +117,7 @@ class FormHelper extends ApplicationHelper {
       $options['class'] = 'button';
     }
     $html .= $this->addAttributes($options);
-    $html .= ' /> ';
+    $html .= ' /> ' . PHP_EOL;
     return $html;
   }
     

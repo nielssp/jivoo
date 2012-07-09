@@ -3,79 +3,6 @@ include '../app/essentials.php';
 
 include p(CLASSES . 'database/MysqlDatabase.php');
 
-class postsSchema extends Schema {
-  public $id = array(
-    'type' => 'integer',
-    'length' => 10,
-    'key' => 'primary',
-    'autoIncrement' => true,
-    'null' => false,
-  );
-
-  public $name = array(
-    'type' => 'string',
-    'length' => 255,
-    'key' => 'unique',
-    'null' => false,
-  );
-
-  public $title = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $content = array(
-    'type' => 'text',
-    'null' => false,
-  );
-
-  public $date = array(
-    'type' => 'integer',
-    'length' => 10,
-    'key' => 'index',
-    'null' => false,
-  );
-
-  public $comments = array(
-    'type' => 'integer',
-    'length' => 11,
-    'null' => false,
-  );
-
-  public $state = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $commenting = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $user_id = array(
-    'type' => 'integer',
-    'length' => 11,
-    'null' => false,
-  );
-
-  public $indexes = array(
-    'PRIMARY' => array(
-      'columns' => array('id'),
-      'unique' => true
-    ),
-    'name' => array(
-      'columns' => array('name'),
-      'unique' => true
-    ),
-    'date' => array(
-      'columns' => array('date'),
-      'unique' => false
-    ),
-  );
-}
 echo '<pre>';
 
 
@@ -88,22 +15,18 @@ $options = array(
 
 $db = new MysqlDatabase($options);
 
+$db->migrate(new postsSchema());
+$db->migrate(new tagsSchema());
+$db->migrate(new posts_tagsSchema());
 
 Post::connect($db->posts);
+Tag::connect($db->tags);
 
-$post = Post::create();
-$post->name = '2';
-$post->title = '1.22415215';
-$post->allow_comments = 'true';
+$post = Post::find(1);
+$tag = Tag::find(1);
 
-var_dump($post->getFields());
+var_dump($post->title);
+var_dump($tag->name);
 
-var_dump($post->allow_comments);
-
-var_dump($post->tags);
-
-var_dump($post->isValid());
-
-var_dump($post->getErrors());
 
 echo '</pre>';

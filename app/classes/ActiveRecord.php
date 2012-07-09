@@ -53,6 +53,7 @@ abstract class ActiveRecord implements IModel {
   public function __set($property, $value) {
     if (isset($this->virtuals[$property]) AND isset($this->virtuals[$property]['set'])) {
       call_user_func(array($this, $this->virtuals[$property]['set']), $value);
+      $this->isSaved = FALSE;
     }
     else if (array_key_exists($property, $this->data) AND $property != $this->primaryKey) {
       $this->data[$property] = $value;
@@ -610,6 +611,11 @@ abstract class ActiveRecord implements IModel {
     if ($this->isSaved) {
       return true;
     }
+    foreach ($this->virtuals as $tasks) {
+      if (isset($tasks['presave'])) {
+        call_user_func(array($this, $tasks['presave']));
+      }
+    }
     if ($this->isNew) {
       $query = $this->dataSource->insert();
       $this->data[$this->primaryKey] = $query->addPairs($this->data)->execute();
@@ -625,6 +631,11 @@ abstract class ActiveRecord implements IModel {
     }
     $this->isNew = FALSE;
     $this->isSaved = TRUE;
+    foreach ($this->virtuals as $tasks) {
+      if (isset($tasks['save'])) {
+        call_user_func(array($this, $tasks['save']));
+      }
+    }
     return true;
   }
 

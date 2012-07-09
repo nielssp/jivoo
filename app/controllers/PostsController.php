@@ -72,7 +72,6 @@ class PostsController extends ApplicationController {
       }
       if ($this->post->isValid()) {
         $this->post->save();
-        $this->post->createAndAddTags($this->post->tags);
         if ($this->post->state == 'published') {
           $this->redirect($this->post);
         }
