@@ -6,7 +6,7 @@
 // Author         : PeanutCMS
 // Dependencies   : errors
 
-class Configuration extends ModuleBase {
+class Configuration extends ModuleBase implements arrayaccess {
 
   private $data = array();
 
@@ -51,11 +51,16 @@ class Configuration extends ModuleBase {
     $config->parentKey = $key;
     return $config;
   }
-
-  private function &getDataReference($key) {
+  
+  private function realKey($key) {
     if ($this->parentKey != '') {
       $key = $this->parentKey . ($key != '' ? '.' . $key : '');
     }
+    return $key;
+  }
+
+  private function &getDataReference($key) {
+    $key = $this->realKey($key);
     $keyArray = explode('.', $key);
     $arrayRef =& $this->data;
     foreach ($keyArray as $part) {
@@ -162,6 +167,7 @@ class Configuration extends ModuleBase {
    * @return bool True if it exists false if not
    */
   public function exists($key) {
+    /** @todo Do something less expensive for this... */
     $ref = &$this->getDataReference($key);
     return isset($ref);
   }
@@ -253,5 +259,27 @@ class Configuration extends ModuleBase {
       }
     }
     return $data;
+  }
+  
+  /* arrayaccess implementation */
+
+  public function offsetExists($key) {
+    return $this->exists($key);
+  }
+  
+  public function offsetGet($key) {
+    return $this->get($key);
+  }
+  
+  public function offsetSet($key, $value) {
+    if (is_null($key)) {
+    }
+    else {
+      $this->set($key, $value);
+    }
+  }
+  
+  public function offsetUnset($key) {
+    $this->delete($key);
   }
 }

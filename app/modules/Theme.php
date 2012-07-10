@@ -26,9 +26,6 @@ class Theme extends ModuleBase {
   private $menuList;
 
   protected function init() {
-    // Set default settings
-    $this->m->Configuration->setDefault('theme.name', 'arachis');
-
     // Create meta-tags
     if (!$this->m->Templates->hideIdentity()) {
       $this->m->Templates->insertMeta(
@@ -73,7 +70,7 @@ class Theme extends ModuleBase {
       while (($theme = readdir($dir)) !== false) {
         if (is_dir(p(THEMES . $theme)) AND $theme != '.' AND $theme != '..') {
           if (file_exists(p(THEMES . $theme . '/themeinfo'))) {
-            $this->m->Configuration->set('theme', $theme);
+            $this->m->Configuration->set('theme.name', $theme);
             $this->theme = $theme;
             return TRUE;
           }

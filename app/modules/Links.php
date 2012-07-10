@@ -56,12 +56,4 @@ class Links extends ModuleBase {
     }
   }
 
-  public function getPath(Link $record) {
-
-  }
-
-  public function getLink(Link $record) {
-    return $this->m->Http->getLink($record->getPath());
-  }
-
 }

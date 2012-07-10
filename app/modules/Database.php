@@ -100,6 +100,9 @@ class Database extends ModuleBase implements IDatabase  {
       return FALSE;
     }
     $meta = readFileMeta(p(CLASSES . 'database/' . $driver . '.php'));
+    if (!isset($meta['required'])) {
+      $meta['required'] = '';
+    }
     $missing = array();
     foreach ($meta['dependencies']['php'] as $dependency => $versionInfo) {
       if (!extension_loaded($dependency)) {
@@ -109,7 +112,7 @@ class Database extends ModuleBase implements IDatabase  {
     return array(
       'driver' => $driver,
       'name' => $meta['name'],
-      'requiredOptions' => $meta['required'],
+      'requiredOptions' => explode(' ', $meta['required']),
       'isAvailable' => count($missing) < 1,
       'link' => $this->m->Http->getLink(NULL, array('select' => $driver)),
       'missingExtensions' => $missing

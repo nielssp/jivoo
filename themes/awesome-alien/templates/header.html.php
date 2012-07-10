@@ -40,7 +40,7 @@ else {
         <h2><?php echo $site['subtitle']; ?></h2>
       </div>
       <?php
-      $rand = rand(1, 5);
+      $rand =  floor(time() / 60) % 5 + 1;
       ?>
       <img src="<?php echo $this->file('banner' . $rand . '.jpg'); ?>"
            alt="<?php echo $site['title']; ?>" style="width:950px;height:200px;" />
