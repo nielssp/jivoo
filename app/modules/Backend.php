@@ -87,40 +87,6 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     );
   }
 
-  private function createShortcut($title, $category = NULL) {
-    $titleArr = str_split($title);
-    foreach ($titleArr as $char) {
-      $shortcut = strtoupper($char);
-      if (isset($this->shortcuts['root']) AND in_array($shortcut, $this->shortcuts['root'])) {
-        continue;
-      }
-      if ($category == NULL AND in_array($shortcut, $this->shortcuts)) {
-        continue;
-      }
-      if ($category != NULL) {
-        if (isset($this->shortcuts[$category])
-            AND is_array($this->shortcuts[$category])
-            AND in_array($shortcut, $this->shortcuts[$category])) {
-          continue;
-        }
-        if (!isset($this->shortcuts[$category]) OR
-            !is_array($this->shortcuts[$category])) {
-          $this->shortcuts[$category] = array();
-        }
-        $this->shortcuts[$category][] = $shortcut;
-      }
-      else {
-        if (!isset($this->shortcuts['root']) OR !is_array($this->shortcuts['root'])) {
-          $this->shortcuts['root'] = array();
-        }
-        $this->shortcuts['root'][] = $shortcut;
-      }
-      $this->shortcuts[] = $shortcut;
-      return $shortcut;
-    }
-    return NULL;
-  }
-
   /** @todo In case of overflow; combine remaining categories under one "More"-category */
   /** @todo actually... it should be handled in the theme... */
   public function createMenu($sender, $eventArgs) {

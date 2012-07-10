@@ -2,9 +2,6 @@
  * PeanutCMD backend javascript
  */
 
-
-
-
 $(function() {
   $.maxZIndex = $.fn.maxZIndex = function(opt) {
     /// <summary>
@@ -86,6 +83,40 @@ $(function() {
   $(document).bind('click', function () {
     if (!over)
       $(".menubar").find(".items").hide();
+  });
+  
+  var rootShortcuts = [];
+  var allShortcuts = [];
+  var shortcuts = {};
+  
+  $(".item a").each(function() {
+    var category = $(this).data("shortcut-on");
+    var label = $.trim($(this).html());
+    var shortcut = null;
+    for (c in label) {
+      shortcut = label[c].toUpperCase();
+      if ($.inArray(shortcut, rootShortcuts) > -1) {
+        continue;
+      }
+      if (category == 'root') {
+        if ($.inArray(shortcut, allShortcuts) > -1) {
+          continue;
+        }
+        rootShortcuts.push(shortcut);
+      }
+      else {
+        if (category in shortcuts && $.inArray(shortcut, shortcuts[category]) > -1) {
+          continue;
+        }
+        if (!(category in shortcuts)) {
+          shortcuts[category] = [];
+        }
+        shortcuts[category].push(shortcut);
+      }
+      allShortcuts.push(shortcut);
+      break;
+    }
+    $(this).data("shortcut", shortcut);
   });
   
   $(".item a").each(function() {

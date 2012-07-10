@@ -23,11 +23,10 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
       <div id="bar">
 <?php if (isset($menu)): ?>
         <ul class="menubar">
-<?php foreach ($menu as $category): ?>
+<?php foreach ($menu as $key => $category): ?>
           <li class="menu">
             <div class="header item">
-              <a href="#"
-                data-shortcut="<?php echo $category->shortcut; ?>">
+              <a href="#" data-shortcut-on="root">
                 <?php echo $category->label; ?>
               </a>
             </div>
@@ -39,8 +38,7 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
               <li class="separator"></li>
 <?php endif; ?>
               <li class="item">
-                <a href="<?php echo $this->link($link); ?>"
-                  data-shortcut="<?php echo $link->shortcut; ?>">
+                <a href="<?php echo $this->link($link); ?>" data-shortcut-on="<?php echo $key; ?>">
                   <?php echo $link->label; ?>
                 </a>
               </li>
