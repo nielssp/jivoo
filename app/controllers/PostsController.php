@@ -99,6 +99,8 @@ class PostsController extends ApplicationController {
 
     $this->posts = $this->tag->getPosts($select);
 
+    $this->title = $this->tag->tag;
+
     $this->render('posts/index.html');
   }
   

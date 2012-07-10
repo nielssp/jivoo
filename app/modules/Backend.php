@@ -64,6 +64,9 @@ class Backend extends ModuleBase implements ILinkable {
     $this->addLink('settings', 'modules', tr('Modules'), array(), 2);
   }
 
+  public function __get($category) {
+  }
+
   public function getRoute() {
     return array(
       'path' => explode('/', $this->m->Configuration->get('backend.path'))

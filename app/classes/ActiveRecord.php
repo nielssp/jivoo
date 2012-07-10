@@ -366,7 +366,7 @@ abstract class ActiveRecord implements IModel {
     }
   }
 
-  private function __construct() {
+  private function __construct($data = array()) {
     $class = get_class($this);
     if (!isset(self::$models[$class])) {
       throw new InvalidModelException(tr('The model "%1" has not been added to ActiveRecord.', $class));
@@ -377,7 +377,12 @@ abstract class ActiveRecord implements IModel {
     $this->schema = self::$models[$class]['schema'];
     $this->data = array();
     foreach (self::$models[$class]['columns'] as $column) {
-      $this->data[$column] = NULL;
+      if (isset($data[$column])) {
+        $this->data[$column] = $data[$column];
+      }
+      else {
+        $this->data[$column] = NULL;
+      }
       if ($column == $this->primaryKey) {
         continue;
       }
@@ -467,12 +472,14 @@ abstract class ActiveRecord implements IModel {
     if (!class_exists($class)) {
       throw new Exception(tr('%1 is not a class', $class));
     }
-    $new = new $class();
+    $new = new $class($assoc);
+    /*
     foreach ($assoc as $property => $value) {
       if (in_array($property, self::$models[$class]['columns'])) {
         $new->data[$property] = $value;
       }
     }
+     */
     $new->addToCache();
     return $new;
   }
