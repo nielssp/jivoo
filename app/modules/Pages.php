@@ -49,9 +49,9 @@ class Pages extends ModuleBase {
     $this->detectFancyPath();
     $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
-    $this->m->Backend->addCategory('content', tr('Content'), 2);
-    $this->m->Backend->addPage('content', 'new-page', tr('New Page'), array($this->controller, 'add'), 2);
-    $this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
+    $this->m->Backend['content']->setup(tr('Content'), 2);
+    $this->m->Backend['content']['page-add']->setup(tr('New page'), 2)->autoRoute($this->controller, 'add');
+    //$this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 
   private function detectFancyPath() {

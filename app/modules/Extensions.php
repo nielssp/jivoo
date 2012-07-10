@@ -39,7 +39,7 @@ class Extensions extends ModuleBase {
       ' ', $this->m->Configuration->get('extensions.installed')
     );
 
-    $this->m->Backend->addPage('settings', 'extensions', tr('Extensions'), array($this, 'extensionsController'), 2);
+    $this->m->Backend['settings']['extensions']->setup(tr('Extensions'), 2);
     
     // Load installed extensions when all modules are loaded and initialized
     $this->Core->onModulesLoaded(array($this, 'loadExtensions'));

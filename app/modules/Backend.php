@@ -16,22 +16,27 @@
 /**
  * Backend class
  */
-class Backend extends ModuleBase implements ILinkable {
+class Backend extends ModuleBase implements ILinkable, arrayaccess {
+
+  private $categories = array();
+  private $unlisted = NULL;
 
   private $controller;
-  
-  private $categories = array();
 
   private $shortcuts = array();
+  
+  private $prefix = '';
 
   protected function init() {
     $this->m->Configuration->setDefault('backend.path', 'admin');
 
     $path = $this->m->Configuration->get('backend.path');
+    $this->prefix = $path . '/';
     $aboutPath = $path . '/about';
     
     $this->controller = new BackendController($this->m->Templates, $this->m->Routes);
     
+    // no no no
     $this->controller->addModule($this->m->Users);
 
     if ($this->m->Users->isLoggedIn()) {
@@ -50,21 +55,30 @@ class Backend extends ModuleBase implements ILinkable {
     }
 
     $this->m->Routes->onRendering(array($this, 'createMenu'));
+    
+    $this['peanutcms']->setup('PeanutCMS', -2);
+    $this['peanutcms']['home']->setup(tr('Home'), 0, NULL);
+    $this['peanutcms']['dashboard']->setup(tr('Dashboard'), 0, array('path' => explode('/', $path)));
+    $this['peanutcms']['about']->setup(tr('About'), 8, array('path' => explode('/', $aboutPath)));
+    $this['peanutcms']['logout']->setup(tr('Log out'), 10, array('query' => array('logout' => '')));
 
-    $this->addCategory('peanutcms', 'PeanutCMS', -2);
-    $this->addLink('peanutcms', 'logout', tr('Log out'), array('query' => array('logout' => '')), 10);
-    $this->addLink('peanutcms', 'dashboard', tr('Dashboard'), array('path' => explode('/', $path)), 0);
-    $this->addLink('peanutcms', 'about', tr('About'), array('path' => explode('/', $aboutPath)), 8);
-    $this->addLink('peanutcms', 'home', tr('Home'), NULL, 0);
-
-    $this->addCategory('settings', tr('Settings'), 10);
+    $this['settings']->setup(tr('Settings'), 10);
     $mainConfigPage = new ConfigurationPage($this, $this->m->Templates);
-    $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
-    $this->addLink('settings', 'themes', tr('Themes'), array(), 2);
-    $this->addLink('settings', 'modules', tr('Modules'), array(), 2);
+//    $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
+    $this['settings']['themes']->setup(tr('Themes'), 2);
+    $this['settings']['modules']->setup(tr('Modules'), 2);
   }
 
-  public function __get($category) {
+  public function __get($property) {
+    switch ($property) {
+      case 'unlisted':
+        if (!isset($this->unlisted)) {
+          $this->unlisted = new BackendCategory();
+        }
+        return $this->unlisted;
+      case 'prefix':
+        return $this->$property;
+    }
   }
 
   public function getRoute() {
@@ -107,99 +121,33 @@ class Backend extends ModuleBase implements ILinkable {
     return NULL;
   }
 
-  public function addCategory($categoryId, $categoryTitle, $group = 0, $shortcut = NULL) {
-    if (!isset($this->categories[$categoryId])) {
-      $this->categories[$categoryId] = new BackendCategory();
-    }
-    $this->categories[$categoryId]->id = $categoryId;
-    $this->categories[$categoryId]->title = $categoryTitle;
-    $this->categories[$categoryId]->group = $group;
-    if (!isset($this->categories[$categoryId]->shortcut)) {
-      $this->categories[$categoryId]->shortcut = $this->createShortcut($categoryTitle);
-    }
-  }
-
-  public function addLink($categoryId, $pageId, $pageTitle, $route, $group = 0, $shortcut = NULL) {
-    if (!isset($this->categories[$categoryId])) {
-      $this->addCategory($categoryId, ucfirst($categoryId));
-    }
-    if (!isset($this->categories[$categoryId]->links[$pageId])) {
-      $this->categories[$categoryId]->links[$pageId] = new BackendLink();
-    }
-    $this->categories[$categoryId]->links[$pageId]->id = $pageId;
-    $this->categories[$categoryId]->links[$pageId]->title = $pageTitle;
-    $this->categories[$categoryId]->links[$pageId]->group = $group;
-    $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle, $categoryId);
-    $this->categories[$categoryId]->links[$pageId]->route = $route;
-  }
-
-  public function addPage($categoryId, $pageId, $pageTitle, $pageController, $group = 0, $shortcut = NULL) {
-    $backend = $this->m->Configuration->get('backend.path');
-    if ($this->m->Users->isLoggedIn()) {
-      $this->m->Routes->addRoute($backend . '/' . $categoryId . '/' . $pageId, $pageController);
-    }
-    else {
-      $this->controller->addRoute($backend . '/' . $categoryId . '/' . $pageId, 'login');
-    }
-    $path = array_merge(
-      explode('/', $backend),
-      explode('/', $categoryId),
-      explode('/', $pageId)
-    );
-    if (!isset($this->categories[$categoryId])) {
-      $this->addCategory($categoryId, ucfirst($categoryId));
-    }
-    if (!isset($this->categories[$categoryId]->links[$pageId])) {
-      $this->categories[$categoryId]->links[$pageId] = new BackendLink();
-    }
-    $this->categories[$categoryId]->links[$pageId]->id = $pageId;
-    $this->categories[$categoryId]->links[$pageId]->title = $pageTitle;
-    $this->categories[$categoryId]->links[$pageId]->group = $group;
-    $this->categories[$categoryId]->links[$pageId]->shortcut = $this->createShortcut($pageTitle, $categoryId);
-    $this->categories[$categoryId]->links[$pageId]->route = array('path' => $path);
-  }
-
   /** @todo In case of overflow; combine remaining categories under one "More"-category */
   /** @todo actually... it should be handled in the theme... */
   public function createMenu($sender, $eventArgs) {
-    if (!$this->m->Users->isLoggedIn()) {
-      return;
-    }
-    $menu = array();
     foreach ($this->categories as $category) {
-      groupObjects($category->links);
-      $menu[] = $category;
+     $category->group();
     }
-    groupObjects($menu);
-    $this->m->Templates->set('menu', $menu, 'backend/header.html');
+    groupObjects($this->categories);
+    $this->m->Templates->set('menu', $this->categories, 'backend/header.html');
+    return $this->categories;
   }
-}
-
-class BackendCategory implements IGroupable {
-  public $id;
-  public $title;
-  public $group;
-  public $shortcut;
-
-  public $links = array();
-
-  public function getGroup() {
-    return $this->group;
+  
+  public function offsetExists($category) {
+    return isset($this->categories[$category]);
   }
-}
-
-class BackendLink implements IGroupable, ILinkable {
-  public $id;
-  public $title;
-  public $group;
-  public $route;
-  public $shortcut;
-
-  public function getGroup() {
-    return $this->group;
+  
+  public function offsetGet($category) {
+    if (!isset($this->categories[$category])) {
+      $this->categories[$category] = new BackendCategory($this);
+    }
+    return $this->categories[$category];
   }
-
-  public function getRoute() {
-    return $this->route;
+  
+  public function offsetSet($category, $value) {
+    // not implemented
+  }
+  
+  public function offsetUnset($category) {
+    unset($this->categories[$category]);
   }
 }

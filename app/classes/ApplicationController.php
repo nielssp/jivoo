@@ -66,26 +66,37 @@ class ApplicationController {
     $this->e->$class = $object;
   }
   
-  public function autoRoute() {
-    foreach ($this->actions as $action) {
-      $reflect = new ReflectionMethod(get_class($this), 'view');
-      $required = $reflect->getNumberOfRequiredParameters();
-      $total = $reflect->getNumberOfParameters();
-      $controller = classFileName($this->name);
-      $action = classFileName($action);
-      if ($action == 'index') {
-        $this->addRoute($controller, $action);
-      }
-      $path = $controller . '/' . $action;
-      if ($required < 1) {
+  private function createRoute($action, $prefix = '') {
+    $reflect = new ReflectionMethod(get_class($this), $action);
+    $required = $reflect->getNumberOfRequiredParameters();
+    $total = $reflect->getNumberOfParameters();
+    if (!empty($prefix) AND substr($prefix, -1) != '/') {
+      $prefix .= '/';
+    }
+    $controller = $prefix . classFileName($this->name);
+    $action = classFileName($action);
+    if ($action == 'index') {
+      $this->addRoute($controller, $action);
+    }
+    $path = $controller . '/' . $action;
+    if ($required < 1) {
+      $this->addRoute($path, $action);
+    }
+    for ($i = 0; $i < $total; $i++) {
+      $path .= '/*';
+      if ($i <= $required) {
         $this->addRoute($path, $action);
       }
-      for ($i = 0; $i < $total; $i++) {
-        $path .= '/*';
-        if ($i <= $required) {
-          $this->addRoute($path, $action);
-        }
-      }
+    }
+  }
+  
+  public function autoRoute($action = NULL, $prefix = '') {
+    if (isset($action)) {
+      $this->createRoute($action, $prefix);
+      return;
+    }
+    foreach ($this->actions as $action) {
+      $this->createRoute($action, $prefix);
     }
   }
   

@@ -96,11 +96,11 @@ class Posts extends ModuleBase {
       $this->controller->addRoute('posts/*/comments/*', 'viewComment');
     }
     
-    $this->m->Backend->addCategory('content', tr('Content'), 2);
-    $this->m->Backend->addPage('content', 'new-post', tr('New Post'), array($this->controller, 'add'), 2);
-    $this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
-    $this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
-    $this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
+    $this->m->Backend['content']->setup(tr('Content'), 2);
+    $this->m->Backend['content']['post-add']->setup(tr('New post'), 2)->autoRoute($this->controller, 'add');    
+    //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
+    //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
+    //$this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
   }
 
   private function detectFancyPath() {

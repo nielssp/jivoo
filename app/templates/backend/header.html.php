@@ -28,12 +28,12 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
             <div class="header item">
               <a href="#"
                 data-shortcut="<?php echo $category->shortcut; ?>">
-                <?php echo $category->title; ?>
+                <?php echo $category->label; ?>
               </a>
             </div>
             <ul class="items">
 <?php $prevGroup = NULL; ?>
-<?php foreach ($category->links as $link): ?>
+<?php foreach ($category as $link): ?>
 
 <?php if (isset($prevGroup) AND $prevGroup != $link->group): ?>
               <li class="separator"></li>
@@ -41,7 +41,7 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
               <li class="item">
                 <a href="<?php echo $this->link($link); ?>"
                   data-shortcut="<?php echo $link->shortcut; ?>">
-                  <?php echo $link->title; ?>
+                  <?php echo $link->label; ?>
                 </a>
               </li>
 <?php $prevGroup = $link->group; ?>
