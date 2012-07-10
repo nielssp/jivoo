@@ -23,7 +23,7 @@ class Core {
       foreach ($blacklistFile as $line) {
         $line = trim($line);
         if ($line[0] != '#') {
-          $this->blacklist[] = className($line);
+          $this->blacklist[className($this)] = TRUE;
         }
       }
     }
@@ -103,7 +103,7 @@ class Core {
 
   public function onBlacklist($module) {
     $module = className($module);
-    return in_array($module, $this->blacklist);
+    return isset($this->blacklist[$module]);
   }
 
   public function loadModule($module) {
