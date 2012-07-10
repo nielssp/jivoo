@@ -40,7 +40,7 @@ class PagesController extends ApplicationController {
       $this->page = Page::create();
     }
     $this->title = tr('New page');
-    $this->render('backend/edit-page.html');
+    $this->render('pages/edit.html');
   }
   
 }

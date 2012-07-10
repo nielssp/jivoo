@@ -70,7 +70,7 @@ class PostsController extends ApplicationController {
       $this->post = Post::create();
     }
     $this->title = tr('New post');
-    $this->render('backend/edit-post.html');
+    $this->render('posts/edit.html');
   }
 
   public function edit($post) {
