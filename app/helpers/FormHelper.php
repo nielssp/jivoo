@@ -32,7 +32,7 @@ class FormHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function field($field, $options) {
+  public function field($field, $options = array()) {
     $type = $this->record->getFieldType($field);
     switch ($type) {
       case 'text':
@@ -60,7 +60,7 @@ class FormHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function text($field, $options) {
+  public function text($field, $options = array()) {
     $html = '<input type="text" name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
@@ -74,7 +74,7 @@ class FormHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function radio($field, $value, $options) {
+  public function radio($field, $value, $options = array()) {
     $html = '<input type="radio" name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field, $value) . '"';
     $html .= ' value="' . $value . '"';
@@ -86,7 +86,7 @@ class FormHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function password($field, $options) {
+  public function password($field, $options = array()) {
     $html = '<input type="password" name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
@@ -97,7 +97,7 @@ class FormHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function textarea($field, $options) {
+  public function textarea($field, $options = array()) {
     $html = '<textarea name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= $this->addAttributes($options);
@@ -109,7 +109,7 @@ class FormHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function submit($value, $field = 'submit', $options) {
+  public function submit($value, $field = 'submit', $options = array()) {
     $html = '<input type="submit" name="' . $field . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= ' value="' . $value . '"';

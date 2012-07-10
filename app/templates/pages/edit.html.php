@@ -24,7 +24,7 @@ $this->render('backend/header.html');
           <div class="container">
             <div class="input">
               <p class="label">
-                <?php echo $Form->label(tr('Permalink'), name); ?>
+                <?php echo $Form->label(tr('Permalink'), 'name'); ?>
               </p>
               <div class="element">
                 <div class="permalink-wrapper">
