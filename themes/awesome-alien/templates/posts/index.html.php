@@ -26,12 +26,11 @@ $this->render('header.html');
 <?php echo $post->content; ?>
 
 <div class="byline"><?php echo tr('Posted on %1', $post->formatDate())?>
- | <a href="<?php echo $this->link($post); ?>#comment">
-<?php
+ | <a href="<?php echo $this->link($post);
 if ($post->comments == 0)
-  echo tr('Leave a comment');
+  echo '#comment">' . tr('Leave a comment');
 else
-  echo trn('%1 comment', '%1 comments', $post->comments);
+  echo '#comments">' . trn('%1 comment', '%1 comments', $post->comments);
 ?></a></div>
 </div>
 
