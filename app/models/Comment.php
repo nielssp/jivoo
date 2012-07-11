@@ -18,6 +18,19 @@ class Comment extends ActiveRecord implements ILinkable {
     'User' => array('connection' => 'this',
                     'otherKey' => 'user_id')
   );
+  
+  protected $validate = array(
+    'content' => array(
+      'presence' => TRUE,
+    ),
+  );
+  
+  protected $labels = array(
+    'author' => 'Name',
+    'email' => 'E-mail',
+    'website' => 'Website',
+    'content' => 'Content'
+  );
 
   protected $defaults = array(
     'user_id' => 0,

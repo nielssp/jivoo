@@ -40,6 +40,8 @@ abstract class ActiveRecord implements IModel {
   protected $defaults = array();
 
   protected $virtuals = array();
+  
+  protected $labels = array();
 
   protected $hasOne = array();
   protected $hasMany = array();
@@ -629,6 +631,19 @@ abstract class ActiveRecord implements IModel {
       $field = $this->schema->$field;
       return $field['type'];
     }
+  }
+  
+  public function getFieldLabel($field) {
+    if (!isset($this->labels[$field])) {
+      $this->labels[$field] = ucfirst($field);
+    }
+    return tr($this->labels[$field]);
+  }
+  
+  public function isFieldRequired($field) {
+    return isset($this->validate[$field])
+      AND isset($this->validate[$field]['presence'])
+      AND $this->validate[$field]['presence'];
   }
 
   public function getErrors() {

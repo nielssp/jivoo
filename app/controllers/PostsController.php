@@ -25,6 +25,14 @@ class PostsController extends ApplicationController {
       $this->render('404.html');
       return;
     }
+    if ($this->request->isPost()) {
+      $this->comment = Comment::create($this->request->data['comment']);
+    }
+    else {
+      $this->comment = Comment::create();
+    }
+    
+    
     $this->title = $this->post->title;
     $this->render();
   }

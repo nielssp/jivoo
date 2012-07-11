@@ -36,6 +36,12 @@ class Page extends ActiveRecord implements ILinkable {
     ),
   );
 
+  protected $labels = array(
+    'title' => 'Title',
+    'name' => 'Permalink',
+    'content' => 'Content',
+  );
+  
   protected $defaults = array(
     'date' => array('time'),
   );

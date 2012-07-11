@@ -8,15 +8,15 @@ $this->render('backend/header.html');
       <div class="section">
         <div class="container">
           <p>
-            <?php echo $Form->label(tr('Title'), 'title', array('class' => 'small')); ?>
+            <?php echo $Form->label('title', NULL, array('class' => 'small')); ?>
             <?php echo $Form->field('title', array('class' => 'text bigtext')); ?>
           </p>
           <p>
-            <?php echo $Form->label(tr('Content'), 'content', array('class' => 'small')); ?>
+            <?php echo $Form->label('content', NULL, array('class' => 'small')); ?>
             <?php echo $Form ->field('content'); ?>
           </p>
           <p>
-            <?php echo $Form->label(tr('Tags'), 'tags', array('class' => 'small')); ?>
+            <?php echo $Form->label('tags', NULL, array('class' => 'small')); ?>
             <?php echo $Form ->field('tags'); ?>
             <span class="description">Comma-separated list of tags</span>
           </p>
@@ -29,7 +29,7 @@ $this->render('backend/header.html');
           <div class="container">
             <div class="input">
               <p class="label">
-                <?php echo $Form->label(tr('Permalink'), 'name'); ?>
+                <?php echo $Form->label('name'); ?>
               </p>
               <div class="element">
                 <div class="permalink-wrapper">
@@ -54,9 +54,9 @@ $this->render('backend/header.html');
               <div class="element">
                 <div class="radioset">
                   <?php echo $Form->radio('commenting', 'yes'); ?>
-                  <?php echo $Form->label(tr('Yes'), 'commenting_yes'); ?>
+                  <?php echo $Form->label('commenting_yes', tr('Yes')); ?>
                   <?php echo $Form->radio('commenting', 'no'); ?>
-                  <?php echo $Form->label(tr('No'), 'commenting_no'); ?>
+                  <?php echo $Form->label('commenting_no', tr('No')); ?>
                 </div>
               </div>
               <div class="clearl"></div>

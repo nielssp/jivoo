@@ -4,7 +4,7 @@ class FormHelper extends ApplicationHelper {
 
   private $record = NULL;
   private $currentForm = '';
-
+  
   public function begin(IModel $record) {
     $this->record = $record;
     $this->currentForm = classFileName(get_class($record));
@@ -22,11 +22,24 @@ class FormHelper extends ApplicationHelper {
     }
     return $id;
   }
+  
+  public function isRequired($field, $output = NULL) {
+    $required = $this->record->isFieldRequired($field);
+    if (isset($output)) {
+      return $required ? $output : '';
+    }
+    else {
+      return $required;
+    }
+  }
 
-  public function label($label, $field = NULL, $options = array()) {
+  public function label($field, $label = NULL,  $options = array()) {
     $html = '<label for="' . $this->fieldId($field) . '"';
     if (isset($options['class'])) {
       $html .= ' class="' . $options['class'] . '"';
+    }
+    if (!isset($label)) {
+      $label = $this->record->getFieldLabel($field);
     }
     $html .= '>' . $label . '</label>' . PHP_EOL;
     return $html;

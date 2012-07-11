@@ -72,6 +72,14 @@ class Post extends ActiveRecord implements ILinkable {
       'save' => 'virtualSaveTags'
     ),
   );
+  
+  protected $labels = array(
+    'title' => 'Title',
+    'name' => 'Permalink',
+    'content' => 'Content',
+    'tag' => 'Tags',
+    'commenting' => 'Allow comments'
+  );
 
   protected $defaults = array(
     'comments' => 0,
