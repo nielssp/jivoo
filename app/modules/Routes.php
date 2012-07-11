@@ -140,7 +140,7 @@ class Routes extends ModuleBase {
     else if (is_array($route)) {
       $default = array(
         'path' => NULL,
-        'query' => NULL,
+        'query' => $this->request->query,
         'fragment' => NULL,
         'controller' => $this->selectedController[0],
         'action' => $this->selectedController[1],

@@ -20,6 +20,13 @@ class PostsController extends ApplicationController {
     $this->reroute();
 
     $this->post = Post::find($post);
+    
+    $select = SelectQuery::create()->orderBy('date');
+
+    $this->Pagination->setLimit(10);
+    
+    $this->Pagination->setCount($this->post->comments);
+    $this->Pagination->paginate($select);
 
     if (!$this->post) {
       $this->render('404.html');
@@ -30,18 +37,18 @@ class PostsController extends ApplicationController {
       $this->newComment->setPost($this->post);
       if ($this->newComment->isValid()) {
         $this->newComment->save();
-        $this->refresh(NULL, 'comment' . $this->newComment->id);
+        $this->post->comments += 1;
+        $this->post->save();
+        $this->Pagination->setCount($this->post->comments);
+        $this->refresh(
+          array('page' => $this->Pagination->getPages()),
+          'comment' . $this->newComment->id
+        );
       }
     }
     else {
       $this->newComment = Comment::create();
     }
-    
-    $select = SelectQuery::create()->orderBy('date');
-    
-     $this->Pagination->setCount($this->post->comments);
-     $this->Pagination->setLimit(10);
-     $this->Pagination->paginate($select);
     
     $this->comments = $this->post->getComments($select);
     
