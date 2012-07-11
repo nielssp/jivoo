@@ -37,6 +37,13 @@ class PostsController extends ApplicationController {
       $this->newComment = Comment::create();
     }
     
+    $select = SelectQuery::create()->orderBy('date');
+    
+     $this->Pagination->setCount($this->post->comments);
+     $this->Pagination->setLimit(10);
+     $this->Pagination->paginate($select);
+    
+    $this->comments = $this->post->getComments($select);
     
     $this->title = $this->post->title;
     $this->render();

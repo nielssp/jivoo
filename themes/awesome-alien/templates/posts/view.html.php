@@ -36,12 +36,12 @@ else {
 <?php
 if ($post->countComments() > 0):
 ?>
-<h1><?php echo trn('%1 comment', '%1 comments', $post->comments); ?></h1>
+<h1 id="comments"><?php echo trn('%1 comment', '%1 comments', $post->comments); ?></h1>
 
 <ul class="comments">
 <?php
 $level = 0;
-foreach ($post->getComments() as $comment):
+foreach ($comments as $comment):
   if (isset($comment->level)) {
     if ($level == $comment->level) {
       echo '</li>';
@@ -98,13 +98,20 @@ for ($i = $level; $i >= 0; $i--)
   echo '</li></ul>';
 ?>
 
+<div class="pagination">
+  <?php if (!$Pagination->isFirst()) echo $Html->link('&#8592; Back ', $Pagination->prevLink('comments')); ?>
+  <div class="right">
+    <?php if (!$Pagination->isLast()) echo $Html->link('More comments &#8594;', $Pagination->nextLink('comments')); ?>
+  </div>
+</div>
+
 <?php
 endif;
 ?>
 
 <?php if ($post->commenting == 'yes'): ?>
 
-<h1 id="comment"><?php echo tr('Post a comment'); ?></h1>
+<h1 id="comment"><?php echo tr('Leave a comment'); ?></h1>
 
 <p><?php echo tr('Have something to say? Say it!'); ?>
 

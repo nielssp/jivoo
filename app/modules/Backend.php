@@ -65,6 +65,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $this['settings']->setup(tr('Settings'), 10);
     $mainConfigPage = new ConfigurationPage($this, $this->m->Templates);
 //    $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
+    $this['settings']['configuration']->setup(tr('Configuration'), 10);
     $this['settings']['themes']->setup(tr('Themes'), 2);
     $this['settings']['modules']->setup(tr('Modules'), 2);
   }
