@@ -52,7 +52,7 @@ class Posts extends ModuleBase {
       $post->date = time();
       $post->comments = 0;
       $post->state = 'published';
-      $post->commenting = 'on';
+      $post->commenting = 'yes';
       $post->save();
       $comment = Comment::create();
       $comment->author = 'PeanutCMS';

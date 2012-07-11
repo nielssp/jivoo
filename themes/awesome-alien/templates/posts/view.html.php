@@ -40,7 +40,7 @@ if ($post->countComments() > 0):
 
 <ul class="comments">
 <?php
-$level = -1;
+$level = 0;
 foreach ($post->getComments() as $comment):
   if (isset($comment->level)) {
     if ($level == $comment->level) {
@@ -104,41 +104,38 @@ endif;
 
 <?php if ($post->commenting == 'yes'): ?>
 
-<h1 id="comment"><?php echo tr('Comment'); ?></h1>
+<h1 id="comment"><?php echo tr('Post a comment'); ?></h1>
 
 <p><?php echo tr('Have something to say? Say it!'); ?>
 
-<?php foreach ($newComment->getErrors() as $field => $error): ?>
-
-<p><strong><?php echo $field; ?></strong>
-<?php echo $error; ?></p>
-
-<?php endforeach; ?>
-
-<?php echo $Form->begin($newComment); ?>
+<?php echo $Form->begin($newComment, 'comment'); ?>
 
 <p class="input">
 <?php echo $Form->label('author'); ?>
 <?php echo $Form->isRequired('author', '<span class="star">*</span>'); ?>
 <?php echo $Form->field('author'); ?>
+<?php echo $Form->getError('author'); ?>
 </p>
 
 <p class="input">
 <?php echo $Form->label('email'); ?>
 <?php echo $Form->isRequired('email', '<span class="star">*</span>'); ?>
 <?php echo $Form->field('email'); ?>
+<?php echo $Form->getError('email'); ?>
 </p>
 
 <p class="input">
 <?php echo $Form->label('website'); ?>
 <?php echo $Form->isRequired('website', '<span class="star">*</span>'); ?>
 <?php echo $Form->field('website'); ?>
+<?php echo $Form->getError('website'); ?>
 </p>
 
 <p class="input">
 <?php echo $Form->label('content'); ?>
 <?php echo $Form->isRequired('content', '<span class="star">*</span>'); ?>
 <?php echo $Form->field('content'); ?>
+<?php echo $Form->getError('content'); ?>
 </p>
 
 <p><?php echo $Form->submit(tr('Post comment')); ?></p>

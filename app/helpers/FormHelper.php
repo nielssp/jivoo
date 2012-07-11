@@ -4,11 +4,17 @@ class FormHelper extends ApplicationHelper {
 
   private $record = NULL;
   private $currentForm = '';
+  private $post = FALSE;
+  private $errors = array();
   
-  public function begin(IModel $record) {
+  public function begin(IModel $record, $fragment = NULL) {
+    $this->post = $this->request->isPost();
     $this->record = $record;
+    if ($this->post) {
+      $this->errors = $record->getErrors();      
+    }
     $this->currentForm = classFileName(get_class($record));
-    return '<form action="' . $this->getLink(array()) . '" method="post">';
+    return '<form action="' . $this->getLink(array('fragment' => $fragment)) . '" method="post">';
   }
 
   public function fieldName($field) {
@@ -31,6 +37,26 @@ class FormHelper extends ApplicationHelper {
     else {
       return $required;
     }
+  }
+  
+  public function isValid($field = NULL) {
+    if (!$post) {
+      return TRUE;
+    }
+    if (isset($field)) {
+      return !isset($this->errors[$field]);
+    }
+    else {
+      return empty($this->errors);
+    }
+  }
+  
+  public function getErrors() {
+    return $this->errors;
+  }
+  
+  public function getError($field) {
+    return isset($this->errors[$field]) ? $this->errors[$field] : '';
   }
 
   public function label($field, $label = NULL,  $options = array()) {
