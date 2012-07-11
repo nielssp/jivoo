@@ -26,10 +26,15 @@ class PostsController extends ApplicationController {
       return;
     }
     if ($this->request->isPost()) {
-      $this->comment = Comment::create($this->request->data['comment']);
+      $this->newComment = Comment::create($this->request->data['comment']);
+      $this->newComment->setPost($this->post);
+      if ($this->newComment->isValid()) {
+        $this->newComment->save();
+        $this->refresh(NULL, 'comment' . $this->newComment->id);
+      }
     }
     else {
-      $this->comment = Comment::create();
+      $this->newComment = Comment::create();
     }
     
     

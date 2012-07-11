@@ -117,8 +117,8 @@ class ApplicationController {
     $this->m->Routes->redirect($route);
   }
   
-  protected function refresh() {
-    $this->m->Routes->refresh();
+  protected function refresh($query = NULL, $fragment = NULL) {
+    $this->m->Routes->refresh($query, $fragment);
   }
 
   public function addTemplatePath($path) {

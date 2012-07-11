@@ -34,7 +34,7 @@ else {
 </div>
 
 <?php
-if ($post->comments > 0):
+if ($post->countComments() > 0):
 ?>
 <h1><?php echo trn('%1 comment', '%1 comments', $post->comments); ?></h1>
 
@@ -66,7 +66,7 @@ else
 ?>?s=40&amp;d=monsterid&amp;r=G"
      alt="<?php echo $comment->author; ?>"/>
 </div>
-<div class="comment">
+<div class="comment" id="comment<?php echo $comment->id; ?>">
 <h2><?php
 if (empty($comment->author)) {
   echo tr('Anonymous');
@@ -104,11 +104,18 @@ endif;
 
 <?php if ($post->commenting == 'yes'): ?>
 
-<h1><?php echo tr('Comment'); ?></h1>
+<h1 id="comment"><?php echo tr('Comment'); ?></h1>
 
 <p><?php echo tr('Have something to say? Say it!'); ?>
 
-<?php echo $Form->begin($comment); ?>
+<?php foreach ($newComment->getErrors() as $field => $error): ?>
+
+<p><strong><?php echo $field; ?></strong>
+<?php echo $error; ?></p>
+
+<?php endforeach; ?>
+
+<?php echo $Form->begin($newComment); ?>
 
 <p class="input">
 <?php echo $Form->label('author'); ?>

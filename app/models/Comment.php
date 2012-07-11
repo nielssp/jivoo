@@ -35,6 +35,7 @@ class Comment extends ActiveRecord implements ILinkable {
   protected $defaults = array(
     'user_id' => 0,
     'parent_id' => 0,
+    'date' => array('time'),
     'email' => '',
     'website' => ''
   );
