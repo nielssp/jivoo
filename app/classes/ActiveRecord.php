@@ -538,7 +538,7 @@ abstract class ActiveRecord implements IModel {
     return $new;
   }
   
-  public function edit($data) {
+  public function addData($data) {
     if (!is_array($data)) {
       return;
     }
@@ -573,7 +573,7 @@ abstract class ActiveRecord implements IModel {
       case 'email':
         return preg_match("/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i", $value) == 1;
       case 'url':
-        return preg_match("/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i", $value) == 1;
+        return preg_match("/^https?:\/\/[-a-z0-9@:%_\+\.~#\?&\/=\[\]]+$/i", $value) == 1;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -676,7 +676,10 @@ abstract class ActiveRecord implements IModel {
     return FALSE;
   }
 
-
+  public function getName() {
+    return classFileName(get_class($this));
+  }
+  
   public function getFields() {
     $fields = array_keys($this->fields);
     $virtualFields = array_keys($this->virtuals);

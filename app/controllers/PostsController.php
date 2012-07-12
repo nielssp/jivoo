@@ -86,6 +86,9 @@ class PostsController extends ApplicationController {
   }
 
   public function add() {
+    if (!$this->auth->hasPermission('backend.posts.add')) {
+      return $this->accessDenied();
+    }
     $examplePost = Post::create();
     $examplePost->name = '%name%';
     $examplePost->date = time();

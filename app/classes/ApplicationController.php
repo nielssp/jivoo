@@ -20,10 +20,14 @@ class ApplicationController {
   private $helperObjects = array();
   
   
-  public final function __construct(Templates $templates, Routes $routes) {
+  public final function __construct(Templates $templates, Routes $routes, Authentication $authentication = NULL) {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
     $this->m->Routes = $routes;
+    if (isset($authentication)) {
+      $this->m->Authentication = $authentication;
+      $this->auth = $authentication;
+    }
 
     $this->e = new Dictionary();
     
@@ -60,6 +64,9 @@ class ApplicationController {
 
   public function addModule($object) {
     $class = get_class($object);
+    if ($object instanceof Authentication) {
+      $this->auth = $object;
+    }
     $this->m->$class = $object;
   }
 

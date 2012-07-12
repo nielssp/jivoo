@@ -17,7 +17,9 @@
  */
 class Authentication extends ModuleBase {
 
-  private $user;
+  private $user = NULL;
+  
+  private $unregistered = NULL;
 
   private $hashTypes = array(
     'sha512',
@@ -78,6 +80,15 @@ class Authentication extends ModuleBase {
           $this->m->Configuration->set('authentication.hashType', $hashType);
           break;
         }
+      }
+    }
+    
+    if (!$this->isLoggedIn()) {
+      $unregistered = Group::first(SelectQuery::create()
+        ->where('name = ?', $this->m->Configuration['authentication.defaultGroups.unregistered'])
+      );
+      if ($unregistered) {
+        $this->unregistered = $unregistered;
       }
     }
 
@@ -161,6 +172,18 @@ class Authentication extends ModuleBase {
     return FALSE;
   }
 
+  public function hasPermission($permission) {
+    if ($this->isLoggedIn()) {
+      return $this->user->hasPermission($permission);
+    }
+    else if (isset($this->unregistered)) {
+      return $this->unregistered->hasPermission($permission);
+    }
+    else {
+      return FALSE;
+    }
+  }
+  
   public function getUser() {
     return $this->isLoggedIn() ? $this->user : FALSE;
   }

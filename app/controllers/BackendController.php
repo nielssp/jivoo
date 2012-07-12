@@ -5,7 +5,7 @@ class BackendController extends ApplicationController {
   protected $helpers = array('Html', 'Form');
   
   public function dashboard() {
-    if (!$this->m->Authentication->isLoggedIn()) {
+    if (!$this->auth->isLoggedIn()) {
       $this->login();
       return;
     }
@@ -14,7 +14,7 @@ class BackendController extends ApplicationController {
   }
   
   public function about() {
-    if (!$this->m->Authentication->isLoggedIn() AND $this->m->Templates->hideIdentity()) {
+    if (!$this->auth->isLoggedIn() AND $this->m->Templates->hideIdentity()) {
       $this->login();
       return;
     }
@@ -26,13 +26,20 @@ class BackendController extends ApplicationController {
     $this->title = tr('Log in');
     $this->noHeader = TRUE;
 
+    $this->login = new Form('login');
+    
+    $this->login->addString('username', tr('Username'));
+    $this->login->addString('password', tr('Password'));
+    
     if ($this->request->isPost()) {
-      if ($this->m->Authentication->logIn($this->request->data['login_username'], $this->request->data['login_password'])) {
-        $this->refresh();
-      }
-      else {
-        $this->loginError = TRUE;
-        $this->loginUsername = h($this->request->data['login_username']);
+      $this->login->addData($this->request->data['login']);
+      if ($this->login->isValid()) {
+        if ($this->auth->logIn($this->login->username, $this->login->password)) {
+          $this->refresh();
+        }
+        else {
+          $this->login->addError('username', tr('Wrong username and/or password.'));
+        }
       }
     }
     $this->render();

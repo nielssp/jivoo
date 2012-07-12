@@ -13,7 +13,7 @@ class FormHelper extends ApplicationHelper {
     if ($this->post) {
       $this->errors = $record->getErrors();
     }
-    $this->currentForm = classFileName(get_class($record));
+    $this->currentForm = $record->getName();
     return '<form action="' . $this->getLink(array('fragment' => $fragment)) . '" method="post">';
   }
 

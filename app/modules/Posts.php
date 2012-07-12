@@ -81,7 +81,11 @@ class Posts extends ModuleBase {
     }
     
     // Create controller
-    $this->controller = new PostsController($this->m->Templates, $this->m->Routes);
+    $this->controller = new PostsController(
+      $this->m->Templates,
+      $this->m->Routes,
+      $this->m->Authentication
+    );
 
     $this->controller->addRoute('posts', 'index');
 

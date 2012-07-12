@@ -51,7 +51,7 @@ class PagesController extends ApplicationController {
     }
     
     if ($this->request->isPost()) {
-      $this->page->edit($this->request->data['page']);
+      $this->page->addData($this->request->data['page']);
       if (isset($this->request->data['publish'])) {
         $this->page->state = 'published';
       }

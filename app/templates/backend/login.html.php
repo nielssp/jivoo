@@ -10,23 +10,18 @@ $this->render('backend/header.html');
         </div>
       </div>
 
-      <form action="<?php echo $this->link(''); ?>" method="post">
+      <?php echo $Form->begin($login); ?>
 
       <div class="top_shadow"></div>
       <div class="section dark_section">
         <div class="container narrow_container">
           <p>
-            <label for="login_username" class="small">Username</label>
-            <input type="text" name="login_username" class="text bigtext"
-              id="login_username" <?php if (isset($loginUsername)) {
-                echo 'value="' . $loginUsername . '"';
-              }
-              ?> />
+            <?php echo $Form->label('username', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->field('username', array('class' => 'text bigtext')); ?>
           </p>
           <p>
-            <label for="login_password" class="small">Password</label>
-            <input type="password" name="login_password" class="text bigtext"
-              id="login_password" />
+            <?php echo $Form->label('password', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->field('password', array('class' => 'text bigtext')); ?>
           </p>
         </div>
       </div>
@@ -35,13 +30,11 @@ $this->render('backend/header.html');
       <div class="section">
         <div class="container narrow_container">
           <div class="aright">
-            <input type="submit" class="button" value="Reset password" />
-            <input type="submit" class="button publish" value="Log in" />
+            <?php echo $Form->submit(tr('Reset password'), 'reset'); ?>
+            <?php echo $Form->submit(tr('Log in'), 'submit', array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>
-
-      </form>
 
 <?php
 $this->render('backend/footer.html');
