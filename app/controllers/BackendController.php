@@ -5,7 +5,7 @@ class BackendController extends ApplicationController {
   protected $helpers = array('Html', 'Form');
   
   public function dashboard() {
-    if (!$this->m->Users->isLoggedIn()) {
+    if (!$this->m->Authentication->isLoggedIn()) {
       $this->login();
       return;
     }
@@ -14,7 +14,7 @@ class BackendController extends ApplicationController {
   }
   
   public function about() {
-    if (!$this->m->Users->isLoggedIn() AND $this->m->Templates->hideIdentity()) {
+    if (!$this->m->Authentication->isLoggedIn() AND $this->m->Templates->hideIdentity()) {
       $this->login();
       return;
     }
@@ -27,7 +27,7 @@ class BackendController extends ApplicationController {
     $this->noHeader = TRUE;
 
     if ($this->request->isPost()) {
-      if ($this->m->Users->logIn($this->request->data['login_username'], $this->request->data['login_password'])) {
+      if ($this->m->Authentication->logIn($this->request->data['login_username'], $this->request->data['login_password'])) {
         $this->refresh();
       }
       else {

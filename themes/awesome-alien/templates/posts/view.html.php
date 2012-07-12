@@ -59,7 +59,7 @@ foreach ($comments as $comment):
 <li>
 <div class="comment-avatar">
 <img src="http://1.gravatar.com/avatar/<?php
-if (isset($comment->email) AND !empty($comment->email))
+if (!empty($comment->email))
   echo md5($comment->email);
 else
   echo md5($comment->ip);
@@ -75,7 +75,7 @@ else {
   if (empty($comment->website))
     echo h($comment->author);
   else
-    echo '<a href="' . h($comment->website) . '">' . h($comment->author) . '</a>';
+    echo '<a href="' . $Html->cleanUrl($comment->website) . '">' . h($comment->author) . '</a>';
 }
 ?></h2>
 <p><?php echo h($comment->content); ?></p>

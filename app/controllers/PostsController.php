@@ -34,6 +34,10 @@ class PostsController extends ApplicationController {
     }
     if ($this->request->isPost()) {
       $this->newComment = Comment::create($this->request->data['comment']);
+      if (!empty($this->newComment->website)
+          AND preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
+        $this->newComment->website = 'http://' . $this->newComment->website;
+      }
       $this->newComment->setPost($this->post);
       $this->newComment->ip = $this->request->ip;
       if ($this->newComment->isValid()) {
@@ -41,6 +45,17 @@ class PostsController extends ApplicationController {
         $this->post->comments += 1;
         $this->post->save();
         $this->Pagination->setCount($this->post->comments);
+        
+        if (!empty($this->newComment->author)) {
+          $this->request->cookies['comment_author'] = $this->newComment->author;
+        }
+        if (!empty($this->newComment->email)) {
+          $this->request->cookies['comment_email'] = $this->newComment->email;
+        }
+        if (!empty($this->newComment->website)) {
+          $this->request->cookies['comment_website'] = $this->newComment->website;
+        }
+        
         $this->refresh(
           array('page' => $this->Pagination->getPages()),
           'comment' . $this->newComment->id
@@ -49,6 +64,15 @@ class PostsController extends ApplicationController {
     }
     else {
       $this->newComment = Comment::create();
+      if (isset($this->request->cookies['comment_author'])) {
+        $this->newComment->author = $this->request->cookies['comment_author'];
+      }
+      if (isset($this->request->cookies['comment_email'])) {
+        $this->newComment->email = $this->request->cookies['comment_email'];
+      }
+      if (isset($this->request->cookies['comment_website'])) {
+        $this->newComment->website = $this->request->cookies['comment_website'];
+      }
     }
     
     $this->comments = $this->post->getComments($select);

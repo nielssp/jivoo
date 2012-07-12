@@ -8,6 +8,8 @@ class Request {
 
   private $query;
   
+  private $cookies;
+  
   private $fragment = NULL;
 
   private $data;
@@ -34,6 +36,8 @@ class Request {
     
     $this->query = $_GET;
     $this->data = $_POST;
+    
+    $this->cookies = new Cookies($_COOKIE, SESSION_PREFIX);
   }
 
   public function __get($name) {
@@ -42,6 +46,7 @@ class Request {
       case 'realPath':
       case 'data':
       case 'query':
+      case 'cookies':
       case 'fragment':
         return $this->$name;
       case 'form':

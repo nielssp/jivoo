@@ -48,5 +48,9 @@ class HtmlHelper extends ApplicationHelper {
     }
     return '';
   }
+  
+  public function cleanUrl($url) {
+    return $url;
+  }
 
 }

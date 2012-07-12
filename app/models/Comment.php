@@ -31,6 +31,9 @@ class Comment extends ActiveRecord implements ILinkable {
       'presence' => TRUE,
       'email' => TRUE
     ),
+    'website' => array(
+      'url' => TRUE,
+    ),
   );
   
   protected $fields = array(
@@ -56,6 +59,9 @@ class Comment extends ActiveRecord implements ILinkable {
         'email' => array(
           'email' => TRUE
         ),
+        'website' => array(
+          'url' => TRUE,
+        ),
       );
     }
     else {
@@ -70,6 +76,9 @@ class Comment extends ActiveRecord implements ILinkable {
         'email' => array(
           'presence' => TRUE,
           'email' => TRUE
+        ),
+        'website' => array(
+          'url' => TRUE,
         ),
       );
     }

@@ -572,6 +572,8 @@ abstract class ActiveRecord implements IModel {
         return is_null($value) == $conditionValue;
       case 'email':
         return preg_match("/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i", $value) == 1;
+      case 'url':
+        return preg_match("/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i", $value) == 1;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -624,6 +626,8 @@ abstract class ActiveRecord implements IModel {
         return $value ? tr('Must be null.') : tr('Must not be null.');
       case 'email':
         return tr('Not a valid email address.');
+      case 'url':
+        return tr('Not a valid URL.');
       case 'minLength':
         return trn('Minimum length of %1 character.', 'Minimum length of %1 characters.', $value);
       case 'maxLength':

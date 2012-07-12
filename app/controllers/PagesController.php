@@ -46,6 +46,9 @@ class PagesController extends ApplicationController {
   public function edit($page) {
     $this->beforePermalink = $this->m->Routes->getLink();
     $this->page = Page::find($page);
+    if (!$this->page) {
+      return $this->notFound();
+    }
     
     if ($this->request->isPost()) {
       $this->page->edit($this->request->data['page']);
