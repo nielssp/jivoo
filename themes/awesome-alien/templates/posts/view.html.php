@@ -47,7 +47,7 @@ foreach ($comments as $comment):
       echo '</li>';
     }
     else if ($level > $comment->level) {
-      for ($i = $comment['level']; $level > $i; $i++)
+      for ($i = $comment->level; $level > $i; $i++)
         echo '</li></ul>';
       echo '</li>';
     }
@@ -59,12 +59,12 @@ foreach ($comments as $comment):
 <li>
 <div class="comment-avatar">
 <img src="http://1.gravatar.com/avatar/<?php
-if (isset($comment->email))
+if (isset($comment->email) AND !empty($comment->email))
   echo md5($comment->email);
 else
   echo md5($comment->ip);
 ?>?s=40&amp;d=monsterid&amp;r=G"
-     alt="<?php echo $comment->author; ?>"/>
+     alt="<?php echo h($comment->author); ?>"/>
 </div>
 <div class="comment" id="comment<?php echo $comment->id; ?>">
 <h2><?php
@@ -73,12 +73,12 @@ if (empty($comment->author)) {
 }
 else {
   if (empty($comment->website))
-    echo $comment->author;
+    echo h($comment->author);
   else
-    echo '<a href="' . $comment->website . '">' . $comment->author . '</a>';
+    echo '<a href="' . h($comment->website) . '">' . h($comment->author) . '</a>';
 }
 ?></h2>
-<p><?php echo $comment->content; ?></p>
+<p><?php echo h($comment->content); ?></p>
 <div class="byline">
 <?php
 echo tr('%1 at %2', $comment->formatDate(), $comment->formatTime());

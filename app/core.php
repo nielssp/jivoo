@@ -26,7 +26,7 @@ chdir(PATH);
 // Modules that has to be initialized, the order does not matter
 $modules = array(
   'errors', 'configuration',  'i18n', 'http', 'templates',
-  'routes', 'theme', 'database', 'users', 'backend',
+  'routes', 'theme', 'database', 'authentication', 'backend',
   'extensions', 'posts', 'links', 'pages'
 );
 

@@ -35,6 +35,7 @@ class PostsController extends ApplicationController {
     if ($this->request->isPost()) {
       $this->newComment = Comment::create($this->request->data['comment']);
       $this->newComment->setPost($this->post);
+      $this->newComment->ip = $this->request->ip;
       if ($this->newComment->isValid()) {
         $this->newComment->save();
         $this->post->comments += 1;

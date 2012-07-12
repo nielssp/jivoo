@@ -427,8 +427,8 @@ function w($relative) {
 }
 
 function h($string) {
-  //  return htmlentities($string, ENT_COMPAT, 'UTF-8'); 
-  return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+  return htmlentities($string, ENT_COMPAT, 'UTF-8'); 
+  //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
 
 function __autoload($className) {

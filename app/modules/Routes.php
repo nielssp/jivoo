@@ -21,7 +21,7 @@ class Routes extends ModuleBase {
 
   private $paths = array();
   
-  private $renders = FALSE;
+  private $rendered = FALSE;
 
   private $selectedController;
 

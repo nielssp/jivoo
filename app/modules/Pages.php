@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS content page system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration database routes templates http
-//                  users backend
+// Dependencies   : Errors Configuration Database Routes Templates Http
+//                  Authentication Backend
 
 /*
  * Static pages
@@ -51,6 +51,8 @@ class Pages extends ModuleBase {
 
     $this->m->Backend['content']->setup(tr('Content'), 2);
     $this->m->Backend['content']['page-add']->setup(tr('New page'), 2)->autoRoute($this->controller, 'add');
+    
+    $this->m->Backend->unlisted['page-edit']->autoRoute($this->controller, 'edit');
     //$this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 

@@ -22,9 +22,10 @@ class Comment extends ActiveRecord implements ILinkable {
   protected $validate = array(
     'content' => array(
       'presence' => TRUE,
+      'maxLength' => 1024,
     ),
     'author' => array(
-      'presence' => TRUE,
+      'presence' => TRUE
     ),
     'email' => array(
       'presence' => TRUE,
@@ -49,7 +50,8 @@ class Comment extends ActiveRecord implements ILinkable {
     if ($value) {
       self::$validateOverride['Comment'] = array(
         'content' => array(
-          'presence' => TRUE
+          'presence' => TRUE,
+          'maxLength' => 1024,
         ),
         'email' => array(
           'email' => TRUE
@@ -60,6 +62,7 @@ class Comment extends ActiveRecord implements ILinkable {
       self::$validateOverride['Comment'] = array(
         'content' => array(
           'presence' => TRUE,
+          'maxLength' => 1024,
         ),
         'author' => array(
           'presence' => TRUE,

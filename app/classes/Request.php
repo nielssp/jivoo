@@ -46,6 +46,8 @@ class Request {
         return $this->$name;
       case 'form':
         return $this->getFormData($form);
+      case 'ip':
+        return $_SERVER['REMOTE_ADDR'];
     }
   }
   

@@ -8,6 +8,8 @@ class ApplicationController {
   protected $e = NULL;
   protected $request = NULL;
   
+  protected $auth = NULL;
+  
   private $actions = array();
   
   private $templatePaths = array();
@@ -140,6 +142,10 @@ class ApplicationController {
 
   public function notFound() {
     $this->render('404.html');
+  }
+  
+  public function accessDenied() {
+    $this->render('backend/access-denied.html');
   }
   
 }

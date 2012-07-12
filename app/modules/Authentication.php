@@ -1,21 +1,21 @@
 <?php
 // Module
-// Name           : Users
+// Name           : Authentication
 // Version        : 0.2.0
-// Description    : The PeanutCMS user system
+// Description    : The PeanutCMS authentication system
 // Author         : PeanutCMS
 // Dependencies   : errors configuration templates actions database routes http
 
-/*
- * Static pages
+/**
+ * Authentication module
  *
  * @package PeanutCMS
  */
 
 /**
- * Pages class
+ * Authentication class
  */
-class Users extends ModuleBase {
+class Authentication extends ModuleBase {
 
   private $user;
 
@@ -67,15 +67,15 @@ class Users extends ModuleBase {
     }
 
     $this->m->Configuration->setDefault(array(
-      'users.defaultGroups.unregistered' => 'guests',
-      'users.defaultGroups.registered' => 'users'
+      'authentication.defaultGroups.unregistered' => 'guests',
+      'authentication.defaultGroups.registered' => 'users'
     ));
 
-    if (!$this->m->Configuration->exists('users.hashType')) {
+    if (!$this->m->Configuration->exists('authentication.hashType')) {
       foreach ($this->hashTypes as $hashType) {
         $constant = 'CRYPT_' . strtoupper($hashType);
         if (defined($constant) AND constant($constant) == 1) {
-          $this->m->Configuration->set('users.hashType', $hashType);
+          $this->m->Configuration->set('authentication.hashType', $hashType);
           break;
         }
       }
@@ -90,7 +90,7 @@ class Users extends ModuleBase {
 
   public function genSalt($hashType = NULL) {
     if (!isset($hashType)) {
-      $hashType = $this->m->Configuration->get('users.hashType');
+      $hashType = $this->m->Configuration->get('authentication.hashType');
       if ($hashType == 'auto') {
         foreach ($this->hashTypes as $t) {
           $constant = 'CRYPT_' . strtoupper($t);

@@ -537,6 +537,17 @@ abstract class ActiveRecord implements IModel {
     }
     return $new;
   }
+  
+  public function edit($data) {
+    if (!is_array($data)) {
+      return;
+    }
+    foreach ($data as $key => $value) {
+      if (isset($this->fields[$key])) {
+        $this->$key = $value;
+      }
+    }
+  }
 
   protected function validateValue($column, $value, $conditionKey, $conditionValue) {
     $validate = array();

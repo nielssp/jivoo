@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS extension system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration database routes templates http
-//                  users backend
+// Dependencies   : Errors Configuration Database Routes Templates Http
+//                  Authentication Backend
 
 /*
  * Extension system

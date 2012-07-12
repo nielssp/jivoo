@@ -4,8 +4,8 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration database routes templates http
-//                  users backend
+// Dependencies   : Errors Configuration Database Routes Templates Http
+//                  Authentication Backend
 
 /*
  * Menu system

@@ -49,6 +49,12 @@ class commentsSchema extends Schema {
     'length' => 255,
     'null' => false,
   );
+  
+  public $ip = array(
+    'type' => 'string',
+    'length' => 255,
+    'null' => false,
+  );
 
   public $content = array(
     'type' => 'text',

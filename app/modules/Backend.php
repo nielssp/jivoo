@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
-// Dependencies   : database users errors actions configuration routes
-//                  templates http
+// Dependencies   : Database Authentication Errors Actions Configuration Routes
+//                  Templates Http
 
 /**
  * PeanutCMS backend
@@ -37,16 +37,16 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $this->controller = new BackendController($this->m->Templates, $this->m->Routes);
     
     // no no no
-    $this->controller->addModule($this->m->Users);
+    $this->controller->addModule($this->m->Authentication);
 
-    if ($this->m->Users->isLoggedIn()) {
+    if ($this->m->Authentication->isLoggedIn()) {
       $this->controller->addRoute($path, 'dashboard');
       $this->m->Templates->set('notifications', LocalNotification::all());
     }
     else {
       $this->controller->addRoute($path, 'login');
     }
-    if (!$this->m->Templates->hideIdentity() OR $this->m->Users->isLoggedIn()) {
+    if (!$this->m->Templates->hideIdentity() OR $this->m->Authentication->isLoggedIn()) {
       $this->controller->addRoute($aboutPath, 'about');
       $this->m->Templates->set('aboutLink', $this->m->Http->getLink(explode('/', $aboutPath)), 'backend/footer.html');
     }
@@ -74,7 +74,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     switch ($property) {
       case 'unlisted':
         if (!isset($this->unlisted)) {
-          $this->unlisted = new BackendCategory();
+          $this->unlisted = new BackendCategory($this);
         }
         return $this->unlisted;
       case 'prefix':
