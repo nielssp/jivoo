@@ -34,14 +34,12 @@ class Comment extends ActiveRecord implements ILinkable {
   
   protected $fields = array(
     'author' => 'Name',
-    'email' => 'E-mail',
+    'email' => 'Email',
     'website' => 'Website',
     'content' => 'Content'
   );
 
   protected $defaults = array(
-    'user_id' => 0,
-    'parent_id' => 0,
     'date' => array('time'),
     'email' => '',
     'website' => ''

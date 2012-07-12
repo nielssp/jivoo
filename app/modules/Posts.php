@@ -184,7 +184,14 @@ class Posts extends ModuleBase {
         $record = $parameters;
       }
       else {
-        $record = Post::find($parameters[0]);
+        if ($parameters[0] == 0) {
+          $record = Post::create();
+          $record->name = '%name%';
+          $record->date = time();
+        }
+        else {
+          $record = Post::find($parameters[0]);
+        }
       }
       $time = $record->date;
       $replace = array('%name%'  => $record->name,

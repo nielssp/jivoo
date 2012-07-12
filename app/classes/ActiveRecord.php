@@ -550,7 +550,8 @@ abstract class ActiveRecord implements IModel {
       }
       return TRUE;
     }
-    if ($conditionKey != 'presence' AND empty($value) AND !is_numeric($value)) {
+    if ($conditionKey != 'presence'
+        AND $conditionKey != 'null' AND empty($value) AND !is_numeric($value)) {
       return TRUE;
     }
     switch ($conditionKey) {
@@ -609,9 +610,9 @@ abstract class ActiveRecord implements IModel {
       case 'presence':
         return $value ? tr('Must not be empty.') : tr('Must be empty.');
       case 'null':
-        return $value ? tr('Must not be null.') : tr('Must be null.');
+        return $value ? tr('Must be null.') : tr('Must not be null.');
       case 'email':
-        return tr('Not a valid e-mail address.');
+        return tr('Not a valid email address.');
       case 'minLength':
         return trn('Minimum length of %1 character.', 'Minimum length of %1 characters.', $value);
       case 'maxLength':

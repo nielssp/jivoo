@@ -89,7 +89,7 @@ class PostsController extends ApplicationController {
       }
       else {
         foreach ($this->post->getErrors() as $field => $error) {
-          new LocalWarning($field . ': ' . $error);
+          new LocalWarning($this->post->getFieldLabel($field) . ': ' . $error);
         }
       }
     }

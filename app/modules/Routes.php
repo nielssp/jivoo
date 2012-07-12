@@ -20,6 +20,8 @@ class Routes extends ModuleBase {
   private $routes = array();
 
   private $paths = array();
+  
+  private $renders = FALSE;
 
   private $selectedController;
 
@@ -140,19 +142,25 @@ class Routes extends ModuleBase {
     else if (is_array($route)) {
       $default = array(
         'path' => NULL,
-        'query' => $this->request->query,
+        'query' => NULL,
         'fragment' => NULL,
-        'controller' => $this->selectedController[0],
+        'controller' => $this->controllerName($this->selectedController[0]),
         'action' => $this->selectedController[1],
         'parameters' => $this->selectedControllerParameters
       );
-      if (isset($route['controller'])) {
+      if (isset($route['controller']) AND $route['controller'] != $default['controller']) {
         $default['action'] = 'index';
         $default['parameters'] = array();
       }
       $route = array_merge($default, $route);
       if (isset($route['path'])) {
         return $this->m->Http->getLink($route['path'], $route['query'], $route['fragment']);
+      }
+      if (!isset($route['query'])
+          AND $route['controller'] == $default['controller']
+          AND $route['action'] == $default['action']
+          AND $route['parameters'] == $default['parameters']) {
+        $route['query'] = $this->request->query;
       }
       return $this->m->Http->getLink(
         $this->getPath($route['controller'], $route['action'], $route['parameters']),
@@ -203,6 +211,9 @@ class Routes extends ModuleBase {
   }
 
   public function setRoute($controller, $priority = 7, $parameters = array()) {
+    if ($this->rendered) {
+      return FALSE;
+    }
     if ($priority > $this->selectedControllerPriority) {
       $this->selectedController = $controller;
       $this->selectedControllerPriority = $priority;
@@ -211,6 +222,9 @@ class Routes extends ModuleBase {
   }
 
   private function mapRoute() {
+    if ($this->rendered) {
+      return FALSE;
+    }
     $routes = $this->routes;
     $path = $this->getRequest()->path;
     foreach ($routes as $j => $route) {
@@ -253,6 +267,7 @@ class Routes extends ModuleBase {
     $this->mapRoute();
     
     if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
+      $this->rendered = TRUE;
       call_user_func_array($this->selectedController, $this->selectedControllerParameters);
     }
     else {

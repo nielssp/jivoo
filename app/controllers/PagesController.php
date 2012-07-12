@@ -32,7 +32,7 @@ class PagesController extends ApplicationController {
       }
       else {
         foreach ($this->page->getErrors() as $field => $error) {
-          new LocalWarning($field . ': ' . $error);
+          new LocalWarning($this->page->getFieldLabel($field) . ': ' . $error);
         }
       }
     }

@@ -73,11 +73,11 @@ class Post extends ActiveRecord implements ILinkable {
     ),
   );
   
-  protected $labels = array(
+  protected $fields = array(
     'title' => 'Title',
     'name' => 'Permalink',
     'content' => 'Content',
-    'tag' => 'Tags',
+    'tags' => 'Tags',
     'commenting' => 'Allow comments'
   );
 
@@ -96,7 +96,7 @@ class Post extends ActiveRecord implements ILinkable {
     return array(
       'controller' => 'Posts',
       'action' => 'view',
-      'parameters' => $this
+      'parameters' => array($this->id)
     );
   }
 

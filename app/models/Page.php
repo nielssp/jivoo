@@ -36,7 +36,7 @@ class Page extends ActiveRecord implements ILinkable {
     ),
   );
 
-  protected $labels = array(
+  protected $fields = array(
     'title' => 'Title',
     'name' => 'Permalink',
     'content' => 'Content',
