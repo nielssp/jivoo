@@ -36,12 +36,16 @@ abstract class ActiveRecord implements IModel {
   private $isDeleted = FALSE;
 
   protected $validate = array();
+  protected static $validateOverride = array();
 
   protected $defaults = array();
+  protected static $defaultsOverride = array();
 
   protected $virtuals = array();
+  protected static $virtualsOverride = array();
   
-  protected $labels = array();
+  protected $fields = array();
+  protected static $fieldsOverride= array();
 
   protected $hasOne = array();
   protected $hasMany = array();
@@ -378,6 +382,20 @@ abstract class ActiveRecord implements IModel {
     $this->primaryKey = self::$models[$class]['primaryKey'];
     $this->schema = self::$models[$class]['schema'];
     $this->data = array();
+    
+    if (isset(self::$validateOverride[$class])) {
+      $this->validate = self::$validateOverride[$class];
+    }
+    if (isset(self::$defaultsOverride[$class])) {
+      $this->defaults = self::$defaultsOverride[$class];
+    }
+    if (isset(self::$virtualsOverride[$class])) {
+      $this->virtuals = self::$virtualsOverride[$class];
+    }
+    if (isset(self::$fieldsOverride[$class])) {
+      $this->fields = self::$fieldsOverride[$class];
+    }
+    
     foreach (self::$models[$class]['columns'] as $column) {
       if (isset($data[$column])) {
         $this->data[$column] = $data[$column];
@@ -426,9 +444,12 @@ abstract class ActiveRecord implements IModel {
         if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
           $this->validate[$column]['unique'] = TRUE;
         }
+        if (isset($info['null']) AND $info['null'] == FALSE) {
+          $this->validate[$column]['null'] = FALSE;
+        }
         if (isset($info['default'])) {
-          if (!isset($this->defaults['column'])) {
-            $this->defaults['column'] = $info['default'];
+          if (!isset($this->defaults[$column])) {
+            $this->defaults[$column] = $info['default'];
           }
         }
       }
@@ -491,17 +512,23 @@ abstract class ActiveRecord implements IModel {
     $new = new $class();
     $new->isNew = TRUE;
     $new->isSaved = FALSE;
-    $data = array_merge($new->defaults, $data);
-    foreach ($data as $property => $value) {
+    $keys = array_unique(array_merge(array_keys($new->defaults), array_keys($data)));
+    foreach ($keys as $key) {
       try {
-        if (is_array($value)) {
-          if (is_callable($value[0])) {
-            $function = array_shift($value);
-            $new->$property = call_user_func_array($function, $value);
-          }
+        if (isset($data[$key]) AND isset($new->fields[$key])) {
+          $new->$key = $data[$key];
         }
-        else {
-          $new->$property = $value;
+        else if (isset($new->defaults[$key])) {
+          $value = $new->defaults[$key];
+          if (is_array($value)) {
+            if (is_callable($value[0])) {
+              $function = array_shift($value);
+              $new->$key = call_user_func_array($function, $value);
+            }
+          }
+          else {
+            $new->$key = $value;
+          }
         }
       }
       catch (RecordPropertyNotFoundException $ex) {
@@ -523,9 +550,16 @@ abstract class ActiveRecord implements IModel {
       }
       return TRUE;
     }
+    if ($conditionKey != 'presence' AND empty($value) AND !is_numeric($value)) {
+      return TRUE;
+    }
     switch ($conditionKey) {
       case 'presence':
         return (!empty($value) OR is_numeric($value)) == $conditionValue;
+      case 'null':
+        return is_null($value) == $conditionValue;
+      case 'email':
+        return preg_match("/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i", $value) == 1;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -574,6 +608,10 @@ abstract class ActiveRecord implements IModel {
     switch ($rule) {
       case 'presence':
         return $value ? tr('Must not be empty.') : tr('Must be empty.');
+      case 'null':
+        return $value ? tr('Must not be null.') : tr('Must be null.');
+      case 'email':
+        return tr('Not a valid e-mail address.');
       case 'minLength':
         return trn('Minimum length of %1 character.', 'Minimum length of %1 characters.', $value);
       case 'maxLength':
@@ -602,6 +640,9 @@ abstract class ActiveRecord implements IModel {
   public function isValid() {
     $this->errors = array();
     foreach ($this->data as $column => $value) {
+      if (!is_scalar($value) AND !is_null($value)) {
+        $this->errors[$column] = tr('Value not a scalar.');
+      }
       if (!isset($this->validate[$column])) {
         continue;
       }
@@ -621,7 +662,7 @@ abstract class ActiveRecord implements IModel {
 
 
   public function getFields() {
-    $fields = array_keys($this->data);
+    $fields = array_keys($this->fields);
     $virtualFields = array_keys($this->virtuals);
     return array_unique(array_merge($fields, $virtualFields));
   }
@@ -634,16 +675,20 @@ abstract class ActiveRecord implements IModel {
   }
   
   public function getFieldLabel($field) {
-    if (!isset($this->labels[$field])) {
-      $this->labels[$field] = ucfirst($field);
+    if (!isset($this->fields[$field])) {
+      return '';
     }
-    return tr($this->labels[$field]);
+    return tr($this->fields[$field]);
   }
   
   public function isFieldRequired($field) {
     return isset($this->validate[$field])
       AND isset($this->validate[$field]['presence'])
       AND $this->validate[$field]['presence'];
+  }
+  
+  public function isField($field) {
+    return isset($this->field[$field]);
   }
 
   public function getErrors() {

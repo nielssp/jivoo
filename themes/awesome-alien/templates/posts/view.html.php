@@ -113,7 +113,7 @@ endif;
 
 <h1 id="comment"><?php echo tr('Leave a comment'); ?></h1>
 
-<p><?php echo tr('Have something to say? Say it!'); ?>
+<p><?php echo tr('Have something to say? Say it!'); ?></p>
 
 <?php echo $Form->begin($newComment, 'comment'); ?>
 

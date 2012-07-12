@@ -23,6 +23,20 @@ class Posts extends ModuleBase {
 
   protected function init() {
 
+    // Set default settings
+    $this->m->Configuration->setDefault(array(
+      'posts.fancyPermalinks' => 'on',
+      'posts.permalink' => '%year%/%month%/%name%',
+      'posts.comments.sorting' => 'desc',
+      'posts.comments.childSorting' => 'asc',
+      'posts.comments.display' => 'thread',
+      'posts.comments.levelLimit' => '2',
+      'posts.commentingDefault' => 'on',
+      'posts.anonymousCommenting' => 'off',
+      'posts.commentApproval' => 'off'
+    ));
+    
+    // Set up models
     $newInstall = FALSE;
 
     $postsSchema = new postsSchema();
@@ -43,6 +57,10 @@ class Posts extends ModuleBase {
     Post::connect($this->m->Database->posts);
     Tag::connect($this->m->Database->tags);
     Comment::connect($this->m->Database->comments);
+    
+    if ($this->m->Configuration['posts.anonymousCommenting'] == 'on') {
+      Comment::setAnonymousCommenting(TRUE);
+    }
 
     if ($newInstall) {
       $post = Post::create();
@@ -61,19 +79,6 @@ class Posts extends ModuleBase {
       $comment->setPost($post);
       $comment->save();
     }
-
-    // Set default settings
-    $this->m->Configuration->setDefault(array(
-      'posts.fancyPermalinks' => 'on',
-      'posts.permalink' => '%year%/%month%/%name%',
-      'posts.comments.sorting' => 'desc',
-      'posts.comments.childSorting' => 'asc',
-      'posts.comments.display' => 'thread',
-      'posts.comments.levelLimit' => '2',
-      'posts.commentingDefault' => 'on',
-      'posts.anonymousCommenting' => 'off',
-      'posts.commentApproval' => 'off'
-    ));
     
     // Create controller
     $this->controller = new PostsController($this->m->Templates, $this->m->Routes);

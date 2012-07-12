@@ -23,9 +23,16 @@ class Comment extends ActiveRecord implements ILinkable {
     'content' => array(
       'presence' => TRUE,
     ),
+    'author' => array(
+      'presence' => TRUE,
+    ),
+    'email' => array(
+      'presence' => TRUE,
+      'email' => TRUE
+    ),
   );
   
-  protected $labels = array(
+  protected $fields = array(
     'author' => 'Name',
     'email' => 'E-mail',
     'website' => 'Website',
@@ -39,6 +46,33 @@ class Comment extends ActiveRecord implements ILinkable {
     'email' => '',
     'website' => ''
   );
+  
+  public static function setAnonymousCommenting($value = FALSE) {
+    if ($value) {
+      self::$validateOverride['Comment'] = array(
+        'content' => array(
+          'presence' => TRUE
+        ),
+        'email' => array(
+          'email' => TRUE
+        ),
+      );
+    }
+    else {
+      self::$validateOverride['Comment'] = array(
+        'content' => array(
+          'presence' => TRUE,
+        ),
+        'author' => array(
+          'presence' => TRUE,
+        ),
+        'email' => array(
+          'presence' => TRUE,
+          'email' => TRUE
+        ),
+      );
+    }
+  } 
 
   public function getRoute() {
     return array(

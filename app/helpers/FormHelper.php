@@ -11,7 +11,7 @@ class FormHelper extends ApplicationHelper {
     $this->post = $this->request->isPost();
     $this->record = $record;
     if ($this->post) {
-      $this->errors = $record->getErrors();      
+      $this->errors = $record->getErrors();
     }
     $this->currentForm = classFileName(get_class($record));
     return '<form action="' . $this->getLink(array('fragment' => $fragment)) . '" method="post">';
@@ -40,14 +40,14 @@ class FormHelper extends ApplicationHelper {
   }
   
   public function isValid($field = NULL) {
-    if (!$post) {
+    if (!$this->post) {
       return TRUE;
     }
     if (isset($field)) {
       return !isset($this->errors[$field]);
     }
     else {
-      return empty($this->errors);
+      return count($this->errors) < 1;
     }
   }
   
