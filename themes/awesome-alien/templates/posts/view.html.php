@@ -72,10 +72,11 @@ if (empty($comment->author)) {
   echo tr('Anonymous');
 }
 else {
-  if (empty($comment->website))
+  $website = $Html->cleanUrl($comment->website);
+  if (empty($website))
     echo h($comment->author);
   else
-    echo '<a href="' . $Html->cleanUrl($comment->website) . '">' . h($comment->author) . '</a>';
+    echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
 }
 ?></h2>
 <p><?php echo h($comment->content); ?></p>
@@ -113,9 +114,26 @@ endif;
 
 <h1 id="comment"><?php echo tr('Leave a comment'); ?></h1>
 
-<p><?php echo tr('Have something to say? Say it!'); ?></p>
+<?php if (!isset($newComment)): ?></li>
+
+<p><?php echo tr('Please log in to leave a comment.'); ?></p>
+
+<?php else: ?>
 
 <?php echo $Form->begin($newComment, 'comment'); ?>
+
+<p><?php echo tr('Have something to say? Say it!'); ?></p>
+
+<?php if ($user): ?>
+
+<p class="input">
+<label>
+  <?php echo tr('Logged in as %1.', $Html->link(h($user->username), $user))?>
+</label>
+(<?php echo $Html->link(tr('Log out?'), array('query' => array('logout' => '')))?>)
+</p>
+
+<?php else: ?>
 
 <p class="input">
 <?php echo $Form->label('author'); ?>
@@ -138,6 +156,8 @@ endif;
 <?php echo $Form->getError('website'); ?>
 </p>
 
+<?php endif; ?>
+
 <p class="input">
 <?php echo $Form->label('content'); ?>
 <?php echo $Form->isRequired('content', '<span class="star">*</span>'); ?>
@@ -148,6 +168,8 @@ endif;
 <p><?php echo $Form->submit(tr('Post comment')); ?></p>
 
 <?php echo $Form->end(); ?>
+
+<?php endif; ?>
 
 <?php endif; ?>
 

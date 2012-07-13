@@ -87,6 +87,8 @@ class Posts extends ModuleBase {
       $this->m->Authentication
     );
 
+    // Frontend setup
+    
     $this->controller->addRoute('posts', 'index');
 
     $this->controller->addRoute('tags', 'tagIndex');
@@ -105,8 +107,11 @@ class Posts extends ModuleBase {
       $this->controller->addRoute('posts/*/comments/*', 'viewComment');
     }
     
+    // Backend setup
+    
     $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['post-add']->setup(tr('New post'), 2)->autoRoute($this->controller, 'add');    
+    $this->m->Backend['content']['post-add']->setup(tr('New post'), 2)
+      ->permission('backend.posts.add')->autoRoute($this->controller, 'add');    
     //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
     //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
     //$this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);

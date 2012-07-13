@@ -5,18 +5,16 @@ class BackendController extends ApplicationController {
   protected $helpers = array('Html', 'Form');
   
   public function dashboard() {
-    if (!$this->auth->isLoggedIn()) {
-      $this->login();
-      return;
+    if (!$this->auth->hasPermission('backend.access')) {
+      return $this->login();
     }
     $this->title = tr('Dashboard');
     $this->render();
   }
   
   public function about() {
-    if (!$this->auth->isLoggedIn() AND $this->m->Templates->hideIdentity()) {
-      $this->login();
-      return;
+    if (!$this->auth->hasPermission('backend.access') AND $this->m->Templates->hideIdentity()) {
+      return $this->login();
     }
     $this->title = tr('About');
     $this->render();

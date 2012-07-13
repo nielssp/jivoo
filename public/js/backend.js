@@ -218,4 +218,13 @@ $(function() {
     });
   });
   
+  $("input#login_username").each(function(index, Element) {
+    if ($(this).val() == '') {
+      $(this).focus();
+    }
+    else {
+      $("input#login_password").focus();
+    }
+  });
+  
 });

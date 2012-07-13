@@ -4,9 +4,13 @@ class BackendItem implements IGroupable, ILinkable {
   private $label = '';
   private $group = 0;
   private $backend = NULL;
+  private $auth = NULL;
+  private $permission = 'backend.access';
+  private $access = NULL;
 
-  public function __construct(Backend $backend) {
+  public function __construct(Backend $backend, Authentication $authentication) {
     $this->backend = $backend;
+    $this->auth = $authentication;
   }
 
   public function __get($property) {
@@ -37,13 +41,27 @@ class BackendItem implements IGroupable, ILinkable {
     }
     return $this;
   }
+  
+  public function permission($key = NULL) {
+    $this->permission = $key;
+    return $this;
+  }
+  
+  public function hasAccess() {
+    if (!isset($this->access)) {
+      $this->access = $this->auth->hasPermission($this->permission);
+    }
+    return $this->access;
+  }
 
   public function autoRoute(ApplicationController $controller, $action) {
-    $controller->autoRoute($action, $this->backend->prefix);
-    $this->route = array(
-        'controller' => $controller,
-        'action' => $action
-    );
+    if ($this->hasAccess()) {
+      $controller->autoRoute($action, $this->backend->prefix);
+      $this->route = array(
+          'controller' => $controller,
+          'action' => $action
+      );
+    }
   }
 
   public function getLabel() {

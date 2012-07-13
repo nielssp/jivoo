@@ -2,7 +2,7 @@
 class Group extends ActiveRecord {
 
   protected $hasMany = array(
-  	'User' => array('thisKey' => 'group_id'),
+    'User' => array('thisKey' => 'group_id'),
   );
 
   private $permissions;
@@ -22,9 +22,12 @@ class Group extends ActiveRecord {
     }
   }
 
-  public function hasPermission($key) {
+  public function hasPermission($key = NULL) {
     if ($this->isNew()) {
       return FALSE;
+    }
+    if (!isset($key)) {
+      return TRUE;
     }
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
@@ -51,17 +54,21 @@ class Group extends ActiveRecord {
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
     }
-    $db = self::connection();
+    $dataSource = self::connection('Group');
+    if (!($dataSource instanceof ITable)) {
+      return;
+    }
+    $dataSource = $dataSource->getOwner()->groups_permissions;
     if ($value == TRUE AND !$this->hasPermission($key)) {
       $this->permissions[$key] = TRUE;
-      $db->insertQuery('groups_permissions')
+      $dataSource->insert()
         ->addPair('group_id', $this->id)
         ->addPair('permission', $key)
         ->execute();
     }
     else if ($this->hasPermission($key)) {
       unset($this->permissions[$key]);
-      $db->deleteQuery('groups_permissions')
+      $dataSource->delete()
         ->where('group_id = ? AND permission = ?')
         ->addVar($this->id)
         ->addVar($key)

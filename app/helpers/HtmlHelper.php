@@ -50,7 +50,10 @@ class HtmlHelper extends ApplicationHelper {
   }
   
   public function cleanUrl($url) {
-    return $url;
+    if (preg_match('/^https?:\/\//i', $url) == 0) {
+      $url = '';
+    }
+    return h($url);
   }
 
 }

@@ -7,21 +7,31 @@ class FormHelper extends ApplicationHelper {
   private $post = FALSE;
   private $errors = array();
   
-  public function begin(IModel $record, $fragment = NULL) {
+  public function begin(IModel $record = NULL, $fragment = NULL) {
+    if (!isset($record)) {
+      return FALSE;
+    }
     $this->post = $this->request->isPost();
     $this->record = $record;
     if ($this->post) {
       $this->errors = $record->getErrors();
     }
     $this->currentForm = $record->getName();
-    return '<form action="' . $this->getLink(array('fragment' => $fragment)) . '" method="post">';
+    return '<form action="' . $this->getLink(array('fragment' => $fragment))
+    . '" id="' . $this->currentForm . '" method="post">';
   }
 
   public function fieldName($field) {
+    if (!isset($this->record)) {
+      return;
+    }
     return $this->currentForm . '[' . $field . ']';
   }
 
   public function fieldId($field, $value = NULL) {
+    if (!isset($this->record)) {
+      return;
+    }
     $id = $this->currentForm . '_' . $field;
     if (isset($value)) {
       $id .= '_' . $value;
@@ -30,6 +40,9 @@ class FormHelper extends ApplicationHelper {
   }
   
   public function isRequired($field, $output = NULL) {
+    if (!isset($this->record)) {
+      return;
+    }
     $required = $this->record->isFieldRequired($field);
     if (isset($output)) {
       return $required ? $output : '';
@@ -40,6 +53,9 @@ class FormHelper extends ApplicationHelper {
   }
   
   public function isValid($field = NULL) {
+    if (!isset($this->record)) {
+      return;
+    }
     if (!$this->post) {
       return TRUE;
     }
@@ -52,14 +68,23 @@ class FormHelper extends ApplicationHelper {
   }
   
   public function getErrors() {
+    if (!isset($this->record)) {
+      return;
+    }
     return $this->errors;
   }
   
   public function getError($field) {
+    if (!isset($this->record)) {
+      return;
+    }
     return isset($this->errors[$field]) ? $this->errors[$field] : '';
   }
 
   public function label($field, $label = NULL,  $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $html = '<label for="' . $this->fieldId($field) . '"';
     if (isset($options['class'])) {
       $html .= ' class="' . $options['class'] . '"';
@@ -72,6 +97,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function field($field, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $type = $this->record->getFieldType($field);
     switch ($type) {
       case 'text':
@@ -85,6 +113,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function fieldValue($field) {
+    if (!isset($this->record)) {
+      return;
+    }
     if (isset($this->record->$field)) {
       return h($this->record->$field);
     }
@@ -100,6 +131,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function text($field, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $html = '<input type="text" name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
@@ -114,6 +148,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function radio($field, $value, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $html = '<input type="radio" name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field, $value) . '"';
     $html .= ' value="' . $value . '"';
@@ -126,6 +163,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function password($field, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $html = '<input type="password" name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
@@ -137,6 +177,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function textarea($field, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $html = '<textarea name="' . $this->fieldName($field) .'"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= $this->addAttributes($options);
@@ -149,6 +192,9 @@ class FormHelper extends ApplicationHelper {
   }
 
   public function submit($value, $field = 'submit', $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
     $html = '<input type="submit" name="' . $field . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= ' value="' . $value . '"';
@@ -161,6 +207,8 @@ class FormHelper extends ApplicationHelper {
   }
     
   public function end() {
+    $this->record = NULL;
+    $this->errors = array();
     return '</form>';
   }
 }

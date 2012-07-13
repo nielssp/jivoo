@@ -6,9 +6,11 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
   private $group = 0;
   private $position = 0;
   private $backend = NULL;
+  private $auth = NULL;
 
-  public function __construct(Backend $backend) {
+  public function __construct(Backend $backend, Authentication $authentication) {
     $this->backend = $backend;
+    $this->auth = $authentication;
   }
   
   public function __get($property) {
@@ -42,6 +44,19 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
   public function getGroup() {
     return $this->group;
   }
+  
+  public function count() {
+    $count = 0;
+    foreach ($this->items as $key => $item) {
+      if (!$item->hasAccess()) {
+        unset($this->items[$key]);
+      }
+      else {
+        $count++;
+      }
+    }
+    return $count;
+  }
 
   public function offsetExists($item) {
     return isset($this->items[$item]);
@@ -49,7 +64,7 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
 
   public function offsetGet($item) {
     if (!isset($this->items[$item])) {
-      $this->items[$item] = new BackendItem($this->backend);
+      $this->items[$item] = new BackendItem($this->backend, $this->auth);
       $this->items[$item]->label = $item;
     }
     return $this->items[$item];

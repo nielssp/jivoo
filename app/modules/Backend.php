@@ -36,14 +36,14 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     
     $this->controller = new BackendController($this->m->Templates, $this->m->Routes, $this->m->Authentication);
 
-    if ($this->m->Authentication->isLoggedIn()) {
+    if ($this->m->Authentication->hasPermission('backend.access')) {
       $this->controller->addRoute($path, 'dashboard');
       $this->m->Templates->set('notifications', LocalNotification::all());
     }
     else {
       $this->controller->addRoute($path, 'login');
     }
-    if (!$this->m->Templates->hideIdentity() OR $this->m->Authentication->isLoggedIn()) {
+    if (!$this->m->Templates->hideIdentity() OR $this->m->Authentication->hasPermission('backend.access')) {
       $this->controller->addRoute($aboutPath, 'about');
       $this->m->Templates->set('aboutLink', $this->m->Http->getLink(explode('/', $aboutPath)), 'backend/footer.html');
     }
@@ -71,7 +71,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     switch ($property) {
       case 'unlisted':
         if (!isset($this->unlisted)) {
-          $this->unlisted = new BackendCategory($this);
+          $this->unlisted = new BackendCategory($this, $this->m->Authentication);
         }
         return $this->unlisted;
       case 'prefix':
@@ -88,12 +88,20 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
   /** @todo In case of overflow; combine remaining categories under one "More"-category */
   /** @todo actually... it should be handled in the theme... */
   public function createMenu($sender, $eventArgs) {
-    foreach ($this->categories as $category) {
-     $category->group();
+    if (!$this->m->Authentication->hasPermission('backend.access')) {
+      $this->m->Templates->set('menu', array(), 'backend/header.html');
+      return array();
     }
-    groupObjects($this->categories);
-    $this->m->Templates->set('menu', $this->categories, 'backend/header.html');
-    return $this->categories;
+    $menu = array();
+    foreach ($this->categories as $category) {
+      if ($category->count() > 0) {
+        $category->group();
+        $menu[] = $category;
+      }
+    }
+    groupObjects($menu);
+    $this->m->Templates->set('menu', $menu, 'backend/header.html');
+    return $menu;
   }
   
   public function offsetExists($category) {
@@ -102,7 +110,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
   
   public function offsetGet($category) {
     if (!isset($this->categories[$category])) {
-      $this->categories[$category] = new BackendCategory($this);
+      $this->categories[$category] = new BackendCategory($this, $this->m->Authentication);
     }
     return $this->categories[$category];
   }
