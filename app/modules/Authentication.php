@@ -59,13 +59,13 @@ class Authentication extends ModuleBase {
       $group->name = 'users';
       $group->title = tr('User');
       $group->save();
-      $group->setPermission('content.comments.create', TRUE);
+      $group->setPermission('frontend', TRUE);
 
       $group = Group::create();
       $group->name = 'guests';
       $group->title = tr('Guest');
       $group->save();
-      $group->setPermission('content.comments.create', TRUE);
+      $group->setPermission('frontend', TRUE);
     }
 
     $this->m->Configuration->setDefault(array(
