@@ -1,18 +1,43 @@
 <?php
 
 class Encoder {
+  // source: http://xahlee.info/js/html5_non-closing_tag.html
   private $selfClosingTags = array(
+    'area' => TRUE,
+    'base' => TRUE,
     'br' => TRUE,
-    'img' => TRUE
+    'col' => TRUE,
+    'command' => TRUE,
+    'embed' => TRUE,
+    'hr' => TRUE,
+    'img' => TRUE,
+    'input' => TRUE,
+    'keygen' => TRUE,
+    'link' => TRUE,
+    'meta' => TRUE,
+    'param' => TRUE,
+    'source' => TRUE,
+    'track' => TRUE,
+    'wbr' => TRUE
   );
   private $allow = array();
 
   private $openTags = array();
 
+  private $maxLength = -1;
+
+  /** XHTML/HTML5  (not valid to use <br /> in HTML4) */
   private $xhtml = TRUE;
 
-  public function __construct($allow = array()) {
-    $this->allow = array();
+  public function __construct(Configuration $config = NULl) {
+    if (isset($config)) {
+      if (isset($config['allow'])) {
+        $this->allow = $config['allow'];
+      }
+      if (isset($config['xhtml'])) {
+        $this->xhtml = (bool)$config['xhtml'];
+      }
+    }
   }
 
   public function setXhtml($xhtml = TRUE) {
@@ -21,6 +46,10 @@ class Encoder {
 
   public function setAllowed($allow = array()) {
     $this->allow = $allow;
+  }
+
+  public function setMaxLength($length = -1) {
+    $this->maxLength = $length;
   }
 
   public function allowTag($tag) {
@@ -137,6 +166,9 @@ class Encoder {
 
   public function encode($text) {
     $this->openTags = array();
+    if ($this->maxLength > 0) {
+      $text = substr($text, 0, $this->maxLength);
+    }
     $text =
       preg_replace_callback('/<((\/?)(\w+)((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/', array($this, 'replaceTag'), $text);
     foreach ($this->openTags as $tag => $number) {
