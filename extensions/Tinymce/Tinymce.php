@@ -6,9 +6,10 @@
 // Version      : 3.4.4 
 // Dependencies : templates ext;jquery ext;jquery-ui 
 
-class Tinymce extends ExtensionBase implements IEditor {
+class Tinymce extends ExtensionBase {
   
   private $format = NULL;
+  private $encoder = NULL;
   
   protected function init() {
     $this->format = new HtmlFormat();
@@ -20,9 +21,8 @@ class Tinymce extends ExtensionBase implements IEditor {
     );
   }
 
-  public function configure(Configuration $config) {
-    $this->config = $config;
-    $this->format->configure($config->getSubset('format'));
+  public function setEncoder(Encoder $encoder) {
+    $this->encoder = $encoder;
   }
   
   public function getFormat() {

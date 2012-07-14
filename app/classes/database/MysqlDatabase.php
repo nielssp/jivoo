@@ -192,7 +192,7 @@ class MysqlDatabase extends SqlDatabase {
       }
       $sql .= implode(', ', $options['columns']) . ')';
     }
-    $sql .= ')';
+    $sql .= ') CHARACTER SET utf8';
     $this->rawQuery($sql);
   }
 
