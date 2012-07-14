@@ -43,7 +43,7 @@ class Configuration extends ModuleBase implements arrayaccess {
       Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
     }
     $file = explode('?>', $fileContent);
-    $this->data = $this->parseData($file[1], true);
+    $this->data = $this->parseData($file[1]);
   }
 
   public function getSubset($key) {
