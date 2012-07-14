@@ -8,5 +8,5 @@ interface IEditor {
   
   public function getFormat();
 
-  public function field($name, $id, $value = NULL, $options = array());
+  public function field(FormHelper $Form, $field, $options = array());
 }

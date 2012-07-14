@@ -20,8 +20,8 @@ class HtmlEditor implements IEditor {
     return $this->format;
   }
 
-  public function field($name, $id, $value = NULL, $options = array()) {
-    return '<textarea></textarea>';
+  public function field(FormHelper $Form, $field, $options = array()) {
+    return $Form->textarea($field, $options);
   }
 
 }
