@@ -57,7 +57,7 @@ class Theme extends ModuleBase {
   private function load() {
     if ($this->m->Configuration->exists('theme.name')) {
       $theme = $this->m->Configuration->get('theme.name');
-      if (file_exists(p(THEMES . $theme . '/themeinfo'))) {
+      if (file_exists(p(THEMES . $theme . '/' . $theme . '.php'))) {
         $this->theme = $theme;
         return TRUE;
       }
@@ -69,7 +69,7 @@ class Theme extends ModuleBase {
     if ($dir) {
       while (($theme = readdir($dir)) !== false) {
         if (is_dir(p(THEMES . $theme)) AND $theme != '.' AND $theme != '..') {
-          if (file_exists(p(THEMES . $theme . '/themeinfo'))) {
+          if (file_exists(p(THEMES . $theme . '/' . $theme . '.php'))) {
             $this->m->Configuration->set('theme.name', $theme);
             $this->theme = $theme;
             return TRUE;

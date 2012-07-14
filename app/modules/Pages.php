@@ -50,9 +50,11 @@ class Pages extends ModuleBase {
     $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
     $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['page-add']->setup(tr('New page'), 2)->autoRoute($this->controller, 'add');
+    $this->m->Backend['content']['pages-add']->setup(tr('New page'), 2)->autoRoute($this->controller, 'add');
+    $this->m->Backend['content']['pages-manage']->setup(tr('Manage pages'), 4)->autoRoute($this->controller, 'manage');
     
-    $this->m->Backend->unlisted['page-edit']->autoRoute($this->controller, 'edit');
+    $this->m->Backend->unlisted['pages-edit']->autoRoute($this->controller, 'edit');
+    $this->m->Backend->unlisted['pages-delete']->autoRoute($this->controller, 'delete');
     //$this->m->Backend->addPage('content', 'manage-pages', tr('Manage Pages'), array($this, 'addPageController'), 4);
   }
 

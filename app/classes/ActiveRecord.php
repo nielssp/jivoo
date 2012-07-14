@@ -714,6 +714,12 @@ abstract class ActiveRecord implements IModel {
     return $this->errors;
   }
 
+  public function encode($field, $for = 'html', $options = array()) {
+    if (isset($this->field[$field])) {
+      return h($this->data[$field]);
+    }
+  }
+
   public function isNew() {
     return $this->isNew;
   }

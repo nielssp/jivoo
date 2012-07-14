@@ -41,6 +41,9 @@ abstract class Notification {
   public static function all() {
     $type = get_called_class();
     $result = array();
+    if (!isset($_SESSION[SESSION_PREFIX . 'notifications'])) {
+      return $result;
+    }
     foreach ($_SESSION[SESSION_PREFIX . 'notifications'] as $uid => $obj) {
       if (is_a($obj, $type) OR is_subclass_of($obj, $type)) {
         $result[] = $obj;
@@ -52,6 +55,9 @@ abstract class Notification {
   public static function count() {
     $type = get_called_class();
     $result = 0;
+    if (!isset($_SESSION[SESSION_PREFIX . 'notifications'])) {
+      return 0;
+    }
     foreach ($_SESSION[SESSION_PREFIX . 'notifications'] as $uid => $obj) {
       if (is_a($obj, $type) OR is_subclass_of($obj, $type)) {
         $result++;

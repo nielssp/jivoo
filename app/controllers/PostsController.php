@@ -6,6 +6,7 @@ class PostsController extends ApplicationController {
 
   public function index() {
     $select = SelectQuery::create()
+      ->where('state = "published"')
       ->orderByDescending('date');
     $this->Pagination->setCount(Post::count());
 
@@ -20,6 +21,12 @@ class PostsController extends ApplicationController {
     $this->reroute();
 
     $this->post = Post::find($post);
+
+    if (!$this->post OR ($this->post->state != 'published'
+        AND !$this->auth->hasPermission('backend.posts.viewDraft'))) {
+      return $this->render('404.html');
+    }
+
     
     $select = SelectQuery::create()->orderBy('date');
 
@@ -30,12 +37,8 @@ class PostsController extends ApplicationController {
     
     $this->user = $this->auth->getUser();
 
-    if (!$this->post) {
-      $this->render('404.html');
-      return;
-    }
     if ($this->auth->hasPermission('frontend.comments.add')) {
-      if ($this->request->isPost()) {
+      if ($this->request->isPost() AND $this->request->checkToken('comment')) {
         $this->newComment = Comment::create($this->request->data['comment']);
         if (!empty($this->newComment->website)
             AND preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
@@ -91,7 +94,7 @@ class PostsController extends ApplicationController {
   }
   
   public function manage() {
-    $this->render('not-implemented.html');
+    $this->render();
   }
 
   public function add() {
@@ -103,7 +106,7 @@ class PostsController extends ApplicationController {
     $this->nameInPermalink = count($exampleLink) >= 2;
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];
-    if ($this->request->isPost()) {
+    if ($this->request->isPost() AND $this->request->checkToken('post')) {
       $this->post = Post::create($this->request->data['post']);
       if (isset($this->request->data['publish'])) {
         $this->post->state = 'published';

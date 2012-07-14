@@ -6,6 +6,10 @@ class PagesController extends ApplicationController {
 
   public function view($page) {
     $this->page = Page::find($page);
+    if (!$this->page OR ($this->page->state != 'published'
+        AND !$this->auth->hasPermission('backend.pages.viewDraft'))) {
+      return $this->notFound();
+    }
     $this->title = $this->page->title;
     $this->render();
   }
@@ -42,6 +46,10 @@ class PagesController extends ApplicationController {
     $this->title = tr('New page');
     $this->render('pages/edit.html');
   }
+
+  public function manage() {
+    $this->render('not-implemented.html');
+  }
   
   public function edit($page) {
     $this->beforePermalink = $this->m->Routes->getLink();
@@ -76,6 +84,10 @@ class PagesController extends ApplicationController {
     }
     $this->title = tr('Edit page');
     $this->render('pages/edit.html');
+  }
+
+  public function delete($page) {
+    $this->render('not-implemented.html');
   }
   
 }

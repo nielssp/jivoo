@@ -15,7 +15,8 @@ $this->render('header.html');
 <?php echo $page->content; ?>
 
 <p>
-<?php echo $Html->link('Permalink', $page); ?>
+<?php echo $Html->link('Permalink', $page); ?> |
+<?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($page->id)); ?>
 </p>
 
 <?php

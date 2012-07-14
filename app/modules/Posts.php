@@ -110,8 +110,20 @@ class Posts extends ModuleBase {
     // Backend setup
     
     $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['post-add']->setup(tr('New post'), 2)
+    $this->m->Backend['content']['posts-add']->setup(tr('New post'), 2)
       ->permission('backend.posts.add')->autoRoute($this->controller, 'add');    
+    $this->m->Backend['content']['posts-manage']->setup(tr('Manage posts'), 4)
+      ->permission('backend.posts.manage')->autoRoute($this->controller, 'manage');
+
+    $this->m->Backend['content']['comments']->setup(tr('Comments'), 8)
+      ->permission('backend.posts.comments.manage');
+    $this->m->Backend['content']['tags']->setup(tr('Tags'), 8)
+      ->permission('backend.posts.tags.manage');
+
+    $this->m->Backend->unlisted['posts-edit']->permission('backend.posts.edit')
+      ->autoRoute($this->controller, 'edit');
+    $this->m->Backend->unlisted['posts-delete']->permission('backend.posts.delete')
+      ->autoRoute($this->controller, 'delete');
     //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
     //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
     //$this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);

@@ -13,4 +13,5 @@ interface IModel {
   public function isField($field);
   public function isValid();
   public function getErrors();
+  public function encode($field, $for = 'html', $options = array());
 }

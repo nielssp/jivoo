@@ -9,6 +9,8 @@ class Request {
   private $query;
   
   private $cookies;
+
+  private $session;
   
   private $fragment = NULL;
 
@@ -38,6 +40,7 @@ class Request {
     $this->data = $_POST;
     
     $this->cookies = new Cookies($_COOKIE, SESSION_PREFIX);
+    $this->session = new Session(SESSION_PREFIX);
   }
 
   public function __get($name) {
@@ -47,6 +50,7 @@ class Request {
       case 'data':
       case 'query':
       case 'cookies':
+      case 'session':
       case 'fragment':
         return $this->$name;
       case 'form':
@@ -76,6 +80,24 @@ class Request {
     else {
       unset($this->query[$key]);
     }
+  }
+
+  public function getToken($form) {
+    if ($this->checkToken($form)) {
+      return $this->session[$form . '_token'];
+    }
+    $token = sha1(mt_rand());
+    $this->session[$form . '_token'] = $token;
+    return $token;
+  }
+
+  public function checkToken($form) {
+    if (!isset($this->data[$form]) OR !isset($this->data[$form]['token'])
+      OR !isset($this->session[$form . '_token'])) {
+      return FALSE;
+    }
+    $result = $this->session[$form . '_token'] === $this->data[$form]['token'];
+    return $result;
   }
 
   public function isGet() {
