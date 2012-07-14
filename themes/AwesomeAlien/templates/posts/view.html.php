@@ -83,7 +83,7 @@ else {
     echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
 }
 ?></h2>
-<p><?php echo h($comment->content); ?></p>
+<p><?php echo $comment->encode('content'); ?></p>
 <div class="byline">
 <?php
 echo tr('%1 at %2', $comment->formatDate(), $comment->formatTime());

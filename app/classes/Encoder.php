@@ -22,6 +22,8 @@ class Encoder {
   );
   private $allow = array();
 
+  private $append = array();
+
   private $openTags = array();
 
   private $maxLength = -1;
@@ -56,6 +58,16 @@ class Encoder {
     if (!isset($this->allow[$tag])) {
       $this->allow[$tag] = array('attributes' => array());
     }
+  }
+
+  public function appendAttributes($tag, $attributes) {
+    if (!isset($this->append[$tag])) {
+      $this->append[$tag] = '';
+    }
+    if ($attributes[0] != ' ') {
+      $attributes = ' ' . $attributes;
+    }
+    $this->append[$tag] .= $attributes;
   }
 
   public function allowAttribute($tag, $attribute) {
@@ -144,7 +156,12 @@ class Encoder {
       if ($attributes !== FALSE ) {
         $clean = '<' . ($isCloseTag ? '/' : '');
         $clean .= $tag;
-        $clean .= $attributes;
+        if (!$isCloseTag) {
+          $clean .= $attributes;
+          if (isset($this->append[$tag])) {
+            $clean .= $this->append[$tag];
+          }
+        }
         if ($this->xhtml) {
           $clean .= ($selfClosing ? ' /' : '') . '>';
         }

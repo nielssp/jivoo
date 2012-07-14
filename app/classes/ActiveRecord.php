@@ -8,7 +8,8 @@ abstract class ActiveRecord implements IModel {
       'table' => $dataSource->getName(),
       'schema' => $schema,
       'columns' => $schema->getColumns(),
-      'primaryKey' => $schema->getPrimaryKey()
+      'primaryKey' => $schema->getPrimaryKey(),
+      'encoders' => array()
     );
   }
   public static function connect(IDataSource $dataSource) {
@@ -19,7 +20,8 @@ abstract class ActiveRecord implements IModel {
       'table' => $dataSource->getName(),
       'schema' => $schema,
       'columns' => $schema->getColumns(),
-      'primaryKey' => $schema->getPrimaryKey()
+      'primaryKey' => $schema->getPrimaryKey(),
+      'encoders' => array()
     );
   }
   private static $cache = array();
@@ -707,16 +709,38 @@ abstract class ActiveRecord implements IModel {
   }
   
   public function isField($field) {
-    return isset($this->field[$field]);
+    return isset($this->fields[$field]);
   }
 
   public function getErrors() {
     return $this->errors;
   }
 
-  public function encode($field, $for = 'html', $options = array()) {
-    if (isset($this->field[$field])) {
-      return h($this->data[$field]);
+  public static function setEncoder($field, Encoder $encoder = NULL) {
+    $class = get_called_class();
+    self::$models[$class]['encoders'][$field] = $encoder;
+  }
+
+  public static function getEncoder($field) {
+    $class = get_called_class();
+    if (isset(self::$models[$class]['encoders'][$field])) {
+      return self::$models[$class]['encoders'][$field];
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  public function encode($field, $options = array()) {
+    $class = get_class($this);
+    if (isset($this->fields[$field])) {
+      $text = $this->data[$field];
+      if (isset(self::$models[$class]['encoders'][$field])) {
+        return self::$models[$class]['encoders'][$field]->encode($text);
+      }
+      else {
+        return h($this->data[$field]);
+      }
     }
   }
 

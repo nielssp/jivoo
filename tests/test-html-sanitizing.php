@@ -94,6 +94,7 @@ $format->allowTag('p');
 $format->allowTag('img');
 $format->allowAttribute('img', 'src');
 $format->validateAttribute('img', 'src', 'url', TRUE);
+$format->appendAttributes('a', 'rel="nofollow"');
 
 output($format->encode($comment, $allow));
 

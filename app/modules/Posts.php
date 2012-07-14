@@ -79,6 +79,19 @@ class Posts extends ModuleBase {
       $comment->setPost($post);
       $comment->save();
     }
+
+    // Encoder
+    $commentEncoder = new Encoder();
+    $commentEncoder->allowTag('strong');
+    $commentEncoder->allowTag('br');
+    $commentEncoder->allowTag('a');
+    $commentEncoder->allowAttribute('a', 'href');
+    $commentEncoder->validateAttribute('a', 'href', 'url', TRUE);
+    $commentEncoder->appendAttributes('a', 'rel="nofollow"');
+    $commentEncoder->allowTag('img');
+    $commentEncoder->allowAttribute('img', 'src');
+    $commentEncoder->validateAttribute('img', 'src', 'url', TRUE);
+    Comment::setEncoder('content', $commentEncoder);
     
     // Create controller
     $this->controller = new PostsController(
