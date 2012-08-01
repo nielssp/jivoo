@@ -1,10 +1,10 @@
 <?php
-/*Language
-Name             : English
-Local name       : English
-Translator       : Niels Sonnich Poulsen
-Version          : 0.1.0
-*/
+// Language
+// Name           : English
+// Local name     : English
+// Translator     : PeanutCMS
+// Version        : 0.1.0
+
 $translate['en'] = array(
   'defaultDateFormat' => 'F j, Y',
   'defaultTimeFormat' => 'g:i a',

@@ -25,9 +25,9 @@ chdir(PATH);
 
 // Modules that has to be initialized, the order does not matter
 $modules = array(
-  'errors', 'configuration',  'i18n', 'http', 'templates',
-  'routes', 'theme', 'database', 'authentication', 'backend',
-  'extensions', 'posts', 'links', 'pages'
+  'Errors', 'Configuration', 'Shadow', 'I18n', 'Http', 'Templates',
+  'Routes', 'Theme', 'Database', 'Authentication', 'Backend',
+  'Extensions', 'Posts', 'Links', 'Pages'
 );
 
 Core::main($modules);

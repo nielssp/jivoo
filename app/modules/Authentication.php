@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS authentication system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration templates actions database routes http
+// Dependencies   : Errors Configuration Shadow Templates Actions Database Routes Http
 
 /**
  * Authentication module
@@ -20,15 +20,6 @@ class Authentication extends ModuleBase {
   private $user = NULL;
   
   private $unregistered = NULL;
-
-  private $hashTypes = array(
-    'sha512',
-    'sha256',
-    'blowfish',
-    'md5',
-    'ext_des',
-    'std_des'
-  );
 
   protected function init() {
     $newInstall = FALSE;
@@ -72,16 +63,6 @@ class Authentication extends ModuleBase {
       'authentication.defaultGroups.unregistered' => 'guests',
       'authentication.defaultGroups.registered' => 'users'
     ));
-
-    if (!$this->m->Configuration->exists('authentication.hashType')) {
-      foreach ($this->hashTypes as $hashType) {
-        $constant = 'CRYPT_' . strtoupper($hashType);
-        if (defined($constant) AND constant($constant) == 1) {
-          $this->m->Configuration->set('authentication.hashType', $hashType);
-          break;
-        }
-      }
-    }
     
     if (!$this->isLoggedIn()) {
       $unregistered = Group::first(SelectQuery::create()
@@ -97,66 +78,6 @@ class Authentication extends ModuleBase {
       $this->m->Http->refreshPath();
     }
 
-  }
-
-  public function genSalt($hashType = NULL) {
-    if (!isset($hashType)) {
-      $hashType = $this->m->Configuration->get('authentication.hashType');
-      if ($hashType == 'auto') {
-        foreach ($this->hashTypes as $t) {
-          $constant = 'CRYPT_' . strtoupper($t);
-          if (defined($constant) AND constant($constant) == 1) {
-            $hashType = $t;
-          }
-        }
-      }
-    }
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./';
-    $max = strlen($chars) - 1;
-    $salt = '';
-    switch (strtolower($hashType)) {
-      case 'sha512':
-        $saltLength = 16;
-        // rounds from 1000 to 999,999,999
-        $prefix = '$6$rounds=5000$';
-        break;
-      case 'sha256':
-        $saltLength = 16;
-        // rounds from 1000 to 999,999,999
-        $prefix = '$5$rounds=5000$';
-        break;
-      case 'blowfish':
-        $saltLength = 22;
-        // cost (second param) from 04 to 31
-        $prefix = '$2a$08$';
-        break;
-      case 'md5':
-        $saltLength = 8;
-        $prefix = '$1$';
-        break;
-      case 'ext_des':
-        $saltLength = 4;
-        // iterations (4 characters after _) from .... to zzzz
-        $prefix = '_J9..';
-        break;
-      case 'std_des':
-      default:
-        $saltLength = 2;
-        $prefix = '';
-        break;
-    }
-    for ($i = 0; $i < $saltLength; $i++) {
-      $salt .= $chars[mt_rand(0, $max)];
-    }
-    return $prefix . $salt;
-  }
-
-  public function hash($string, $hashType = NULL) {
-    return crypt($string, $this->genSalt($hashType));
-  }
-
-  public function compareHash($string, $hash) {
-    return crypt($string, $hash) == $hash;
   }
 
   public function isLoggedIn() {
@@ -260,7 +181,7 @@ class Authentication extends ModuleBase {
     if (!$user) {
       return FALSE;
     }
-    if (!$this->compareHash($password, $user->password)) {
+    if (!$this->m->Shadow->compare($password, $user->password)) {
       return FALSE;
     }
     $this->user = $user;

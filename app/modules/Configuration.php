@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS configuration system
 // Author         : PeanutCMS
-// Dependencies   : errors
+// Dependencies   : Errors
 
 class Configuration extends ModuleBase implements arrayaccess {
 
