@@ -1,17 +1,7 @@
 <?php
 abstract class ActiveRecord implements IModel {
   private static $models = array();
-  public static function addModel($class, IDataSource $dataSource) {
-    $schema = $dataSource->getSchema();
-    self::$models[$class] = array(
-      'source' => $dataSource,
-      'table' => $dataSource->getName(),
-      'schema' => $schema,
-      'columns' => $schema->getColumns(),
-      'primaryKey' => $schema->getPrimaryKey(),
-      'encoders' => array()
-    );
-  }
+
   public static function connect(IDataSource $dataSource) {
     $class = get_called_class();
     $schema = $dataSource->getSchema();
@@ -21,9 +11,65 @@ abstract class ActiveRecord implements IModel {
       'schema' => $schema,
       'columns' => $schema->getColumns(),
       'primaryKey' => $schema->getPrimaryKey(),
-      'encoders' => array()
+      'encoders' => array(),
+      'validator' => NULL
     );
+    $object = new $class();
+    self::$models[$class]['validator'] = $object->createValidator();
+    unset($object);
   }
+  
+  private function createValidator($class) {
+    $class = get_class($this);
+    $validator = new Validator($this->validate);
+    foreach (self::$models[$class]['columns'] as $column) {
+      if ($column == $this->primaryKey) {
+        continue;
+      }
+      if (isset($this->schema->$column)) {
+        $info = $this->schema->$column;
+        if ($info['type'] == 'integer') {
+          /** @todo Handle signed integers */
+          $validator->$column->isInteger = TRUE;
+          if (isset($validator->$column->maxValue)) {
+            $validator->$column->maxValue = min($validator->$column->maxValue, 4294967295);
+          }
+          else {
+            $validator->$column->maxValue = 4294967295;
+          }
+          if (isset($validator->$column->minValue)) {
+            $validator->$column->minValue = max(0, $validator->$column->minValue);
+          }
+          else {
+            $validator->$column->minValue = 0;
+          }
+        }
+        else if ($info['type'] == 'float') {
+          $validator->$column->isFloat = TRUE;
+        }
+        else if ($info['type'] == 'boolean') {
+          $validator->$column->isBoolean = TRUE;
+        }
+        if (isset($info['length']) AND $info['type'] != 'float'
+            AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
+          if (isset($validator->$column->maxLength)) {
+            $validator->$column->maxLength = min($validator->$column->maxLength, $info['length']);
+          }
+          else {
+            $validator->$column->maxLength = $info['length'];
+          }
+        }
+        if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
+          $validator->$column->unique = TRUE;
+        }
+        if (isset($info['null']) AND $info['null'] == FALSE) {
+          $validator->$column->null = FALSE;
+        }
+      }
+    }
+    return $validator;
+  }
+  
   private static $cache = array();
 
   private $table;
@@ -38,16 +84,12 @@ abstract class ActiveRecord implements IModel {
   private $isDeleted = FALSE;
 
   protected $validate = array();
-  protected static $validateOverride = array();
 
   protected $defaults = array();
-  protected static $defaultsOverride = array();
 
   protected $virtuals = array();
-  protected static $virtualsOverride = array();
   
   protected $fields = array();
-  protected static $fieldsOverride= array();
 
   protected $hasOne = array();
   protected $hasMany = array();
@@ -377,26 +419,13 @@ abstract class ActiveRecord implements IModel {
   private function __construct($data = array()) {
     $class = get_class($this);
     if (!isset(self::$models[$class])) {
-      throw new InvalidModelException(tr('The model "%1" has not been added to ActiveRecord.', $class));
+      throw new InvalidModelException(tr('The model "%1" has not been connected to ActiveRecord.', $class));
     }
     $this->dataSource = self::$models[$class]['source'];
     $this->table = self::$models[$class]['table'];
     $this->primaryKey = self::$models[$class]['primaryKey'];
     $this->schema = self::$models[$class]['schema'];
     $this->data = array();
-    
-    if (isset(self::$validateOverride[$class])) {
-      $this->validate = self::$validateOverride[$class];
-    }
-    if (isset(self::$defaultsOverride[$class])) {
-      $this->defaults = self::$defaultsOverride[$class];
-    }
-    if (isset(self::$virtualsOverride[$class])) {
-      $this->virtuals = self::$virtualsOverride[$class];
-    }
-    if (isset(self::$fieldsOverride[$class])) {
-      $this->fields = self::$fieldsOverride[$class];
-    }
     
     foreach (self::$models[$class]['columns'] as $column) {
       if (isset($data[$column])) {
@@ -405,50 +434,8 @@ abstract class ActiveRecord implements IModel {
       else {
         $this->data[$column] = NULL;
       }
-      if ($column == $this->primaryKey) {
-        continue;
-      }
-      if (!isset($this->validate[$column])) {
-        $this->validate[$column] = array();
-      }
       if (isset($this->schema->$column)) {
         $info = $this->schema->$column;
-        if ($info['type'] == 'integer') {
-          /** @todo Handle signed integers */
-          $this->validate[$column]['isInteger'] = TRUE;
-          if (isset($this->validate[$column]['maxValue'])) {
-            $this->validate[$column]['maxValue'] = min($this->validate[$column]['maxValue'], 4294967295);
-          }
-          else {
-            $this->validate[$column]['maxValue'] = 4294967295;
-          }
-          if (isset($this->validate[$column]['minValue'])) {
-            $this->validate[$column]['minValue'] = max(0, $this->validate[$column]['minValue']);
-          }
-          else {
-            $this->validate[$column]['minValue'] = 0;
-          }
-        }
-        else if ($info['type'] == 'float') {
-          $this->validate[$column]['isFloat'] = TRUE;
-        }
-        else if ($info['type'] == 'boolean') {
-          $this->validate[$column]['isBoolean'] = TRUE;
-        }
-        if (isset($info['length']) AND $info['type'] != 'float' AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
-          if (isset($this->validate[$column]['maxLength'])) {
-            $this->validate[$column]['maxLength'] = min($this->validate[$column]['maxLength'], $info['length']);
-          }
-          else {
-            $this->validate[$column]['maxLength'] = $info['length'];
-          }
-        }
-        if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
-          $this->validate[$column]['unique'] = TRUE;
-        }
-        if (isset($info['null']) AND $info['null'] == FALSE) {
-          $this->validate[$column]['null'] = FALSE;
-        }
         if (isset($info['default'])) {
           if (!isset($this->defaults[$column])) {
             $this->defaults[$column] = $info['default'];
@@ -484,6 +471,18 @@ abstract class ActiveRecord implements IModel {
       $this->associations['add' . $class] = array('hasAndBelongsToMany', 'add', $class);
       $this->associations['remove' . $class] = array('hasAndBelongsToMany', 'remove', $class);
     }
+  }
+  
+  public function getValidator() {
+    $class = get_class($this);
+    return self::$models[$class]['validator'];
+  }
+  
+  public static function getModelValidator($class = NULL) {
+    if (!isset($class)) {
+      $class = get_called_class();
+    }
+    return self::$models[$class]['validator'];
   }
 
   protected static function connection($class) {
@@ -554,8 +553,8 @@ abstract class ActiveRecord implements IModel {
   protected function validateValue($column, $value, $conditionKey, $conditionValue) {
     $validate = array();
     $class = get_class($this);
-    if (is_int($conditionKey) AND is_array($conditionValue)) {
-      foreach ($conditionValue as $subConditionKey => $subConditionValue) {
+    if ($conditionValue instanceof ValidatorRule) {
+      foreach ($conditionValue->getRules() as $subConditionKey => $subConditionValue) {
         $validate = $this->validateValue($column, $value, $subConditionKey, $subConditionValue);
         if (!$validate) {
           return FALSE;
@@ -583,7 +582,7 @@ abstract class ActiveRecord implements IModel {
       case 'isNumeric':
         return is_numeric($value) == $conditionValue;
       case 'isInteger':
-        return (preg_match('/\A[+-]?\d+\Z/', $value) == 1) == $conditionValue;
+        return (preg_match('/^[-+]?\d+$/', $value) == 1) == $conditionValue;
       case 'isFloat':
         return (preg_match('/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/', $value) == 1) == $conditionValue;
       case 'isBoolean':
@@ -615,11 +614,8 @@ abstract class ActiveRecord implements IModel {
   }
 
   protected function getMessage($rule, $value) {
-    if (is_int($rule) AND is_array($value)) {
-      if (isset($value['message'])) {
-        return tr($value['message']);
-      }
-      return tr('Invalid value.');
+    if ($value instanceof ValidatorRule) {
+      return tr($value->message);
     }
     switch ($rule) {
       case 'presence':
@@ -657,14 +653,15 @@ abstract class ActiveRecord implements IModel {
 
   public function isValid() {
     $this->errors = array();
+    $validator = $this->getValidator();
     foreach ($this->data as $column => $value) {
       if (!is_scalar($value) AND !is_null($value)) {
         $this->errors[$column] = tr('Value not a scalar.');
       }
-      if (!isset($this->validate[$column])) {
+      if (!isset($validator->$column)) {
         continue;
       }
-      foreach ($this->validate[$column] as $conditionKey => $conditionValue) {
+      foreach ($validator->$column->getRules() as $conditionKey => $conditionValue) {
         $validate = $this->validateValue($column, $value, $conditionKey, $conditionValue);
         if (!$validate) {
           $this->errors[$column] = $this->getMessage($conditionKey, $conditionValue);
@@ -754,15 +751,15 @@ abstract class ActiveRecord implements IModel {
 
   public function save($options = array()) {
     if ($this->isDeleted) {
-      return false;
+      return FALSE;
     }
     $defaultOptions = array('validate' => true);
     $options = array_merge($defaultOptions, $options);
     if ($options['validate'] AND !$this->isValid()) {
-      return false;
+      return FALSE;
     }
     if ($this->isSaved) {
-      return true;
+      return TRUE;
     }
     foreach ($this->virtuals as $tasks) {
       if (isset($tasks['presave'])) {

@@ -50,37 +50,14 @@ class Comment extends ActiveRecord implements ILinkable {
   );
   
   public static function setAnonymousCommenting($value = FALSE) {
+    $validator = Comment::getModelValidator();
     if ($value) {
-      self::$validateOverride['Comment'] = array(
-        'content' => array(
-          'presence' => TRUE,
-          'maxLength' => 1024,
-        ),
-        'email' => array(
-          'email' => TRUE
-        ),
-        'website' => array(
-          'url' => TRUE,
-        ),
-      );
+      unset($validator->author->presence);
+      unset($validator->email->presence);
     }
     else {
-      self::$validateOverride['Comment'] = array(
-        'content' => array(
-          'presence' => TRUE,
-          'maxLength' => 1024,
-        ),
-        'author' => array(
-          'presence' => TRUE,
-        ),
-        'email' => array(
-          'presence' => TRUE,
-          'email' => TRUE
-        ),
-        'website' => array(
-          'url' => TRUE,
-        ),
-      );
+      $validator->author->presence = TRUE;
+      $validator->email->presence = TRUE;
     }
   } 
 

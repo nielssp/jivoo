@@ -55,7 +55,7 @@ class Post extends ActiveRecord implements ILinkable {
       'unique' => TRUE,
       'minLength' => 1,
       'maxLength' => 50,
-      array(
+      'rule0' => array(
         'match' => '/^[a-z0-9-]+$/',
         'message' => 'Only lowercase letters, numbers and dashes allowed.'
       ),

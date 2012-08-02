@@ -90,4 +90,20 @@ class Shadow extends ModuleBase {
     return crypt($string, $hash) == $hash;
   }
   
+  public function setPassword($name, $password, $hash = FALSE) {
+    if ($hash) {
+      $password = $this->hash($password);
+    }
+  }
+  
+  public function getPassword($name) {
+    
+  }
+  
+  public function comparePassword($name, $password, $hash = FALSE) {
+    if ($hash) {
+      $password = $this->hash($password);
+    }
+  }
+  
 }
