@@ -518,7 +518,14 @@ abstract class ActiveRecord implements IModel {
     foreach ($keys as $key) {
       try {
         if (isset($data[$key]) AND isset($new->fields[$key])) {
-          $new->$key = $data[$key];
+          $editor = $new->getFieldEditor($key);
+          if (isset($editor)) {
+            $format = $editor->getFormat();
+            $new->$key = $format->toHtml($data[$key]);
+          }
+          else {
+            $new->$key = $data[$key];
+          }
         }
         else if (isset($new->defaults[$key])) {
           $value = $new->defaults[$key];
@@ -546,7 +553,14 @@ abstract class ActiveRecord implements IModel {
     }
     foreach ($data as $key => $value) {
       if (isset($this->fields[$key])) {
-        $this->$key = $value;
+        $editor = $this->getFieldEditor($key);
+        if (isset($editor)) {
+          $format = $editor->getFormat();
+          $this->$key = $format->toHtml($data[$key]);
+        }
+        else {
+          $this->$key = $data[$key];
+        }
       }
     }
   }

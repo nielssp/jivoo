@@ -32,7 +32,7 @@ class Pages extends ModuleBase {
 
     Page::connect($this->m->Database->pages);
 
-    $editor = new HtmlEditor();
+    $editor = new TextEditor();
     Page::setFieldEditor('content', $editor);
 
     if ($newInstall) {

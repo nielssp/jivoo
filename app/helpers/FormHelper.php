@@ -123,6 +123,16 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
+    $editor = $this->record->getFieldEditor($field);
+    if (isset($editor)) {
+      $format = $editor->getFormat();
+      if ($encode) {
+        return h($format->fromHtml($this->record->$field));
+      }
+      else {
+        return $format->fromHtml($this->record->$field);
+      }
+    }
     if (isset($this->record->$field)) {
       if ($encode) {
         return h($this->record->$field);
