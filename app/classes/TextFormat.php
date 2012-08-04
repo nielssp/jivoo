@@ -14,7 +14,7 @@ class TextFormat implements IContentFormat {
     $text = preg_replace('/^<p>(.*)<\/p>$/is', "\\1", $text);
     $text = preg_replace('/<\/p> *<p>/i', "\n\n", $text);
     $text = preg_replace('/<br *\/?>/i', "\n", $text);
-    $text = preg_replace('/([\n\r \A])<a href="(https?:\/\/.+?)">(.*?)<\/a>([\n\r< "\Z])/i', '\\1\\2\\4', $text);
+    $text = preg_replace('/([\n\r \A])<a href="(https?:\/\/.+?)">(.*?)<\/a>([\n\r "]|\Z)/i', '\\1\\2\\4', $text);
     return $text;
   }
 }
