@@ -1,7 +1,6 @@
 <?php
 class UpdateQuery extends Query {
 
-  protected $table;
   protected $orderBy;
   protected $descending = FALSE;
   protected $limit;
@@ -9,17 +8,6 @@ class UpdateQuery extends Query {
   protected $whereVars;
   protected $offset = 0;
   protected $sets = array();
-
-  public static function create($table = NULL) {
-    $query = new self();
-    $query->table = $table;
-    return $query;
-  }
-
-  public function setTable($table) {
-    $this->table = $table;
-    return $this;
-  }
 
   public function set($column, $value = null) {
     if (is_array($column)) {
@@ -71,30 +59,4 @@ class UpdateQuery extends Query {
     $this->descending = true;
     return $this;
   }
-
-  public function toSql(IDatabase $db) {
-    $sqlString = 'UPDATE ' . $db->tableName($this->table);
-    if (!empty($this->sets)) {
-      $sqlString .= ' SET';
-      reset($this->sets);
-      while (($value = current($this->sets)) !== FALSE) {
-        $sqlString .= ' ' . $db->escapeQuery(key($this->sets) . '  = ?', array($value));
-        if (next($this->sets) !== FALSE) {
-          $sqlString .= ',';
-        }
-      }
-    }
-    if (isset($this->where)) {
-      $sqlString .= ' WHERE ' . $db->escapeQuery($this->where, $this->whereVars);
-    }
-    if (isset($this->orderBy)) {
-      $sqlString .= ' ORDER BY ' . $this->orderBy;
-      $sqlString .= $this->descending ? ' DESC' : ' ASC';
-    }
-    if (isset($this->limit)) {
-      $sqlString .= ' LIMIT ' . $this->offset . ', ' . $this->limit;
-    }
-    return $sqlString;
-  }
-
 }

@@ -1,20 +1,8 @@
 <?php
 class InsertQuery extends Query {
 
-  private $table;
-
   protected $columns = array();
   protected $values = array();
-
-  public static function create($table = NULL) {
-    $query = new self();
-    $query->table = $table;
-    return $query;
-  }
-
-  public function setTable($table) {
-    $this->table = $table;
-  }
 
   public function addColumn($column) {
     $this->columns[] = $column;
@@ -60,25 +48,6 @@ class InsertQuery extends Query {
       }
     }
     return $this;
-  }
-
-  public function toSql(IDatabase $db) {
-    $sqlString = 'INSERT INTO ' . $db->tableName($this->table) . ' (';
-    $sqlString .= implode(', ', $this->columns);
-    $sqlString .= ') VALUES (';
-    while (($value= current($this->values)) !== FALSE) {
-      if (isset($value)) {
-        $sqlString .= $db->escapeQuery('?', $value);
-      }
-      else {
-        $sqlString .= 'NULL';
-      }
-      if (next($this->values) !== FALSE) {
-        $sqlString .= ', ';
-      }
-    }
-    $sqlString .= ')';
-    return $sqlString;
   }
 
 }

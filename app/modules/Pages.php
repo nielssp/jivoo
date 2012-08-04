@@ -32,6 +32,9 @@ class Pages extends ModuleBase {
 
     Page::connect($this->m->Database->pages);
 
+    $editor = new HtmlEditor();
+    Page::setFieldEditor('content', $editor);
+
     if ($newInstall) {
       $page = Page::create();
       $page->title = 'About';
@@ -44,7 +47,7 @@ class Pages extends ModuleBase {
       $page->save();
     }
     
-    $this->controller = new PagesController($this->m->Templates, $this->m->Routes);
+    $this->controller = new PagesController($this->m->Templates, $this->m->Routes, $this->m->Authentication);
 
     $this->detectFancyPath();
     $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));

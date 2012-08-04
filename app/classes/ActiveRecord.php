@@ -12,6 +12,7 @@ abstract class ActiveRecord implements IModel {
       'columns' => $schema->getColumns(),
       'primaryKey' => $schema->getPrimaryKey(),
       'encoders' => array(),
+      'editors' => array(),
       'validator' => NULL
     );
     $object = new $class();
@@ -19,7 +20,7 @@ abstract class ActiveRecord implements IModel {
     unset($object);
   }
   
-  private function createValidator($class) {
+  private function createValidator() {
     $class = get_class($this);
     $validator = new Validator($this->validate);
     foreach (self::$models[$class]['columns'] as $column) {
@@ -698,6 +699,20 @@ abstract class ActiveRecord implements IModel {
     }
     return tr($this->fields[$field]);
   }
+
+  public function getFieldEditor($field) {
+    $class = get_class($this);
+    if (isset(self::$models[$class]['editors'][$field])) {
+      return self::$models[$class]['editors'][$field];
+    }
+    return NULL;
+  }
+
+  public static function setFieldEditor($field, IEditor $editor) {
+    $class = get_called_class();
+    self::$models[$class]['editors'][$field] = $editor;
+  }
+
   
   public function isFieldRequired($field) {
     return isset($this->validate[$field])
@@ -723,9 +738,7 @@ abstract class ActiveRecord implements IModel {
     if (isset(self::$models[$class]['encoders'][$field])) {
       return self::$models[$class]['encoders'][$field];
     }
-    else {
-      return FALSE;
-    }
+    return NULL;
   }
 
   public function encode($field, $options = array()) {

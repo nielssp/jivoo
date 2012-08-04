@@ -1,7 +1,6 @@
 <?php
 abstract class Query {
   private $dataSource = NULL;
-  protected $db;
 
   public function __construct() {
   }
@@ -17,12 +16,8 @@ abstract class Query {
   }
 
   public static function create() {
-    return new self();
-  }
-
-  public function setDb(IDatabase $db) {
-    $this->db = $db;
-    return $this;
+    $class = get_called_class();
+    return new $class();
   }
 
   public function setDataSource(IDataSource $dataSource) {
@@ -61,8 +56,5 @@ abstract class Query {
       return $table;
     }
   }
-
-  public abstract function toSql(IDatabase $db);
-
 
 }

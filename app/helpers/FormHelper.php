@@ -103,6 +103,10 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
+    $editor = $this->record->getFieldEditor($field);
+    if (isset($editor)) {
+      return $editor->field($this, $field, $options);
+    }
     $type = $this->record->getFieldType($field);
     switch ($type) {
       case 'text':
@@ -115,12 +119,17 @@ class FormHelper extends ApplicationHelper {
     }
   }
 
-  public function fieldValue($field) {
+  public function fieldValue($field, $encode = TRUE) {
     if (!isset($this->record)) {
       return;
     }
     if (isset($this->record->$field)) {
-      return h($this->record->$field);
+      if ($encode) {
+        return h($this->record->$field);
+      }
+      else {
+        return $this->record->$field;
+      }
     }
     return '';
   }

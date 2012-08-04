@@ -7,19 +7,7 @@ class DeleteQuery extends Query {
   protected $whereVars;
   protected $count = FALSE;
   protected $offset = 0;
-  protected $table;
   protected $join;
-
-  public static function create($table = NULL) {
-    $query = new self();
-    $query->table = $table;
-    return $query;
-  }
-
-  public function from($table) {
-    $this->table = $table;
-    return $this;
-  }
 
   public function limit($limit) {
     $this->limit = (int)$limit;
@@ -72,24 +60,5 @@ class DeleteQuery extends Query {
       'right' => $rightColumn
     );
     return $this;
-  }
-
-  public function toSql(IDatabase $db) {
-    $sqlString = 'DELETE FROM ' . $db->tableName($this->table);
-    if (isset($this->join)) {
-      $sqlString .= ' JOIN ' . $db->tableName($this->join['table']);
-      $sqlString .= ' ON ' . $this->join['left'] . ' = ' . $this->join['right'];
-    }
-    if (isset($this->where)) {
-      $sqlString .= ' WHERE ' . $db->escapeQuery($this->where, $this->whereVars);
-    }
-    if (isset($this->orderBy)) {
-      $sqlString .= ' ORDER BY ' . $this->orderBy;
-      $sqlString .= $this->descending ? ' DESC' : ' ASC';
-    }
-    if (isset($this->limit)) {
-      $sqlString .= ' LIMIT ' . $this->offset . ', ' . $this->limit;
-    }
-    return $sqlString;
   }
 }

@@ -9,6 +9,7 @@ interface IModel {
   public function getFields();
   public function getFieldType($field);
   public function getFieldLabel($field);
+  public function getFieldEditor($field);
   public function isFieldRequired($field);
   public function isField($field);
   public function isValid();

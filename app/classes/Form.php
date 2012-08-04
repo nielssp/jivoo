@@ -79,6 +79,10 @@ class Form implements IModel {
       return $this->fields[$field]['label'];
     }
   }
+
+  public function getFieldEditor($field) {
+    return NULL;
+  }
   
   public function isFieldRequired($field) {
     if (isset($this->fields[$field])) {
