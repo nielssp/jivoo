@@ -8,12 +8,11 @@
 
 class Tinymce extends ExtensionBase {
   
-  private $format = NULL;
   private $encoder = NULL;
   
   protected function init() {
-    $this->format = new HtmlFormat();
-    
+    $this->load('TinymceEditor');
+    $editor = new TinymceEditor($this);
     $this->m->Templates->addScript(
       'tinymce',
       $this->getLink('js/jquery.tinymce.js'),
@@ -23,9 +22,5 @@ class Tinymce extends ExtensionBase {
 
   public function setEncoder(Encoder $encoder) {
     $this->encoder = $encoder;
-  }
-  
-  public function getFormat() {
-    return $this->format;
   }
 }

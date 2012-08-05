@@ -1,8 +1,7 @@
 <?php
 
 class HtmlEditor implements IEditor {
-  
-  private $format = NULL;
+  protected $format = NULL;
   
   public function __construct() {
     $this->format = new HtmlFormat();
@@ -15,5 +14,4 @@ class HtmlEditor implements IEditor {
   public function field(FormHelper $Form, $field, $options = array()) {
     return $Form->textarea($field, $options);
   }
-
 }
