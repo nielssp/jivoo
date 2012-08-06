@@ -5,7 +5,7 @@
 // Description    : The PeanutCMS content page system
 // Author         : PeanutCMS
 // Dependencies   : Errors Configuration Database Routes Templates Http
-//                  Authentication Backend
+//                  Authentication Backend Editors
 
 /*
  * Static pages
@@ -32,9 +32,6 @@ class Pages extends ModuleBase {
 
     Page::connect($this->m->Database->pages);
 
-    $editor = new TextEditor();
-    Page::setFieldEditor('content', $editor);
-
     if ($newInstall) {
       $page = Page::create();
       $page->title = 'About';
@@ -46,6 +43,12 @@ class Pages extends ModuleBase {
       $page->state = 'published';
       $page->save();
     }
+
+    $this->m->Configuration->setDefault('pages.editor', 'TinymceEditor');
+
+    $editor = $this->m->Configuration['pages.editor'];
+
+    Page::setFieldEditor('content', $this->m->Editors->getEditor($editor));
     
     $this->controller = new PagesController($this->m->Templates, $this->m->Routes, $this->m->Authentication);
 

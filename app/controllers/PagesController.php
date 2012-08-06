@@ -82,6 +82,7 @@ class PagesController extends ApplicationController {
         }
       }
     }
+    $this->page->editorsInit();
     $this->title = tr('Edit page');
     $this->render('pages/edit.html');
   }

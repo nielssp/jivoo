@@ -7,6 +7,9 @@ class HtmlEditor implements IEditor {
     $this->format = new HtmlFormat();
   }
 
+  public function init() {
+  }
+
   public function getFormat() {
     return $this->format;
   }

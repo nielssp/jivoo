@@ -722,6 +722,13 @@ abstract class ActiveRecord implements IModel {
     return NULL;
   }
 
+  public function editorsInit() {
+    $class = get_class($this);
+    foreach (self::$models[$class]['editors'] as $field => $editor) {
+      $editor->init();
+    }
+  }
+
   public static function setFieldEditor($field, IEditor $editor) {
     $class = get_called_class();
     self::$models[$class]['editors'][$field] = $editor;
