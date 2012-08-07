@@ -78,6 +78,7 @@ class Extensions extends ModuleBase {
 //      if (!$reflection->isSubclassOf('ExtensionBase')) {
 //        throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
 //      }
+
       $info = $this->getInfo($extension);
       if (!$info) {
         throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));

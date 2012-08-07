@@ -270,7 +270,6 @@ function readDependencies($dependencies) {
   );
   foreach ($depArray as $dependency) {
     if (!empty($dependency)) {
-      $dependency = strtolower($dependency);
       if (strpos($dependency, ';') === FALSE) {
         if (($matches = matchDependencyVersion($dependency)) !== FALSE) {
           $matches[1] = className($matches[1]);
