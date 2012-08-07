@@ -4,11 +4,11 @@ class ApplicationController {
   
   private $name;
 
+  protected $config = NULL;
+  protected $auth = NULL;
   protected $m = NULL;
   protected $e = NULL;
   protected $request = NULL;
-  
-  protected $auth = NULL;
   
   private $actions = array();
   
@@ -20,16 +20,13 @@ class ApplicationController {
   private $helperObjects = array();
   
   
-  public final function __construct(Templates $templates, Routes $routes, Authentication $authentication = NULL) {
+  public final function __construct(Routes $routes, Configuration $config = NULL) {
     $this->m = new Dictionary();
-    $this->m->Templates = $templates;
-    $this->m->Routes = $routes;
-    if (isset($authentication)) {
-      $this->m->Authentication = $authentication;
-      $this->auth = $authentication;
-    }
-
     $this->e = new Dictionary();
+
+    $routes->addController($this);
+    
+    $this->config = $config;
     
     $this->request = $routes->getRequest();
     
@@ -43,7 +40,7 @@ class ApplicationController {
       $name = className($helper);
       $class = $name . 'Helper';
       if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($templates, $routes, $this);
+        $this->helperObjects[$name] = new $class($this->m->Templates, $routes, $this);
       }
     }
     

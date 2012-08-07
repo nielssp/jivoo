@@ -8,8 +8,9 @@ class Core {
   /* EVENTS BEGIN */
   private $events = NULL;
 
-  public function onModulesLoaded($handler) { $this->events->attach($handler); }
-  public function onRender($handler) { $this->events->attach($handler); }
+  public function onModuleLoaded($h) { $this->events->attach($h); }
+  public function onModulesLoaded($h) { $this->events->attach($h); }
+  public function onRender($h) { $this->events->attach($h); }
   /* EVENTS END */
 
   public function __construct($blacklist = NULL) {
@@ -160,7 +161,8 @@ class Core {
 
     foreach ($modules as $module) {
       try {
-        $core->loadModule($module);
+        $object = $core->loadModule($module);
+        $core->events->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
       }
       catch (ModuleBlacklistedException $e) {
         // The user has blacklisted this module, continue loading other modules
@@ -191,3 +193,9 @@ class ModuleNotFoundException extends Exception { }
 class ModuleInvalidException extends Exception { }
 class ModuleMissingDependencyException extends ModuleNotFoundException { }
 class ModuleBlacklistedException extends Exception { }
+
+
+class ModuleLoadedEventArgs extends EventArgs {
+  public $module;
+  public $object;
+}

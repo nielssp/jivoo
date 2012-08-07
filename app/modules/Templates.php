@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS template system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration http
+// Dependencies   : Errors Configuration Http
 
 /**
  * Class for setting the template

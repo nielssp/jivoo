@@ -34,7 +34,9 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $this->prefix = $path . '/';
     $aboutPath = $path . '/about';
     
-    $this->controller = new BackendController($this->m->Templates, $this->m->Routes, $this->m->Authentication);
+    $this->controller = new BackendController(
+      $this->m->Routes, $this->m->Configuration['backend']
+    );
 
     if ($this->m->Authentication->hasPermission('backend.access')) {
       $this->controller->addRoute($path, 'dashboard');

@@ -150,8 +150,8 @@ class Database extends ModuleBase implements IDatabase  {
   public function setupDriverController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['driver'] = $this->driverInfo;
-    $templateData['cancelAction'] = $this->actions->add('unset-driver');
-    $templateData['saveAction'] = $this->actions->add('save');
+    $templateData['cancelAction'] = $this->m->Actions->add('unset-driver');
+    $templateData['saveAction'] = $this->m->Actions->add('save');
     $templateData['title'] = tr('Welcome to PeanutCMS');
     if ($this->m->Actions->has('unset-driver')) {
       $this->m->Configuration->delete('database.driver');

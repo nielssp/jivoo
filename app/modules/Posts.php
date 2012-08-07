@@ -33,7 +33,9 @@ class Posts extends ModuleBase {
       'posts.comments.levelLimit' => '2',
       'posts.commentingDefault' => 'on',
       'posts.anonymousCommenting' => 'off',
-      'posts.commentApproval' => 'off'
+      'posts.commentApproval' => 'off',
+      'posts.editor.name' => 'TinymceEditor',
+      'posts.comments.editor.name' => 'HtmlEditor'
     ));
     
     // Set up models
@@ -95,9 +97,8 @@ class Posts extends ModuleBase {
     
     // Create controller
     $this->controller = new PostsController(
-      $this->m->Templates,
       $this->m->Routes,
-      $this->m->Authentication
+      $this->m->Configuration['posts']
     );
 
     // Frontend setup

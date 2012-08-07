@@ -44,13 +44,9 @@ class Pages extends ModuleBase {
       $page->save();
     }
 
-    $this->m->Configuration->setDefault('pages.editor', 'TinymceEditor');
+    $this->m->Configuration->setDefault('pages.editor.name', 'TinymceEditor');
 
-    $editor = $this->m->Configuration['pages.editor'];
-
-    Page::setFieldEditor('content', $this->m->Editors->getEditor($editor));
-    
-    $this->controller = new PagesController($this->m->Templates, $this->m->Routes, $this->m->Authentication);
+    $this->controller = new PagesController($this->m->Routes, $this->m->Configuration['pages']);
 
     $this->detectFancyPath();
     $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));

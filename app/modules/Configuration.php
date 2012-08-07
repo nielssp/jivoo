@@ -47,8 +47,8 @@ class Configuration extends ModuleBase implements arrayaccess {
   }
 
   public function getSubset($key) {
-    $config = new Configuration(array($this->m->Errors), $this->Core, $this->file, $this);
-    $config->parentKey = $key;
+    $config = new Configuration(array('Errors' => $this->m->Errors), $this->Core, $this->file, $this);
+    $config->parentKey = $this->realKey($key);
     return $config;
   }
   
@@ -268,7 +268,11 @@ class Configuration extends ModuleBase implements arrayaccess {
   }
   
   public function offsetGet($key) {
-    return $this->get($key);
+    $value = $this->get($key);
+    if (is_array($value) OR $value === FALSE) {
+      return $this->getSubset($key);
+    }
+    return $value;
   }
   
   public function offsetSet($key, $value) {

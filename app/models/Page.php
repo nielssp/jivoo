@@ -26,7 +26,7 @@ class Page extends ActiveRecord implements ILinkable {
       'presence' => true,
       'minLength' => 1,
       'maxLength' => 25,
-      array(
+      'rule0' => array(
         'match' => '/^[a-z-\/]+$/',
         'message' => 'Only lowercase letters, numbers, dashes and slashes allowed.'
       ),

@@ -12,7 +12,6 @@ abstract class ActiveRecord implements IModel {
       'columns' => $schema->getColumns(),
       'primaryKey' => $schema->getPrimaryKey(),
       'encoders' => array(),
-      'editors' => array(),
       'validator' => NULL
     );
     $object = new $class();
@@ -83,6 +82,8 @@ abstract class ActiveRecord implements IModel {
   private $isNew = FALSE;
   private $isSaved = TRUE;
   private $isDeleted = FALSE;
+  
+  private $editors = array();
 
   protected $validate = array();
 
@@ -715,25 +716,15 @@ abstract class ActiveRecord implements IModel {
   }
 
   public function getFieldEditor($field) {
-    $class = get_class($this);
-    if (isset(self::$models[$class]['editors'][$field])) {
-      return self::$models[$class]['editors'][$field];
+    if (isset($this->editors[$field])) {
+      return $this->editors[$field];
     }
     return NULL;
   }
 
-  public function editorsInit() {
-    $class = get_class($this);
-    foreach (self::$models[$class]['editors'] as $field => $editor) {
-      $editor->init();
-    }
+  public function setFieldEditor($field, IEditor $editor) {
+    $this->editors[$field] = $editor;
   }
-
-  public static function setFieldEditor($field, IEditor $editor) {
-    $class = get_called_class();
-    self::$models[$class]['editors'][$field] = $editor;
-  }
-
   
   public function isFieldRequired($field) {
     return isset($this->validate[$field])

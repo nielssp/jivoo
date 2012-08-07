@@ -22,18 +22,23 @@ class Editors extends ModuleBase {
   }
 
   public function setEditor($editorName, IEditor $editor) {
-    if (isset($this->editors[$editorName]) AND $this->editors[$editorName] instanceof DummyEditor) {
-      $this->editors[$editorName]->setEditor($editor);
-    }
-    else {
-      $this->editors[$editorName] = $editor;
-    }
+    $this->editors[$editorName] = $editor;
   }
 
-  public function getEditor($editorName) {
-    if (!isset($this->editors[$editorName])) {
-      $this->editors[$editorName] = new DummyEditor($this->HtmlEditor);
+  public function getEditor($editor, Configuration $config = NULL) {
+    $name = $editor;
+    if ($editor instanceof Configuration) {
+      $name = $editor['name'];
+      if (isset($editor['config'])) {
+        $config = $editor['config'];
+      }
     }
-    return $this->editors[$editorName];
+    if (!is_string($name)) {
+      return $this->HtmlEditor;
+    }
+    if (!isset($this->editors[$name])) {
+      $this->editors[$name] = $this->HtmlEditor;
+    }
+    return $this->editors[$name]->init($editorConfig);
   }
 }

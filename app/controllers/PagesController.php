@@ -43,6 +43,10 @@ class PagesController extends ApplicationController {
     else {
       $this->page = Page::create();
     }
+    $this->page->setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
     $this->title = tr('New page');
     $this->render('pages/edit.html');
   }
@@ -82,7 +86,10 @@ class PagesController extends ApplicationController {
         }
       }
     }
-    $this->page->editorsInit();
+    $this->page->setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
     $this->title = tr('Edit page');
     $this->render('pages/edit.html');
   }

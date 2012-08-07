@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS routing system
 // Author         : PeanutCMS
-// Dependencies   : errors http templates configuration
+// Dependencies   : Errors Http Templates Editors Configuration
 
 /**
  * Handling routes
@@ -16,6 +16,8 @@
  * Routes class
  */
 class Routes extends ModuleBase {
+  
+  private $controllers = array();
 
   private $routes = array();
 
@@ -39,12 +41,34 @@ class Routes extends ModuleBase {
   protected function init() {
     $this->events = new Events($this);
 
-    $controller = new ApplicationController($this->m->Templates, $this);
+    $controller = new ApplicationController($this, $this->m->Configuration);
     $controller->setRoute('notFound', 1);
     
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
     $this->Core->onRender(array($this, 'callController'));
+    $this->Core->onModuleLoaded(array($this, 'addAuthModule'));
+  }
+  
+  public function addAuthModule($sender, ModuleLoadedEventArgs $args) {
+    if ($args->module != 'Authentication') {
+      return;
+    }
+    foreach ($this->controllers as $controller) {
+      $controller->addModule($args->object);
+    }
+  }
+  
+  public function addController(ApplicationController $controller) {
+    $name = substr($controller, 0, -10);
+    $this->controllers[$name] = $controller;
+    $controller->addModule($this);
+    $controller->addModule($this->m->Templates);
+    $controller->addModule($this->m->Editors);
+    $auth = $this->Core->requestModule('Authentication');
+    if ($auth) {
+      $controller->addModule($auth);
+    }
   }
 
   protected function controllerName($controller, $withSuffix = FALSE) {

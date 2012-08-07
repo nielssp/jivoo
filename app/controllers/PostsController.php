@@ -85,6 +85,10 @@ class PostsController extends ApplicationController {
           $this->newComment->website = $this->request->cookies['comment_website'];
         }
       }
+      $this->newComment->setFieldEditor(
+        'content',
+        $this->m->Editors->getEditor($this->config['comments.editor'])
+      );
     }
     
     $this->comments = $this->post->getComments($select);
@@ -133,6 +137,10 @@ class PostsController extends ApplicationController {
     else {
       $this->post = Post::create();
     }
+    $this->post->setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
     $this->title = tr('New post');
     $this->render('posts/edit.html');
   }
