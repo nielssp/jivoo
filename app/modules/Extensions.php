@@ -92,6 +92,7 @@ class Extensions extends ModuleBase {
           $extensions[className($dependency)] = $this->loadExtension($dependency);
         }
         catch (ExtensionNotFoundException $ex) {
+          trigger_error(tr('Extension "%1" uninstalled. Missing extension dependency: "%2".', $extension, $dependency), E_USER_WARNING);
           $this->uninstall($extension);
           return FALSE;
         }
@@ -104,6 +105,7 @@ class Extensions extends ModuleBase {
           $modules[$dependency] = $module; 
         }
         else {
+          trigger_error(tr('Extension "%1" uninstalled. Missing module dependency: "%2".', $extension, $dependency), E_USER_WARNING);
           $this->uninstall($extension);
           return FALSE;
         }

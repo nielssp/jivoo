@@ -60,7 +60,7 @@ class Routes extends ModuleBase {
   }
   
   public function addController(ApplicationController $controller) {
-    $name = substr($controller, 0, -10);
+    $name = substr(get_class($controller), 0, -10);
     $this->controllers[$name] = $controller;
     $controller->addModule($this);
     $controller->addModule($this->m->Templates);
