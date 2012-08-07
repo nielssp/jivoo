@@ -21,7 +21,7 @@ $(function() {
     theme_advanced_resizing : true,
 
     // Example content CSS (should be your site CSS)
-    content_css : "<?php echo $styletUrl; ?>",
+    content_css : "<?php echo $styleUrl; ?>",
 
   });
 });
