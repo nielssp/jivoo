@@ -165,9 +165,8 @@ class Authentication extends ModuleBase {
     $this->user->session = $sid;
     $this->user->cookie = $cookie;
     $this->user->ip = $ip;
-    if (!$this->user->save()) {
-      var_dump($this->user->getErrors());
-      exit;
+    if (!$this->user->save(array('validate' => FALSE))) {
+      throw new Exception(tr('Could not save user session data.'));
     }
 
   }
