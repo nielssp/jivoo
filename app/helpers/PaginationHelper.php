@@ -12,11 +12,13 @@ class PaginationHelper extends ApplicationHelper {
   
   public function setCount($count) {
     $this->count = $count;
+    return $this;
   }
   
   public function setLimit($limit) {
     precondition($limit > 0);
     $this->limit = $limit;
+    return $this;
   }
   
   public function paginate(SelectQuery $select) {    

@@ -98,6 +98,13 @@ class PostsController extends ApplicationController {
   }
   
   public function manage() {
+    $select = SelectQuery::create()
+    ->orderByDescending('date');
+    $this->Pagination->setCount(Post::count())->setLimit(10);
+    
+    $this->Pagination->paginate($select);
+    
+    $this->posts = Post::all($select);
     $this->render();
   }
 

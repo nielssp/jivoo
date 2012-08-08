@@ -95,6 +95,10 @@ class Posts extends ModuleBase {
     $commentEncoder->validateAttribute('img', 'src', 'url', TRUE);
     Comment::setEncoder('content', $commentEncoder);
     
+    $postsEncoder = new Encoder();
+    $postsEncoder->setAllowAll(TRUE);
+    Post::setEncoder('content', $postsEncoder);
+    
     // Create controller
     $this->controller = new PostsController(
       $this->m->Routes,

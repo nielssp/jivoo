@@ -209,6 +209,17 @@ div.input {
   margin:8px 0;
 }
 
+div.record {
+  padding:8px 32px;
+  margin-left:-32px;
+  margin-right:-32px;
+  font-size:12px;
+}
+
+div.record:hover {
+  background-color:#eee;
+}
+
 .section .separator {
   border-bottom:1px solid #ccc;
 } 

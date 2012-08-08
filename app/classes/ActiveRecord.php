@@ -758,7 +758,7 @@ abstract class ActiveRecord implements IModel {
     if (isset($this->fields[$field])) {
       $text = $this->data[$field];
       if (isset(self::$models[$class]['encoders'][$field])) {
-        return self::$models[$class]['encoders'][$field]->encode($text);
+        return self::$models[$class]['encoders'][$field]->encode($text, $options);
       }
       else {
         return h($this->data[$field]);

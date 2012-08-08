@@ -7,7 +7,7 @@ $this->render('backend/header.html');
       <div class="section light_section">
         <div class="container">
           <div class="input">
-            <p class="label"><label for="post_permalink">Filter</label></p>
+            <p class="label"><label for="post_permalink">Search</label></p>
             <div class="element">
               <input type="text" class="text" />
             </div>
@@ -17,22 +17,17 @@ $this->render('backend/header.html');
       </div>
       <div class="section light_section">
         <div class="container">
-          <h2>Site</h2>
-          <div class="input">
-            <p class="label"><label for="post_permalink">Site Title</label></p>
-            <div class="element">
-              <input type="text" class="text" />
-            </div>
+<?php foreach ($posts as $post): ?>
+          <div class="record">
+            <strong><?php echo h($post->title); ?></strong><br/>
+            <?php echo $post->encode(
+              'content',
+              array('stripAll' => TRUE, 'maxLength' => 200, 'append' => '...')
+            ); ?>
             <div class="clearl"></div>
           </div>
           <div class="separator"></div>
-          <div class="input">
-            <p class="label"><label for="post_permalink">Site Subtitle</label></p>
-            <div class="element">
-              <input type="text" class="text" />
-            </div>
-            <div class="clearl"></div>
-          </div>
+<?php endforeach; ?>
         </div>
       </div>
 

@@ -20,6 +20,10 @@ class Encoder {
     'track' => TRUE,
     'wbr' => TRUE
   );
+  
+  private $allowAll = FALSE;
+  private $stripAll = FALSE;
+  
   private $allow = array();
 
   private $append = array();
@@ -44,6 +48,10 @@ class Encoder {
 
   public function setXhtml($xhtml = TRUE) {
     $this->xhtml = $xhtml;
+  }
+  
+  public function setAllowAll($allowAll = FALSE) {
+    $this->allowAll = $allowAll;
   }
 
   public function setAllowed($allow = array()) {
@@ -117,6 +125,9 @@ class Encoder {
           $newString .= ' ' . $attribute . '=' . $value;
         }
       }
+      else if ($this->allowAll) {
+        $newString .= ' ' . $attribute . '=' . $values[$key];
+      }
     }
     return $newString;
   }
@@ -147,7 +158,7 @@ class Encoder {
     if (isset($this->selfClosingTags[$tag])) {
       $selfClosing = TRUE;
     }
-    if (isset($this->allow[$tag])) {
+    if ((isset($this->allow[$tag]) OR $this->allowAll) AND !$this->stripAll) {
       if ($isCloseTag AND (!isset($this->openTags[$tag])
           OR $this->openTags[$tag] < 1)) {
         return '';
@@ -181,10 +192,21 @@ class Encoder {
     return '';
   }
 
-  public function encode($text) {
+  public function encode($text, $options = array()) {
     $this->openTags = array();
-    if ($this->maxLength > 0) {
-      $text = substr($text, 0, $this->maxLength);
+    if (isset($options['maxLength'])) {
+      $maxLength = $options['maxLength'];
+    }
+    else {
+      $maxLength = $this->maxLength;
+    }
+    if (isset($options['stripAll']) AND $options['stripAll'] == TRUE) {
+      $this->stripAll = TRUE;
+    }
+    $shortened = FALSE;
+    if ($maxLength > 0 AND strlen($text) > $maxLength) {
+      $text = substr($text, 0, $maxLength);
+      $shortened = TRUE;
     }
     $text =
       preg_replace_callback('/<((\/?)(\w+)((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/', array($this, 'replaceTag'), $text);
@@ -192,6 +214,10 @@ class Encoder {
       for ($i = 0; $i < $number; $i++) {
         $text .= '</' . $tag . '>';
       }
+    }
+    $this->stripAll = FALSE;
+    if ($shortened AND isset($options['append'])) {
+      $text .= $options['append'];
     }
     return $text;
   }
