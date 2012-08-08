@@ -44,7 +44,7 @@ class postsSchema extends Schema {
 
   public $state = array(
     'type' => 'string',
-    'length' => 10,
+    'length' => 50,
     'null' => false,
   );
 

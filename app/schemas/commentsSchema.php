@@ -67,6 +67,12 @@ class commentsSchema extends Schema {
     'null' => false,
   );
 
+  public $status = array(
+    'type' => 'string',
+    'length' => 50,
+    'null' => false,
+  );
+
   public $indexes = array(
     'PRIMARY' => array(
       'columns' => array('id'),
