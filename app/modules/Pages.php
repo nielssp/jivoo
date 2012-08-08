@@ -43,6 +43,10 @@ class Pages extends ModuleBase {
       $page->state = 'published';
       $page->save();
     }
+    
+    $pagesEncoder = new Encoder();
+    $pagesEncoder->setAllowAll(TRUE);
+    Page::setEncoder('content', $pagesEncoder);
 
     $this->m->Configuration->setDefault('pages.editor.name', 'TinymceEditor');
 

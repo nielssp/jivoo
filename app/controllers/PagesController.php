@@ -2,7 +2,7 @@
 
 class PagesController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Form');
+  protected $helpers = array('Html', 'Form', 'Pagination');
 
   public function view($page) {
     $this->page = Page::find($page);
@@ -52,7 +52,25 @@ class PagesController extends ApplicationController {
   }
 
   public function manage() {
-    $this->render('not-implemented.html');
+    $select = SelectQuery::create()
+      ->orderByDescending('date');
+    
+    if (isset($this->request->query['filter'])) {
+      $this->filter = $this->request->query['filter'];
+      $select->where('content LIKE ? OR title LIKE ?')
+        ->addVar('%' . $this->filter . '%')
+        ->addVar('%' . $this->filter . '%');
+      $this->Pagination->setCount(Page::count(clone $select));
+    }
+    else {
+      $this->Pagination->setCount(Page::count());
+    }
+    
+    $this->Pagination->setLimit(10)->paginate($select);
+    
+    $this->pages = Page::all($select);
+    $this->title = tr('Manage pages');
+    $this->render();
   }
   
   public function edit($page) {
