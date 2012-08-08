@@ -5,8 +5,8 @@ $this->render('backend/header.html');
 
 
       <div class="section header_section">
-        <div class="container narrow_container">
-          <h1><?php echo $Html->link('PeanutCMS'); ?></h1>
+        <div class="container">
+          <h1><?php echo $Html->link($site['title']); ?></h1>
         </div>
       </div>
 

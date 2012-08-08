@@ -177,6 +177,9 @@ class Routes extends ModuleBase {
         $default['parameters'] = array();
       }
       $route = array_merge($default, $route);
+      if (isset($route['query']) AND isset($route['mergeQuery']) AND $route['mergeQuery'] == TRUE) {
+        $route['query'] = array_merge($this->request->query, $route['query']);
+      }
       if (isset($route['path'])) {
         return $this->m->Http->getLink($route['path'], $route['query'], $route['fragment']);
       }

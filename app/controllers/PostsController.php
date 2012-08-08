@@ -99,12 +99,23 @@ class PostsController extends ApplicationController {
   
   public function manage() {
     $select = SelectQuery::create()
-    ->orderByDescending('date');
-    $this->Pagination->setCount(Post::count())->setLimit(10);
+      ->orderByDescending('date');
     
-    $this->Pagination->paginate($select);
+    if (isset($this->request->query['filter'])) {
+      $this->filter = $this->request->query['filter'];
+      $select->where('content LIKE ? OR title LIKE ?')
+        ->addVar('%' . $this->filter . '%')
+        ->addVar('%' . $this->filter . '%');
+      $this->Pagination->setCount(Post::count(clone $select));
+    }
+    else {
+      $this->Pagination->setCount(Post::count());
+    }
+    
+    $this->Pagination->setLimit(10)->paginate($select);
     
     $this->posts = Post::all($select);
+    $this->title = tr('Manage posts');
     $this->render();
   }
 
@@ -153,7 +164,49 @@ class PostsController extends ApplicationController {
   }
 
   public function edit($post) {
-    $this->render('not-implemented.html');
+    $examplePost = Post::create();
+    $examplePost->name = '%name%';
+    $examplePost->date = time();
+    $exampleLink = explode('%name%', $this->m->Routes->getLink($examplePost));
+    $examplePost = NULL;
+    $this->nameInPermalink = count($exampleLink) >= 2;
+    $this->beforePermalink = $exampleLink[0];
+    $this->afterPermalink = $exampleLink[1];
+    $this->post = Post::find($post);
+    if (!$this->post) {
+      return $this->notFound();
+    }
+    
+    if ($this->request->isPost()) {
+      $this->post->addData($this->request->data['post']);
+      if (isset($this->request->data['publish'])) {
+        $this->post->state = 'published';
+      }
+      else {
+        $this->post->state = 'draft';
+      }
+      if ($this->post->isValid()) {
+        $this->post->save();
+        if ($this->post->state == 'published') {
+          $this->redirect($this->post);
+        }
+        else {
+          new LocalNotice(tr('Post successfully saved'));
+          $this->refresh();
+        }
+      }
+      else {
+        foreach ($this->post->getErrors() as $field => $error) {
+          new LocalWarning($this->post->getFieldLabel($field) . ': ' . $error);
+        }
+      }
+    }
+    $this->post->setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
+    $this->title = tr('Edit post');
+    $this->render('posts/edit.html');
   }
 
   public function delete($post) {

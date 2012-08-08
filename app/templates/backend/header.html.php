@@ -49,7 +49,9 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
 <?php endforeach; ?>
         </ul>
 <?php endif; ?>
-        <div class="right">PeanutCMS</div>
+        <div class="right">
+          <?php echo $Html->link($site['title']); ?>
+        </div>
       </div>
       <div id="shadow"></div>
     </div>

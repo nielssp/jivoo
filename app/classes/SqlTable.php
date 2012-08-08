@@ -114,7 +114,7 @@ class SqlTable implements ITable {
 
   public function delete(DeleteQuery $query = NULL) {
     if (!isset($query)) {
-      return DelteQuery::create()->setDataSource($this);
+      return DeleteQuery::create()->setDataSource($this);
     }
     $sqlString = 'DELETE FROM ' . $this->owner->tableName($this->name);
     if (isset($query->join)) {

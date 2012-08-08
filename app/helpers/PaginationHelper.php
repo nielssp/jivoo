@@ -22,7 +22,7 @@ class PaginationHelper extends ApplicationHelper {
   }
   
   public function paginate(SelectQuery $select) {    
-    $this->pages = ceil($this->count / $this->limit);
+    $this->pages = max(ceil($this->count / $this->limit), 1);
     $select->limit($this->limit);
     if (isset($this->request->query['page'])) {
       $this->page = (int) $this->request->query['page'];
@@ -52,28 +52,32 @@ class PaginationHelper extends ApplicationHelper {
   public function prevLink($fragment = NULL) {
     return $this->getLink(array(
       'query' => array('page' => $this->page - 1),
-      'fragment' => $fragment
+      'fragment' => $fragment,
+      'mergeQuery' => TRUE
     ));
   }
   
   public function nextLink($fragment = NULL) {
     return $this->getLink(array(
       'query' => array('page' => $this->page + 1),
-      'fragment' => $fragment
+      'fragment' => $fragment,
+      'mergeQuery' => TRUE
     ));
   }
 
   public function firstLink($fragment = NULL) {
     return $this->getLink(array(
       'query' => array('page' => 1),
-      'fragment' => $fragment
+      'fragment' => $fragment,
+      'mergeQuery' => TRUE
     ));
   }
   
   public function lastLink($fragment = NULL) {
     return $this->getLink(array(
       'query' => array('page' => $this->pages),
-      'fragment' => $fragment
+      'fragment' => $fragment,
+      'mergeQuery' => TRUE
     ));
   }
 }
