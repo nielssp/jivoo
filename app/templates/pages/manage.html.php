@@ -49,7 +49,7 @@ $this->render('backend/header.html');
              <li>
                <?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($page->id))); ?>
              </li>
-             <li class="last">
+             <li class="last red">
                <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($page->id))); ?>
              </li>
            </ul>

@@ -58,7 +58,7 @@ else {
              <li class="first"><a href="#">Approve</a></li>
              <li><a href="#">Spam</a></li>
              <li><a href="#">Edit</a></li>
-             <li class="last"><a href="#">Delete</a></li>
+             <li class="last red"><a href="#">Delete</a></li>
            </ul>
           </div>
             <div class="clearl"></div>

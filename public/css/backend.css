@@ -550,11 +550,22 @@ span.description {
 
 .menubutton li a:hover,
 .menubutton li a:focus {
-  background-color:#222;
+  background-color:#333;
   margin:0;
   font-weight:normal;
   outline:none;
   text-decoration:none!important;
+}
+
+.menubutton li.red a:link,
+.menubutton li.red a:active,
+.menubutton li.red a:visited {
+  background-color:#500;
+}
+
+.menubutton li.red a:hover,
+.menubutton li.red a:focus {
+  background-color:#800;
 }
 
 .menubar .menu .items {
@@ -581,7 +592,7 @@ span.description {
 
 .menubar .menu .items .item a:hover,
 .menubar .menu .items .item a:focus {
-  background-color:#222;
+  background-color:#333;
   outline:none;
 }
 
