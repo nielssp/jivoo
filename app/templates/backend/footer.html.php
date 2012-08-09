@@ -8,7 +8,7 @@
       Powered by
       <a href="<?php echo $aboutLink; ?>">
         PeanutCMS
-<?php $version ?>
+<?php echo $version ?>
       </a>
     </div>
 <?php endif; ?>

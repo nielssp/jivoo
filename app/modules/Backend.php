@@ -52,6 +52,12 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     else {
       $this->controller->addRoute($aboutPath, 'login');
     }
+    if (!$this->m->Templates->hideVersion() OR $this->m->Authentication->hasPermission('backend.access')) {
+      $this->m->Templates->set('version', PEANUT_VERSION);
+    }
+    else {
+      $this->m->Templates->set('version', '');
+    }
 
     $this->m->Routes->onRendering(array($this, 'createMenu'));
     
