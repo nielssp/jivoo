@@ -66,7 +66,7 @@ class Group extends ActiveRecord {
         ->addPair('permission', $key)
         ->execute();
     }
-    else if ($this->hasPermission($key)) {
+    else if ($value == FALSE AND $this->hasPermission($key)) {
       unset($this->permissions[$key]);
       $dataSource->delete()
         ->where('group_id = ? AND permission = ?')

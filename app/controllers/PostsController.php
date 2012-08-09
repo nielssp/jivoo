@@ -236,6 +236,32 @@ class PostsController extends ApplicationController {
     $this->render('posts/index.html');
   }
   
+  public function comments() {
+    $select = SelectQuery::create()
+      ->orderByDescending('date');
+    
+    if (isset($this->request->query['filter'])) {
+      $this->filter = $this->request->query['filter'];
+      $select->where('content LIKE ? OR author LIKE ?')
+        ->addVar('%' . $this->filter . '%')
+        ->addVar('%' . $this->filter . '%');
+      $this->Pagination->setCount(Comment::count(clone $select));
+    }
+    else {
+      $this->Pagination->setCount(Comment::count());
+    }
+    
+    $this->Pagination->setLimit(10)->paginate($select);
+    
+    $this->comments = Comment::all($select);
+    $this->title = tr('Comments');
+    $this->render();
+  }
+  
+  public function tags() {
+    $this->render('not-implemented.html');
+  }
+  
   public function commentIndex($post) {
     $this->render('not-implemented.html');
   }

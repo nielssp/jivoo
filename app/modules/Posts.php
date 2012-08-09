@@ -134,9 +134,9 @@ class Posts extends ModuleBase {
       ->permission('backend.posts.manage')->autoRoute($this->controller, 'manage');
 
     $this->m->Backend['content']['comments']->setup(tr('Comments'), 8)
-      ->permission('backend.posts.comments.manage');
+      ->permission('backend.posts.comments.manage')->autoRoute($this->controller, 'comments');
     $this->m->Backend['content']['tags']->setup(tr('Tags'), 8)
-      ->permission('backend.posts.tags.manage');
+      ->permission('backend.posts.tags.manage')->autoRoute($this->controller, 'tags');
 
     $this->m->Backend->unlisted['posts-edit']->permission('backend.posts.edit')
       ->autoRoute($this->controller, 'edit');
