@@ -41,13 +41,19 @@ $this->render('backend/header.html');
           <span class="state block10 margin5">
             <?php echo ucfirst($page->state); ?>
           </span>
-          <span class="actions">
-<?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($page->id))); ?>
-
-<?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($page->id))); ?>
-
-<?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($page->id))); ?>
-          </span>
+          <div class="actions">
+           <ul class="menubutton">
+             <li class="first">
+               <?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($page->id))); ?>
+             </li>
+             <li>
+               <?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($page->id))); ?>
+             </li>
+             <li class="last">
+               <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($page->id))); ?>
+             </li>
+           </ul>
+          </div>
             <div class="clearl"></div>
             <div class="content block100 topspace">
             <?php echo $page->encode(

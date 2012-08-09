@@ -297,6 +297,7 @@ div.record .date {
 
 div.record .actions {
   float:right;
+  position:relative;
 }
 
 div.record .actions a {
@@ -468,7 +469,6 @@ span.description {
   color:#777;
 }
 
-
 .menubar {
   float:left;
   margin-top:4px;
@@ -507,6 +507,56 @@ span.description {
   padding:0 0 0 8px;
 }
 
+.menubutton {
+  background-color:#111;
+  min-width:96px;
+  color:#fff;
+  padding:0;
+  box-shadow:2px 2px 16px 0px #000;
+  border-radius:6px;
+  font-size:11px;
+  position:absolute;
+  right:0px;
+}
+
+.menubutton li {
+  display:none;
+}
+
+.menubutton li.first {
+  display:list-item;
+}
+
+.menubutton li.first a {
+  background:transparent url(../img/menu-arrow.png) no-repeat right 4px;
+  border-top-left-radius:6px;
+  border-top-right-radius:6px;
+}
+
+.menubutton li.last a {
+  border-bottom-left-radius:6px;
+  border-bottom-right-radius:6px;
+}
+
+.menubutton li a:link,
+.menubutton li a:active,
+.menubutton li a:visited {
+  padding:2px 24px 2px 8px;
+  margin:0;
+  font-weight:normal;
+  text-decoration:none;
+  display:block;
+}
+
+.menubutton li a:hover,
+.menubutton li a:focus {
+  background-color:#222;
+  margin:0;
+  font-weight:normal;
+  outline:none;
+  text-decoration:none!important;
+}
+
 .menubar .menu .items {
   margin-top:4px;
   background-color:#111;
@@ -518,7 +568,8 @@ span.description {
   position:relative;
 }
 
-.menubar .menu .items .item {
+.menubar .menu .items .item,
+.menubutton li {
   list-style-type: none;
 }
 

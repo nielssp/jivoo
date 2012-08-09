@@ -44,13 +44,19 @@ $this->render('backend/header.html');
           <span class="date block15 margin5">
             <?php echo $post->formatDate(); ?>
           </span>
-          <span class="actions">
-<?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($post->id))); ?>
-
-<?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($post->id))); ?>
-
-<?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($post->id))); ?>
-          </span>
+          <div class="actions">
+           <ul class="menubutton">
+             <li class="first">
+               <?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($post->id))); ?>
+             </li>
+             <li>
+               <?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($post->id))); ?>
+             </li>
+             <li class="last">
+               <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($post->id))); ?>
+             </li>
+           </ul>
+          </div>
             <div class="clearl"></div>
             <div class="content block100 topspace">
             <?php echo $post->encode(

@@ -36,15 +36,15 @@ $this->render('backend/header.html');
 
           <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
           <span class="author block20 margin5">
-          <strong>
+          
 <?php
 if (empty($comment->author)) {
-  echo tr('Anonymous');
+  echo '<em>' . tr('Anonymous') . '</em>';
 }
 else {
-  echo h($comment->author);
+  echo '<strong>' . h($comment->author) . '</strong>';
 }
-?></strong>
+?>
 
           </span>
           <span class="title block30 margin5">
@@ -53,13 +53,14 @@ else {
           <span class="date block15 margin5">
             <?php echo $comment->formatDate(); ?>
           </span>
-          <span class="actions">
-<?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($comment->id))); ?>
-
-<?php echo $Html->link('View', $comment); ?>
-
-<?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($comment->id))); ?>
-          </span>
+          <div class="actions">
+           <ul class="menubutton">
+             <li class="first"><a href="#">Approve</a></li>
+             <li><a href="#">Spam</a></li>
+             <li><a href="#">Edit</a></li>
+             <li class="last"><a href="#">Delete</a></li>
+           </ul>
+          </div>
             <div class="clearl"></div>
             <div class="author block20 margin5 topspace">
 <?php
@@ -73,9 +74,9 @@ else
 if (empty($comment->email))
   echo '<em>' . tr('No email') . '</em>';
 else 
-  echo $comment->email;
+  echo h($comment->email);
 ?><br/>
-<?php echo $comment->ip; ?>
+<?php echo h($comment->ip); ?>
 <div class="topspace">
 <strong><?php echo ucfirst(h($comment->status))?></strong>
 </div>

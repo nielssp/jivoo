@@ -150,6 +150,16 @@ $(function() {
     }
   });
   
+  $(".menubutton").each(function() {
+    var items = $(this).find("li:not(.first)");
+    $(this).bind('mouseover mouseout', function (event) {
+      if (event.type == 'mouseover') {
+        items.show().maxZIndex();
+      } else {
+        items.hide();
+      }
+    });
+  });
 
   $(".menu").each(function() {
     var items = $(this).find(".items");
