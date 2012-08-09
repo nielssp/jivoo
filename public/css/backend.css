@@ -265,45 +265,43 @@ div.record:hover {
   background-color:#eee;
 }
 
-div.record .author {
+.block10, .block15, .block20, .block25, .block30, .block75, .block100 {
   float:left;
-  width:20%;
+}
+
+.block10 { width:10%; }
+.block15 { width:15%; }
+.block20 { width:20%; }
+.block25 { width:25%; }
+.block30 { width:30%; }
+.block75 { width:75%; }
+.block100 { width:100%; }
+
+.margin5 { margin-right:5%; }
+
+div.record .author {
   margin-right:5%;
 }
 
 div.record .title {
-  float:left;
-  width:30%;
   font-weight:bold;
 }
 
 div.record .state {
-  float:left;
-  margin-left:5%;
-  width:15%;
   font-weight:bold;
 }
 
 div.record .date {
-  float:left;
-  margin-left:5%;
-  width:15%;
   font-weight:bold;
 }
 
 div.record .actions {
   float:right;
-  margin-left:5%;
 }
 
 div.record .actions a {
   margin-left:16px;
   font-weight:bold;
-}
-
-div.record .content {
-  float:left;
-  width:75%;
 }
 
 div.record .topspace {
@@ -315,19 +313,7 @@ div.pagination {
 }
 
 div.pagination .older {
-  float:left;
-  width:15%;
   font-weight:bold;
-}
-
-div.pagination .pages {
-  float:left;
-  width:15%;
-}
-
-div.pagination .filter {
-  float:left;
-  width:30%;
 }
 
 div.pagination .filter input.text {

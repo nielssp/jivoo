@@ -6,15 +6,15 @@ $this->render('backend/header.html');
 
       <div class="section light_section">
         <div class="container pagination">
-          <span class="older">
+          <span class="older block15">
 <?php if (!$Pagination->isLast()) echo $Html->link('&#8592; Older', $Pagination->nextLink()); ?>
           &nbsp;</span>
-          <span class="pages">
+          <span class="pages block15">
             Page <?php echo $Pagination->getPage(); ?>
             of <?php echo $Pagination->getPages(); ?>
           </span>
           <form action="<?php echo $this->link(array()); ?>" method="get">
-          <span class="filter">
+          <span class="filter block30">
             <input type="text" class="text" name="filter" value="<?php echo h($filter); ?>" />
           </span>
           </form>
@@ -35,7 +35,7 @@ $this->render('backend/header.html');
 <?php foreach ($comments as $comment): ?>
 
           <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
-          <span class="author">
+          <span class="author block20 margin5">
           <strong>
 <?php
 if (empty($comment->author)) {
@@ -47,10 +47,10 @@ else {
 ?></strong>
 
           </span>
-          <span class="title">
+          <span class="title block30 margin5">
             <?php echo $Html->link(h($comment->getPost()->title), $comment); ?>
           </span>
-          <span class="date">
+          <span class="date block15 margin5">
             <?php echo $comment->formatDate(); ?>
           </span>
           <span class="actions">
@@ -61,7 +61,7 @@ else {
 <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($comment->id))); ?>
           </span>
             <div class="clearl"></div>
-            <div class="author topspace">
+            <div class="author block20 margin5 topspace">
 <?php
 $website = $Html->cleanUrl($comment->website);
 if (empty($comment->website))
@@ -80,7 +80,7 @@ else
 <strong><?php echo ucfirst(h($comment->status))?></strong>
 </div>
             </div>
-            <div class="content topspace">
+            <div class="content block75 topspace">
             <?php echo $comment->encode(
               'content',
               array('stripAll' => TRUE, 'maxLength' => 500, 'append' => '[...]')

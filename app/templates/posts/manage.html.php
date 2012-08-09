@@ -6,15 +6,15 @@ $this->render('backend/header.html');
 
       <div class="section light_section">
         <div class="container pagination">
-          <span class="older">
+          <span class="older block15">
 <?php if (!$Pagination->isLast()) echo $Html->link('&#8592; Older', $Pagination->nextLink()); ?>
           &nbsp;</span>
-          <span class="pages">
+          <span class="pages block15">
             Page <?php echo $Pagination->getPage(); ?>
             of <?php echo $Pagination->getPages(); ?>
           </span>
           <form action="<?php echo $this->link(array()); ?>" method="get">
-          <span class="filter">
+          <span class="filter block30">
             <input type="text" class="text" name="filter" value="<?php echo h($filter); ?>" />
           </span>
           </form>
@@ -35,13 +35,13 @@ $this->render('backend/header.html');
 <?php foreach ($posts as $post): ?>
 
           <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
-          <span class="title">
+          <span class="title block30 margin5">
 <?php echo $Html->link(h($post->title), array('action' => 'edit', 'parameters' => array($post->id))); ?>
           </span>
-          <span class="state">
+          <span class="state block15 margin5">
             <?php echo ucfirst($post->state); ?>
           </span>
-          <span class="date">
+          <span class="date block15 margin5">
             <?php echo $post->formatDate(); ?>
           </span>
           <span class="actions">
@@ -52,12 +52,13 @@ $this->render('backend/header.html');
 <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($post->id))); ?>
           </span>
             <div class="clearl"></div>
-            <div class="content">
+            <div class="content block100 topspace">
             <?php echo $post->encode(
               'content',
               array('stripAll' => TRUE, 'maxLength' => 250, 'append' => '[...]')
             ); ?>
             </div>
+            <div class="clearl"></div>
           </div>
 <?php endforeach; ?>
         </div>
