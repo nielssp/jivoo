@@ -92,9 +92,11 @@ $(function() {
   $(".item a").each(function() {
     var category = $(this).data("shortcut-on");
     var label = $.trim($(this).html());
+    var chars = label + "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // Alternatives 
     var shortcut = null;
-    for (c in label) {
-      shortcut = label[c].toUpperCase();
+    var found = false;
+    for (c in chars) {
+      shortcut = chars[c].toUpperCase();
       if ($.inArray(shortcut, rootShortcuts) > -1) {
         continue;
       }
@@ -114,15 +116,20 @@ $(function() {
         shortcuts[category].push(shortcut);
       }
       allShortcuts.push(shortcut);
+      found = true;
       break;
+    }    
+    if (found) {
+      $(this).data("shortcut", shortcut);
     }
-    $(this).data("shortcut", shortcut);
   });
   
   $(".item a").each(function() {
     var shortcut = $(this).data("shortcut");
     var label = $(this).html();
     var link = $(this);
+    if (shortcut == undefined)
+      return;
     $(this).prepend('<div class="key">' + shortcut + '</div>');
     if (!$(this).parent().hasClass('header')) {
       var items = $(this).parent().parent();
