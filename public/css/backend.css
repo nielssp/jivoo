@@ -74,13 +74,11 @@ strong, em {
 }
 
 #content a:link, #content a:visited, #content a:active {
-  font-weight:bold;
   text-decoration:none;
   color:inherit;
 }
 
 #content a:hover {
-  font-weight:bold;
   text-decoration:underline;
   color:inherit;
 }
@@ -241,15 +239,42 @@ div.record {
   padding:8px 32px;
   margin-left:-32px;
   margin-right:-32px;
+  border-top:1px solid #e5e5e5;
+}
+
+div.record.red {
+  border-left:3px solid #c00;
+  border-right:3px solid #c00;
+}
+
+div.record.green {
+  border-left:3px solid #0c0;
+  border-right:3px solid #0c0;
+}
+
+div.record.yellow {
+  border-left:3px solid #fc0;
+  border-right:3px solid #fc0;
+}
+
+div.record.first {
+  border-top:0;
 }
 
 div.record:hover {
   background-color:#eee;
 }
 
+div.record .author {
+  float:left;
+  width:20%;
+  margin-right:5%;
+}
+
 div.record .title {
   float:left;
   width:30%;
+  font-weight:bold;
 }
 
 div.record .state {
@@ -262,7 +287,7 @@ div.record .state {
 div.record .date {
   float:left;
   margin-left:5%;
-  width:20%;
+  width:15%;
   font-weight:bold;
 }
 
@@ -273,9 +298,15 @@ div.record .actions {
 
 div.record .actions a {
   margin-left:16px;
+  font-weight:bold;
 }
 
 div.record .content {
+  float:left;
+  width:75%;
+}
+
+div.record .topspace {
   margin-top:8px;
 }
 
@@ -286,6 +317,7 @@ div.pagination {
 div.pagination .older {
   float:left;
   width:15%;
+  font-weight:bold;
 }
 
 div.pagination .pages {
@@ -308,6 +340,7 @@ div.pagination .newer {
   float:right;
   width:15%;
   text-align:right;
+  font-weight:bold;
 }
 
 .section .separator {

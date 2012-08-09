@@ -34,11 +34,7 @@ $this->render('backend/header.html');
 <?php $first = TRUE; ?>
 <?php foreach ($pages as $page): ?>
 
-<?php if (!$first): ?>
-          <div class="separator"></div>
-<?php endif; ?>
-<?php $first = FALSE; ?>
-          <div class="record">
+          <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
           <span class="title">
 <?php echo $Html->link(h($page->title), array('action' => 'edit', 'parameters' => array($page->id))); ?>
           </span>

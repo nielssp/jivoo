@@ -37,7 +37,7 @@ class PostsController extends ApplicationController {
     
     $this->user = $this->auth->getUser();
 
-    if ($this->auth->hasPermission('frontend.comments.add')) {
+    if ($this->auth->hasPermission('frontend.posts.comments.add')) {
       if ($this->request->isPost() AND $this->request->checkToken('comment')) {
         $this->newComment = Comment::create($this->request->data['comment']);
         if (!empty($this->newComment->website)
@@ -51,6 +51,13 @@ class PostsController extends ApplicationController {
         }
         $this->newComment->setPost($this->post);
         $this->newComment->ip = $this->request->ip;
+        if ($this->config['commentApproval'] == 'on'
+            AND !$this->auth->hasPermission('backend.posts.comments.approve')) {
+          $this->newComment->status = 'unapproved';
+        }
+        else {
+          $this->newComment->status = 'approved';
+        }
         if ($this->newComment->isValid()) {
           $this->newComment->save();
           $this->post->comments += 1;

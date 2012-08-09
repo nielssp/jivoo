@@ -34,28 +34,21 @@ $this->render('backend/header.html');
 <?php $first = TRUE; ?>
 <?php foreach ($comments as $comment): ?>
 
-<?php if (!$first): ?>
-          <div class="separator"></div>
-<?php endif; ?>
-<?php $first = FALSE; ?>
-          <div class="record">
-          <span class="title">
-            <?php echo $Html->link(h($comment->getPost()->title), $comment); ?>
-          </span>
-          <span class="state">
+          <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
+          <span class="author">
+          <strong>
 <?php
 if (empty($comment->author)) {
   echo tr('Anonymous');
 }
 else {
-  $website = $Html->cleanUrl($comment->website);
-  if (empty($website))
-    echo h($comment->author);
-  else
-    echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
+  echo h($comment->author);
 }
-?>
+?></strong>
 
+          </span>
+          <span class="title">
+            <?php echo $Html->link(h($comment->getPost()->title), $comment); ?>
           </span>
           <span class="date">
             <?php echo $comment->formatDate(); ?>
@@ -63,17 +56,37 @@ else {
           <span class="actions">
 <?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($comment->id))); ?>
 
-<?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($comment->id))); ?>
+<?php echo $Html->link('View', $comment); ?>
 
 <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($comment->id))); ?>
           </span>
             <div class="clearl"></div>
-            <div class="content">
+            <div class="author topspace">
+<?php
+$website = $Html->cleanUrl($comment->website);
+if (empty($comment->website))
+  echo '<em>' . tr('No website') . '</em>';
+else
+  echo '<a href="' . $website . '">' . h($comment->website) . '</a>';
+?><br/>
+<?php 
+if (empty($comment->email))
+  echo '<em>' . tr('No email') . '</em>';
+else 
+  echo $comment->email;
+?><br/>
+<?php echo $comment->ip; ?>
+<div class="topspace">
+<strong><?php echo ucfirst(h($comment->status))?></strong>
+</div>
+            </div>
+            <div class="content topspace">
             <?php echo $comment->encode(
               'content',
-              array('stripAll' => TRUE, 'maxLength' => 250, 'append' => '[...]')
+              array('stripAll' => TRUE, 'maxLength' => 500, 'append' => '[...]')
             ); ?>
             </div>
+            <div class="clearl"></div>
           </div>
 <?php endforeach; ?>
         </div>
