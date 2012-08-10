@@ -36,6 +36,11 @@ class PostsController extends ApplicationController {
     $this->Pagination->paginate($select);
     
     $this->user = $this->auth->getUser();
+    
+    Comment::setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
 
     if ($this->auth->hasPermission('frontend.posts.comments.add')) {
       if ($this->request->isPost() AND $this->request->checkToken('comment')) {
@@ -92,10 +97,6 @@ class PostsController extends ApplicationController {
           $this->newComment->website = $this->request->cookies['comment_website'];
         }
       }
-      $this->newComment->setFieldEditor(
-        'content',
-        $this->m->Editors->getEditor($this->config['comments.editor'])
-      );
     }
     
     $this->comments = $this->post->getComments($select);
@@ -135,6 +136,12 @@ class PostsController extends ApplicationController {
     $this->nameInPermalink = count($exampleLink) >= 2;
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];
+    
+    Post::setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
+    
     if ($this->request->isPost() AND $this->request->checkToken('post')) {
       $this->post = Post::create($this->request->data['post']);
       if (isset($this->request->data['publish'])) {
@@ -162,10 +169,6 @@ class PostsController extends ApplicationController {
     else {
       $this->post = Post::create();
     }
-    $this->post->setFieldEditor(
-      'content',
-      $this->m->Editors->getEditor($this->config['editor'])
-    );
     $this->title = tr('New post');
     $this->render('posts/edit.html');
   }
@@ -183,6 +186,11 @@ class PostsController extends ApplicationController {
     if (!$this->post) {
       return $this->notFound();
     }
+    
+    Post::setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
     
     if ($this->request->isPost()) {
       $this->post->addData($this->request->data['post']);
@@ -208,10 +216,6 @@ class PostsController extends ApplicationController {
         }
       }
     }
-    $this->post->setFieldEditor(
-      'content',
-      $this->m->Editors->getEditor($this->config['editor'])
-    );
     $this->title = tr('Edit post');
     $this->render('posts/edit.html');
   }

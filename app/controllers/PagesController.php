@@ -16,6 +16,11 @@ class PagesController extends ApplicationController {
   
   public function add() {
     $this->beforePermalink = $this->m->Routes->getLink();
+
+    Page::setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
     if ($this->request->isPost()) {
       $this->page = Page::create($this->request->data['page']);
       if (isset($this->request->data['publish'])) {
@@ -43,10 +48,6 @@ class PagesController extends ApplicationController {
     else {
       $this->page = Page::create();
     }
-    $this->page->setFieldEditor(
-      'content',
-      $this->m->Editors->getEditor($this->config['editor'])
-    );
     $this->title = tr('New page');
     $this->render('pages/edit.html');
   }
@@ -80,6 +81,11 @@ class PagesController extends ApplicationController {
       return $this->notFound();
     }
     
+    Page::setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['editor'])
+    );
+    
     if ($this->request->isPost()) {
       $this->page->addData($this->request->data['page']);
       if (isset($this->request->data['publish'])) {
@@ -104,10 +110,6 @@ class PagesController extends ApplicationController {
         }
       }
     }
-    $this->page->setFieldEditor(
-      'content',
-      $this->m->Editors->getEditor($this->config['editor'])
-    );
     $this->title = tr('Edit page');
     $this->render('pages/edit.html');
   }
