@@ -15,7 +15,7 @@ $this->render('backend/header.html');
           </span>
           <form action="<?php echo $this->link(array()); ?>" method="get">
           <span class="filter block30">
-            <input type="text" class="text" name="filter" value="<?php echo h($filter); ?>" />
+            <input type="text" class="text" name="filter" value="<?php echo h($Filtering->query); ?>" />
           </span>
           </form>
           <span class="newer">&nbsp;
@@ -34,7 +34,20 @@ $this->render('backend/header.html');
 <?php $first = TRUE; ?>
 <?php foreach ($comments as $comment): ?>
 
-          <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
+<?php
+$classes = '';
+if ($first) {
+  $classes .= ' first';
+  $first = FALSE;
+}
+switch ($comment->status) {
+  case 'approved': break;
+  case 'spam': $classes .= ' red'; break;
+  default: $classes .= ' yellow';
+}
+?>
+
+<div class="record<?php echo $classes; ?>">
           <span class="author block20 margin5">
           
 <?php
@@ -78,7 +91,13 @@ else
 ?><br/>
 <?php echo h($comment->ip); ?>
 <div class="topspace">
-<strong><?php echo ucfirst(h($comment->status))?></strong>
+  <strong><?php
+switch ($comment->status) {
+  case 'approved': echo tr('Approved'); break;
+  case 'spam': echo tr('Marked as spam'); break;
+  default: echo tr('Pending approval');
+}
+?></strong>
 </div>
             </div>
             <div class="content block75 topspace">

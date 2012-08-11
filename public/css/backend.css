@@ -240,6 +240,8 @@ div.record {
   margin-left:-32px;
   margin-right:-32px;
   border-top:1px solid #e5e5e5;
+  border-left:3px solid transparent;
+  border-right:3px solid transparent;
 }
 
 div.record.red {

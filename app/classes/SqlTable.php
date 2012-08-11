@@ -70,7 +70,7 @@ class SqlTable implements ITable {
       $sqlString .= ' JOIN ' . $this->owner->tableName($query->join['table']);
       $sqlString .= ' ON ' . $query->join['left'] . ' = ' . $query->join['right'];
     }
-    if (isset($query->where)) {
+    if (!empty($query->where)) {
       $sqlString .= ' WHERE ' . $this->owner->escapeQuery($query->where, $query->whereVars);
     }
     if (isset($query->orderBy)) {

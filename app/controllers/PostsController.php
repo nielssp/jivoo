@@ -2,7 +2,7 @@
 
 class PostsController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Pagination', 'Form');
+  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering');
 
   public function index() {
     $select = SelectQuery::create()
@@ -251,11 +251,14 @@ class PostsController extends ApplicationController {
     $select = SelectQuery::create()
       ->orderByDescending('date');
     
+    $this->Filtering->addSearchColumn('content');
+    $this->Filtering->addSearchColumn('author');
+    $this->Filtering->addFilterColumn('status');
+    $this->Filtering->addFilterColumn('author');
+
+    $this->Filtering->filter($select);
+
     if (isset($this->request->query['filter'])) {
-      $this->filter = $this->request->query['filter'];
-      $select->where('content LIKE ? OR author LIKE ?')
-        ->addVar('%' . $this->filter . '%')
-        ->addVar('%' . $this->filter . '%');
       $this->Pagination->setCount(Comment::count(clone $select));
     }
     else {
