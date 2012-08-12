@@ -68,8 +68,22 @@ else {
           </span>
           <div class="actions">
            <ul class="menubutton">
-             <li class="first"><a href="#">Approve</a></li>
-             <li><a href="#">Spam</a></li>
+<li class="first"><a href="#"><?php
+switch($comment->status) {
+  case 'approved':
+    echo 'Unapprove';
+    break;
+  case 'spam':
+    echo 'Not spam';
+    break;
+  default:
+    echo 'Approve';
+}
+?>
+</a></li>
+<?php if ($comment->status != 'spam'): ?>
+<li><a href="#">Spam</a></li>
+<?php endif; ?>
              <li><a href="#">Edit</a></li>
              <li class="last red"><a href="#">Delete</a></li>
            </ul>

@@ -201,7 +201,12 @@ class SqlTable implements ITable {
       $sqlString .= ' SET';
       reset($sets);
       while (($value = current($sets)) !== FALSE) {
-        $sqlString .= ' ' . $this->owner->escapeQuery(key($sets) . ' = ?', array($value));
+        if (isset($value)) {
+          $sqlString .= ' ' . $this->owner->escapeQuery(key($sets) . ' = ?', array($value));
+        }
+        else {
+          $sqlString .= ' ' . key($sets);
+        }
         if (next($sets) !== FALSE) {
           $sqlString .= ',';
         }

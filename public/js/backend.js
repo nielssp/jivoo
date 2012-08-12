@@ -76,7 +76,7 @@ $(function() {
   var over = false;
   var inputFocus = false;
   
-  $(":text, textarea").bind("blur focus", function(event) {
+  $(":text, :[type=search], textarea").bind("blur focus", function(event) {
     inputFocus = event.type == "focus";
   });
   

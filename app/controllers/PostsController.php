@@ -252,9 +252,9 @@ class PostsController extends ApplicationController {
       ->orderByDescending('date');
     
     $this->Filtering->addSearchColumn('content');
-    $this->Filtering->addSearchColumn('author');
     $this->Filtering->addFilterColumn('status');
     $this->Filtering->addFilterColumn('author');
+    $this->Filtering->addFilterColumn('date');
 
     $this->Filtering->filter($select);
 

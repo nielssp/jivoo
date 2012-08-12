@@ -48,6 +48,12 @@ class postsSchema extends Schema {
     'null' => false,
   );
 
+  public $status = array(
+    'type' => 'string',
+    'length' => 50,
+    'null' => false,
+  );
+
   public $commenting = array(
     'type' => 'string',
     'length' => 10,
@@ -74,4 +80,9 @@ class postsSchema extends Schema {
       'unique' => false
     ),
   );
+
+  public function addColumn_status(IDatabase $db) {
+    $db->addColumn('posts', 'status', $this->status);
+    $db->posts->update()->set('status = state')->execute();
+  }
 }

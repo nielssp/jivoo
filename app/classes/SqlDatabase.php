@@ -75,7 +75,13 @@ abstract class SqlDatabase implements IDatabase {
       $status = 'unchanged';
       foreach ($allColumns as $column) {
         if (!isset($oldSchema->$column)) {
-          $this->addColumn($table, $column, $schema->$column);
+          /** @TODO work, work */
+          if (method_exists($schema, 'addColumn_' . $column)) {
+            call_user_func(array($schema, 'addColumn_' . $column), $this);
+          }
+          else {
+            $this->addColumn($table, $column, $schema->$column);
+          }
           $status = 'updated';
         }
         else if (!isset($schema->$column)) {

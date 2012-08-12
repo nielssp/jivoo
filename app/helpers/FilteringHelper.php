@@ -4,6 +4,7 @@ class FilteringHelper extends ApplicationHelper {
 
   private $searchColumns = array();
   private $filterColumns = array();
+  private $callbacks = array();
   private $query = '';
 
   public function __get($property) {
@@ -49,10 +50,12 @@ class FilteringHelper extends ApplicationHelper {
       $where .= '(' . implode(' OR ', $filters) . ')';
     }
     if (count($this->searchColumns) > 0) {
-      $searchQuery = '%' . implode(' ', $words) . '%';
-      if ($searchQuery != '%%') {
-        foreach ($this->searchColumns as $column => $bool) {
-          $where->or($column . ' LIKE ?', $searchQuery);
+      foreach ($words as $word) {
+        $searchQuery = '%' . $word . '%';
+        if ($searchQuery != '%%') {
+          foreach ($this->searchColumns as $column => $bool) {
+            $where->or($column . ' LIKE ?', $searchQuery);
+          }
         }
       }
     }
