@@ -35,6 +35,10 @@ $this->render('backend/header.html');
 <?php foreach ($posts as $post): ?>
 
           <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
+            <div class="checkbox">
+              <input type="checkbox" />
+            </div>
+            <div class="header">
           <span class="title block30 margin5">
 <?php echo $Html->link(h($post->title), array('action' => 'edit', 'parameters' => array($post->id))); ?>
           </span>
@@ -56,14 +60,17 @@ $this->render('backend/header.html');
                <?php echo $Html->link('Delete', array('action' => 'delete', 'parameters' => array($post->id))); ?>
              </li>
            </ul>
-          </div>
-            <div class="clearl"></div>
-            <div class="content block100 topspace">
+         </div>
+       </div>
+       <div class="clearl"></div>
+       <div class="body">
+         <div class="content block100">
             <?php echo $post->encode(
               'content',
               array('stripAll' => TRUE, 'maxLength' => 250, 'append' => '[...]')
             ); ?>
             </div>
+        </div>
             <div class="clearl"></div>
           </div>
 <?php endforeach; ?>

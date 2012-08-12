@@ -48,6 +48,10 @@ switch ($comment->status) {
 ?>
 
 <div class="record<?php echo $classes; ?>">
+          <div class="checkbox">
+           <input type="checkbox" />
+         </div>
+  <div class="header">
           <span class="author block20 margin5">
           
 <?php
@@ -87,9 +91,11 @@ switch($comment->status) {
              <li><a href="#">Edit</a></li>
              <li class="last red"><a href="#">Delete</a></li>
            </ul>
-          </div>
+         </div>
+       </div>
             <div class="clearl"></div>
-            <div class="author block20 margin5 topspace">
+            <div class="body">
+            <div class="author block20 margin5">
 <?php
 $website = $Html->cleanUrl($comment->website);
 if (empty($comment->website))
@@ -104,22 +110,23 @@ else
   echo h($comment->email);
 ?><br/>
 <?php echo h($comment->ip); ?>
-<div class="topspace">
-  <strong><?php
+<div class="comment-status">
+<?php
 switch ($comment->status) {
   case 'approved': echo tr('Approved'); break;
   case 'spam': echo tr('Marked as spam'); break;
   default: echo tr('Pending approval');
 }
-?></strong>
+?>
 </div>
             </div>
-            <div class="content block75 topspace">
+            <div class="content block75">
             <?php echo $comment->encode(
               'content',
               array('stripAll' => TRUE, 'maxLength' => 500, 'append' => '[...]')
             ); ?>
             </div>
+          </div>
             <div class="clearl"></div>
           </div>
 <?php endforeach; ?>

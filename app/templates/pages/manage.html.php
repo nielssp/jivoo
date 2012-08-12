@@ -35,6 +35,10 @@ $this->render('backend/header.html');
 <?php foreach ($pages as $page): ?>
 
           <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
+            <div class="checkbox">
+              <input type="checkbox" />
+            </div>
+            <div class="header">
           <span class="title block30 margin5">
 <?php echo $Html->link(h($page->title), array('action' => 'edit', 'parameters' => array($page->id))); ?>
           </span>
@@ -54,13 +58,16 @@ $this->render('backend/header.html');
              </li>
            </ul>
           </div>
-            <div class="clearl"></div>
-            <div class="content block100 topspace">
+        </div>
+        <div class="clearl"></div>
+        <div class="body">
+          <div class="content block100">
             <?php echo $page->encode(
               'content',
               array('stripAll' => TRUE, 'maxLength' => 250, 'append' => '[...]')
             ); ?>
-            </div>
+          </div>
+        </div>
             <div class="clearl"></div>
           </div>
 <?php endforeach; ?>
