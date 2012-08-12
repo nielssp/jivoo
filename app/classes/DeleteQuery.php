@@ -4,10 +4,23 @@ class DeleteQuery extends Query {
   protected $descending = FALSE;
   protected $limit;
   protected $where;
-  protected $whereVars;
-  protected $count = FALSE;
   protected $offset = 0;
   protected $join;
+
+  public function __construct() {
+    $this->where = new Condition();
+  }
+
+  public function __call($method, $args) {
+    switch ($method) {
+      case 'and':
+        call_user_func_array(array($this->where, 'andWhere'), $args);
+        return $this;
+      case 'or':
+        call_user_func_array(array($this->where, 'orWhere'), $args);
+        return $this;
+    }
+  }
 
   public function limit($limit) {
     $this->limit = (int)$limit;
@@ -20,45 +33,45 @@ class DeleteQuery extends Query {
   }
 
   public function where($clause) {
-    $this->where = $clause;
-    if (func_num_args() > 1) {
-      $args = func_get_args();
-      array_shift($args);
-      foreach ($args as $arg) {
-        $this->addVar($arg);
-      }
-    }
+    call_user_func_array(array($this->where, 'where'), func_get_args());
+    return $this;
+  }
+
+  public function andWhere($clause) {
+    call_user_func_array(array($this->where, 'andWhere'), func_get_args());
+    return $this;
+  }
+
+  public function orWhere($clause) {
+    call_user_func_array(array($this->where, 'orWhere'), func_get_args());
     return $this;
   }
 
   public function addVar($var) {
-    $this->whereVars[] = $var;
+    $this->where->addVar($var);
     return $this;
   }
 
   public function orderBy($column) {
-    $this->orderBy = $column;
-    $this->descending = false;
+    $this->orderBy[] = array(
+      'column' => $column,
+      'descending' => FALSE
+    );
     return $this;
   }
 
   public function orderByDescending($column) {
-    $this->orderBy = $column;
-    $this->descending = true;
+    $this->orderBy[] = array(
+      'column' => $column,
+      'descending' => TRUE
+    );
     return $this;
   }
 
   public function reverseOrder() {
-    $this->descending = !$this->descending;
-    return $this;
-  }
-
-  public function join($table, $leftColumn, $rightColumn) {
-    $this->join = array(
-      'table' => $table,
-      'left' => $leftColumn,
-      'right' => $rightColumn
-    );
+    foreach ($this->orderBy as $key => $orderBy) {
+      $this->orderBy[$key]['descending'] = !$orderBy['descending'];
+    }
     return $this;
   }
 }

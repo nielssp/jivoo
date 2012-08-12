@@ -25,10 +25,9 @@ class FilteringHelper extends ApplicationHelper {
     if (!isset($this->request->query['filter'])) {
       return;
     }
-    $where = '';
+    $where = new Condition();
     $this->query = $this->request->query['filter']; 
     $words = explode(' ', $this->query);
-    $filters = array();
     if (count($this->filterColumns) > 0) {
       foreach ($words as $key => $value) {
         $pos = strpos($value, ':');
@@ -37,30 +36,29 @@ class FilteringHelper extends ApplicationHelper {
           if (isset($this->filterColumns[$column])) {
             unset($words[$key]);
             $filterValue = substr($value, $pos + 1);
-            $filters[] = $column . ' = ?';
-            $query->addVar($filterValue);
+            $where->or($column . ' = ?', $filterValue);
           }
         }
       }
     }
+    if ($where->hasClauses()) {
+      $query->where($where);
+    }
+    $where = new Condition();
     if (count($filters) > 0) {
       $where .= '(' . implode(' OR ', $filters) . ')';
     }
     if (count($this->searchColumns) > 0) {
       $searchQuery = '%' . implode(' ', $words) . '%';
       if ($searchQuery != '%%') {
-        if ($where != '') {
-          $where .= ' AND ';
-        }
-        $searches = array();
         foreach ($this->searchColumns as $column => $bool) {
-          $searches[] = $column . ' LIKE ?';
-          $query->addVar($searchQuery);
+          $where->or($column . ' LIKE ?', $searchQuery);
         }
-        $where .= '(' . implode(' OR ', $searches) . ')';
       }
     }
-    $query->where($where);
+    if ($where->hasClauses()) {
+      $query->and($where);
+    }
   }
 
 }

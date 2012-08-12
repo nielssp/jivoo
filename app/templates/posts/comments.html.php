@@ -15,7 +15,7 @@ $this->render('backend/header.html');
           </span>
           <form action="<?php echo $this->link(array()); ?>" method="get">
           <span class="filter block30">
-            <input type="text" class="text" name="filter" value="<?php echo h($Filtering->query); ?>" />
+            <input type="search" class="text" name="filter" value="<?php echo h($Filtering->query); ?>" />
           </span>
           </form>
           <span class="newer">&nbsp;

@@ -1,6 +1,43 @@
 <?php
-require('../app/essentials.php');
+require '../app/essentials.php';
 
-// Make this shit work, please!
-$core = new Core(array('http'));
-$posts = $core->loadModule('posts');
+require p(CLASSES . 'database/MysqlDatabase.php');
+
+class DummySqlDatabase extends SqlDatabase {
+  public function __construct($options = array()) { }
+  public function close() { }
+  public function tableExists($table) { return TRUE; }
+  public function getSchema($table) { }
+  public function escapeString($string) { return addslashes($string); }
+  public function tableName($name) { return 'pre_' . $name; }
+  public function rawQuery($string) { var_dump($string); }
+  public function createTable(Schema $schema) { }
+  public function dropTable($table) { }
+  public function addColumn($table, $column, $options = array()) { }
+  public function deleteColumn($table, $column) { }
+  public function alterColumn($table, $column, $options = array()) { }
+  public function createIndex($table, $index, $options = array()) { }
+  public function deleteIndex($table, $index) { }
+  public function alterIndex($table, $index, $options = array()) { }
+}
+
+$db = new DummySqlDatabase();
+$table1 = $db->imaginary;
+$table2 = $db->secondary;
+$select = new SelectQuery();
+$select->addColumn('%ass');
+$select->addColumn('sec.ass', 'ass2');
+$select->innerJoin('secondary', '%secondary.ass = ass2');
+$select->or(Condition::create('%ass = ?', 2.4)->and('ass2 IS null'));
+$select->groupBy(array('ass', 'ass2'), 'ass = 2');
+
+echo '<pre>';
+
+var_dump($table1->columnName('test'));
+var_dump($table1->columnName('test.tet'));
+
+$table1->select($select);
+
+$table1->count($select);
+
+echo '</pre>';
