@@ -11,6 +11,8 @@
 
 define('APP', 'app/');
 
+define('TMP', '/tmp/peanutcms/');
+
 //define('PUB', '../../public/');
 
 define('DEBUG', TRUE);

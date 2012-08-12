@@ -19,6 +19,10 @@ if (!defined('LOG_ERRORS')) {
   define('LOG_ERRORS', FALSE);
 }
 
+if (!defined('CACHING')) {
+  define('CACHING', TRUE);
+}
+
 if (!defined('HIDE_LEVEL')) {
   /**
    * How much to hide the identity of PeanutCMS
@@ -139,6 +143,10 @@ if (!defined('PUB')) {
 
 if (!defined('LOG')) {
   define('LOG', 'log/');
+}
+
+if (!defined('TMP')) {
+  define('TMP', 'tmp/');
 }
 
 

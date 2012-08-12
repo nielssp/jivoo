@@ -199,7 +199,15 @@ function groupSorter(IGroupable $a, IGroupable $b) {
   }
 }
 
-function readFileMeta($file) {
+function readFileMeta($file, $caching = NULL) {
+  if (!isset($caching)) {
+    $caching = CACHING;
+  }
+  $uid = md5($file);
+  if ($caching AND file_exists(p(TMP . $uid))) {
+    $serialized = file_get_contents(p(TMP . $uid));
+    return unserialize($serialized);
+  }
   /** @todo cache.. cache.. cache */
   $file = fopen($file, 'r');
 
@@ -257,6 +265,13 @@ function readFileMeta($file) {
   $metaData['dependencies'] = readDependencies($metaData['dependencies']);
   if (!isset($metaData['version'])) {
     $metaData['version'] = '0.0.0';
+  }
+  if ($caching AND is_writable(p(TMP))) {
+    $cacheFile = fopen(p(TMP . $uid), 'w');
+    if ($cacheFile) {
+      fwrite($cacheFile, serialize($metaData));
+      fclose($cacheFile);
+    }
   }
   return $metaData;
 }
