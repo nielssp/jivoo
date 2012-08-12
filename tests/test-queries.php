@@ -1,6 +1,7 @@
 <?php
 require '../app/essentials.php';
 
+
 require p(CLASSES . 'database/MysqlDatabase.php');
 
 class DummySqlDatabase extends SqlDatabase {
@@ -29,7 +30,7 @@ $select->addColumn('%ass');
 $select->addColumn('sec.ass', 'ass2');
 $select->innerJoin('secondary', '%secondary.ass = ass2');
 $select->or(Condition::create('%ass = ?', 2.4)->and('ass2 IS null'));
-$select->groupBy(array('ass', 'ass2'), 'ass = 2');
+//$select->groupBy(array('ass', 'ass2'), 'ass = 2');
 
 echo '<pre>';
 

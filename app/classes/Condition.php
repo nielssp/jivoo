@@ -6,7 +6,8 @@ class Condition {
 
   public function __construct($clause = NULL) {
     if (isset($clause) AND !empty($clause)) {
-      call_user_func_array(array($this, 'andWhere'), func_get_args());
+      $args = func_get_args();
+      call_user_func_array(array($this, 'andWhere'), $args);
     }
   }
 
@@ -41,7 +42,8 @@ class Condition {
   }
 
   public function where($clause) {
-    return call_user_func_array(array($this, 'andWhere'), func_get_args());
+    $args = func_get_args();
+    return call_user_func_array(array($this, 'andWhere'), $args);
   }
 
   public function andWhere($clause) {

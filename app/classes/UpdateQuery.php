@@ -44,17 +44,20 @@ class UpdateQuery extends Query {
   }
 
   public function where($clause) {
-    call_user_func_array(array($this->where, 'where'), func_get_args());
+    $args = func_get_args();
+    call_user_func_array(array($this->where, 'where'), $args);
     return $this;
   }
 
   public function andWhere($clause) {
-    call_user_func_array(array($this->where, 'andWhere'), func_get_args());
+    $args = func_get_args();
+    call_user_func_array(array($this->where, 'andWhere'), $args);
     return $this;
   }
 
   public function orWhere($clause) {
-    call_user_func_array(array($this->where, 'orWhere'), func_get_args());
+    $args = func_get_args();
+    call_user_func_array(array($this->where, 'orWhere'), $args);
     return $this;
   }
 
