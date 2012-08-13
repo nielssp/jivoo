@@ -206,6 +206,15 @@ $(function() {
     else
       $("#settings").hide("blind", 200);
   });
+
+  $(".delete-action").click(function() {
+    $(this).parents(".record").each(function() {
+      $(this).animate({opacity: '0'}, 300).slideUp(200);
+      if ($(this).hasClass('first')) {
+        $(this).next().addClass('first');
+      }
+    });
+  });
   
   $(".permalink").each(function(index, Element) {
     var input = $(this);

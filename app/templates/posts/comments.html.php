@@ -89,7 +89,7 @@ switch($comment->status) {
 <li><a href="#">Spam</a></li>
 <?php endif; ?>
              <li><a href="#">Edit</a></li>
-             <li class="last red"><a href="#">Delete</a></li>
+             <li class="last red"><a href="#" class="delete-action">Delete</a></li>
            </ul>
          </div>
        </div>
