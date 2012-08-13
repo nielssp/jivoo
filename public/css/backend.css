@@ -353,6 +353,15 @@ div.pagination {
   line-height:17px;
 }
 
+div.pagination .predefined {
+  position:relative;
+}
+
+div.pagination .predefined .menubutton {
+  left:0;
+  right:auto;
+}
+
 div.pagination .older {
   font-weight:bold;
 }
@@ -582,6 +591,7 @@ span.description {
 .menubutton li a:active,
 .menubutton li a:visited {
   padding:2px 24px 2px 8px;
+  line-height:100%;
   margin:0;
   font-weight:normal;
   text-decoration:none;
@@ -591,6 +601,7 @@ span.description {
 .menubutton li a:hover,
 .menubutton li a:focus {
   background-color:#333;
+  line-height:100%;
   margin:0;
   font-weight:normal;
   outline:none;

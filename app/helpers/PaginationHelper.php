@@ -9,6 +9,8 @@ class PaginationHelper extends ApplicationHelper {
   private $pages = 1;
   
   private $page = 1;
+
+  private $offset = 0;
   
   public function setCount($count) {
     $this->count = $count;
@@ -29,12 +31,20 @@ class PaginationHelper extends ApplicationHelper {
       $this->page = min($this->page, $this->pages);
       $this->page = max($this->page, 1);
     }
-    $offset = ($this->page - 1) * $this->limit;
-    $select->offset($offset);
+    $this->offset = ($this->page - 1) * $this->limit;
+    $select->offset($this->offset);
   }
 
   public function getCount() {
     return $this->count;
+  }
+
+  public function getFrom() {
+    return min($this->offset + 1, $this->count);
+  }
+
+  public function getTo() {
+    return min($this->offset + $this->limit, $this->count);
   }
   
   public function getPage() {
