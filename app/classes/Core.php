@@ -24,14 +24,13 @@ class Core {
       foreach ($blacklistFile as $line) {
         $line = trim($line);
         if ($line[0] != '#') {
-          $this->blacklist[className($this)] = TRUE;
+          $this->blacklist[$this] = TRUE;
         }
       }
     }
   }
 
   public function __get($module) {
-    $module = className($module);
     if (!isset($this->modules[$module])) {
       $backtrace = debug_backtrace();
       $class = $backtrace[1]['class'];
@@ -45,7 +44,6 @@ class Core {
   }
 
   public function requestModule($module) {
-    $module = className($module);
     try {
       return $this->$module;
     }
@@ -66,19 +64,19 @@ class Core {
     if (isset(self::$info[$module])) {
       return self::$info[$module];
     }
-    $meta = readFileMeta(p(MODULES . className($module) . '.php'));
+    $meta = readFileMeta(p(MODULES . $module . '.php'));
     if (!$meta OR $meta['type'] != 'module') {
       return FALSE;
     }
     if (!isset($meta['name'])) {
-      $meta['name'] = className($module);
+      $meta['name'] = $module;
     }
     self::$info[$module] = $meta;
     return $meta;
   }
 
   public function checkDependencies($module) {
-    if (is_subclass_of($module, 'IModule')) {
+    if (is_subclass_of($module, 'ModuleBase')) {
       $info = self::getModuleInfo(get_class($module));
     }
     else {
@@ -103,12 +101,12 @@ class Core {
   }
 
   public function onBlacklist($module) {
-    $module = className($module);
+    $module = $module;
     return isset($this->blacklist[$module]);
   }
 
   public function loadModule($module) {
-    $module = className($module);
+    $module = $module;
     if ($this->onBlacklist($module)) {
       throw new ModuleBlacklistedException(tr('The "%1" module is blacklisted', $module));
     }
@@ -122,10 +120,6 @@ class Core {
           throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
         }
       }
-      //$reflection = new ReflectionClass($className);
-      //if (!$reflection->implementsInterface('IModule')) {
-      //  throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
-      //}
       $info = self::getModuleInfo($module);
       if (!$info) {
         throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
@@ -133,7 +127,7 @@ class Core {
       $dependencies = $info['dependencies']['modules'];
       $modules = array();
       foreach ($dependencies as $dependency => $versionInfo) {
-        $dependency = className($dependency);
+        $dependency = $dependency;
         try {
           $modules[$dependency] = $this->loadModule($dependency);
         }
@@ -145,13 +139,7 @@ class Core {
           ));
         }
       }
-      //$this->modules[$module] = $reflection->newInstanceArgs(array($this));
-      if (is_subclass_of($module, 'ModuleBase')) {
-        $this->modules[$module] = new $module($modules, $this);
-      }
-      else {
-        $this->modules[$module] = new $module($this);
-      }
+      $this->modules[$module] = new $module($modules, $this);
     }
     return $this->modules[$module];
   }

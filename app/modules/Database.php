@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : configuration routes templates actions errors http
+// Dependencies   : Configuration Routes Templates Actions Errors Http
 
 class Database extends ModuleBase implements IDatabase  {
   private $driver;
@@ -95,7 +95,6 @@ class Database extends ModuleBase implements IDatabase  {
   }
 
   public function checkDriver($driver) {
-    $driver = className($driver);
     if (!file_exists(p(CLASSES . 'database/' . $driver . '.php'))) {
       return FALSE;
     }

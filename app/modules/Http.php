@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS http system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration
+// Dependencies   : Errors Configuration
 
 /*
  * Class for working with HTTP headers, redirects etc.

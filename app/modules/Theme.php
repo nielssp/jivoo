@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS theme system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration templates
+// Dependencies   : Errors Configuration Templates
 
 /*
  * Class for loading and manipulating the theme

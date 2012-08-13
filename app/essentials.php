@@ -287,28 +287,28 @@ function readDependencies($dependencies) {
     if (!empty($dependency)) {
       if (strpos($dependency, ';') === FALSE) {
         if (($matches = matchDependencyVersion($dependency)) !== FALSE) {
-          $matches[1] = className($matches[1]);
+          $matches[1] = $matches[1];
           if (!isset($result['modules'][$matches[1]])) {
             $result['modules'][$matches[1]] = array();
           }
           $result['modules'][$matches[1]][$matches[2]] = $matches[3];
         }
         else {
-          $result['modules'][className($dependency)] = array();
+          $result['modules'][$dependency] = array();
         }
       }
       else {
         $split = explode(';', $dependency, 2);
         if ($split[0] == 'ext') {
           if (($matches = matchDependencyVersion($split[1])) !== FALSE) {
-            $matches[1] = className($matches[1]);
+            $matches[1] = $matches[1];
             if (!isset($result['extensions'][$matches[1]])) {
               $result['extensions'][$matches[1]] = array();
             }
             $result['extensions'][$matches[1]][$matches[2]] = $matches[3];
           }
           else {
-            $result['extensions'][className($split[1])] = array();
+            $result['extensions'][$split[1]] = array();
           }
         }
         else if ($split[0] == 'php') {
@@ -375,18 +375,6 @@ function isSerialized($str){
   if (preg_match('/^(i|s|a|o|d):(.*);/si', $str) == 0)
   return false;
   return true;
-}
-
-function className($name) {
-  if (ucfirst($name) == $name) {
-    return $name;
-  }
-  $words = explode('-', $name);
-  $className = '';
-  foreach ($words as $word) {
-    $className .= ucfirst($word);
-  }
-  return $className;
 }
 
 function classFileName($className) {

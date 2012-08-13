@@ -4,7 +4,7 @@
 // Category     : JavaScript jQuery
 // Website      : http://jquery.com
 // Version      : 1.7.1
-// Dependencies : templates
+// Dependencies : Templates
 
 class Jquery extends ExtensionBase {
   protected function init() {

@@ -21,8 +21,7 @@ abstract class ApplicationHelper {
 
     $this->controller = $controller;
     
-    foreach ($this->helpers as $helper) {
-      $name = className($helper);
+    foreach ($this->helpers as $name) {
       $class = $name . 'Helper';
       if (class_exists($class)) {
         $this->helperObjects[$name] = new $class($templates, $routes, $this);

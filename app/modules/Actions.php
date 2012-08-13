@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS action system
 // Author         : PeanutCMS
-// Dependencies   : http
+// Dependencies   : Http
 /*
  * Class for acting on url actions
  *

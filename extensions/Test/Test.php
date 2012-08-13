@@ -1,7 +1,7 @@
 <?php
 // Extension
 // Name : PeanutCMS example extension
-// Dependencies : templates posts>=0.2.0 extensions php;mysql ext;Tinymce
+// Dependencies : Templates Posts>=0.2.0 Extensions php;Mysql ext;Tinymce
 
 class Test extends ExtensionBase {
   protected function init() {

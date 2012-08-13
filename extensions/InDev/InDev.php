@@ -1,7 +1,7 @@
 <?php
 // Extension
 // Name         : Development version
-// Dependencies : templates
+// Dependencies : Templates
 
 class InDev extends ExtensionBase {
   protected function init() {

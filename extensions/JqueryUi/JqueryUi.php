@@ -4,7 +4,7 @@
 // Category     : JavaScript jQuery
 // Website      : http://jqueryui.com
 // Version      : 1.8.17
-// Dependencies : templates ext;jquery>=1.3.2
+// Dependencies : Templates ext;Jquery>=1.3.2
 
 class JqueryUi extends ExtensionBase {
   private $theme;

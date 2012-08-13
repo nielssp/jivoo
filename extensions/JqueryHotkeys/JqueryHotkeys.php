@@ -3,7 +3,7 @@
 // Name         : jQuery hotkeys plug-in
 // Category     : JavaScript jQuery
 // Version      : 0.7.9
-// Dependencies : templates ext;jquery
+// Dependencies : Templates ext;Jquery
 
 class JqueryHotkeys extends ExtensionBase {
   protected function init() {

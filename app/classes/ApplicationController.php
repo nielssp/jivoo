@@ -36,8 +36,7 @@ class ApplicationController {
     $parentMethods = get_class_methods(__CLASS__);
     $this->actions = array_diff($classMethods, $parentMethods);
 
-    foreach ($this->helpers as $helper) {
-      $name = className($helper);
+    foreach ($this->helpers as $name) {
       $class = $name . 'Helper';
       if (class_exists($class)) {
         $this->helperObjects[$name] = new $class($this->m->Templates, $routes, $this);

@@ -19,11 +19,11 @@ abstract class ExtensionBase {
   }
 
   protected function load($className) {
-    if ($className[0] == 'I' AND file_exists($path = $this->getPath('interfaces/' . className($className) . '.php'))) {
+    if ($className[0] == 'I' AND file_exists($path = $this->getPath('interfaces/' . $className . '.php'))) {
       include($path);
     }
     else {
-      $fileName = className($className) . '.php';
+      $fileName = $className . '.php';
       if (file_exists($this->getPath('classes/' . $fileName))) {
         include($this->getPath('classes/' . $fileName));
       }

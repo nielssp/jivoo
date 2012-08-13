@@ -1,6 +1,6 @@
 <?php
 // Module
-// Name           : Database
+// Name           : Errors
 // Version        : 0.2.0
 // Description    : The PeanutCMS error system
 // Author         : PeanutCMS

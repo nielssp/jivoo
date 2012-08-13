@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS internationalization and localization system
 // Author         : PeanutCMS
-// Dependencies   : errors configuration
+// Dependencies   : Errors Configuration
 
 /*
  * Internationalization and localization of PeanutCMS
@@ -15,11 +15,7 @@
 /**
  * Internationalization and localization class
  */
-class I18n extends TranslationService implements IModule {
-
-  private $core;
-  private $configuration;
-  private $errors;
+class I18n extends ModuleBase implements ITranslationService {
 
   /**
    * Contains the translation strings of the current language
@@ -33,14 +29,7 @@ class I18n extends TranslationService implements IModule {
    */
   private $languageCode;
 
-  /**
-   * PHP5-style constructor
-   */
-  public function __construct(Core $core) {
-    $this->core = $core;
-    $this->configuration = $this->core->configuration;
-    $this->errors = $this->core->errors;
-
+  protected function init() {
     TranslationService::setService($this);
 
     $this->language = array();
@@ -57,22 +46,19 @@ class I18n extends TranslationService implements IModule {
    */
   private function configure() {
     // Set default language
-    if (!$this->configuration->exists('i18n.language'))
-      $this->configuration->set('i18n.language', LANGUAGE);
+    $this->m->Configuration->setDefault('i18n.language', LANGUAGE);
     // Get language from configuration instead
     $this->getLanguage();
 
     // Set default settings
-    if (!$this->configuration->exists('i18n.dateFormat'))
-      $this->configuration->set('i18n.dateFormat', $this->dateFormat());
-    if (!$this->configuration->exists('i18n.timeFormat'))
-      $this->configuration->set('i18n.timeFormat', $this->timeFormat());
-    if (!$this->configuration->exists('i18n.timeZone')) {
-      $this->configuration->set('i18n.timeZone', date_default_timezone_get());
-    }
+    $this->m->Configuration->setDefault(array(
+      'i18n.dateFormat' => $this->dateFormat(),
+      'i18n.timeFormat' => $this->timeFormat(),
+      'i18n.timeZone' => date_default_timezone_get()
+    ));
 
     // Set time zone
-    if (!date_default_timezone_set($this->configuration->get('i18n.timeZone')))
+    if (!date_default_timezone_set($this->m->Configuration->get('i18n.timeZone')))
       date_default_timezone_set('UTC');
   }
 
@@ -82,7 +68,7 @@ class I18n extends TranslationService implements IModule {
    * @return void
    */
   private function getLanguage() {
-    if ($language = $this->configuration->get('language')) {
+    if ($language = $this->m->Configuration->get('language')) {
       if (file_exists(p(LANG . $language . '.lng.php'))) {
         include(p(LANG . $language . '.lng.php'));
         $this->language = $translate[$language];
@@ -236,7 +222,7 @@ class I18n extends TranslationService implements IModule {
    * @return string Format string used with date()
    */
   public function dateFormat() {
-    if ($dateFormat = $this->configuration->get('i18n.dateFormat'))
+    if ($dateFormat = $this->m->Configuration->get('i18n.dateFormat'))
       return $dateFormat;
     else if (!empty($this->language['defaultDateFormat']))
       return $this->language['defaultDateFormat'];
@@ -250,7 +236,7 @@ class I18n extends TranslationService implements IModule {
    * @return string Format string used with date()
    */
   public function timeFormat() {
-    if ($timeFormat = $this->configuration->get('i18n.timeFormat'))
+    if ($timeFormat = $this->m->Configuration->get('i18n.timeFormat'))
       return $timeFormat;
     else if (!empty($this->language['defaultTimeFormat']))
       return $this->language['defaultTimeFormat'];
@@ -313,6 +299,7 @@ class I18n extends TranslationService implements IModule {
   /**
    * Return an array of languages installed in the language-directory
    *
+   * @TODO Forgot about this? :S Fix this pile of junk
    * @param bool $full If true then returns all info about a language
    * @return array|false Sorted array where languagecode => language or false on error
    */

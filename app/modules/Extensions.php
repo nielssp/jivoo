@@ -61,7 +61,6 @@ class Extensions extends ModuleBase {
   }
   
   private function loadExtension($extension) {
-    $extension = className($extension);
     if (!isset($this->extensions[$extension])) {
       if (isset($this->loading[$extension])) {
         throw new ExtensionInvalidException(tr('Circular dependency detected when attempting to load the "%1" extension.', $extension));
@@ -74,10 +73,6 @@ class Extensions extends ModuleBase {
       if (!class_exists($extension)) {
         throw new ExtensionInvalidException(tr('The "%1" extension does not have a main class', $extension));
       }
-//      $reflection = new ReflectionClass($className);
-//      if (!$reflection->isSubclassOf('ExtensionBase')) {
-//        throw new ExtensionInvalidException(tr('The "%1" extension is invalid', $extension));
-//      }
 
       $info = $this->getInfo($extension);
       if (!$info) {
@@ -90,7 +85,7 @@ class Extensions extends ModuleBase {
           throw new ExtensionInvalidException(tr('The "%1" extension depends on itself', $extension));
         }
         try {
-          $extensions[className($dependency)] = $this->loadExtension($dependency);
+          $extensions[$dependency] = $this->loadExtension($dependency);
         }
         catch (ExtensionNotFoundException $ex) {
           trigger_error(tr('Extension "%1" uninstalled. Missing extension dependency: "%2".', $extension, $dependency), E_USER_WARNING);
@@ -125,7 +120,6 @@ class Extensions extends ModuleBase {
   }
   
   public function getInfo($extension) {
-    $extension = className($extension);
     if (isset($this->info[$extension])) {
       return $this->info[$extension];
     }
