@@ -218,6 +218,28 @@ $(function() {
     });
   });
   
+  $(".bulk-actions :checkbox").change(function() {
+    if ($(this).attr('checked') == 'checked') {
+      $(".record :checkbox").attr('checked', 'checked').change();
+      $(".bulk-actions :checkbox").attr('checked', 'checked');
+    }
+    else {
+      $(".record :checkbox").removeAttr('checked').change();
+      $(".bulk-actions :checkbox").removeAttr('checked');
+    }
+  });
+
+  $(".record :checkbox").change(function() {
+    var number = $(".record :checkbox:checked").length;
+    if (number == 0) {
+      var text = 'Select all';
+    }
+    else {
+      var text = number + ' selected';
+    }
+    $(".bulk-actions .checkbox-text label").html(text);
+  });
+
   $(".permalink").each(function(index, Element) {
     var input = $(this);
     var titleId = input.data('title-id');

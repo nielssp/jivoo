@@ -28,7 +28,7 @@ class PostsController extends ApplicationController {
     }
 
     
-    $select = SelectQuery::create()->orderBy('date');
+    $select = SelectQuery::create()->orderBy('date')->where('status = "approved"');
 
     $this->Pagination->setLimit(10);
     
