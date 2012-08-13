@@ -79,11 +79,11 @@ class ApplicationController {
       $prefix .= '/';
     }
     $controller = $prefix . classFileName($this->name);
-    $action = classFileName($action);
+    $paction = classFileName($action);
     if ($action == 'index') {
       $this->addRoute($controller, $action);
     }
-    $path = $controller . '/' . $action;
+    $path = $controller . '/' . $paction;
     if ($required < 1) {
       $this->addRoute($path, $action);
     }

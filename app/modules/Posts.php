@@ -142,6 +142,8 @@ class Posts extends ModuleBase {
       ->autoRoute($this->controller, 'edit');
     $this->m->Backend->unlisted['posts-delete']->permission('backend.posts.delete')
       ->autoRoute($this->controller, 'delete');
+    $this->m->Backend->unlisted['posts-approve-comment']->permission('backend.posts.comments.approve')
+      ->autoRoute($this->controller, 'approveComment');
     //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
     //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
     //$this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);

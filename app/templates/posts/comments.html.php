@@ -105,19 +105,22 @@ else {
           </span>
           <div class="actions">
            <ul class="menubutton">
-<li class="first"><a href="#"><?php
+<li class="first"><?php
 switch($comment->status) {
   case 'approved':
-    echo 'Unapprove';
+    echo $Html->link('Unapprove', array());
     break;
   case 'spam':
-    echo 'Not spam';
+    echo $Html->link('Not spam', array());
     break;
   default:
-    echo 'Approve';
+    echo $Html->link('Approve',
+      array('action' => 'approveComment', 'parameters' => array($comment->id)),
+      array('class' => 'approve-action')
+    );
 }
 ?>
-</a></li>
+</li>
 <?php if ($comment->status != 'spam'): ?>
 <li><a href="#">Spam</a></li>
 <?php endif; ?>

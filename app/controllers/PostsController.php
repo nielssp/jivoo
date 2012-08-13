@@ -271,6 +271,16 @@ class PostsController extends ApplicationController {
     $this->title = tr('Comments');
     $this->render();
   }
+
+  public function approveComment($comment) {
+    if ($this->request->isPost()) {
+      $comment = Comment::find($comment);
+      if ($comment) {
+        $comment->status = 'approved';
+        $comment->save(array('validate' => FALSE));
+      }
+    }
+  }
   
   public function tags() {
     $this->render('not-implemented.html');

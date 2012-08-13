@@ -46,9 +46,6 @@ class FilteringHelper extends ApplicationHelper {
       $query->where($where);
     }
     $where = new Condition();
-    if (count($filters) > 0) {
-      $where .= '(' . implode(' OR ', $filters) . ')';
-    }
     if (count($this->searchColumns) > 0) {
       foreach ($words as $word) {
         $searchQuery = '%' . $word . '%';

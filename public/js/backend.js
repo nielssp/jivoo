@@ -208,6 +208,19 @@ $(function() {
       $("#settings").hide("blind", 200);
   });
 
+  $(".approve-action").click(function() {
+    var action = $(this).attr('href');
+    var record = $(this).parents(".record");
+    $.ajax({
+      type: 'POST',
+      url: action,
+      success: function(data) {
+        record.removeClass('yellow', 500);
+      }
+    });
+    return false;
+  });
+
   $(".delete-action").click(function() {
     $(this).parents(".record").each(function() {
       $(this).animate({opacity: '0'}, 300).slideUp(200, function() {

@@ -16,9 +16,17 @@ class HtmlHelper extends ApplicationHelper {
     return $this->endTags[$tag];
   }
 
-  public function link($label, $route = NULL) {
+  private function addAttributes($options) {
+    $html = '';
+    foreach ($options as $attribute => $value) {
+      $html .= ' ' . $attribute . '="' . $value . '"';
+    }
+    return $html;
+  }
+
+  public function link($label, $route = NULL, $attributes = array()) {
     $url = $this->m->Routes->getLink($route);
-    return '<a href="' . $url . '">' . $label . '</a>';
+    return '<a href="' . $url . '"' . $this->addAttributes($attributes) . '>' . $label . '</a>';
   }
 
   public function nestedList($list, $listTag = '<ul>', $itemTag = '<li>') {
