@@ -154,7 +154,8 @@ $(function() {
     var items = $(this).find("li:not(.first)");
     $(this).bind('mouseover mouseout', function (event) {
       if (event.type == 'mouseover') {
-        items.show().maxZIndex();
+        items.show();
+        $(this).parent().maxZIndex();
       } else {
         items.hide();
       }
@@ -209,10 +210,11 @@ $(function() {
 
   $(".delete-action").click(function() {
     $(this).parents(".record").each(function() {
-      $(this).animate({opacity: '0'}, 300).slideUp(200);
-      if ($(this).hasClass('first')) {
-        $(this).next().addClass('first');
-      }
+      $(this).animate({opacity: '0'}, 300).slideUp(200, function() {
+        if ($(this).hasClass('first')) {
+          $(this).nextAll(':visible:first').addClass('first');
+        }
+      });
     });
   });
   

@@ -24,6 +24,27 @@ $this->render('backend/header.html');
           <div class="clearl"></div>
         </div>
       </div>
+
+      <div class="section bulk-actions">
+        <div class="container">
+          <div class="checkbox">
+            <input type="checkbox" id="select-all-top" />
+          </div>
+          <div class="checkbox-text">
+            <label for="select-all-top">Select all</label>
+          </div>
+          <div class="actions">
+            <ul class="menubutton">
+              <li class="first"><a href="#">Approve</a></li>
+              <li><a href="#">Unapprove</a></li>
+              <li><a href="#">Spam</a></li>
+              <li class="last red"><a href="#" class="delete-action">Delete</a></li>
+            </ul>
+          </div>
+          <div class="clearl"></div>
+        </div>
+      </div>
+
       <div class="section light_section">
         <div class="container">
 <?php if (count($comments) < 1): ?>
@@ -130,6 +151,26 @@ switch ($comment->status) {
             <div class="clearl"></div>
           </div>
 <?php endforeach; ?>
+        </div>
+      </div>
+
+      <div class="section bulk-actions">
+        <div class="container">
+          <div class="checkbox">
+            <input type="checkbox" id="select-all-bottom" />
+          </div>
+          <div class="checkbox-text">
+            <label for="select-all-bottom">Select all</label>
+          </div>
+          <div class="actions">
+            <ul class="menubutton">
+              <li class="first"><a href="#">Approve</a></li>
+              <li><a href="#">Unapprove</a></li>
+              <li><a href="#">Spam</a></li>
+              <li class="last red"><a href="#" class="delete-action">Delete</a></li>
+            </ul>
+          </div>
+          <div class="clearl"></div>
         </div>
       </div>
 

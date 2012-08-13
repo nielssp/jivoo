@@ -32,6 +32,10 @@ class PaginationHelper extends ApplicationHelper {
     $offset = ($this->page - 1) * $this->limit;
     $select->offset($offset);
   }
+
+  public function getCount() {
+    return $this->count;
+  }
   
   public function getPage() {
     return $this->page;

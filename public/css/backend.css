@@ -70,6 +70,7 @@ strong, em {
 
 #content {
   margin-top:64px;
+  margin-bottom:64px;
   text-align:center;
 }
 
@@ -235,6 +236,23 @@ div.input {
   margin:8px 0;
 }
 
+div.bulk-actions {
+  margin:-8px 0;
+}
+
+div.bulk-actions .checkbox {
+  margin-left:-29px;
+}
+
+div.bulk-actions .actions {
+  margin-right:3px;
+}
+
+div.bulk-actions .checkbox-text {
+  float:left;
+  color:#666;
+}
+
 div.record {
   padding:8px 0;
   margin-left:-32px;
@@ -308,11 +326,13 @@ div.record .date {
   font-weight:bold;
 }
 
+div.bulk-actions .actions,
 div.record .actions {
   float:right;
   position:relative;
 }
 
+div.bulk-actions .checkbox, 
 div.record .checkbox {
   float:left;
   width:32px;
