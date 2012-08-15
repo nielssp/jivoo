@@ -58,7 +58,7 @@ class PostsController extends ApplicationController {
         $this->newComment->ip = $this->request->ip;
         if ($this->config['commentApproval'] == 'on'
             AND !$this->auth->hasPermission('backend.posts.comments.approve')) {
-          $this->newComment->status = 'unapproved';
+          $this->newComment->status = 'pending';
         }
         else {
           $this->newComment->status = 'approved';

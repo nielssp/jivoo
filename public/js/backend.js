@@ -227,6 +227,7 @@ $(function() {
         if ($(this).hasClass('first')) {
           $(this).nextAll(':visible:first').addClass('first');
         }
+        $(this).remove();
       });
     });
   });
