@@ -5,27 +5,38 @@ class BackendController extends ApplicationController {
   protected $helpers = array('Html', 'Form', 'Backend');
   
   public function dashboard() {
-    if (!$this->auth->hasPermission('backend.access')) {
-      return $this->login();
-    }
+    $this->Backend->requireAuth('backend.access');
     $this->title = tr('Dashboard');
     $this->render();
   }
   
   public function about() {
-    if (!$this->auth->hasPermission('backend.access') AND $this->m->Templates->hideIdentity()) {
-      return $this->login();
+    if ($this->m->Templates->hideIdentity()) {
+      $this->Backend->requireAuth('backend.access');
     }
     $this->title = tr('About');
     $this->render();
   }
   
   public function accessDenied() {
+    $this->Backend->requireAuth('backend.access');
     $this->title = tr('Access Denied');
     $this->render();
   }
+  
+  public function logout() {
+    if (!$this->auth->isLoggedIn()) {
+      $this->redirect(NULL);
+    }
+    $this->auth->logOut();
+    $this->goBack();
+    $this->refresh();
+  }
 
   public function login() {
+    if ($this->auth->isLoggedIn()) {
+      $this->redirect(array('action' => 'dashboard'));
+    }
     $this->title = tr('Log in');
     $this->noHeader = TRUE;
 

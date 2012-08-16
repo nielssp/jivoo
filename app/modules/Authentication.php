@@ -72,12 +72,6 @@ class Authentication extends ModuleBase {
         $this->unregistered = $unregistered;
       }
     }
-
-    if ($this->m->Actions->has('logout')) {
-      $this->logOut();
-      $this->m->Http->refreshPath();
-    }
-
   }
 
   public function isLoggedIn() {

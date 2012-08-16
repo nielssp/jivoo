@@ -32,27 +32,39 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
 
     $path = $this->m->Configuration->get('backend.path');
     $this->prefix = $path . '/';
-    $aboutPath = $path . '/about';
     
     $this->controller = new BackendController(
       $this->m->Routes, $this->m->Configuration['backend']
     );
     
+    $this->controller->addRoute($path, 'dashboard');
+    $this->controller->addRoute($this->prefix . 'login', 'login');
     $this->controller->addRoute($this->prefix . 'access-denied', 'accessDenied');
+    $this->controller->addRoute($this->prefix . 'about', 'about');
 
+    $this['peanutcms']->setup('PeanutCMS', -2);
+    $this['peanutcms']['home']->setup(tr('Home'), 0, NULL);
+    $this['peanutcms']['dashboard']->setup(tr('Dashboard'), 0, array('path' => explode('/', $path)));
+    $this['peanutcms']['dashboard']->setup(tr('About'), 8)->autoRoute($this->controller, 'about');
+    $this['peanutcms']['logout']->setup(tr('Log out'), 10)->autoRoute($this->controller, 'logout');
+    
+    $this['settings']->setup(tr('Settings'), 10);
+    $mainConfigPage = new ConfigurationPage($this, $this->m->Templates);
+    //    $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
+    $this['settings']['configuration']->setup(tr('Configuration'), 10);
+    $this['settings']['themes']->setup(tr('Themes'), 2);
+    $this['settings']['modules']->setup(tr('Modules'), 2);
+    
     if ($this->m->Authentication->hasPermission('backend.access')) {
-      $this->controller->addRoute($path, 'dashboard');
       $this->m->Templates->set('notifications', LocalNotification::all());
     }
-    else {
-      $this->controller->addRoute($path, 'login');
-    }
-    if (!$this->m->Templates->hideIdentity() OR $this->m->Authentication->hasPermission('backend.access')) {
-      $this->controller->addRoute($aboutPath, 'about');
-      $this->m->Templates->set('aboutLink', $this->m->Http->getLink(explode('/', $aboutPath)), 'backend/footer.html');
-    }
-    else {
-      $this->controller->addRoute($aboutPath, 'login');
+    if (!$this->m->Templates->hideIdentity()
+        OR $this->m->Authentication->hasPermission('backend.access')) {
+      $this->m->Templates->set(
+        'aboutLink',
+        $this->m->Routes->getLink(array('controller' => 'Backend', 'action' => 'about')),
+        'backend/footer.html'
+      );
     }
     if (!$this->m->Templates->hideVersion() OR $this->m->Authentication->hasPermission('backend.access')) {
       $this->m->Templates->set('version', PEANUT_VERSION);
@@ -62,19 +74,6 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     }
 
     $this->m->Routes->onRendering(array($this, 'createMenu'));
-    
-    $this['peanutcms']->setup('PeanutCMS', -2);
-    $this['peanutcms']['home']->setup(tr('Home'), 0, NULL);
-    $this['peanutcms']['dashboard']->setup(tr('Dashboard'), 0, array('path' => explode('/', $path)));
-    $this['peanutcms']['about']->setup(tr('About'), 8, array('path' => explode('/', $aboutPath)));
-    $this['peanutcms']['logout']->setup(tr('Log out'), 10, array('query' => array('logout' => '')));
-
-    $this['settings']->setup(tr('Settings'), 10);
-    $mainConfigPage = new ConfigurationPage($this, $this->m->Templates);
-//    $this->addPage('settings', 'configuration', tr('Configuration'), array($mainConfigPage, 'controller'), 10);
-    $this['settings']['configuration']->setup(tr('Configuration'), 10);
-    $this['settings']['themes']->setup(tr('Themes'), 2);
-    $this['settings']['modules']->setup(tr('Modules'), 2);
   }
 
   public function __get($property) {

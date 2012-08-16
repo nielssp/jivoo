@@ -10,10 +10,10 @@ class BackendHelper extends ApplicationHelper {
         break;
       }
     }
-    if ($this->auth->isLoggedIn()) {
-      if ($access) {
-        return;
-      }
+    if ($access) {
+      return;
+    }
+    if ($this->auth->hasPermission('backend.access')) {
       $this->accessDenied();
     }
     else {
