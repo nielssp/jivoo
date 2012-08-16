@@ -2,7 +2,7 @@
 
 class PostsController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering');
+  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend');
 
   public function index() {
     $select = SelectQuery::create()
@@ -106,6 +106,8 @@ class PostsController extends ApplicationController {
   }
   
   public function manage() {
+    $this->Backend->requireAuth('backend.posts.manage');
+    
     $select = SelectQuery::create()
       ->orderByDescending('date');
     
@@ -128,6 +130,8 @@ class PostsController extends ApplicationController {
   }
 
   public function add() {
+    $this->Backend->requireAuth('backend.posts.add');
+    
     $examplePost = Post::create();
     $examplePost->name = '%name%';
     $examplePost->date = time();
@@ -174,6 +178,8 @@ class PostsController extends ApplicationController {
   }
 
   public function edit($post) {
+    $this->Backend->requireAuth('backend.posts.edit');
+    
     $examplePost = Post::create();
     $examplePost->name = '%name%';
     $examplePost->date = time();
@@ -221,6 +227,8 @@ class PostsController extends ApplicationController {
   }
 
   public function delete($post) {
+    $this->Backend->requireAuth('backend.posts.delete');
+    
     $this->render('not-implemented.html');
   }
 
@@ -248,6 +256,8 @@ class PostsController extends ApplicationController {
   }
   
   public function comments() {
+    $this->Backend->requireAuth('backend.posts.comments.manage');
+
     $select = SelectQuery::create()
       ->orderByDescending('date');
     
@@ -269,10 +279,14 @@ class PostsController extends ApplicationController {
     
     $this->comments = Comment::all($select);
     $this->title = tr('Comments');
+    
+    $this->returnToThis();
     $this->render();
   }
 
   public function approveComment($comment) {
+    $this->Backend->requireAuth('backend.posts.comments.approve');
+    
     if ($this->request->isPost()) {
       $comment = Comment::find($comment);
       if ($comment) {
@@ -280,12 +294,15 @@ class PostsController extends ApplicationController {
         $comment->save(array('validate' => FALSE));
       }
     }
-    if (!$this->request->isPost()) {
-       return;
+    if (!$this->request->isAjax()) {
+      $this->goBack();
+      $this->redirect(array('action' => 'comments'));
     }
   }
   
   public function approveComments() {
+    $this->Backend->requireAuth('backend.posts.comments.approve');
+
     if ($this->request->isPost()) {
       
     }

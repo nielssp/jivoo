@@ -56,9 +56,11 @@ class Request {
       case 'form':
         return $this->getFormData($form);
       case 'ip':
-        return $_SERVER['REMOTE_ADDR'];
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
+      case 'url':
+        return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : NULL;
       case 'referer':
-        return $_SERVER['HTTP_REFERER'];
+        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL;
     }
   }
   

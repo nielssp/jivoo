@@ -26,6 +26,7 @@ class Actions extends ModuleBase {
    * @return bool
    */
   public function has($action, $getPost = 'both') {
+    trigger_error('Actions:has() is deprecated.', E_USER_DEPRECATED);
     $path = $this->request->path;
     $query = $this->request->query;
     $post = $this->request->data;
@@ -43,6 +44,7 @@ class Actions extends ModuleBase {
   }
 
   public function add($action) {
+    trigger_error('Actions:add() is deprecated.', E_USER_DEPRECATED);
     unset($_GET[$action]);
     return $this->m->Http->getLink(null, array_merge($_GET, array($action => '')));
   }

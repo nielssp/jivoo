@@ -41,7 +41,7 @@ class ApplicationController {
     foreach ($this->helpers as $name) {
       $class = $name . 'Helper';
       if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($this->m->Templates, $routes, $this);
+        $this->helperObjects[$name] = new $class($routes, $this);
       }
     }
     
@@ -120,6 +120,22 @@ class ApplicationController {
     $this->m->Routes->reroute($this->name, $caller['function'], $caller['args']);
   }
   
+  protected function returnToThis() {
+    //list( , $caller) = debug_backtrace(false);
+//    $this->session['returnTo'] = array('url' => $this->request->url);
+    $this->session['returnTo'] = array(
+      'path' => $this->request->path,
+      'query' => $this->request->query
+    );
+  }
+  
+  protected function goBack() {
+    if (!isset($this->session['returnTo'])) {
+      return FALSE;
+    }
+    $this->redirect($this->session['returnTo']);
+  }
+  
   protected function redirect($route = NULL) {
     $this->m->Routes->redirect($route);
   }
@@ -138,7 +154,7 @@ class ApplicationController {
     if (!isset($templateName)) {
       $templateName = classFileName($this->name) . '/';
       list( , $caller) = debug_backtrace(false);
-      $templateName .= $caller['function'] . '.html';
+      $templateName .= classFileName($caller['function']) . '.html';
     }
     $templateData = array_merge($this->data, $this->helperObjects);
     $template->set($templateData);
@@ -147,10 +163,6 @@ class ApplicationController {
 
   public function notFound() {
     $this->render('404.html');
-  }
-  
-  public function accessDenied() {
-    $this->render('backend/access-denied.html');
   }
   
 }

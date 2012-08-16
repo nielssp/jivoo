@@ -3,7 +3,7 @@ abstract class Notification {
 
   private $uid;
 
-  private $session;
+  private static $session;
   private $message;
 
   public function __get($property) {
@@ -22,31 +22,31 @@ abstract class Notification {
   }
 
   public function __construct($message, $uid = NULL, $readMore = NULL) {
-    $this->session = new Session(SESSION_PREFIX);
+    self::$session = new Session(SESSION_PREFIX);
     $type = get_class($this);
     $this->message = $message;
     if (!isset($uid)) {
       $uid = md5($message);
     }
     $this->uid = $uid;
-    if (!isset($this->session['notifications'])
-        OR !is_array($this->session['notifications'])) {
-      $this->session['notifications'] = array();
+    if (!isset(self::$session['notifications'])
+        OR !is_array(self::$session['notifications'])) {
+      self::$session['notifications'] = array();
     }
-    $this->session['notifications'][$uid] = $this;
+    self::$session['notifications'][$uid] = $this;
   }
 
   public function delete() {
-    unset($this->session['notifications'][$this->uid]);
+    unset(self::$session['notifications'][$this->uid]);
   }
 
   public static function all() {
     $type = get_called_class();
     $result = array();
-    if (!isset($this->session['notifications'])) {
+    if (!isset(self::$session['notifications'])) {
       return $result;
     }
-    foreach ($this->session['notifications'] as $uid => $obj) {
+    foreach (self::$session['notifications'] as $uid => $obj) {
       if (is_a($obj, $type) OR is_subclass_of($obj, $type)) {
         $result[] = $obj;
       }
@@ -57,10 +57,10 @@ abstract class Notification {
   public static function count() {
     $type = get_called_class();
     $result = 0;
-    if (!isset($this->session['notifications'])) {
+    if (!isset(self::$session['notifications'])) {
       return 0;
     }
-    foreach ($this->session['notifications'] as $uid => $obj) {
+    foreach (self::$session['notifications'] as $uid => $obj) {
       if (is_a($obj, $type) OR is_subclass_of($obj, $type)) {
         $result++;
       }

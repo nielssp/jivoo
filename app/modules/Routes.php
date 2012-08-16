@@ -18,6 +18,7 @@
 class Routes extends ModuleBase {
   
   private $controllers = array();
+  private $helpers = array();
 
   private $routes = array();
 
@@ -57,6 +58,9 @@ class Routes extends ModuleBase {
     foreach ($this->controllers as $controller) {
       $controller->addModule($args->object);
     }
+    foreach ($this->helpers as $helper) {
+      $helper->addModule($args->object);
+    }
   }
   
   public function addController(ApplicationController $controller) {
@@ -68,6 +72,18 @@ class Routes extends ModuleBase {
     $auth = $this->Core->requestModule('Authentication');
     if ($auth) {
       $controller->addModule($auth);
+    }
+  }
+  
+  public function addHelper(ApplicationHelper $helper) {
+    $name = substr(get_class($helper), 0, -6);
+    $this->helpers[$name] = $helper;
+    $helper->addModule($this);
+    $helper->addModule($this->m->Templates);
+    $helper->addModule($this->m->Editors);
+    $auth = $this->Core->requestModule('Authentication');
+    if ($auth) {
+      $helper->addModule($auth);
     }
   }
 
@@ -164,6 +180,9 @@ class Routes extends ModuleBase {
       return $this->getLink($route->getRoute());
     }
     else if (is_array($route)) {
+      if (isset($route['url'])) {
+        return $route['url'];
+      }
       $default = array(
         'path' => NULL,
         'query' => NULL,

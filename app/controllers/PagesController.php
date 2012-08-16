@@ -2,7 +2,7 @@
 
 class PagesController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Form', 'Pagination');
+  protected $helpers = array('Html', 'Form', 'Pagination', 'Backend');
 
   public function view($page) {
     $this->page = Page::find($page);
@@ -15,6 +15,8 @@ class PagesController extends ApplicationController {
   }
   
   public function add() {
+    $this->Backend->requireAuth('backend.pages.add');
+    
     $this->beforePermalink = $this->m->Routes->getLink();
 
     Page::setFieldEditor(
@@ -53,6 +55,8 @@ class PagesController extends ApplicationController {
   }
 
   public function manage() {
+    $this->Backend->requireAuth('backend.pages.manage');
+    
     $select = SelectQuery::create()
       ->orderByDescending('date');
     
@@ -75,6 +79,8 @@ class PagesController extends ApplicationController {
   }
   
   public function edit($page) {
+    $this->Backend->requireAuth('backend.pages.edit');
+    
     $this->beforePermalink = $this->m->Routes->getLink();
     $this->page = Page::find($page);
     if (!$this->page) {
@@ -115,6 +121,7 @@ class PagesController extends ApplicationController {
   }
 
   public function delete($page) {
+    $this->Backend->requireAuth('backend.pages.delete');
     $this->render('not-implemented.html');
   }
   

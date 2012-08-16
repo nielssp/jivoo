@@ -6,6 +6,7 @@ abstract class ApplicationHelper {
   protected $m = NULL;
   protected $request = NULL;
   protected $session = NULL;
+  protected $auth = NULL;
 
   protected $controller = NULL;
 
@@ -13,10 +14,10 @@ abstract class ApplicationHelper {
 
   private $helperObjects = array();
 
-  public final function __construct(Templates $templates, Routes $routes, $controller = NULL) {
+  public final function __construct(Routes $routes, $controller = NULL) {
     $this->m = new Dictionary();
-    $this->m->Templates = $templates;
-    $this->m->Routes = $routes;
+    
+    $routes->addHelper($this);
     
     $this->request = $routes->getRequest();
     $this->session = $this->request->session;
@@ -26,7 +27,7 @@ abstract class ApplicationHelper {
     foreach ($this->helpers as $name) {
       $class = $name . 'Helper';
       if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($templates, $routes, $this);
+        $this->helperObjects[$name] = new $class($routes, $this);
       }
     }
 
@@ -40,6 +41,14 @@ abstract class ApplicationHelper {
   }
 
   protected function init() {
+  }
+  
+  public function addModule($object) {
+    $class = get_class($object);
+    if ($object instanceof Authentication) {
+      $this->auth = $object;
+    }
+    $this->m->$class = $object;
   }
   
   protected function getLink($route) {

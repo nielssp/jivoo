@@ -2,7 +2,7 @@
 
 class BackendController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Form');
+  protected $helpers = array('Html', 'Form', 'Backend');
   
   public function dashboard() {
     if (!$this->auth->hasPermission('backend.access')) {
@@ -19,6 +19,11 @@ class BackendController extends ApplicationController {
     $this->title = tr('About');
     $this->render();
   }
+  
+  public function accessDenied() {
+    $this->title = tr('Access Denied');
+    $this->render();
+  }
 
   public function login() {
     $this->title = tr('Log in');
@@ -33,6 +38,7 @@ class BackendController extends ApplicationController {
       $this->login->addData($this->request->data['login']);
       if ($this->login->isValid()) {
         if ($this->auth->logIn($this->login->username, $this->login->password)) {
+          $this->goBack();
           $this->refresh();
         }
         else {

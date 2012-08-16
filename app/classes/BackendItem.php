@@ -55,13 +55,11 @@ class BackendItem implements IGroupable, ILinkable {
   }
 
   public function autoRoute(ApplicationController $controller, $action) {
-    if ($this->hasAccess()) {
-      $controller->autoRoute($action, $this->backend->prefix);
-      $this->route = array(
-          'controller' => $controller,
-          'action' => $action
-      );
-    }
+    $controller->autoRoute($action, $this->backend->prefix);
+    $this->route = array(
+        'controller' => $controller,
+        'action' => $action
+    );
   }
 
   public function getLabel() {
