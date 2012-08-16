@@ -28,6 +28,7 @@ $this->render('backend/header.html');
               <li><a href="?filter=status:approved">Approved</a></li>
               <li><a href="?filter=status:pending">Pending</a></li>
               <li class="last"><a href="?filter=status:spam">Spam</a></li>
+            </ul>
           </div>
           </form>
           <span class="newer">&nbsp;

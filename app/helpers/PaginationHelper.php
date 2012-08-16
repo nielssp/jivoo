@@ -27,11 +27,11 @@ class PaginationHelper extends ApplicationHelper {
   
   public function paginate(SelectQuery $select) {    
     $this->pages = max(ceil($this->count / $this->limit), 1);
-    $this->offset = ($this->page - 1) * $this->limit;
     if (isset($this->request->query['page'])) {
       $this->page = (int) $this->request->query['page'];
       $this->page = min($this->page, $this->pages);
       $this->page = max($this->page, 1);
+      $this->offset = ($this->page - 1) * $this->limit;
     }
     else if (isset($this->request->query['from'])
         AND isset($this->request->query['to'])) {

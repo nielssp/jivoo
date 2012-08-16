@@ -47,11 +47,35 @@ class FilteringHelper extends ApplicationHelper {
     }
     $where = new Condition();
     if (count($this->searchColumns) > 0) {
-      foreach ($words as $word) {
-        $searchQuery = '%' . $word . '%';
+      for ($i = 0; $i < count($words); $i++) {
+        $word = $words[$i];
+        if ($word[0] == '"') {
+          if ($word[strlen($word)-1] == '"') {
+            $searchQuery = '%' . substr($word, 1, -1) . '%';
+          }
+          else {
+            $searchQuery = '%' . substr($word, 1);
+            for ($i = $i + 1; $i < count($words); $i++) {
+              $word = $words[$i];
+              $searchQuery .= ' ';
+              if ($word[strlen($word)-1] == '"') {
+                $searchQuery .= substr($word, 0, -1);
+                break;
+              }
+              else {
+                $searchQuery .= ' ' . $word;
+              }
+            }
+            $searchQuery .= '%';
+            var_dump($searchQuery);
+          }
+        }
+        else {
+          $searchQuery = '%' . $word . '%';
+        }
         if ($searchQuery != '%%') {
           foreach ($this->searchColumns as $column => $bool) {
-            $where->or($column . ' LIKE ?', $searchQuery);
+            $where->and($column . ' LIKE ?', $searchQuery);
           }
         }
       }

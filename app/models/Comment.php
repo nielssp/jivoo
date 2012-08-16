@@ -77,4 +77,15 @@ class Comment extends ActiveRecord implements ILinkable {
   public function formatTime() {
     return ftime($this->date);
   }
+  
+  protected function beforeValidate() {
+    $encoder = new Encoder();
+    $this->content_text = $encoder->encode($this->content);
+  }
+  
+  protected function beforeSave($options) {
+    if (!$options['validate']) {
+      $this->beforeValidate();
+    }
+  }
 }

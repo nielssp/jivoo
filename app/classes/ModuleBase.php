@@ -6,6 +6,7 @@ abstract class ModuleBase {
   protected $m = NULL;
 
   protected $request = NULL;
+  protected $session = NULL;
 
   private $modules = array();
   
@@ -15,6 +16,7 @@ abstract class ModuleBase {
 
     if (isset($this->m->Http)) {
       $this->request = $this->m->Http->getRequest();
+      $this->session = $this->request->session;
     }
     
     $additionalParameters = func_get_args();

@@ -280,6 +280,15 @@ class PostsController extends ApplicationController {
         $comment->save(array('validate' => FALSE));
       }
     }
+    if (!$this->request->isPost()) {
+       return;
+    }
+  }
+  
+  public function approveComments() {
+    if ($this->request->isPost()) {
+      
+    }
   }
   
   public function tags() {

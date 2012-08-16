@@ -9,6 +9,7 @@ class ApplicationController {
   protected $m = NULL;
   protected $e = NULL;
   protected $request = NULL;
+  protected $session = NULL;
   
   private $actions = array();
   
@@ -29,6 +30,7 @@ class ApplicationController {
     $this->config = $config;
     
     $this->request = $routes->getRequest();
+    $this->session = $this->request->session;
     
     $this->name = substr(get_class($this), 0, -10);
     

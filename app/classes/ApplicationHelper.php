@@ -5,6 +5,7 @@ abstract class ApplicationHelper {
   
   protected $m = NULL;
   protected $request = NULL;
+  protected $session = NULL;
 
   protected $controller = NULL;
 
@@ -18,6 +19,7 @@ abstract class ApplicationHelper {
     $this->m->Routes = $routes;
     
     $this->request = $routes->getRequest();
+    $this->session = $this->request->session;
 
     $this->controller = $controller;
     

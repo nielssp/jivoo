@@ -60,6 +60,11 @@ class commentsSchema extends Schema {
     'type' => 'text',
     'null' => false,
   );
+  
+  public $content_text = array(
+      'type' => 'text',
+      'null' => false,
+  );
 
   public $date = array(
     'type' => 'integer',
@@ -83,4 +88,15 @@ class commentsSchema extends Schema {
       'unique' => false
     ),
   );
+  
+  public function addColumn_content_text(IDatabase $db) {
+    $db->addColumn('comments', 'content_text', $this->content_text);
+    $rows = $db->comments->select()->execute();
+    $encoder = new Encoder();
+    while ($row = $rows->fetchAssoc()) {
+      $contentText = $encoder->encode($row['content']);
+      $db->comments->update()->where('id = ?', $row['id'])
+        ->set('content_text', $contentText)->execute();
+    }
+  }
 }

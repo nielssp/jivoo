@@ -8,7 +8,7 @@
 
 /** PeanutCMS version string */
 if (!defined('PEANUT_VERSION')) {
-  define('PEANUT_VERSION', '0.3.3');
+  define('PEANUT_VERSION', '0.3.4');
 }
 
 if (!defined('DEBUG')) {

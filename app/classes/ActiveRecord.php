@@ -667,9 +667,12 @@ abstract class ActiveRecord implements IModel {
         return tr('Invalid value.');
     }
   }
+  
+  protected function beforeValidate() { }
 
   public function isValid() {
     $this->errors = array();
+    $this->beforeValidate();
     $validator = $this->getValidator();
     foreach ($this->data as $column => $value) {
       if (!is_scalar($value) AND !is_null($value)) {
@@ -686,11 +689,14 @@ abstract class ActiveRecord implements IModel {
         }
       }
     }
+    $this->afterValidate();
     if (count($this->errors) < 1) {
       return TRUE;
     }
     return FALSE;
   }
+  
+  protected function afterValidate() { } 
 
   public function getName() {
     return classFileName(get_class($this));
@@ -776,6 +782,8 @@ abstract class ActiveRecord implements IModel {
   public function isSaved() {
     return $this->isSaved;
   }
+  
+  protected function beforeSave($options) { } 
 
   public function save($options = array()) {
     if ($this->isDeleted) {
@@ -783,6 +791,7 @@ abstract class ActiveRecord implements IModel {
     }
     $defaultOptions = array('validate' => true);
     $options = array_merge($defaultOptions, $options);
+    $this->beforeSave($options);
     if ($options['validate'] AND !$this->isValid()) {
       return FALSE;
     }
@@ -809,6 +818,7 @@ abstract class ActiveRecord implements IModel {
     }
     $this->isNew = FALSE;
     $this->isSaved = TRUE;
+    $this->afterSave($options);
     foreach ($this->virtuals as $tasks) {
       if (isset($tasks['save'])) {
         call_user_func(array($this, $tasks['save']));
@@ -816,6 +826,8 @@ abstract class ActiveRecord implements IModel {
     }
     return true;
   }
+  
+  protected function afterSave($options) { } 
 
   public function delete() {
     $this->dataSource->delete()

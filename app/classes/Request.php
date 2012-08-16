@@ -57,6 +57,8 @@ class Request {
         return $this->getFormData($form);
       case 'ip':
         return $_SERVER['REMOTE_ADDR'];
+      case 'referer':
+        return $_SERVER['HTTP_REFERER'];
     }
   }
   

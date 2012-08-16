@@ -3,6 +3,7 @@ abstract class Notification {
 
   private $uid;
 
+  private $session;
   private $message;
 
   public function __get($property) {
@@ -21,30 +22,31 @@ abstract class Notification {
   }
 
   public function __construct($message, $uid = NULL, $readMore = NULL) {
+    $this->session = new Session(SESSION_PREFIX);
     $type = get_class($this);
     $this->message = $message;
     if (!isset($uid)) {
       $uid = md5($message);
     }
     $this->uid = $uid;
-    if (!isset($_SESSION[SESSION_PREFIX . 'notifications'])
-        OR !is_array($_SESSION[SESSION_PREFIX . 'notifications'])) {
-      $_SESSION[SESSION_PREFIX . 'notifications'] = array();
+    if (!isset($this->session['notifications'])
+        OR !is_array($this->session['notifications'])) {
+      $this->session['notifications'] = array();
     }
-    $_SESSION[SESSION_PREFIX . 'notifications'][$uid] = $this;
+    $this->session['notifications'][$uid] = $this;
   }
 
   public function delete() {
-    unset($_SESSION[SESSION_PREFIX . 'notifications'][$this->uid]);
+    unset($this->session['notifications'][$this->uid]);
   }
 
   public static function all() {
     $type = get_called_class();
     $result = array();
-    if (!isset($_SESSION[SESSION_PREFIX . 'notifications'])) {
+    if (!isset($this->session['notifications'])) {
       return $result;
     }
-    foreach ($_SESSION[SESSION_PREFIX . 'notifications'] as $uid => $obj) {
+    foreach ($this->session['notifications'] as $uid => $obj) {
       if (is_a($obj, $type) OR is_subclass_of($obj, $type)) {
         $result[] = $obj;
       }
@@ -55,10 +57,10 @@ abstract class Notification {
   public static function count() {
     $type = get_called_class();
     $result = 0;
-    if (!isset($_SESSION[SESSION_PREFIX . 'notifications'])) {
+    if (!isset($this->session['notifications'])) {
       return 0;
     }
-    foreach ($_SESSION[SESSION_PREFIX . 'notifications'] as $uid => $obj) {
+    foreach ($this->session['notifications'] as $uid => $obj) {
       if (is_a($obj, $type) OR is_subclass_of($obj, $type)) {
         $result++;
       }

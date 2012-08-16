@@ -110,14 +110,13 @@ class Authentication extends ModuleBase {
   }
 
   protected function checkSession() {
-    if (isset($_SESSION[SESSION_PREFIX . 'username'])) {
+    if (isset($this->session['username'])) {
       $sid = session_id();
       $ip = $_SERVER['REMOTE_ADDR'];
-      $username = $_SESSION[SESSION_PREFIX . 'username'];
       $user = User::first(
         SelectQuery::create()
           ->where('username = ? AND session = ? AND ip = ?')
-          ->addVar($username)
+          ->addVar($this->session['username'])
           ->addVar($sid)
           ->addVar($ip)
       );
@@ -130,8 +129,8 @@ class Authentication extends ModuleBase {
   }
 
   protected function checkCookie() {
-    if (isset($_COOKE[SESSION_PREFIX . 'login'])) {
-      list($username, $cookie) = explode(':', $_COOKIE[SESSION_PREFIX . 'login']);
+    if (isset($this->request->cookies['login'])) {
+      list($username, $cookie) = explode(':', $this->request->cookies['login']);
       $user = User::first(
           SelectQuery::create()
           ->where('username = ? AND cookie = ?')
@@ -143,8 +142,7 @@ class Authentication extends ModuleBase {
         return TRUE;
       }
       else {
-        setcookie(SESSION_PREFIX . 'login', '', time(), WEBPATH);
-        unset($_COOKIE[SESSION_PREFIX . 'login']);
+        unset($this->request->cookies['login']);
       }
     }
     return FALSE;
@@ -156,11 +154,11 @@ class Authentication extends ModuleBase {
     $ip = $_SERVER['REMOTE_ADDR'];
     $username = $this->user->username;
     $cookie = $this->user->cookie;
-    $_SESSION[SESSION_PREFIX . 'username'] = $username;
+    $this->session['username'] = $username;
     if ($remember) {
       $cookie = md5($username . rand() . time());
       $cookieval = implode(':', array($username, $cookie));
-      setcookie(SESSION_PREFIX . 'login', $cookieval, time()+60*60*24*365, WEBPATH);
+      $this->request->cookies['login'] = $cookieval;
     }
     $this->user->session = $sid;
     $this->user->cookie = $cookie;
@@ -190,14 +188,13 @@ class Authentication extends ModuleBase {
 
   public function logOut() {
     $this->sessionDefaults();
-    if (isset($_COOKIE[SESSION_PREFIX . 'login'])) {
-      setcookie(SESSION_PREFIX . 'login', '', time(), WEBPATH);
-      unset($_COOKIE[SESSION_PREFIX . 'login']);
+    if (isset($this->cookies['login'])) {
+      unset($this->request->cookies['login']);
     }
     $this->user = NULL;
   }
 
   protected function sessionDefaults() {
-    $_SESSION[SESSION_PREFIX . 'username'] = '';
+    unset($this->session['username']);
   }
 }
