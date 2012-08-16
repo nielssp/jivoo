@@ -45,7 +45,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $this['peanutcms']->setup('PeanutCMS', -2);
     $this['peanutcms']['home']->setup(tr('Home'), 0, NULL);
     $this['peanutcms']['dashboard']->setup(tr('Dashboard'), 0, array('path' => explode('/', $path)));
-    $this['peanutcms']['dashboard']->setup(tr('About'), 8)->autoRoute($this->controller, 'about');
+    $this['peanutcms']['about']->setup(tr('About'), 8)->autoRoute($this->controller, 'about');
     $this['peanutcms']['logout']->setup(tr('Log out'), 10)->autoRoute($this->controller, 'logout');
     
     $this['settings']->setup(tr('Settings'), 10);

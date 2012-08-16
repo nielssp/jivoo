@@ -109,10 +109,9 @@ class Authentication extends ModuleBase {
       $ip = $_SERVER['REMOTE_ADDR'];
       $user = User::first(
         SelectQuery::create()
-          ->where('username = ? AND session = ? AND ip = ?')
-          ->addVar($this->session['username'])
-          ->addVar($sid)
-          ->addVar($ip)
+          ->where('username = ?', $this->session['username'])
+          ->and('session = ?', $sid)
+          ->and('ip = ?', $ip)
       );
       if ($user) {
         $this->user = $user;
@@ -127,9 +126,8 @@ class Authentication extends ModuleBase {
       list($username, $cookie) = explode(':', $this->request->cookies['login']);
       $user = User::first(
           SelectQuery::create()
-          ->where('username = ? AND cookie = ?')
-          ->addVar($username)
-          ->addVar($cookie)
+          ->where('username = ?', $username)
+          ->and('cookie = ?', $cookie)
       );
       if ($user) {
         $this->user = $user;
@@ -166,8 +164,7 @@ class Authentication extends ModuleBase {
   public function logIn($username, $password, $remember = FALSE) {
     $user = User::first(
       SelectQuery::create()
-        ->where('username = ?')
-        ->addVar($username)
+        ->where('username = ?', $username)
     );
     if (!$user) {
       return FALSE;
