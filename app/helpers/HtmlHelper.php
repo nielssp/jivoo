@@ -26,7 +26,7 @@ class HtmlHelper extends ApplicationHelper {
 
   public function link($label, $route = NULL, $attributes = array()) {
     $url = $this->m->Routes->getLink($route);
-    return '<a href="' . $url . '"' . $this->addAttributes($attributes) . '>' . $label . '</a>';
+    return '<a href="' . h($url) . '"' . $this->addAttributes($attributes) . '>' . $label . '</a>';
   }
 
   public function nestedList($list, $listTag = '<ul>', $itemTag = '<li>') {

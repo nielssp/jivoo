@@ -589,7 +589,13 @@ span.description {
 
 .menubutton li a:link,
 .menubutton li a:active,
-.menubutton li a:visited {
+.menubutton li a:visited,
+.menubutton li input {
+  color:#fff;
+  text-align:left;
+  font-size:100%;
+  background-color:transparent;
+  border:0;
   padding:2px 24px 2px 8px;
   line-height:100%;
   margin:0;
@@ -598,8 +604,15 @@ span.description {
   display:block;
 }
 
+.menubutton li input {
+  width:100%;
+  cursor:pointer;
+}
+
 .menubutton li a:hover,
-.menubutton li a:focus {
+.menubutton li a:focus,
+.menubutton li input:hover,
+.menubutton li input:focus {
   background-color:#333;
   line-height:100%;
   margin:0;

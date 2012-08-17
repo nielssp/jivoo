@@ -18,7 +18,7 @@ $this->render('backend/header.html');
             of <?php echo $Pagination->getPages(); ?>
             <?php endif; ?>
           </span>
-          <form action="<?php echo $this->link(array()); ?>" method="get">
+          <form action="<?php echo h($this->link(array())); ?>" method="get">
           <span class="filter block30 margin5">
             <input type="search" class="text" name="filter" value="<?php echo h($Filtering->query); ?>" />
           </span>
@@ -49,6 +49,7 @@ $this->render('backend/header.html');
           <div class="actions">
             <ul class="menubutton">
               <li class="first"><a href="#">Approve</a></li>
+              <li><input type="submit" name="approve" value="Approve" /></li>
               <li><a href="#">Unapprove</a></li>
               <li><a href="#">Spam</a></li>
               <li class="last red"><a href="#" class="delete-action">Delete</a></li>
