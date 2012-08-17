@@ -116,7 +116,7 @@ switch($comment->status) {
     break;
   default:
     echo $Html->link('Approve',
-      array('action' => 'approveComment', 'parameters' => array($comment->id)),
+      array('action' => 'approve', 'parameters' => array($comment->id)),
       array('class' => 'approve-action')
     );
 }
