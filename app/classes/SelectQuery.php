@@ -1,5 +1,5 @@
 <?php
-class SelectQuery extends Query {
+class SelectQuery extends Query implements ICondition, ILimitable {
   protected $orderBy = array();
   protected $groupBy = NULL;
   protected $groupByCondition = NULL;
@@ -67,6 +67,10 @@ class SelectQuery extends Query {
   public function offset($offset) {
     $this->offset = (int)$offset;
     return $this;
+  }
+  
+  public function hasClauses() {
+    return $this->where->hasClauses();
   }
 
   public function where($clause) {

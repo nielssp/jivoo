@@ -22,7 +22,7 @@ class FilteringHelper extends ApplicationHelper {
     $this->filterColumns[$column] = TRUE;
   }
 
-  public function filter(SelectQuery $query) {
+  public function filter(ICondition $query) {
     if (!isset($this->request->query['filter'])) {
       return;
     }

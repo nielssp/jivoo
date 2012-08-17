@@ -25,7 +25,7 @@ class PaginationHelper extends ApplicationHelper {
     return $this;
   }
   
-  public function paginate(SelectQuery $select) {    
+  public function paginate(ILimitable $select) {    
     $this->pages = max(ceil($this->count / $this->limit), 1);
     if (isset($this->request->query['page'])) {
       $this->page = (int) $this->request->query['page'];

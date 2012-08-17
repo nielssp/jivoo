@@ -1,6 +1,6 @@
 <?php
 
-class Condition {
+class Condition implements ICondition {
   private $clauses = array();
   private $vars = array();
 

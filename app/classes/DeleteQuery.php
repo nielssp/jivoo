@@ -1,5 +1,5 @@
 <?php
-class DeleteQuery extends Query {
+class DeleteQuery extends Query implements ICondition, ILimitable {
   protected $orderBy;
   protected $descending = FALSE;
   protected $limit;
@@ -30,6 +30,10 @@ class DeleteQuery extends Query {
   public function offset($offset) {
     $this->offset = (int)$offset;
     return $this;
+  }
+  
+  public function hasClauses() {
+    return $this->where->hasClauses();
   }
 
   public function where($clause) {

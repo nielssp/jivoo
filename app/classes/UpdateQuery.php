@@ -1,5 +1,5 @@
 <?php
-class UpdateQuery extends Query {
+class UpdateQuery extends Query implements ICondition, ILimitable {
   protected $orderBy;
   protected $limit;
   protected $where;
@@ -41,6 +41,10 @@ class UpdateQuery extends Query {
   public function offset($offset) {
     $this->offset = (int)$offset;
     return $this;
+  }
+  
+  public function hasClauses() {
+    return $this->where->hasClauses();
   }
 
   public function where($clause) {
