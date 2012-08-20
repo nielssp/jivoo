@@ -14,6 +14,11 @@ class CommentsController extends ApplicationController {
 
   public function manage() {
     $this->Backend->requireAuth('backend.comments.manage');
+
+    if ($this->request->isPost()) {
+      var_dump($this->request->data);
+      exit;
+    }
   
     $select = SelectQuery::create()
     ->orderByDescending('date');
@@ -39,6 +44,28 @@ class CommentsController extends ApplicationController {
   
     $this->returnToThis();
     $this->render();
+  }
+
+  public function edit($comment = NULL) {
+    $this->Backend->requireAuth('backend.comments.approve');
+
+    if (!isset($comment) AND $this->Bulk->isBulk()) {
+      switch ($this->Bulk->action) {
+        case 'notspam':
+        case 'approve':
+          $this->Bulk->data['status'] = 'approved';
+          break;
+        case 'unapprove':
+          $data['status'] = 'pending';
+          break;
+        case 'spam':
+          $data['status'] = 'spam';
+          break;
+        case 'delete':
+          $data['status'] = 'trash';
+          break;
+      }
+    }
   }
   
   public function approve($comment = NULL) {

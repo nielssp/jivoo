@@ -86,22 +86,18 @@ class Request {
     }
   }
 
-  public function getToken($form) {
-    if ($this->checkToken($form)) {
-      return $this->session[$form . '_token'];
+  public function getToken() {
+    if (isset($this->sesssion['access_token'])) {
+      $this->session['access_token'] = sha1(mt_rand());
     }
-    $token = sha1(mt_rand());
-    $this->session[$form . '_token'] = $token;
-    return $token;
+    return $this->session['access_token'];
   }
 
-  public function checkToken($form) {
-    if (!isset($this->data[$form]) OR !isset($this->data[$form]['token'])
-      OR !isset($this->session[$form . '_token'])) {
+  public function checkToken() {
+    if (!isset($this->data['access_token']) OR !isset($this->session['access_token'])) {
       return FALSE;
     }
-    $result = $this->session[$form . '_token'] === $this->data[$form]['token'];
-    return $result;
+    return $this->session['access_token'] === $this->data['access_token'];
   }
 
   public function isGet() {

@@ -97,7 +97,7 @@ class Posts extends ModuleBase {
     $postsEncoder = new Encoder();
     $postsEncoder->setAllowAll(TRUE);
     Post::setEncoder('content', $postsEncoder);
-    
+     
     // Create controllers
     $this->posts = new PostsController(
       $this->m->Routes,
@@ -204,7 +204,7 @@ class Posts extends ModuleBase {
       $post = Post::find($id);
       if ($post !== FALSE) {
         $post->addToCache();
-        $this->controller->setRoute('view', 6, array($post->id));
+        $this->posts->setRoute('view', 6, array($post->id));
         return;
       }
     }
@@ -216,7 +216,7 @@ class Posts extends ModuleBase {
       );
       if ($post !== FALSE) {
         $post->addToCache();
-        $this->controller->setRoute('view', 6, array($post->id));
+        $this->posts->setRoute('view', 6, array($post->id));
         return;
       }
     }

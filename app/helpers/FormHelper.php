@@ -19,8 +19,8 @@ class FormHelper extends ApplicationHelper {
     $this->currentForm = $record->getName();
     return '<form action="' . $this->getLink(array('fragment' => $fragment))
       . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL
-      . '<input type="hidden" name="' . $this->fieldName('token') . '" value="'
-      . $this->request->getToken($this->currentForm) . '" />' . PHP_EOL;
+      . '<input type="hidden" name="access_token" value="'
+      . $this->request->getToken() . '" />' . PHP_EOL;
 
   }
 

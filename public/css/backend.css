@@ -200,6 +200,10 @@ p.right {
   text-align:right;
 }
 
+input {
+  font-family:"Segoe UI", Tahoma, Arial, sans-serif;
+}
+
 input.text, textarea {
   font-size: 12px;
   width:750px;

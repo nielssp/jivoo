@@ -26,15 +26,12 @@ $table1 = $db->imaginary;
 $table2 = $db->secondary;
 $select = new SelectQuery();
 $select->addColumn('%ass');
-$select->addColumn('sec.ass', 'ass2');
+$select->addColumn('sec.ass', 'ass2', 'YEAR(FROM_UNIXTIME())');
 $select->innerJoin('secondary', '%secondary.ass = ass2');
 $select->or(Condition::create('%ass = ?', 2.4)->and('ass2 IS null'));
 $select->groupBy(array('ass', 'ass2'), 'ass = 2');
 
 echo '<pre>';
-
-var_dump($table1->columnName('test'));
-var_dump($table1->columnName('test.tet'));
 
 $table1->select($select);
 

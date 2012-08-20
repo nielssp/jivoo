@@ -43,7 +43,7 @@ class PostsController extends ApplicationController {
     );
 
     if ($this->auth->hasPermission('frontend.posts.comments.add')) {
-      if ($this->request->isPost() AND $this->request->checkToken('comment')) {
+      if ($this->request->isPost() AND $this->request->checkToken()) {
         $this->newComment = Comment::create($this->request->data['comment']);
         if (!empty($this->newComment->website)
             AND preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
@@ -177,17 +177,9 @@ class PostsController extends ApplicationController {
     $this->render('posts/edit.html');
   }
 
-  public function edit($post) {
+  public function edit($post = NULL) {
     $this->Backend->requireAuth('backend.posts.edit');
-    
-    $examplePost = Post::create();
-    $examplePost->name = '%name%';
-    $examplePost->date = time();
-    $exampleLink = explode('%name%', $this->m->Routes->getLink($examplePost));
-    $examplePost = NULL;
-    $this->nameInPermalink = count($exampleLink) >= 2;
-    $this->beforePermalink = $exampleLink[0];
-    $this->afterPermalink = $exampleLink[1];
+
     $this->post = Post::find($post);
     if (!$this->post) {
       return $this->notFound();
@@ -222,6 +214,14 @@ class PostsController extends ApplicationController {
         }
       }
     }
+    $examplePost = Post::create();
+    $examplePost->name = '%name%';
+    $examplePost->date = time();
+    $exampleLink = explode('%name%', $this->m->Routes->getLink($examplePost));
+    $examplePost = NULL;
+    $this->nameInPermalink = count($exampleLink) >= 2;
+    $this->beforePermalink = $exampleLink[0];
+    $this->afterPermalink = $exampleLink[1];
     $this->title = tr('Edit post');
     $this->render('posts/edit.html');
   }

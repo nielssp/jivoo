@@ -38,6 +38,8 @@ $this->render('backend/header.html');
         </div>
       </div>
 
+      <form action="" method="post">
+
       <div class="section bulk-actions">
         <div class="container">
           <div class="checkbox">
@@ -52,6 +54,7 @@ $this->render('backend/header.html');
               <li><input type="submit" name="approve" value="Approve" /></li>
               <li><a href="#">Unapprove</a></li>
               <li><a href="#">Spam</a></li>
+              <li><input type="submit" name="notspam" value="Not spam" /></li>
               <li class="last red"><a href="#" class="delete-action">Delete</a></li>
             </ul>
           </div>
@@ -84,7 +87,7 @@ switch ($comment->status) {
 
 <div class="record<?php echo $classes; ?>">
           <div class="checkbox">
-            <input type="checkbox" name="select-records" value="<?php echo $comment->id; ?>" />
+            <input type="checkbox" name="comments[<?php echo $comment->id; ?>]" value="selected" />
          </div>
   <div class="header">
           <span class="author block20 margin5">
@@ -190,6 +193,8 @@ switch ($comment->status) {
           <div class="clearl"></div>
         </div>
       </div>
+
+    </form>
 
 <?php
 $this->render('backend/footer.html');
