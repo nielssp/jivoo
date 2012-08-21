@@ -40,14 +40,28 @@ $this->render('backend/header.html');
 
       <form action="" method="post">
         <input type="hidden" name="access_token" value="<?php echo $accessToken; ?>" />
+        <input type="hidden" name="filter" value="<?php echo $Filtering->query; ?>" />
+        <input type="hidden" name="from" value="<?php echo $Pagination->getFrom(); ?>" />
+        <input type="hidden" name="to" value="<?php echo $Pagination->getTo(); ?>" />
+        <input type="hidden" name="count" value="<?php echo $Pagination->getCount(); ?>" />
 
       <div class="section bulk-actions">
         <div class="container">
           <div class="checkbox">
-            <input type="checkbox" id="select-all-top" />
+            <input type="checkbox" value="all" name="all" id="select-all-top" />
           </div>
           <div class="checkbox-text">
-            <label for="select-all-top">Select all</label>
+            <label for="select-all-top">Select all
+            (<?php echo $Html->link(
+                tr('Select all %1 comments', $Pagination->getCount()),
+                array('query' => array(
+                  'filter' => $Filtering->query,
+                  'from' => 1,
+                  'to' => $Pagination->getCount()
+                ))
+              );
+            ?>)
+            </label>
           </div>
           <div class="actions">
             <ul class="menubutton">
@@ -104,7 +118,7 @@ else {
 
           </span>
           <span class="title block30 margin5">
-            <?php echo $Html->link(h($comment->getPost()->title), $comment); ?>
+            <?php echo $Html->link(h($comment->getPost()->title), $comment->getPost()); ?>
           </span>
           <span class="date block15 margin5">
             <?php echo $comment->formatDate(); ?>
@@ -198,7 +212,7 @@ switch ($comment->status) {
       <div class="section bulk-actions">
         <div class="container">
           <div class="checkbox">
-            <input type="checkbox" id="select-all-bottom" />
+            <input name="all" value="all" type="checkbox" id="select-all-bottom" />
           </div>
           <div class="checkbox-text">
             <label for="select-all-bottom">Select all</label>

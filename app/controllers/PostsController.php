@@ -226,7 +226,7 @@ class PostsController extends ApplicationController {
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];
     $this->title = tr('Edit post');
-    $this->render('posts/edit.html');
+    $this->render();
   }
 
   public function delete($post) {

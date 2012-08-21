@@ -63,8 +63,13 @@ class CommentsController extends ApplicationController {
       }
     }
     
+    $this->title = tr('Edit comment');
+    
     if (!$this->request->isAjax()) {
       $this->render();
+    }
+    else {
+      echo $this->comment->json();
     }
   }
 
