@@ -1,7 +1,7 @@
 <?php
 
 class TinymceController extends ApplicationController {
-  public function init() {
+  public function initJs() {
     $this->scriptUrl = $this->e->Tinymce->getScriptUrl();
     $this->styleUrl = $this->e->Tinymce->getStyleUrl();
 //     header("Cache-Control: max-age=3600");

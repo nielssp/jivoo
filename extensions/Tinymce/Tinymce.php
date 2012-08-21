@@ -17,7 +17,7 @@ class Tinymce extends ExtensionBase {
 
     $this->controller = new TinymceController($this->m->Routes, $this->config);
     $this->controller->addExtension($this);
-    $this->controller->addRoute('tinymce/init.js', 'init');
+    $this->controller->addRoute('tinymce/init.js', 'initJs');
 
     $this->controller->addTemplatePath($this->getPath('templates'));
 
