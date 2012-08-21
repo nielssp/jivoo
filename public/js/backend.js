@@ -174,9 +174,15 @@ $(function() {
   $(".approve-action").click(function() {
     var action = $(this).attr('href');
     var record = $(this).parents(".record");
+    var accessToken = $('input[name=access_token]').val();
     $.ajax({
       type: 'POST',
       url: action,
+      dataType: 'json',
+      data: {
+        access_token: accessToken,
+        comment: { status: 'approved' }
+      },
       success: function(data) {
         record.removeClass('yellow', 500);
       }

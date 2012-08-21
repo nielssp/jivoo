@@ -511,11 +511,15 @@ abstract class ActiveRecord implements IModel {
     return $new;
   }
 
-  public static function create($data = array()) {
+  public static function create($data = array(), $allowedFields = NULL) {
     $class = get_called_class();
     $new = new $class();
     $new->isNew = TRUE;
     $new->isSaved = FALSE;
+    if (is_array($allowedFields)) {
+      $allowedFields = array_flip($allowedFields);
+      $data = array_intersect_key($data, $allowedFields);
+    }
     $keys = array_unique(array_merge(array_keys($new->defaults), array_keys($data)));
     foreach ($keys as $key) {
       try {
@@ -549,9 +553,13 @@ abstract class ActiveRecord implements IModel {
     return $new;
   }
   
-  public function addData($data) {
+  public function addData($data, $allowedFields = NULl) {
     if (!is_array($data)) {
       return;
+    }
+    if (is_array($allowedFields)) {
+      $allowedFields = array_flip($allowedFields);
+      $data = array_intersect_key($data, $allowedFields);
     }
     foreach ($data as $key => $value) {
       if (isset($this->fields[$key])) {

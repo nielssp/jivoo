@@ -26,11 +26,7 @@ class Routes extends ModuleBase {
   
   private $rendered = FALSE;
 
-  private $selectedController;
-
-  private $selectedControllerPriority;
-
-  private $selectedControllerParameters = array();
+  private $selectedRoute = NULl;
 
   private $parameters;
 
@@ -151,9 +147,9 @@ class Routes extends ModuleBase {
         'path' => NULL,
         'query' => NULL,
         'fragment' => NULL,
-        'controller' => $this->selectedController[0],
-        'action' => $this->selectedController[1],
-        'parameters' => $this->selectedControllerParameters
+        'controller' => $this->selectedRoute['controller'],
+        'action' => $this->selectedRoute['action'],
+        'parameters' => $this->selectedRoute['parameters']
       );
       if (isset($route['controller'])) {
         $default['action'] = 'index';
@@ -163,9 +159,9 @@ class Routes extends ModuleBase {
       if (isset($route['path'])) {
         return $this->request->path == $route['path'];
       }
-      return $this->controllerName($this->selectedController[0]) == $route['controller']
-        AND ($route['action'] == '*' OR $this->selectedController[1] == $route['action'])
-        AND ($route['parameters'] == '*' OR $this->selectedControllerParameters == $route['parameters']);
+      return $this->controllerName($this->selectedRoute['controller']) == $route['controller']
+        AND ($route['action'] == '*' OR $this->selectedRoute['action'] == $route['action'])
+        AND ($route['parameters'] == '*' OR $this->selectedRoute['parameters'] == $route['parameters']);
     }
     else {
       return FALSE;
@@ -187,9 +183,9 @@ class Routes extends ModuleBase {
         'path' => NULL,
         'query' => NULL,
         'fragment' => NULL,
-        'controller' => $this->controllerName($this->selectedController[0]),
-        'action' => $this->selectedController[1],
-        'parameters' => $this->selectedControllerParameters
+        'controller' => $this->controllerName($this->selectedRoute['controller']),
+        'action' => $this->selectedRoute['action'],
+        'parameters' => $this->selectedRoute['parameters']
       );
       if (isset($route['controller']) AND $route['controller'] != $default['controller']) {
         $default['action'] = 'index';
@@ -230,17 +226,18 @@ class Routes extends ModuleBase {
     $this->m->Http->refreshPath($query, $fragment);
   }
 
-  public function addRoute($path, $controller, $priority = 5) {
+  public function addRoute($path, ApplicationController $controller, $action, $priority = 5) {
     if (!is_array($path)) {
       $path = explode('/', $path);
     }
     $this->routes[] = array(
       'path' => $path,
       'controller' => $controller,
+      'action' => $action,
       'priority' => 5,
       'parameters' => array()
     );
-    $this->addPath(get_class($controller[0]), $controller[1], array($this, 'insertParameters'), array($path));
+    $this->addPath(get_class($controller), $action, array($this, 'insertParameters'), array($path));
   }
 
   public function addPath($controller, $action, $pathFunction, $additional = array()) {
@@ -256,14 +253,17 @@ class Routes extends ModuleBase {
     );
   }
 
-  public function setRoute($controller, $priority = 7, $parameters = array()) {
+  public function setRoute(ApplicationController $controller, $action, $priority = 7, $parameters = array()) {
     if ($this->rendered) {
       return FALSE;
     }
-    if ($priority > $this->selectedControllerPriority) {
-      $this->selectedController = $controller;
-      $this->selectedControllerPriority = $priority;
-      $this->selectedControllerParameters = $parameters;
+    if ($priority > $this->selectedRoute['priority']) {
+      $this->selectedRoute = array(
+        'controller' => $controller,
+        'action' => $action,
+        'priority' => $priority,
+        'parameters' => $parameters
+      );
     }
   }
 
@@ -300,10 +300,8 @@ class Routes extends ModuleBase {
     uasort($routes, 'prioritySorter');
     reset($routes);
     $route = current($routes);
-    if ($route['priority'] > $this->selectedControllerPriority) {
-      $this->selectedController = $route['controller'];
-      $this->selectedControllerPriority = $route['priority'];
-      $this->selectedControllerParameters = $route['parameters'];
+    if (isset($route['controller'])) {
+      $this->setRoute($route['controller'], $route['action'], $route['priority'], $route['parameters']);
     }
   }
 
@@ -312,9 +310,17 @@ class Routes extends ModuleBase {
 
     $this->mapRoute();
     
-    if (!is_null($this->selectedController) AND is_callable($this->selectedController)) {
+    if (isset($this->selectedRoute)
+        AND $this->selectedRoute['controller'] instanceof ApplicationController
+        AND is_callable(array($this->selectedRoute['controller'], $this->selectedRoute['action']))) {
       $this->rendered = TRUE;
-      call_user_func_array($this->selectedController, $this->selectedControllerParameters);
+      call_user_func(
+        array($this->selectedRoute['controller'], 'init')
+      );
+      call_user_func_array(
+        array($this->selectedRoute['controller'], $this->selectedRoute['action']),
+        $this->selectedRoute['parameters']
+      );
     }
     else {
       /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */

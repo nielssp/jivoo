@@ -32,19 +32,22 @@ class PostsController extends ApplicationController {
 
     $this->Pagination->setLimit(10);
     
-    $this->Pagination->setCount($this->post->comments);
+    $this->Pagination->setCount($this->post->countComments(clone $select));
     $this->Pagination->paginate($select);
     
     $this->user = $this->auth->getUser();
     
     Comment::setFieldEditor(
       'content',
-      $this->m->Editors->getEditor($this->config['editor'])
+      $this->m->Editors->getEditor($this->config['comments.editor'])
     );
 
     if ($this->auth->hasPermission('frontend.posts.comments.add')) {
       if ($this->request->isPost() AND $this->request->checkToken()) {
-        $this->newComment = Comment::create($this->request->data['comment']);
+        $this->newComment = Comment::create(
+          $this->request->data['comment'],
+          array('author', 'email', 'website', 'content')
+        );
         if (!empty($this->newComment->website)
             AND preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
           $this->newComment->website = 'http://' . $this->newComment->website;

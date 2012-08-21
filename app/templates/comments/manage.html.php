@@ -39,6 +39,7 @@ $this->render('backend/header.html');
       </div>
 
       <form action="" method="post">
+        <input type="hidden" name="access_token" value="<?php echo $accessToken; ?>" />
 
       <div class="section bulk-actions">
         <div class="container">
@@ -120,7 +121,7 @@ switch($comment->status) {
     break;
   default:
     echo $Html->link('Approve',
-      array('action' => 'approve', 'parameters' => array($comment->id)),
+      array('action' => 'edit', 'parameters' => array($comment->id)),
       array('class' => 'approve-action')
     );
 }

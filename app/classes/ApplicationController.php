@@ -108,11 +108,11 @@ class ApplicationController {
   }
   
   public function addRoute($path, $action, $priority = NULL) {
-    $this->m->Routes->addRoute($path, array($this, $action), $priority);
+    $this->m->Routes->addRoute($path, $this, $action, $priority);
   }
 
   public function setRoute($action, $priority = 5, $parameters = array()) {
-    $this->m->Routes->setRoute(array($this, $action), $priority, $parameters);
+    $this->m->Routes->setRoute($this, $action, $priority, $parameters);
   }
 
   protected function reroute() {
@@ -159,6 +159,9 @@ class ApplicationController {
     $templateData = array_merge($this->data, $this->helperObjects);
     $template->set($templateData);
     $template->render($templateName);
+  }
+
+  public function init() {
   }
 
   public function notFound() {

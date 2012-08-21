@@ -38,9 +38,9 @@ else {
 </div>
 
 <?php
-if ($post->countComments() > 0):
+if ($Pagination->getCount() > 0):
 ?>
-<h1 id="comments"><?php echo trn('%1 comment', '%1 comments', $post->comments); ?></h1>
+<h1 id="comments"><?php echo trn('%1 comment', '%1 comments', $Pagination->getCount()); ?></h1>
 
 <ul class="comments">
 <?php

@@ -41,37 +41,37 @@ class CommentsController extends ApplicationController {
   
     $this->comments = Comment::all($select);
     $this->title = tr('Comments');
+
+    $this->accessToken = $this->request->getToken();
   
     $this->returnToThis();
     $this->render();
   }
 
   public function edit($comment = NULL) {
-    $this->Backend->requireAuth('backend.comments.approve');
+    $this->Backend->requireAuth('backend.comments.edit');
 
-    if (!isset($comment) AND $this->Bulk->isBulk()) {
-      switch ($this->Bulk->action) {
-        case 'notspam':
-        case 'approve':
-          $this->Bulk->data['status'] = 'approved';
-          break;
-        case 'unapprove':
-          $data['status'] = 'pending';
-          break;
-        case 'spam':
-          $data['status'] = 'spam';
-          break;
-        case 'delete':
-          $data['status'] = 'trash';
-          break;
-      }
+    if (isset($comment)) {
+      $this->comment = Comment::find($comment);
     }
+
+    if ($this->request->isPost() AND $this->request->checkToken()) {
+      $this->comment->addData($this->request->data['comment']);
+      $this->comment->save(array('validate' => FALSE));
+    }
+    if (!$this->request->isAjax()) {
+      $this->goBack();
+      $this->redirect(array('action' => 'comments'));
+    }
+  }
+
+  public function delete($comment = NULL) {
   }
   
   public function approve($comment = NULL) {
     $this->Backend->requireAuth('backend.comments.approve');
   
-    if ($this->request->isPost()) {
+    if ($this->request->isPost() AND $this->request->checkToken()) {
       if (isset($comment)) {
         $comment = Comment::find($comment);
         if ($comment) {
