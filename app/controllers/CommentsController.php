@@ -14,14 +14,9 @@ class CommentsController extends ApplicationController {
 
   public function manage() {
     $this->Backend->requireAuth('backend.comments.manage');
-
-    if ($this->request->isPost()) {
-      var_dump($this->request->data);
-      exit;
-    }
   
     $select = SelectQuery::create()
-    ->orderByDescending('date');
+      ->orderByDescending('date');
   
     $this->Filtering->addSearchColumn('content');
     $this->Filtering->addFilterColumn('status');
@@ -43,9 +38,13 @@ class CommentsController extends ApplicationController {
     $this->title = tr('Comments');
 
     $this->accessToken = $this->request->getToken();
-  
-    $this->returnToThis();
-    $this->render();
+    
+    if ($this->request->isAjax()) {
+    }
+    else {
+      $this->returnToThis();
+      $this->render();
+    }
   }
 
   public function edit($comment = NULL) {
@@ -58,31 +57,18 @@ class CommentsController extends ApplicationController {
     if ($this->request->isPost() AND $this->request->checkToken()) {
       $this->comment->addData($this->request->data['comment']);
       $this->comment->save(array('validate' => FALSE));
+      if (!$this->request->isAjax()) {
+        $this->goBack();
+        $this->redirect(array('action' => 'comments'));
+      }
     }
+    
     if (!$this->request->isAjax()) {
-      $this->goBack();
-      $this->redirect(array('action' => 'comments'));
+      $this->render();
     }
   }
 
   public function delete($comment = NULL) {
-  }
-  
-  public function approve($comment = NULL) {
-    $this->Backend->requireAuth('backend.comments.approve');
-  
-    if ($this->request->isPost() AND $this->request->checkToken()) {
-      if (isset($comment)) {
-        $comment = Comment::find($comment);
-        if ($comment) {
-          $comment->status = 'approved';
-          $comment->save(array('validate' => FALSE));
-        }
-      }
-    }
-    if (!$this->request->isAjax()) {
-      $this->goBack();
-      $this->redirect(array('action' => 'comments'));
-    }
+    $this->Backend->requireAuth('backend.comments.delete');
   }
 }

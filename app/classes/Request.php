@@ -87,7 +87,7 @@ class Request {
   }
 
   public function getToken() {
-    if (isset($this->sesssion['access_token'])) {
+    if (!isset($this->sesssion['access_token'])) {
       $this->session['access_token'] = sha1(mt_rand());
     }
     return $this->session['access_token'];

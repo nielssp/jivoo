@@ -114,10 +114,16 @@ else {
 <li class="first"><?php
 switch($comment->status) {
   case 'approved':
-    echo $Html->link('Unapprove', array());
+    echo $Html->link('Unapprove',
+      array('action' => 'edit', 'parameters' => array($comment->id)),
+      array('class' => 'unapprove-action')
+    );
     break;
   case 'spam':
-    echo $Html->link('Not spam', array());
+    echo $Html->link('Not spam',
+      array('action' => 'edit', 'parameters' => array($comment->id)),
+      array('class' => 'approve-action')
+    );
     break;
   default:
     echo $Html->link('Approve',
@@ -128,10 +134,24 @@ switch($comment->status) {
 ?>
 </li>
 <?php if ($comment->status != 'spam'): ?>
-<li><a href="#">Spam</a></li>
+<li><?php
+echo $Html->link('Spam',
+  array('action' => 'edit', 'parameters' => array($comment->id)),
+  array('class' => 'spam-action')
+); 
+?></li>
 <?php endif; ?>
-             <li><a href="#">Edit</a></li>
-             <li class="last red"><a href="#" class="delete-action">Delete</a></li>
+             <li><?php
+             echo $Html->link('Edit',
+               array('action' => 'edit', 'parameters' => array($comment->id))
+             ); 
+             ?></li>
+             <li class="last red"><?php
+             echo $Html->link('Delete',
+               array('action' => 'delete', 'parameters' => array($comment->id)),
+               array('class' => 'delete-action')
+             ); 
+             ?></li>
            </ul>
          </div>
        </div>

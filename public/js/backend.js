@@ -171,7 +171,17 @@ $(function() {
       $("#settings").hide("blind", 200);
   });
 
-  $(".approve-action").click(function() {
+  $(".approve-action, .unapprove-action, .spam-action").click(function() {
+    var status = 'pending';
+    var targetClass = 'yellow';
+    if ($(this).hasClass('approve-action')) {
+      status = 'approved';
+      targetClass = null;
+    }
+    else if ($(this).hasClass('spam-action')) {
+      status = 'spam';
+      targetClass = 'red';
+    }
     var action = $(this).attr('href');
     var record = $(this).parents(".record");
     var accessToken = $('input[name=access_token]').val();
@@ -181,10 +191,18 @@ $(function() {
       dataType: 'json',
       data: {
         access_token: accessToken,
-        comment: { status: 'approved' }
+        comment: { status: status }
       },
       success: function(data) {
-        record.removeClass('yellow', 500);
+        if (record.hasClass('yellow')) {
+          record.removeClass('yellow', 500);
+        }
+        else if (record.hasClass('red')) {
+          record.removeClass('red', 500);
+        }
+        if (targetClass != null) {
+          record.addClass(targetClass, 500);
+        }
       }
     });
     return false;
