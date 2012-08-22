@@ -843,6 +843,12 @@ abstract class ActiveRecord implements IModel {
       ->addVar($this->data[$this->primaryKey])
       ->execute();
   }
+  
+  public static function execute(Query $query) {
+    $class = get_called_class();
+    $dataSource = self::connection($class);
+    return $query->setDataSource($dataSource)->execute();
+  }
 
   public static function all(SelectQuery $selector = null) {
     $class = get_called_class();
@@ -907,7 +913,6 @@ abstract class ActiveRecord implements IModel {
     }
     return self::createFromAssoc($class, $result->fetchAssoc());
   }
-
   public static function last(SelectQuery $selector = null) {
     $class = get_called_class();
     $dataSource = self::connection($class);

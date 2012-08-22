@@ -19,17 +19,20 @@ $this->render('backend/header.html');
             <?php endif; ?>
           </span>
           <form action="<?php echo h($this->link(array())); ?>" method="get">
-          <span class="filter block30 margin5">
-            <input type="search" class="text" name="filter" value="<?php echo h($Filtering->query); ?>" />
-          </span>
-          <div class="predefined block20">
-            <ul class="menubutton">
-              <li class="first"><a href="?filter=">All</a></li>
-              <li><a href="?filter=status:approved">Approved</a></li>
-              <li><a href="?filter=status:pending">Pending</a></li>
-              <li class="last"><a href="?filter=status:spam">Spam</a></li>
-            </ul>
-          </div>
+            <input type="hidden" name="from" value="<?php echo $Pagination->getFrom(); ?>" />
+            <input type="hidden" name="to" value="<?php echo $Pagination->getTo(); ?>" />
+            <input type="hidden" name="count" value="<?php echo $Pagination->getCount(); ?>" />
+            <span class="filter block30 margin5">
+              <input type="search" class="text" name="filter" value="<?php echo h($Filtering->getQuery()); ?>" />
+            </span>
+            <div class="predefined block20">
+              <ul class="menubutton">
+                <li class="first"><a href="?filter=">All</a></li>
+                <li><a href="?filter=status:approved">Approved</a></li>
+                <li><a href="?filter=status:pending">Pending</a></li>
+                <li class="last"><a href="?filter=status:spam">Spam</a></li>
+              </ul>
+            </div>
           </form>
           <span class="newer">&nbsp;
 <?php if (!$Pagination->isFirst()) echo $Html->link('Newer &#8594;', $Pagination->prevLink()); ?>
@@ -38,12 +41,7 @@ $this->render('backend/header.html');
         </div>
       </div>
 
-      <form action="" method="post">
-        <input type="hidden" name="access_token" value="<?php echo $accessToken; ?>" />
-        <input type="hidden" name="filter" value="<?php echo $Filtering->query; ?>" />
-        <input type="hidden" name="from" value="<?php echo $Pagination->getFrom(); ?>" />
-        <input type="hidden" name="to" value="<?php echo $Pagination->getTo(); ?>" />
-        <input type="hidden" name="count" value="<?php echo $Pagination->getCount(); ?>" />
+<?php echo $Bulk->begin(); ?>
 
       <div class="section bulk-actions">
         <div class="container">
@@ -65,12 +63,23 @@ $this->render('backend/header.html');
           </div>
           <div class="actions">
             <ul class="menubutton">
-              <li class="first"><a href="#">Approve</a></li>
-              <li><input type="submit" name="approve" value="Approve" /></li>
-              <li><a href="#">Unapprove</a></li>
-              <li><a href="#">Spam</a></li>
-              <li><input type="submit" name="notspam" value="Not spam" /></li>
-              <li class="last red"><a href="#" class="delete-action">Delete</a></li>
+            <?php $first = true; ?>
+            <?php foreach ($Bulk->getActions() as $action): ?>
+<?php
+$classes = '';
+if ($first) {
+  $first = false;
+  $classes .= ' first';
+}
+if ($action['type'] == 'delete') {
+  $classes .= ' red';
+}
+?>
+              <li class="<?php echo $classes; ?>">
+                <input type="submit" name="<?php echo $action['name']; ?>"
+                  value="<?php echo $action['label']; ?>" />
+              </li>
+            <?php endforeach; ?>
             </ul>
           </div>
           <div class="clearl"></div>
@@ -116,7 +125,7 @@ foreach ($comments as $this->comment) {
         </div>
       </div>
 
-    </form>
+<?php echo $Bulk->end(); ?>
 
 <?php
 $this->render('backend/footer.html');

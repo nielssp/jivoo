@@ -17,11 +17,16 @@ class FormHelper extends ApplicationHelper {
       $this->errors = $record->getErrors();
     }
     $this->currentForm = $record->getName();
-    return '<form action="' . $this->getLink(array('fragment' => $fragment))
-      . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL
-      . '<input type="hidden" name="access_token" value="'
+    $html = '<form action="' . $this->getLink(array('fragment' => $fragment))
+      . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
+    $html .= '<input type="hidden" name="access_token" value="'
       . $this->request->getToken() . '" />' . PHP_EOL;
-
+    foreach ($this->record->getFields() as $field) {
+      if ($this->record->getFieldType($field) == 'hidden') {
+        $html .= $this->hidden($field);
+      }
+    }
+    return $html;
   }
 
   public function fieldName($field) {
@@ -111,6 +116,8 @@ class FormHelper extends ApplicationHelper {
     switch ($type) {
       case 'text':
         return $this->textarea($field, $options);
+      case 'hidden':
+        return $this->hidden($field, $options);
       default:
         if (strpos($field, 'pass') !== false) {
           return $this->password($field, $options);
@@ -147,8 +154,22 @@ class FormHelper extends ApplicationHelper {
   private function addAttributes($options) {
     $html = '';
     foreach ($options as $attribute => $value) {
-      $html .= ' ' . $attribute . '="' . $value . '"';
+      $html .= ' ' . $attribute . '="' . h($value) . '"';
     }
+    return $html;
+  }
+
+  public function hidden($field, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
+    $html = '<input type="hidden" name="' . $this->fieldName($field) .'"';
+    $html .= ' id="' . $this->fieldId($field) . '"';
+    $html .= $this->addAttributes($options);
+    if ($this->fieldValue($field) != '') {
+      $html .= ' value="' . $this->fieldValue($field) . '"';
+    }
+    $html .= ' />' . PHP_EOL;
     return $html;
   }
 

@@ -255,6 +255,9 @@ class SqlTable implements ITable {
     if (!isset($query)) {
       $query = new SelectQuery();
     }
+    else {
+      $query = clone $query;
+    }
     $result = $this->select($query->count());
     if (!$result->hasRows()) {
       return false;

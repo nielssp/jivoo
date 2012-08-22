@@ -13,6 +13,10 @@ class FilteringHelper extends ApplicationHelper {
         return $this->$property;
     }
   }
+  
+  public function getQuery() {
+    return $this->query;
+  }
 
   public function addSearchColumn($column) {
     $this->searchColumns[$column] = true;

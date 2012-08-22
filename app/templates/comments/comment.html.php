@@ -12,7 +12,7 @@ switch ($comment->status) {
         <div class="record<?php echo $classes; ?>" id="record-<?php echo $comment->id; ?>">
           <div class="checkbox">
             <input type="checkbox" id="record-<?php echo $comment->id; ?>-checkbox"
-              name="comments[<?php echo $comment->id; ?>]" value="selected" />
+              name="records[<?php echo $comment->id; ?>]" value="selected" />
           </div>
           <div class="header">
             <span class="author block20 margin5">

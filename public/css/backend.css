@@ -580,13 +580,15 @@ span.description {
   display:list-item;
 }
 
-.menubutton li.first a {
+.menubutton li.first a,
+.menubutton li.first input {
   background:transparent url(../img/menu-arrow.png) no-repeat right 4px;
   border-top-left-radius:6px;
   border-top-right-radius:6px;
 }
 
-.menubutton li.last a {
+.menubutton li:last-child a,
+.menubutton li:last-child input {
   border-bottom-left-radius:6px;
   border-bottom-right-radius:6px;
 }
@@ -627,12 +629,15 @@ span.description {
 
 .menubutton li.red a:link,
 .menubutton li.red a:active,
-.menubutton li.red a:visited {
+.menubutton li.red a:visited,
+.menubutton li.red input {
   background-color:#500;
 }
 
 .menubutton li.red a:hover,
-.menubutton li.red a:focus {
+.menubutton li.red a:focus,
+.menubutton li.red input:hover,
+.menubutton li.red input:focus  {
   background-color:#800;
 }
 
