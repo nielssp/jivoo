@@ -29,6 +29,20 @@ $(function() {
       $(this).css("z-index", zmax);
     });
   }
+  
+  $.fn.menuButton = function() {
+    this.each(function() {
+      var items = $(this).find("li:not(.first)");
+      $(this).bind('mouseover mouseout', function (event) {
+        if (event.type == 'mouseover') {
+          items.show();
+          $(this).parent().maxZIndex();
+        } else {
+          items.hide();
+        }
+      });
+    });
+  }
 
   $(".button").button();
 
@@ -113,17 +127,7 @@ $(function() {
     }
   });
   
-  $(".menubutton").each(function() {
-    var items = $(this).find("li:not(.first)");
-    $(this).bind('mouseover mouseout', function (event) {
-      if (event.type == 'mouseover') {
-        items.show();
-        $(this).parent().maxZIndex();
-      } else {
-        items.hide();
-      }
-    });
-  });
+  $(".menubutton").menuButton();
 
   $(".menu").each(function() {
     var items = $(this).find(".items");
@@ -171,7 +175,7 @@ $(function() {
       $("#settings").hide("blind", 200);
   });
 
-  $(".approve-action, .unapprove-action, .spam-action").click(function() {
+  $(".approve-action, .unapprove-action, .spam-action").live('click', function() {
     var status = 'pending';
     var targetClass = 'yellow';
     if ($(this).hasClass('approve-action')) {
@@ -188,7 +192,7 @@ $(function() {
     $.ajax({
       type: 'POST',
       url: action,
-      dataType: 'json',
+      dataType: 'html',
       data: {
         access_token: accessToken,
         comment: { status: status }
@@ -203,20 +207,37 @@ $(function() {
         if (targetClass != null) {
           record.addClass(targetClass, 500);
         }
+        record.html($(data).html());
+        record.find('.menubutton').menuButton();
       }
     });
     return false;
   });
 
-  $(".delete-action").click(function() {
+  $(".delete-action").live('click', function() {
     $(this).parents(".record").each(function() {
       $(this).animate({opacity: '0'}, 300).slideUp(200, function() {
         if ($(this).hasClass('first')) {
           $(this).nextAll(':visible:first').addClass('first');
         }
+        var list = $(this).parent();
         $(this).remove();
+        $.ajax({
+          type: 'GET',
+          url: location.href,
+          dataType: 'html',
+          data: {
+            filter: $('input[name=filter]').val(),
+            from: $('input[name=to]').val(),
+            to: $('input[name=to]').val()
+          },
+          success: function(data) {
+            list.append(data);
+          }
+        });
       });
     });
+    return false;
   });
   
   $(".bulk-actions :checkbox").change(function() {

@@ -40,6 +40,9 @@ class CommentsController extends ApplicationController {
     $this->accessToken = $this->request->getToken();
     
     if ($this->request->isAjax()) {
+      foreach ($this->comments as $this->comment) {
+        $this->render('comments/comment.html');
+      }
     }
     else {
       $this->returnToThis();
@@ -69,7 +72,7 @@ class CommentsController extends ApplicationController {
       $this->render();
     }
     else {
-      echo $this->comment->json();
+      $this->render('comments/comment.html');
     }
   }
 
