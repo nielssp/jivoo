@@ -15,9 +15,9 @@ define('TMP', '/tmp/peanutcms/');
 
 //define('PUB', '../../public/');
 
-define('DEBUG', TRUE);
+define('DEBUG', true);
 
-define('LOG_ERRORS', TRUE);
+define('LOG_ERRORS', true);
 
 require_once(APP . 'core.php');
 

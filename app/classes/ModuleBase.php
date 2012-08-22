@@ -2,16 +2,16 @@
 
 abstract class ModuleBase {
   
-  protected $Core = NULL;
-  protected $m = NULL;
+  protected $Core = null;
+  protected $m = null;
 
-  protected $request = NULL;
-  protected $session = NULL;
+  protected $request = null;
+  protected $session = null;
 
   private $modules = array();
   
   public final function __construct($modules, Core $core) {
-    $this->m = new Dictionary($modules, TRUE);
+    $this->m = new Dictionary($modules, true);
     $this->Core = $core;
 
     if (isset($this->m->Http)) {

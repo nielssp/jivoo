@@ -8,15 +8,15 @@ $this->render('backend/header.html');
       <div class="section">
         <div class="container">
           <p>
-            <?php echo $Form->label('title', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->label('title', null, array('class' => 'small')); ?>
             <?php echo $Form->field('title', array('class' => 'text bigtext')); ?>
           </p>
           <p>
-            <?php echo $Form->label('content', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->label('content', null, array('class' => 'small')); ?>
             <?php echo $Form ->field('content'); ?>
           </p>
           <p>
-            <?php echo $Form->label('tags', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->label('tags', null, array('class' => 'small')); ?>
             <?php echo $Form ->field('tags'); ?>
             <span class="description">Comma-separated list of tags</span>
           </p>

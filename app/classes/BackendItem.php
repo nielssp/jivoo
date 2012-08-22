@@ -1,12 +1,12 @@
 <?php
 class BackendItem implements IGroupable, ILinkable {
-  private $route = NULL;
+  private $route = null;
   private $label = '';
   private $group = 0;
-  private $backend = NULL;
-  private $auth = NULL;
+  private $backend = null;
+  private $auth = null;
   private $permission = 'backend.access';
-  private $access = NULL;
+  private $access = null;
 
   public function __construct(Backend $backend, Authentication $authentication) {
     $this->backend = $backend;
@@ -31,7 +31,7 @@ class BackendItem implements IGroupable, ILinkable {
     }
   }
   
-  public function setup($label, $group = NULL, $route = NULL) {
+  public function setup($label, $group = null, $route = null) {
     $this->label = $label;
     if (isset($group)) {
       $this->group = $group;
@@ -42,7 +42,7 @@ class BackendItem implements IGroupable, ILinkable {
     return $this;
   }
   
-  public function permission($key = NULL) {
+  public function permission($key = null) {
     $this->permission = $key;
     return $this;
   }

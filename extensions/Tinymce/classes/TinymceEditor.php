@@ -2,17 +2,17 @@
 
 class TinymceEditor implements IEditor {
 
-  private $format = NULL;
-  private $tinymce = NULL;
-  private $config = NULL;
-  private $initiated = FALSE;
+  private $format = null;
+  private $tinymce = null;
+  private $config = null;
+  private $initiated = false;
 
   public function __construct(Tinymce $tinymce) {
     $this->format = new HtmlFormat();
     $this->tinymce = $tinymce;
   }
 
-  public function init(Configuration $config = NULL) {
+  public function init(Configuration $config = null) {
     $this->tinymce->insertScripts();
     $this->config = $config;
     if ($this->initiated) {
@@ -20,7 +20,7 @@ class TinymceEditor implements IEditor {
       $instance = new $class($this->tinymce);
       return $instance->init();
     }
-    $this->initiated = TRUE;
+    $this->initiated = true;
     return $this;
   }
 

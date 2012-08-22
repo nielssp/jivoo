@@ -44,12 +44,12 @@ class ValidatorRule {
 
   public function get($rule) {
     if (!isset($this->rules[$rule])) {
-      return NULL;
+      return null;
     }
     return $this->rules[$rule];
   }
 
-  public function add($rule, $value = TRUE) {
+  public function add($rule, $value = true) {
     $this->rules[$rule] = $value;
     return $this;
   }

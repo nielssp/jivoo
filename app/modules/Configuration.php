@@ -14,9 +14,9 @@ class Configuration extends ModuleBase implements arrayaccess {
 
   private $file;
 
-  private $save = TRUE;
+  private $save = true;
 
-  protected function init($cfgFile = NULL, Configuration $subsetOf = NULL) {
+  protected function init($cfgFile = null, Configuration $subsetOf = null) {
     if (!isset($cfgFile)) {
       $cfgFile = p(CFG . 'config.cfg.php');
     }
@@ -39,7 +39,7 @@ class Configuration extends ModuleBase implements arrayaccess {
       new GlobalWarning(tr('%1 is not writable', $this->file), 'settings-writable');
     }
     $fileContent = file_get_contents($this->file);
-    if ($fileContent === FALSE) {
+    if ($fileContent === false) {
       Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
     }
     $file = explode('?>', $fileContent);
@@ -86,51 +86,51 @@ class Configuration extends ModuleBase implements arrayaccess {
     if (isset($key) AND isset($value) AND $key != '')
       $ref = $value;
     else
-      $ref = NULL;
+      $ref = null;
     return $this->save();
   }
 
   private function save() {
-    if ($this->save == FALSE) {
-      return FALSE;
+    if ($this->save == false) {
+      return false;
     }
     if (!is_writable($this->file))
-      return FALSE;
+      return false;
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
-      return FALSE;
+      return false;
     $data = Configuration::compileData($this->data);
     fwrite($filePointer, "<?php exit(); ?>\n" . $data);
     fclose($filePointer);
-    return TRUE;
+    return true;
   }
 
   /**
    * Delete a configuration key
    *
-   * Function is an alias for update($key, NULL)
+   * Function is an alias for update($key, null)
    *
    * @uses update()
    * @param string $key The configuration key to delete
    * @return bool True if successful, false if not
    */
   public function delete($key) {
-    return $this->set($key, NULL);
+    return $this->set($key, null);
   }
 
 
-  public function setDefault($key, $value = NULL) {
+  public function setDefault($key, $value = null) {
     if (is_array($key)) {
       $array = $key;    
-      $this->save = FALSE;
-      $changed = FALSE;
+      $this->save = false;
+      $changed = false;
       foreach ($array as $key => $value) {
         if (!$this->exists($key)) {
           $this->set($key, $value);
-          $changed = TRUE;
+          $changed = true;
         }
       }
-      $this->save = TRUE;
+      $this->save = true;
       if ($changed) {
         $this->save();
       }
@@ -149,10 +149,10 @@ class Configuration extends ModuleBase implements arrayaccess {
    * @return mixed The content of the configuration key or false if key
    * doesn't exist
    */
-  public function get($key = '', $arrayOnly = FALSE) {
+  public function get($key = '', $arrayOnly = false) {
     $ref = &$this->getDataReference($key);
     if (!isset($ref)) {
-      return $arrayOnly ? array() : FALSE;
+      return $arrayOnly ? array() : false;
     }
     if ($arrayOnly && !is_array($ref)) {
       return array();
@@ -269,7 +269,7 @@ class Configuration extends ModuleBase implements arrayaccess {
   
   public function offsetGet($key) {
     $value = $this->get($key);
-    if (is_array($value) OR $value === FALSE) {
+    if (is_array($value) OR $value === false) {
       return $this->getSubset($key);
     }
     return $value;

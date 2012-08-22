@@ -8,11 +8,11 @@ interface IDataSource {
    * @parameter InsertQuery $query The insert query
    * @return int The last insert id
    */
-  public function insert(InsertQuery $query = NULL);
-  public function select(SelectQuery $query = NULL);
-  public function update(UpdateQuery $query = NULL);
-  public function delete(DeleteQuery $query = NULL);
-  public function count(SelectQuery $query = NULL);
+  public function insert(InsertQuery $query = null);
+  public function select(SelectQuery $query = null);
+  public function update(UpdateQuery $query = null);
+  public function delete(DeleteQuery $query = null);
+  public function count(SelectQuery $query = null);
   public function getColumns();
   public function getPrimaryKey();
 }
@@ -35,7 +35,7 @@ interface IMigration {
 }
 
 class SqlTable implements Itable {
-  private $owner = NULL;
+  private $owner = null;
   private $name = '';
 
   public function __construct(SqlDatabase $database, $table) {
@@ -47,7 +47,7 @@ class SqlTable implements Itable {
     return $this->owner;
   }
 
-  public function insert(InsertQuery $query = NULL) {
+  public function insert(InsertQuery $query = null) {
     if (!isset($query)) {
       return InsertQuery::create()->setDataSource($this);
     }
@@ -56,14 +56,14 @@ class SqlTable implements Itable {
     $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
-    while (($value = current($values)) !== FALSE) {
+    while (($value = current($values)) !== false) {
       if (isset($value)) {
         $sqlString .= $this->owner->escapeQuery('?', $value);
       }
       else {
-        $sqlString .= 'NULL';
+        $sqlString .= 'null';
       }
-      if (next($values) !== FALSE) {
+      if (next($values) !== false) {
         $sqlString .= ', ';
       }
     }
@@ -71,7 +71,7 @@ class SqlTable implements Itable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function select(SelectQuery $query = NULL) {
+  public function select(SelectQuery $query = null) {
     if (!isset($query)) {
       return SelectQuery::create()->setDataSource($this);
     }
@@ -102,7 +102,7 @@ class SqlTable implements Itable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function update(UpdateQuery $query = NULL) {
+  public function update(UpdateQuery $query = null) {
     if (!isset($query)) {
       return UpdateQuery::create()->setDataSource($this);
     }
@@ -111,9 +111,9 @@ class SqlTable implements Itable {
     if (!empty($sets)) {
       $sqlString .= ' SET';
       reset($sets);
-      while (($value = current($sets)) !== FALSE) {
+      while (($value = current($sets)) !== false) {
         $sqlString .= ' ' . $this->owner->escapeQuery(key($sets) . ' = ?', array($value));
-        if (next($sets) !== FALSE) {
+        if (next($sets) !== false) {
           $sqlString .= ',';
         }
       }
@@ -131,7 +131,7 @@ class SqlTable implements Itable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function delete(DeleteQuery $query = NULL) {
+  public function delete(DeleteQuery $query = null) {
     if (!isset($query)) {
       return DelteQuery::create()->setDataSource($this);
     }
@@ -153,13 +153,13 @@ class SqlTable implements Itable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function count(SelectQuery $query = NULL) {
+  public function count(SelectQuery $query = null) {
     if (!isset($query)) {
       $query = new SelectQuery();
     }
     $result = $this->select($query->count());
     if (!$result->hasRows()) {
-      return FALSE;
+      return false;
     }
     $row = $result->fetchRow();
     return $row[0];

@@ -1,8 +1,8 @@
 <?php
 class SqlTable implements ITable {
-  private $owner = NULL;
+  private $owner = null;
   private $name = '';
-  private $schema = NULL;
+  private $schema = null;
 
   public function __construct(SqlDatabase $database, $table) {
     $this->owner = $database;
@@ -20,7 +20,7 @@ class SqlTable implements ITable {
     return $this->schema;
   }
 
-  public function setSchema(Schema $schema = NULL) {
+  public function setSchema(Schema $schema = null) {
     $this->schema = $schema;
   }
 
@@ -28,7 +28,7 @@ class SqlTable implements ITable {
     return $this->owner;
   }
 
-  public function insert(InsertQuery $query = NULL) {
+  public function insert(InsertQuery $query = null) {
     if (!isset($query)) {
       return InsertQuery::create()->setDataSource($this);
     }
@@ -37,14 +37,14 @@ class SqlTable implements ITable {
     $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
-    while (($value = current($values)) !== FALSE) {
+    while (($value = current($values)) !== false) {
       if (isset($value)) {
         $sqlString .= $this->owner->escapeQuery('?', $value);
       }
       else {
-        $sqlString .= 'NULL';
+        $sqlString .= 'null';
       }
-      if (next($values) !== FALSE) {
+      if (next($values) !== false) {
         $sqlString .= ', ';
       }
     }
@@ -85,12 +85,12 @@ class SqlTable implements ITable {
     return $matches[1] . $this->columnName($matches[2]);
   }
 
-  public function columnName($column, $table = NULL) {
+  public function columnName($column, $table = null) {
     if (!isset($table)) {
       $table = $this->name;
     }
     $dot = strpos($column, '.');
-    if ($dot === FALSE ) {
+    if ($dot === false ) {
       return $this->owner->tableName($table) . '.' . $column;
     }
     else {
@@ -113,7 +113,7 @@ class SqlTable implements ITable {
     }
   }
 
-  public function select(SelectQuery $query = NULL) {
+  public function select(SelectQuery $query = null) {
     if (!isset($query)) {
       return SelectQuery::create()->setDataSource($this);
     }
@@ -191,7 +191,7 @@ class SqlTable implements ITable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function update(UpdateQuery $query = NULL) {
+  public function update(UpdateQuery $query = null) {
     if (!isset($query)) {
       return UpdateQuery::create()->setDataSource($this);
     }
@@ -200,14 +200,14 @@ class SqlTable implements ITable {
     if (!empty($sets)) {
       $sqlString .= ' SET';
       reset($sets);
-      while (($value = current($sets)) !== FALSE) {
+      while (($value = current($sets)) !== false) {
         if (isset($value)) {
           $sqlString .= ' ' . $this->owner->escapeQuery(key($sets) . ' = ?', array($value));
         }
         else {
           $sqlString .= ' ' . key($sets);
         }
-        if (next($sets) !== FALSE) {
+        if (next($sets) !== false) {
           $sqlString .= ',';
         }
       }
@@ -229,7 +229,7 @@ class SqlTable implements ITable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function delete(DeleteQuery $query = NULL) {
+  public function delete(DeleteQuery $query = null) {
     if (!isset($query)) {
       return DeleteQuery::create()->setDataSource($this);
     }
@@ -251,13 +251,13 @@ class SqlTable implements ITable {
     return $this->owner->rawQuery($sqlString);
   }
 
-  public function count(SelectQuery $query = NULL) {
+  public function count(SelectQuery $query = null) {
     if (!isset($query)) {
       $query = new SelectQuery();
     }
     $result = $this->select($query->count());
     if (!$result->hasRows()) {
-      return FALSE;
+      return false;
     }
     $row = $result->fetchRow();
     return $row[0];

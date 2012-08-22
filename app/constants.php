@@ -12,15 +12,15 @@ if (!defined('PEANUT_VERSION')) {
 }
 
 if (!defined('DEBUG')) {
-  define('DEBUG', FALSE);
+  define('DEBUG', false);
 }
 
 if (!defined('LOG_ERRORS')) {
-  define('LOG_ERRORS', FALSE);
+  define('LOG_ERRORS', false);
 }
 
 if (!defined('CACHING')) {
-  define('CACHING', TRUE);
+  define('CACHING', true);
 }
 
 if (!defined('HIDE_LEVEL')) {
@@ -58,7 +58,7 @@ if (!defined('WEBPATH')) {
 }
 
 if (!defined('ALLOW_REDIRECT')) {
-  define('ALLOW_REDIRECT', TRUE);
+  define('ALLOW_REDIRECT', true);
 }
 
 if (!defined('META_MAX_LINES')) {

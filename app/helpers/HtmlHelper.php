@@ -24,7 +24,7 @@ class HtmlHelper extends ApplicationHelper {
     return $html;
   }
 
-  public function link($label, $route = NULL, $attributes = array()) {
+  public function link($label, $route = null, $attributes = array()) {
     $url = $this->m->Routes->getLink($route);
     return '<a href="' . h($url) . '"' . $this->addAttributes($attributes) . '>' . $label . '</a>';
   }
@@ -37,14 +37,14 @@ class HtmlHelper extends ApplicationHelper {
       $listEndTag = $this->getEndTag($listTag);
       $itemEndTag = $this->getEndTag($itemTag);
       $output = $listTag . PHP_EOL;
-      $li = FALSE;
+      $li = false;
       foreach ($list as $item) {
         if ($li AND is_string($item)) {
           $output .= $itemEndTag . PHP_EOL;
         }
         if (is_string($item) OR !$li) {
           $output .= $itemTag;
-          $li = TRUE;
+          $li = true;
         }
         $output .= $this->nestedList($item, $listTag, $itemTag);
       }

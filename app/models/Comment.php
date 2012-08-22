@@ -21,18 +21,18 @@ class Comment extends ActiveRecord implements ILinkable {
   
   protected $validate = array(
     'content' => array(
-      'presence' => TRUE,
+      'presence' => true,
       'maxLength' => 1024,
     ),
     'author' => array(
-      'presence' => TRUE
+      'presence' => true
     ),
     'email' => array(
-      'presence' => TRUE,
-      'email' => TRUE
+      'presence' => true,
+      'email' => true
     ),
     'website' => array(
-      'url' => TRUE,
+      'url' => true,
     ),
   );
   
@@ -52,15 +52,15 @@ class Comment extends ActiveRecord implements ILinkable {
     'website' => ''
   );
   
-  public static function setAnonymousCommenting($value = FALSE) {
+  public static function setAnonymousCommenting($value = false) {
     $validator = Comment::getModelValidator();
     if ($value) {
       unset($validator->author->presence);
       unset($validator->email->presence);
     }
     else {
-      $validator->author->presence = TRUE;
-      $validator->email->presence = TRUE;
+      $validator->author->presence = true;
+      $validator->email->presence = true;
     }
   } 
 

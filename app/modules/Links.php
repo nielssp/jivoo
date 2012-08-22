@@ -19,7 +19,7 @@
 class Links extends ModuleBase {
 
   protected function init() {
-    $newInstall = FALSE;
+    $newInstall = false;
 
     $linksSchema = new linksSchema();
 

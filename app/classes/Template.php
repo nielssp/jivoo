@@ -2,14 +2,14 @@
 
 class Template extends ApplicationTemplate {
 
-  public function render($_templateName, $_return = FALSE) {
+  public function render($_templateName, $_return = false) {
     extract($this->data, EXTR_SKIP);
     extract($this->getTemplateData($_templateName), EXTR_SKIP);
     $_templateFile = $this->getTemplate($_templateName, $_return);
     if ($_return) {
       ob_start();
     }
-    if ($_templateFile !== FALSE) {
+    if ($_templateFile !== false) {
       require($_templateFile);
     }
     else {

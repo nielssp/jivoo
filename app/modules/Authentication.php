@@ -17,12 +17,12 @@
  */
 class Authentication extends ModuleBase {
 
-  private $user = NULL;
+  private $user = null;
   
-  private $unregistered = NULL;
+  private $unregistered = null;
 
   protected function init() {
-    $newInstall = FALSE;
+    $newInstall = false;
 
     $usersSchema = new usersSchema();
     $groupsSchema = new groupsSchema();
@@ -44,19 +44,19 @@ class Authentication extends ModuleBase {
       $group->name = 'root';
       $group->title = tr('Admin');
       $group->save();
-      $group->setPermission('*', TRUE);
+      $group->setPermission('*', true);
 
       $group = Group::create();
       $group->name = 'users';
       $group->title = tr('User');
       $group->save();
-      $group->setPermission('frontend', TRUE);
+      $group->setPermission('frontend', true);
 
       $group = Group::create();
       $group->name = 'guests';
       $group->title = tr('Guest');
       $group->save();
-      $group->setPermission('frontend', TRUE);
+      $group->setPermission('frontend', true);
     }
 
     $this->m->Configuration->setDefault(array(
@@ -76,15 +76,15 @@ class Authentication extends ModuleBase {
 
   public function isLoggedIn() {
     if (isset($this->user)) {
-      return TRUE;
+      return true;
     }
     if ($this->checkSession()) {
-      return TRUE;
+      return true;
     }
     if ($this->checkCookie()) {
-      return TRUE;
+      return true;
     }
-    return FALSE;
+    return false;
   }
 
   public function hasPermission($permission) {
@@ -95,12 +95,12 @@ class Authentication extends ModuleBase {
       return $this->unregistered->hasPermission($permission);
     }
     else {
-      return FALSE;
+      return false;
     }
   }
   
   public function getUser() {
-    return $this->isLoggedIn() ? $this->user : FALSE;
+    return $this->isLoggedIn() ? $this->user : false;
   }
 
   protected function checkSession() {
@@ -115,10 +115,10 @@ class Authentication extends ModuleBase {
       );
       if ($user) {
         $this->user = $user;
-        return TRUE;
+        return true;
       }
     }
-    return FALSE;
+    return false;
   }
 
   protected function checkCookie() {
@@ -131,16 +131,16 @@ class Authentication extends ModuleBase {
       );
       if ($user) {
         $this->user = $user;
-        return TRUE;
+        return true;
       }
       else {
         unset($this->request->cookies['login']);
       }
     }
-    return FALSE;
+    return false;
   }
 
-  protected function setSession($remember = FALSE) {
+  protected function setSession($remember = false) {
     session_regenerate_id();
     $sid = session_id();
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -155,26 +155,26 @@ class Authentication extends ModuleBase {
     $this->user->session = $sid;
     $this->user->cookie = $cookie;
     $this->user->ip = $ip;
-    if (!$this->user->save(array('validate' => FALSE))) {
+    if (!$this->user->save(array('validate' => false))) {
       throw new Exception(tr('Could not save user session data.'));
     }
 
   }
 
-  public function logIn($username, $password, $remember = FALSE) {
+  public function logIn($username, $password, $remember = false) {
     $user = User::first(
       SelectQuery::create()
         ->where('username = ?', $username)
     );
     if (!$user) {
-      return FALSE;
+      return false;
     }
     if (!$this->m->Shadow->compare($password, $user->password)) {
-      return FALSE;
+      return false;
     }
     $this->user = $user;
     $this->setSession($remember);
-    return TRUE;
+    return true;
   }
 
   public function logOut() {
@@ -182,7 +182,7 @@ class Authentication extends ModuleBase {
     if (isset($this->cookies['login'])) {
       unset($this->request->cookies['login']);
     }
-    $this->user = NULL;
+    $this->user = null;
   }
 
   protected function sessionDefaults() {

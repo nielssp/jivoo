@@ -7,7 +7,7 @@ class Link extends ActiveRecord implements ILinkable {
       case 'remote':
         return $this->path;
       case 'home':
-        return NULL;
+        return null;
       default:
         $path = explode('/', $this->path);
         if ($this->type == 'action') {
@@ -23,7 +23,7 @@ class Link extends ActiveRecord implements ILinkable {
     }
   }
 
-  public function setRoute($route = NULL) {
+  public function setRoute($route = null) {
     if (!isset($route)) {
       $this->path = '';
       $this->type = 'home';

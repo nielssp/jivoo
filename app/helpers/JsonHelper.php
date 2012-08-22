@@ -1,7 +1,7 @@
 <?php
 
 class JsonHelper extends ApplicationHelper {
-  public function respond($response = NULL) {
+  public function respond($response = null) {
     $template = new Template($this->m->Templates, $this->m->Routes);
     if (isset($response)) {
       $template->json = json_encode($response);

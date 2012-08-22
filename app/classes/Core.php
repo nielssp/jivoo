@@ -6,14 +6,14 @@ class Core {
   private $blacklist = array();
 
   /* EVENTS BEGIN */
-  private $events = NULL;
+  private $events = null;
 
   public function onModuleLoaded($h) { $this->events->attach($h); }
   public function onModulesLoaded($h) { $this->events->attach($h); }
   public function onRender($h) { $this->events->attach($h); }
   /* EVENTS END */
 
-  public function __construct($blacklist = NULL) {
+  public function __construct($blacklist = null) {
     $this->events = new Events($this);
 
     if (is_array($blacklist)) {
@@ -24,7 +24,7 @@ class Core {
       foreach ($blacklistFile as $line) {
         $line = trim($line);
         if ($line[0] != '#') {
-          $this->blacklist[$this] = TRUE;
+          $this->blacklist[$this] = true;
         }
       }
     }
@@ -48,16 +48,16 @@ class Core {
       return $this->$module;
     }
     catch (ModuleNotLoadedException $e) {
-      return FALSE;
+      return false;
     }
   }
   
   public function getVersion($module) {
     $info = self::getModuleInfo($module);
-    if ($info !== FALSE) {
+    if ($info !== false) {
       return $info['version'];
     }
-    return FALSE;
+    return false;
   }
 
   public static function getModuleInfo($module) {
@@ -66,7 +66,7 @@ class Core {
     }
     $meta = readFileMeta(p(MODULES . $module . '.php'));
     if (!$meta OR $meta['type'] != 'module') {
-      return FALSE;
+      return false;
     }
     if (!isset($meta['name'])) {
       $meta['name'] = $module;

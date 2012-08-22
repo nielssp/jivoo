@@ -5,8 +5,8 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
   private $label = '';
   private $group = 0;
   private $position = 0;
-  private $backend = NULL;
-  private $auth = NULL;
+  private $backend = null;
+  private $auth = null;
 
   public function __construct(Backend $backend, Authentication $authentication) {
     $this->backend = $backend;
@@ -29,7 +29,7 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
     }
   }
   
-  public function setup($label, $group = NULL) {
+  public function setup($label, $group = null) {
     $this->label = $label;
     if (isset($group)) {
       $this->group = $group;

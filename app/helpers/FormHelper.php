@@ -2,14 +2,14 @@
 
 class FormHelper extends ApplicationHelper {
 
-  private $record = NULL;
+  private $record = null;
   private $currentForm = '';
-  private $post = FALSE;
+  private $post = false;
   private $errors = array();
   
-  public function begin(IModel $record = NULL, $fragment = NULL) {
+  public function begin(IModel $record = null, $fragment = null) {
     if (!isset($record)) {
-      return FALSE;
+      return false;
     }
     $this->post = $this->request->isPost();
     $this->record = $record;
@@ -31,7 +31,7 @@ class FormHelper extends ApplicationHelper {
     return $this->currentForm . '[' . $field . ']';
   }
 
-  public function fieldId($field, $value = NULL) {
+  public function fieldId($field, $value = null) {
     if (!isset($this->record)) {
       return;
     }
@@ -42,7 +42,7 @@ class FormHelper extends ApplicationHelper {
     return $id;
   }
   
-  public function isRequired($field, $output = NULL) {
+  public function isRequired($field, $output = null) {
     if (!isset($this->record)) {
       return;
     }
@@ -55,12 +55,12 @@ class FormHelper extends ApplicationHelper {
     }
   }
   
-  public function isValid($field = NULL) {
+  public function isValid($field = null) {
     if (!isset($this->record)) {
       return;
     }
     if (!$this->post) {
-      return TRUE;
+      return true;
     }
     if (isset($field)) {
       return !isset($this->errors[$field]);
@@ -84,7 +84,7 @@ class FormHelper extends ApplicationHelper {
     return isset($this->errors[$field]) ? $this->errors[$field] : '';
   }
 
-  public function label($field, $label = NULL,  $options = array()) {
+  public function label($field, $label = null,  $options = array()) {
     if (!isset($this->record)) {
       return;
     }
@@ -112,14 +112,14 @@ class FormHelper extends ApplicationHelper {
       case 'text':
         return $this->textarea($field, $options);
       default:
-        if (strpos($field, 'pass') !== FALSE) {
+        if (strpos($field, 'pass') !== false) {
           return $this->password($field, $options);
         }
         return $this->text($field, $options);
     }
   }
 
-  public function fieldValue($field, $encode = TRUE) {
+  public function fieldValue($field, $encode = true) {
     if (!isset($this->record)) {
       return;
     }
@@ -229,7 +229,7 @@ class FormHelper extends ApplicationHelper {
   }
     
   public function end() {
-    $this->record = NULL;
+    $this->record = null;
     $this->errors = array();
     return '</form>';
   }

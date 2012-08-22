@@ -27,7 +27,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase {
 
     $value = $this->configuration->get('test.testValue');
 
-    $this->assertEquals(FALSE, $value);
+    $this->assertEquals(false, $value);
 
   }
 }

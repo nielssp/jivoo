@@ -38,7 +38,7 @@ class Posts extends ModuleBase {
     ));
     
     // Set up models
-    $newInstall = FALSE;
+    $newInstall = false;
 
     $postsSchema = new postsSchema();
     $tagsSchema = new tagsSchema();
@@ -60,7 +60,7 @@ class Posts extends ModuleBase {
     Comment::connect($this->m->Database->comments);
     
     if ($this->m->Configuration['posts.anonymousCommenting'] == 'on') {
-      Comment::setAnonymousCommenting(TRUE);
+      Comment::setAnonymousCommenting(true);
     }
 
     if ($newInstall) {
@@ -87,15 +87,15 @@ class Posts extends ModuleBase {
     $commentEncoder->allowTag('br');
     $commentEncoder->allowTag('a');
     $commentEncoder->allowAttribute('a', 'href');
-    $commentEncoder->validateAttribute('a', 'href', 'url', TRUE);
+    $commentEncoder->validateAttribute('a', 'href', 'url', true);
     $commentEncoder->appendAttributes('a', 'rel="nofollow"');
     $commentEncoder->allowTag('img');
     $commentEncoder->allowAttribute('img', 'src');
-    $commentEncoder->validateAttribute('img', 'src', 'url', TRUE);
+    $commentEncoder->validateAttribute('img', 'src', 'url', true);
     Comment::setEncoder('content', $commentEncoder);
     
     $postsEncoder = new Encoder();
-    $postsEncoder->setAllowAll(TRUE);
+    $postsEncoder->setAllowAll(true);
     Post::setEncoder('content', $postsEncoder);
      
     // Create controllers
@@ -204,7 +204,7 @@ class Posts extends ModuleBase {
     }
     if ($id > 0) {
       $post = Post::find($id);
-      if ($post !== FALSE) {
+      if ($post !== false) {
         $post->addToCache();
         $this->posts->setRoute('view', 6, array($post->id));
         return;
@@ -216,7 +216,7 @@ class Posts extends ModuleBase {
           ->where('name = ?')
           ->addVar($name)
       );
-      if ($post !== FALSE) {
+      if ($post !== false) {
         $post->addToCache();
         $this->posts->setRoute('view', 6, array($post->id));
         return;
@@ -254,6 +254,6 @@ class Posts extends ModuleBase {
       }
       return $path;
     }
-    return FALSE;
+    return false;
   }
 }

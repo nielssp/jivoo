@@ -2,13 +2,13 @@
 class Schema {
   private $_schema = array();
   private $_columns = array();
-  private $_primaryKey = NULL;
-  private $_readOnly = FALSE;
+  private $_primaryKey = null;
+  private $_readOnly = false;
   private $_name = 'undefined';
 
   public $indexes = array();
 
-  public function __construct($name = NULL) {
+  public function __construct($name = null) {
     $className = get_class($this);
     if ($className != __CLASS__) {
       if (!isset($name)) {
@@ -21,7 +21,7 @@ class Schema {
           $this->_columns[] = $key;
         }
       }
-      $this->_readOnly = TRUE;
+      $this->_readOnly = true;
     }
     if (isset($name)) {
       $this->_name = $name;
@@ -52,7 +52,7 @@ class Schema {
     }
   }
 
-  public function addIndex($index, $columns, $unique = FALSE) {
+  public function addIndex($index, $columns, $unique = false) {
     if (!$this->_readOnly) {
       if (!is_array($columns)) {
         $columns = array($columns);
@@ -67,7 +67,7 @@ class Schema {
         $this->indexes[$index] = array();
         $this->indexes[$index]['columns'] = $columns;
         if ($index == 'PRIMARY') {
-          $unique = TRUE;
+          $unique = true;
         }
         $this->indexes[$index]['unique'] = $unique;
       }
@@ -104,7 +104,7 @@ class Schema {
     foreach ($this->_schema as $column => $info) {
       $source .= '  public $' . $column . ' = array(' . PHP_EOL;
       foreach ($info as $key => $value) {
-        $source .= "    '" . $key . "' => " . var_export($value, TRUE) . ',' . PHP_EOL;
+        $source .= "    '" . $key . "' => " . var_export($value, true) . ',' . PHP_EOL;
       }
       $source .= '  );' . PHP_EOL . PHP_EOL;
     }
@@ -116,7 +116,7 @@ class Schema {
       $source .= implode("', '", $info['columns']);
       $source .= "')," . PHP_EOL;
       $source .= "      'unique' => ";
-      $source .= var_export($info['unique'], TRUE);
+      $source .= var_export($info['unique'], true);
       $source .= PHP_EOL;
       $source .= '    ),' . PHP_EOL;
     }

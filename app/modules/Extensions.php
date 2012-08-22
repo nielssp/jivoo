@@ -55,7 +55,7 @@ class Extensions extends ModuleBase {
   
   public function request($extension) {
     if (!isset($this->extensions[$extension])) {
-      return FALSE;
+      return false;
     }
     return $this->extensions[$extension];
   }
@@ -65,7 +65,7 @@ class Extensions extends ModuleBase {
       if (isset($this->loading[$extension])) {
         throw new ExtensionInvalidException(tr('Circular dependency detected when attempting to load the "%1" extension.', $extension));
       }
-      $this->loading[$extension] = TRUE;
+      $this->loading[$extension] = true;
       if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.php'))) {
         throw new ExtensionNotFoundException(tr('The "%1" extension could not be found', $extension));
       }
@@ -90,20 +90,20 @@ class Extensions extends ModuleBase {
         catch (ExtensionNotFoundException $ex) {
           trigger_error(tr('Extension "%1" uninstalled. Missing extension dependency: "%2".', $extension, $dependency), E_USER_WARNING);
           $this->uninstall($extension);
-          return FALSE;
+          return false;
         }
       }
       foreach ($info['dependencies']['modules'] as $dependency => $versionInfo) {
         $module = $this->Core->requestModule($dependency);
         /** @todo Do this when installing.. */
         // $version = $this->core->getVersion($dependency);
-        if ($module !== FALSE) { // AND compareDependencyVersions($version, $versionInfo)) {
+        if ($module !== false) { // AND compareDependencyVersions($version, $versionInfo)) {
           $modules[$dependency] = $module; 
         }
         else {
           trigger_error(tr('Extension "%1" uninstalled. Missing module dependency: "%2".', $extension, $dependency), E_USER_WARNING);
           $this->uninstall($extension);
-          return FALSE;
+          return false;
         }
       }
       $config = $this->m->Configuration->getSubset('extensions.config.' . $extension);
@@ -125,7 +125,7 @@ class Extensions extends ModuleBase {
     }
     $meta = readFileMeta(p(EXTENSIONS . $extension . '/' . $extension . '.php'));
     if (!$meta OR $meta['type'] != 'extension') {
-      return FALSE;
+      return false;
     }
     if (!isset($meta['name'])) {
       $meta['name'] = $extension;
@@ -142,16 +142,16 @@ class Extensions extends ModuleBase {
     if ($this->isInstalled($extension)) {
       return;
     }
-    if ($this->getInfo($extension) === FALSE) {
+    if ($this->getInfo($extension) === false) {
       return;
     }
     $this->installed[] = $extension;
     $this->updateConfig(); 
   }
   
-  public function uninstall($extension, $deleteConfig = FALSE) {
+  public function uninstall($extension, $deleteConfig = false) {
     $key = array_search($extension, $this->installed);
-    if ($key === FALSE) {
+    if ($key === false) {
       return;
     }
     unset($this->installed[$key]);

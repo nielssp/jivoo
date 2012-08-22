@@ -27,7 +27,7 @@ class MysqlDatabase extends SqlDatabase {
   }
 
 
-  public function fromSchematype($type, $length = NULL) {
+  public function fromSchematype($type, $length = null) {
     switch ($type) {
       case 'string':
         $type = 'varchar';
@@ -56,26 +56,26 @@ class MysqlDatabase extends SqlDatabase {
   }
 
   public function toSchemaType($type) {
-    $length = NULL;
-    if (strpos($type, '(') !== FALSE) {
+    $length = null;
+    if (strpos($type, '(') !== false) {
       list($type, $right) = explode('(', $type);
       list($length) = explode(')', $right);
       $length = (int)$length;
     }
-    if (strpos($type, 'char') !== FALSE) {
+    if (strpos($type, 'char') !== false) {
       $type = 'string';
     }
-    else if (strpos($type, 'tinyint') !== FALSE OR strpos($type, 'bool') !== FALSE) {
+    else if (strpos($type, 'tinyint') !== false OR strpos($type, 'bool') !== false) {
       $type = 'boolean';
     }
-    else if (strpos($type, 'int') !== FALSE) {
+    else if (strpos($type, 'int') !== false) {
       $type = 'integer';
     }
-    else if (strpos($type, 'blob') !== FALSE OR $type === 'binary') {
+    else if (strpos($type, 'blob') !== false OR $type === 'binary') {
       $type = 'binary';
     }
-    else if (strpos($type, 'float') !== FALSE OR strpos($type, 'double') !== FALSE
-      OR strpos($type, 'decimal') !== FALSE) {
+    else if (strpos($type, 'float') !== false OR strpos($type, 'double') !== false
+      OR strpos($type, 'decimal') !== false) {
       $type = 'float';
     }
     else {
@@ -107,8 +107,8 @@ class MysqlDatabase extends SqlDatabase {
         }
       }
       if (isset($row['Extra'])) {
-        if (strpos($row['Extra'], 'auto_increment') !== FALSE) {
-          $info['autoIncrement'] = TRUE;
+        if (strpos($row['Extra'], 'auto_increment') !== false) {
+          $info['autoIncrement'] = true;
         }
       }
       if (isset($row['Default'])) {
@@ -123,7 +123,7 @@ class MysqlDatabase extends SqlDatabase {
     while ($row = $result->fetchAssoc()) {
       $index = $row['Key_name'];
       $column = $row['Column_name'];
-      $unique = $row['Non_unique'] == 0 ? TRUE : FALSE;
+      $unique = $row['Non_unique'] == 0 ? true : false;
       $schema->addIndex($index, $column, $unique);
     }
     return $schema;
@@ -157,21 +157,21 @@ class MysqlDatabase extends SqlDatabase {
   public function createTable(Schema $schema) {
     $sql = 'CREATE TABLE ' . $this->tableName($schema->getName()) . '(';
     $columns = $schema->getColumns();
-    $first = TRUE;
+    $first = true;
     foreach ($columns as $column) {
       $options = $schema->$column;
       if (!$first) {
         $sql .= ', ';
       }
       else {
-        $first = FALSE;
+        $first = false;
       }
       $sql .= $column;
       $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
       if (!$options['null']) {
         $sql .= ' NOT';
       }
-      $sql .= ' NULL';
+      $sql .= ' null';
       if (isset($options['default'])) {
         $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
       }
@@ -207,7 +207,7 @@ class MysqlDatabase extends SqlDatabase {
     if (!$options['null']) {
       $sql .= ' NOT';
     }
-    $sql .= ' NULL';
+    $sql .= ' null';
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }
@@ -224,13 +224,13 @@ class MysqlDatabase extends SqlDatabase {
   }
 
   public function alterColumn($table, $column, $options = array()) {
-    // ALTER TABLE  `posts` CHANGE  `testing`  `testing` INT( 12 ) NOT NULL
+    // ALTER TABLE  `posts` CHANGE  `testing`  `testing` INT( 12 ) NOT null
     $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column . ' ' . $column;
     $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
     if (!$options['null']) {
       $sql .= ' NOT';
     }
-    $sql .= ' NULL';
+    $sql .= ' null';
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }

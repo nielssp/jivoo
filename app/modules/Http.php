@@ -50,7 +50,7 @@ class Http extends ModuleBase {
     }
 
     $path = explode('/', $this->m->Configuration->get('http.index.path'));
-    $query = $this->m->Configuration->get('http.index.query', TRUE);
+    $query = $this->m->Configuration->get('http.index.query', true);
     if (count($this->request->path) < 1) {
       $this->request->path = $path;
       $this->request->query = array_merge($query, $this->request->query);
@@ -104,7 +104,7 @@ class Http extends ModuleBase {
    * if false then a 303 status code will be used
    * @return void
    */
-  public function redirectPath($path = NULL, $query = NULL, $moved = TRUE, $fragment = NULL, $rewrite = FALSE) {
+  public function redirectPath($path = null, $query = null, $moved = true, $fragment = null, $rewrite = false) {
     $status = $moved ? 301 : 303;
     $this->redirect($status, $this->getLink($path, $query, $fragment));
   }
@@ -115,11 +115,11 @@ class Http extends ModuleBase {
    * @param array $parameters Optional alternative parameters-array
    * @return void
    */
-  public function refreshPath($query = NULL, $fragment = NULL) {
+  public function refreshPath($query = null, $fragment = null) {
     if (!isset($query)) {
       $query = $this->request->query;
     }
-    $this->redirectPath($this->request->path, $query, FALSE, $fragment);
+    $this->redirectPath($this->request->path, $query, false, $fragment);
   }
 
   public static function setStatus($status) {
@@ -168,7 +168,7 @@ class Http extends ModuleBase {
    * @param array $path Path as an array
    * @return string Link
    */
-  public function getLink($path = NULL, $query = NULL, $fragment = NULL, $rewrite = FALSE) {
+  public function getLink($path = null, $query = null, $fragment = null, $rewrite = false) {
     if (!isset($path)) {
       $path = $this->request->path;
     }

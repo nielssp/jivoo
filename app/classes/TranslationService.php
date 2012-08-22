@@ -12,7 +12,7 @@ abstract class TranslationService {
       return self::$translationService;
     }
     else {
-      return FALSE;
+      return false;
     }
   }
 }

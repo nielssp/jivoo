@@ -2,9 +2,9 @@
 
 abstract class ApplicationTemplate {
 
-  private $m = NULL;
+  private $m = null;
 
-  private $controller = NULL;
+  private $controller = null;
 
   private $templatePaths = array();
 
@@ -12,7 +12,7 @@ abstract class ApplicationTemplate {
 
   protected $data = array();
 
-  public final function __construct(Templates $templates, Routes $routes, $controller = NULL) {
+  public final function __construct(Templates $templates, Routes $routes, $controller = null) {
     $this->m = new Dictionary();
     $this->m->Templates = $templates;
     $this->m->Routes = $routes;
@@ -34,10 +34,10 @@ abstract class ApplicationTemplate {
     if (isset($this->data[$name])) {
       return $this->data[$name];
     }
-    return NULL;
+    return null;
   }
 
-  public function set($name, $value = NULL) {
+  public function set($name, $value = null) {
     if (is_array($name)) {
       foreach ($name as $n => $value) {
         $this->set($n, $value);
@@ -48,11 +48,11 @@ abstract class ApplicationTemplate {
     }
   }
 
-  protected function link($route = NULL) {
+  protected function link($route = null) {
     return $this->m->Routes->getLink($route);
   }
 
-  protected function isCurrent($route = NULL) {
+  protected function isCurrent($route = null) {
     return $this->m->Routes->isCurrent($route);
   }
 
@@ -92,7 +92,7 @@ abstract class ApplicationTemplate {
     $this->templatePaths = $paths;
   }
 
-  protected function getTemplate($template, $return = FALSE) {
+  protected function getTemplate($template, $return = false) {
     return $this->m->Templates->getTemplate($template, $this->templatePaths, $return);
   }
 
@@ -100,6 +100,6 @@ abstract class ApplicationTemplate {
     return $this->m->Templates->getTemplateData($template);
   }
 
-  public abstract function render($template, $return = FALSE);
+  public abstract function render($template, $return = false);
 
 }

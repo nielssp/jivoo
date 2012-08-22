@@ -31,10 +31,10 @@ $this->render('backend/header.html');
           <?php echo tr('No posts matched your search criteria.')?>
           </div>
 <?php endif; ?>
-<?php $first = TRUE; ?>
+<?php $first = true; ?>
 <?php foreach ($posts as $post): ?>
 
-          <div class="record<?php if ($first) { echo ' first'; $first = FALSE; } ?>">
+          <div class="record<?php if ($first) { echo ' first'; $first = false; } ?>">
             <div class="checkbox">
               <input type="checkbox" />
             </div>
@@ -67,7 +67,7 @@ $this->render('backend/header.html');
          <div class="content block100">
             <?php echo $post->encode(
               'content',
-              array('stripAll' => TRUE, 'maxLength' => 250, 'append' => '[...]')
+              array('stripAll' => true, 'maxLength' => 250, 'append' => '[...]')
             ); ?>
             </div>
         </div>

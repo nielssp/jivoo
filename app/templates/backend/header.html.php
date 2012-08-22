@@ -31,7 +31,7 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
               </a>
             </div>
             <ul class="items">
-<?php $prevGroup = NULL; ?>
+<?php $prevGroup = null; ?>
 <?php foreach ($category as $link): ?>
 
 <?php if (isset($prevGroup) AND $prevGroup != $link->group): ?>

@@ -9,9 +9,9 @@
  */
 
 /** The PeanutCMS essentials has been included */
-define('PEANUTCMS', TRUE);
+define('PEANUTCMS', true);
 
-define('PEANUTCMS_START', microtime(TRUE));
+define('PEANUTCMS_START', microtime(true));
 
 // To hell with those "magic quotes"!
 ini_set('magic_quotes_runtime', 0);
@@ -139,7 +139,7 @@ function trn($single, $plural, $number) {
   }
 }
 
-function fdate($timestamp = NULL) {
+function fdate($timestamp = null) {
   if (!isset($timestamp)) {
     $timestamp = time();
   }
@@ -153,7 +153,7 @@ function fdate($timestamp = NULL) {
   }
 }
 
-function ftime($timestamp = NULL) {
+function ftime($timestamp = null) {
   if (!isset($timestamp)) {
     $timestamp = time();
   }
@@ -167,7 +167,7 @@ function ftime($timestamp = NULL) {
   }
 }
 
-function tdate($format, $timestamp = NULL) {
+function tdate($format, $timestamp = null) {
   if (!isset($timestamp)) {
     $timestamp = time();
   }
@@ -183,7 +183,7 @@ function tdate($format, $timestamp = NULL) {
 
 function groupObjects(&$objects) {
   if (!is_array($objects) OR count($objects) < 1) {
-    return FALSE;
+    return false;
   }
   uasort($objects, 'groupSorter');
 }
@@ -199,7 +199,7 @@ function groupSorter(IGroupable $a, IGroupable $b) {
   }
 }
 
-function readFileMeta($file, $caching = NULL) {
+function readFileMeta($file, $caching = null) {
   if (!isset($caching)) {
     $caching = CACHING;
   }
@@ -212,14 +212,14 @@ function readFileMeta($file, $caching = NULL) {
   $file = fopen($file, 'r');
 
   if (!$file) {
-    return FALSE;
+    return false;
   }
 
-  $readingMeta = FALSE;
+  $readingMeta = false;
 
   $metaData = array();
   $lines = 0;
-  $currentKey = NULL;
+  $currentKey = null;
 
   while ($line = fgets($file)) {
     $trimmed = trim($line);
@@ -229,7 +229,7 @@ function readFileMeta($file, $caching = NULL) {
       }
       $lines++;
       if ($lines > META_MAX_LINES) {
-        return FALSE;
+        return false;
       }
       continue;
     }
@@ -240,7 +240,7 @@ function readFileMeta($file, $caching = NULL) {
         $currentKey = strtolower(trim($split[0]));
         $metaData[$currentKey] = trim($split[1]);
       }
-      else if ($currentKey != NULL) {
+      else if ($currentKey != null) {
         $metaData[$currentKey] = trim($metaData[$currentKey] . ' ' . trim($split[0]));
       }
     }
@@ -250,14 +250,14 @@ function readFileMeta($file, $caching = NULL) {
           $type == 'database' OR
           $type == 'theme' OR
           $type == 'extension') {
-        $readingMeta = TRUE;
+        $readingMeta = true;
         $metaData['type'] = $type;
       }
     }
   }
   fclose($file);
   if (!$readingMeta) {
-    return FALSE;
+    return false;
   }
   if (!isset($metaData['dependencies'])) {
     $metaData['dependencies'] = '';
@@ -285,8 +285,8 @@ function readDependencies($dependencies) {
   );
   foreach ($depArray as $dependency) {
     if (!empty($dependency)) {
-      if (strpos($dependency, ';') === FALSE) {
-        if (($matches = matchDependencyVersion($dependency)) !== FALSE) {
+      if (strpos($dependency, ';') === false) {
+        if (($matches = matchDependencyVersion($dependency)) !== false) {
           $matches[1] = $matches[1];
           if (!isset($result['modules'][$matches[1]])) {
             $result['modules'][$matches[1]] = array();
@@ -300,7 +300,7 @@ function readDependencies($dependencies) {
       else {
         $split = explode(';', $dependency, 2);
         if ($split[0] == 'ext') {
-          if (($matches = matchDependencyVersion($split[1])) !== FALSE) {
+          if (($matches = matchDependencyVersion($split[1])) !== false) {
             $matches[1] = $matches[1];
             if (!isset($result['extensions'][$matches[1]])) {
               $result['extensions'][$matches[1]] = array();
@@ -312,7 +312,7 @@ function readDependencies($dependencies) {
           }
         }
         else if ($split[0] == 'php') {
-          if (($matches = matchDependencyVersion($split[1])) !== FALSE) {
+          if (($matches = matchDependencyVersion($split[1])) !== false) {
             if (!isset($result['php'][$matches[1]])) {
               $result['php'][$matches[1]] = array();
             }
@@ -333,20 +333,20 @@ function matchDependencyVersion($dependency) {
     return $matches;
   }
   else {
-    return FALSE;
+    return false;
   }
 }
 
 function compareDependencyVersions($versionStr, $versionInfo) {
   if (!is_array($comparisonArray)) {
-    return FALSE;
+    return false;
   }
   foreach ($comparisonArray as $operator => $version) {
     if (!version_compare($versionStr, $version, $operator)) {
-      return FALSE;
+      return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /**
@@ -392,7 +392,7 @@ function fileClassName($fileName) {
 }
 
 function precondition($condition) {
-  if ($condition === TRUE) {
+  if ($condition === true) {
     return;
   }
   $bt = debug_backtrace();

@@ -139,7 +139,7 @@ class PostsController extends ApplicationController {
     $examplePost->name = '%name%';
     $examplePost->date = time();
     $exampleLink = explode('%name%', $this->m->Routes->getLink($examplePost));
-    $examplePost = NULL;
+    $examplePost = null;
     $this->nameInPermalink = count($exampleLink) >= 2;
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];
@@ -180,7 +180,7 @@ class PostsController extends ApplicationController {
     $this->render('posts/edit.html');
   }
 
-  public function edit($post = NULL) {
+  public function edit($post = null) {
     $this->Backend->requireAuth('backend.posts.edit');
 
     $this->post = Post::find($post);
@@ -221,7 +221,7 @@ class PostsController extends ApplicationController {
     $examplePost->name = '%name%';
     $examplePost->date = time();
     $exampleLink = explode('%name%', $this->m->Routes->getLink($examplePost));
-    $examplePost = NULL;
+    $examplePost = null;
     $this->nameInPermalink = count($exampleLink) >= 2;
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];

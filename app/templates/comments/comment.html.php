@@ -107,7 +107,7 @@ switch ($comment->status) {
             <div class="content block75">
             <?php echo $comment->encode(
               'content',
-              array('stripAll' => TRUE, 'maxLength' => 500, 'append' => '[...]')
+              array('stripAll' => true, 'maxLength' => 500, 'append' => '[...]')
             ); ?>
             </div>
           </div>

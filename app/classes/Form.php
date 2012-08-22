@@ -18,7 +18,7 @@ class Form implements IModel {
     }
   }
   
-  public function addField($field, $type = 'string', $label = NULL, $required = TRUE) {
+  public function addField($field, $type = 'string', $label = null, $required = true) {
     if (!isset($label)) {
       $label = tr(ucfirst($field));
     }
@@ -29,11 +29,11 @@ class Form implements IModel {
     );
   }
   
-  public function addString($field, $label = NULL, $required = TRUE) {
+  public function addString($field, $label = null, $required = true) {
     $this->addField($field, 'string', $label, $required);
   }
   
-  public function addText($field, $label = NULL, $required = TRUE) {
+  public function addText($field, $label = null, $required = true) {
     $this->addField($field, 'text', $label, $required);
   }
   
@@ -47,7 +47,7 @@ class Form implements IModel {
     if (isset($this->data[$field])) {
       return $this->data[$field];
     }
-    return NULL;
+    return null;
   }
 
   public function __set($field, $value) {
@@ -81,7 +81,7 @@ class Form implements IModel {
   }
 
   public function getFieldEditor($field) {
-    return NULL;
+    return null;
   }
   
   public function isFieldRequired($field) {

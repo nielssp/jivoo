@@ -59,11 +59,11 @@ class Theme extends ModuleBase {
       $theme = $this->m->Configuration->get('theme.name');
       if (file_exists(p(THEMES . $theme . '/' . $theme . '.php'))) {
         $this->theme = $theme;
-        return TRUE;
+        return true;
       }
     }
     if (!is_dir(p(THEMES))) {
-      return FALSE;
+      return false;
     }
     $dir = opendir(p(THEMES));
     if ($dir) {
@@ -72,13 +72,13 @@ class Theme extends ModuleBase {
           if (file_exists(p(THEMES . $theme . '/' . $theme . '.php'))) {
             $this->m->Configuration->set('theme.name', $theme);
             $this->theme = $theme;
-            return TRUE;
+            return true;
           }
         }
       }
       closedir($dir);
     }
-    return FALSE;
+    return false;
   }
 
 

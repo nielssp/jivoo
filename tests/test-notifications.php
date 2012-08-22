@@ -8,7 +8,7 @@ abstract class Notification {
 
   public $message;
 
-  public function __construct($message, $uid = NULL, $readMore = NULL) {
+  public function __construct($message, $uid = null, $readMore = null) {
     $type = get_class($this);
     $this->message = $message;
     if (!isset($uid)) {

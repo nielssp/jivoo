@@ -1,5 +1,5 @@
 <?php
-define('DEBUG', TRUE);
+define('DEBUG', true);
 
 require('../app/essentials.php');
 

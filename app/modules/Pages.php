@@ -21,7 +21,7 @@ class Pages extends ModuleBase {
   private $controller;
   
   protected function init() {
-    $newInstall = FALSE;
+    $newInstall = false;
 
 
     $pagesSchema = new pagesSchema();
@@ -45,7 +45,7 @@ class Pages extends ModuleBase {
     }
     
     $pagesEncoder = new Encoder();
-    $pagesEncoder->setAllowAll(TRUE);
+    $pagesEncoder->setAllowAll(true);
     Page::setEncoder('content', $pagesEncoder);
 
     $this->m->Configuration->setDefault('pages.editor.name', 'TinymceEditor');
@@ -78,7 +78,7 @@ class Pages extends ModuleBase {
         ->where('name = ?')
         ->addVar($name)
     );
-    if ($page === FALSE) {
+    if ($page === false) {
       return;
     }
     $page->addToCache();

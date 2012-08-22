@@ -25,7 +25,7 @@ class Editors extends ModuleBase {
     $this->editors[$editorName] = $editor;
   }
 
-  public function getEditor($editor, Configuration $config = NULL) {
+  public function getEditor($editor, Configuration $config = null) {
     $name = $editor;
     if ($editor instanceof Configuration) {
       $name = $editor['name'];

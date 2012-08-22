@@ -1,10 +1,10 @@
 <?php
 class SelectQuery extends Query implements ICondition, ILimitable {
   protected $orderBy = array();
-  protected $groupBy = NULL;
-  protected $groupByCondition = NULL;
+  protected $groupBy = null;
+  protected $groupByCondition = null;
   protected $limit;
-  protected $where = NULL;
+  protected $where = null;
   protected $offset = 0;
   protected $joins = array();
   protected $columns = array();
@@ -26,7 +26,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     }
   }
 
-  public function addColumn($column, $alias = NULL, $function = NULL) {
+  public function addColumn($column, $alias = null, $function = null) {
     $this->columns[] = array(
       'column' => $column,
       'function' => $function,
@@ -42,7 +42,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     $this->columns = array();
   }
 
-  public function addSource(IDataSource $source, $alias = NULL) {
+  public function addSource(IDataSource $source, $alias = null) {
     $this->sources[] = array(
       'source' => $source,
       'alias' => $alias
@@ -99,7 +99,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
   public function orderBy($column) {
     $this->orderBy[] = array(
       'column' => $column,
-      'descending' => FALSE
+      'descending' => false
     );
     return $this;
   }
@@ -107,7 +107,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
   public function orderByDescending($column) {
     $this->orderBy[] = array(
       'column' => $column,
-      'descending' => TRUE
+      'descending' => true
     );
     return $this;
   }
@@ -119,7 +119,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function groupBy($columns, $condition = NULL) {
+  public function groupBy($columns, $condition = null) {
     if (!is_array($columns)) {
       $columns = array($columns);
     }
@@ -138,7 +138,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function innerJoin($dataSource, $condition = NULL, $alias = NULL) {
+  public function innerJoin($dataSource, $condition = null, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
@@ -151,7 +151,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function leftJoin($dataSource, $condition, $alias = NULL) {
+  public function leftJoin($dataSource, $condition, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
@@ -164,7 +164,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function rightJoin($dataSource, $condition, $alias = NULL) {
+  public function rightJoin($dataSource, $condition, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
@@ -179,7 +179,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
 
   public function count() {
     $this->resetColumns();
-    $this->addColumn('*', NULL, 'COUNT()');
+    $this->addColumn('*', null, 'COUNT()');
     return $this;
   }
 

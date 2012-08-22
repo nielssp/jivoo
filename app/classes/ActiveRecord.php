@@ -13,7 +13,7 @@ abstract class ActiveRecord implements IModel {
       'primaryKey' => $schema->getPrimaryKey(),
       'encoders' => array(),
       'editors' => array(),
-      'validator' => NULL
+      'validator' => null
     );
     $object = new $class();
     self::$models[$class]['validator'] = $object->createValidator();
@@ -31,7 +31,7 @@ abstract class ActiveRecord implements IModel {
         $info = $this->schema->$column;
         if ($info['type'] == 'integer') {
           /** @todo Handle signed integers */
-          $validator->$column->isInteger = TRUE;
+          $validator->$column->isInteger = true;
           if (isset($validator->$column->maxValue)) {
             $validator->$column->maxValue = min($validator->$column->maxValue, 4294967295);
           }
@@ -46,10 +46,10 @@ abstract class ActiveRecord implements IModel {
           }
         }
         else if ($info['type'] == 'float') {
-          $validator->$column->isFloat = TRUE;
+          $validator->$column->isFloat = true;
         }
         else if ($info['type'] == 'boolean') {
-          $validator->$column->isBoolean = TRUE;
+          $validator->$column->isBoolean = true;
         }
         if (isset($info['length']) AND $info['type'] != 'float'
             AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
@@ -61,10 +61,10 @@ abstract class ActiveRecord implements IModel {
           }
         }
         if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
-          $validator->$column->unique = TRUE;
+          $validator->$column->unique = true;
         }
-        if (isset($info['null']) AND $info['null'] == FALSE) {
-          $validator->$column->null = FALSE;
+        if (isset($info['null']) AND $info['null'] == false) {
+          $validator->$column->null = false;
         }
       }
     }
@@ -80,9 +80,9 @@ abstract class ActiveRecord implements IModel {
   private $data;
   private $changed;
 
-  private $isNew = FALSE;
-  private $isSaved = TRUE;
-  private $isDeleted = FALSE;
+  private $isNew = false;
+  private $isSaved = true;
+  private $isDeleted = false;
   
   private $editors = array();
 
@@ -106,12 +106,12 @@ abstract class ActiveRecord implements IModel {
   public function __set($property, $value) {
     if (isset($this->virtuals[$property]) AND isset($this->virtuals[$property]['set'])) {
       call_user_func(array($this, $this->virtuals[$property]['set']), $value);
-      $this->isSaved = FALSE;
+      $this->isSaved = false;
     }
     else if (array_key_exists($property, $this->data) AND $property != $this->primaryKey) {
       $this->data[$property] = $value;
-      $this->changed[$property] = TRUE;
-      $this->isSaved = FALSE;
+      $this->changed[$property] = true;
+      $this->isSaved = false;
     }
     else {
       throw new RecordPropertyNotFoundException(
@@ -169,12 +169,12 @@ abstract class ActiveRecord implements IModel {
       }
 
       if (!isset($arguments[0])) {
-        $arguments[0] = NULL;
+        $arguments[0] = null;
       }
 
       if ($association == 'hasMany' OR $association == 'hasAndBelongsToMany') {
         if ($this->isNew) {
-          return FALSE;
+          return false;
         }
         switch ($procedure) {
           case 'get':
@@ -200,7 +200,7 @@ abstract class ActiveRecord implements IModel {
           }
         }
         if ($this->isNew AND $options['connection'] == 'other') {
-          return FALSE;
+          return false;
         }
         switch ($procedure) {
           case 'get':
@@ -217,7 +217,7 @@ abstract class ActiveRecord implements IModel {
     }
   }
 
-  private function manyGet($options, SelectQuery $customSelect = NULL) {
+  private function manyGet($options, SelectQuery $customSelect = null) {
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -241,7 +241,7 @@ abstract class ActiveRecord implements IModel {
     if (isset($options['count']) AND !isset($customSelect)) {
       if ($this->data[$options['count']] != $result->count()) {
         $this->data[$options['count']] = $result->count();
-        $this->isSaved = FALSE;
+        $this->isSaved = false;
         $this->save();
       }
     }
@@ -252,7 +252,7 @@ abstract class ActiveRecord implements IModel {
     return $allArray;
   }
 
-  private function manyCount($options, SelectQuery $customSelect = NULL) {
+  private function manyCount($options, SelectQuery $customSelect = null) {
     $thisClass = get_class($this);
     $otherClass = $options['class'];
 
@@ -277,7 +277,7 @@ abstract class ActiveRecord implements IModel {
     if (isset($options['count']) AND !isset($customSelect)) {
       if ($this->data[$options['count']] != $result) {
         $this->data[$options['count']] = $result;
-        $this->isSaved = FALSE;
+        $this->isSaved = false;
         $this->save();
       }
     }
@@ -312,29 +312,29 @@ abstract class ActiveRecord implements IModel {
     $otherClass = $options['class'];
 
     if ($this->manyHas($options, $record)) {
-      return FALSE;
+      return false;
     }
 
     if (isset($options['join'])) {
       if ($record->isNew) {
-        return FALSE;
+        return false;
       }
       if ($this->dataSource instanceof ITable) {
         $query = $this->dataSource->getOwner()->getTable($options['join'])->insert();
         $query->addPair($options['thisKey'], $this->data[$this->primaryKey]);
         $query->addPair($options['otherKey'], $record->data[$record->primaryKey]);
         $query->execute();
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     }
     else {
       $record->data[$options['thisKey']] = $this->data[$this->primaryKey];
-      $record->isSaved = FALSE;
+      $record->isSaved = false;
       if (!$record->isNew) {
         $record->save();
       }
-      return TRUE;
+      return true;
     }
 
   }
@@ -345,7 +345,7 @@ abstract class ActiveRecord implements IModel {
 
     if (isset($options['join'])) {
       if ($record->isNew) {
-        return FALSE;
+        return false;
       }
       if ($this->dataSource instanceof ITable) {
         $query = $this->dataSource->getOwner()->getTable($options['join'])->delete();
@@ -353,17 +353,17 @@ abstract class ActiveRecord implements IModel {
         $query->addVar($this->data[$this->primaryKey]);
         $query->addVar($record->data[$record->primaryKey]);
         $query->execute();
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     }
     else {
       $record->data[$options['thisKey']] = 0;
-      $record->isSaved = FALSE;
+      $record->isSaved = false;
       if (!$record->isNew) {
         $record->save();
       }
-      return TRUE;
+      return true;
     }
   }
 
@@ -373,7 +373,7 @@ abstract class ActiveRecord implements IModel {
 
     if ($options['connection'] == 'this') {
       if (!isset($this->data[$options['otherKey']])) {
-        return FALSE;
+        return false;
       }
       $primaryKey = $this->data[$options['otherKey']];
       if (isset(self::$cache[$otherClass][$primaryKey])) {
@@ -391,7 +391,7 @@ abstract class ActiveRecord implements IModel {
     $query->limit(1);
     $result = $query->execute();
     if (!$result->hasRows()) {
-      return FALSE;
+      return false;
     }
     return self::createFromAssoc($otherClass, $result->fetchAssoc());
   }
@@ -402,17 +402,17 @@ abstract class ActiveRecord implements IModel {
 
     if ($options['connection'] == 'this') {
       if ($record->isNew) {
-        return FALSE;
+        return false;
       }
       $this->data[$options['otherKey']] = $record->data[$record->primaryKey];
-      $this->isSaved = FALSE;
+      $this->isSaved = false;
       if (!$this->isNew) {
         $this->save();
       }
     }
     else {
       $record->data[$options['thisKey']] = $this->data[$this->primaryKey];
-      $record->isSaved = FALSE;
+      $record->isSaved = false;
       if (!$record->isNew) {
         $record->save();
       }
@@ -435,7 +435,7 @@ abstract class ActiveRecord implements IModel {
         $this->data[$column] = $data[$column];
       }
       else {
-        $this->data[$column] = NULL;
+        $this->data[$column] = null;
       }
       if (isset($this->schema->$column)) {
         $info = $this->schema->$column;
@@ -481,7 +481,7 @@ abstract class ActiveRecord implements IModel {
     return self::$models[$class]['validator'];
   }
   
-  public static function getModelValidator($class = NULL) {
+  public static function getModelValidator($class = null) {
     if (!isset($class)) {
       $class = get_called_class();
     }
@@ -511,11 +511,11 @@ abstract class ActiveRecord implements IModel {
     return $new;
   }
 
-  public static function create($data = array(), $allowedFields = NULL) {
+  public static function create($data = array(), $allowedFields = null) {
     $class = get_called_class();
     $new = new $class();
-    $new->isNew = TRUE;
-    $new->isSaved = FALSE;
+    $new->isNew = true;
+    $new->isSaved = false;
     if (is_array($allowedFields)) {
       $allowedFields = array_flip($allowedFields);
       $data = array_intersect_key($data, $allowedFields);
@@ -582,14 +582,14 @@ abstract class ActiveRecord implements IModel {
       foreach ($conditionValue->getRules() as $subConditionKey => $subConditionValue) {
         $validate = $this->validateValue($column, $value, $subConditionKey, $subConditionValue);
         if (!$validate) {
-          return FALSE;
+          return false;
         }
       }
-      return TRUE;
+      return true;
     }
     if ($conditionKey != 'presence'
         AND $conditionKey != 'null' AND empty($value) AND !is_numeric($value)) {
-      return TRUE;
+      return true;
     }
     switch ($conditionKey) {
       case 'presence':
@@ -635,7 +635,7 @@ abstract class ActiveRecord implements IModel {
       case 'callback':
         return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);
     }
-    return TRUE;
+    return true;
   }
 
   protected function getMessage($rule, $value) {
@@ -699,9 +699,9 @@ abstract class ActiveRecord implements IModel {
     }
     $this->afterValidate();
     if (count($this->errors) < 1) {
-      return TRUE;
+      return true;
     }
-    return FALSE;
+    return false;
   }
   
   protected function afterValidate() { } 
@@ -735,7 +735,7 @@ abstract class ActiveRecord implements IModel {
     if (isset(self::$models[$class]['editors'][$field])) {
       return self::$models[$class]['editors'][$field];
     }
-    return NULL;
+    return null;
   }
 
   public static function setFieldEditor($field, IEditor $editor) {
@@ -757,7 +757,7 @@ abstract class ActiveRecord implements IModel {
     return $this->errors;
   }
 
-  public static function setEncoder($field, Encoder $encoder = NULL) {
+  public static function setEncoder($field, Encoder $encoder = null) {
     $class = get_called_class();
     self::$models[$class]['encoders'][$field] = $encoder;
   }
@@ -767,7 +767,7 @@ abstract class ActiveRecord implements IModel {
     if (isset(self::$models[$class]['encoders'][$field])) {
       return self::$models[$class]['encoders'][$field];
     }
-    return NULL;
+    return null;
   }
 
   public function encode($field, $options = array()) {
@@ -795,16 +795,16 @@ abstract class ActiveRecord implements IModel {
 
   public function save($options = array()) {
     if ($this->isDeleted) {
-      return FALSE;
+      return false;
     }
     $defaultOptions = array('validate' => true);
     $options = array_merge($defaultOptions, $options);
     $this->beforeSave($options);
     if ($options['validate'] AND !$this->isValid()) {
-      return FALSE;
+      return false;
     }
     if ($this->isSaved) {
-      return TRUE;
+      return true;
     }
     foreach ($this->virtuals as $tasks) {
       if (isset($tasks['presave'])) {
@@ -824,8 +824,8 @@ abstract class ActiveRecord implements IModel {
       $query->addVar($this->data[$this->primaryKey]);
       $query->execute();
     }
-    $this->isNew = FALSE;
-    $this->isSaved = TRUE;
+    $this->isNew = false;
+    $this->isSaved = true;
     $this->afterSave($options);
     foreach ($this->virtuals as $tasks) {
       if (isset($tasks['save'])) {
@@ -844,7 +844,7 @@ abstract class ActiveRecord implements IModel {
       ->execute();
   }
 
-  public static function all(SelectQuery $selector = NULL) {
+  public static function all(SelectQuery $selector = null) {
     $class = get_called_class();
     $dataSource = self::connection($class);
     if (!isset($selector)) {
@@ -878,7 +878,7 @@ abstract class ActiveRecord implements IModel {
       ->limit(1)
       ->execute();
     if (!$result->hasRows()) {
-      return FALSE;
+      return false;
     }
     $record = self::createFromAssoc($class, $result->fetchAssoc());
     $record->addToCache();
@@ -894,7 +894,7 @@ abstract class ActiveRecord implements IModel {
     return $dataSource->count($query) > 0;
   }
 
-  public static function first(SelectQuery $selector = NULL) {
+  public static function first(SelectQuery $selector = null) {
     $class = get_called_class();
     $dataSource = self::connection($class);
     if (!isset($selector)) {
@@ -903,12 +903,12 @@ abstract class ActiveRecord implements IModel {
     $selector->limit(1);
     $result = $dataSource->select($selector);
     if (!$result->hasRows()) {
-      return FALSE;
+      return false;
     }
     return self::createFromAssoc($class, $result->fetchAssoc());
   }
 
-  public static function last(SelectQuery $selector = NULL) {
+  public static function last(SelectQuery $selector = null) {
     $class = get_called_class();
     $dataSource = self::connection($class);
     if (!isset($selector)) {
@@ -918,12 +918,12 @@ abstract class ActiveRecord implements IModel {
     $selector->reverseOrder()->limit(1);
     $result = $dataSource->select($selector);
     if (!$result->hasRows()) {
-      return FALSE;
+      return false;
     }
     return self::createFromAssoc($class, $result->fetchAssoc());
   }
 
-  public static function count(SelectQuery $selector = NULL) {
+  public static function count(SelectQuery $selector = null) {
     $class = get_called_class();
     $dataSource = self::connection($class);
     return $dataSource->count($selector);

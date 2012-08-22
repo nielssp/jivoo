@@ -24,7 +24,7 @@ class Routes extends ModuleBase {
 
   private $paths = array();
   
-  private $rendered = FALSE;
+  private $rendered = false;
 
   private $selectedRoute = NULl;
 
@@ -83,7 +83,7 @@ class Routes extends ModuleBase {
     }
   }
 
-  protected function controllerName($controller, $withSuffix = FALSE) {
+  protected function controllerName($controller, $withSuffix = false) {
     if (is_object($controller)) {
       $controller = get_class($controller);
     }
@@ -111,7 +111,7 @@ class Routes extends ModuleBase {
         $fragment = array_shift($parameters);
       }
       if ($fragment == '**') {
-        while (current($parameters) !== FALSE) {
+        while (current($parameters) !== false) {
           $result[] = array_shift($parameters);
         }
         break;
@@ -121,20 +121,20 @@ class Routes extends ModuleBase {
     return $result;
   }
 
-  public function getPath($controller = NULL, $action = 'index', $parameters = array()) {
+  public function getPath($controller = null, $action = 'index', $parameters = array()) {
     if (!isset($controller)) {
-      return NULL;
+      return null;
     }
-    $controller = $this->controllerName($controller, TRUE);
+    $controller = $this->controllerName($controller, true);
     if (isset($this->paths[$controller][$action])) {
       $function = $this->paths[$controller][$action]['function'];
       $additional = $this->paths[$controller][$action]['additional'];
       return call_user_func($function, $parameters, $additional);
     }
-    return NULL;
+    return null;
   }
 
-  public function isCurrent($route = NULL) {
+  public function isCurrent($route = null) {
     if (!isset($route)) {
       $path = explode('/', $this->m->Configuration->get('http.index.path'));
       return $path == $this->request->path;
@@ -144,9 +144,9 @@ class Routes extends ModuleBase {
     }
     else if (is_array($route)) {
       $default = array(
-        'path' => NULL,
-        'query' => NULL,
-        'fragment' => NULL,
+        'path' => null,
+        'query' => null,
+        'fragment' => null,
         'controller' => $this->selectedRoute['controller'],
         'action' => $this->selectedRoute['action'],
         'parameters' => $this->selectedRoute['parameters']
@@ -164,11 +164,11 @@ class Routes extends ModuleBase {
         AND ($route['parameters'] == '*' OR $this->selectedRoute['parameters'] == $route['parameters']);
     }
     else {
-      return FALSE;
+      return false;
     }
   }
 
-  public function getLink($route = NULL) {
+  public function getLink($route = null) {
     if (!isset($route)) {
       return $this->m->Http->getLink(array());
     }
@@ -180,9 +180,9 @@ class Routes extends ModuleBase {
         return $route['url'];
       }
       $default = array(
-        'path' => NULL,
-        'query' => NULL,
-        'fragment' => NULL,
+        'path' => null,
+        'query' => null,
+        'fragment' => null,
         'controller' => $this->controllerName($this->selectedRoute['controller']),
         'action' => $this->selectedRoute['action'],
         'parameters' => $this->selectedRoute['parameters']
@@ -192,7 +192,7 @@ class Routes extends ModuleBase {
         $default['parameters'] = array();
       }
       $route = array_merge($default, $route);
-      if (isset($route['query']) AND isset($route['mergeQuery']) AND $route['mergeQuery'] == TRUE) {
+      if (isset($route['query']) AND isset($route['mergeQuery']) AND $route['mergeQuery'] == true) {
         $route['query'] = array_merge($this->request->query, $route['query']);
       }
       if (isset($route['path'])) {
@@ -214,15 +214,15 @@ class Routes extends ModuleBase {
     }
   }
 
-  public function redirect($route = NULL) {
+  public function redirect($route = null) {
     $this->m->Http->redirect(303, $this->getLink($route));
   }
 
-  public function moved($route = NULL) {
+  public function moved($route = null) {
     $this->m->Http->redirect(301, $this->getLink($route));
   }
 
-  public function refresh($query = NULL, $fragment = NULL) {
+  public function refresh($query = null, $fragment = null) {
     $this->m->Http->refreshPath($query, $fragment);
   }
 
@@ -255,7 +255,7 @@ class Routes extends ModuleBase {
 
   public function setRoute(ApplicationController $controller, $action, $priority = 7, $parameters = array()) {
     if ($this->rendered) {
-      return FALSE;
+      return false;
     }
     if ($priority > $this->selectedRoute['priority']) {
       $this->selectedRoute = array(
@@ -269,7 +269,7 @@ class Routes extends ModuleBase {
 
   private function mapRoute() {
     if ($this->rendered) {
-      return FALSE;
+      return false;
     }
     $routes = $this->routes;
     $path = $this->getRequest()->path;
@@ -313,7 +313,7 @@ class Routes extends ModuleBase {
     if (isset($this->selectedRoute)
         AND $this->selectedRoute['controller'] instanceof ApplicationController
         AND is_callable(array($this->selectedRoute['controller'], $this->selectedRoute['action']))) {
-      $this->rendered = TRUE;
+      $this->rendered = true;
       call_user_func(
         array($this->selectedRoute['controller'], 'init')
       );

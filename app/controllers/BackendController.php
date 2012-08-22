@@ -26,7 +26,7 @@ class BackendController extends ApplicationController {
   
   public function logout() {
     if (!$this->auth->isLoggedIn()) {
-      $this->redirect(NULL);
+      $this->redirect(null);
     }
     $this->auth->logOut();
     $this->goBack();
@@ -38,7 +38,7 @@ class BackendController extends ApplicationController {
       $this->redirect(array('action' => 'dashboard'));
     }
     $this->title = tr('Log in');
-    $this->noHeader = TRUE;
+    $this->noHeader = true;
 
     $this->login = new Form('login');
     

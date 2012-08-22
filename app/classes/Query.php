@@ -1,6 +1,6 @@
 <?php
 abstract class Query {
-  private $dataSource = NULL;
+  private $dataSource = null;
 
   public function __construct() {
   }

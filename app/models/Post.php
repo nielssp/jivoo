@@ -9,13 +9,13 @@
  * @property string $content
  * @property int $date Timestamp
  * @property string $tags Comma-separated list of tags (virtual)
- * @method Tag[] getTags(SelectQuery $select = NULL) Retrieve all tags associated with post
- * @method int countTags(SelectQuery $select = NULL) Count all tags associated with post
+ * @method Tag[] getTags(SelectQuery $select = null) Retrieve all tags associated with post
+ * @method int countTags(SelectQuery $select = null) Count all tags associated with post
  * @method bool hasTag(Tag $tag) Check if a tag belongs to post
  * @method void addTag(Tag $tag) Add a tag to post
  * @method void removeTag(Tag $tag) Remove tag from post
- * @method Comment[] getComments(SelectQuery $select = NULL) Retrieve all comments associated with post
- * @method int countComments(SelectQuery $select = NULL) Count all comments associated with post
+ * @method Comment[] getComments(SelectQuery $select = null) Retrieve all comments associated with post
+ * @method int countComments(SelectQuery $select = null) Count all comments associated with post
  * @method bool hasComment(Comment $comment) Check if a comment belongs to post
  * @method void addComment(Comment $comment) Add a comment to post
  * @method void removeComment(Comment $comment) Remove a comment from post
@@ -48,11 +48,11 @@ class Post extends ActiveRecord implements ILinkable {
 
   protected $validate = array(
     'title' => array(
-      'presence' => TRUE,
+      'presence' => true,
     ),
     'name' => array(
-      'presence' => TRUE,
-      'unique' => TRUE,
+      'presence' => true,
+      'unique' => true,
       'minLength' => 1,
       'maxLength' => 50,
       'rule0' => array(
@@ -61,7 +61,7 @@ class Post extends ActiveRecord implements ILinkable {
       ),
     ),
     'content' => array(
-      'presence' => TRUE,
+      'presence' => true,
     ),
   );
 
@@ -90,7 +90,7 @@ class Post extends ActiveRecord implements ILinkable {
   );
 
 
-  private $virtualTags = NULL;
+  private $virtualTags = null;
 
   public function getRoute() {
     return array(
@@ -126,10 +126,10 @@ class Post extends ActiveRecord implements ILinkable {
     else if (!$this->isNew()) {
       $tags = $this->getTags();
       $csv = '';
-      $first = TRUE;
+      $first = true;
       foreach ($tags as $tag) {
         if ($first) {
-          $first = FALSE;
+          $first = false;
         }
         else {
           $csv .= ', ';
@@ -175,7 +175,7 @@ class Post extends ActiveRecord implements ILinkable {
           ->where('name = ?')
           ->addVar($name)
       );
-      if ($existing !== FALSE) {
+      if ($existing !== false) {
         $this->addTag($existing);
       }
       else {

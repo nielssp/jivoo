@@ -3,26 +3,26 @@
 class Encoder {
   // source: http://xahlee.info/js/html5_non-closing_tag.html
   private $selfClosingTags = array(
-    'area' => TRUE,
-    'base' => TRUE,
-    'br' => TRUE,
-    'col' => TRUE,
-    'command' => TRUE,
-    'embed' => TRUE,
-    'hr' => TRUE,
-    'img' => TRUE,
-    'input' => TRUE,
-    'keygen' => TRUE,
-    'link' => TRUE,
-    'meta' => TRUE,
-    'param' => TRUE,
-    'source' => TRUE,
-    'track' => TRUE,
-    'wbr' => TRUE
+    'area' => true,
+    'base' => true,
+    'br' => true,
+    'col' => true,
+    'command' => true,
+    'embed' => true,
+    'hr' => true,
+    'img' => true,
+    'input' => true,
+    'keygen' => true,
+    'link' => true,
+    'meta' => true,
+    'param' => true,
+    'source' => true,
+    'track' => true,
+    'wbr' => true
   );
   
-  private $allowAll = FALSE;
-  private $stripAll = FALSE;
+  private $allowAll = false;
+  private $stripAll = false;
   
   private $allow = array();
 
@@ -33,7 +33,7 @@ class Encoder {
   private $maxLength = -1;
 
   /** XHTML/HTML5  (not valid to use <br /> in HTML4) */
-  private $xhtml = TRUE;
+  private $xhtml = true;
 
   public function __construct(Configuration $config = NULl) {
     if (isset($config)) {
@@ -46,11 +46,11 @@ class Encoder {
     }
   }
 
-  public function setXhtml($xhtml = TRUE) {
+  public function setXhtml($xhtml = true) {
     $this->xhtml = $xhtml;
   }
   
-  public function setAllowAll($allowAll = FALSE) {
+  public function setAllowAll($allowAll = false) {
     $this->allowAll = $allowAll;
   }
 
@@ -85,7 +85,7 @@ class Encoder {
     }
   }
 
-  public function validateAttribute($tag, $attribute, $type, $stripTag = FALSE) {
+  public function validateAttribute($tag, $attribute, $type, $stripTag = false) {
     if (isset($this->allow[$tag]['attributes'][$attribute])) {
       $this->allow[$tag]['attributes'][$attribute][$type] = $stripTag;
     }
@@ -96,7 +96,7 @@ class Encoder {
       case 'url':
         return preg_match('/^("|\')?https?:\/\//i', $value) == 1;
     }
-    return TRUE;
+    return true;
   }
 
   private function replaceAttributes($tag, $attributes) {
@@ -110,14 +110,14 @@ class Encoder {
       if (isset($this->allow[$tag]['attributes'][$attribute])) {
         $rules = $this->allow[$tag]['attributes'][$attribute];
         $value = $values[$key];
-        $valid = TRUE;
+        $valid = true;
         foreach ($rules as $rule => $stripTag) {
           if (!$this->isValid($value, $rule)) {
             if ($stripTag) {
-              return FALSE;
+              return false;
             }
             else {
-              $valid = FALSE;
+              $valid = false;
             }
           }
         }
@@ -156,7 +156,7 @@ class Encoder {
     $isCloseTag = $matches[2] == '/';
     $selfClosing = $matches[$num - 1] == '/';
     if (isset($this->selfClosingTags[$tag])) {
-      $selfClosing = TRUE;
+      $selfClosing = true;
     }
     if ((isset($this->allow[$tag]) OR $this->allowAll) AND !$this->stripAll) {
       if ($isCloseTag AND (!isset($this->openTags[$tag])
@@ -164,7 +164,7 @@ class Encoder {
         return '';
       }
       $attributes = $this->replaceAttributes($tag, $attributes);
-      if ($attributes !== FALSE ) {
+      if ($attributes !== false ) {
         $clean = '<' . ($isCloseTag ? '/' : '');
         $clean .= $tag;
         if (!$isCloseTag) {
@@ -200,13 +200,13 @@ class Encoder {
     else {
       $maxLength = $this->maxLength;
     }
-    if (isset($options['stripAll']) AND $options['stripAll'] == TRUE) {
-      $this->stripAll = TRUE;
+    if (isset($options['stripAll']) AND $options['stripAll'] == true) {
+      $this->stripAll = true;
     }
-    $shortened = FALSE;
+    $shortened = false;
     if ($maxLength > 0 AND strlen($text) > $maxLength) {
       $text = substr($text, 0, $maxLength);
-      $shortened = TRUE;
+      $shortened = true;
     }
     $text =
       preg_replace_callback('/<((\/?)(\w+)((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/', array($this, 'replaceTag'), $text);
@@ -215,7 +215,7 @@ class Encoder {
         $text .= '</' . $tag . '>';
       }
     }
-    $this->stripAll = FALSE;
+    $this->stripAll = false;
     if ($shortened AND isset($options['append'])) {
       $text .= $options['append'];
     }

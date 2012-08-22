@@ -73,7 +73,7 @@ class UpdateQuery extends Query implements ICondition, ILimitable {
   public function orderBy($column) {
     $this->orderBy[] = array(
       'column' => $column,
-      'descending' => FALSE
+      'descending' => false
     );
     return $this;
   }
@@ -81,7 +81,7 @@ class UpdateQuery extends Query implements ICondition, ILimitable {
   public function orderByDescending($column) {
     $this->orderBy[] = array(
       'column' => $column,
-      'descending' => TRUE
+      'descending' => true
     );
     return $this;
   }

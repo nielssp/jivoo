@@ -4,7 +4,7 @@ class Condition implements ICondition {
   private $clauses = array();
   private $vars = array();
 
-  public function __construct($clause = NULL) {
+  public function __construct($clause = null) {
     if (isset($clause) AND !empty($clause)) {
       $args = func_get_args();
       call_user_func_array(array($this, 'andWhere'), $args);

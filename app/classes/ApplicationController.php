@@ -4,12 +4,12 @@ class ApplicationController {
   
   private $name;
 
-  protected $config = NULL;
-  protected $auth = NULL;
-  protected $m = NULL;
-  protected $e = NULL;
-  protected $request = NULL;
-  protected $session = NULL;
+  protected $config = null;
+  protected $auth = null;
+  protected $m = null;
+  protected $e = null;
+  protected $request = null;
+  protected $session = null;
   
   private $actions = array();
   
@@ -21,7 +21,7 @@ class ApplicationController {
   private $helperObjects = array();
   
   
-  public final function __construct(Routes $routes, Configuration $config = NULL) {
+  public final function __construct(Routes $routes, Configuration $config = null) {
     $this->m = new Dictionary();
     $this->e = new Dictionary();
 
@@ -101,7 +101,7 @@ class ApplicationController {
     }
   }
   
-  public function autoRoute($action = NULL, $prefix = '') {
+  public function autoRoute($action = null, $prefix = '') {
     if (isset($action)) {
       $this->createRoute($action, $prefix);
       return;
@@ -111,7 +111,7 @@ class ApplicationController {
     }
   }
   
-  public function addRoute($path, $action, $priority = NULL) {
+  public function addRoute($path, $action, $priority = null) {
     $this->m->Routes->addRoute($path, $this, $action, $priority);
   }
 
@@ -135,16 +135,16 @@ class ApplicationController {
   
   protected function goBack() {
     if (!isset($this->session['returnTo'])) {
-      return FALSE;
+      return false;
     }
     $this->redirect($this->session['returnTo']);
   }
   
-  protected function redirect($route = NULL) {
+  protected function redirect($route = null) {
     $this->m->Routes->redirect($route);
   }
   
-  protected function refresh($query = NULL, $fragment = NULL) {
+  protected function refresh($query = null, $fragment = null) {
     $this->m->Routes->refresh($query, $fragment);
   }
 
@@ -152,7 +152,7 @@ class ApplicationController {
     $this->templatePaths[] = $path;
   }
   
-  protected function render($templateName = NULL, $return = FALSE) {
+  protected function render($templateName = null, $return = false) {
     $template = new Template($this->m->Templates, $this->m->Routes, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {

@@ -244,11 +244,11 @@ class I18n extends ModuleBase implements ITranslationService {
       return 'H:i:s';
   }
 
-  public function fdate($timestamp = NULL) {
+  public function fdate($timestamp = null) {
     return $this->date($this->dateFormat(), $timestamp);
   }
 
-  public function ftime($timestamp = NULL) {
+  public function ftime($timestamp = null) {
     return $this->date($this->timeFormat(), $timestamp);
   }
 
@@ -261,7 +261,7 @@ class I18n extends ModuleBase implements ITranslationService {
    * @param int $timestamp Optional Unix timestamp to use. Default is value of time()
    * @return string Formatted date string
    */
-  public function date($format, $timestamp = NULL) {
+  public function date($format, $timestamp = null) {
     if (is_null($timestamp))
       $timestamp = time();
     $month = date('n', $timestamp);

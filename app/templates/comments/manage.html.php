@@ -10,7 +10,7 @@ $this->render('backend/header.html');
 <?php if (!$Pagination->isLast()) echo $Html->link('&#8592; Older', $Pagination->nextLink()); ?>
           &nbsp;</span>
           <span class="pages block15">
-            <?php if (FALSE): ?>
+            <?php if (false): ?>
             <?php echo $Pagination->getFrom() . '-' . $Pagination->getTo(); ?>
             of <?php echo $Pagination->getCount(); ?>
             <?php else: ?>
@@ -85,11 +85,11 @@ $this->render('backend/header.html');
           </div>
 <?php endif; ?>
 <?php
-$this->first = TRUE;
+$this->first = true;
 foreach ($comments as $this->comment) {
   $this->render('comments/comment.html');
   if ($this->first) {
-    $this->first = FALSE;
+    $this->first = false;
   }
 }
 ?>

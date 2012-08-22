@@ -75,11 +75,11 @@ $allow = array(
   'div' => array(),
   'br' => array(),
   'a' => array(
-    'href' => array('url' => TRUE)
+    'href' => array('url' => true)
   ),
   'p' => array(),
   'img' => array(
-    'src' => array('url' => TRUE)
+    'src' => array('url' => true)
   ),
 );
 
@@ -89,11 +89,11 @@ $format->allowTag('div');
 $format->allowTag('br');
 $format->allowTag('a');
 $format->allowAttribute('a', 'href');
-$format->validateAttribute('a', 'href', 'url', TRUE);
+$format->validateAttribute('a', 'href', 'url', true);
 $format->allowTag('p');
 $format->allowTag('img');
 $format->allowAttribute('img', 'src');
-$format->validateAttribute('img', 'src', 'url', TRUE);
+$format->validateAttribute('img', 'src', 'url', true);
 $format->appendAttributes('a', 'rel="nofollow"');
 
 output($format->encode($comment, $allow));

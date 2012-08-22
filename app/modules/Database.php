@@ -44,7 +44,7 @@ class Database extends ModuleBase implements IDatabase  {
 
   public function migrate(Schema $schema) {
     if ($schema->getName() == 'undefined') {
-      return FALSE;
+      return false;
     }
     $name = $schema->getName();
     if ($this->m->Configuration->exists('database.migration.' . $name)) {
@@ -96,7 +96,7 @@ class Database extends ModuleBase implements IDatabase  {
 
   public function checkDriver($driver) {
     if (!file_exists(p(CLASSES . 'database/' . $driver . '.php'))) {
-      return FALSE;
+      return false;
     }
     $meta = readFileMeta(p(CLASSES . 'database/' . $driver . '.php'));
     if (!isset($meta['required'])) {
@@ -113,7 +113,7 @@ class Database extends ModuleBase implements IDatabase  {
       'name' => $meta['name'],
       'requiredOptions' => explode(' ', $meta['required']),
       'isAvailable' => count($missing) < 1,
-      'link' => $this->m->Http->getLink(NULL, array('select' => $driver)),
+      'link' => $this->m->Http->getLink(null, array('select' => $driver)),
       'missingExtensions' => $missing
     );
   }
@@ -135,7 +135,7 @@ class Database extends ModuleBase implements IDatabase  {
   public function selectDriverController($path = array(), $parameters = array(), $contentType = 'html') {
     $templateData = array();
     $templateData['drivers'] = $this->listDrivers();
-    $templateData['backendMenu'] = FALSE;
+    $templateData['backendMenu'] = false;
     $templateData['title'] = tr('Welcome to PeanutCMS');
     if (isset($_GET['select']) AND isset($templateData['drivers'][$_GET['select']])) {
       $this->m->Configuration->set('database.driver', $_GET['select']);

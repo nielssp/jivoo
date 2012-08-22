@@ -12,7 +12,7 @@ class Request {
 
   private $session;
   
-  private $fragment = NULL;
+  private $fragment = null;
 
   private $data;
 
@@ -56,11 +56,11 @@ class Request {
       case 'form':
         return $this->getFormData($form);
       case 'ip':
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
       case 'url':
-        return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : NULL;
+        return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
       case 'referer':
-        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL;
+        return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
     }
   }
   
@@ -77,7 +77,7 @@ class Request {
 
   }
   
-  public function unsetQuery($key = NULL) {
+  public function unsetQuery($key = null) {
     if (isset($key)) {
       $this->query = array();
     }
@@ -95,7 +95,7 @@ class Request {
 
   public function checkToken() {
     if (!isset($this->data['access_token']) OR !isset($this->session['access_token'])) {
-      return FALSE;
+      return false;
     }
     return $this->session['access_token'] === $this->data['access_token'];
   }

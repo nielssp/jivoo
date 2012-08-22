@@ -42,7 +42,7 @@ class CommentsController extends ApplicationController {
     if ($this->request->isAjax()) {
       $html = '';
       foreach ($this->comments as $this->comment) {
-        $html .= $this->render('comments/comment.html', TRUE);
+        $html .= $this->render('comments/comment.html', true);
       }
       $this->Json->respond(array('html' => $html));
     }
@@ -52,7 +52,7 @@ class CommentsController extends ApplicationController {
     }
   }
 
-  public function edit($comment = NULL) {
+  public function edit($comment = null) {
     $this->Backend->requireAuth('backend.comments.edit');
 
     if (isset($comment)) {
@@ -61,7 +61,7 @@ class CommentsController extends ApplicationController {
 
     if ($this->request->isPost() AND $this->request->checkToken()) {
       $this->comment->addData($this->request->data['comment']);
-      $this->comment->save(array('validate' => FALSE));
+      $this->comment->save(array('validate' => false));
       if (!$this->request->isAjax()) {
         $this->goBack();
         $this->redirect(array('action' => 'comments'));
@@ -75,12 +75,12 @@ class CommentsController extends ApplicationController {
     }
     else {
       $this->Json->respond(array(
-        'html' => $this->render('comments/comment.html', TRUE)
+        'html' => $this->render('comments/comment.html', true)
       ));
     }
   }
 
-  public function delete($comment = NULL) {
+  public function delete($comment = null) {
     $this->Backend->requireAuth('backend.comments.delete');
   }
 }

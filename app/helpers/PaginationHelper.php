@@ -72,35 +72,35 @@ class PaginationHelper extends ApplicationHelper {
     return $this->page == $this->pages;
   }
   
-  public function prevLink($fragment = NULL) {
+  public function prevLink($fragment = null) {
     return $this->getLink(array(
       'query' => array('page' => $this->page - 1),
       'fragment' => $fragment,
-      'mergeQuery' => TRUE
+      'mergeQuery' => true
     ));
   }
   
-  public function nextLink($fragment = NULL) {
+  public function nextLink($fragment = null) {
     return $this->getLink(array(
       'query' => array('page' => $this->page + 1),
       'fragment' => $fragment,
-      'mergeQuery' => TRUE
+      'mergeQuery' => true
     ));
   }
 
-  public function firstLink($fragment = NULL) {
+  public function firstLink($fragment = null) {
     return $this->getLink(array(
       'query' => array('page' => 1),
       'fragment' => $fragment,
-      'mergeQuery' => TRUE
+      'mergeQuery' => true
     ));
   }
   
-  public function lastLink($fragment = NULL) {
+  public function lastLink($fragment = null) {
     return $this->getLink(array(
       'query' => array('page' => $this->pages),
       'fragment' => $fragment,
-      'mergeQuery' => TRUE
+      'mergeQuery' => true
     ));
   }
 }

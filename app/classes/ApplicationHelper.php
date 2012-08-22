@@ -3,18 +3,18 @@
 abstract class ApplicationHelper {
 
   
-  protected $m = NULL;
-  protected $request = NULL;
-  protected $session = NULL;
-  protected $auth = NULL;
+  protected $m = null;
+  protected $request = null;
+  protected $session = null;
+  protected $auth = null;
 
-  protected $controller = NULL;
+  protected $controller = null;
 
   protected $helpers = array();
 
   private $helperObjects = array();
 
-  public final function __construct(Routes $routes, $controller = NULL) {
+  public final function __construct(Routes $routes, $controller = null) {
     $this->m = new Dictionary();
     
     $routes->addHelper($this);

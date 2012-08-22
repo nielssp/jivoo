@@ -16,11 +16,11 @@ $this->render('backend/header.html');
       <div class="section dark_section">
         <div class="container narrow_container">
           <p>
-            <?php echo $Form->label('username', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->label('username', null, array('class' => 'small')); ?>
             <?php echo $Form->field('username', array('class' => 'text bigtext')); ?>
           </p>
           <p>
-            <?php echo $Form->label('password', NULL, array('class' => 'small')); ?>
+            <?php echo $Form->label('password', null, array('class' => 'small')); ?>
             <?php echo $Form->field('password', array('class' => 'text bigtext')); ?>
           </p>
         </div>

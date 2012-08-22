@@ -8,8 +8,8 @@
 
 class Tinymce extends ExtensionBase {
   
-  private $encoder = NULL;
-  private $controller = NULL;
+  private $encoder = null;
+  private $controller = null;
   
   protected function init() {
     $this->load('TinymceEditor');

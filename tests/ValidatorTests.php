@@ -1,5 +1,5 @@
 <?php
-define('ALLOW_REDIRECT', FALSE);
+define('ALLOW_REDIRECT', false);
 include '../app/essentials.php';
 
 $core = new Core();

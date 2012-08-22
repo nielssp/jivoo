@@ -166,7 +166,7 @@ class Errors extends ModuleBase {
         }
       }
       else {
-        $body .= 'NULL';
+        $body .= 'null';
       }
       $body .= '</td></tr>';
     }
@@ -182,7 +182,7 @@ class Errors extends ModuleBase {
   * @param string $more A longer HTML-formatted (should use paragraphs <p></p>) explanation of the error
   * @return void
   */
-  public static function fatal($title, $message, $more = NULL) {
+  public static function fatal($title, $message, $more = null) {
     $body = '<h2>' . $message . '</h2>';
 
     if (!isset($more)) {

@@ -25,7 +25,7 @@ class Templates extends ModuleBase {
 
   private $indentation = 0;
 
-  private $contentTypeSet = FALSE;
+  private $contentTypeSet = false;
 
   private $prevParameters = array();
 
@@ -78,7 +78,7 @@ class Templates extends ModuleBase {
     }
     $fileName = explode('.', $name);
     $fileExt = $fileName[count($fileName) - 1];
-    $contentType = NULL;
+    $contentType = null;
     switch ($fileExt) {
       case 'html':
       case 'htm':
@@ -108,7 +108,7 @@ class Templates extends ModuleBase {
         throw new Exception(tr('Unsupported content type: %1', $fileExt));
     }
     header('Content-Type:' . $contentType . ';charset=utf-8');
-    $this->contentTypeSet = TRUE;
+    $this->contentTypeSet = true;
   }
 
   public function addScript($id, $file, $dependencies = array()) {
@@ -198,7 +198,7 @@ class Templates extends ModuleBase {
       }
       return $this->html[$location][$id]['priority'];
     }
-    return FALSE;
+    return false;
   }
 
   /**
@@ -278,7 +278,7 @@ class Templates extends ModuleBase {
     }
   }
   
-  public function link($label, $controller = NULL, $action = 'index', $parameters = array()) {
+  public function link($label, $controller = null, $action = 'index', $parameters = array()) {
     return $this->Core->Routes->getLink($controller, $action, $parameters);
   }
 
@@ -289,7 +289,7 @@ class Templates extends ModuleBase {
     $this->parameters[$template][$name] = $value;
   }
 
-  public function getTemplate($name, $additionalPaths = array(), $return = FALSE) {
+  public function getTemplate($name, $additionalPaths = array(), $return = false) {
     if (file_exists(p($this->theme . 'templates/' . $name. '.php'))) {
       if (!$return) {
         $this->setContentType($name);
@@ -316,7 +316,7 @@ class Templates extends ModuleBase {
         return $this->getTemplate($name . '.html');
       }
     }
-    return FALSE;
+    return false;
   }
 
   public function getTemplateData($name) {

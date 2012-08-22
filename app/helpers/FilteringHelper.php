@@ -15,11 +15,11 @@ class FilteringHelper extends ApplicationHelper {
   }
 
   public function addSearchColumn($column) {
-    $this->searchColumns[$column] = TRUE;
+    $this->searchColumns[$column] = true;
   }
 
   public function addFilterColumn($column) {
-    $this->filterColumns[$column] = TRUE;
+    $this->filterColumns[$column] = true;
   }
 
   public function filter(ICondition $query) {
@@ -32,7 +32,7 @@ class FilteringHelper extends ApplicationHelper {
     if (count($this->filterColumns) > 0) {
       foreach ($words as $key => $value) {
         $pos = strpos($value, ':');
-        if ($pos !== FALSE) {
+        if ($pos !== false) {
           $column = strtolower(substr($value, 0, $pos));
           if (isset($this->filterColumns[$column])) {
             unset($words[$key]);

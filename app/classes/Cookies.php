@@ -11,7 +11,7 @@ class Cookies implements arrayaccess {
     $this->prefix = $prefix;
   }
 
-  public function setCookie($name, $value, $expire = NULL, $path = WEBPATH) {
+  public function setCookie($name, $value, $expire = null, $path = WEBPATH) {
     if (!isset($expire)) {
       $expire = time() + 60 * 60 * 24 * 365;
     }

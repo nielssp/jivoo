@@ -30,7 +30,7 @@ class Shadow extends ModuleBase {
   }
   
 
-  public function genSalt($hashType = NULL) {
+  public function genSalt($hashType = null) {
     if (!isset($hashType)) {
       $hashType = $this->m->Configuration->get('shadow.hashType');
       if ($hashType == 'auto') {
@@ -82,7 +82,7 @@ class Shadow extends ModuleBase {
     return $prefix . $salt;
   }
   
-  public function hash($string, $hashType = NULL) {
+  public function hash($string, $hashType = null) {
     return crypt($string, $this->genSalt($hashType));
   }
   
@@ -90,7 +90,7 @@ class Shadow extends ModuleBase {
     return crypt($string, $hash) == $hash;
   }
   
-  public function setPassword($name, $password, $hash = FALSE) {
+  public function setPassword($name, $password, $hash = false) {
     if ($hash) {
       $password = $this->hash($password);
     }
@@ -100,7 +100,7 @@ class Shadow extends ModuleBase {
     
   }
   
-  public function comparePassword($name, $password, $hash = FALSE) {
+  public function comparePassword($name, $password, $hash = false) {
     if ($hash) {
       $password = $this->hash($password);
     }

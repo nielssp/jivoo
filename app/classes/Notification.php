@@ -21,7 +21,7 @@ abstract class Notification {
     }
   }
 
-  public function __construct($message, $uid = NULL, $readMore = NULL) {
+  public function __construct($message, $uid = null, $readMore = null) {
     self::$session = new Session(SESSION_PREFIX);
     $type = get_class($this);
     $this->message = $message;

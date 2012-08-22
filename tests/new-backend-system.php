@@ -1,6 +1,6 @@
 <?php
-define('ALLOW_REDIRECT', FALSE);
-define('DEBUG', TRUE);
+define('ALLOW_REDIRECT', false);
+define('DEBUG', true);
 include '../app/essentials.php';
 
 echo '<pre>';

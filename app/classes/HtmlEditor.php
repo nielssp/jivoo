@@ -1,22 +1,22 @@
 <?php
 
 class HtmlEditor implements IEditor {
-  protected $format = NULL;
-  protected $config = NULL;
-  protected $initiated = FALSE;
+  protected $format = null;
+  protected $config = null;
+  protected $initiated = false;
   
   public function __construct() {
     $this->format = new HtmlFormat();
   }
 
-  public function init(Configuration $config = NULL) {
+  public function init(Configuration $config = null) {
     $this->config = $config;
     if ($this->initiated) {
       $class = get_class($this);
       $instance = new $class();
       return $instance->init();
     }
-    $this->initiated = TRUE;
+    $this->initiated = true;
     return $this;
   }
 

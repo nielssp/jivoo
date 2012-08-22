@@ -3,10 +3,10 @@
 class BackendHelper extends ApplicationHelper {
   public function requireAuth() {
     $permissions = func_get_args();
-    $access = TRUE;
+    $access = true;
     foreach ($permissions as $permission) {
       if (!$this->auth->hasPermission($permission)) {
-        $access = FALSE;
+        $access = false;
         break;
       }
     }

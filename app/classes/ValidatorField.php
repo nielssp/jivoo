@@ -37,12 +37,12 @@ class ValidatorField {
       }
     }
     else if (!isset($this->rules[$rule])) {
-      return NULL;
+      return null;
     }
     return $this->rules[$rule];
   }
 
-  public function add($rule, $value = TRUE) {
+  public function add($rule, $value = true) {
     if (substr($rule, 0, 4) == 'rule') {
       if (!isset($this->rules[$rule])) {
         $this->rules[$rule] = new ValidatorRule();

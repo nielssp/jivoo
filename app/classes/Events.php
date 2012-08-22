@@ -4,13 +4,13 @@ class Events {
 
   private $events = array();
 
-  private $sender = NULL;
+  private $sender = null;
 
   public function __construct($sender) {
     $this->sender = $sender;
   }
 
-  public function attach($handler = NULL) {
+  public function attach($handler = null) {
     $backtrace = debug_backtrace();
     if (isset($backtrace[1]['function'])) {
       if (!isset($handler)) {
@@ -24,7 +24,7 @@ class Events {
     }
   }
 
-  public function trigger($event, $eventArgs = NULL) {
+  public function trigger($event, $eventArgs = null) {
     if (isset($this->events[$event])) {
       foreach ($this->events[$event] as $function) {
         call_user_func($function, $this->sender, $eventArgs);

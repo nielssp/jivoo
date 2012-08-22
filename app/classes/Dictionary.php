@@ -2,7 +2,7 @@
 
 class Dictionary {
   private $array = array();
-  private $readOnly = FALSE;
+  private $readOnly = false;
 
   public function __get($key) {
     if (isset($this->array[$key])) {
@@ -35,7 +35,7 @@ class Dictionary {
     return $this->readOnly;
   }
 
-  public function __construct($array = array(), $readOnly = FALSE) {
+  public function __construct($array = array(), $readOnly = false) {
     $this->array = $array;
     $this->readOnly = $readOnly;
   }

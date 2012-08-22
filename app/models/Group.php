@@ -17,28 +17,28 @@ class Group extends ActiveRecord {
         ->execute();
       $this->permissions = array();
       while ($row = $result->fetchAssoc()) {
-        $this->permissions[$row['permission']] = TRUE;
+        $this->permissions[$row['permission']] = true;
       }
     }
   }
 
-  public function hasPermission($key = NULL) {
+  public function hasPermission($key = null) {
     if ($this->isNew()) {
-      return FALSE;
+      return false;
     }
     if (!isset($key)) {
-      return TRUE;
+      return true;
     }
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
     }
     if (isset($this->permissions['*']))
-      return TRUE;
+      return true;
     if (isset($this->permissions[$key]))
-      return TRUE;
+      return true;
     $permArr = explode('.', $key);
     if (count($permArr) <= 1) {
-      return FALSE;
+      return false;
     }
     else {
       array_pop($permArr);
@@ -49,7 +49,7 @@ class Group extends ActiveRecord {
 
   public function setPermission($key, $value) {
     if ($this->isNew()) {
-      return FALSE;
+      return false;
     }
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
@@ -59,14 +59,14 @@ class Group extends ActiveRecord {
       return;
     }
     $dataSource = $dataSource->getOwner()->groups_permissions;
-    if ($value == TRUE AND !$this->hasPermission($key)) {
-      $this->permissions[$key] = TRUE;
+    if ($value == true AND !$this->hasPermission($key)) {
+      $this->permissions[$key] = true;
       $dataSource->insert()
         ->addPair('group_id', $this->id)
         ->addPair('permission', $key)
         ->execute();
     }
-    else if ($value == FALSE AND $this->hasPermission($key)) {
+    else if ($value == false AND $this->hasPermission($key)) {
       unset($this->permissions[$key]);
       $dataSource->delete()
         ->where('group_id = ? AND permission = ?')
