@@ -42,7 +42,7 @@ class SqlTable implements ITable {
         $sqlString .= $this->owner->escapeQuery('?', $value);
       }
       else {
-        $sqlString .= 'null';
+        $sqlString .= 'NULL';
       }
       if (next($values) !== false) {
         $sqlString .= ', ';

@@ -171,7 +171,7 @@ class MysqlDatabase extends SqlDatabase {
       if (!$options['null']) {
         $sql .= ' NOT';
       }
-      $sql .= ' null';
+      $sql .= ' NULL';
       if (isset($options['default'])) {
         $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
       }
@@ -207,7 +207,7 @@ class MysqlDatabase extends SqlDatabase {
     if (!$options['null']) {
       $sql .= ' NOT';
     }
-    $sql .= ' null';
+    $sql .= ' NULL';
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }
@@ -230,7 +230,7 @@ class MysqlDatabase extends SqlDatabase {
     if (!$options['null']) {
       $sql .= ' NOT';
     }
-    $sql .= ' null';
+    $sql .= ' NULL';
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }

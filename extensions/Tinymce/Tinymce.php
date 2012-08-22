@@ -44,7 +44,7 @@ class Tinymce extends ExtensionBase {
       'tinymce-init',
       $this->m->Routes->getLink(array(
         'controller' => $this->controller,
-        'action' => 'init'
+        'action' => 'initJs'
       )),
       array('tinymce')
     );
