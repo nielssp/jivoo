@@ -192,7 +192,7 @@ $(function() {
     $.ajax({
       type: 'POST',
       url: action,
-      dataType: 'html',
+      dataType: 'json',
       data: {
         access_token: accessToken,
         comment: { status: status }
@@ -207,7 +207,7 @@ $(function() {
         if (targetClass != null) {
           record.addClass(targetClass, 500);
         }
-        record.html($(data).html());
+        record.html($(data.html).html());
         record.find('.menubutton').menuButton();
       }
     });
@@ -225,14 +225,14 @@ $(function() {
         $.ajax({
           type: 'GET',
           url: location.href,
-          dataType: 'html',
+          dataType: 'json',
           data: {
             filter: $('input[name=filter]').val(),
             from: $('input[name=to]').val(),
             to: $('input[name=to]').val()
           },
           success: function(data) {
-            list.append(data);
+            list.append(data.html);
           }
         });
       });

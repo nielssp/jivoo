@@ -2,7 +2,7 @@
 
 class CommentsController extends ApplicationController {
   
-  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend');
+  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend', 'Json');
   
   public function index($post) {
     $this->render('not-implemented.html');
@@ -40,9 +40,11 @@ class CommentsController extends ApplicationController {
     $this->accessToken = $this->request->getToken();
     
     if ($this->request->isAjax()) {
+      $html = '';
       foreach ($this->comments as $this->comment) {
-        $this->render('comments/comment.html');
+        $html .= $this->render('comments/comment.html', TRUE);
       }
+      $this->Json->respond(array('html' => $html));
     }
     else {
       $this->returnToThis();
@@ -72,7 +74,9 @@ class CommentsController extends ApplicationController {
       $this->render();
     }
     else {
-      $this->render('comments/comment.html');
+      $this->Json->respond(array(
+        'html' => $this->render('comments/comment.html', TRUE)
+      ));
     }
   }
 

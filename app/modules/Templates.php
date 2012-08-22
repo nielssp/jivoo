@@ -289,13 +289,17 @@ class Templates extends ModuleBase {
     $this->parameters[$template][$name] = $value;
   }
 
-  public function getTemplate($name, $additionalPaths = array()) {
+  public function getTemplate($name, $additionalPaths = array(), $return = FALSE) {
     if (file_exists(p($this->theme . 'templates/' . $name. '.php'))) {
-      $this->setContentType($name);
+      if (!$return) {
+        $this->setContentType($name);
+      }
       return p($this->theme . 'templates/' . $name . '.php');
     }
     else if (file_exists(p(TEMPLATES . $name . '.php'))) {
-      $this->setContentType($name);
+      if (!$return) {
+        $this->setContentType($name);
+      }
       return p(TEMPLATES . $name . '.php');
     }
     else {

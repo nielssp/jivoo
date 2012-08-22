@@ -59,6 +59,10 @@ class ApplicationController {
   public function __set($name, $value) {
     $this->data[$name] = $value;
   }
+  
+  public function getData() {
+    return $this->data;
+  }
 
   public function addModule($object) {
     $class = get_class($object);
@@ -148,7 +152,7 @@ class ApplicationController {
     $this->templatePaths[] = $path;
   }
   
-  protected function render($templateName = NULL) {
+  protected function render($templateName = NULL, $return = FALSE) {
     $template = new Template($this->m->Templates, $this->m->Routes, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
@@ -158,7 +162,7 @@ class ApplicationController {
     }
     $templateData = array_merge($this->data, $this->helperObjects);
     $template->set($templateData);
-    $template->render($templateName);
+    return $template->render($templateName, $return);
   }
 
   public function init() {

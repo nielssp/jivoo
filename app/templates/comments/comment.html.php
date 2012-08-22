@@ -9,9 +9,10 @@ switch ($comment->status) {
   default: $classes .= ' yellow';
 }
 ?>
-        <div class="record<?php echo $classes; ?>">
+        <div class="record<?php echo $classes; ?>" id="record-<?php echo $comment->id; ?>">
           <div class="checkbox">
-            <input type="checkbox" name="comments[<?php echo $comment->id; ?>]" value="selected" />
+            <input type="checkbox" id="record-<?php echo $comment->id; ?>-checkbox"
+              name="comments[<?php echo $comment->id; ?>]" value="selected" />
           </div>
           <div class="header">
             <span class="author block20 margin5">

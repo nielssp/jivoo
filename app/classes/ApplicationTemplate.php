@@ -92,14 +92,14 @@ abstract class ApplicationTemplate {
     $this->templatePaths = $paths;
   }
 
-  protected function getTemplate($template) {
-    return $this->m->Templates->getTemplate($template, $this->templatePaths);
+  protected function getTemplate($template, $return = FALSE) {
+    return $this->m->Templates->getTemplate($template, $this->templatePaths, $return);
   }
 
   protected function getTemplateData($template) {
     return $this->m->Templates->getTemplateData($template);
   }
 
-  public abstract function render($template);
+  public abstract function render($template, $return = FALSE);
 
 }
