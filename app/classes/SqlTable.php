@@ -223,7 +223,7 @@ class SqlTable implements ITable {
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($this->query)) {
+    if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
     }
     return $this->owner->rawQuery($sqlString);
