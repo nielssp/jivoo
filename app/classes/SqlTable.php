@@ -224,7 +224,7 @@ class SqlTable implements ITable {
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
     if (isset($query->limit)) {
-      $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
+      $sqlString .= ' LIMIT ' . $query->limit;
     }
     return $this->owner->rawQuery($sqlString);
   }
@@ -246,7 +246,7 @@ class SqlTable implements ITable {
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
     if (isset($query->limit)) {
-      $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
+      $sqlString .= ' LIMIT ' . $query->limit;
     }
     return $this->owner->rawQuery($sqlString);
   }

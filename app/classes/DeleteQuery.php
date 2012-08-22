@@ -1,10 +1,9 @@
 <?php
-class DeleteQuery extends Query implements ICondition, ILimitable {
+class DeleteQuery extends Query implements ICondition {
   protected $orderBy;
   protected $descending = false;
   protected $limit;
   protected $where;
-  protected $offset = 0;
   protected $join;
 
   public function __construct() {
@@ -20,11 +19,6 @@ class DeleteQuery extends Query implements ICondition, ILimitable {
         call_user_func_array(array($this->where, 'orWhere'), $args);
         return $this;
     }
-  }
-
-  public function limit($limit) {
-    $this->limit = (int)$limit;
-    return $this;
   }
 
   public function offset($offset) {

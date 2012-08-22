@@ -1,9 +1,8 @@
 <?php
-class UpdateQuery extends Query implements ICondition, ILimitable {
+class UpdateQuery extends Query implements ICondition {
   protected $orderBy;
   protected $limit;
   protected $where;
-  protected $offset = 0;
   protected $sets = array();
 
   public function __construct() {
@@ -35,11 +34,6 @@ class UpdateQuery extends Query implements ICondition, ILimitable {
 
   public function limit($limit) {
     $this->limit = (int)$limit;
-    return $this;
-  }
-
-  public function offset($offset) {
-    $this->offset = (int)$offset;
     return $this;
   }
   

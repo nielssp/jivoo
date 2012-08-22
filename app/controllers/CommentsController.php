@@ -51,7 +51,6 @@ class CommentsController extends ApplicationController {
         $query = UpdateQuery::create()->orderByDescending('date');
       }
       $this->Filtering->filter($query);
-      $this->Pagination->paginate($query);
       $this->Bulk->select($query);
       Comment::execute($query);
       if (!$this->request->isAjax()) {
