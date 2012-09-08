@@ -86,6 +86,8 @@ abstract class ActiveRecord implements IModel {
   
   private $editors = array();
 
+  protected $virtualData = array();
+
   protected $validate = array();
 
   protected $defaults = array();
@@ -113,6 +115,10 @@ abstract class ActiveRecord implements IModel {
       $this->changed[$property] = true;
       $this->isSaved = false;
     }
+    else if (isset($this->fields[$property])) {
+      $this->virtualData[$property] = $value;
+      $this->isSaved = false;
+    }
     else {
       throw new RecordPropertyNotFoundException(
         tr('Property "%1" was not found in model "%2".', $property, get_class($this))
@@ -126,6 +132,9 @@ abstract class ActiveRecord implements IModel {
     }
     else if (array_key_exists($property, $this->data)) {
       return $this->data[$property];
+    }
+    else if (isset($this->virtualData[$property])) {
+      return $this->virtualData[$property];
     }
     else {
       throw new RecordPropertyNotFoundException(
@@ -499,7 +508,7 @@ abstract class ActiveRecord implements IModel {
     if (!class_exists($class)) {
       throw new Exception(tr('%1 is not a class', $class));
     }
-    $new = new $class($assoc);
+    $new = new $class($assoc, true);
     /*
     foreach ($assoc as $property => $value) {
       if (in_array($property, self::$models[$class]['columns'])) {
@@ -523,7 +532,7 @@ abstract class ActiveRecord implements IModel {
     $keys = array_unique(array_merge(array_keys($new->defaults), array_keys($data)));
     foreach ($keys as $key) {
       try {
-        if (isset($data[$key]) AND isset($new->fields[$key])) {
+        if (isset($new->fields[$key]) OR $allowedFields === true) {
           $editor = $new->getFieldEditor($key);
           if (isset($editor)) {
             $format = $editor->getFormat();
@@ -633,7 +642,7 @@ abstract class ActiveRecord implements IModel {
         $result = $query->addVar($value)->execute();
         return $result->hasRows() != $conditionValue;
       case 'callback':
-        return !is_callable($conditionValue) OR call_user_func($conditionValue, $value);
+        return !is_callable(array($this, $conditionValue)) OR call_user_func(array($this, $conditionValue), $value);
     }
     return true;
   }
@@ -744,9 +753,10 @@ abstract class ActiveRecord implements IModel {
   }
   
   public function isFieldRequired($field) {
-    return isset($this->validate[$field])
-      AND isset($this->validate[$field]['presence'])
-      AND $this->validate[$field]['presence'];
+    $validator = $this->getValidator();
+    return isset($validator->$field)
+      AND isset($validator->$field->presence)
+      AND $validator->$field->presence;
   }
   
   public function isField($field) {

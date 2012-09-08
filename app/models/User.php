@@ -11,15 +11,37 @@ class User extends ActiveRecord implements ILinkable {
   );
 
   protected $validate = array(
-    'username' => array('presence' => true,
-                        'minLength' => 1,
-                        'maxLength' => 255),
-    'password' => array('presence' => true,
-                        'minLength' => 1,
-                        'maxLength' => 255),
-    'email' => array('presence' => true,
-                     'minLength' => 1,
-                     'maxLength' => 255),
+    'username' => array(
+      'presence' => true,
+    ),
+    'password' => array(
+      'presence' => true,
+    ),
+    'email' => array(
+      'presence' => true,
+      'email' => true
+    ),
+    'confirm_password' => array(
+      'presence' => true,
+      'ruleConfirm' => array(
+        'callback' => 'confirmPassword',
+        'message' => 'The two passwords are not identical'
+      ),
+    ),
+  );
+
+  protected $fields = array(
+    'username' => 'Username',
+    'email' => 'Email',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm password',
+  );
+
+  protected $defaults = array(
+    'cookie' => '',
+    'session' => '',
+    'ip' => '',
+    'group_id' => 0,
   );
 
   public function getRoute() {
@@ -32,5 +54,9 @@ class User extends ActiveRecord implements ILinkable {
 
   public function hasPermission($key) {
     return $this->getGroup()->hasPermission($key);
+  }
+
+  protected function confirmPassword($value) {
+    return $value == $this->password;
   }
 }

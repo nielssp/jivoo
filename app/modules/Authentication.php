@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS authentication system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Shadow Templates Database Routes Http
+// Dependencies   : Errors Configuration Shadow Maintenance Templates Database Routes Http
 
 /**
  * Authentication module
@@ -22,6 +22,10 @@ class Authentication extends ModuleBase {
   private $unregistered = null;
 
   protected function init() {
+    $this->m->Configuration->setDefault(array(
+      'authentication.defaultGroups.unregistered' => 'guests',
+      'authentication.defaultGroups.registered' => 'users'
+    ));
     $newInstall = false;
 
     $usersSchema = new usersSchema();
@@ -39,12 +43,14 @@ class Authentication extends ModuleBase {
     User::connect($this->m->Database->users);
     Group::connect($this->m->Database->groups);
 
+    $rootGroup = null;
     if ($newInstall) {
       $group = Group::create();
       $group->name = 'root';
       $group->title = tr('Admin');
       $group->save();
       $group->setPermission('*', true);
+      $rootGroup = $group;
 
       $group = Group::create();
       $group->name = 'users';
@@ -57,16 +63,19 @@ class Authentication extends ModuleBase {
       $group->title = tr('Guest');
       $group->save();
       $group->setPermission('frontend', true);
+
     }
 
-    $this->m->Configuration->setDefault(array(
-      'authentication.defaultGroups.unregistered' => 'guests',
-      'authentication.defaultGroups.registered' => 'users'
-    ));
+    if ($newInstall OR $this->m->Configuration->get('authentication.rootCreated') != 'yes') {
+      $controller = new AuthenticationController($this->m->Routes, $this->m->Configuration->getSubset('authentication'));
+      $controller->addModule($this->m->Shadow);
+      $this->m->Maintenance->setup($controller, 'setupRoot', array($rootGroup));
+    }
     
     if (!$this->isLoggedIn()) {
-      $unregistered = Group::first(SelectQuery::create()
-        ->where('name = ?', $this->m->Configuration['authentication.defaultGroups.unregistered'])
+      $unregistered = Group::first(
+        SelectQuery::create()
+          ->where('name = ?', $this->m->Configuration['authentication.defaultGroups.unregistered'])
       );
       if ($unregistered) {
         $this->unregistered = $unregistered;

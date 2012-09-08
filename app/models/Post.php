@@ -87,6 +87,7 @@ class Post extends ActiveRecord implements ILinkable {
     'date' => array('time'),
     'user_id' => 0,
     'state' => 'draft',
+    'status' => 'draft'
   );
 
 

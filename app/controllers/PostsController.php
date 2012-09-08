@@ -6,7 +6,7 @@ class PostsController extends ApplicationController {
 
   public function index() {
     $select = SelectQuery::create()
-      ->where('state = "published"')
+      ->where('status = "published"')
       ->orderByDescending('date');
     $this->Pagination->setCount(Post::count());
 
@@ -22,7 +22,7 @@ class PostsController extends ApplicationController {
 
     $this->post = Post::find($post);
 
-    if (!$this->post OR ($this->post->state != 'published'
+    if (!$this->post OR ($this->post->status != 'published'
         AND !$this->auth->hasPermission('backend.posts.viewDraft'))) {
       return $this->render('404.html');
     }
@@ -152,14 +152,14 @@ class PostsController extends ApplicationController {
     if ($this->request->isPost() AND $this->request->checkToken('post')) {
       $this->post = Post::create($this->request->data['post']);
       if (isset($this->request->data['publish'])) {
-        $this->post->state = 'published';
+        $this->post->status = 'published';
       }
       else {
-        $this->post->state = 'draft';
+        $this->post->status = 'draft';
       }
       if ($this->post->isValid()) {
         $this->post->save();
-        if ($this->post->state == 'published') {
+        if ($this->post->status == 'published') {
           $this->redirect($this->post);
         }
         else {
@@ -196,14 +196,14 @@ class PostsController extends ApplicationController {
     if ($this->request->isPost()) {
       $this->post->addData($this->request->data['post']);
       if (isset($this->request->data['publish'])) {
-        $this->post->state = 'published';
+        $this->post->status = 'published';
       }
       else {
-        $this->post->state = 'draft';
+        $this->post->status = 'draft';
       }
       if ($this->post->isValid()) {
         $this->post->save();
-        if ($this->post->state == 'published') {
+        if ($this->post->status == 'published') {
           $this->redirect($this->post);
         }
         else {
