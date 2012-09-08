@@ -153,7 +153,7 @@ class Errors extends ModuleBase {
 //             $body .= ob_get_clean();
 //           }
           if (is_scalar($arg)) {
-            $body .= $arg;
+            $body .= h($arg);
           }
           else if (is_object($arg)) {
             $body .= get_class($arg);
