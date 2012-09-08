@@ -89,7 +89,7 @@ class commentsSchema extends Schema {
     ),
   );
   
-  public function addColumn_content_text(IDatabase $db) {
+  public function addColumn_content_text(MigratableDatabase $db) {
     $db->addColumn('comments', 'content_text', $this->content_text);
     $rows = $db->comments->select()->execute();
     $encoder = new Encoder();

@@ -81,7 +81,7 @@ class postsSchema extends Schema {
     ),
   );
 
-  public function addColumn_status(IDatabase $db) {
+  public function addColumn_status(MigratableDatabase $db) {
     $db->addColumn('posts', 'status', $this->status);
     $db->posts->update()->set('status = state')->execute();
   }

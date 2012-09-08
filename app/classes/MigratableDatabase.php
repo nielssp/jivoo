@@ -1,6 +1,17 @@
 <?php
 
 abstract class MigratableDatabase implements IDatabase, IMigratable {
+  private function migrationMethod(Schema $schema, $method, $subject = '') {
+    if (!empty($subject)) {
+      $method = $method . '_' . $subject;
+    }
+    if (!method_exists($schema, $method)) {
+      return false;
+    }
+    call_user_func(array($schema, $method), $this);
+    return true;
+  }
+
   public function migrate(Schema $schema) {
     $table = $schema->getName();
     if ($this->tableExists($table)) {
@@ -9,21 +20,18 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
       $status = 'unchanged';
       foreach ($allColumns as $column) {
         if (!isset($oldSchema->$column)) {
-          /** @TODO work, work */
-          if (method_exists($schema, 'addColumn_' . $column)) {
-            call_user_func(array($schema, 'addColumn_' . $column), $this);
-          }
-          else {
-            $this->addColumn($table, $column, $schema->$column);
-          }
+          $this->migrationMethod($schema, 'addColumn', $column)
+            OR $this->addColumn($table, $column, $schema->$column);
           $status = 'updated';
         }
         else if (!isset($schema->$column)) {
-          $this->deleteColumn($table, $column);
+          $this->migrationMethod($schema, 'deleteColumn', $column)
+            OR $this->deleteColumn($table, $column);
           $status = 'updated';
         }
         else if ($schema->$column != $oldSchema->$column) {
-          $this->alterColumn($table, $column, $schema->$column);
+          $this->migrationMethod($schema, 'alterColumn', $column)
+            OR $this->alterColumn($table, $column, $schema->$column);
           $status = 'updated';
         }
       }
@@ -32,22 +40,26 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
       $allIndexes = array_unique(array_merge($indexes, $oldIndexes));
       foreach ($allIndexes as $index) {
         if (!isset($oldSchema->indexes[$index])) {
-          $this->createIndex($table, $index, $schema->indexes[$index]);
+          $this->migrationMethod($schema, 'createIndex', $index)
+            OR $this->createIndex($table, $index, $schema->indexes[$index]);
           $status = 'updated';
         }
         else if (!isset($schema->indexes[$index])) {
-          $this->deleteIndex($table, $index);
+          $this->migrationMethod($schema, 'deleteIndex', $index)
+            OR $this->deleteIndex($table, $index);
           $status = 'updated';
         }
         else if ($schema->indexes[$index] != $oldSchema->indexes[$index]) {
-          $this->alterIndex($table, $index, $schema->indexes[$index]);
+          $this->migrationMethod($schema, 'alterIndex', $index)
+            OR $this->alterIndex($table, $index, $schema->indexes[$index]);
           $status = 'updated';
         }
       }
       return $status;
     }
     else {
-      $this->createTable($schema);
+      $this->migrationMethod($schema, 'createTable')
+        OR $this->createTable($schema);
       return 'new';
     }
   }
