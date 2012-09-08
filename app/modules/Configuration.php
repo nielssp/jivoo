@@ -74,6 +74,10 @@ class Configuration extends ModuleBase implements arrayaccess {
     return $arrayRef;
   }
 
+  public function getArray() {
+  return $this->getDataReference('');
+  }
+
   /**
    * Update a configuration key
    *
@@ -286,4 +290,5 @@ class Configuration extends ModuleBase implements arrayaccess {
   public function offsetUnset($key) {
     $this->delete($key);
   }
+
 }

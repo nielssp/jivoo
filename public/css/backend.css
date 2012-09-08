@@ -146,6 +146,10 @@ strong, em {
   width:768px;
 }
 
+.container .error {
+  color:#a22121;
+}
+
 .narrow_container {
   width:368px;
 }

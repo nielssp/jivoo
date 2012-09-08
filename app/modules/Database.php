@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : Configuration Routes Templates Actions Errors Http
+// Dependencies   : Configuration Routes Templates Actions Errors Http Maintenance
 
 class Database extends ModuleBase implements IDatabase  {
   private $driver;
@@ -61,23 +61,29 @@ class Database extends ModuleBase implements IDatabase  {
   /* End IDatabase implementation */
 
   protected function init() {
+    $this->m->Configuration->setDefault(array(
+      'database.server' => 'localhost',
+      'database.database' => 'peanutcms',
+      'database.filename' => 'cfg/db.sqlite3',
+    ));
+    $controller = new DatabaseMaintenanceController($this->m->Routes, $this->m->Configuration['database']);
+    $controller->addModule($this);
     if (!$this->m->Configuration->exists('database.driver')) {
-      $this->m->Routes->setRoute(array($this, 'selectDriverController'), 10);
-      $this->m->Routes->callController();
-      exit;
+      $this->m->Maintenance->setup($controller, 'selectDriver');
     }
     else {
       $this->driver = $this->m->Configuration->get('database.driver');
       $this->driverInfo = $this->checkDriver($this->driver);
       if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
         $this->m->Configuration->delete('database.driver');
-        $this->m->Http->refreshPath();
+        $this->m->routes->refresh();
+      }
+      if ($this->m->Configuration->get('database.configured') != 'yes') {
+        $this->m->Maintenance->setup($controller, 'setupDriver', array($this->driverInfo));
       }
       foreach ($this->driverInfo['requiredOptions'] as $option) {
         if (!$this->m->Configuration->exists('database.' . $option)) {
-          $this->m->Routes->setRoute(array($this, 'setupDriverController'), 10);
-          $this->m->Routes->callController();
-          exit;
+          $this->m->Maintenance->setup($controller, 'setupDriver', array($this->driverInfo));
         }
       }
       require(p(CLASSES . 'database/' . $this->driver . '.php'));
@@ -112,8 +118,8 @@ class Database extends ModuleBase implements IDatabase  {
       'driver' => $driver,
       'name' => $meta['name'],
       'requiredOptions' => explode(' ', $meta['required']),
+      'optionalOptions' => explode(' ', $meta['optional']),
       'isAvailable' => count($missing) < 1,
-      'link' => $this->m->Http->getLink(null, array('select' => $driver)),
       'missingExtensions' => $missing
     );
   }
@@ -130,41 +136,6 @@ class Database extends ModuleBase implements IDatabase  {
       }
     }
     return $drivers;
-  }
-
-  public function selectDriverController($path = array(), $parameters = array(), $contentType = 'html') {
-    $templateData = array();
-    $templateData['drivers'] = $this->listDrivers();
-    $templateData['backendMenu'] = false;
-    $templateData['title'] = tr('Welcome to PeanutCMS');
-    if (isset($_GET['select']) AND isset($templateData['drivers'][$_GET['select']])) {
-      $this->m->Configuration->set('database.driver', $_GET['select']);
-      $this->m->Http->refreshPath(array());
-    }
-    else {
-      $this->m->Templates->renderTemplate('backend/select-driver.html', $templateData);
-    }
-  }
-
-  public function setupDriverController($path = array(), $parameters = array(), $contentType = 'html') {
-    $templateData = array();
-    $templateData['driver'] = $this->driverInfo;
-    $templateData['cancelAction'] = $this->m->Actions->add('unset-driver');
-    $templateData['saveAction'] = $this->m->Actions->add('save');
-    $templateData['title'] = tr('Welcome to PeanutCMS');
-    if ($this->m->Actions->has('unset-driver')) {
-      $this->m->Configuration->delete('database.driver');
-      $this->m->Http->refreshPath();
-    }
-    if ($this->m->Actions->has('save')) {
-      $this->m->Configuration->set('database.server', $_POST['server']);
-      $this->m->Configuration->set('database.username', $_POST['username']);
-      $this->m->Configuration->set('database.password', $_POST['password']);
-      $this->m->Configuration->set('database.database', $_POST['database']);
-      $this->m->Configuration->set('database.tablePrefix', $_POST['tablePrefix']);
-      $this->m->Http->refreshPath();
-    }
-    $this->m->Templates->renderTemplate('backend/setup-driver.html', $templateData);
   }
 
 }

@@ -1,8 +1,8 @@
 <?php
 class SqlTable implements ITable {
-  private $owner = null;
-  private $name = '';
-  private $schema = null;
+  protected $owner = null;
+  protected $name = '';
+  protected $schema = null;
 
   public function __construct(SqlDatabase $database, $table) {
     $this->owner = $database;

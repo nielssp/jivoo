@@ -9,7 +9,7 @@ class FormHelper extends ApplicationHelper {
   
   public function begin(IModel $record = null, $fragment = null) {
     if (!isset($record)) {
-      return false;
+      $record = new Form('form');
     }
     $this->post = $this->request->isPost();
     $this->record = $record;
@@ -57,6 +57,19 @@ class FormHelper extends ApplicationHelper {
     }
     else {
       return $required;
+    }
+  }
+
+  public function isOptional($field, $output = null) {
+    if (!isset($this->record)) {
+      return;
+    }
+    $required = $this->record->isFieldRequired($field);
+    if (isset($output)) {
+      return $required ? '' : $output;
+    }
+    else {
+      return !$required;
     }
   }
   
