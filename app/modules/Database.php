@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : Configuration Routes Templates Actions Errors Http Maintenance
+// Dependencies   : Configuration Routes Templates Errors Http Maintenance
 
 class Database extends ModuleBase implements IDatabase  {
   private $driver;

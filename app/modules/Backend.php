@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
-// Dependencies   : Database Authentication Errors Actions Configuration Routes
+// Dependencies   : Database Authentication Errors Configuration Routes
 //                  Templates Http
 
 /**
