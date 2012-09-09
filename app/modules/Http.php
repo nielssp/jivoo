@@ -34,7 +34,7 @@ class Http extends ModuleBase {
     $this->request = new Request();
 
     // Determine if the current URL is correct
-    if ($this->m->Configuration->get('rewrite') === 'on') {
+    if ($this->m->Configuration->get('http.rewrite') == 'on') {
       if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {
         array_shift($this->request->path);
         $this->redirectPath($this->request->path, $this->request->query);
@@ -92,6 +92,9 @@ class Http extends ModuleBase {
     if (defined('ALLOW_REDIRECT') AND ALLOW_REDIRECT) {
       header('Location: ' . $location);
       exit();
+    }
+    else {
+      throw new RedirectNotAllowedException(tr('Redirect not allowed'));
     }
   }
 
@@ -232,3 +235,5 @@ class Http extends ModuleBase {
   }
 
 }
+
+class RedirectNotAllowedException extends Exception { }

@@ -3,6 +3,11 @@
  */
 
 $(function() {
+
+  String.prototype.trim = function() {
+    return this.replace(/(^[ \n\t\r]+|[ \n\r\t]+$)/g, '');
+  }
+
   $.maxZIndex = $.fn.maxZIndex = function(opt) {
     /// <summary>
     /// Returns the max zOrder in the document (no parameter)
@@ -240,27 +245,6 @@ $(function() {
     return false;
   });
   
-  $(".bulk-actions :checkbox").change(function() {
-    if ($(this).attr('checked') == 'checked') {
-      $(".record :checkbox").attr('checked', 'checked').change();
-      $(".bulk-actions :checkbox").attr('checked', 'checked');
-    }
-    else {
-      $(".record :checkbox").removeAttr('checked').change();
-      $(".bulk-actions :checkbox").removeAttr('checked');
-    }
-  });
-
-  $(".record :checkbox").change(function() {
-    var number = $(".record :checkbox:checked").length;
-    if (number == 0) {
-      var text = 'Select all';
-    }
-    else {
-      var text = number + ' selected';
-    }
-    $(".bulk-actions .checkbox-text label").html(text);
-  });
 
   $(".permalink").each(function(index, Element) {
     var input = $(this);
@@ -297,6 +281,74 @@ $(function() {
     else {
       $("input#login_password").focus();
     }
+  });
+
+  $("#pagination").each(function() {
+    var pagination = $(this);
+    var filterInput = pagination.find('input[name=filter]');
+    var from = pagination.data('from');
+    var to = pagination.data('to');
+    var count = pagination.data('count');
+
+    var phrases = [];
+    
+    $(".bulk-actions :checkbox").each(function(index, Element) {
+      var checkbox = $(this);
+      var label = checkbox.parent().parent().find('label');
+      phrases[0] = label.html();
+      phrases[1] = label.data('phrase1');
+      phrases[2] = label.data('phrase2');
+      label.html(phrases[1]);
+      checkbox.val('not-all');
+      checkbox.change(function() {
+        checkbox.val('not-all');
+        if ($(this).attr('checked') == 'checked') {
+          $(".record :checkbox").attr('checked', 'checked').change();
+          $(".bulk-actions :checkbox").attr('checked', 'checked');
+        }
+        else {
+          $(".record :checkbox").removeAttr('checked').change();
+          $(".bulk-actions :checkbox").removeAttr('checked');
+        }
+      });
+    });
+
+    var selectAllLink = $('<a></a>').html('(' + phrases[0].trim() + ')');
+    selectAllLink.attr('href', '#');
+
+    var labels = $('.bulk-actions .checkbox-text label');
+
+    labels.find('a').live('click', function() {
+      $(".bulk-actions :checkbox").val('all');
+      labels.html(phrases[2].replace('0', count));
+    });
+
+    $(".record :checkbox").change(function() {
+      var total = $(".record :checkbox").length;
+      var number = $(".record :checkbox:checked").length;
+      if (number == 0) {
+        var text = phrases[1];
+      }
+      else {
+        var text = phrases[2].replace('0', number);
+      }
+      labels.html(text);
+      if (number == total) {
+        labels.append(selectAllLink);
+      }
+    });
+
+//    $(".bulk-actions :checkbox").change(function() {
+//      if ($(this).attr('checked') == 'checked') {
+//        $(".record :checkbox").attr('checked', 'checked').change();
+//        $(".bulk-actions :checkbox").attr('checked', 'checked');
+//      }
+//      else {
+//        $(".record :checkbox").removeAttr('checked').change();
+//        $(".bulk-actions :checkbox").removeAttr('checked');
+//      }
+//    });
+
   });
   
 });

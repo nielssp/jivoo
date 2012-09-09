@@ -5,7 +5,10 @@ $this->render('backend/header.html');
 
 
       <div class="section light_section">
-        <div class="container pagination">
+        <div class="container pagination" id="pagination"
+            data-from="<?php echo $Pagination->getFrom(); ?>"
+            data-to="<?php echo $Pagination->getTo(); ?>"
+            data-count="<?php echo $Pagination->getCount(); ?>">
           <span class="older block15">
 <?php if (!$Pagination->isLast()) echo $Html->link('&#8592; Older', $Pagination->nextLink()); ?>
           &nbsp;</span>
@@ -19,9 +22,6 @@ $this->render('backend/header.html');
             <?php endif; ?>
           </span>
           <form action="<?php echo h($this->link(array())); ?>" method="get">
-            <input type="hidden" name="from" value="<?php echo $Pagination->getFrom(); ?>" />
-            <input type="hidden" name="to" value="<?php echo $Pagination->getTo(); ?>" />
-            <input type="hidden" name="count" value="<?php echo $Pagination->getCount(); ?>" />
             <span class="filter block30 margin5">
               <input type="search" class="text" name="filter" value="<?php echo h($Filtering->getQuery()); ?>" />
             </span>
@@ -49,16 +49,9 @@ $this->render('backend/header.html');
             <input type="checkbox" value="all" name="all" id="select-all-top" />
           </div>
           <div class="checkbox-text">
-            <label for="select-all-top">Select all
-            (<?php echo $Html->link(
-                tr('Select all %1 comments', $Pagination->getCount()),
-                array('query' => array(
-                  'filter' => $Filtering->query,
-                  'from' => 1,
-                  'to' => $Pagination->getCount()
-                ))
-              );
-            ?>)
+            <label for="select-all-top" data-phrase1="<?php echo h(tr('Select all')); ?>"
+              data-phrase2="<?php echo h(tr('%1 selected', 0)); ?>">
+              <?php echo trn('Select one comment', 'Select all %1 comments', $Pagination->getCount()); ?>
             </label>
           </div>
           <div class="actions">
@@ -111,7 +104,10 @@ foreach ($comments as $this->comment) {
             <input name="all" value="all" type="checkbox" id="select-all-bottom" />
           </div>
           <div class="checkbox-text">
-            <label for="select-all-bottom">Select all</label>
+            <label for="select-all-top" data-phrase1="<?php echo h(tr('Select all')); ?>"
+              data-phrase2="<?php echo h(tr('%1 selected', 0)); ?>">
+              <?php echo trn('Select one comment', 'Select all %1 comments', $Pagination->getCount()); ?>
+            </label>
           </div>
           <div class="actions">
             <ul class="menubutton">

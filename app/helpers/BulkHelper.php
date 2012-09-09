@@ -17,7 +17,7 @@ class BulkHelper extends ApplicationHelper {
   }
   
   public function end() {
-    return '</html>';
+    return '</form>';
   }
   
   public function addDeleteAction($action, $label) {
@@ -84,7 +84,7 @@ class BulkHelper extends ApplicationHelper {
     if (!$this->isBulk()) {
       return;
     }
-    if (!isset($this->request->data['all'])) {
+    if (!isset($this->request->data['all']) OR $this->request->data['all']  != 'all') {
       $records = $this->request->data['records'];
       $where = new Condition();
       foreach ($records as $id => $value) {
