@@ -158,6 +158,7 @@ class PostsController extends ApplicationController {
         $this->post->status = 'draft';
       }
       if ($this->post->isValid()) {
+        $this->post->setUser($this->auth->getUser());
         $this->post->save();
         if ($this->post->status == 'published') {
           $this->redirect($this->post);

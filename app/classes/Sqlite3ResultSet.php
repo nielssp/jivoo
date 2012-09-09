@@ -2,8 +2,7 @@
 class Sqlite3ResultSet implements IResultSet {
 
   private $result;
-  private $allRows = array();
-  private $pointer = 0;
+  private $rows = array();
 
   public function __construct(SQLite3Result $result) {
     $this->result = $result;
@@ -13,18 +12,24 @@ class Sqlite3ResultSet implements IResultSet {
   }
 
   public function hasRows() {
-    return $this->count() > 0;
+    return ($this->rows[] = $this->fetchAssoc()) !== false;
   }
 
-  public function count() {
-    return count($this->allRows);
+  private function rowFromAssoc($assoc) {
+    return array_values($assoc);
   }
 
   public function fetchRow() {
-    return $this->allRows[$this->pointer++];
+    if (!empty($this->rows)) {
+      return $this->rowFromAssoc(array_shift($this->rows));
+    }
+    return $this->result->fetchArray(SQLITE3_NUM);
   }
 
   public function fetchAssoc() {
-    return $this->allRows[$this->pointer++];
+    if (!empty($this->rows)) {
+      return array_shift($this->rows);
+    }
+    return $this->result->fetchArray(SQLITE3_ASSOC);
   }
 }

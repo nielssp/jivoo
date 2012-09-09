@@ -247,16 +247,18 @@ abstract class ActiveRecord implements IModel {
 
     $result = self::$models[$otherClass]['source']->select($select);
 
+    $allArray = array();
+    $count = 0;
+    while ($assoc = $result->fetchAssoc()) {
+      $allArray[] = self::createFromAssoc($otherClass, $assoc);
+      $count++;
+    }
     if (isset($options['count']) AND !isset($customSelect)) {
-      if ($this->data[$options['count']] != $result->count()) {
-        $this->data[$options['count']] = $result->count();
+      if ($this->data[$options['count']] != $count) {
+        $this->data[$options['count']] = $count;
         $this->isSaved = false;
         $this->save();
       }
-    }
-    $allArray = array();
-    while ($assoc = $result->fetchAssoc()) {
-      $allArray[] = self::createFromAssoc($otherClass, $assoc);
     }
     return $allArray;
   }
@@ -273,7 +275,6 @@ abstract class ActiveRecord implements IModel {
     else {
       $select = $customSelect;
     }
-    $select->count();
     if (isset($options['join'])) {
       $select->join($options['join'], $otherPrimaryKey, $options['otherKey']);
     }
@@ -532,7 +533,7 @@ abstract class ActiveRecord implements IModel {
     $keys = array_unique(array_merge(array_keys($new->defaults), array_keys($data)));
     foreach ($keys as $key) {
       try {
-        if (isset($new->fields[$key]) OR $allowedFields === true) {
+        if (isset($data[$key]) AND (isset($new->fields[$key]) OR $allowedFields === true)) {
           $editor = $new->getFieldEditor($key);
           if (isset($editor)) {
             $format = $editor->getFormat();
