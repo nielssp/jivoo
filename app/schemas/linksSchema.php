@@ -18,6 +18,13 @@ class linksSchema extends Schema {
     'null' => false,
   );
 
+  public $position = array(
+    'type' => 'integer',
+    'length' => 10,
+    'null' => false,
+    'default' => 0,
+  );
+
   public $type = array(
     'type' => 'string',
     'length' => 10,

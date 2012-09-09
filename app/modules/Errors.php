@@ -90,6 +90,18 @@ class Errors extends ModuleBase {
     }
   }
 
+  public function createErrorReport(Exception $exception) {
+    if (!is_writable(p(LOG))) {
+    }
+    else {
+      $file = fopen(p(LOG . 'report-' . time() . '.html'), 'w');
+      if ($file) {
+        fwrite($file, $this->handleException($exception, true));
+        fclose($file);
+      }
+    }
+  }
+
   public function logToFile($message) {
     if (!is_writable(p(LOG . 'error.log'))) {
       new GlobalWarning(tr('Unable to write to log file'));

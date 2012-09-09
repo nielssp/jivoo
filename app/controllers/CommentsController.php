@@ -45,10 +45,10 @@ class CommentsController extends ApplicationController {
     
     if ($this->Bulk->isBulk()) {
       if ($this->Bulk->isDelete()) {
-        $query = SelectQuery::create()->orderByDescending('date');
+        $query = SelectQuery::create();
       }
       else {
-        $query = UpdateQuery::create()->orderByDescending('date');
+        $query = UpdateQuery::create();
       }
       $this->Filtering->filter($query);
       $this->Bulk->select($query);

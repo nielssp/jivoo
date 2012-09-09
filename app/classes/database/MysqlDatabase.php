@@ -134,7 +134,7 @@ class MysqlDatabase extends SqlDatabase {
 
   public function tableExists($table) {
     $result = $this->rawQuery('SHOW TABLES LIKE "' . $this->tableName($table) . '"');
-    return $result->count() >= 1;
+    return $result->hasRows();
   }
 
   public function rawQuery($sql) {

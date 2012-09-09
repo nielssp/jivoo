@@ -259,8 +259,11 @@ class PostsController extends ApplicationController {
     $this->render('posts/index.html');
   }
   
-  public function tags() {
-    $this->render('not-implemented.html');
+  public function manageTags() {
+    $this->Backend->requireAuth('backend.tags.manage');
+    $this->title = tr('Tags');
+    $this->tags = Tag::all();
+    $this->render();
   }
   
 }

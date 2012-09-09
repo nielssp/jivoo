@@ -49,17 +49,17 @@ class Shadow extends ModuleBase {
       case 'sha512':
         $saltLength = 16;
         // rounds from 1000 to 999,999,999
-        $prefix = '$6$rounds=5000$';
+        $prefix = '$6$rounds=5001$';
         break;
       case 'sha256':
         $saltLength = 16;
         // rounds from 1000 to 999,999,999
-        $prefix = '$5$rounds=5000$';
+        $prefix = '$5$rounds=5001$';
         break;
       case 'blowfish':
         $saltLength = 22;
         // cost (second param) from 04 to 31
-        $prefix = '$2a$08$';
+        $prefix = '$2a$09$';
         break;
       case 'md5':
         $saltLength = 8;

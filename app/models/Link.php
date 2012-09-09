@@ -1,6 +1,19 @@
 <?php
 
 class Link extends ActiveRecord implements ILinkable {
+
+  protected $fields = array(
+    'menu' => 'Menu',
+    'position' => 'Position',
+    'type' => 'Type',
+    'title' => 'Title',
+    'path' => 'Path'
+  );
+
+  protected $defaults = array(
+    'menu' => 'main',
+    'position' => 0
+  );
   
   public function getRoute() {
     switch ($this->type) {
