@@ -7,8 +7,13 @@ class BulkHelper extends ApplicationHelper {
   private $delete = false;
   private $primaryKey = 'id';
   
+  private $started = false;
+  
   public function begin() {
-    $this->id = $id;
+    if ($this->started) {
+      return '';
+    }
+    $this->started = true;
     $html = '<form action="' . $this->getLink(array())
       . '" id="bulk" method="post">' . PHP_EOL;
     $html .= '<input type="hidden" name="access_token" value="'
@@ -17,7 +22,15 @@ class BulkHelper extends ApplicationHelper {
   }
   
   public function end() {
+    if (!$this->started) {
+      return '';
+    }
+    $this->started = false;
     return '</form>';
+  }
+  
+  public function isStarted() {
+    return $this->started;
   }
   
   public function addDeleteAction($action, $label) {
