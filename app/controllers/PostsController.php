@@ -2,7 +2,7 @@
 
 class PostsController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend');
+  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend', 'Bulk');
 
   public function index() {
     $select = SelectQuery::create()
@@ -129,7 +129,17 @@ class PostsController extends ApplicationController {
     
     $this->posts = Post::all($select);
     $this->title = tr('Manage posts');
-    $this->render();
+      if ($this->request->isAjax()) {
+      $html = '';
+      foreach ($this->posts as $this->post) {
+        $html .= $this->render('posts/post.html', true);
+      }
+      $this->Json->respond(array('html' => $html));
+    }
+    else {
+      $this->returnToThis();
+      $this->render();
+    }
   }
 
   public function add() {
@@ -204,12 +214,15 @@ class PostsController extends ApplicationController {
       }
       if ($this->post->isValid()) {
         $this->post->save();
-        if ($this->post->status == 'published') {
-          $this->redirect($this->post);
-        }
-        else {
-          new LocalNotice(tr('Post successfully saved'));
-          $this->refresh();
+        if (!$this->request->isAjax()) {
+          $this->goBack();
+          if ($this->post->status == 'published') {
+            $this->redirect($this->post);
+          }
+          else {
+            new LocalNotice(tr('Post successfully saved'));
+            $this->refresh();
+          }
         }
       }
       else {
@@ -227,7 +240,14 @@ class PostsController extends ApplicationController {
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];
     $this->title = tr('Edit post');
-    $this->render();
+    if (!$this->request->isAjax()) {
+      $this->render();
+    }
+    else {
+      $this->Json->respond(array(
+        'html' => $this->render('posts/post.html', true)
+      ));
+    }
   }
 
   public function delete($post) {

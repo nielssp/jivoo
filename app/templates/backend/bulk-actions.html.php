@@ -12,7 +12,7 @@
           <div class="checkbox-text">
             <label for="select-all-top" data-phrase1="<?php echo h(tr('Select all')); ?>"
               data-phrase2="<?php echo h(tr('%1 selected', 0)); ?>">
-              <?php echo trn('Select one comment', 'Select all %1 comments', $Pagination->getCount()); ?>
+              <?php echo trn('Select one record', 'Select all %1 records', $Pagination->getCount()); ?>
             </label>
           </div>
           <div class="actions">
