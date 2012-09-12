@@ -7,7 +7,7 @@ if ($post->status != 'published') {
   $classes .= ' yellow';
 }
 ?>
-          <div class="record<?php echo $classes; ?>" id="record-<?php echo $post->id; ?>">
+          <div class="record<?php echo $classes; ?>" id="record-<?php echo $post->id; ?>" data-type="post">
             <div class="checkbox">
               <input type="checkbox" />
             </div>

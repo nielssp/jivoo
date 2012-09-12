@@ -181,6 +181,33 @@ $(function() {
   });
 
   $('.record .actions li a').live('click', function() {
+    var recordData = {};
+    $.each(this.attributes, function(i, attrib) {
+      var property = attrib.name.split('-', 2);
+      var value = attrib.value;
+      if (property[0] == 'data' && property.length > 1) {
+        recordData[property[1]] = value;
+      }
+    });
+    if (!jQuery.isEmptyObject(recordData)) {
+      var action = $(this).attr('href');
+      var record = $(this).parents(".record");
+      var accessToken = $('input[name=access_token]').val();
+      var type = record.data('type');
+      var data = { access_token: accessToken };
+      data[type] = recordData;
+      $.ajax({
+        type: 'POST',
+        url: action,
+        dataType: 'json',
+        data: data,
+        success: function(response) {
+          record.replaceWith(response.html);
+          record.find('.menubutton').menuButton();
+        }
+      });
+      return false;
+    }
   });
 
   $(".approve-action, .unapprove-action, .spam-action").live('click', function() {

@@ -9,7 +9,7 @@ switch ($comment->status) {
   default: $classes .= ' yellow';
 }
 ?>
-        <div class="record<?php echo $classes; ?>" id="record-<?php echo $comment->id; ?>">
+        <div class="record<?php echo $classes; ?>" id="record-<?php echo $comment->id; ?>" data-type="comment">
           <div class="checkbox">
             <input type="checkbox" id="record-<?php echo $comment->id; ?>-checkbox"
               name="records[<?php echo $comment->id; ?>]" value="selected" />
