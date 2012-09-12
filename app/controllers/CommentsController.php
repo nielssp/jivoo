@@ -63,8 +63,6 @@ class CommentsController extends ApplicationController {
     $this->comments = Comment::all($select);
     $this->title = tr('Comments');
 
-    $this->accessToken = $this->request->getToken();
-    
     if ($this->request->isAjax()) {
       $html = '';
       foreach ($this->comments as $this->comment) {

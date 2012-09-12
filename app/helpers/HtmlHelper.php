@@ -18,8 +18,15 @@ class HtmlHelper extends ApplicationHelper {
 
   private function addAttributes($options) {
     $html = '';
+    if (isset($options['data'])) {
+      $data = $options['data'];
+      unset($options['data']);
+      foreach ($data as $key => $value) {
+        $html .= ' data-' . $key . '="' . h($value) . '"';
+      }
+    }
     foreach ($options as $attribute => $value) {
-      $html .= ' ' . $attribute . '="' . $value . '"';
+      $html .= ' ' . $attribute . '="' . h($value) . '"';
     }
     return $html;
   }

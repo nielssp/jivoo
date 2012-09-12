@@ -180,6 +180,9 @@ $(function() {
       $("#settings").hide("blind", 200);
   });
 
+  $('.record .actions li a').live('click', function() {
+  });
+
   $(".approve-action, .unapprove-action, .spam-action").live('click', function() {
     var status = 'pending';
     var targetClass = 'yellow';

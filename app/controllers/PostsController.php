@@ -2,8 +2,21 @@
 
 class PostsController extends ApplicationController {
 
-  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend', 'Bulk');
+  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend', 'Json', 'Bulk');
 
+  public function init() {
+    $this->Filtering->addSearchColumn('content');
+    $this->Filtering->addFilterColumn('status');
+    $this->Filtering->addFilterColumn('date');
+    
+    $this->Pagination->setLimit(10);
+    
+    $this->Bulk->addUpdateAction('publish', tr('Publish'), array('status' => 'published'));
+    $this->Bulk->addUpdateAction('conceal', tr('Conceal'), array('status' => 'draft'));
+    
+    $this->Bulk->addDeleteAction('delete', tr('Delete'));
+  }
+  
   public function index() {
     $select = SelectQuery::create()
       ->where('status = "published"')
@@ -124,12 +137,27 @@ class PostsController extends ApplicationController {
     else {
       $this->Pagination->setCount(Post::count());
     }
+
+    if ($this->Bulk->isBulk()) {
+      if ($this->Bulk->isDelete()) {
+        $query = SelectQuery::create();
+      }
+      else {
+        $query = UpdateQuery::create();
+      }
+      $this->Filtering->filter($query);
+      $this->Bulk->select($query);
+      Post::execute($query);
+      if (!$this->request->isAjax()) {
+        $this->refresh();
+      }
+    }
     
-    $this->Pagination->setLimit(10)->paginate($select);
+    $this->Pagination->paginate($select);
     
     $this->posts = Post::all($select);
     $this->title = tr('Manage posts');
-      if ($this->request->isAjax()) {
+    if ($this->request->isAjax()) {
       $html = '';
       foreach ($this->posts as $this->post) {
         $html .= $this->render('posts/post.html', true);

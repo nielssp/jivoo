@@ -29,23 +29,23 @@ if ($post->status == 'published') {
   echo $Html->link(
     tr('Conceal'),
     array('action' => 'edit', 'parameters' => array($post->id)),
-    array('class' => 'conceal-action')
+    array('data' => array('status' => 'draft'))
   );
 }
 else {
   echo $Html->link(
     tr('Publish'),
     array('action' => 'edit', 'parameters' => array($post->id)),
-    array('class' => 'publish-action')
+    array('data' => array('status' => 'published'))
   );
 }
 ?>
                </li>
                <li>
-                 <?php echo $Html->link('Edit', array('action' => 'edit', 'parameters' => array($post->id))); ?>
+                 <?php echo $Html->link(tr('Edit'), array('action' => 'edit', 'parameters' => array($post->id))); ?>
                </li>
                <li>
-                 <?php echo $Html->link('View', array('action' => 'view', 'parameters' => array($post->id))); ?>
+                 <?php echo $Html->link(tr('View'), array('action' => 'view', 'parameters' => array($post->id))); ?>
                </li>
                <li class="last red"><?php
                  echo $Html->link('Delete',
