@@ -202,7 +202,7 @@ $(function() {
         dataType: 'json',
         data: data,
         success: function(response) {
-          record.replaceWith(response.html);
+          record = record.replaceWith(response.html);
           record.find('.menubutton').menuButton();
         }
       });
