@@ -240,12 +240,13 @@ $(function() {
           url: location.href,
           dataType: 'json',
           data: {
-            filter: $('input[name=filter]').val(),
-            from: $('input[name=to]').val(),
-            to: $('input[name=to]').val()
+            filter: $('#pagination input[name=filter]').val(),
+            from: $('#pagination').data('to'),
+            to: $('#pagination').data('to')
           },
           success: function(data) {
             list.append(data.html);
+            $(".menubutton").menuButton();
           }
         });
       });
