@@ -9,7 +9,8 @@ if ($post->status != 'published') {
 ?>
           <div class="record<?php echo $classes; ?>" id="record-<?php echo $post->id; ?>" data-type="post">
             <div class="checkbox">
-              <input type="checkbox" />
+              <input type="checkbox" id="record-<?php echo $post->id; ?>-checkbox"
+                name="records[<?php echo $post->id; ?>]" value="selected" />
             </div>
             <div class="header">
           <span class="title block30 margin5">

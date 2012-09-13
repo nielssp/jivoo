@@ -78,7 +78,8 @@ class Post extends ActiveRecord implements ILinkable {
     'name' => 'Permalink',
     'content' => 'Content',
     'tags' => 'Tags',
-    'commenting' => 'Allow comments'
+    'commenting' => 'Allow comments',
+    'status' => 'Status',
   );
 
   protected $defaults = array(

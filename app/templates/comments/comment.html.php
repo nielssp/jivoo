@@ -38,19 +38,19 @@ switch($comment->status) {
   case 'approved':
     echo $Html->link('Unapprove',
       array('action' => 'edit', 'parameters' => array($comment->id)),
-      array('class' => 'unapprove-action')
+      array('data' => array('status' => 'pending'))
     );
     break;
   case 'spam':
     echo $Html->link('Not spam',
       array('action' => 'edit', 'parameters' => array($comment->id)),
-      array('class' => 'approve-action')
+      array('data' => array('status' => 'approved'))
     );
     break;
   default:
     echo $Html->link('Approve',
       array('action' => 'edit', 'parameters' => array($comment->id)),
-      array('class' => 'approve-action')
+      array('data' => array('status' => 'approved'))
     );
 }
 ?>
@@ -59,7 +59,7 @@ switch($comment->status) {
 <li><?php
 echo $Html->link('Spam',
   array('action' => 'edit', 'parameters' => array($comment->id)),
-  array('class' => 'spam-action')
+  array('data' => array('status' => 'spam'))
 ); 
 ?></li>
 <?php endif; ?>

@@ -237,7 +237,7 @@ class PostsController extends ApplicationController {
       if (isset($this->request->data['publish'])) {
         $this->post->status = 'published';
       }
-      else {
+      else if (!isset($this->request->data['post']['status'])) {
         $this->post->status = 'draft';
       }
       if ($this->post->isValid()) {
