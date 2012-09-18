@@ -95,7 +95,7 @@ class FilteringHelper extends ApplicationHelper {
         }
         if ($searchQuery != '%%') {
           foreach ($this->searchColumns as $column => $bool) {
-            $where->and($column . ' LIKE ?', $searchQuery);
+            $where->or($column . ' LIKE ?', $searchQuery);
           }
         }
       }

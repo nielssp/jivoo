@@ -5,6 +5,7 @@ class PostsController extends ApplicationController {
   protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering', 'Backend', 'Json', 'Bulk');
 
   public function init() {
+    $this->Filtering->addSearchColumn('title');
     $this->Filtering->addSearchColumn('content');
     $this->Filtering->addFilterColumn('status');
     $this->Filtering->addFilterColumn('date');
@@ -133,11 +134,7 @@ class PostsController extends ApplicationController {
     $this->Filtering->filter($select);
     
     if (isset($this->request->query['filter'])) {
-      $this->filter = $this->request->query['filter'];
-      $select->where('content LIKE ? OR title LIKE ?')
-        ->addVar('%' . $this->filter . '%')
-        ->addVar('%' . $this->filter . '%');
-      $this->Pagination->setCount(Post::count(clone $select));
+      $this->Pagination->setCount(Post::count($select));
     }
     else {
       $this->Pagination->setCount(Post::count());
