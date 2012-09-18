@@ -21,10 +21,15 @@
             </span>
             <div class="predefined block20">
               <ul class="menubutton">
-                <li class="first"><a href="?filter=">All</a></li>
-                <li><a href="?filter=status:approved">Approved</a></li>
-                <li><a href="?filter=status:pending">Pending</a></li>
-                <li class="last"><a href="?filter=status:spam">Spam</a></li>
+                <?php
+                $first = true;
+                foreach ($Filtering->getPredefined() as $filter):
+                ?>
+                <li<?php if ($first) echo ' class="first"'; ?>><?php echo $Html->link($filter['label'], $filter); ?></li>
+                <?php
+                  if ($first) $first = false;
+                endforeach; 
+                ?>
               </ul>
             </div>
           </form>

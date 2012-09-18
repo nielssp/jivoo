@@ -9,6 +9,9 @@ class PostsController extends ApplicationController {
     $this->Filtering->addFilterColumn('status');
     $this->Filtering->addFilterColumn('date');
     
+    $this->Filtering->addPredefined(tr('Published'), 'status:published');
+    $this->Filtering->addPredefined(tr('Draft'), 'status:draft');
+    
     $this->Pagination->setLimit(10);
     
     $this->Bulk->addUpdateAction('publish', tr('Publish'), array('status' => 'published'));
@@ -126,6 +129,8 @@ class PostsController extends ApplicationController {
     
     $select = SelectQuery::create()
       ->orderByDescending('date');
+
+    $this->Filtering->filter($select);
     
     if (isset($this->request->query['filter'])) {
       $this->filter = $this->request->query['filter'];

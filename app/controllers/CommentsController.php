@@ -10,6 +10,10 @@ class CommentsController extends ApplicationController {
     $this->Filtering->addFilterColumn('author');
     $this->Filtering->addFilterColumn('date');
     
+    $this->Filtering->addPredefined(tr('Approved'), 'status:approved');
+    $this->Filtering->addPredefined(tr('Pending'), 'status:pending');
+    $this->Filtering->addPredefined(tr('Spam'), 'status:spam');
+    
     $this->Pagination->setLimit(10);
     
     $this->Bulk->addUpdateAction('approve', tr('Approve'), array('status' => 'approved'));

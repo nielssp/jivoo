@@ -2,11 +2,16 @@
 
 class FilteringHelper extends ApplicationHelper {
 
+  private $predefined = array();
   private $searchColumns = array();
   private $filterColumns = array();
   private $callbacks = array();
   private $query = '';
 
+  protected function init() {
+    $this->addPredefined(tr('All'), '');
+  }
+  
   public function __get($property) {
     switch ($property) {
       case 'query':
@@ -17,6 +22,13 @@ class FilteringHelper extends ApplicationHelper {
   public function getQuery() {
     return $this->query;
   }
+  
+  public function addPredefined($label, $filter) {
+    $this->predefined[] = array(
+      'label' => $label,
+      'query' => array('filter' => $filter) 
+    );
+  }
 
   public function addSearchColumn($column) {
     $this->searchColumns[$column] = true;
@@ -24,6 +36,10 @@ class FilteringHelper extends ApplicationHelper {
 
   public function addFilterColumn($column) {
     $this->filterColumns[$column] = true;
+  }
+  
+  public function getPredefined() {
+    return $this->predefined;
   }
 
   public function filter(ICondition $query) {
