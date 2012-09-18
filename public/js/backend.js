@@ -7,6 +7,14 @@ $(function() {
   String.prototype.trim = function() {
     return this.replace(/(^[ \n\t\r]+|[ \n\r\t]+$)/g, '');
   }
+  
+  startLoading = function() {
+    $("#header-title").addClass('loading');
+  }
+  
+  stopLoading = function() {
+    $("#header-title").removeClass('loading');
+  }
 
   $.maxZIndex = $.fn.maxZIndex = function(opt) {
     /// <summary>
@@ -196,6 +204,7 @@ $(function() {
       var type = record.data('type');
       var data = { access_token: accessToken };
       data[type] = recordData;
+      startLoading();
       $.ajax({
         type: 'POST',
         url: action,
@@ -221,6 +230,7 @@ $(function() {
           }
           record.html(responseObject.html());
           record.find('.menubutton').menuButton();
+          stopLoading();
         }
       });
       return false;

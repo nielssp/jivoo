@@ -49,7 +49,7 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
 <?php endforeach; ?>
         </ul>
 <?php endif; ?>
-        <div class="right">
+        <div class="right" id="header-title">
           <?php echo $Html->link($site['title']); ?>
         </div>
       </div>
