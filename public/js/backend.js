@@ -149,9 +149,11 @@ $(function() {
     var key = $(this).find(".header a").data("shortcut");
     $(this).find(".header a").css('cursor', 'default');
     $(this).find(".header a").click(function() {
+      items.parent().parent().find(".items").hide();
+      items.show().maxZIndex();
       return false;
     });
-    $(this).bind('mouseover mouseout', function (event) {
+    $(this).bind('mouseover mouseout click', function (event) {
       if (event.type == 'mouseover') {
         over = true;
         items.parent().parent().find(".items").hide();
