@@ -26,7 +26,7 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
 <?php foreach ($menu as $key => $category): ?>
           <li class="menu">
             <div class="header item">
-              <a href="#" data-shortcut-on="root">
+              <a href="" data-shortcut-on="root">
                 <?php echo $category->label; ?>
               </a>
             </div>

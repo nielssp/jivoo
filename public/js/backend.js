@@ -141,10 +141,16 @@ $(function() {
   });
   
   $(".menubutton").menuButton();
+  
+  var hideTimeout;
 
   $(".menu").each(function() {
     var items = $(this).find(".items");
     var key = $(this).find(".header a").data("shortcut");
+    $(this).find(".header a").css('cursor', 'default');
+    $(this).find(".header a").click(function() {
+      return false;
+    });
     $(this).bind('mouseover mouseout', function (event) {
       if (event.type == 'mouseover') {
         over = true;
@@ -152,7 +158,12 @@ $(function() {
         items.show().maxZIndex();
       } else {
         over = false;
-        items.hide();
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(function() {
+          if (!over) {
+            items.hide();
+          }
+        }, 500);
       }
     });
 //    console.log("Binding " + key + "...");
