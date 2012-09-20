@@ -23,6 +23,11 @@ class BackendController extends ApplicationController {
     $this->title = tr('Access Denied');
     $this->render();
   }
+
+  public function configuration() {
+    $this->title = tr('Configuration');
+    $this->render();
+  }
   
   public function logout() {
     if (!$this->auth->isLoggedIn()) {
