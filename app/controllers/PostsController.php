@@ -298,6 +298,7 @@ class PostsController extends ApplicationController {
     $this->Pagination->setCount($this->tag->countPosts());
 
     $select = SelectQuery::create()
+      ->where('status = "published"')
       ->orderByDescending('date');
 
     $this->Pagination->paginate($select);
