@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <title>PeanutCMS</title>
+  <parser>
+    <target>doc</target>
+  </parser>
+  <transformer>
+    <target>doc</target>
+  </transformer>
+  <files>
+    <directory>app</directory>
+    <ignore>app/templates/*</ignore>
+  </files>
+  <logging>
+    <level>info</level>
+  </logging>
+</phpdoc>
