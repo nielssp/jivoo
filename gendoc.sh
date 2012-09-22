@@ -1,7 +1,7 @@
 #!/bin/bash
 apigen --source app \
   --destination doc \
-  --exclude app/templates/* \
+  --exclude "app/templates/*" \
   --title PeanutCMS \
   --deprecated yes \
   --todo yes \

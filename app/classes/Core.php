@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Core application
+ * @package PeanutCMS
+ */
 class Core {
   private $modules = array();
   private static $info = array();
@@ -8,11 +11,29 @@ class Core {
   /* EVENTS BEGIN */
   private $events = null;
 
+  /**
+   * Event, triggered each time a module is loaded
+   * @param callback $h Attach an event handler
+   */
   public function onModuleLoaded($h) { $this->events->attach($h); }
+  /**
+   * Event, triggered when all modules are loaded
+   * @param callback $h Attach an event handler
+   */
   public function onModulesLoaded($h) { $this->events->attach($h); }
+  /**
+   * Event, triggered when ready to render page
+   * @param callback $h Attach an event handler
+   */
   public function onRender($h) { $this->events->attach($h); }
   /* EVENTS END */
 
+  /**
+   * Constructor
+   * @param array|string $blacklist An array of modules that
+   * should not be loaded or a filename (string) of a file
+   * containing a newline separated list of modules.
+   */
   public function __construct($blacklist = null) {
     $this->events = new Events($this);
 
@@ -30,6 +51,12 @@ class Core {
     }
   }
 
+  /**
+   * Return a loaded module
+   * @param string $module Module name
+   * @return ModuleBase Module object
+   * @throws ModuleNotLoadedException If module is not loaded
+   */
   public function __get($module) {
     if (!isset($this->modules[$module])) {
       $backtrace = debug_backtrace();
@@ -43,6 +70,12 @@ class Core {
     return $this->modules[$module];
   }
 
+  /**
+   * Request a module
+   * @param string $module Module name
+   * @return ModuleBase|false Module object or false if module is
+   * not loaded
+   */
   public function requestModule($module) {
     try {
       return $this->$module;
@@ -52,6 +85,11 @@ class Core {
     }
   }
   
+  /**
+   * Get the version of a module
+   * @param string $module Module name
+   * @return string|false Vesion string or false if information unavailable
+   */
   public function getVersion($module) {
     $info = self::getModuleInfo($module);
     if ($info !== false) {
@@ -60,6 +98,12 @@ class Core {
     return false;
   }
 
+  /**
+   * Get information about a module
+   * @param string $module Module name
+   * @return array|false Array of key/value pairs or false if information
+   * unavailable
+   */
   public static function getModuleInfo($module) {
     if (isset(self::$info[$module])) {
       return self::$info[$module];
@@ -75,6 +119,12 @@ class Core {
     return $meta;
   }
 
+  /**
+   * Check module dependencies
+   * @param ModuleBase|string $module Module object or module name (string)
+   * @throws ModuleInvalidException If the module is invalid
+   * @throws ModuleMissingDependencyException If a dependency is missing
+   */
   public function checkDependencies($module) {
     if (is_subclass_of($module, 'ModuleBase')) {
       $info = self::getModuleInfo(get_class($module));
@@ -100,11 +150,24 @@ class Core {
     }
   }
 
+  /**
+   * Whether or not a module is blacklisted
+   * @return bool True if blacklisted, false if not
+   */
   public function onBlacklist($module) {
     $module = $module;
     return isset($this->blacklist[$module]);
   }
 
+  /**
+   * Load a module (or return it if it is already loaded)
+   * @param string $module Module name
+   * @return ModuleBase Module object
+   * @throws ModuleBlacklistedException If module is blacklisted
+   * @throws ModuleNotFoundException If module does not exist
+   * @throws ModuleInvalidException If module is invalid
+   * @throws ModuleMissingDependencyException If a dependency is missing
+   */
   public function loadModule($module) {
     $module = $module;
     if ($this->onBlacklist($module)) {
@@ -144,6 +207,10 @@ class Core {
     return $this->modules[$module];
   }
 
+  /**
+   * Main
+   * @param array $modules An array of modules to load
+   */
   public static function main($modules) {
     $core = new Core(p(CFG . 'blacklist'));
 
@@ -176,14 +243,39 @@ class Core {
   }
 }
 
+/**
+ * Thrown when a requested module is not loaded
+ * @package PeanutCMS
+ */
 class ModuleNotLoadedException extends Exception { }
+/**
+ * Thrown when a module does not exist
+ * @package PeanutCMS
+ */
 class ModuleNotFoundException extends Exception { }
+/**
+ * Thrown when a module is invalid
+ * @package PeanutCMS
+ */
 class ModuleInvalidException extends Exception { }
+/**
+ * Thrown when a module is missing dependencies
+ * @package PeanutCMS
+ */
 class ModuleMissingDependencyException extends ModuleNotFoundException { }
+/**
+ * Thrown when a module is blacklisted
+ * @package PeanutCMS
+ */
 class ModuleBlacklistedException extends Exception { }
 
-
+/**
+ * EventArgs to be sent with the onModuleLoaded event
+ * @property-read string $module Module name
+ * @property-read ModuleBase $object Module object
+ * @package PeanutCMS
+ */
 class ModuleLoadedEventArgs extends EventArgs {
-  public $module;
-  public $object;
+  protected $module;
+  protected $object;
 }

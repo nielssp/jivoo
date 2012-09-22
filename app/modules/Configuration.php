@@ -6,6 +6,14 @@
 // Author         : PeanutCMS
 // Dependencies   : Errors
 
+/**
+ * Represents a configuration file or subset
+ *
+ * Implements arrayaccess, so the []-operator can be used
+ * to get and set configuration values.
+ * @package PeanutCMS
+ * @subpackage Modules
+ */
 class Configuration extends ModuleBase implements arrayaccess {
 
   private $data = array();
@@ -16,6 +24,11 @@ class Configuration extends ModuleBase implements arrayaccess {
 
   private $save = true;
 
+  /**
+   * Module initializer
+   * @param string $cfgFile Configuration file
+   * @param Configuration $subsetOf Configuration to be a subset of
+   */
   protected function init($cfgFile = null, Configuration $subsetOf = null) {
     if (!isset($cfgFile)) {
       $cfgFile = p(CFG . 'config.cfg.php');
@@ -46,6 +59,11 @@ class Configuration extends ModuleBase implements arrayaccess {
     $this->data = Configuration::parseData($file[1]);
   }
 
+  /**
+   * Get a subset of the current configuration
+   * @param string $key The key of the subset
+   * @return Configuration A subset
+   */
   public function getSubset($key) {
     $config = new Configuration(array('Errors' => $this->m->Errors), $this->Core, $this->file, $this);
     $config->parentKey = $this->realKey($key);
@@ -74,8 +92,12 @@ class Configuration extends ModuleBase implements arrayaccess {
     return $arrayRef;
   }
 
+  /**
+   * Get the current configuration as an array
+   * @return array Configuration
+   */
   public function getArray() {
-  return $this->getDataReference('');
+    return $this->getDataReference('');
   }
 
   /**
@@ -98,8 +120,9 @@ class Configuration extends ModuleBase implements arrayaccess {
     if ($this->save == false) {
       return false;
     }
-    if (!is_writable($this->file))
+    if (!is_writable($this->file)) {
       return false;
+    }
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
       return false;
@@ -123,6 +146,11 @@ class Configuration extends ModuleBase implements arrayaccess {
   }
 
 
+  /**
+   * Set default values.
+   * @param string|array Either a key as a string or an array of key/value pairs
+   * @param mixed $value Value
+   */
   public function setDefault($key, $value = null) {
     if (is_array($key)) {
       $array = $key;    
@@ -150,6 +178,7 @@ class Configuration extends ModuleBase implements arrayaccess {
    * Return the value of a configuration key
    *
    * @param string $key Configuration key
+   * @param bool $arrayOnly Only return arrays
    * @return mixed The content of the configuration key or false if key
    * doesn't exist
    */
@@ -180,8 +209,9 @@ class Configuration extends ModuleBase implements arrayaccess {
    * Parse data string into data array
    *
    * @param string $data Data string
-   * @param bool $serialize Wether or not to unserialize data that appears to be serialized
-   * @param bool $associative Return an associative array of keys and value
+   * @param bool $serialize Whether or not to unserialize data that appears to be serialized
+   * @param bool $associative Return an associative array of keys and values
+   * @param bool $tree Create a tree
    * @return array Data fields in an array
    */
   public static function parseData($data, $serialize = false, $associative = true,  $tree = true) {
@@ -227,8 +257,11 @@ class Configuration extends ModuleBase implements arrayaccess {
    * Assemble data array into data string
    *
    * @param array $fields Data array
-   * @param bool $serialize Wether or not to serialize arrays, if false then arrays
-   *  and objects will not be included in data
+   * @param bool $serialize Wether or not to serialize arrays, if false then
+   * arrays and objects will not be included in data
+   * @param bool $associative Create from associatve array
+   * @param bool $tree Create from tree (recursive)
+   * @param string $parent Parent key
    * @return string Data string
    */
   public static function compileData($fields, $serialize = false, $associative = true, $tree = true, $parent = '') {
@@ -267,10 +300,20 @@ class Configuration extends ModuleBase implements arrayaccess {
   
   /* arrayaccess implementation */
 
+  /**
+   * Whether or not a key exists.
+   * @param string $name Key
+   * @return bool True if it does, false otherwise
+   */
   public function offsetExists($key) {
     return $this->exists($key);
   }
   
+  /**
+   * Get a value
+   * @param string $name Key
+   * @return mixed Value
+   */
   public function offsetGet($key) {
     $value = $this->get($key);
     if (is_array($value) OR $value === false) {
@@ -278,7 +321,12 @@ class Configuration extends ModuleBase implements arrayaccess {
     }
     return $value;
   }
-  
+
+  /**
+   * Associate a value with a key
+   * @param string $name Key
+   * @param mixed $value Value
+   */
   public function offsetSet($key, $value) {
     if (is_null($key)) {
     }
@@ -287,6 +335,10 @@ class Configuration extends ModuleBase implements arrayaccess {
     }
   }
   
+  /**
+   * Delete a key
+   * @param string $name Key
+   */
   public function offsetUnset($key) {
     $this->delete($key);
   }

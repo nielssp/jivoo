@@ -5,6 +5,11 @@
 // Description    : The PeanutCMS error system
 // Author         : PeanutCMS
 
+/**
+ * Errors module
+ * @package PeanutCMS
+ * @subpackage Modules
+ */
 class Errors extends ModuleBase {
 
   private $errorLog = array();
@@ -20,8 +25,7 @@ class Errors extends ModuleBase {
   * @param int $type Error level
   * @param string $message Error message
   * @param string $file Filename of file in which error occured
-  * @param int $line Line number on which error occured
-  * @return void
+  * @param int $line Line number on which the error occured
   */
   public function handleError($type, $message, $file, $line) {
     switch ($type) {
@@ -61,6 +65,10 @@ class Errors extends ModuleBase {
     }
   }
 
+  /**
+   * Get a log of errors
+   * @return array Errors
+   */
   public function getErrorLog() {
     return $this->errorLog;
   }
@@ -90,6 +98,10 @@ class Errors extends ModuleBase {
     }
   }
 
+  /**
+   * Create an error report file from an Exception
+   * @param Exception $exception Exception to report
+   */
   public function createErrorReport(Exception $exception) {
     if (!is_writable(p(LOG))) {
     }
@@ -102,6 +114,10 @@ class Errors extends ModuleBase {
     }
   }
 
+  /**
+   * Log an error to the error log
+   * @param string $message Error message
+   */
   public function logToFile($message) {
     if (!is_writable(p(LOG . 'error.log'))) {
       new GlobalWarning(tr('Unable to write to log file'));
@@ -115,6 +131,10 @@ class Errors extends ModuleBase {
     }
   }
 
+  /**
+   * Uncaught Exception handler
+   * @param Exception $exception Exception
+   */
   public function handleException(Exception $exception) {
     if (!DEBUG) {
       self::fatal(tr('Fatal error'), tr('A fatal error has occured'));
@@ -192,7 +212,6 @@ class Errors extends ModuleBase {
   * @param string $title Title of error
   * @param string $message Short message explaining error
   * @param string $more A longer HTML-formatted (should use paragraphs <p></p>) explanation of the error
-  * @return void
   */
   public static function fatal($title, $message, $more = null) {
     $body = '<h2>' . $message . '</h2>';
@@ -218,6 +237,11 @@ class Errors extends ModuleBase {
     self::exceptionLayout($title, $body);
   }
 
+  /**
+   * Creates the exception view
+   * @param string $title Title of page
+   * @param string $body COntent of page
+   */
   private static function exceptionLayout($title, $body) {
     ob_start();
     echo '<!DOCTYPE html>
