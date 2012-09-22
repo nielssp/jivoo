@@ -3,6 +3,7 @@
  * PeanutCMS constants
  *
  * @package PeanutCMS
+ * @subpackage Constants
  * @since 0.2.0
  */
 

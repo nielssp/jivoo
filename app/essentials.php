@@ -1,10 +1,10 @@
 <?php
 /**
- * PeanutCMS core functions and aliases
- *
+ * PeanutCMS core functions and aliases.
  * Functions and aliases to make things easier
  *
  * @package PeanutCMS
+ * @subpackage Essentials
  * @since 0.2.0
  */
 
