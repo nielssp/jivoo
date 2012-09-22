@@ -53,8 +53,6 @@ class Request {
       case 'session':
       case 'fragment':
         return $this->$name;
-      case 'form':
-        return $this->getFormData($form);
       case 'ip':
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
       case 'url':
@@ -73,10 +71,6 @@ class Request {
     }
   }
 
-  public function getFormData($form) {
-
-  }
-  
   public function unsetQuery($key = null) {
     if (isset($key)) {
       $this->query = array();
