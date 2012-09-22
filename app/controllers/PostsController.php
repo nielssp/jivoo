@@ -295,6 +295,7 @@ class PostsController extends ApplicationController {
       ->where('name = ?', $tag)
     );
 
+    /** @todo This includes unpublished posts */
     $this->Pagination->setCount($this->tag->countPosts());
 
     $select = SelectQuery::create()
