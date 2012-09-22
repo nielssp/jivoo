@@ -15,7 +15,12 @@ class Cookies implements arrayaccess {
     if (!isset($expire)) {
       $expire = time() + 60 * 60 * 24 * 365;
     }
-    setcookie($this->prefix . $name, $value, $expire, $path);
+    $this->cookies[$this->prefix . $name] = $value;
+    try {
+      setcookie($this->prefix . $name, $value, $expire, $path);
+    }
+    catch (Exception $e) {
+    }
   }
 
   public function offsetExists($name) {
@@ -31,7 +36,6 @@ class Cookies implements arrayaccess {
     }
     else {
       $this->setCookie($name, $value);
-      $this->cookies[$name] = $value;
     }
   }
   
