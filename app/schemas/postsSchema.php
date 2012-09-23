@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for posts table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class postsSchema extends Schema {
   public $id = array(
@@ -48,12 +50,6 @@ class postsSchema extends Schema {
     'null' => false,
   );
 
-  public $status = array(
-    'type' => 'string',
-    'length' => 50,
-    'null' => false,
-  );
-
   public $commenting = array(
     'type' => 'string',
     'length' => 10,
@@ -63,6 +59,12 @@ class postsSchema extends Schema {
   public $user_id = array(
     'type' => 'integer',
     'length' => 10,
+    'null' => false,
+  );
+
+  public $status = array(
+    'type' => 'string',
+    'length' => 50,
     'null' => false,
   );
 
@@ -80,9 +82,4 @@ class postsSchema extends Schema {
       'unique' => false
     ),
   );
-
-  public function addColumn_status(MigratableDatabase $db) {
-    $db->addColumn('posts', 'status', $this->status);
-    $db->posts->update()->set('status = state')->execute();
-  }
 }

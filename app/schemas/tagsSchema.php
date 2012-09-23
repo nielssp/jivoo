@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for tags table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class tagsSchema extends Schema {
   public $id = array(

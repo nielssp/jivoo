@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for links table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class linksSchema extends Schema {
   public $id = array(
@@ -18,13 +20,6 @@ class linksSchema extends Schema {
     'null' => false,
   );
 
-  public $position = array(
-    'type' => 'integer',
-    'length' => 10,
-    'null' => false,
-    'default' => 0,
-  );
-
   public $type = array(
     'type' => 'string',
     'length' => 10,
@@ -39,6 +34,13 @@ class linksSchema extends Schema {
 
   public $path = array(
     'type' => 'text',
+    'null' => false,
+  );
+
+  public $position = array(
+    'type' => 'integer',
+    'length' => 10,
+    'default' => '0',
     'null' => false,
   );
 

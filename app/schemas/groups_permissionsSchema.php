@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for groups_permissions table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class groups_permissionsSchema extends Schema {
   public $group_id = array(

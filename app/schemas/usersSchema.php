@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for users table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class usersSchema extends Schema {
   public $id = array(

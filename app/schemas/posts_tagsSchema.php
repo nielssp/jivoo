@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for posts_tags table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class posts_tagsSchema extends Schema {
   public $post_id = array(

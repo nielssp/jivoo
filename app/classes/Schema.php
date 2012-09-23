@@ -1,4 +1,8 @@
 <?php
+/**
+ * Represents a database table schema
+ * @package PeanutCMS
+ */
 class Schema {
   private $_schema = array();
   private $_columns = array();
@@ -6,8 +10,20 @@ class Schema {
   private $_readOnly = false;
   private $_name = 'undefined';
 
+  /**
+   * @var array List of indexes in format `array(
+   *   'indexname' => array(
+   *     'columnts' => array('columnname1', 'columnname2'),
+   *     'unique' => true
+   *   )
+   * )
+   */
   public $indexes = array();
 
+  /**
+   * Create schema
+   * @param string $name Name of schema
+   */
   public function __construct($name = null) {
     $className = get_class($this);
     if ($className != __CLASS__) {
@@ -28,20 +44,39 @@ class Schema {
     }
   }
 
+  /**
+   * Get information about column
+   * @param string $column Column name
+   * @return array Key/value pairs with possible keys:
+   * 'type', 'length', 'null', 'default', 'autoIncrement', 'key'
+   */
   public function __get($column) {
     if (isset($this->_schema[$column])) {
       return $this->_schema[$column];
     }
   }
 
+  /**
+   * Whether or not a column exists in schema
+   * @return bool True if it does, false otherwise
+   */
   public function __isset($column) {
     return isset($this->_schema[$column]);
   }
 
+  /**
+   * Get name of schema
+   * @return string Name
+   */
   public function getName() {
     return $this->_name;
   }
 
+  /**
+   * Add a column to schema
+   * @param string $column Column name
+   * @param array $info Column information
+   */
   public function addColumn($column, $info = array()) {
     if (!$this->_readOnly) {
       $this->_columns[] = $column;
@@ -52,6 +87,12 @@ class Schema {
     }
   }
 
+  /**
+   * Add an index to schema
+   * @param string $index Index name
+   * @param string[] $columns An array of column names
+   * @param bool $unique Whether or not index is unique
+   */
   public function addIndex($index, $columns, $unique = false) {
     if (!$this->_readOnly) {
       if (!is_array($columns)) {
@@ -74,10 +115,18 @@ class Schema {
     }
   }
 
+  /**
+   * Get column names
+   * @return string[] Column names
+   */
   public function getColumns() {
     return $this->_columns;
   }
 
+  /**
+   * Get name of primary key column
+   * @return string Primary key column name
+   */
   public function getPrimaryKey() {
     if (!isset($this->_primaryKey)) {
       $this->findPrimaryKey();
@@ -94,10 +143,18 @@ class Schema {
     }
   }
 
-  public function export() {
+  /**
+   * Export schema to PHP class
+   * @param string $package Package (for documentation)
+   * @param string $subpackage Subpackage (for documentation)
+   * @return string PHP source
+   */
+  public function export($package = 'PeanutCMS', $subpackage = 'Schemas') {
     $source = '<?php' . PHP_EOL;
     $source .= '/**' . PHP_EOL;
     $source .= ' * Automatically generated schema for ' . $this->_name . ' table' . PHP_EOL;
+    $source .= ' * @package ' . $package . PHP_EOL;
+    $source .= ' * @subpackage ' . $subpackage . PHP_EOL;
     $source .= ' */' . PHP_EOL;
     $source .= 'class ' . $this->_name . 'Schema extends Schema {' . PHP_EOL;
 

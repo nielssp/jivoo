@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for pages table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class pagesSchema extends Schema {
   public $id = array(

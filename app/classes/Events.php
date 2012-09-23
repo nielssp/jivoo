@@ -22,7 +22,8 @@ class Events {
    * 
    * This function has to be called from an event-function.
    * The name of the function will be the name of the event.
-   * @param callback $handler A function
+   * @param callback $handler A function of type
+   * `function eventHandler($object, $eventArgs)`
    */
   public function attach($handler = null) {
     $backtrace = debug_backtrace();

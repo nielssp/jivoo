@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for comments table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class commentsSchema extends Schema {
   public $id = array(
@@ -49,21 +51,10 @@ class commentsSchema extends Schema {
     'length' => 255,
     'null' => false,
   );
-  
-  public $ip = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
 
   public $content = array(
     'type' => 'text',
     'null' => false,
-  );
-  
-  public $content_text = array(
-      'type' => 'text',
-      'null' => false,
   );
 
   public $date = array(
@@ -72,9 +63,20 @@ class commentsSchema extends Schema {
     'null' => false,
   );
 
+  public $ip = array(
+    'type' => 'string',
+    'length' => 255,
+    'null' => false,
+  );
+
   public $status = array(
     'type' => 'string',
     'length' => 50,
+    'null' => false,
+  );
+
+  public $content_text = array(
+    'type' => 'text',
     'null' => false,
   );
 
@@ -88,15 +90,4 @@ class commentsSchema extends Schema {
       'unique' => false
     ),
   );
-  
-  public function addColumn_content_text(MigratableDatabase $db) {
-    $db->addColumn('comments', 'content_text', $this->content_text);
-    $rows = $db->comments->select()->execute();
-    $encoder = new Encoder();
-    while ($row = $rows->fetchAssoc()) {
-      $contentText = $encoder->encode($row['content']);
-      $db->comments->update()->where('id = ?', $row['id'])
-        ->set('content_text', $contentText)->execute();
-    }
-  }
 }

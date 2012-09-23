@@ -14,6 +14,7 @@ class Core {
   /**
    * Event, triggered each time a module is loaded
    * @param callback $h Attach an event handler
+   * @uses ModuleLoadedEventArgs
    */
   public function onModuleLoaded($h) { $this->events->attach($h); }
   /**

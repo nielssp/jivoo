@@ -1,6 +1,8 @@
 <?php
 /**
  * Automatically generated schema for groups table
+ * @package PeanutCMS
+ * @subpackage Schemas
  */
 class groupsSchema extends Schema {
   public $id = array(

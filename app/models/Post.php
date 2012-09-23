@@ -2,7 +2,6 @@
 
 /**
  * Post model
- *
  * @property int $id
  * @property string $name
  * @property string $title
@@ -23,6 +22,8 @@
  * @method void setUser(User $user) Set the user
  * @method Category getCategory()
  * @method void setCategory(Category $category)
+ * @package PeanutCMS
+ * @subpackage Models
  */
 class Post extends ActiveRecord implements ILinkable {
 
