@@ -58,6 +58,7 @@ class Schema {
 
   /**
    * Whether or not a column exists in schema
+   * @param string $column Column name
    * @return bool True if it does, false otherwise
    */
   public function __isset($column) {

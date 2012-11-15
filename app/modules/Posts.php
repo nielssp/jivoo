@@ -70,7 +70,7 @@ class Posts extends ModuleBase {
       $post->content = '<p>Welcome to PeanutCMS.</p>';
       $post->date = time();
       $post->comments = 0;
-      $post->state = 'published';
+      $post->status = 'published';
       $post->commenting = 'yes';
       $post->save();
       $comment = Comment::create();

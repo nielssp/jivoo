@@ -107,7 +107,7 @@ class Form implements IModel {
     return $this->errors;
   }
 
-  public function encode($field, $for = 'html', $options = array()) {
+  public function encode($field, $options = array()) {
     if (isset($this->data[$field])) {
       return h($this->data[$field]);
     }

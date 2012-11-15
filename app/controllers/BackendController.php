@@ -27,6 +27,8 @@ class BackendController extends ApplicationController {
   public function configuration() {
     $this->Backend->requireAuth('backend.configuration');
     $this->title = tr('Configuration');
+    $this->configuration = new ConfigurationForm();
+    $this->configuration->add(new ConfigurationSection(tr('Site')));
     $this->render();
   }
   
