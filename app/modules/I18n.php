@@ -70,8 +70,7 @@ class I18n extends ModuleBase implements ITranslationService {
   private function getLanguage() {
     if ($language = $this->m->Configuration->get('language')) {
       if (file_exists(p(LANG . $language . '.lng.php'))) {
-        include(p(LANG . $language . '.lng.php'));
-        $this->language = $translate[$language];
+        $this->language = include(p(LANG . $language . '.lng.php'));
         $this->languageCode = $language;
         return;
       }
