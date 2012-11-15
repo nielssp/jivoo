@@ -96,7 +96,7 @@ if (!defined('APP')) {
 }
 
 if (!defined('CLASSES')) {
-  define('CLASSES', APP . 'classes/');
+  define('CLASSES', 'lib/');
 }
 
 if (!defined('CONTROLLERS')) {

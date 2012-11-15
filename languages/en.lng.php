@@ -5,7 +5,7 @@
 // Translator     : PeanutCMS
 // Version        : 0.1.0
 
-$translate['en'] = array(
+return array(
   'defaultDateFormat' => 'F j, Y',
   'defaultTimeFormat' => 'g:i a',
   'tr' => array(
