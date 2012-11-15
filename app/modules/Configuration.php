@@ -31,32 +31,26 @@ class Configuration extends ModuleBase implements arrayaccess {
    */
   protected function init($cfgFile = null, Configuration $subsetOf = null) {
     if (!isset($cfgFile)) {
-      $cfgFile = p(CFG . 'config.cfg.php');
+      $cfgFile = p(CFG . 'config.php');
     }
     $this->file = $cfgFile;
     if (isset($subsetOf)) {
       $this->data =& $subsetOf->data; 
       return;
     }
-
     if (!is_readable($this->file)) {
       // Attempt to create configuration-file
       $file = fopen($this->file, 'w');
       if (!$file) {
         Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
       }
-      fwrite($file, "<?php exit; ?>\n");
+      fwrite($file, '<?php' . PHP_EOL . 'return array();' . PHP_EOL);
       fclose($file);
     }
     if (!is_writable($this->file)) {
       new GlobalWarning(tr('%1 is not writable', $this->file), 'settings-writable');
     }
-    $fileContent = file_get_contents($this->file);
-    if ($fileContent === false) {
-      Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible', $this->file));
-    }
-    $file = explode('?>', $fileContent);
-    $this->data = Configuration::parseData($file[1]);
+    $this->data = include $this->file;
   }
 
   /**
@@ -115,7 +109,32 @@ class Configuration extends ModuleBase implements arrayaccess {
       $ref = null;
     return $this->save();
   }
+  
+  /**
+   * Create valid PHP array representation
+   * @param array $data Associative array
+   * @param string $prefix Prefix to put in front of new lines
+   * @return string PHP source
+   */
+  public static function phpPrettyPrint($data, $prefix = '') {
+    $php = 'array(' . PHP_EOL;
+    foreach ($data as $key => $value) {
+      $php .= $prefix . '  ' . var_export($key, true) . ' => ';
+      if (is_array($value)) {
+        $php .= Configuration::phpPrettyPrint($value, $prefix . '  ');
+      }
+      else {
+        $php .= var_export($value, true);
+      }
+      $php .= ',' . PHP_EOL;
+    }
+    return $php . $prefix . ')';
+  }
 
+  /**
+   * Save configuration to config-file
+   * @return boolean True on success, false on failure
+   */
   private function save() {
     if ($this->save == false) {
       return false;
@@ -126,8 +145,8 @@ class Configuration extends ModuleBase implements arrayaccess {
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
       return false;
-    $data = Configuration::compileData($this->data);
-    fwrite($filePointer, "<?php exit(); ?>\n" . $data);
+    $data = Configuration::phpPrettyPrint($this->data);
+    fwrite($filePointer, '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL);
     fclose($filePointer);
     return true;
   }
