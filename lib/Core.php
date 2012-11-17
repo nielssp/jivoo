@@ -109,7 +109,7 @@ class Core {
     if (isset(self::$info[$module])) {
       return self::$info[$module];
     }
-    $meta = readFileMeta(p(MODULES . $module . '.php'));
+    $meta = readFileMeta(p(CLASSES . $module . '/' . $module . '.php'));
     if (!$meta OR $meta['type'] != 'module') {
       return false;
     }
@@ -176,10 +176,10 @@ class Core {
     }
     if (!isset($this->modules[$module])) {
       if (!class_exists($module)) {
-        if (!file_exists(p(MODULES . $module . '.php'))) {
+        if (!file_exists(p(CLASSES . $module . '/' . $module . '.php'))) {
           throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
         }
-        require(p(MODULES . $module . '.php'));
+        require(p(CLASSES . $module . '/' . $module . '.php'));
         if (!class_exists($module)) {
           throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
         }

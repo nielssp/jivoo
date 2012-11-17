@@ -76,7 +76,7 @@ class Database extends ModuleBase implements IDatabase  {
       $this->driverInfo = $this->checkDriver($this->driver);
       if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
         $this->m->Configuration->delete('database.driver');
-        $this->m->routes->refresh();
+        $this->m->Routes->refresh();
       }
       if ($this->m->Configuration->get('database.configured') != 'yes') {
         $this->m->Maintenance->setup($controller, 'setupDriver', array($this->driverInfo));
@@ -86,7 +86,7 @@ class Database extends ModuleBase implements IDatabase  {
           $this->m->Maintenance->setup($controller, 'setupDriver', array($this->driverInfo));
         }
       }
-      require(p(CLASSES . 'database/' . $this->driver . '.php'));
+      require(p(CLASSES . 'Database/Drivers/' . $this->driver . '.php'));
       try {
         $this->connection = new $this->driver($this->m->Configuration->get('database'));
       }
@@ -101,10 +101,10 @@ class Database extends ModuleBase implements IDatabase  {
   }
 
   public function checkDriver($driver) {
-    if (!file_exists(p(CLASSES . 'database/' . $driver . '.php'))) {
+    if (!file_exists(p(CLASSES . 'Database/Drivers/' . $driver . '.php'))) {
       return false;
     }
-    $meta = readFileMeta(p(CLASSES . 'database/' . $driver . '.php'));
+    $meta = readFileMeta(p(CLASSES . 'Database/Drivers/' . $driver . '.php'));
     if (!isset($meta['required'])) {
       $meta['required'] = '';
     }
@@ -126,7 +126,7 @@ class Database extends ModuleBase implements IDatabase  {
 
   public function listDrivers() {
     $drivers = array();
-    $dir = opendir(p(CLASSES . 'database/'));
+    $dir = opendir(p(CLASSES . 'Database/Drivers'));
     while ($file = readdir($dir)) {
       if (substr($file, -4) == '.php') {
         $driver = substr($file, 0, -4);

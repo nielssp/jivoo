@@ -111,10 +111,6 @@ if (!defined('HELPERS')) {
   define('HELPERS', APP . 'helpers/');
 }
 
-if (!defined('MODULES')) {
-  define('MODULES', APP . 'modules/');
-}
-
 if (!defined('MODELS')) {
   define('MODELS', APP . 'models/');
 }

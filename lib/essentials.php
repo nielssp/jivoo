@@ -16,7 +16,7 @@ define('PEANUTCMS_START', microtime(true));
 // To hell with those "magic quotes"!
 ini_set('magic_quotes_runtime', 0);
 
-require_once('constants.php');
+require_once(LIB_PATH . '/constants.php');
 
 /**
  * Translate function alias
@@ -432,35 +432,6 @@ function h($string) {
   return htmlentities($string, ENT_COMPAT, 'UTF-8'); 
   //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
-
-function __autoload($className) {
-  if ($className[0] == 'I' AND file_exists($path = p(INTERFACES . $className . '.php'))) {
-    include($path);
-  }
-  else {
-    $fileName = $className . '.php';
-    if (file_exists(p(CLASSES . $fileName))) {
-      include(p(CLASSES . $fileName));
-    }
-    else if (file_exists(p(HELPERS . $fileName))) {
-      include(p(HELPERS . $fileName));
-    }
-    else if (file_exists(p(CONTROLLERS . $fileName))) {
-      include(p(CONTROLLERS . $fileName));
-    }
-    else if (file_exists(p(MODELS . $fileName))) {
-      include(p(MODELS . $fileName));
-    }
-    else if (file_exists(p(MODULES . $fileName))) {
-      include(p(MODULES . $fileName));
-    }
-    else if (file_exists(p(SCHEMAS . $fileName))) {
-      include(p(SCHEMAS . $fileName));
-    }
-  }
-}
-
-spl_autoload_register('__autoload');
 
 // PHP 5.2 compatibility
 if (!function_exists('get_called_class')) {
