@@ -273,9 +273,7 @@ class Templates extends ModuleBase {
     if (isset($this->theme) AND file_exists(p($this->theme . $file))) {
       return w($this->theme . $file);
     }
-    if (file_exists(p(PUB . $file))) {
-      return w(PUB . $file);
-    }
+    return w(ASSETS . $file);
   }
   
   public function link($label, $controller = null, $action = 'index', $parameters = array()) {
