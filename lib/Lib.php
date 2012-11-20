@@ -53,7 +53,7 @@ class Lib {
       $classPath = $path . '/' . $className . '.php';
       if (file_exists($classPath)) {
         require $classPath;
-        self::$classes[$dotPath . '.' . $class] = $className;
+        self::$classes[$dotPath . '.' . $className] = $className;
         return true;
       }
     }
