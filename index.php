@@ -8,12 +8,13 @@
  * @package PeanutCMS
  * @since 0.1.0
  */
-define('DEBUG', true);
 
-define('LOG_ERRORS', true);
+require_once 'lib/bootstrap.php';
 
-require_once('lib/bootstrap.php');
+$app = new App(include 'app/app.php');
 
-$app = new App('app');
+$app->configPath = 'config';
 
-$app->run();
+$environment = getenv('ARACHIS_ENVIRONMENT') || 'production';
+
+$app->run($environment);
