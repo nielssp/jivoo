@@ -94,8 +94,7 @@ class I18n extends ModuleBase implements ITranslationService {
       );
       return;
     }
-    include(PATH . LANG . LANGUAGE . '.lng.php');
-    $this->language = $translate[LANGUAGE];
+    $this->language = include(PATH . LANG . LANGUAGE . '.lng.php');;
     $this->languageCode = LANGUAGE;
   }
 

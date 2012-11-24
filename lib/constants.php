@@ -88,7 +88,7 @@ if (!defined('LANGUAGE')) {
 /** DIRECTORIES */
 
 if (!defined('CFG')) {
-  define('CFG', 'cfg/');
+  define('CFG', 'config/');
 }
 
 if (!defined('APP')) {
@@ -116,11 +116,15 @@ if (!defined('MODELS')) {
 }
 
 if (!defined('SCHEMAS')) {
-  define('SCHEMAS', APP . 'schemas/');
+  define('SCHEMAS', CFG . 'schemas/');
 }
 
 if (!defined('TEMPLATES')) {
   define('TEMPLATES', APP . 'templates/');
+}
+
+if (!defined('ASSETS')) {
+  define('ASSETS', APP . 'assets/');
 }
 
 if (!defined('LANG')) {
