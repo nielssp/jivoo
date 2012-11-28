@@ -5,6 +5,8 @@ class Lib {
 
   private static $classes = array();
 
+  private static $info = array();
+
   private function __construct() {
   }
 
@@ -19,6 +21,7 @@ class Lib {
       if (file_exists(LIB_PATH . '/' . $class . '.php')) {
         require LIB_PATH . '/' . $class . '.php';
         self::$classes[$class] = $className;
+        return true;
       }
       return false;
     }
@@ -46,6 +49,27 @@ class Lib {
 
   public static function addIncludePath($path) {
     self::$paths[$path] = 'app';
+  }
+
+  /**
+   * Get information about a module
+   * @param string $module Module name
+   * @return array|false Array of key/value pairs or false if information
+   * unavailable
+   */
+  public static function getModuleInfo($module) {
+    if (isset(self::$info[$module])) {
+      return self::$info[$module];
+    }
+    $meta = readFileMeta(p(CLASSES . $module . '/' . $module . '.php'));
+    if (!$meta OR $meta['type'] != 'module') {
+      return false;
+    }
+    if (!isset($meta['name'])) {
+      $meta['name'] = $module;
+    }
+    self::$info[$module] = $meta;
+    return $meta;
   }
 
   public static function autoload($className) {

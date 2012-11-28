@@ -43,8 +43,8 @@ class Templates extends ModuleBase {
 
   protected function init() {
     $this->m->Configuration->setDefault(array(
-      'site.title' => 'PeanutCMS',
-      'site.subtitle' => 'The domesticated peanut is an amphidiploid or allotetraploid.',
+      'site.title' => $this->app->name,
+      'site.subtitle' => 'Powered by ' . $this->app->name,
       'system.hide.identity' => HIDE_LEVEL > 1 ? 'on' : 'off',
       'system.hide.version' => HIDE_LEVEL > 0 ? 'on' : 'off',
     ));

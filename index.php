@@ -9,11 +9,17 @@
  * @since 0.1.0
  */
 
+define('CACHING', true);
+
+define('TMP', '/tmp/peanutcms/');
+
 require_once 'lib/bootstrap.php';
 
 $app = new App(include 'app/app.php');
 
-$app->configPath = 'config';
+$app->paths->config = 'config';
+$app->paths->log = 'log';
+$app->paths->tmp = '/tmp/peanutcms';
 
 $environment = getenv('ARACHIS_ENVIRONMENT') || 'production';
 

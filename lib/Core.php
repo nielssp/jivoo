@@ -170,7 +170,6 @@ class Core {
    * @throws ModuleMissingDependencyException If a dependency is missing
    */
   public function loadModule($module) {
-    $module = $module;
     if ($this->onBlacklist($module)) {
       throw new ModuleBlacklistedException(tr('The "%1" module is blacklisted', $module));
     }

@@ -43,8 +43,8 @@ class Routes extends ModuleBase {
     
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
-    $this->Core->onRender(array($this, 'callController'));
-    $this->Core->onModuleLoaded(array($this, 'addAuthModule'));
+    $this->app->onRender(array($this, 'callController'));
+    $this->app->onModuleLoaded(array($this, 'addAuthModule'));
   }
   
   public function addAuthModule($sender, ModuleLoadedEventArgs $args) {

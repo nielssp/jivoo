@@ -21,9 +21,6 @@ class Http extends ModuleBase {
     return $this->request;
   }
 
-  /**
-   * PHP5-style constructor
-   */
   protected function init() {
     // Set default settings
     $this->m->Configuration->setDefault(array(
@@ -61,18 +58,6 @@ class Http extends ModuleBase {
     
   }
 
-  /** @deprecated Use the request-object instead */
-  public function getPath() {
-    trigger_error('Use of Http::getPath() is deprecated', E_USER_DEPRECATED);
-    return $this->request->path;
-  }
-
-  /** @deprecated Use the request-object instead */
-  public function isCurrent($path) {
-    trigger_error('Use of Http::isCurrent() is deprecated', E_USER_DEPRECATED);
-    return $path === $this->request->path;
-  }
-
   /**
    * Redirect the user to another page
    *
@@ -84,6 +69,7 @@ class Http extends ModuleBase {
    */
   public function redirect($status, $location) {
     if (!Http::setStatus($status)) {
+      /** @todo Should be an exception... */
       Errors::fatal(
         tr('Redirect error'),
         tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
@@ -197,18 +183,18 @@ class Http extends ModuleBase {
       }
       $combined = implode('/', $path) . '?' . implode('&', $queryStrings) . $fragment;
       if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
-        return w($combined);
+        return $this->w($combined);
       }
       else {
-        return w('index.php/' . $combined);
+        return $this->w('index.php/' . $combined);
       }
     }
     else {
       if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
-        return w(implode('/', $path) . $fragment);
+        return $this->w(implode('/', $path) . $fragment);
       }
       else {
-        return w('index.php/' . implode('/', $path) . $fragment);
+        return $this->w('index.php/' . implode('/', $path) . $fragment);
       }
     }
   }

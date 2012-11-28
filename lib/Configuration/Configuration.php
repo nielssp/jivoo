@@ -11,8 +11,8 @@
  *
  * Implements arrayaccess, so the []-operator can be used
  * to get and set configuration values.
- * @package PeanutCMS
- * @subpackage Modules
+ * @package ApakohPHP
+ * @subpackage Configuration
  */
 class Configuration extends ModuleBase implements arrayaccess {
 
@@ -30,9 +30,7 @@ class Configuration extends ModuleBase implements arrayaccess {
    * @param Configuration $subsetOf Configuration to be a subset of
    */
   protected function init($cfgFile = null, Configuration $subsetOf = null) {
-    if (!isset($cfgFile)) {
-      $cfgFile = p(CFG . 'config.php');
-    }
+    $cfgFile = $this->app->p('config', 'config.php');
     $this->file = $cfgFile;
     if (isset($subsetOf)) {
       $this->data =& $subsetOf->data; 

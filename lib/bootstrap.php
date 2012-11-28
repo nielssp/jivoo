@@ -54,10 +54,14 @@ if (!function_exists('lcfirst')) {
 
 require LIB_PATH . '/Lib.php';
 
-function __autoload($class) {
-  Lib::autoload($class);
-}
 
-spl_autoload_register('__autoload');
+if (function_exists('spl_autoload_register')) {
+  spl_autoload_register(array('Lib', 'autoload'));
+}
+else {
+  function __autoload($class) {
+    Lib::autoload($class);
+  }
+}
 
 Lib::import('*');

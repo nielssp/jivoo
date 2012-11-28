@@ -167,14 +167,6 @@ class SqlTable implements ITable {
     if ($query->where->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
     }
-    if (!empty($query->orderBy)) {
-      $columns = array();
-      foreach ($query->orderBy as $orderBy) {
-        $columns[] = $this->replaceColumns($orderBy['column'])
-          . ($orderBy['descending'] ? ' DESC' : ' ASC');
-      }
-      $sqlString .= ' ORDER BY ' . implode(', ', $columns);
-    }
     if (isset($query->groupBy)) {
       $columns = array();
       foreach ($query->groupBy['columns'] as $column) {
@@ -184,6 +176,14 @@ class SqlTable implements ITable {
       if (isset($query->groupBy['condition']) AND $query->groupBy['condition']->hasClauses()) {
         $sqlString .= ' HAVING ' . $this->conditionToSql($query->groupBy['condition']);
       }
+    }
+    if (!empty($query->orderBy)) {
+      $columns = array();
+      foreach ($query->orderBy as $orderBy) {
+        $columns[] = $this->replaceColumns($orderBy['column'])
+          . ($orderBy['descending'] ? ' DESC' : ' ASC');
+      }
+      $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
     if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
