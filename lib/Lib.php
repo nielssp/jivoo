@@ -61,12 +61,17 @@ class Lib {
     if (isset(self::$info[$module])) {
       return self::$info[$module];
     }
-    $meta = readFileMeta(p(CLASSES . $module . '/' . $module . '.php'));
+    $moduleName = $module;
+    if (strpos($module, '.') !== false) {
+      $segments = explode('.', $module);
+      $moduleName = $segments[count($segments) - 1];
+    }
+    $meta = readFileMeta(LIB_PATH . '/' . implode('/', $segments) . '/' . $moduleName . '.php');
     if (!$meta OR $meta['type'] != 'module') {
       return false;
     }
     if (!isset($meta['name'])) {
-      $meta['name'] = $module;
+      $meta['name'] = $moduleName;
     }
     self::$info[$module] = $meta;
     return $meta;

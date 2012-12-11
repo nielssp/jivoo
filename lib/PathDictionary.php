@@ -21,7 +21,7 @@ class PathDictionary extends Dictionary {
     }
     $path = parent::__get($key);
     /** @todo Also check for other absolute paths.. E.g. C:\example\directory on Windows */
-    if ($path[0] == '/') {
+    if ($path[0] == '/' OR $path[1] == ':') {
       return $path;
     }
     return $this->basePath . '/' . $path;

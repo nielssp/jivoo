@@ -48,13 +48,13 @@ class Database extends ModuleBase implements IDatabase  {
     }
     $name = $schema->getName();
     if ($this->m->Configuration->exists('database.migration.' . $name)) {
-      if ($this->m->Configuration->get('database.migration.' . $name) == PEANUT_VERSION) {
+      if ($this->m->Configuration->get('database.migration.' . $name) == $this->app->version) {
         return 'unchanged';
       }
     }
     if ($this->connection) {
       $status = $this->connection->migrate($schema);
-      $this->m->Configuration->set('database.migration.' . $name, PEANUT_VERSION);
+      $this->m->Configuration->set('database.migration.' . $name, $this->app->version);
       return $status;
     }
   }
@@ -64,7 +64,7 @@ class Database extends ModuleBase implements IDatabase  {
     $this->m->Configuration->setDefault(array(
       'database.server' => 'localhost',
       'database.database' => 'peanutcms',
-      'database.filename' => 'cfg/db.sqlite3',
+      'database.filename' => 'config/db.sqlite3',
     ));
     $controller = new DatabaseMaintenanceController($this->m->Routes, $this->m->Configuration['database']);
     $controller->addModule($this);
@@ -86,7 +86,7 @@ class Database extends ModuleBase implements IDatabase  {
           $this->m->Maintenance->setup($controller, 'setupDriver', array($this->driverInfo));
         }
       }
-      require(p(CLASSES . 'Database/Drivers/' . $this->driver . '.php'));
+      require($this->p('Drivers/' . $this->driver . '.php'));
       try {
         $this->connection = new $this->driver($this->m->Configuration->get('database'));
       }
@@ -101,10 +101,10 @@ class Database extends ModuleBase implements IDatabase  {
   }
 
   public function checkDriver($driver) {
-    if (!file_exists(p(CLASSES . 'Database/Drivers/' . $driver . '.php'))) {
+    if (!file_exists($this->p('Drivers/' . $driver . '.php'))) {
       return false;
     }
-    $meta = readFileMeta(p(CLASSES . 'Database/Drivers/' . $driver . '.php'));
+    $meta = readFileMeta($this->p('Drivers/' . $driver . '.php'));
     if (!isset($meta['required'])) {
       $meta['required'] = '';
     }
@@ -126,7 +126,7 @@ class Database extends ModuleBase implements IDatabase  {
 
   public function listDrivers() {
     $drivers = array();
-    $dir = opendir(p(CLASSES . 'Database/Drivers'));
+    $dir = opendir($this->p('Drivers'));
     while ($file = readdir($dir)) {
       if (substr($file, -4) == '.php') {
         $driver = substr($file, 0, -4);

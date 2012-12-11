@@ -4,8 +4,10 @@ return array(
   'name' => 'PeanutCMS',
   'version' => '0.3.4',
   'modules' => array(
-    'Errors', 'Configuration', 'Shadow', 'I18n', 'Http', 'Templates',
-    'Routes', 'Theme', 'Database', 'Authentication', 'Backend',
-    'Extensions', 'Posts', 'Links', 'Pages'
+    'ApakohPHP.Errors', 'ApakohPHP.Configuration', 'ApakohPHP.Shadow',
+    'ApakohPHP.I18n', 'ApakohPHP.Http', 'ApakohPHP.Templates',
+    'ApakohPHP.Routes', 'ApakohPHP.Authentication', 'ApakohPHP.Database',
+    'PeanutCMS.Theme', 'PeanutCMS.Backend', 'PeanutCMS.Extensions',
+    'PeanutCMS.Posts', 'PeanutCMS.Links', 'PeanutCMS.Pages'
   ),
 );

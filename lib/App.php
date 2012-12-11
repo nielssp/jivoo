@@ -124,12 +124,17 @@ class App {
   }
 
   public function loadModule($module) {
-    if (!isset($this->m->$module)) {
-      if (!class_exists($module)) {
+    $moduleName = $module;
+    if (strpos($module, '.') !== false) {
+      $segments = explode('.', $module);
+      $moduleName = $segments[count($segments) - 1];
+    }
+    if (!isset($this->m->$moduleName)) {
+      if (!class_exists($moduleName)) {
         if (!Lib::import($module . '.*')) {
           throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
         }
-        if (!class_exists($module)) {
+        if (!class_exists($moduleName)) {
           throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
         }
       }
@@ -140,9 +145,9 @@ class App {
       $dependencies = $info['dependencies']['modules'];
       $modules = array();
       foreach ($dependencies as $dependency => $versionInfo) {
-        $dependency = $dependency;
         try {
-          $modules[$dependency] = $this->loadModule($dependency);
+          $dependencyObject = $this->loadModule($dependency);
+          $modules[get_class($dependencyObject)] = $dependencyObject;
         }
         catch (ModuleNotFoundException $e) {
           throw new ModuleMissingDependencyException(tr(
@@ -152,9 +157,10 @@ class App {
           ));
         }
       }
-      $this->m->$module = new $module($modules, $this);
+      $this->paths->$moduleName = LIB_PATH . '/' . implode('/', $segments);
+      $this->m->$moduleName = new $moduleName($modules, $this);
     }
-    return $this->m->$module;
+    return $this->m->$moduleName;
   }
 
   /**

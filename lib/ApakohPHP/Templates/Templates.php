@@ -107,6 +107,9 @@ class Templates extends ModuleBase {
       default:
         throw new Exception(tr('Unsupported content type: %1', $fileExt));
     }
+    if (!defined('OUTPUTTING')) {
+      define('OUTPUTTING', $contentType);
+    }
     header('Content-Type:' . $contentType . ';charset=utf-8');
     $this->contentTypeSet = true;
   }

@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS authentication system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Shadow Maintenance Templates Database Routes Http
+// Dependencies   : Errors Configuration Shadow ApakohPHP.Maintenance Templates ApakohPHP.Database Routes Http
 
 /**
  * Authentication module

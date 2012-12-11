@@ -21,6 +21,6 @@ $app->paths->config = 'config';
 $app->paths->log = 'log';
 $app->paths->tmp = '/tmp/peanutcms';
 
-$environment = getenv('ARACHIS_ENVIRONMENT') || 'production';
+$environment = getenv('APAKOHPHP_ENVIRONMENT') || 'production';
 
 $app->run($environment);

@@ -53,7 +53,11 @@ if (!function_exists('lcfirst')) {
 }
 
 require LIB_PATH . '/Lib.php';
+require LIB_PATH . '/ErrorReporting.php';
 
+error_reporting(-1);
+set_error_handler(array('ErrorReporting', 'handleError'));
+set_exception_handler(array('ErrorReporting', 'handleException'));
 
 if (function_exists('spl_autoload_register')) {
   spl_autoload_register(array('Lib', 'autoload'));

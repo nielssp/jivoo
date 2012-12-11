@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS routing system
 // Author         : PeanutCMS
-// Dependencies   : Errors Http Templates Editors Configuration
+// Dependencies   : Errors Http Templates ApakohPHP.Editors Configuration
 
 /**
  * Handling routes
@@ -26,7 +26,7 @@ class Routes extends ModuleBase {
   
   private $rendered = false;
 
-  private $selectedRoute = NULl;
+  private $selectedRoute = null;
 
   private $parameters;
 

@@ -62,8 +62,13 @@ abstract class ModuleBase {
    * @param string $path File
    * @return string Absolute path
    */
-  public function p($key, $path = '') {
-    return $this->app->p($key, $path);
+  public function p($key, $path = null) {
+    if (isset($path)) {
+      return $this->app->p($key, $path);
+    }
+    else {
+      return $this->app->p(get_class($this), $key);
+    }
   }
 
   /**
