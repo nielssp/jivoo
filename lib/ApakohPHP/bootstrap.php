@@ -2,7 +2,11 @@
 ini_set('magic_quotes_runtime', 0);
 
 if (!defined('LIB_PATH')) {
-  define('LIB_PATH', str_replace('\\', '/', dirname(__FILE__)));
+  define('LIB_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))));
+}
+
+if (!defined('APAKOH_LIB_PATH')) {
+  define('APAKOH_LIB_PATH', str_replace('\\', '/', dirname(__FILE__)));
 }
 
 // PHP 5.2 compatibility
@@ -52,8 +56,8 @@ if (!function_exists('lcfirst')) {
   }
 }
 
-require LIB_PATH . '/Lib.php';
-require LIB_PATH . '/ErrorReporting.php';
+require APAKOH_LIB_PATH . '/Lib.php';
+require APAKOH_LIB_PATH . '/ErrorReporting.php';
 
 error_reporting(-1);
 set_error_handler(array('ErrorReporting', 'handleError'));

@@ -13,7 +13,9 @@ define('CACHING', true);
 
 define('TMP', '/tmp/peanutcms/');
 
-require_once 'lib/bootstrap.php';
+require_once 'lib/ApakohPHP/bootstrap.php';
+
+Lib::import('ApakohPHP.*');
 
 $app = new App(include 'app/app.php');
 
