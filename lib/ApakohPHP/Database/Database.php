@@ -86,9 +86,10 @@ class Database extends ModuleBase implements IDatabase  {
           $this->m->Maintenance->setup($controller, 'setupDriver', array($this->driverInfo));
         }
       }
-      require($this->p('Drivers/' . $this->driver . '.php'));
+      Lib::import('ApakohPHP/Database/' . $this->driver);
       try {
-        $this->connection = new $this->driver($this->m->Configuration->get('database'));
+        $class = $this->driver . 'Database';
+        $this->connection = new $class($this->m->Configuration->get('database'));
       }
       catch (DatabaseConnectionFailedException $exception) {
         Errors::fatal(
@@ -101,10 +102,10 @@ class Database extends ModuleBase implements IDatabase  {
   }
 
   public function checkDriver($driver) {
-    if (!file_exists($this->p('Drivers/' . $driver . '.php'))) {
+    if (!file_exists($this->p($driver . '/' . $driver . 'Database.php'))) {
       return false;
     }
-    $meta = readFileMeta($this->p('Drivers/' . $driver . '.php'));
+    $meta = readFileMeta($this->p($driver . '/' . $driver . 'Database.php'));
     if (!isset($meta['required'])) {
       $meta['required'] = '';
     }
@@ -126,10 +127,9 @@ class Database extends ModuleBase implements IDatabase  {
 
   public function listDrivers() {
     $drivers = array();
-    $dir = opendir($this->p('Drivers'));
-    while ($file = readdir($dir)) {
-      if (substr($file, -4) == '.php') {
-        $driver = substr($file, 0, -4);
+    $dir = opendir($this->p(''));
+    while ($driver = readdir($dir)) {
+      if (is_dir($this->p($driver))) {
         if ($driverInfo = $this->checkDriver($driver)) {
           $drivers[$driver] = $driverInfo;
         }

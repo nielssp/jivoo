@@ -5,6 +5,9 @@ class DatabaseMaintenanceController extends ApplicationController {
   protected $helpers = array('Html', 'Form');
 
   public function selectDriver() {
+    if ($this->config->exists('driver')) {
+      $this->refresh();
+    }
     $this->title = tr('Welcome to PeanutCMS');
     $this->drivers = $this->m->Database->listDrivers();
     $this->backendMenu = false;
@@ -48,9 +51,10 @@ class DatabaseMaintenanceController extends ApplicationController {
       }
       else if ($this->setupForm->isValid()) {
         $driver = $this->driver['driver'];
-        require(p(CLASSES . 'database/' . $driver . '.php'));
+        $class = $driver . 'Database';
+        Lib::import('ApakohPHP/Database/' . $driver);
         try {
-          new $driver($this->request->data['setup']);
+          new $class($this->request->data['setup']);
           $options = array_flip(array_merge($driverInfo['requiredOptions'], $driverInfo['optionalOptions']));
           foreach ($this->request->data['setup'] as $key => $value) {
             if (isset($options[$key])) {
