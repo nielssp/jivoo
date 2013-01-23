@@ -125,16 +125,16 @@ class App {
 
   public function loadModule($module) {
     $moduleName = $module;
-    if (strpos($module, '.') !== false) {
-      $segments = explode('.', $module);
+    if (strpos($module, '/') !== false) {
+      $segments = explode('/', $module);
       $moduleName = $segments[count($segments) - 1];
     }
     if (!isset($this->m->$moduleName)) {
-      if (!class_exists($moduleName)) {
-        if (!Lib::import($module . '.*')) {
+      if (!class_exists($moduleName, false)) {
+        if (!Lib::import($module)) {
           throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
         }
-        if (!class_exists($moduleName)) {
+        if (!Lib::autoLoad($module . '/' . $moduleName)) {
           throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
         }
       }

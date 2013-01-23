@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS routing system
 // Author         : PeanutCMS
-// Dependencies   : Errors Http Templates ApakohPHP.Editors Configuration
+// Dependencies   : Errors Http Templates ApakohPHP/Editors Configuration
 
 /**
  * Handling routes

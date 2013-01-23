@@ -72,4 +72,4 @@ else {
   }
 }
 
-Lib::import('*');
+Lib::import('');

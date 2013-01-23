@@ -9,46 +9,22 @@ class Lib {
 
   private function __construct() {
   }
-
-  public static function import($class) {
-    if (isset(self::$classes[$class])) {
+  
+  public static function import($module) {
+    if (isset(self::$paths[$module])) {
       return true;
     }
-    if (class_exists($class, false) OR interface_exists($class, false)) {
-      return true;
-    }
-    if (strpos($class, '.') === false AND $class != '*') {
-      if (file_exists(LIB_PATH . '/' . $class . '.php')) {
-        require LIB_PATH . '/' . $class . '.php';
-        self::$classes[$class] = $className;
-        return true;
-      }
-      return false;
-    }
-    $segments = explode('.', $class);
-    $className = $segments[count($segments) - 1];
-    if ($className == '*') {
-      array_pop($segments);
-      $path = LIB_PATH . '/' . implode('/', $segments);
-      if (isset(self::$paths[$path])) {
-        return true;
-      }
-      self::$paths[$path] = implode('.', $segments);
-      return true;
-    }
-    else {
-      $path = LIB_PATH . '/' . implode('/', $segments) . '.php';
-      if (file_exists($path)) {
-        require $path;
-        self::$classes[$class] = $className;
-        return true;
-      }
-    }
-    return false;
+    $module = trim($module, '/');
+    $path = LIB_PATH . ($module != '' ? '/' : '') . $module;
+//    echo 'IMPORT ' . $module . ' > ' . $path . PHP_EOL;
+    self::$paths[$module] = $path;
+    return true;
   }
 
+
   public static function addIncludePath($path) {
-    self::$paths[$path] = 'app';
+//    echo 'ADDPATH ' . $path . PHP_EOL;
+    self::$paths[] = $path;
   }
 
   /**
@@ -62,11 +38,12 @@ class Lib {
       return self::$info[$module];
     }
     $moduleName = $module;
-    if (strpos($module, '.') !== false) {
-      $segments = explode('.', $module);
+    if (strpos($module, '/') !== false) {
+      $segments = explode('/', $module);
       $moduleName = $segments[count($segments) - 1];
     }
-    $meta = readFileMeta(LIB_PATH . '/' . implode('/', $segments) . '/' . $moduleName . '.php');
+    //echo 'INFO ' . $module . ' > ' . $moduleName . PHP_EOL;
+    $meta = readFileMeta(LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
     if (!$meta OR $meta['type'] != 'module') {
       return false;
     }
@@ -78,11 +55,12 @@ class Lib {
   }
 
   public static function autoload($className) {
-    foreach (self::$paths as $path => $dotPath) {
+    //echo 'LOAD ' . $className . PHP_EOL;
+    foreach (self::$paths as $module => $path) {
       $classPath = $path . '/' . $className . '.php';
+      //echo 'TEST ' . $classPath . PHP_EOL;
       if (file_exists($classPath)) {
         require $classPath;
-        self::$classes[$dotPath . '.' . $className] = $className;
         return true;
       }
     }

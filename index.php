@@ -15,7 +15,7 @@ define('TMP', '/tmp/peanutcms/');
 
 require_once 'lib/ApakohPHP/bootstrap.php';
 
-Lib::import('ApakohPHP.*');
+Lib::import('ApakohPHP');
 
 $app = new App(include 'app/app.php');
 
