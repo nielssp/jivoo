@@ -40,7 +40,7 @@ class Utilities {
    * @param boolean $condition Condition
    * @throws InvalidArgumentException When condition is false
    */
-  function precondition($condition) {
+  public static function precondition($condition) {
     if ($condition === true) {
       return;
     }
@@ -53,5 +53,35 @@ class Utilities {
       $matches
     );
     throw new InvalidArgumentException('Precondition not met (' . $matches[1] . ').');
+  }
+  
+  public static function getContentType($fileName) {
+    $fileExt = strtolower($fileName);
+    if (strpos($fileExt, '.')) {
+      $segments = explode('.', $fileExt);
+      $fileExt = $segments[count($segments) - 1];
+    }
+    switch ($fileExt) {
+      case 'htm':
+        $fileExt = 'html';
+      case 'css':
+      case 'js':
+      case 'html':
+        return "text/" . $fileExt;
+      case 'json':
+        return "application/json";
+      case 'rss':
+        return "application/rss+xml";
+      case 'xml':
+        return "application/xml";
+      case 'jpg':
+        $fileExt = 'jpeg';
+      case 'gif':
+      case 'jpeg':
+      case 'png':
+        return "image/" . $fileExt;
+      default:
+        return "text/plain";
+    }
   }
 }

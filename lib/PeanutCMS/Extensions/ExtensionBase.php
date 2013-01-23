@@ -22,23 +22,21 @@ abstract class ExtensionBase {
   }
 
   protected function load($className) {
-    if ($className[0] == 'I' AND file_exists($path = $this->p('interfaces/' . $className . '.php'))) {
-      include($path);
+    $fileName = $className . '.php';
+    if (file_exists($this->p($fileName))) {
+      include($this->p($fileName));
     }
-    else {
-      $fileName = $className . '.php';
-      if (file_exists($this->p('classes/' . $fileName))) {
-        include($this->p('classes/' . $fileName));
-      }
-      else if (file_exists($this->p('helpers/' . $fileName))) {
-        include($this->p('helpers/' . $fileName));
-      }
-      else if (file_exists($this->p('controllers/' . $fileName))) {
-        include($this->p('controllers/' . $fileName));
-      }
-      else if (file_exists($this->getpath('modules/' . $fileName))) {
-        include($this->p('modules/' . $fileName));
-      }
+    else if (file_exists($this->p('classes/' . $fileName))) {
+      include($this->p('classes/' . $fileName));
+    }
+    else if (file_exists($this->p('helpers/' . $fileName))) {
+      include($this->p('helpers/' . $fileName));
+    }
+    else if (file_exists($this->p('controllers/' . $fileName))) {
+      include($this->p('controllers/' . $fileName));
+    }
+    else if (file_exists($this->getpath('modules/' . $fileName))) {
+      include($this->p('modules/' . $fileName));
     }
   }
   
