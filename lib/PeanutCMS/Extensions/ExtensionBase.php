@@ -68,7 +68,7 @@ abstract class ExtensionBase {
     if (!isset($this->m->Assets)) {
       return false;
     }
-    return $this->m->Assets->getAsset($this->p($file));
+    return $this->m->Assets->getAsset('extensions', $this->extensionDir . '/' . $file);
   }
   
   protected abstract function init();

@@ -17,8 +17,6 @@
  */
 class Templates extends ModuleBase {
 
-  private $theme;
-
   private $html = array();
 
   private $availableHtml = array();
@@ -263,7 +261,7 @@ class Templates extends ModuleBase {
   }
 
   public function setTheme($themeDir) {
-    $this->theme = $themeDir;
+    $this->app->paths->theme = $themeDir;
   }
 
   /**
@@ -273,8 +271,8 @@ class Templates extends ModuleBase {
   * @return string Link
   */
   public function getFile($file) {
-    if (isset($this->theme) AND file_exists($this->theme . $file)) {
-      return $this->m->Assets->getAsset($this->theme . $file);
+    if (file_exists($this->p('theme', $file))) {
+      return $this->m->Assets->getAsset('theme', $file);
     }
     return $this->m->Assets->getAsset($file);
   }
@@ -291,11 +289,11 @@ class Templates extends ModuleBase {
   }
 
   public function getTemplate($name, $additionalPaths = array(), $return = false) {
-    if (file_exists($this->theme . 'templates/' . $name. '.php')) {
+    if (file_exists($this->p('theme', 'templates/' . $name. '.php'))) {
       if (!$return) {
         $this->setContentType($name);
       }
-      return $this->theme . 'templates/' . $name . '.php';
+      return $this->p('theme',  'templates/' . $name . '.php');
     }
     else if (file_exists($this->p('templates', $name . '.php'))) {
       if (!$return) {

@@ -10,8 +10,11 @@ class Assets extends ModuleBase {
   private $docRoot = '';
   private $docRootLength = 0;
   
-  private $blacklist = array(
+  private $extensionBlacklist = array(
     'php'
+  );
+  
+  private $pathWhitelist = array(
   );
   
   protected function init() {
@@ -21,28 +24,19 @@ class Assets extends ModuleBase {
     if ($this->request->path[0] == 'assets' AND isset($this->request->path[1])) {
       $path = $this->request->path;
       array_shift($path);
-      if (count($path) == 1) {
-        if ($this->returnAsset($this->p('assets', 'css/' . $path[0]))) {
-          exit;
-        }
-        else if ($this->returnAsset($this->p('assets', 'js/' . $path[0]))) {
-          exit;
-        }
-        else if ($this->returnAsset($this->p('assets', 'img/' . $path[0]))) {
-          exit;
-        }
-      }
-      $key = array_shift($path);
       $filename = explode('.', $path[(count($path)-1)]);
       if (count($filename) > 1 AND !empty($filename[0])) {
         $extension = strtolower(array_pop($filename));
-        if (!in_array($extension, $this->blacklist)) {
-          switch ($extension) {
-            case 'css':
-          }
-          $file = $this->p($key, implode('/', $path));
-          if ($this->returnAsset($file)) {
+        if (!in_array($extension, $this->extensionBlacklist)) {
+          if ($this->returnAsset($this->p('assets', implode('/', $path)))) {
             exit;
+          }
+          else {
+            $key = array_shift($path);
+            $file = $this->p($key, implode('/', $path));
+            if ($this->returnAsset($file)) {
+              exit;
+            }
           }
         }
       }
@@ -58,12 +52,19 @@ class Assets extends ModuleBase {
     return false;
   }
   
-  public function getAsset($location) {
-    if (strncmp($location, $this->docRoot, $this->docRootLength) == 0) {
-      return substr($location, $this->docRootLength);
+  public function getAsset($key, $path = null) {
+    if (!isset($path)) {
+      $path = $key;
+      $key = 'assets';
+    }
+    $p = $this->p($key, $path);
+    if (strncmp($p, $this->docRoot, $this->docRootLength) == 0) {
+      return substr($p, $this->docRootLength);
     }
     else {
-      throw new Exception('ASSETS NOT IMPLEMENTED. PATH: ' . $location);
+      $pArray = ($key == 'assets' ? array($key) : array('assets', $key));
+      $pArray = array_merge($pArray, explode('/', $path));
+      return $this->m->Http->getLink($pArray);
     }
   }
 }
