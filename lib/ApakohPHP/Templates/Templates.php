@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS template system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Http
+// Dependencies   : Errors Configuration Http ApakohPHP/Assets
 
 /**
  * Class for setting the template
@@ -273,10 +273,10 @@ class Templates extends ModuleBase {
   * @return string Link
   */
   public function getFile($file) {
-    if (isset($this->theme) AND file_exists($this->p($this->theme . $file))) {
-      return $this->w($this->theme . $file);
+    if (isset($this->theme) AND file_exists($this->theme . $file)) {
+      return $this->m->Assets->getAsset($this->theme . $file);
     }
-    return $this->w($file);
+    return $this->m->Assets->getAsset($file);
   }
   
   public function link($label, $controller = null, $action = 'index', $parameters = array()) {
