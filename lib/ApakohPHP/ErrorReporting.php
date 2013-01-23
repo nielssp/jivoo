@@ -38,7 +38,7 @@ class ErrorReporting {
    * Uncaught Exception handler
    * @param Exception $exception Exception
    */
-  public function handleException(Exception $exception) {
+  public static function handleException(Exception $exception) {
     if (defined('OUTPUTTING')) {
       echo 'Uncaught exception';
     }
@@ -47,8 +47,6 @@ class ErrorReporting {
       $file = $exception->getFile();
       $line = $exception->getLine();
       $message = $exception->getMessage();
-      /* This should (!!) be a template/view instead..
-       * Or should it? (What if the template is missing?) */
       echo 'Uncaught ' . get_class($exception) . ': ' . $message . PHP_EOL;
   
       echo tr('An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',

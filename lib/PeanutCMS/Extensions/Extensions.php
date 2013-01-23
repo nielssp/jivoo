@@ -66,10 +66,10 @@ class Extensions extends ModuleBase {
         throw new ExtensionInvalidException(tr('Circular dependency detected when attempting to load the "%1" extension.', $extension));
       }
       $this->loading[$extension] = true;
-      if (!file_exists(p(EXTENSIONS . $extension . '/' . $extension . '.php'))) {
+      if (!file_exists($this->p('extensions', $extension . '/' . $extension . '.php'))) {
         throw new ExtensionNotFoundException(tr('The "%1" extension could not be found', $extension));
       }
-      require_once(p(EXTENSIONS . $extension . '/' . $extension . '.php'));
+      require_once($this->p('extensions', $extension . '/' . $extension . '.php'));
       if (!class_exists($extension)) {
         throw new ExtensionInvalidException(tr('The "%1" extension does not have a main class', $extension));
       }
@@ -94,7 +94,7 @@ class Extensions extends ModuleBase {
         }
       }
       foreach ($info['dependencies']['modules'] as $dependency => $versionInfo) {
-        $module = $this->Core->requestModule($dependency);
+        $module = $this->app->requestModule($dependency);
         /** @todo Do this when installing.. */
         // $version = $this->core->getVersion($dependency);
         if ($module !== false) { // AND compareDependencyVersions($version, $versionInfo)) {
@@ -108,7 +108,7 @@ class Extensions extends ModuleBase {
       }
       $config = $this->m->Configuration->getSubset('extensions.config.' . $extension);
       //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
-      $this->extensions[$extension] = new $extension($modules, $extensions, $config);
+      $this->extensions[$extension] = new $extension($modules, $extensions, $config, $this);
     }
     return $this->extensions[$extension];
   }
@@ -123,7 +123,7 @@ class Extensions extends ModuleBase {
     if (isset($this->info[$extension])) {
       return $this->info[$extension];
     }
-    $meta = readFileMeta(p(EXTENSIONS . $extension . '/' . $extension . '.php'));
+    $meta = FileMeta::read($this->p('extensions', $extension . '/' . $extension . '.php'));
     if (!$meta OR $meta['type'] != 'extension') {
       return false;
     }

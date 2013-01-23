@@ -2,18 +2,17 @@
 // Module
 // Name           : Authentication
 // Version        : 0.2.0
-// Description    : The PeanutCMS authentication system
-// Author         : PeanutCMS
-// Dependencies   : Errors Configuration Shadow ApakohPHP/Maintenance Templates ApakohPHP/Database Routes Http
+// Description    : The ApakohPHP authentication system
+// Author         : apakoh.dk
+// Dependencies   : ApakohPHP/Errors ApakohPHP/Configuration ApakohPHP/Shadow
+//                  ApakohPHP/Maintenance ApakohPHP/Templates ApakohPHP/Database
+//                  ApakohPHP/Routes ApakohPHP/Http
 
 /**
  * Authentication module
  *
- * @package PeanutCMS
- */
-
-/**
- * Authentication class
+ * @package ApakohPHP
+ * @subpackage Authentication
  */
 class Authentication extends ModuleBase {
 

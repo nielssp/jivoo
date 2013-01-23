@@ -93,9 +93,9 @@ class Errors extends ModuleBase {
         'file' => $file,
         'line' => $line
     );
-    if (LOG_ERRORS) {
-      $this->logToFile($message . ' in ' . $file . ' on line ' . $line);
-    }
+//     if (LOG_ERRORS) {
+//       $this->logToFile($message . ' in ' . $file . ' on line ' . $line);
+//     }
   }
 
   /**
@@ -250,8 +250,8 @@ class Errors extends ModuleBase {
           <title>' . $title . '</title>
 
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <link rel="stylesheet" href="' . w(PUB . 'css/backend.css') . '" type="text/css" />
-          <link rel="stylesheet" href="' . w(PUB . 'css/exception.css') . '" type="text/css" />
+          <link rel="stylesheet" href="' . (PUB . 'css/backend.css') . '" type="text/css" />
+          <link rel="stylesheet" href="' . (PUB . 'css/exception.css') . '" type="text/css" />
 
         </head>
         <body>

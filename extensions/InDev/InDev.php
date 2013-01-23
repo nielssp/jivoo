@@ -5,7 +5,7 @@
 
 class InDev extends ExtensionBase {
   protected function init() {
-    if (file_exists(p('.git'))) {
+    if (file_exists($this->p(null, '../.git'))) {
       if (PHP_OS == 'WINNT') {
         $revDate = exec('"%PROGRAMFILES(X86)%/git/cmd/git" log -1 --format=%ci 2>&1');
       }

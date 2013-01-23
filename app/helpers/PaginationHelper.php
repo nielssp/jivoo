@@ -20,7 +20,7 @@ class PaginationHelper extends ApplicationHelper {
   }
   
   public function setLimit($limit) {
-    precondition($limit > 0);
+    Utilities::precondition($limit > 0);
     $this->limit = $limit;
     return $this;
   }

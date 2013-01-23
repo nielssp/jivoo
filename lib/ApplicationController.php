@@ -84,8 +84,8 @@ class ApplicationController {
     if (!empty($prefix) AND substr($prefix, -1) != '/') {
       $prefix .= '/';
     }
-    $controller = $prefix . classFileName($this->name);
-    $paction = classFileName($action);
+    $controller = $prefix . Utilities::camelCaseToDashes($this->name);
+    $paction = Utilities::camelCaseToDashes($action);
     if ($action == 'index') {
       $this->addRoute($controller, $action);
     }
@@ -156,9 +156,9 @@ class ApplicationController {
     $template = new Template($this->m->Templates, $this->m->Routes, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
-      $templateName = classFileName($this->name) . '/';
+      $templateName = Utilities::camelCaseToDashes($this->name) . '/';
       list( , $caller) = debug_backtrace(false);
-      $templateName .= classFileName($caller['function']) . '.html';
+      $templateName .= Utilities::camelCaseToDashes($caller['function']) . '.html';
     }
     $templateData = array_merge($this->data, $this->helperObjects);
     $template->set($templateData);

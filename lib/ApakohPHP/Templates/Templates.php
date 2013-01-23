@@ -49,7 +49,7 @@ class Templates extends ModuleBase {
       'system.hide.version' => HIDE_LEVEL > 0 ? 'on' : 'off',
     ));
 
-    $this->setTheme(TEMPLATES);
+    $this->setTheme($this->p(null, ''));
 
     if ($this->m->Configuration->exists('site.meta')) {
       $meta = $this->m->Configuration->get('site.meta');
@@ -273,10 +273,10 @@ class Templates extends ModuleBase {
   * @return string Link
   */
   public function getFile($file) {
-    if (isset($this->theme) AND file_exists(p($this->theme . $file))) {
-      return w($this->theme . $file);
+    if (isset($this->theme) AND file_exists($this->p($this->theme . $file))) {
+      return $this->w($this->theme . $file);
     }
-    return w(ASSETS . $file);
+    return $this->w($file);
   }
   
   public function link($label, $controller = null, $action = 'index', $parameters = array()) {
@@ -291,17 +291,17 @@ class Templates extends ModuleBase {
   }
 
   public function getTemplate($name, $additionalPaths = array(), $return = false) {
-    if (file_exists(p($this->theme . 'templates/' . $name. '.php'))) {
+    if (file_exists($this->theme . 'templates/' . $name. '.php')) {
       if (!$return) {
         $this->setContentType($name);
       }
-      return p($this->theme . 'templates/' . $name . '.php');
+      return $this->theme . 'templates/' . $name . '.php';
     }
-    else if (file_exists(p(TEMPLATES . $name . '.php'))) {
+    else if (file_exists($this->p('templates', $name . '.php'))) {
       if (!$return) {
         $this->setContentType($name);
       }
-      return p(TEMPLATES . $name . '.php');
+      return $this->p('templates', $name . '.php');
     }
     else {
       foreach ($additionalPaths as $path) {

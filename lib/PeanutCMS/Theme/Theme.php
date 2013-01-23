@@ -42,7 +42,7 @@ class Theme extends ModuleBase {
 
     // Find and load theme
     if ($this->load()) {
-      $this->m->Templates->setTheme(THEMES . $this->theme . '/');
+      $this->m->Templates->setTheme($this->p('themes', $this->theme . '/'));
     }
     else {
       new GlobalWarning(tr('Please install a theme'), 'theme-missing');
@@ -57,19 +57,19 @@ class Theme extends ModuleBase {
   private function load() {
     if ($this->m->Configuration->exists('theme.name')) {
       $theme = $this->m->Configuration->get('theme.name');
-      if (file_exists(p(THEMES . $theme . '/' . $theme . '.php'))) {
+      if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
         $this->theme = $theme;
         return true;
       }
     }
-    if (!is_dir(p(THEMES))) {
+    if (!is_dir($this->p('themes', ''))) {
       return false;
     }
-    $dir = opendir(p(THEMES));
+    $dir = opendir($this->p('themes', ''));
     if ($dir) {
       while (($theme = readdir($dir)) !== false) {
-        if (is_dir(p(THEMES . $theme)) AND $theme != '.' AND $theme != '..') {
-          if (file_exists(p(THEMES . $theme . '/' . $theme . '.php'))) {
+        if (is_dir($this->p('themes', $theme)) AND $theme != '.' AND $theme != '..') {
+          if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
             $this->m->Configuration->set('theme.name', $theme);
             $this->theme = $theme;
             return true;

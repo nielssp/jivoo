@@ -43,7 +43,7 @@ class Lib {
       $moduleName = $segments[count($segments) - 1];
     }
     //echo 'INFO ' . $module . ' > ' . $moduleName . PHP_EOL;
-    $meta = readFileMeta(LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
+    $meta = FileMeta::read(LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
     if (!$meta OR $meta['type'] != 'module') {
       return false;
     }

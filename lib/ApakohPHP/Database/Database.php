@@ -105,7 +105,7 @@ class Database extends ModuleBase implements IDatabase  {
     if (!file_exists($this->p($driver . '/' . $driver . 'Database.php'))) {
       return false;
     }
-    $meta = readFileMeta($this->p($driver . '/' . $driver . 'Database.php'));
+    $meta = FileMeta::read($this->p($driver . '/' . $driver . 'Database.php'));
     if (!isset($meta['required'])) {
       $meta['required'] = '';
     }

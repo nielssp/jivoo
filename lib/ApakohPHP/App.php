@@ -173,7 +173,7 @@ class App {
     }
     define('CFG', $this->paths->config . '/');
     define('WEBPATH', $this->paths->web . '/');
-    if (!require_once(LIB_PATH . '/essentials.php')) {
+    if (false AND !require_once(LIB_PATH . '/essentials.php')) {
       echo 'Essential PeanutCMS files are missing. You should probably reinstall.';
       return;
     }

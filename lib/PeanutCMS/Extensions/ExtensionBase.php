@@ -2,6 +2,8 @@
 
 abstract class ExtensionBase {
 
+  private $extensions;
+  
   private $extensionDir;
   
   protected $m = null;
@@ -10,10 +12,11 @@ abstract class ExtensionBase {
   
   protected $config = null;
   
-  public final function __construct($modules, $extensions, Configuration $config) {
+  public final function __construct($m, $e, Configuration $config, Extensions $extensions) {
     $this->config = $config;
-    $this->m = new Dictionary($modules, true);
-    $this->e = new Dictionary($extensions, true);
+    $this->extensions = $extensions;
+    $this->m = new Dictionary($m, true);
+    $this->e = new Dictionary($e, true);
     $this->extensionDir = get_class($this);
     $this->init();
   }
@@ -38,13 +41,37 @@ abstract class ExtensionBase {
       }
     }
   }
-
-  protected function getPath($file) {
-    return p(EXTENSIONS . $this->extensionDir . '/' . $file);
+  
+  /**
+   * Get the absolute path of a file
+   * @param string $key Location-identifier
+   * @param string $path File
+   * @return string Absolute path
+   */
+  public function p($key, $path = null) {
+    if (isset($path)) {
+      return $this->extensions->p($key, $path);
+    }
+    else {
+      return $this->extensions->p('extensions', $this->extensionDir . '/' . $key);
+    }
+  }
+  
+  /**
+   * Get the absolute path of a file relative to the public directory
+   * @param string $path File
+   * @return string Path
+   */
+  public function w($path = '') {
+    return $this->extensions->w($path);
   }
 
-  protected function getLink($file) {
-    return w(EXTENSIONS . $this->extensionDir . '/' . $file);
+  public function getPath($file) {
+    return $this->p($file);
+  }
+
+  public function getLink($file) {
+    return $this->w('extensions' . $this->extensionDir . '/' . $file);
   }
   
   protected abstract function init();
