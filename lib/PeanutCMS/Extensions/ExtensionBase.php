@@ -22,22 +22,22 @@ abstract class ExtensionBase {
   }
 
   protected function load($className) {
-    if ($className[0] == 'I' AND file_exists($path = $this->getPath('interfaces/' . $className . '.php'))) {
+    if ($className[0] == 'I' AND file_exists($path = $this->p('interfaces/' . $className . '.php'))) {
       include($path);
     }
     else {
       $fileName = $className . '.php';
-      if (file_exists($this->getPath('classes/' . $fileName))) {
-        include($this->getPath('classes/' . $fileName));
+      if (file_exists($this->p('classes/' . $fileName))) {
+        include($this->p('classes/' . $fileName));
       }
-      else if (file_exists($this->getPath('helpers/' . $fileName))) {
-        include($this->getpath('helpers/' . $fileName));
+      else if (file_exists($this->p('helpers/' . $fileName))) {
+        include($this->p('helpers/' . $fileName));
       }
-      else if (file_exists($this->getpath('controllers/' . $fileName))) {
-        include($this->getpath('controllers/' . $fileName));
+      else if (file_exists($this->p('controllers/' . $fileName))) {
+        include($this->p('controllers/' . $fileName));
       }
       else if (file_exists($this->getpath('modules/' . $fileName))) {
-        include($this->getpath('modules/' . $fileName));
+        include($this->p('modules/' . $fileName));
       }
     }
   }
@@ -65,13 +65,12 @@ abstract class ExtensionBase {
   public function w($path = '') {
     return $this->extensions->w($path);
   }
-
-  public function getPath($file) {
-    return $this->p($file);
-  }
-
-  public function getLink($file) {
-    return $this->w('extensions' . $this->extensionDir . '/' . $file);
+  
+  public function getAsset($file) {
+    if (!isset($this->m->Assets)) {
+      return false;
+    }
+    return $this->m->Assets->getAsset($this->p($file));
   }
   
   protected abstract function init();

@@ -96,8 +96,13 @@ class App {
    * not loaded
    */
   public function requestModule($module) {
+    $moduleName = $module;
+    if (strpos($module, '/') !== false) {
+      $segments = explode('/', $module);
+      $moduleName = $segments[count($segments) - 1];
+    }
     try {
-      return $this->m->$module;
+      return $this->m->$moduleName;
     }
     catch (DictionaryKeyInvalidException $e) {
       return false;

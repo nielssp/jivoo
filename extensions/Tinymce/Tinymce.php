@@ -4,7 +4,8 @@
 // Category     : JavaScript WYSIWYG editor
 // Website      : http://tinymce.com
 // Version      : 3.4.4 
-// Dependencies : Templates Routes Editors ext;Jquery ext;JqueryUi 
+// Dependencies : Templates Routes Editors
+//                Assets ext;Jquery ext;JqueryUi 
 
 class Tinymce extends ExtensionBase {
   
@@ -19,24 +20,24 @@ class Tinymce extends ExtensionBase {
     $this->controller->addExtension($this);
     $this->controller->addRoute('tinymce/init.js', 'initJs');
 
-    $this->controller->addTemplatePath($this->getPath('templates'));
+    $this->controller->addTemplatePath($this->p('templates'));
 
     $editor = new TinymceEditor($this);
     $this->m->Editors->TinymceEditor = $editor;
 
     $this->m->Templates->addScript(
       'tinymce',
-      $this->getLink('jquery.tinymce.js'),
+      $this->getAsset('jquery.tinymce.js'),
       array('jquery', 'jquery-ui')
     );
   }
 
   public function getScriptUrl() {
-    return $this->getLink('tiny_mce.js');
+    return $this->getAsset('tiny_mce.js');
   }
 
   public function getStyleUrl() {
-    return $this->getLink('css/content.css');
+    return $this->getAsset('css/content.css');
   }
 
   public function insertScripts() {

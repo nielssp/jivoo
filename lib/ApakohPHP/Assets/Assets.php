@@ -7,14 +7,16 @@
 class Assets extends ModuleBase {
   
   private $docRoot = '';
+  private $docRootLength = 0;
   
   protected function init() {
     $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
+    $this->docRootLength = strlen($this->docRoot);
   }
   
   public function getAsset($location) {
-    if (strncmp($location, $this->docRoot, strlen($this->docRoot)) == 0) {
-      return substr($location, strlen($this->docRoot));
+    if (strncmp($location, $this->docRoot, $this->docRootLength) == 0) {
+      return substr($location, $this->docRootLength);
     }
     else {
       throw new Exception('ASSETS NOT IMPLEMENTED. PATH: ' . $location);
