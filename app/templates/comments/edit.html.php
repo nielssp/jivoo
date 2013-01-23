@@ -9,7 +9,7 @@ $this->render('backend/header.html');
         <div class="container">
           <p>
             <?php echo $Form->label('author', null, array('class' => 'small')); ?>
-            <?php echo $Form ->field('author'); ?>
+            <?php echo $Form->field('author'); ?>
           </p>
         </div>
       </div>
@@ -18,7 +18,7 @@ $this->render('backend/header.html');
         <div class="container">
           <p>
             <?php echo $Form->label('email', null, array('class' => 'small')); ?>
-            <?php echo $Form ->field('email'); ?>
+            <?php echo $Form->field('email'); ?>
           </p>
         </div>
       </div>
@@ -27,7 +27,7 @@ $this->render('backend/header.html');
         <div class="container">
           <p>
             <?php echo $Form->label('website', null, array('class' => 'small')); ?>
-            <?php echo $Form ->field('website'); ?>
+            <?php echo $Form->field('website'); ?>
           </p>
         </div>
       </div>
@@ -36,7 +36,7 @@ $this->render('backend/header.html');
         <div class="container">
           <p>
             <?php echo $Form->label('content', null, array('class' => 'small')); ?>
-            <?php echo $Form ->field('content'); ?>
+            <?php echo $Form->field('content'); ?>
           </p>
         </div>
       </div>
@@ -44,7 +44,8 @@ $this->render('backend/header.html');
       <div class="section">
         <div class="container">
           <div class="aright">
-            <?php echo $Form->submit(tr('Save'), 'save', array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Save'), 'save',
+    array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>

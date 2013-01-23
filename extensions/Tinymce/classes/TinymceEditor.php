@@ -13,7 +13,8 @@ class TinymceEditor implements IEditor {
   }
 
   public function init(Configuration $config = null) {
-    $this->tinymce->insertScripts();
+    $this->tinymce
+      ->insertScripts();
     $this->config = $config;
     if ($this->initiated) {
       $class = get_class($this);

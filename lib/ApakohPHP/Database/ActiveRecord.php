@@ -5,21 +5,17 @@ abstract class ActiveRecord implements IModel {
   public static function connect(IDataSource $dataSource) {
     $class = get_called_class();
     $schema = $dataSource->getSchema();
-    self::$models[$class] = array(
-      'source' => $dataSource,
-      'table' => $dataSource->getName(),
-      'schema' => $schema,
+    self::$models[$class] = array('source' => $dataSource,
+      'table' => $dataSource->getName(), 'schema' => $schema,
       'columns' => $schema->getColumns(),
-      'primaryKey' => $schema->getPrimaryKey(),
-      'encoders' => array(),
-      'editors' => array(),
-      'validator' => null
+      'primaryKey' => $schema->getPrimaryKey(), 'encoders' => array(),
+      'editors' => array(), 'validator' => null
     );
     $object = new $class();
     self::$models[$class]['validator'] = $object->createValidator();
     unset($object);
   }
-  
+
   private function createValidator() {
     $class = get_class($this);
     $validator = new Validator($this->validate);
@@ -27,50 +23,70 @@ abstract class ActiveRecord implements IModel {
       if ($column == $this->primaryKey) {
         continue;
       }
-      if (isset($this->schema->$column)) {
-        $info = $this->schema->$column;
+      if (isset($this->schema
+        ->$column)) {
+        $info = $this->schema
+          ->$column;
         if ($info['type'] == 'integer') {
           /** @todo Handle signed integers */
-          $validator->$column->isInteger = true;
-          if (isset($validator->$column->maxValue)) {
-            $validator->$column->maxValue = min($validator->$column->maxValue, 4294967295);
+          $validator->$column
+            ->isInteger = true;
+          if (isset($validator->$column
+            ->maxValue)) {
+            $validator->$column
+              ->maxValue = min($validator->$column
+              ->maxValue, 4294967295);
           }
           else {
-            $validator->$column->maxValue = 4294967295;
+            $validator->$column
+              ->maxValue = 4294967295;
           }
-          if (isset($validator->$column->minValue)) {
-            $validator->$column->minValue = max(0, $validator->$column->minValue);
+          if (isset($validator->$column
+            ->minValue)) {
+            $validator->$column
+              ->minValue = max(0, $validator->$column
+              ->minValue);
           }
           else {
-            $validator->$column->minValue = 0;
+            $validator->$column
+              ->minValue = 0;
           }
         }
         else if ($info['type'] == 'float') {
-          $validator->$column->isFloat = true;
+          $validator->$column
+            ->isFloat = true;
         }
         else if ($info['type'] == 'boolean') {
-          $validator->$column->isBoolean = true;
+          $validator->$column
+            ->isBoolean = true;
         }
         if (isset($info['length']) AND $info['type'] != 'float'
             AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
-          if (isset($validator->$column->maxLength)) {
-            $validator->$column->maxLength = min($validator->$column->maxLength, $info['length']);
+          if (isset($validator->$column
+            ->maxLength)) {
+            $validator->$column
+              ->maxLength = min($validator->$column
+              ->maxLength, $info['length']);
           }
           else {
-            $validator->$column->maxLength = $info['length'];
+            $validator->$column
+              ->maxLength = $info['length'];
           }
         }
-        if (isset($info['key']) AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
-          $validator->$column->unique = true;
+        if (isset($info['key'])
+            AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
+          $validator->$column
+            ->unique = true;
         }
         if (isset($info['null']) AND $info['null'] == false) {
-          $validator->$column->null = false;
+          $validator->$column
+            ->null = false;
         }
       }
     }
     return $validator;
   }
-  
+
   private static $cache = array();
 
   private $table;
@@ -83,7 +99,7 @@ abstract class ActiveRecord implements IModel {
   private $isNew = false;
   private $isSaved = true;
   private $isDeleted = false;
-  
+
   private $editors = array();
 
   protected $virtualData = array();
@@ -93,7 +109,7 @@ abstract class ActiveRecord implements IModel {
   protected $defaults = array();
 
   protected $virtuals = array();
-  
+
   protected $fields = array();
 
   protected $hasOne = array();
@@ -106,11 +122,13 @@ abstract class ActiveRecord implements IModel {
   private $errors = array();
 
   public function __set($property, $value) {
-    if (isset($this->virtuals[$property]) AND isset($this->virtuals[$property]['set'])) {
+    if (isset($this->virtuals[$property])
+        AND isset($this->virtuals[$property]['set'])) {
       call_user_func(array($this, $this->virtuals[$property]['set']), $value);
       $this->isSaved = false;
     }
-    else if (array_key_exists($property, $this->data) AND $property != $this->primaryKey) {
+    else if (array_key_exists($property, $this->data)
+        AND $property != $this->primaryKey) {
       $this->data[$property] = $value;
       $this->changed[$property] = true;
       $this->isSaved = false;
@@ -121,13 +139,14 @@ abstract class ActiveRecord implements IModel {
     }
     else {
       throw new RecordPropertyNotFoundException(
-        tr('Property "%1" was not found in model "%2".', $property, get_class($this))
-      );
+        tr('Property "%1" was not found in model "%2".', $property,
+          get_class($this)));
     }
   }
 
   public function __get($property) {
-    if (isset($this->virtuals[$property]) AND isset($this->virtuals[$property]['get'])) {
+    if (isset($this->virtuals[$property])
+        AND isset($this->virtuals[$property]['get'])) {
       return call_user_func(array($this, $this->virtuals[$property]['get']));
     }
     else if (array_key_exists($property, $this->data)) {
@@ -138,14 +157,13 @@ abstract class ActiveRecord implements IModel {
     }
     else {
       throw new RecordPropertyNotFoundException(
-        tr('Property "%1" was not found in model "%2".', $property, get_class($this))
-      );
+        tr('Property "%1" was not found in model "%2".', $property,
+          get_class($this)));
     }
   }
-  
+
   public function __isset($property) {
-    return isset($this->data[$property])
-      OR isset($this->virtuals[$property]);
+    return isset($this->data[$property]) OR isset($this->virtuals[$property]);
   }
 
   public function __call($method, $arguments) {
@@ -169,10 +187,12 @@ abstract class ActiveRecord implements IModel {
 
       if ($association == 'hasAndBelongsToMany' AND !isset($options['join'])) {
         if (strcmp($this->table, self::$models[$otherClass]['table']) < 0) {
-          $options['join'] = $this->table . '_' . self::$models[$otherClass]['table'];
+          $options['join'] = $this->table . '_'
+              . self::$models[$otherClass]['table'];
         }
         else {
-          $options['join'] = self::$models[$otherClass]['table'] . '_' . $this->table;
+          $options['join'] = self::$models[$otherClass]['table'] . '_'
+              . $this->table;
         }
         // if table does not exist
       }
@@ -198,9 +218,9 @@ abstract class ActiveRecord implements IModel {
             return $this->manyRemove($options, $arguments[0]);
         }
       }
-      else if ($association ==  'hasOne' OR $association == 'belongsTo') {
+      else if ($association == 'hasOne' OR $association == 'belongsTo') {
         if (!isset($options['connection'])) {
-//           $options['connection'] = 'this';
+          //           $options['connection'] = 'this';
           if ($association == 'hasOne') {
             $options['connection'] = 'other';
           }
@@ -221,8 +241,8 @@ abstract class ActiveRecord implements IModel {
     }
     else {
       throw new RecordMethodNotFoundException(
-        tr('Method "%1" was not found in model "%2".', $method, get_class($this))
-      );
+        tr('Method "%1" was not found in model "%2".', $method,
+          get_class($this)));
     }
   }
 
@@ -303,17 +323,22 @@ abstract class ActiveRecord implements IModel {
     $query = SelectQuery::create();
     if (isset($options['join'])) {
       if ($this->dataSource instanceof ITable) {
-        $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
+        $query->where(
+            $options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
         $query->addVar($this->data[$this->primaryKey]);
         $query->addVar($record->data[$record->primaryKey]);
         /** @todo Maybe find some better way of doing this.... */
-        return $this->dataSource->getOwner()->getTable($options['join'])->count($query) > 0;
+        return $this->dataSource
+          ->getOwner()
+          ->getTable($options['join'])
+          ->count($query) > 0;
       }
     }
     else {
       $query->where($options['thisKey'] . ' = ?');
       $query->addVar($this->data[$this->primaryKey]);
-      return $this->dataSource->count($query) > 0;
+      return $this->dataSource
+        ->count($query) > 0;
     }
   }
 
@@ -330,9 +355,13 @@ abstract class ActiveRecord implements IModel {
         return false;
       }
       if ($this->dataSource instanceof ITable) {
-        $query = $this->dataSource->getOwner()->getTable($options['join'])->insert();
+        $query = $this->dataSource
+          ->getOwner()
+          ->getTable($options['join'])
+          ->insert();
         $query->addPair($options['thisKey'], $this->data[$this->primaryKey]);
-        $query->addPair($options['otherKey'], $record->data[$record->primaryKey]);
+        $query->addPair($options['otherKey'],
+            $record->data[$record->primaryKey]);
         $query->execute();
         return true;
       }
@@ -358,8 +387,12 @@ abstract class ActiveRecord implements IModel {
         return false;
       }
       if ($this->dataSource instanceof ITable) {
-        $query = $this->dataSource->getOwner()->getTable($options['join'])->delete();
-        $query->where($options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
+        $query = $this->dataSource
+          ->getOwner()
+          ->getTable($options['join'])
+          ->delete();
+        $query->where(
+            $options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
         $query->addVar($this->data[$this->primaryKey]);
         $query->addVar($record->data[$record->primaryKey]);
         $query->execute();
@@ -432,14 +465,15 @@ abstract class ActiveRecord implements IModel {
   private function __construct($data = array()) {
     $class = get_class($this);
     if (!isset(self::$models[$class])) {
-      throw new InvalidModelException(tr('The model "%1" has not been connected to ActiveRecord.', $class));
+      throw new InvalidModelException(
+        tr('The model "%1" has not been connected to ActiveRecord.', $class));
     }
     $this->dataSource = self::$models[$class]['source'];
     $this->table = self::$models[$class]['table'];
     $this->primaryKey = self::$models[$class]['primaryKey'];
     $this->schema = self::$models[$class]['schema'];
     $this->data = array();
-    
+
     foreach (self::$models[$class]['columns'] as $column) {
       if (isset($data[$column])) {
         $this->data[$column] = $data[$column];
@@ -447,8 +481,10 @@ abstract class ActiveRecord implements IModel {
       else {
         $this->data[$column] = null;
       }
-      if (isset($this->schema->$column)) {
-        $info = $this->schema->$column;
+      if (isset($this->schema
+        ->$column)) {
+        $info = $this->schema
+          ->$column;
         if (isset($info['default'])) {
           if (!isset($this->defaults[$column])) {
             $this->defaults[$column] = $info['default'];
@@ -464,11 +500,17 @@ abstract class ActiveRecord implements IModel {
       if (!isset($options['plural'])) {
         $options['plural'] = $class . 's';
       }
-      $this->associations['get' . $options['plural']] = array('hasMany', 'get', $class);
-      $this->associations['count' . $options['plural']] = array('hasMany', 'count', $class);
+      $this->associations['get' . $options['plural']] = array('hasMany', 'get',
+        $class
+      );
+      $this->associations['count' . $options['plural']] = array('hasMany',
+        'count', $class
+      );
       $this->associations['has' . $class] = array('hasMany', 'has', $class);
       $this->associations['add' . $class] = array('hasMany', 'add', $class);
-      $this->associations['remove' . $class] = array('hasMany', 'remove', $class);
+      $this->associations['remove' . $class] = array('hasMany', 'remove',
+        $class
+      );
     }
     foreach ($this->belongsTo as $class => $options) {
       $this->associations['get' . $class] = array('belongsTo', 'get', $class);
@@ -478,19 +520,29 @@ abstract class ActiveRecord implements IModel {
       if (!isset($options['plural'])) {
         $options['plural'] = $class . 's';
       }
-      $this->associations['get' . $options['plural']] = array('hasAndBelongsToMany', 'get', $class);
-      $this->associations['count' . $options['plural']] = array('hasAndBelongsToMany', 'count', $class);
-      $this->associations['has' . $class] = array('hasAndBelongsToMany', 'has', $class);
-      $this->associations['add' . $class] = array('hasAndBelongsToMany', 'add', $class);
-      $this->associations['remove' . $class] = array('hasAndBelongsToMany', 'remove', $class);
+      $this->associations['get' . $options['plural']] = array(
+        'hasAndBelongsToMany', 'get', $class
+      );
+      $this->associations['count' . $options['plural']] = array(
+        'hasAndBelongsToMany', 'count', $class
+      );
+      $this->associations['has' . $class] = array('hasAndBelongsToMany', 'has',
+        $class
+      );
+      $this->associations['add' . $class] = array('hasAndBelongsToMany', 'add',
+        $class
+      );
+      $this->associations['remove' . $class] = array('hasAndBelongsToMany',
+        'remove', $class
+      );
     }
   }
-  
+
   public function getValidator() {
     $class = get_class($this);
     return self::$models[$class]['validator'];
   }
-  
+
   public static function getModelValidator($class = null) {
     if (!isset($class)) {
       $class = get_called_class();
@@ -500,7 +552,8 @@ abstract class ActiveRecord implements IModel {
 
   protected static function connection($class) {
     if (!isset(self::$models[$class])) {
-      throw new DatabaseNotConnectedException('This ActiveRecord is not connected to a database.');
+      throw new DatabaseNotConnectedException(
+        'This ActiveRecord is not connected to a database.');
     }
     return self::$models[$class]['source'];
   }
@@ -530,10 +583,12 @@ abstract class ActiveRecord implements IModel {
       $allowedFields = array_flip($allowedFields);
       $data = array_intersect_key($data, $allowedFields);
     }
-    $keys = array_unique(array_merge(array_keys($new->defaults), array_keys($data)));
+    $keys = array_unique(
+      array_merge(array_keys($new->defaults), array_keys($data)));
     foreach ($keys as $key) {
       try {
-        if (isset($data[$key]) AND (isset($new->fields[$key]) OR $allowedFields === true)) {
+        if (isset($data[$key])
+            AND (isset($new->fields[$key]) OR $allowedFields === true)) {
           $editor = $new->getFieldEditor($key);
           if (isset($editor)) {
             $format = $editor->getFormat();
@@ -562,7 +617,7 @@ abstract class ActiveRecord implements IModel {
     }
     return $new;
   }
-  
+
   public function addData($data, $allowedFields = NULl) {
     if (!is_array($data)) {
       return;
@@ -585,20 +640,22 @@ abstract class ActiveRecord implements IModel {
     }
   }
 
-  protected function validateValue($column, $value, $conditionKey, $conditionValue) {
+  protected function validateValue($column, $value, $conditionKey,
+                                   $conditionValue) {
     $validate = array();
     $class = get_class($this);
     if ($conditionValue instanceof ValidatorRule) {
       foreach ($conditionValue->getRules() as $subConditionKey => $subConditionValue) {
-        $validate = $this->validateValue($column, $value, $subConditionKey, $subConditionValue);
+        $validate = $this->validateValue($column, $value, $subConditionKey,
+            $subConditionValue);
         if (!$validate) {
           return false;
         }
       }
       return true;
     }
-    if ($conditionKey != 'presence'
-        AND $conditionKey != 'null' AND empty($value) AND !is_numeric($value)) {
+    if ($conditionKey != 'presence' AND $conditionKey != 'null'
+        AND empty($value) AND !is_numeric($value)) {
       return true;
     }
     switch ($conditionKey) {
@@ -607,9 +664,12 @@ abstract class ActiveRecord implements IModel {
       case 'null':
         return is_null($value) == $conditionValue;
       case 'email':
-        return preg_match("/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i", $value) == 1;
+        return preg_match(
+          "/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i",
+          $value) == 1;
       case 'url':
-        return preg_match("/^https?:\/\/[-a-z0-9@:%_\+\.~#\?&\/=\[\]]+$/i", $value) == 1;
+        return preg_match("/^https?:\/\/[-a-z0-9@:%_\+\.~#\?&\/=\[\]]+$/i",
+          $value) == 1;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -619,7 +679,8 @@ abstract class ActiveRecord implements IModel {
       case 'isInteger':
         return (preg_match('/^[-+]?\d+$/', $value) == 1) == $conditionValue;
       case 'isFloat':
-        return (preg_match('/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/', $value) == 1) == $conditionValue;
+        return (preg_match('/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/', $value)
+            == 1) == $conditionValue;
       case 'isBoolean':
         return ($value == 1 OR $value == 0) == $conditionValue;
       case 'minValue':
@@ -631,7 +692,8 @@ abstract class ActiveRecord implements IModel {
       case 'match':
         return preg_match($conditionValue, $value) == 1;
       case 'unique':
-        $query = $this->dataSource->select()
+        $query = $this->dataSource
+          ->select()
           ->limit(1);
         if (!$this->isNew()) {
           $query->where($this->primaryKey . ' != ? AND ' . $column . ' = ?')
@@ -640,10 +702,12 @@ abstract class ActiveRecord implements IModel {
         else {
           $query->where($column . ' = ?');
         }
-        $result = $query->addVar($value)->execute();
+        $result = $query->addVar($value)
+          ->execute();
         return $result->hasRows() != $conditionValue;
       case 'callback':
-        return !is_callable(array($this, $conditionValue)) OR call_user_func(array($this, $conditionValue), $value);
+        return !is_callable(array($this, $conditionValue))
+            OR call_user_func(array($this, $conditionValue), $value);
     }
     return true;
   }
@@ -662,17 +726,22 @@ abstract class ActiveRecord implements IModel {
       case 'url':
         return tr('Not a valid URL.');
       case 'minLength':
-        return trn('Minimum length of %1 character.', 'Minimum length of %1 characters.', $value);
+        return trn('Minimum length of %1 character.',
+          'Minimum length of %1 characters.', $value);
       case 'maxLength':
-        return trn('Maximum length of %1 character.', 'Maximum length of %1 characters.', $value);
+        return trn('Maximum length of %1 character.',
+          'Maximum length of %1 characters.', $value);
       case 'isNumeric':
         return $value ? tr('Must be numeric.') : tr('Must not be numeric.');
       case 'isInteger':
-        return $value ? tr('Must be an integer.') : tr('Must not be an integer.');
+        return $value ? tr('Must be an integer.')
+            : tr('Must not be an integer.');
       case 'isFloat':
-        return $value ? tr('Must be a decimal number.') : tr('Must not be a decimal number.');
+        return $value ? tr('Must be a decimal number.')
+            : tr('Must not be a decimal number.');
       case 'isBoolean':
-        return $value ? tr('Must be boolean (1 or 0).') : tr('Must not be boolean.');
+        return $value ? tr('Must be boolean (1 or 0).')
+            : tr('Must not be boolean.');
       case 'minValue':
         return tr('Minimum value of %1.', $value);
       case 'maxValue':
@@ -685,8 +754,8 @@ abstract class ActiveRecord implements IModel {
         return tr('Invalid value.');
     }
   }
-  
-  protected function beforeValidate() { }
+
+  protected function beforeValidate() {}
 
   public function isValid() {
     $this->errors = array();
@@ -699,10 +768,13 @@ abstract class ActiveRecord implements IModel {
       if (!isset($validator->$column)) {
         continue;
       }
-      foreach ($validator->$column->getRules() as $conditionKey => $conditionValue) {
-        $validate = $this->validateValue($column, $value, $conditionKey, $conditionValue);
+      foreach ($validator->$column
+        ->getRules() as $conditionKey => $conditionValue) {
+        $validate = $this->validateValue($column, $value, $conditionKey,
+            $conditionValue);
         if (!$validate) {
-          $this->errors[$column] = $this->getMessage($conditionKey, $conditionValue);
+          $this->errors[$column] = $this->getMessage($conditionKey,
+              $conditionValue);
           break;
         }
       }
@@ -713,13 +785,13 @@ abstract class ActiveRecord implements IModel {
     }
     return false;
   }
-  
-  protected function afterValidate() { } 
+
+  protected function afterValidate() {}
 
   public function getName() {
-    return classFileName(get_class($this));
+    return Utilities::camelCaseToDashes(get_class($this));
   }
-  
+
   public function getFields() {
     $fields = array_keys($this->fields);
     $virtualFields = array_keys($this->virtuals);
@@ -727,12 +799,14 @@ abstract class ActiveRecord implements IModel {
   }
 
   public function getFieldType($field) {
-    if (isset($this->schema->$field)) {
-      $field = $this->schema->$field;
+    if (isset($this->schema
+      ->$field)) {
+      $field = $this->schema
+        ->$field;
       return $field['type'];
     }
   }
-  
+
   public function getFieldLabel($field) {
     if (!isset($this->fields[$field])) {
       return '';
@@ -752,14 +826,14 @@ abstract class ActiveRecord implements IModel {
     $class = get_called_class();
     self::$models[$class]['editors'][$field] = $editor;
   }
-  
+
   public function isFieldRequired($field) {
     $validator = $this->getValidator();
-    return isset($validator->$field)
-      AND isset($validator->$field->presence)
-      AND $validator->$field->presence;
+    return isset($validator->$field) AND isset($validator->$field
+          ->presence) AND $validator->$field
+          ->presence;
   }
-  
+
   public function isField($field) {
     return isset($this->fields[$field]);
   }
@@ -786,7 +860,8 @@ abstract class ActiveRecord implements IModel {
     if (isset($this->fields[$field])) {
       $text = $this->data[$field];
       if (isset(self::$models[$class]['encoders'][$field])) {
-        return self::$models[$class]['encoders'][$field]->encode($text, $options);
+        return self::$models[$class]['encoders'][$field]->encode($text,
+            $options);
       }
       else {
         return h($this->data[$field]);
@@ -801,8 +876,8 @@ abstract class ActiveRecord implements IModel {
   public function isSaved() {
     return $this->isSaved;
   }
-  
-  protected function beforeSave($options) { } 
+
+  protected function beforeSave($options) {}
 
   public function save($options = array()) {
     if ($this->isDeleted) {
@@ -823,11 +898,14 @@ abstract class ActiveRecord implements IModel {
       }
     }
     if ($this->isNew) {
-      $query = $this->dataSource->insert();
-      $this->data[$this->primaryKey] = $query->addPairs($this->data)->execute();
+      $query = $this->dataSource
+        ->insert();
+      $this->data[$this->primaryKey] = $query->addPairs($this->data)
+        ->execute();
     }
     else {
-      $query = $this->dataSource->update();
+      $query = $this->dataSource
+        ->update();
       foreach ($this->data as $column => $value) {
         $query->set($column, $value);
       }
@@ -845,20 +923,22 @@ abstract class ActiveRecord implements IModel {
     }
     return true;
   }
-  
-  protected function afterSave($options) { } 
+
+  protected function afterSave($options) {}
 
   public function delete() {
-    $this->dataSource->delete()
+    $this->dataSource
+      ->delete()
       ->where($this->primaryKey . ' = ?')
       ->addVar($this->data[$this->primaryKey])
       ->execute();
   }
-  
+
   public static function execute(Query $query) {
     $class = get_called_class();
     $dataSource = self::connection($class);
-    return $query->setDataSource($dataSource)->execute();
+    return $query->setDataSource($dataSource)
+      ->execute();
   }
 
   public static function all(SelectQuery $selector = null) {
@@ -905,8 +985,8 @@ abstract class ActiveRecord implements IModel {
   public static function exists($primaryKey) {
     $class = get_called_class();
     $dataSource = self::connection($class);
-    $query = SelectQuery::create()
-      ->where(self::$models[$class]['primaryKey'] . ' = ?')
+    $query = SelectQuery::create()->where(
+        self::$models[$class]['primaryKey'] . ' = ?')
       ->addVar($primaryKey);
     return $dataSource->count($query) > 0;
   }
@@ -931,7 +1011,8 @@ abstract class ActiveRecord implements IModel {
       $selector = SelectQuery::create();
     }
     $selector->limit(1);
-    $selector->reverseOrder()->limit(1);
+    $selector->reverseOrder()
+      ->limit(1);
     $result = $dataSource->select($selector);
     if (!$result->hasRows()) {
       return false;
@@ -955,9 +1036,9 @@ abstract class ActiveRecord implements IModel {
   }
 }
 
-class InvalidModelException extends Exception { }
-class DatabaseNotConnectedException extends Exception { }
-class TableNotFoundException extends Exception { }
+class InvalidModelException extends Exception {}
+class DatabaseNotConnectedException extends Exception {}
+class TableNotFoundException extends Exception {}
 
-class RecordPropertyNotFoundException extends Exception { }
-class RecordMethodNotFoundException extends Exception { }
+class RecordPropertyNotFoundException extends Exception {}
+class RecordMethodNotFoundException extends Exception {}

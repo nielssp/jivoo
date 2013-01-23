@@ -4,21 +4,29 @@ require '../app/essentials.php';
 require p(CLASSES . 'database/MysqlDatabase.php');
 
 class DummySqlDatabase extends SqlDatabase {
-  public function __construct($options = array()) { }
-  public function close() { }
-  public function tableExists($table) { return true; }
-  public function getSchema($table) { }
-  public function escapeString($string) { return addslashes($string); }
-  public function tableName($name) { return 'pre_' . $name; }
-  public function rawQuery($string) { var_dump($string); }
-  public function createTable(Schema $schema) { }
-  public function dropTable($table) { }
-  public function addColumn($table, $column, $options = array()) { }
-  public function deleteColumn($table, $column) { }
-  public function alterColumn($table, $column, $options = array()) { }
-  public function createIndex($table, $index, $options = array()) { }
-  public function deleteIndex($table, $index) { }
-  public function alterIndex($table, $index, $options = array()) { }
+  public function __construct($options = array()) {}
+  public function close() {}
+  public function tableExists($table) {
+    return true;
+  }
+  public function getSchema($table) {}
+  public function escapeString($string) {
+    return addslashes($string);
+  }
+  public function tableName($name) {
+    return 'pre_' . $name;
+  }
+  public function rawQuery($string) {
+    var_dump($string);
+  }
+  public function createTable(Schema $schema) {}
+  public function dropTable($table) {}
+  public function addColumn($table, $column, $options = array()) {}
+  public function deleteColumn($table, $column) {}
+  public function alterColumn($table, $column, $options = array()) {}
+  public function createIndex($table, $index, $options = array()) {}
+  public function deleteIndex($table, $index) {}
+  public function alterIndex($table, $index, $options = array()) {}
 }
 
 $db = new DummySqlDatabase();

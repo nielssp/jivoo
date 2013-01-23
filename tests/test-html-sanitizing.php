@@ -3,7 +3,8 @@
 include('../app/essentials.php');
 
 function output($text) {
-  echo '<div style="font-size:10px;margin:5px;width:500px;padding:4px;border:4px dashed #ccc;">' . PHP_EOL . PHP_EOL;
+  echo '<div style="font-size:10px;margin:5px;width:500px;padding:4px;border:4px dashed #ccc;">'
+      . PHP_EOL . PHP_EOL;
   echo $text . PHP_EOL . PHP_EOL;
   echo '</div>' . PHP_EOL . PHP_EOL;
 }
@@ -71,16 +72,9 @@ output($comment);
 
 output(nl2br(strip_tags($comment)));
 
-$allow = array(
-  'div' => array(),
-  'br' => array(),
-  'a' => array(
-    'href' => array('url' => true)
-  ),
-  'p' => array(),
-  'img' => array(
-    'src' => array('url' => true)
-  ),
+$allow = array('div' => array(), 'br' => array(),
+  'a' => array('href' => array('url' => true)), 'p' => array(),
+  'img' => array('src' => array('url' => true)),
 );
 
 $format = new Encoder();

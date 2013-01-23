@@ -15,8 +15,7 @@ class App {
 
   private $version = '0.0.0';
 
-  private $modules = array(
-  );
+  private $modules = array();
 
   private $m = null;
 
@@ -28,32 +27,44 @@ class App {
    * @param callback $h Attach an event handler
    * @uses ModuleLoadedEventArgs
    */
-  public function onModuleLoaded($h) { $this->events->attach($h); }
+  public function onModuleLoaded($h) {
+    $this->events
+      ->attach($h);
+  }
   /**
    * Event, triggered when all modules are loaded
    * @param callback $h Attach an event handler
    */
-  public function onModulesLoaded($h) { $this->events->attach($h); }
+  public function onModulesLoaded($h) {
+    $this->events
+      ->attach($h);
+  }
   /**
    * Event, triggered when ready to render page
    * @param callback $h Attach an event handler
    */
-  public function onRender($h) { $this->events->attach($h); }
+  public function onRender($h) {
+    $this->events
+      ->attach($h);
+  }
   /* EVENTS END */
 
   /**
    * Create application
    * @param array $appConfig Associative array containing at least the 'path'-key
    */
-   public function __construct($appConfig) {
+  public function __construct($appConfig) {
     if (!isset($appConfig['path'])) {
       throw new Exception('Application path not set.');
     }
     $this->events = new Events($this);
     $this->m = new Dictionary();
-    $this->paths = new PathDictionary(dirname($_SERVER['SCRIPT_FILENAME']), $appConfig['path']);
-    $this->paths->app = $appConfig['path'];
-    $this->paths->web = dirname($_SERVER['SCRIPT_NAME']);
+    $this->paths = new PathDictionary(dirname($_SERVER['SCRIPT_FILENAME']),
+      $appConfig['path']);
+    $this->paths
+      ->app = $appConfig['path'];
+    $this->paths
+      ->web = dirname($_SERVER['SCRIPT_NAME']);
     if (isset($appConfig['name'])) {
       $this->name = $appConfig['name'];
     }
@@ -102,7 +113,8 @@ class App {
       $moduleName = $segments[count($segments) - 1];
     }
     try {
-      return $this->m->$moduleName;
+      return $this->m
+        ->$moduleName;
     }
     catch (DictionaryKeyInvalidException $e) {
       return false;
@@ -116,7 +128,8 @@ class App {
    * @return string Absolute path
    */
   public function p($key, $path = '') {
-    return $this->paths->$key . '/' . $path;
+    return $this->paths
+      ->$key . '/' . $path;
   }
 
   /**
@@ -125,7 +138,8 @@ class App {
    * @return string Path
    */
   public function w($path = '') {
-    return $this->paths->web . '/' . $path;
+    return $this->paths
+      ->web . '/' . $path;
   }
 
   public function loadModule($module) {
@@ -134,18 +148,22 @@ class App {
       $segments = explode('/', $module);
       $moduleName = $segments[count($segments) - 1];
     }
-    if (!isset($this->m->$moduleName)) {
+    if (!isset($this->m
+      ->$moduleName)) {
       if (!class_exists($moduleName, false)) {
         if (!Lib::import($module)) {
-          throw new ModuleNotFoundException(tr('The "%1" module could not be found', $module));
+          throw new ModuleNotFoundException(
+            tr('The "%1" module could not be found', $module));
         }
         if (!Lib::autoLoad($module . '/' . $moduleName)) {
-          throw new ModuleInvalidException(tr('The "%1" module does not have a main class', $module));
+          throw new ModuleInvalidException(
+            tr('The "%1" module does not have a main class', $module));
         }
       }
       $info = Lib::getModuleInfo($module);
       if (!$info) {
-        throw new ModuleInvalidException(tr('The "%1" module is invalid', $module));
+        throw new ModuleInvalidException(
+          tr('The "%1" module is invalid', $module));
       }
       $dependencies = $info['dependencies']['modules'];
       $modules = array();
@@ -155,17 +173,19 @@ class App {
           $modules[get_class($dependencyObject)] = $dependencyObject;
         }
         catch (ModuleNotFoundException $e) {
-          throw new ModuleMissingDependencyException(tr(
-            'The "%1" module depends on the "%2" module, which could not be found',
-            $module,
-            $dependency
-          ));
+          throw new ModuleMissingDependencyException(
+            tr(
+              'The "%1" module depends on the "%2" module, which could not be found',
+              $module, $dependency));
         }
       }
-      $this->paths->$moduleName = LIB_PATH . '/' . implode('/', $segments);
-      $this->m->$moduleName = new $moduleName($modules, $this);
+      $this->paths
+        ->$moduleName = LIB_PATH . '/' . implode('/', $segments);
+      $this->m
+        ->$moduleName = new $moduleName($modules, $this);
     }
-    return $this->m->$moduleName;
+    return $this->m
+      ->$moduleName;
   }
 
   /**
@@ -176,8 +196,10 @@ class App {
     if ($environment == 'development') {
       define('DEBUG', true);
     }
-    define('CFG', $this->paths->config . '/');
-    define('WEBPATH', $this->paths->web . '/');
+    define('CFG', $this->paths
+      ->config . '/');
+    define('WEBPATH', $this->paths
+      ->web . '/');
     if (false AND !require_once(LIB_PATH . '/essentials.php')) {
       echo 'Essential PeanutCMS files are missing. You should probably reinstall.';
       return;
@@ -188,23 +210,31 @@ class App {
 
     if (PHP_VERSION_ID < 50200) {
       echo 'Sorry, but PeanutCMS does not support PHP versions below 5.2.0. ';
-      echo 'You are currently using version ' . PHP_VERSION .'. ';
+      echo 'You are currently using version ' . PHP_VERSION . '. ';
       echo 'You should contact your webhost. ';
       return;
     }
 
-    Lib::addIncludePath($this->paths->controllers);
-    Lib::addIncludePath($this->paths->views);
-    Lib::addIncludePath($this->paths->helpers);
-    Lib::addIncludePath($this->paths->models);
-    Lib::addIncludePath($this->paths->config . '/schemas');
+    Lib::addIncludePath($this->paths
+      ->controllers);
+    Lib::addIncludePath($this->paths
+      ->views);
+    Lib::addIncludePath($this->paths
+      ->helpers);
+    Lib::addIncludePath($this->paths
+      ->models);
+    Lib::addIncludePath($this->paths
+      ->config . '/schemas');
 
     foreach ($this->modules as $module) {
       $object = $this->loadModule($module);
-      $this->events->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
+      $this->events
+        ->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
     }
-    $this->events->trigger('onModulesLoaded');
-    $this->events->trigger('onRender');
+    $this->events
+      ->trigger('onModulesLoaded');
+    $this->events
+      ->trigger('onRender');
   }
 }
 
@@ -212,27 +242,27 @@ class App {
  * Thrown when a requested module is not loaded
  * @package ApakohCMS
  */
-class ModuleNotLoadedException extends Exception { }
+class ModuleNotLoadedException extends Exception {}
 /**
  * Thrown when a module does not exist
  * @package ApakohCMS
  */
-class ModuleNotFoundException extends Exception { }
+class ModuleNotFoundException extends Exception {}
 /**
  * Thrown when a module is invalid
  * @package ApakohCMS
  */
-class ModuleInvalidException extends Exception { }
+class ModuleInvalidException extends Exception {}
 /**
  * Thrown when a module is missing dependencies
  * @package ApakohCMS
  */
-class ModuleMissingDependencyException extends ModuleNotFoundException { }
+class ModuleMissingDependencyException extends ModuleNotFoundException {}
 /**
  * Thrown when a module is blacklisted
  * @package ApakohPHP
  */
-class ModuleBlacklistedException extends Exception { }
+class ModuleBlacklistedException extends Exception {}
 
 /**
  * EventArgs to be sent with the onModuleLoaded event

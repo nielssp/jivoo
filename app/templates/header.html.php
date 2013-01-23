@@ -15,7 +15,6 @@ else {
 }
 ?>
    </title>
-
 <?php $this->output('head-meta'); ?>
 
 <?php $this->output('head-styles'); ?>
@@ -27,8 +26,7 @@ else {
 
     <h1><?php echo $Html->link($site['title']); ?></h1>
     <h2><?php echo $site['subtitle']; ?></h2>
-
-<?php foreach (Link::getMenu('main') as $link): ?>
+<?php foreach (Link::getMenu('main') as $link) : ?>
 
     <?php echo $Html->link(h($link->title), $link); ?>
 

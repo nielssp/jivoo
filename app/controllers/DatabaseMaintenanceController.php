@@ -5,16 +5,24 @@ class DatabaseMaintenanceController extends ApplicationController {
   protected $helpers = array('Html', 'Form');
 
   public function selectDriver() {
-    if ($this->config->exists('driver')) {
+    if ($this->config
+      ->exists('driver')) {
       $this->refresh();
     }
     $this->title = tr('Welcome to PeanutCMS');
-    $this->drivers = $this->m->Database->listDrivers();
+    $this->drivers = $this->m
+      ->Database
+      ->listDrivers();
     $this->backendMenu = false;
-    if ($this->request->isPost() AND $this->request->checkToken()) {
+    if ($this->request
+      ->isPost() AND $this->request
+          ->checkToken()) {
       foreach ($this->drivers as $driver) {
-        if ($driver['isAvailable'] AND isset($this->request->data[$driver['driver']])) {
-          $this->config->set('driver', $driver['driver']);
+        if ($driver['isAvailable']
+            AND isset($this->request
+              ->data[$driver['driver']])) {
+          $this->config
+            ->set('driver', $driver['driver']);
           $this->refresh();
         }
       }
@@ -38,31 +46,47 @@ class DatabaseMaintenanceController extends ApplicationController {
     $this->setupForm = new Form('setup');
     $this->exception = null;
     foreach ($driverInfo['requiredOptions'] as $option) {
-      $this->setupForm->addString($option, $this->getOptionLabel($option));
+      $this->setupForm
+        ->addString($option, $this->getOptionLabel($option));
     }
     foreach ($driverInfo['optionalOptions'] as $option) {
-      $this->setupForm->addString($option, $this->getOptionLabel($option), false);
+      $this->setupForm
+        ->addString($option, $this->getOptionLabel($option), false);
     }
-    if ($this->request->isPost() AND $this->request->checkToken()) {
-      $this->setupForm->addData($this->request->data['setup']);
-      if (isset($this->request->data['cancel'])) {
-        $this->config->delete('driver');
+    if ($this->request
+      ->isPost() AND $this->request
+          ->checkToken()) {
+      $this->setupForm
+        ->addData($this->request
+          ->data['setup']);
+      if (isset($this->request
+        ->data['cancel'])) {
+        $this->config
+          ->delete('driver');
         $this->refresh();
       }
-      else if ($this->setupForm->isValid()) {
+      else if ($this->setupForm
+        ->isValid()) {
         $driver = $this->driver['driver'];
         $class = $driver . 'Database';
         Lib::import('ApakohPHP/Database/' . $driver);
         try {
-          new $class($this->request->data['setup']);
-          $options = array_flip(array_merge($driverInfo['requiredOptions'], $driverInfo['optionalOptions']));
-          foreach ($this->request->data['setup'] as $key => $value) {
+          new $class($this->request
+            ->data['setup']);
+          $options = array_flip(
+            array_merge($driverInfo['requiredOptions'],
+              $driverInfo['optionalOptions']));
+          foreach ($this->request
+            ->data['setup'] as $key => $value) {
             if (isset($options[$key])) {
-              $this->config->set($key, $value);
+              $this->config
+                ->set($key, $value);
             }
           }
-          $this->config->set('configured', 'yes');
-          $this->config->delete('migration');
+          $this->config
+            ->set('configured', 'yes');
+          $this->config
+            ->delete('migration');
           $this->refresh();
         }
         catch (DatabaseConnectionFailedException $exception) {
@@ -74,7 +98,9 @@ class DatabaseMaintenanceController extends ApplicationController {
       }
     }
     else {
-      $this->setupForm->addData($this->config->getArray());
+      $this->setupForm
+        ->addData($this->config
+          ->getArray());
     }
     $this->render();
   }

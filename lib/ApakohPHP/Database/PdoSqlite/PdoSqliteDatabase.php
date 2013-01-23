@@ -15,8 +15,8 @@ class PdoSqliteDatabase extends PdoDatabase {
     }
     catch (PDOException $exception) {
       throw new DatabaseConnectionFailedException(
-        tr('SQLite database does not exist and could not be created: %1', $options['filename'])
-      );
+        tr('SQLite database does not exist and could not be created: %1',
+          $options['filename']));
     }
   }
 
@@ -24,7 +24,8 @@ class PdoSqliteDatabase extends PdoDatabase {
     switch ($type) {
       case 'string':
         $type = 'TEXT';
-        if (!isset($length)) $length = 255;
+        if (!isset($length))
+          $length = 255;
         break;
       case 'boolean':
         $type = 'INTEGER';
@@ -55,7 +56,7 @@ class PdoSqliteDatabase extends PdoDatabase {
     if (strpos($type, '(') !== false) {
       list($type, $right) = explode('(', $type);
       list($length) = explode(')', $right);
-      $length = (int)$length;
+      $length = (int) $length;
     }
     else if (strpos($type, 'integer') !== false) {
       if (isset($length) AND $length == 1) {
@@ -79,7 +80,8 @@ class PdoSqliteDatabase extends PdoDatabase {
 
   public function getSchema($table) {
     $schema = new Schema($table);
-    $result = $this->rawQuery('PRAGMA table_info(' . $this->tableName($table) . ')');
+    $result = $this->rawQuery(
+        'PRAGMA table_info(' . $this->tableName($table) . ')');
     while ($row = $result->fetchAssoc()) {
       $info = array();
       $column = $row['name'];
@@ -101,7 +103,8 @@ class PdoSqliteDatabase extends PdoDatabase {
       }
       $schema->addColumn($column, $info);
     }
-    $result = $this->rawQuery('PRAGMA index_list(' . $this->tableName($table) . ')');
+    $result = $this->rawQuery(
+        'PRAGMA index_list(' . $this->tableName($table) . ')');
     while ($row = $result->fetchAssoc()) {
       $index = $row['name'];
       $unique = $row['unique'] == 1;
@@ -116,7 +119,8 @@ class PdoSqliteDatabase extends PdoDatabase {
   }
 
   public function tableExists($table) {
-    $result = $this->rawQuery('PRAGMA table_info(' . $this->tableName($table) . ')');
+    $result = $this->rawQuery(
+        'PRAGMA table_info(' . $this->tableName($table) . ')');
     return $result->hasRows();
   }
 
@@ -135,7 +139,8 @@ class PdoSqliteDatabase extends PdoDatabase {
       $sql .= $column;
       $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
       if (isset($options['key']) AND $options['key'] == 'primary'
-        AND (!isset($schema->indexes['PRIMARY']) OR isset($options['autoIncrement']))) {
+          AND (!isset($schema->indexes['PRIMARY'])
+              OR isset($options['autoIncrement']))) {
         $sql .= ' PRIMARY KEY';
       }
       if (isset($options['autoIncrement'])) {

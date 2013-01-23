@@ -2,28 +2,26 @@
 class Lib {
 
   private static $paths = array();
-  
+
   private static $info = array();
-  
+
   private static $lastModule = null;
 
-  private function __construct() {
-  }
-  
+  private function __construct() {}
+
   public static function import($module) {
     if (isset(self::$paths[$module])) {
       return true;
     }
     $module = trim($module, '/');
     $path = LIB_PATH . ($module != '' ? '/' : '') . $module;
-//    echo 'IMPORT ' . $module . ' > ' . $path . PHP_EOL;
+    //    echo 'IMPORT ' . $module . ' > ' . $path . PHP_EOL;
     self::$paths[$module] = $path;
     return true;
   }
 
-
   public static function addIncludePath($path) {
-//    echo 'ADDPATH ' . $path . PHP_EOL;
+    //    echo 'ADDPATH ' . $path . PHP_EOL;
     self::$paths[] = $path;
   }
 
@@ -43,7 +41,8 @@ class Lib {
       $moduleName = $segments[count($segments) - 1];
     }
     //echo 'INFO ' . $module . ' > ' . $moduleName . PHP_EOL;
-    $meta = FileMeta::read(LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
+    $meta = FileMeta::read(
+      LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
     if (!$meta OR $meta['type'] != 'module') {
       return false;
     }
@@ -53,7 +52,7 @@ class Lib {
     self::$info[$module] = $meta;
     return $meta;
   }
-  
+
   public static $loadCalls = 0;
   public static $loadIterations = 0;
 

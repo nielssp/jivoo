@@ -16,30 +16,32 @@ $this->render('backend/header.html');
           	You have selected the <strong><?php echo $driver['name']; ?></strong> database driver.
           	The following information is required.
           </p>
-          <?php if (isset($exception)): ?>
+          <?php if (isset($exception)) : ?>
           <p class="error">
             <?php echo tr('An error occured:'); ?>
             <?php echo $exception->getMessage(); ?>
           </p>
           <?php endif; ?>
-          <?php foreach ($setupForm->getFields() as $field): ?>
+          <?php foreach ($setupForm->getFields() as $field) : ?>
           <p>
             <?php echo $Form->label($field, null, array('class' => 'small')); ?>
             <?php echo $Form->field($field); ?>
-              <?php if ($Form->isValid($field)): ?>
+              <?php if ($Form->isValid($field)) : ?>
             <span class="description">
               <?php echo $Form->isOptional($field, tr('Optional.')); ?> 
 <?php
-switch ($field) {
-  case 'filename':
-    echo tr('The location of the database.');
-    break;
-  case 'tablePrefix':
-    echo tr('Can be used to prevent conflict with other tables in the database.');
-    break;
-}
+    switch ($field) {
+      case 'filename':
+        echo tr('The location of the database.');
+        break;
+      case 'tablePrefix':
+        echo tr(
+          'Can be used to prevent conflict with other tables in the database.');
+        break;
+    }
 ?>
-              <?php else: ?>
+              <?php 
+  else : ?>
             <span class="description error">
               <?php echo $Form->getError($field); ?>
               <?php endif; ?>
@@ -51,11 +53,11 @@ switch ($field) {
         <div class="container">
           <div class="aright">
             <?php echo $Form->submit(tr('Cancel'), 'cancel'); ?>
-            <?php echo $Form->submit(tr('Save'), 'save', array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Save'), 'save',
+    array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>
-
 <?php echo $Form->end(); ?>
 
 <?php

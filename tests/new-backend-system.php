@@ -8,10 +8,8 @@ echo '<pre>';
 $core = new Core();
 $backend = $core->loadModule('backend');
 
-$controller = new PostsController(
-  $core->loadModule('Templates'),
-  $core->loadModule('Routes')
-);
+$controller = new PostsController($core->loadModule('Templates'),
+  $core->loadModule('Routes'));
 
 $menu = $backend->createMenu();
 

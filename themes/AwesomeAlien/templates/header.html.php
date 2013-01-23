@@ -16,7 +16,6 @@ else {
 }
 ?>
    </title>
-
 <?php $this->output('head-meta'); ?>
 
 <?php $this->output('head-styles'); ?>
@@ -40,14 +39,15 @@ else {
         <h2><?php echo $site['subtitle']; ?></h2>
       </div>
       <?php
-      $rand =  floor(time() / 60) % 5 + 1;
+$rand = floor(time() / 60) % 5 + 1;
       ?>
       <img src="<?php echo $this->file('banner' . $rand . '.jpg'); ?>"
            alt="<?php echo $site['title']; ?>" style="width:950px;height:200px;" />
       <div id="navigation">
         <ul>
-<?php foreach (Link::getMenu('main') as $link): ?>
-          <li<?php if ($this->isCurrent($link)) echo ' class="selected"'; ?>>
+<?php foreach (Link::getMenu('main') as $link) : ?>
+          <li<?php if ($this->isCurrent($link))
+    echo ' class="selected"'; ?>>
             <?php echo $Html->link(h($link->title), $link); ?>
           </li>
 <?php endforeach; ?>
@@ -56,4 +56,3 @@ else {
     </div>
 
     <div id="content">
-

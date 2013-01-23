@@ -27,22 +27,33 @@ class Theme extends ModuleBase {
 
   protected function init() {
     // Create meta-tags
-    if (!$this->m->Templates->hideIdentity()) {
-      $this->m->Templates->insertMeta(
-        'generator',
-        'PeanutCMS' . ($this->m->Templates->hideVersion() ? '' : ' ' . PEANUT_VERSION)
-      );
+    if (!$this->m
+      ->Templates
+      ->hideIdentity()) {
+      $this->m
+        ->Templates
+        ->insertMeta('generator',
+          'PeanutCMS'
+              . ($this->m
+                ->Templates
+                ->hideVersion() ? '' : ' ' . PEANUT_VERSION));
     }
-    if ($this->m->Configuration->exists('site.description')) {
-      $this->m->Templates->insertMeta(
-        'description',
-        $this->m->Configuration->get('site.description')
-      );
+    if ($this->m
+      ->Configuration
+      ->exists('site.description')) {
+      $this->m
+        ->Templates
+        ->insertMeta('description',
+          $this->m
+            ->Configuration
+            ->get('site.description'));
     }
 
     // Find and load theme
     if ($this->load()) {
-      $this->m->Templates->setTheme($this->p('themes', $this->theme . '/'));
+      $this->m
+        ->Templates
+        ->setTheme($this->p('themes', $this->theme . '/'));
     }
     else {
       new GlobalWarning(tr('Please install a theme'), 'theme-missing');
@@ -55,8 +66,12 @@ class Theme extends ModuleBase {
    * @return bool False if no theme could be loaded
    */
   private function load() {
-    if ($this->m->Configuration->exists('theme.name')) {
-      $theme = $this->m->Configuration->get('theme.name');
+    if ($this->m
+      ->Configuration
+      ->exists('theme.name')) {
+      $theme = $this->m
+        ->Configuration
+        ->get('theme.name');
       if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
         $this->theme = $theme;
         return true;
@@ -68,9 +83,12 @@ class Theme extends ModuleBase {
     $dir = opendir($this->p('themes', ''));
     if ($dir) {
       while (($theme = readdir($dir)) !== false) {
-        if (is_dir($this->p('themes', $theme)) AND $theme != '.' AND $theme != '..') {
+        if (is_dir($this->p('themes', $theme)) AND $theme != '.'
+            AND $theme != '..') {
           if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
-            $this->m->Configuration->set('theme.name', $theme);
+            $this->m
+              ->Configuration
+              ->set('theme.name', $theme);
             $this->theme = $theme;
             return true;
           }
@@ -80,7 +98,6 @@ class Theme extends ModuleBase {
     }
     return false;
   }
-
 
 }
 

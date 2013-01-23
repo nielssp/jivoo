@@ -37,16 +37,16 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
       array_shift($vars);
     }
     foreach ($chars as $offset => $char) {
-      if ($char == '?' AND (!isset($chars[$offset - 1])
-        OR $chars[$offset - 1] != '\\')) {
+      if ($char == '?'
+          AND (!isset($chars[$offset - 1]) OR $chars[$offset - 1] != '\\')) {
         if (is_array($vars[$key]) AND isset($vars[$key]['table'])) {
-          $sqlString .=  $this->tableName($vars[$key]['table']);
+          $sqlString .= $this->tableName($vars[$key]['table']);
         }
         else if (is_int($vars[$key])) {
-          $sqlString .= (int)$vars[$key];
+          $sqlString .= (int) $vars[$key];
         }
         else if (is_float($vars[$key])) {
-          $sqlString .= (float)$vars[$key];
+          $sqlString .= (float) $vars[$key];
         }
         else {
           $sqlString .= $this->quoteString($vars[$key]);
@@ -54,7 +54,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
         $key++;
       }
       else if ($char != '\\' OR !isset($chars[$offset + 1])
-        OR $chars[$offset + 1] != '?') {
+          OR $chars[$offset + 1] != '?') {
         $sqlString .= $char;
       }
     }

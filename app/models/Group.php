@@ -1,16 +1,15 @@
 <?php
 class Group extends ActiveRecord {
 
-  protected $hasMany = array(
-    'User' => array('thisKey' => 'group_id'),
-  );
+  protected $hasMany = array('User' => array('thisKey' => 'group_id'),);
 
   private $permissions;
 
   private function fetchPermissions() {
     $dataSource = self::connection('Group');
     if ($dataSource instanceof ITable) {
-      $dataSource = $dataSource->getOwner()->groups_permissions;
+      $dataSource = $dataSource->getOwner()
+        ->groups_permissions;
       $result = $dataSource->select()
         ->where('group_id = ?')
         ->addVar($this->id)
@@ -58,7 +57,8 @@ class Group extends ActiveRecord {
     if (!($dataSource instanceof ITable)) {
       return;
     }
-    $dataSource = $dataSource->getOwner()->groups_permissions;
+    $dataSource = $dataSource->getOwner()
+      ->groups_permissions;
     if ($value == true AND !$this->hasPermission($key)) {
       $this->permissions[$key] = true;
       $dataSource->insert()

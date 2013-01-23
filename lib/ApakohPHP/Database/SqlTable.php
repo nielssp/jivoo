@@ -15,7 +15,8 @@ class SqlTable implements ITable {
 
   public function getSchema() {
     if (!isset($this->schema)) {
-      $this->schema = $this->owner->getSchema($this->name);
+      $this->schema = $this->owner
+        ->getSchema($this->name);
     }
     return $this->schema;
   }
@@ -34,12 +35,14 @@ class SqlTable implements ITable {
     }
     $columns = $query->columns;
     $values = $query->values;
-    $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
+    $sqlString = 'INSERT INTO ' . $this->owner
+          ->tableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
     while (($value = current($values)) !== false) {
       if (isset($value)) {
-        $sqlString .= $this->owner->escapeQuery('?', $value);
+        $sqlString .= $this->owner
+          ->escapeQuery('?', $value);
       }
       else {
         $sqlString .= 'NULL';
@@ -49,7 +52,8 @@ class SqlTable implements ITable {
       }
     }
     $sqlString .= ')';
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   protected function conditionToSql(Condition $where) {
@@ -64,10 +68,9 @@ class SqlTable implements ITable {
         }
       }
       else {
-        $sqlString .= $this->owner->escapeQuery(
-          $this->replaceColumns($clause['clause']),
-          $clause['vars']
-        );
+        $sqlString .= $this->owner
+          ->escapeQuery($this->replaceColumns($clause['clause']),
+            $clause['vars']);
       }
     }
     return $sqlString;
@@ -76,9 +79,7 @@ class SqlTable implements ITable {
   public function replaceColumns($query) {
     return preg_replace_callback(
       '/(\A|[^\\\\])%([a-z][a-z0-9_]*([.][a-z][a-z0-9_]*)?)/i',
-      array($this, 'replaceColumn'),
-      $query
-    );
+      array($this, 'replaceColumn'), $query);
   }
 
   protected function replaceColumn($matches) {
@@ -90,20 +91,23 @@ class SqlTable implements ITable {
       $table = $this->name;
     }
     $dot = strpos($column, '.');
-    if ($dot === false ) {
-      return $this->owner->tableName($table) . '.' . $column;
+    if ($dot === false) {
+      return $this->owner
+        ->tableName($table) . '.' . $column;
     }
     else {
       $table = substr($column, 0, $dot);
       $column = substr($column, $dot + 1);
-      return $this->owner->tableName($table) . '.' . $column;
+      return $this->owner
+        ->tableName($table) . '.' . $column;
     }
   }
 
   protected function getColumnList(&$value, $key) {
     $columnName = $this->replaceColumns($value['column']);
     if (isset($value['function'])) {
-      $columnName = str_replace('()', '(' . $columnName . ')', $value['function']);
+      $columnName = str_replace('()', '(' . $columnName . ')',
+        $value['function']);
     }
     if (isset($value['alias'])) {
       $value = $columnName . ' AS ' . $value['alias'];
@@ -126,7 +130,8 @@ class SqlTable implements ITable {
     else {
       $sqlString .= '*';
     }
-    $sqlString .= ' FROM ' . $this->owner->tableName($this->name);
+    $sqlString .= ' FROM ' . $this->owner
+          ->tableName($this->name);
     if (!empty($query->sources)) {
       foreach ($query->sources as $source) {
         if (is_string($source['source'])) {
@@ -138,7 +143,8 @@ class SqlTable implements ITable {
         else {
           continue;
         }
-        $sqlString .= ', ' . $this->owner->tableName($table);
+        $sqlString .= ', ' . $this->owner
+              ->tableName($table);
         if (isset($source['alias'])) {
           $sqlString .= ' AS ' . $source['alias'];
         }
@@ -155,7 +161,9 @@ class SqlTable implements ITable {
         else {
           continue;
         }
-        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->tableName($table);
+        $sqlString .= ' ' . $join['type'] . ' JOIN '
+            . $this->owner
+              ->tableName($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];
         }
@@ -164,7 +172,8 @@ class SqlTable implements ITable {
         }
       }
     }
-    if ($query->where->hasClauses()) {
+    if ($query->where
+      ->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
     }
     if (isset($query->groupBy)) {
@@ -173,36 +182,43 @@ class SqlTable implements ITable {
         $columns[] = $this->replaceColumns($column);
       }
       $sqlString .= ' GROUP BY ' . implode(', ', $columns);
-      if (isset($query->groupBy['condition']) AND $query->groupBy['condition']->hasClauses()) {
-        $sqlString .= ' HAVING ' . $this->conditionToSql($query->groupBy['condition']);
+      if (isset($query->groupBy['condition'])
+          AND $query->groupBy['condition']
+            ->hasClauses()) {
+        $sqlString .= ' HAVING '
+            . $this->conditionToSql($query->groupBy['condition']);
       }
     }
     if (!empty($query->orderBy)) {
       $columns = array();
       foreach ($query->orderBy as $orderBy) {
         $columns[] = $this->replaceColumns($orderBy['column'])
-          . ($orderBy['descending'] ? ' DESC' : ' ASC');
+            . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
     if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function update(UpdateQuery $query = null) {
     if (!isset($query)) {
       return UpdateQuery::create()->setDataSource($this);
     }
-    $sqlString = 'UPDATE ' . $this->owner->tableName($this->name);
+    $sqlString = 'UPDATE ' . $this->owner
+          ->tableName($this->name);
     $sets = $query->sets;
     if (!empty($sets)) {
       $sqlString .= ' SET';
       reset($sets);
       while (($value = current($sets)) !== false) {
         if (isset($value)) {
-          $sqlString .= ' ' . $this->owner->escapeQuery(key($sets) . ' = ?', array($value));
+          $sqlString .= ' '
+              . $this->owner
+                ->escapeQuery(key($sets) . ' = ?', array($value));
         }
         else {
           $sqlString .= ' ' . key($sets);
@@ -212,43 +228,48 @@ class SqlTable implements ITable {
         }
       }
     }
-    if ($query->where->hasClauses()) {
+    if ($query->where
+      ->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
     }
     if (!empty($query->orderBy)) {
       $columns = array();
       foreach ($query->orderBy as $orderBy) {
         $columns[] = $this->replaceColumns($orderBy['column'])
-          . ($orderBy['descending'] ? ' DESC' : ' ASC');
+            . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
     if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function delete(DeleteQuery $query = null) {
     if (!isset($query)) {
       return DeleteQuery::create()->setDataSource($this);
     }
-    $sqlString = 'DELETE FROM ' . $this->owner->tableName($this->name);
-    if ($query->where->hasClauses()) {
+    $sqlString = 'DELETE FROM ' . $this->owner
+          ->tableName($this->name);
+    if ($query->where
+      ->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
     }
     if (!empty($query->orderBy)) {
       $columns = array();
       foreach ($query->orderBy as $orderBy) {
         $columns[] = $this->replaceColumns($orderBy['column'])
-          . ($orderBy['descending'] ? ' DESC' : ' ASC');
+            . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
     if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function count(SelectQuery $query = null) {

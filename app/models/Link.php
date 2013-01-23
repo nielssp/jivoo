@@ -2,19 +2,12 @@
 
 class Link extends ActiveRecord implements ILinkable {
 
-  protected $fields = array(
-    'menu' => 'Menu',
-    'position' => 'Position',
-    'type' => 'Type',
-    'title' => 'Title',
-    'path' => 'Path'
+  protected $fields = array('menu' => 'Menu', 'position' => 'Position',
+    'type' => 'Type', 'title' => 'Title', 'path' => 'Path'
   );
 
-  protected $defaults = array(
-    'menu' => 'main',
-    'position' => 0
-  );
-  
+  protected $defaults = array('menu' => 'main', 'position' => 0);
+
   public function getRoute() {
     switch ($this->type) {
       case 'remote':
@@ -26,9 +19,7 @@ class Link extends ActiveRecord implements ILinkable {
         if ($this->type == 'action') {
           $controller = array_shift($path);
           $action = array_shift($path);
-          return array(
-            'controller' => $controller,
-            'action' => $action,
+          return array('controller' => $controller, 'action' => $action,
             'parameters' => $path
           );
         }
@@ -60,7 +51,7 @@ class Link extends ActiveRecord implements ILinkable {
         }
       }
     }
-    else if (is_string ($route)) {
+    else if (is_string($route)) {
       $this->path = $route;
       $this->type = 'remote';
     }
@@ -68,12 +59,10 @@ class Link extends ActiveRecord implements ILinkable {
       throw new InvalidArgumentException(tr('Invalid route.'));
     }
   }
-  
 
   public static function getMenu($menu = 'main') {
     $menu = strtolower($menu);
-    $select = SelectQuery::create()
-      ->where('menu = ?')
+    $select = SelectQuery::create()->where('menu = ?')
       ->addVar($menu);
     return Link::all($select);
   }

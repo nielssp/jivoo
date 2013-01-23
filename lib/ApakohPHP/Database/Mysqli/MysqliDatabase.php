@@ -12,22 +12,26 @@ class MysqliDatabase extends SqlDatabase {
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];
     }
-    $this->handle = new mysqli($options['server'], $options['username'], $options['password'], $options['database']);
-    if ($this->handle->connect_error) {
-      throw new DatabaseConnectionFailedException($this->handle->connect_error);
+    $this->handle = new mysqli($options['server'], $options['username'],
+      $options['password'], $options['database']);
+    if ($this->handle
+      ->connect_error) {
+      throw new DatabaseConnectionFailedException($this->handle
+        ->connect_error);
     }
   }
 
   public function close() {
-    $this->handle->close();
+    $this->handle
+      ->close();
   }
-
 
   public function fromSchematype($type, $length = null) {
     switch ($type) {
       case 'string':
         $type = 'varchar';
-        if (!isset($length)) $length = 255;
+        if (!isset($length))
+          $length = 255;
         break;
       case 'boolean':
         $type = 'bool';
@@ -56,12 +60,13 @@ class MysqliDatabase extends SqlDatabase {
     if (strpos($type, '(') !== false) {
       list($type, $right) = explode('(', $type);
       list($length) = explode(')', $right);
-      $length = (int)$length;
+      $length = (int) $length;
     }
     if (strpos($type, 'char') !== false) {
       $type = 'string';
     }
-    else if (strpos($type, 'tinyint') !== false OR strpos($type, 'bool') !== false) {
+    else if (strpos($type, 'tinyint') !== false
+        OR strpos($type, 'bool') !== false) {
       $type = 'boolean';
     }
     else if (strpos($type, 'int') !== false) {
@@ -70,8 +75,9 @@ class MysqliDatabase extends SqlDatabase {
     else if (strpos($type, 'blob') !== false OR $type === 'binary') {
       $type = 'binary';
     }
-    else if (strpos($type, 'float') !== false OR strpos($type, 'double') !== false
-      OR strpos($type, 'decimal') !== false) {
+    else if (strpos($type, 'float') !== false
+        OR strpos($type, 'double') !== false
+        OR strpos($type, 'decimal') !== false) {
       $type = 'float';
     }
     else {
@@ -126,27 +132,33 @@ class MysqliDatabase extends SqlDatabase {
   }
 
   public function quoteString($string) {
-    return '"' . $this->handle->real_escape_string($string) . '"';
+    return '"' . $this->handle
+          ->real_escape_string($string) . '"';
   }
 
   public function tableExists($table) {
-    $result = $this->rawQuery('SHOW TABLES LIKE "' . $this->tableName($table) . '"');
+    $result = $this->rawQuery(
+        'SHOW TABLES LIKE "' . $this->tableName($table) . '"');
     return $result->hasRows();
   }
 
   public function rawQuery($sql) {
-    $result = $this->handle->query($sql);
+    $result = $this->handle
+      ->query($sql);
     if (!$result) {
-      throw new DatabaseQueryFailedException($this->handle->error);
+      throw new DatabaseQueryFailedException($this->handle
+        ->error);
     }
     if (preg_match('/^\\s*(select|show|explain|describe) /i', $sql)) {
       return new MysqliResultSet($result);
     }
     else if (preg_match('/^\\s*(insert|replace) /i', $sql)) {
-      return $this->handle->insert_id;
+      return $this->handle
+        ->insert_id;
     }
     else {
-      return $this->handle->affected_rows;
+      return $this->handle
+        ->affected_rows;
     }
   }
 
@@ -221,7 +233,8 @@ class MysqliDatabase extends SqlDatabase {
 
   public function alterColumn($table, $column, $options = array()) {
     // ALTER TABLE  `posts` CHANGE  `testing`  `testing` INT( 12 ) NOT null
-    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column . ' ' . $column;
+    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column
+        . ' ' . $column;
     $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
     if (!$options['null']) {
       $sql .= ' NOT';

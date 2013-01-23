@@ -8,11 +8,10 @@
 
 class JqueryHotkeys extends ExtensionBase {
   protected function init() {
-    $this->m->Templates->addScript(
-      'jquery-hotkeys',
-//      $this->getLink('js/jquery.hotkeys-0.7.9.min.js'),
-      $this->getAsset('js/jquery.hotkeys-0.7.9-fix.js'),
-      array('jquery')
-    );
-  } 
+    $this->m
+      ->Templates
+      ->addScript('jquery-hotkeys',
+        //      $this->getLink('js/jquery.hotkeys-0.7.9.min.js'),
+        $this->getAsset('js/jquery.hotkeys-0.7.9-fix.js'), array('jquery'));
+  }
 }

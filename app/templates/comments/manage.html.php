@@ -5,13 +5,11 @@ $this->render('backend/pagination.html');
 $this->render('backend/bulk-actions.html');
 ?>
 
-
-
       <div class="section light_section">
         <div class="container">
-<?php if (count($comments) < 1): ?>
+<?php if (count($comments) < 1) : ?>
           <div class="center">
-          <?php echo tr('No comments matched your search criteria.')?>
+          <?php echo tr('No comments matched your search criteria.') ?>
           </div>
 <?php endif; ?>
 <?php
@@ -25,7 +23,6 @@ foreach ($comments as $this->comment) {
 ?>
         </div>
       </div>
-
 <?php
 $this->render('backend/bulk-actions.html');
 $this->render('backend/footer.html');

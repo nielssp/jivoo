@@ -13,19 +13,25 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testSetAndGet() {
-    $this->configuration->set('test.testValue', '123456');
+    $this->configuration
+      ->set('test.testValue', '123456');
 
-    $this->assertTrue($this->configuration->exists('test.testValue'));
+    $this->assertTrue($this->configuration
+        ->exists('test.testValue'));
 
-    $value = $this->configuration->get('test.testValue');
+    $value = $this->configuration
+      ->get('test.testValue');
 
     $this->assertEquals('123456', $value);
 
-    $this->configuration->delete('test.testValue');
+    $this->configuration
+      ->delete('test.testValue');
 
-    $this->assertFalse($this->configuration->exists('test.testValue'));
+    $this->assertFalse($this->configuration
+        ->exists('test.testValue'));
 
-    $value = $this->configuration->get('test.testValue');
+    $value = $this->configuration
+      ->get('test.testValue');
 
     $this->assertEquals(false, $value);
 

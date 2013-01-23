@@ -23,20 +23,22 @@ class Posts extends ModuleBase {
   protected function init() {
 
     // Set default settings
-    $this->m->Configuration->setDefault(array(
-      'posts.fancyPermalinks' => 'on',
-      'posts.permalink' => '%year%/%month%/%name%',
-      'posts.comments.sorting' => 'desc',
-      'posts.comments.childSorting' => 'asc',
-      'posts.comments.display' => 'thread',
-      'posts.comments.levelLimit' => '2',
-      'posts.commentingDefault' => 'on',
-      'posts.anonymousCommenting' => 'off',
-      'posts.commentApproval' => 'off',
-      'posts.editor.name' => 'TinymceEditor',
-      'posts.comments.editor.name' => 'HtmlEditor'
-    ));
-    
+    $this->m
+      ->Configuration
+      ->setDefault(
+        array('posts.fancyPermalinks' => 'on',
+          'posts.permalink' => '%year%/%month%/%name%',
+          'posts.comments.sorting' => 'desc',
+          'posts.comments.childSorting' => 'asc',
+          'posts.comments.display' => 'thread',
+          'posts.comments.levelLimit' => '2',
+          'posts.commentingDefault' => 'on',
+          'posts.anonymousCommenting' => 'off',
+          'posts.commentApproval' => 'off',
+          'posts.editor.name' => 'TinymceEditor',
+          'posts.comments.editor.name' => 'HtmlEditor'
+        ));
+
     // Set up models
     $newInstall = false;
 
@@ -45,21 +47,48 @@ class Posts extends ModuleBase {
     $posts_tagsSchema = new posts_tagsSchema();
     $commentsSchema = new commentsSchema();
 
-    $newInstall = $this->m->Database->migrate($postsSchema) == 'new';
-    $this->m->Database->migrate($tagsSchema);
-    $this->m->Database->migrate($posts_tagsSchema);
-    $this->m->Database->migrate($commentsSchema);
+    $newInstall = $this->m
+      ->Database
+      ->migrate($postsSchema) == 'new';
+    $this->m
+      ->Database
+      ->migrate($tagsSchema);
+    $this->m
+      ->Database
+      ->migrate($posts_tagsSchema);
+    $this->m
+      ->Database
+      ->migrate($commentsSchema);
 
-    $this->m->Database->posts->setSchema($postsSchema);
-    $this->m->Database->tags->setSchema($tagsSchema);
-    $this->m->Database->posts_tags->setSchema($posts_tagsSchema);
-    $this->m->Database->comments->setSchema($commentsSchema);
+    $this->m
+      ->Database
+      ->posts
+      ->setSchema($postsSchema);
+    $this->m
+      ->Database
+      ->tags
+      ->setSchema($tagsSchema);
+    $this->m
+      ->Database
+      ->posts_tags
+      ->setSchema($posts_tagsSchema);
+    $this->m
+      ->Database
+      ->comments
+      ->setSchema($commentsSchema);
 
-    Post::connect($this->m->Database->posts);
-    Tag::connect($this->m->Database->tags);
-    Comment::connect($this->m->Database->comments);
-    
-    if ($this->m->Configuration['posts.anonymousCommenting'] == 'on') {
+    Post::connect($this->m
+      ->Database
+      ->posts);
+    Tag::connect($this->m
+      ->Database
+      ->tags);
+    Comment::connect($this->m
+      ->Database
+      ->comments);
+
+    if ($this->m
+      ->Configuration['posts.anonymousCommenting'] == 'on') {
       Comment::setAnonymousCommenting(true);
     }
 
@@ -93,62 +122,100 @@ class Posts extends ModuleBase {
     $commentEncoder->allowAttribute('img', 'src');
     $commentEncoder->validateAttribute('img', 'src', 'url', true);
     Comment::setEncoder('content', $commentEncoder);
-    
+
     $postsEncoder = new Encoder();
     $postsEncoder->setAllowAll(true);
     Post::setEncoder('content', $postsEncoder);
-     
+
     // Create controllers
-    $this->posts = new PostsController(
-      $this->m->Routes,
-      $this->m->Configuration['posts']
-    );
-    
-    $this->comments = new CommentsController(
-        $this->m->Routes,
-        $this->m->Configuration['posts.comments']
-    );
+    $this->posts = new PostsController($this->m
+        ->Routes, $this->m
+        ->Configuration['posts']);
+
+    $this->comments = new CommentsController($this->m
+        ->Routes, $this->m
+        ->Configuration['posts.comments']);
 
     // Frontend setup
-    
-    $this->posts->addRoute('posts', 'index');
 
-    $this->posts->addRoute('tags', 'tagIndex');
-    $this->posts->addRoute('tags/*', 'viewTag');
+    $this->posts
+      ->addRoute('posts', 'index');
 
-    if ($this->m->Configuration->get('posts.fancyPermalinks') == 'on') {
+    $this->posts
+      ->addRoute('tags', 'tagIndex');
+    $this->posts
+      ->addRoute('tags/*', 'viewTag');
+
+    if ($this->m
+      ->Configuration
+      ->get('posts.fancyPermalinks') == 'on') {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m->Routes->addPath('Posts', 'view', array($this, 'getFancyPath'));
-      $this->m->Routes->addPath('Comments', 'index', array($this, 'getFancyPath'));
-      $this->m->Routes->addPath('Comments', 'view', array($this, 'getFancyPath'));
+      $this->m
+        ->Routes
+        ->addPath('Posts', 'view', array($this, 'getFancyPath'));
+      $this->m
+        ->Routes
+        ->addPath('Comments', 'index', array($this, 'getFancyPath'));
+      $this->m
+        ->Routes
+        ->addPath('Comments', 'view', array($this, 'getFancyPath'));
     }
     else {
-      $this->posts->addRoute('posts/*', 'view');
-      $this->comments->addRoute('posts/*/comments', 'index');
-      $this->comments->addRoute('posts/*/comments/*', 'view');
+      $this->posts
+        ->addRoute('posts/*', 'view');
+      $this->comments
+        ->addRoute('posts/*/comments', 'index');
+      $this->comments
+        ->addRoute('posts/*/comments/*', 'view');
     }
-    
+
     // Backend setup
-    
-    $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['posts-add']->setup(tr('New post'), 2)
-      ->permission('backend.posts.add')->autoRoute($this->posts, 'add');    
-    $this->m->Backend['content']['posts-manage']->setup(tr('Manage posts'), 4)
-      ->permission('backend.posts.manage')->autoRoute($this->posts, 'manage');
 
-    $this->m->Backend['content']['comments']->setup(tr('Comments'), 8)
-      ->permission('backend.comments.manage')->autoRoute($this->comments, 'manage');
-    $this->m->Backend['content']['tags']->setup(tr('Tags'), 8)
-      ->permission('backend.tags.manage')->autoRoute($this->posts, 'manageTags');
+    $this->m
+      ->Backend['content']
+      ->setup(tr('Content'), 2);
+    $this->m
+      ->Backend['content']['posts-add']
+      ->setup(tr('New post'), 2)
+      ->permission('backend.posts.add')
+      ->autoRoute($this->posts, 'add');
+    $this->m
+      ->Backend['content']['posts-manage']
+      ->setup(tr('Manage posts'), 4)
+      ->permission('backend.posts.manage')
+      ->autoRoute($this->posts, 'manage');
 
-    $this->m->Backend->unlisted['posts-edit']->permission('backend.posts.edit')
+    $this->m
+      ->Backend['content']['comments']
+      ->setup(tr('Comments'), 8)
+      ->permission('backend.comments.manage')
+      ->autoRoute($this->comments, 'manage');
+    $this->m
+      ->Backend['content']['tags']
+      ->setup(tr('Tags'), 8)
+      ->permission('backend.tags.manage')
+      ->autoRoute($this->posts, 'manageTags');
+
+    $this->m
+      ->Backend
+      ->unlisted['posts-edit']
+      ->permission('backend.posts.edit')
       ->autoRoute($this->posts, 'edit');
-    $this->m->Backend->unlisted['posts-delete']->permission('backend.posts.delete')
+    $this->m
+      ->Backend
+      ->unlisted['posts-delete']
+      ->permission('backend.posts.delete')
       ->autoRoute($this->posts, 'delete');
-    $this->m->Backend->unlisted['comment.delete']->permission('backend.comments.delete')
+    $this->m
+      ->Backend
+      ->unlisted['comment.delete']
+      ->permission('backend.comments.delete')
       ->autoRoute($this->comments, 'delete');
-    $this->m->Backend->unlisted['comments-edit']->permission('backend.comments.edit')
+    $this->m
+      ->Backend
+      ->unlisted['comments-edit']
+      ->permission('backend.comments.edit')
       ->autoRoute($this->comments, 'edit');
     //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
     //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
@@ -156,8 +223,13 @@ class Posts extends ModuleBase {
   }
 
   private function detectFancyPath() {
-    $path = $this->m->Http->getRequest()->path;
-    $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
+    $path = $this->m
+      ->Http
+      ->getRequest()
+      ->path;
+    $permalink = explode('/', $this->m
+      ->Configuration
+      ->get('posts.permalink'));
     if (!is_array($path) OR !is_array($permalink)) {
       return;
     }
@@ -206,26 +278,28 @@ class Posts extends ModuleBase {
       $post = Post::find($id);
       if ($post !== false) {
         $post->addToCache();
-        $this->posts->setRoute('view', 6, array($post->id));
+        $this->posts
+          ->setRoute('view', 6, array($post->id));
         return;
       }
     }
     else if (!empty($name)) {
       $post = Post::first(
-        SelectQuery::create()
-          ->where('name = ?')
-          ->addVar($name)
-      );
+        SelectQuery::create()->where('name = ?')
+          ->addVar($name));
       if ($post !== false) {
         $post->addToCache();
-        $this->posts->setRoute('view', 6, array($post->id));
+        $this->posts
+          ->setRoute('view', 6, array($post->id));
         return;
       }
     }
   }
 
   public function getFancyPath($parameters) {
-    $permalink = explode('/', $this->m->Configuration->get('posts.permalink'));
+    $permalink = explode('/', $this->m
+      ->Configuration
+      ->get('posts.permalink'));
     if (is_array($permalink)) {
       if (is_object($parameters) AND is_a($parameters, 'Post')) {
         $record = $parameters;
@@ -241,11 +315,11 @@ class Posts extends ModuleBase {
         }
       }
       $time = $record->date;
-      $replace = array('%name%'  => $record->name,
-                       '%id%'    => (isset($record->id)) ? $record->id : 0,
-                       '%year%'  => tdate('Y', $time),
-                       '%month%' => tdate('m', $time),
-                       '%day%'   => tdate('d', $time));
+      $replace = array('%name%' => $record->name,
+        '%id%' => (isset($record->id)) ? $record->id : 0,
+        '%year%' => tdate('Y', $time), '%month%' => tdate('m', $time),
+        '%day%' => tdate('d', $time)
+      );
       $search = array_keys($replace);
       $replace = array_values($replace);
       $path = array();

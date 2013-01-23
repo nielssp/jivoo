@@ -4,7 +4,7 @@
  * @package PeanutCMS
  */
 abstract class ModuleBase {
-  
+
   /**
    * @deprecated Core replaced with App
    * @var Core The Core object
@@ -44,18 +44,22 @@ abstract class ModuleBase {
     $this->Core = $app;
     $this->app = $app;
 
-    if (isset($this->m->Http)) {
-      $this->request = $this->m->Http->getRequest();
-      $this->session = $this->request->session;
+    if (isset($this->m
+      ->Http)) {
+      $this->request = $this->m
+        ->Http
+        ->getRequest();
+      $this->session = $this->request
+        ->session;
     }
-    
+
     $additionalParameters = func_get_args();
     array_shift($additionalParameters);
     array_shift($additionalParameters);
-    
+
     call_user_func_array(array($this, 'init'), $additionalParameters);
   }
-  
+
   /**
    * Get the absolute path of a file
    * @param string $key Location-identifier
@@ -64,10 +68,12 @@ abstract class ModuleBase {
    */
   public function p($key, $path = null) {
     if (isset($path)) {
-      return $this->app->p($key, $path);
+      return $this->app
+        ->p($key, $path);
     }
     else {
-      return $this->app->p(get_class($this), $key);
+      return $this->app
+        ->p(get_class($this), $key);
     }
   }
 
@@ -77,7 +83,8 @@ abstract class ModuleBase {
    * @return string Path
    */
   public function w($path = '') {
-    return $this->app->w($path);
+    return $this->app
+      ->w($path);
   }
 
   /**

@@ -1,6 +1,6 @@
 <?php
 function utimer($start) {
-  return round((microtime(true) - $start)*1000000);
+  return round((microtime(true) - $start) * 1000000);
 }
 
 function test_function($rounds, $function) {
@@ -45,7 +45,7 @@ class String implements arrayaccess {
       $this->string = $string->string;
     }
     else {
-      $string = (string)$string;
+      $string = (string) $string;
       $this->bytesize = strlen($string);
       $this->string = preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY);
     }
@@ -77,11 +77,9 @@ class String implements arrayaccess {
     return $this->charAt($offset);
   }
 
-  public function offsetSet($offset, $value) {
-  }
+  public function offsetSet($offset, $value) {}
 
-  public function offsetUnset($offset) {
-  }
+  public function offsetUnset($offset) {}
 
   public function charAt($offset) {
     if (!isset($this->string[$offset])) {
@@ -93,11 +91,11 @@ class String implements arrayaccess {
   }
 
   public function split($delimiter) {
-    return explode((string)$delimiter, $this->toString());
+    return explode((string) $delimiter, $this->toString());
   }
 
   public function concat($string) {
-    return new self($this->toString() . (string)$string); 
+    return new self($this->toString() . (string) $string);
   }
 
   public function slice($start, $length = null) {
@@ -122,8 +120,9 @@ class String implements arrayaccess {
 
 abstract class UTF8 {
   public static function substr($string, $start, $length = null) {
-    return join("", array_slice(
-      preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY), $start, $length));
+    return join("",
+      array_slice(preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY), $start,
+        $length));
   }
 }
 

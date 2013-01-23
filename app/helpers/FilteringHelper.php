@@ -11,22 +11,21 @@ class FilteringHelper extends ApplicationHelper {
   protected function init() {
     $this->addPredefined(tr('All'), '');
   }
-  
+
   public function __get($property) {
     switch ($property) {
       case 'query':
         return $this->$property;
     }
   }
-  
+
   public function getQuery() {
     return $this->query;
   }
-  
+
   public function addPredefined($label, $filter) {
-    $this->predefined[] = array(
-      'label' => $label,
-      'query' => array('filter' => $filter) 
+    $this->predefined[] = array('label' => $label,
+      'query' => array('filter' => $filter)
     );
   }
 
@@ -37,17 +36,19 @@ class FilteringHelper extends ApplicationHelper {
   public function addFilterColumn($column) {
     $this->filterColumns[$column] = true;
   }
-  
+
   public function getPredefined() {
     return $this->predefined;
   }
 
   public function filter(ICondition $query) {
-    if (!isset($this->request->query['filter'])) {
+    if (!isset($this->request
+      ->query['filter'])) {
       return;
     }
     $where = new Condition();
-    $this->query = $this->request->query['filter']; 
+    $this->query = $this->request
+      ->query['filter'];
     $words = explode(' ', $this->query);
     if (count($this->filterColumns) > 0) {
       foreach ($words as $key => $value) {
@@ -70,7 +71,7 @@ class FilteringHelper extends ApplicationHelper {
       for ($i = 0; $i < count($words); $i++) {
         $word = $words[$i];
         if ($word[0] == '"') {
-          if ($word[strlen($word)-1] == '"') {
+          if ($word[strlen($word) - 1] == '"') {
             $searchQuery = '%' . substr($word, 1, -1) . '%';
           }
           else {
@@ -78,7 +79,7 @@ class FilteringHelper extends ApplicationHelper {
             for ($i = $i + 1; $i < count($words); $i++) {
               $word = $words[$i];
               $searchQuery .= ' ';
-              if ($word[strlen($word)-1] == '"') {
+              if ($word[strlen($word) - 1] == '"') {
                 $searchQuery .= substr($word, 0, -1);
                 break;
               }

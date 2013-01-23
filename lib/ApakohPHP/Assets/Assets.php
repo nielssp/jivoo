@@ -6,25 +6,25 @@
 // Author         : apakoh.dk
 // Dependencies   : ApakohPHP/Http
 class Assets extends ModuleBase {
-  
+
   private $docRoot = '';
   private $docRootLength = 0;
-  
-  private $extensionBlacklist = array(
-    'php'
-  );
-  
-  private $pathWhitelist = array(
-  );
-  
+
+  private $extensionBlacklist = array('php');
+
+  private $pathWhitelist = array();
+
   protected function init() {
     $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
     $this->docRootLength = strlen($this->docRoot);
-    
-    if ($this->request->path[0] == 'assets' AND isset($this->request->path[1])) {
-      $path = $this->request->path;
+
+    if ($this->request
+      ->path[0] == 'assets' AND isset($this->request
+          ->path[1])) {
+      $path = $this->request
+        ->path;
       array_shift($path);
-      $filename = explode('.', $path[(count($path)-1)]);
+      $filename = explode('.', $path[(count($path) - 1)]);
       if (count($filename) > 1 AND !empty($filename[0])) {
         $extension = strtolower(array_pop($filename));
         if (!in_array($extension, $this->extensionBlacklist)) {
@@ -42,7 +42,7 @@ class Assets extends ModuleBase {
       }
     }
   }
-  
+
   private function returnAsset($path) {
     if (file_exists($path)) {
       header('Content-Type: ' . Utilities::getContentType($path));
@@ -51,7 +51,7 @@ class Assets extends ModuleBase {
     }
     return false;
   }
-  
+
   public function getAsset($key, $path = null) {
     if (!isset($path)) {
       $path = $key;
@@ -64,7 +64,9 @@ class Assets extends ModuleBase {
     else {
       $pArray = ($key == 'assets' ? array($key) : array('assets', $key));
       $pArray = array_merge($pArray, explode('/', $path));
-      return $this->m->Http->getLink($pArray);
+      return $this->m
+        ->Http
+        ->getLink($pArray);
     }
   }
 }

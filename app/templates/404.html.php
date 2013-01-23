@@ -10,7 +10,6 @@ $this->render('header.html');
 <h2 ><?php echo tr('Page not found'); ?></h2>
 
 <p><?php echo tr('The page you were looking for could not found.'); ?></p>
-
 <?php
 // Render the footer
 $this->render('footer.html');

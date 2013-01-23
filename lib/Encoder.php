@@ -2,28 +2,16 @@
 
 class Encoder {
   // source: http://xahlee.info/js/html5_non-closing_tag.html
-  private $selfClosingTags = array(
-    'area' => true,
-    'base' => true,
-    'br' => true,
-    'col' => true,
-    'command' => true,
-    'embed' => true,
-    'hr' => true,
-    'img' => true,
-    'input' => true,
-    'keygen' => true,
-    'link' => true,
-    'meta' => true,
-    'param' => true,
-    'source' => true,
-    'track' => true,
-    'wbr' => true
+  private $selfClosingTags = array('area' => true, 'base' => true,
+    'br' => true, 'col' => true, 'command' => true, 'embed' => true,
+    'hr' => true, 'img' => true, 'input' => true, 'keygen' => true,
+    'link' => true, 'meta' => true, 'param' => true, 'source' => true,
+    'track' => true, 'wbr' => true
   );
-  
+
   private $allowAll = false;
   private $stripAll = false;
-  
+
   private $allow = array();
 
   private $append = array();
@@ -41,7 +29,7 @@ class Encoder {
         $this->allow = $config['allow'];
       }
       if (isset($config['xhtml'])) {
-        $this->xhtml = (bool)$config['xhtml'];
+        $this->xhtml = (bool) $config['xhtml'];
       }
     }
   }
@@ -49,7 +37,7 @@ class Encoder {
   public function setXhtml($xhtml = true) {
     $this->xhtml = $xhtml;
   }
-  
+
   public function setAllowAll($allowAll = false) {
     $this->allowAll = $allowAll;
   }
@@ -100,7 +88,8 @@ class Encoder {
   }
 
   private function replaceAttributes($tag, $attributes) {
-    preg_match_all('/\s+(\w+)(\s*=\s*((?:".*?"|\'.*?\'|[^\'">\s]+)))?/', $attributes, $matches);
+    preg_match_all('/\s+(\w+)(\s*=\s*((?:".*?"|\'.*?\'|[^\'">\s]+)))?/',
+      $attributes, $matches);
     $attributes = $matches[1];
     $values = $matches[3];
     $num = count($attributes);
@@ -159,12 +148,12 @@ class Encoder {
       $selfClosing = true;
     }
     if ((isset($this->allow[$tag]) OR $this->allowAll) AND !$this->stripAll) {
-      if ($isCloseTag AND (!isset($this->openTags[$tag])
-          OR $this->openTags[$tag] < 1)) {
+      if ($isCloseTag
+          AND (!isset($this->openTags[$tag]) OR $this->openTags[$tag] < 1)) {
         return '';
       }
       $attributes = $this->replaceAttributes($tag, $attributes);
-      if ($attributes !== false ) {
+      if ($attributes !== false) {
         $clean = '<' . ($isCloseTag ? '/' : '');
         $clean .= $tag;
         if (!$isCloseTag) {
@@ -208,8 +197,9 @@ class Encoder {
       $text = substr($text, 0, $maxLength);
       $shortened = true;
     }
-    $text =
-      preg_replace_callback('/<((\/?)(\w+)((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/', array($this, 'replaceTag'), $text);
+    $text = preg_replace_callback(
+      '/<((\/?)(\w+)((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/',
+      array($this, 'replaceTag'), $text);
     foreach ($this->openTags as $tag => $number) {
       for ($i = 0; $i < $number; $i++) {
         $text .= '</' . $tag . '>';

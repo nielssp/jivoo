@@ -20,11 +20,11 @@ class Request {
   private $path;
 
   private $query;
-  
+
   private $cookies;
 
   private $session;
-  
+
   private $fragment = null;
 
   private $data;
@@ -51,10 +51,10 @@ class Request {
     }
 
     $this->realPath = $this->path;
-    
+
     $this->query = $_GET;
     $this->data = $_POST;
-    
+
     $this->cookies = new Cookies($_COOKIE, SESSION_PREFIX);
     $this->session = new Session(SESSION_PREFIX);
   }
@@ -126,7 +126,8 @@ class Request {
    * @return bool True if they match, false otherwise
    */
   public function checkToken() {
-    if (!isset($this->data['access_token']) OR !isset($this->session['access_token'])) {
+    if (!isset($this->data['access_token'])
+        OR !isset($this->session['access_token'])) {
       return false;
     }
     return $this->session['access_token'] === $this->data['access_token'];
@@ -154,7 +155,7 @@ class Request {
    */
   public function isAjax() {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-      AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+        AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
   }
 
 }

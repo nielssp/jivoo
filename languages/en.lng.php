@@ -5,16 +5,11 @@
 // Translator     : PeanutCMS
 // Version        : 0.1.0
 
-return array(
-  'defaultDateFormat' => 'F j, Y',
-  'defaultTimeFormat' => 'g:i a',
-  'tr' => array(
-    'Redirect error' => 'Redirect error',
+return array('defaultDateFormat' => 'F j, Y', 'defaultTimeFormat' => 'g:i a',
+  'tr' => array('Redirect error' => 'Redirect error',
     'An invalid status code was provided: %1.' => 'An invalid status code was provided: %1.',
     'Debugging is <strong>on</strong>' => 'Debugging is <strong>on</strong>',
-    'Error' => 'Error',
-    'Warning' => 'Warning',
-    'Notice' => 'Notice',
+    'Error' => 'Error', 'Warning' => 'Warning', 'Notice' => 'Notice',
     '%1 in <code>%2</code> on line <strong>%3</strong>' => '%1 in <code>%2</code> on line <strong>%3</strong>',
     'Module produced output too early:' => 'Module produced output too early:',
     'Failed to include module \'%1\'. Please check your configuration.' => 'Failed to include module \'%1\'. Please check your configuration.',
@@ -41,10 +36,8 @@ as a result you are required to provide the information below.
 If you are unsure about this information, please contact your web host.' => 'You have chosen to install the %1 database module,
 as a result you are required to provide the information below.
 If you are unsure about this information, please contact your web host.',
-    '%1 username' => '%1 username',
-    'Your username.' => 'Your username.',
-    '%1 password' => '%1 password',
-    'Your password.' => 'Your password.',
+    '%1 username' => '%1 username', 'Your username.' => 'Your username.',
+    '%1 password' => '%1 password', 'Your password.' => 'Your password.',
     '%1 host' => '%1 host',
     'Usually <code>localhost</code>, ask your web host.' => 'Usually <code>localhost</code>, ask your web host.',
     '%1 database' => '%1 database',
@@ -61,15 +54,12 @@ to the following files and folders:',
 It is usually done by CHMODding the files and folders to 664 or 666 depending on the server configuration.' => 'Please give %1 write-access to the specified files and folders.
 It is usually done by CHMODding the files and folders to 664 or 666 depending on the server configuration.',
     'is NOT writable.' => 'is NOT writable.',
-    'does NOT exist.' => 'does NOT exist.',
-    'Cancel' => 'Cancel',
+    'does NOT exist.' => 'does NOT exist.', 'Cancel' => 'Cancel',
     'Please press the button to install.' => 'Please press the button to install.',
     'Install' => 'Install',
     'Please choose modules from the list below.' => 'Please choose modules from the list below.',
-    'Not available.' => 'Not available.',
-    'Depends on:' => 'Depends on:',
-    'Requires:' => 'Requires:',
-    'Continue' => 'Continue',
+    'Not available.' => 'Not available.', 'Depends on:' => 'Depends on:',
+    'Requires:' => 'Requires:', 'Continue' => 'Continue',
     'Welcome to %1. Before you can start using %1 a configuration file has to be created.' => 'Welcome to %1. Before you can start using %1 a configuration file has to be created.',
     'To install %1 you will have to select some modules.' => 'To install %1 you will have to select some modules.',
     'You can either do this by selecting a quick-install option or selecting individual modules.' => 'You can either do this by selecting a quick-install option or selecting individual modules.',
@@ -93,8 +83,7 @@ It is usually done by CHMODding the files and folders to 664 or 666 depending on
     'Unknown error of type %1' => 'Unknown error of type %1',
     'Post a comment' => 'Post a comment',
     'Have something to say? Say it! (Required fields are marked with a %1)' => 'Have something to say? Say it! (Required fields are marked with a %1)',
-    'Name' => 'Name',
-    'Email' => 'Email',
+    'Name' => 'Name', 'Email' => 'Email',
     'Your e-mail is not shown, but is used for identification and retrieving your %1.' => 'Your e-mail is not shown, but is used for identification and retrieving your %1.',
     'Module error' => 'Module error',
     'The module \'%1\' could not be installed properly.' => 'The module \'%1\' could not be installed properly.',
@@ -112,61 +101,50 @@ configuration in <code>config.php</code> and use the installer to create a new c
     'Could not connect to %1 database.' => 'Could not connect to %1 database.',
     'MySQL error' => 'MySQL error',
     '%2<br/>%3<br/>In query:<br/><code>%4</code>' => '%2<br/>%3<br/>In query:<br/><code>%4</code>'
-),
+  ),
   'trl' => array(
     'The module \'%l\' is missing from %1.' => array(
-          'The module \'%l\' is missing from %1.',
-          'The modules \'%l\' are missing from %1.',
-          '\', \'',
-          '\', and \''),
+      'The module \'%l\' is missing from %1.',
+      'The modules \'%l\' are missing from %1.', '\', \'', '\', and \''
+    ),
     'The following module will be installed: <b>%l</b>.' => array(
-          'The following module will be installed: <b>%l</b>.',
-          'The following modules will be installed: <b>%l</b>.',
-          '</b>, <b>',
-          '</b> and <b>'),
-    '\'%l\' is missing.' => array(
-          '\'%l\' is missing.',
-          '\'%l\' are missing.',
-          '\', \'',
-          '\' and \''),
-    '\'%l\' is too new.' => array(
-          '\'%l\' is too new.',
-          '\'%l\' are too new.',
-          '\', \'',
-          '\' and \''),
-    '\'%l\' is too old.' => array(
-          '\'%l\' is too old.',
-          '\'%l\' are too old.',
-          '\', \'',
-          '\' and \''),
+      'The following module will be installed: <b>%l</b>.',
+      'The following modules will be installed: <b>%l</b>.', '</b>, <b>',
+      '</b> and <b>'
+    ),
+    '\'%l\' is missing.' => array('\'%l\' is missing.', '\'%l\' are missing.',
+      '\', \'', '\' and \''
+    ),
+    '\'%l\' is too new.' => array('\'%l\' is too new.', '\'%l\' are too new.',
+      '\', \'', '\' and \''
+    ),
+    '\'%l\' is too old.' => array('\'%l\' is too old.', '\'%l\' are too old.',
+      '\', \'', '\' and \''
+    ),
     '\'%l\' is not the correct version.' => array(
-          '\'%l\' is not the correct version.',
-          '\'%l\' are not the correct version.',
-          '\', \'',
-          '\' and \''),
+      '\'%l\' is not the correct version.',
+      '\'%l\' are not the correct version.', '\', \'', '\' and \''
+    ),
     'Minimal install is not available because the module \'%l\' is missing.' => array(
-          'Minimal install is not available because the module \'%l\' is missing.',
-          'Minimal install is not available because the modules \'%l\' are missing.',
-          '\', \'',
-          '\' and \''),
+      'Minimal install is not available because the module \'%l\' is missing.',
+      'Minimal install is not available because the modules \'%l\' are missing.',
+      '\', \'', '\' and \''
+    ),
     'Complete install is not available because the module \'%l\' is missing.' => array(
-          'Complete install is not available because the module \'%l\' is missing.',
-          'Complete install is not available because the modules \'%l\' are missing.',
-          '\', \'',
-          '\' and \''),
+      'Complete install is not available because the module \'%l\' is missing.',
+      'Complete install is not available because the modules \'%l\' are missing.',
+      '\', \'', '\' and \''
+    ),
     'Posted by %1 on %2 in %3 and tagged %l.' => array(
-          'Posted by %1 on %2 in %3 and tagged %l.',
-          'Posted by %1 on %2 in %3 and tagged %l.',
-          ', ',
-          ' and ')
-),
+      'Posted by %1 on %2 in %3 and tagged %l.',
+      'Posted by %1 on %2 in %3 and tagged %l.', ', ', ' and '
+    )
+  ),
   'trn' => array(
-    '%1 comment' => array(
-          '%1 comment',
-          '%1 comments'),
-    'There is %1 comment' => array(
-          'There is %1 comment',
-          'There are %1 comments')
-)
+    '%1 comment' => array('%1 comment', '%1 comments'),
+    'There is %1 comment' => array('There is %1 comment',
+      'There are %1 comments'
+    )
+  )
 );
 ?>

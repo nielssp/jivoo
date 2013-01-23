@@ -7,32 +7,32 @@
 // Dependencies   : Errors Configuration
 
 class Shadow extends ModuleBase {
-  
-  private $hashTypes = array(
-      'sha512',
-      'sha256',
-      'blowfish',
-      'md5',
-      'ext_des',
-      'std_des'
+
+  private $hashTypes = array('sha512', 'sha256', 'blowfish', 'md5', 'ext_des',
+    'std_des'
   );
-  
+
   protected function init() {
-    if (!$this->m->Configuration->exists('shadow.hashType')) {
+    if (!$this->m
+      ->Configuration
+      ->exists('shadow.hashType')) {
       foreach ($this->hashTypes as $hashType) {
         $constant = 'CRYPT_' . strtoupper($hashType);
         if (defined($constant) AND constant($constant) == 1) {
-          $this->m->Configuration->set('shadow.hashType', $hashType);
+          $this->m
+            ->Configuration
+            ->set('shadow.hashType', $hashType);
           break;
         }
       }
     }
   }
-  
 
   public function genSalt($hashType = null) {
     if (!isset($hashType)) {
-      $hashType = $this->m->Configuration->get('shadow.hashType');
+      $hashType = $this->m
+        ->Configuration
+        ->get('shadow.hashType');
       if ($hashType == 'auto') {
         foreach ($this->hashTypes as $t) {
           $constant = 'CRYPT_' . strtoupper($t);
@@ -81,29 +81,28 @@ class Shadow extends ModuleBase {
     }
     return $prefix . $salt;
   }
-  
+
   public function hash($string, $hashType = null) {
     return crypt($string, $this->genSalt($hashType));
   }
-  
+
   public function compare($string, $hash) {
     return crypt($string, $hash) == $hash;
   }
-  
+
   public function setPassword($name, $password, $hash = false) {
     if ($hash) {
       $password = $this->hash($password);
     }
   }
-  
+
   public function getPassword($name) {
-    
   }
-  
+
   public function comparePassword($name, $password, $hash = false) {
     if ($hash) {
       $password = $this->hash($password);
     }
   }
-  
+
 }

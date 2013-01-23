@@ -52,9 +52,7 @@ class Condition implements ICondition {
     }
     $args = func_get_args();
     array_shift($args);
-    $this->clauses[] = array(
-      'glue' => 'AND',
-      'clause' => $clause,
+    $this->clauses[] = array('glue' => 'AND', 'clause' => $clause,
       'vars' => $args
     );
     return $this;
@@ -66,9 +64,7 @@ class Condition implements ICondition {
     }
     $args = func_get_args();
     array_shift($args);
-    $this->clauses[] = array(
-      'glue' => 'OR',
-      'clause' => $clause,
+    $this->clauses[] = array('glue' => 'OR', 'clause' => $clause,
       'vars' => $args
     );
     return $this;

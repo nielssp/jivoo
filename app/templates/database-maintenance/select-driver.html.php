@@ -16,30 +16,33 @@ $this->render('backend/header.html');
         <div class="container">
 <?php
 $first = true;
-foreach ($drivers as $driver):
+foreach ($drivers as $driver) :
 ?>
 
 <?php
-if ($first) {
-  $first = false;
-}
-else {
-  echo '<div class="separator"></div>';
-}
+  if ($first) {
+    $first = false;
+  }
+  else {
+    echo '<div class="separator"></div>';
+  }
 ?>
           <div class="db_driver">
             <h2><?php echo $driver['name']; ?></h2>
             <p>
-              <?php if ($driver['isAvailable']): ?>
+              <?php if ($driver['isAvailable']) : ?>
               Available.
             </p>
             <div class="button_container">
-              <?php echo $Form->submit(tr('Select %1', $driver['name']), $driver['driver']); ?>
+              <?php echo $Form->submit(tr('Select %1', $driver['name']),
+        $driver['driver']); ?>
             </div>
-              <?php else: ?>
+              <?php 
+  else : ?>
 <?php
-echo trl('Unavailable. Missing the "%l" PHP extension.', 'Unavailable. Missing the "%l" PHP extensions.',
-  '", "', '" and "', $driver['missingExtensions'])
+    echo trl('Unavailable. Missing the "%l" PHP extension.',
+      'Unavailable. Missing the "%l" PHP extensions.', '", "', '" and "',
+      $driver['missingExtensions'])
 ?>
             </p>
             <?php endif; ?>

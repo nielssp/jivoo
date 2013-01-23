@@ -30,23 +30,27 @@ class Configuration extends ModuleBase implements arrayaccess {
    * @param Configuration $subsetOf Configuration to be a subset of
    */
   protected function init($cfgFile = null, Configuration $subsetOf = null) {
-    $cfgFile = $this->app->p('config', 'config.php');
+    $cfgFile = $this->app
+      ->p('config', 'config.php');
     $this->file = $cfgFile;
     if (isset($subsetOf)) {
-      $this->data =& $subsetOf->data; 
+      $this->data = &$subsetOf->data;
       return;
     }
     if (!is_readable($this->file)) {
       // Attempt to create configuration-file
       $file = fopen($this->file, 'w');
       if (!$file) {
-        Errors::fatal(tr('Fatal error'), tr('%1 is missing or inaccessible and could not be created', $this->file));
+        Errors::fatal(tr('Fatal error'),
+          tr('%1 is missing or inaccessible and could not be created',
+            $this->file));
       }
       fwrite($file, '<?php' . PHP_EOL . 'return array();' . PHP_EOL);
       fclose($file);
     }
     if (!is_writable($this->file)) {
-      new GlobalWarning(tr('%1 is not writable', $this->file), 'settings-writable');
+      new GlobalWarning(tr('%1 is not writable', $this->file),
+        'settings-writable');
     }
     $this->data = include $this->file;
   }
@@ -57,11 +61,13 @@ class Configuration extends ModuleBase implements arrayaccess {
    * @return Configuration A subset
    */
   public function getSubset($key) {
-    $config = new Configuration(array('Errors' => $this->m->Errors), $this->Core, $this->file, $this);
+    $config = new Configuration(array('Errors' => $this->m
+        ->Errors
+      ), $this->Core, $this->file, $this);
     $config->parentKey = $this->realKey($key);
     return $config;
   }
-  
+
   private function realKey($key) {
     if ($this->parentKey != '') {
       $key = $this->parentKey . ($key != '' ? '.' . $key : '');
@@ -72,13 +78,13 @@ class Configuration extends ModuleBase implements arrayaccess {
   private function &getDataReference($key) {
     $key = $this->realKey($key);
     $keyArray = explode('.', $key);
-    $arrayRef =& $this->data;
+    $arrayRef = &$this->data;
     foreach ($keyArray as $part) {
       if (!empty($part)) {
         if (!is_array($arrayRef)) {
           $arrayRef = array();
         }
-        $arrayRef =& $arrayRef[$part];
+        $arrayRef = &$arrayRef[$part];
       }
     }
     return $arrayRef;
@@ -107,7 +113,7 @@ class Configuration extends ModuleBase implements arrayaccess {
       $ref = null;
     return $this->save();
   }
-  
+
   /**
    * Create valid PHP array representation
    * @param array $data Associative array
@@ -162,7 +168,6 @@ class Configuration extends ModuleBase implements arrayaccess {
     return $this->set($key, null);
   }
 
-
   /**
    * Set default values.
    * @param string|array Either a key as a string or an array of key/value pairs
@@ -170,7 +175,7 @@ class Configuration extends ModuleBase implements arrayaccess {
    */
   public function setDefault($key, $value = null) {
     if (is_array($key)) {
-      $array = $key;    
+      $array = $key;
       $this->save = false;
       $changed = false;
       foreach ($array as $key => $value) {
@@ -221,7 +226,7 @@ class Configuration extends ModuleBase implements arrayaccess {
     $ref = &$this->getDataReference($key);
     return isset($ref);
   }
-  
+
   /* arrayaccess implementation */
 
   /**
@@ -232,7 +237,7 @@ class Configuration extends ModuleBase implements arrayaccess {
   public function offsetExists($key) {
     return $this->exists($key);
   }
-  
+
   /**
    * Get a value
    * @param string $name Key
@@ -258,7 +263,7 @@ class Configuration extends ModuleBase implements arrayaccess {
       $this->set($key, $value);
     }
   }
-  
+
   /**
    * Delete a key
    * @param string $name Key

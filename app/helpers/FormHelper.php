@@ -6,23 +6,27 @@ class FormHelper extends ApplicationHelper {
   private $currentForm = '';
   private $post = false;
   private $errors = array();
-  
+
   public function begin(IModel $record = null, $fragment = null) {
     if (!isset($record)) {
       $record = new Form('form');
     }
-    $this->post = $this->request->isPost();
+    $this->post = $this->request
+      ->isPost();
     $this->record = $record;
     if ($this->post) {
       $this->errors = $record->getErrors();
     }
     $this->currentForm = $record->getName();
     $html = '<form action="' . $this->getLink(array('fragment' => $fragment))
-      . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
+        . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
     $html .= '<input type="hidden" name="access_token" value="'
-      . $this->request->getToken() . '" />' . PHP_EOL;
-    foreach ($this->record->getFields() as $field) {
-      if ($this->record->getFieldType($field) == 'hidden') {
+        . $this->request
+          ->getToken() . '" />' . PHP_EOL;
+    foreach ($this->record
+      ->getFields() as $field) {
+      if ($this->record
+        ->getFieldType($field) == 'hidden') {
         $html .= $this->hidden($field);
       }
     }
@@ -46,12 +50,13 @@ class FormHelper extends ApplicationHelper {
     }
     return $id;
   }
-  
+
   public function isRequired($field, $output = null) {
     if (!isset($this->record)) {
       return;
     }
-    $required = $this->record->isFieldRequired($field);
+    $required = $this->record
+      ->isFieldRequired($field);
     if (isset($output)) {
       return $required ? $output : '';
     }
@@ -64,7 +69,8 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $required = $this->record->isFieldRequired($field);
+    $required = $this->record
+      ->isFieldRequired($field);
     if (isset($output)) {
       return $required ? '' : $output;
     }
@@ -72,7 +78,7 @@ class FormHelper extends ApplicationHelper {
       return !$required;
     }
   }
-  
+
   public function isValid($field = null) {
     if (!isset($this->record)) {
       return;
@@ -87,14 +93,14 @@ class FormHelper extends ApplicationHelper {
       return count($this->errors) < 1;
     }
   }
-  
+
   public function getErrors() {
     if (!isset($this->record)) {
       return;
     }
     return $this->errors;
   }
-  
+
   public function getError($field) {
     if (!isset($this->record)) {
       return;
@@ -102,7 +108,7 @@ class FormHelper extends ApplicationHelper {
     return isset($this->errors[$field]) ? $this->errors[$field] : '';
   }
 
-  public function label($field, $label = null,  $options = array()) {
+  public function label($field, $label = null, $options = array()) {
     if (!isset($this->record)) {
       return;
     }
@@ -111,7 +117,8 @@ class FormHelper extends ApplicationHelper {
       $html .= ' class="' . $options['class'] . '"';
     }
     if (!isset($label)) {
-      $label = $this->record->getFieldLabel($field);
+      $label = $this->record
+        ->getFieldLabel($field);
     }
     $html .= '>' . $label . '</label>' . PHP_EOL;
     return $html;
@@ -121,11 +128,13 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $editor = $this->record->getFieldEditor($field);
+    $editor = $this->record
+      ->getFieldEditor($field);
     if (isset($editor)) {
       return $editor->field($this, $field, $options);
     }
-    $type = $this->record->getFieldType($field);
+    $type = $this->record
+      ->getFieldType($field);
     switch ($type) {
       case 'text':
         return $this->textarea($field, $options);
@@ -143,22 +152,28 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $editor = $this->record->getFieldEditor($field);
+    $editor = $this->record
+      ->getFieldEditor($field);
     if (isset($editor)) {
       $format = $editor->getFormat();
       if ($encode) {
-        return h($format->fromHtml($this->record->$field));
+        return h($format->fromHtml($this->record
+            ->$field));
       }
       else {
-        return $format->fromHtml($this->record->$field);
+        return $format->fromHtml($this->record
+            ->$field);
       }
     }
-    if (isset($this->record->$field)) {
+    if (isset($this->record
+      ->$field)) {
       if ($encode) {
-        return h($this->record->$field);
+        return h($this->record
+          ->$field);
       }
       else {
-        return $this->record->$field;
+        return $this->record
+          ->$field;
       }
     }
     return '';
@@ -176,7 +191,7 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<input type="hidden" name="' . $this->fieldName($field) .'"';
+    $html = '<input type="hidden" name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= $this->addAttributes($options);
     if ($this->fieldValue($field) != '') {
@@ -190,7 +205,7 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<input type="text" name="' . $this->fieldName($field) .'"';
+    $html = '<input type="text" name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
       $options['class'] = 'text';
@@ -207,7 +222,7 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<input type="radio" name="' . $this->fieldName($field) .'"';
+    $html = '<input type="radio" name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field, $value) . '"';
     $html .= ' value="' . $value . '"';
     $html .= $this->addAttributes($options);
@@ -222,7 +237,7 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<input type="password" name="' . $this->fieldName($field) .'"';
+    $html = '<input type="password" name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
       $options['class'] = 'text';
@@ -236,7 +251,7 @@ class FormHelper extends ApplicationHelper {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<textarea name="' . $this->fieldName($field) .'"';
+    $html = '<textarea name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= $this->addAttributes($options);
     $html .= '>';
@@ -261,7 +276,7 @@ class FormHelper extends ApplicationHelper {
     $html .= ' /> ' . PHP_EOL;
     return $html;
   }
-    
+
   public function end() {
     $this->record = null;
     $this->errors = array();

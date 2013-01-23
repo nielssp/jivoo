@@ -13,9 +13,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     try {
       $this->pdo = new PDO(
         'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
-        $options['username'],
-        $options['password']
-      );
+        $options['username'], $options['password']);
     }
     catch (PDOException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
@@ -26,7 +24,8 @@ class PdoMysqlDatabase extends PdoDatabase {
     switch ($type) {
       case 'string':
         $type = 'varchar';
-        if (!isset($length)) $length = 255;
+        if (!isset($length))
+          $length = 255;
         break;
       case 'boolean':
         $type = 'bool';
@@ -55,12 +54,13 @@ class PdoMysqlDatabase extends PdoDatabase {
     if (strpos($type, '(') !== false) {
       list($type, $right) = explode('(', $type);
       list($length) = explode(')', $right);
-      $length = (int)$length;
+      $length = (int) $length;
     }
     if (strpos($type, 'char') !== false) {
       $type = 'string';
     }
-    else if (strpos($type, 'tinyint') !== false OR strpos($type, 'bool') !== false) {
+    else if (strpos($type, 'tinyint') !== false
+        OR strpos($type, 'bool') !== false) {
       $type = 'boolean';
     }
     else if (strpos($type, 'int') !== false) {
@@ -69,8 +69,9 @@ class PdoMysqlDatabase extends PdoDatabase {
     else if (strpos($type, 'blob') !== false OR $type === 'binary') {
       $type = 'binary';
     }
-    else if (strpos($type, 'float') !== false OR strpos($type, 'double') !== false
-      OR strpos($type, 'decimal') !== false) {
+    else if (strpos($type, 'float') !== false
+        OR strpos($type, 'double') !== false
+        OR strpos($type, 'decimal') !== false) {
       $type = 'float';
     }
     else {
@@ -125,7 +126,8 @@ class PdoMysqlDatabase extends PdoDatabase {
   }
 
   public function tableExists($table) {
-    $result = $this->rawQuery('SHOW TABLES LIKE "' . $this->tableName($table) . '"');
+    $result = $this->rawQuery(
+        'SHOW TABLES LIKE "' . $this->tableName($table) . '"');
     return $result->hasRows();
   }
 
@@ -200,7 +202,8 @@ class PdoMysqlDatabase extends PdoDatabase {
 
   public function alterColumn($table, $column, $options = array()) {
     // ALTER TABLE  `posts` CHANGE  `testing`  `testing` INT( 12 ) NOT null
-    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column . ' ' . $column;
+    $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column
+        . ' ' . $column;
     $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
     if (!$options['null']) {
       $sql .= ' NOT';

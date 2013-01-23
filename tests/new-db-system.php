@@ -53,12 +53,14 @@ class SqlTable implements Itable {
     }
     $columns = $query->columns;
     $values = $query->values;
-    $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
+    $sqlString = 'INSERT INTO ' . $this->owner
+          ->tableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
     while (($value = current($values)) !== false) {
       if (isset($value)) {
-        $sqlString .= $this->owner->escapeQuery('?', $value);
+        $sqlString .= $this->owner
+          ->escapeQuery('?', $value);
       }
       else {
         $sqlString .= 'null';
@@ -68,7 +70,8 @@ class SqlTable implements Itable {
       }
     }
     $sqlString .= ')';
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function select(SelectQuery $query = null) {
@@ -84,13 +87,18 @@ class SqlTable implements Itable {
     else {
       $sqlString .= $query->count ? 'COUNT(*)' : '*';
     }
-    $sqlString .= ' FROM ' . $this->owner->tableName($this->name);
+    $sqlString .= ' FROM ' . $this->owner
+          ->tableName($this->name);
     if (isset($query->join)) {
-      $sqlString .= ' JOIN ' . $this->owner->tableName($query->join['table']);
-      $sqlString .= ' ON ' . $query->join['left'] . ' = ' . $query->join['right'];
+      $sqlString .= ' JOIN ' . $this->owner
+            ->tableName($query->join['table']);
+      $sqlString .= ' ON ' . $query->join['left'] . ' = '
+          . $query->join['right'];
     }
     if (isset($query->where)) {
-      $sqlString .= ' WHERE ' . $this->owner->escapeQuery($query->where, $query->whereVars);
+      $sqlString .= ' WHERE '
+          . $this->owner
+            ->escapeQuery($query->where, $query->whereVars);
     }
     if (isset($query->orderBy)) {
       $sqlString .= ' ORDER BY ' . $query->orderBy;
@@ -99,27 +107,33 @@ class SqlTable implements Itable {
     if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function update(UpdateQuery $query = null) {
     if (!isset($query)) {
       return UpdateQuery::create()->setDataSource($this);
     }
-    $sqlString = 'UPDATE ' . $this->owner->tableName($this->name);
+    $sqlString = 'UPDATE ' . $this->owner
+          ->tableName($this->name);
     $sets = $query->sets;
     if (!empty($sets)) {
       $sqlString .= ' SET';
       reset($sets);
       while (($value = current($sets)) !== false) {
-        $sqlString .= ' ' . $this->owner->escapeQuery(key($sets) . ' = ?', array($value));
+        $sqlString .= ' '
+            . $this->owner
+              ->escapeQuery(key($sets) . ' = ?', array($value));
         if (next($sets) !== false) {
           $sqlString .= ',';
         }
       }
     }
     if (isset($query->where)) {
-      $sqlString .= ' WHERE ' . $this->owner->escapeQuery($query->where, $query->whereVars);
+      $sqlString .= ' WHERE '
+          . $this->owner
+            ->escapeQuery($query->where, $query->whereVars);
     }
     if (isset($query->orderBy)) {
       $sqlString .= ' ORDER BY ' . $query->orderBy;
@@ -128,20 +142,26 @@ class SqlTable implements Itable {
     if (isset($this->query)) {
       $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function delete(DeleteQuery $query = null) {
     if (!isset($query)) {
       return DelteQuery::create()->setDataSource($this);
     }
-    $sqlString = 'DELETE FROM ' . $this->owner->tableName($this->name);
+    $sqlString = 'DELETE FROM ' . $this->owner
+          ->tableName($this->name);
     if (isset($query->join)) {
-      $sqlString .= ' JOIN ' . $this->owner->tableName($query->join['table']);
-      $sqlString .= ' ON ' . $query->join['left'] . ' = ' . $query->join['right'];
+      $sqlString .= ' JOIN ' . $this->owner
+            ->tableName($query->join['table']);
+      $sqlString .= ' ON ' . $query->join['left'] . ' = '
+          . $query->join['right'];
     }
     if (isset($query->where)) {
-      $sqlString .= ' WHERE ' . $this->owner->escapeQuery($query->where, $query->whereVars);
+      $sqlString .= ' WHERE '
+          . $this->owner
+            ->escapeQuery($query->where, $query->whereVars);
     }
     if (isset($query->orderBy)) {
       $sqlString .= ' ORDER BY ' . $query->orderBy;
@@ -150,7 +170,8 @@ class SqlTable implements Itable {
     if (isset($query->limit)) {
       $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner
+      ->rawQuery($sqlString);
   }
 
   public function count(SelectQuery $query = null) {
@@ -166,11 +187,13 @@ class SqlTable implements Itable {
   }
 
   public function getcolumns() {
-    return $this->owner->getColumns($this->name);
+    return $this->owner
+      ->getColumns($this->name);
   }
 
   public function getPrimaryKey() {
-    return $this->owner->getPrimaryKey($this->name);
+    return $this->owner
+      ->getPrimaryKey($this->name);
   }
 }
 
@@ -220,22 +243,24 @@ abstract class SqlDatabase implements IDatabase {
       array_shift($vars);
     }
     foreach ($chars as $offset => $char) {
-      if ($char == '?' AND (!isset($chars[$offset - 1]) OR $chars[$offset - 1] != '\\')) {
+      if ($char == '?'
+          AND (!isset($chars[$offset - 1]) OR $chars[$offset - 1] != '\\')) {
         if (is_array($vars[$key]) AND isset($vars[$key]['table'])) {
-          $sqlString .=  $this->tableName($vars[$key]['table']);
+          $sqlString .= $this->tableName($vars[$key]['table']);
         }
         else if (is_int($vars[$key])) {
-          $sqlString .= (int)$vars[$key];
+          $sqlString .= (int) $vars[$key];
         }
         else if (is_float($vars[$key])) {
-          $sqlString .= (float)$vars[$key];
+          $sqlString .= (float) $vars[$key];
         }
         else {
           $sqlString .= '"' . $this->escapeString($vars[$key]) . '"';
         }
         $key++;
       }
-      else if ($char != '\\' OR !isset($chars[$offset + 1]) OR $chars[$offset + 1] != '?') {
+      else if ($char != '\\' OR !isset($chars[$offset + 1])
+          OR $chars[$offset + 1] != '?') {
         $sqlString .= $char;
       }
     }
@@ -247,7 +272,8 @@ class MysqlDatabase extends SqlDatabase {
   private $handle;
 
   public function __construct($options = array()) {
-    $this->handle = mysql_connect($options['server'], $options['username'], $options['password'], true);
+    $this->handle = mysql_connect($options['server'], $options['username'],
+      $options['password'], true);
     if (!$this->handle) {
       throw new DatabaseConnectionFailedException(mysql_error());
     }
@@ -270,7 +296,9 @@ class MysqlDatabase extends SqlDatabase {
   }
 
   public function getPrimaryKey($table) {
-    $result = $this->rawQuery('SHOW INDEX FROM ' . $this->tableName($table) . ' WHERE Key_name = "PRIMARY"');
+    $result = $this->rawQuery(
+        'SHOW INDEX FROM ' . $this->tableName($table)
+            . ' WHERE Key_name = "PRIMARY"');
     $row = $result->fetchAssoc();
     return $row['Column_name'];
   }
@@ -280,12 +308,12 @@ class MysqlDatabase extends SqlDatabase {
   }
 
   public function tableExists($table) {
-    $result = $this->rawQuery('SHOW TABLES LIKE "' . $this->tableName($table) . '"');
+    $result = $this->rawQuery(
+        'SHOW TABLES LIKE "' . $this->tableName($table) . '"');
     return $result->count() >= 1;
   }
 
-  public function migrate(IMigration $migration) {
-  }
+  public function migrate(IMigration $migration) {}
 
   public function rawQuery($sql) {
     var_dump($sql);
@@ -305,4 +333,4 @@ class MysqlDatabase extends SqlDatabase {
   }
 }
 
-class DatabaseQueryFailedException extends Exception { }
+class DatabaseQueryFailedException extends Exception {}

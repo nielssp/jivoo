@@ -79,10 +79,10 @@ class Dictionary {
  * Exception thrown when a key does not exist in a dictionary
  * @package PeanutCMS
  */
-class DictionaryKeyInvalidException extends Exception { }
+class DictionaryKeyInvalidException extends Exception {}
 
 /**
  * Exception thrown when writing to a read-only dictionary
  * @package PeanutCMS
  */
-class DictionaryReadOnlyException extends Exception { }
+class DictionaryReadOnlyException extends Exception {}

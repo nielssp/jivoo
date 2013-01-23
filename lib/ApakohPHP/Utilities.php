@@ -6,9 +6,8 @@
  */
 class Utilities {
   private function __construct() {
-    
   }
-  
+
   /**
    * Convert a CamelCase class-name to a lowercase dash-separated name. E.g.
    * from "CamelCase" to "camel-case".
@@ -34,7 +33,7 @@ class Utilities {
     }
     return $camelCase;
   }
-  
+
   /**
    * Test a condition and throw an exception if it's false 
    * @param boolean $condition Condition
@@ -47,14 +46,12 @@ class Utilities {
     $bt = debug_backtrace();
     $call = $bt[0];
     $lines = file($call['file']);
-    preg_match(
-      '/' . $call['function'] . '\((.+)\)/',
-      $lines[$call['line'] - 1],
-      $matches
-    );
-    throw new InvalidArgumentException('Precondition not met (' . $matches[1] . ').');
+    preg_match('/' . $call['function'] . '\((.+)\)/',
+      $lines[$call['line'] - 1], $matches);
+    throw new InvalidArgumentException(
+      'Precondition not met (' . $matches[1] . ').');
   }
-  
+
   public static function getContentType($fileName) {
     $fileExt = strtolower($fileName);
     if (strpos($fileExt, '.')) {
@@ -83,5 +80,33 @@ class Utilities {
       default:
         return "text/plain";
     }
+  }
+
+  public static function groupObjects(&$objects) {
+    if (!is_array($objects) OR count($objects) < 1) {
+      return false;
+    }
+    uasort($objects, array('Utilities', 'groupSorter'));
+  }
+
+  public static function groupSorter(IGroupable $a, IGroupable $b) {
+    $groupA = $a->getGroup();
+    $groupB = $b->getGroup();
+    if (is_numeric($groupA) AND is_numeric($groupB)) {
+      return $groupA - $groupB;
+    }
+    else {
+      return strcmp($groupA, $groupB);
+    }
+  }
+  
+  /**
+   * Comparison function for use with usort() and uasort()
+   *
+   * @param array $a
+   * @param array $b
+   */
+  public static function prioritySorter($a, $b) {
+    return $b['priority'] - $a['priority'];
   }
 }

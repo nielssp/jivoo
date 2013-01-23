@@ -24,7 +24,8 @@ class RequestTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testPathAndFragment() {
-    $_SERVER['REQUEST_URI'] = 'http://example.com' . WEBPATH . 'hello/world?a=2&b=2#testFragment';
+    $_SERVER['REQUEST_URI'] = 'http://example.com' . WEBPATH
+        . 'hello/world?a=2&b=2#testFragment';
     $request = new Request();
     $this->assertEquals(array('hello', 'world'), $request->path);
     $this->assertEquals(array('hello', 'world'), $request->realPath);

@@ -3,16 +3,17 @@
 abstract class ExtensionBase {
 
   private $extensions;
-  
+
   private $extensionDir;
-  
+
   protected $m = null;
 
   protected $e = null;
-  
+
   protected $config = null;
-  
-  public final function __construct($m, $e, Configuration $config, Extensions $extensions) {
+
+  public final function __construct($m, $e, Configuration $config,
+                                    Extensions $extensions) {
     $this->config = $config;
     $this->extensions = $extensions;
     $this->m = new Dictionary($m, true);
@@ -39,7 +40,7 @@ abstract class ExtensionBase {
       include($this->p('modules/' . $fileName));
     }
   }
-  
+
   /**
    * Get the absolute path of a file
    * @param string $key Location-identifier
@@ -48,29 +49,35 @@ abstract class ExtensionBase {
    */
   public function p($key, $path = null) {
     if (isset($path)) {
-      return $this->extensions->p($key, $path);
+      return $this->extensions
+        ->p($key, $path);
     }
     else {
-      return $this->extensions->p('extensions', $this->extensionDir . '/' . $key);
+      return $this->extensions
+        ->p('extensions', $this->extensionDir . '/' . $key);
     }
   }
-  
+
   /**
    * Get the absolute path of a file relative to the public directory
    * @param string $path File
    * @return string Path
    */
   public function w($path = '') {
-    return $this->extensions->w($path);
+    return $this->extensions
+      ->w($path);
   }
-  
+
   public function getAsset($file) {
-    if (!isset($this->m->Assets)) {
+    if (!isset($this->m
+      ->Assets)) {
       return false;
     }
-    return $this->m->Assets->getAsset('extensions', $this->extensionDir . '/' . $file);
+    return $this->m
+      ->Assets
+      ->getAsset('extensions', $this->extensionDir . '/' . $file);
   }
-  
+
   protected abstract function init();
 
   public function uninstall() {

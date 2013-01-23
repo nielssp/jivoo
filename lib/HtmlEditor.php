@@ -4,7 +4,7 @@ class HtmlEditor implements IEditor {
   protected $format = null;
   protected $config = null;
   protected $initiated = false;
-  
+
   public function __construct() {
     $this->format = new HtmlFormat();
   }

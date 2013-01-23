@@ -40,17 +40,24 @@ class Templates extends ModuleBase {
   }
 
   protected function init() {
-    $this->m->Configuration->setDefault(array(
-      'site.title' => $this->app->name,
-      'site.subtitle' => 'Powered by ' . $this->app->name,
-      'system.hide.identity' => HIDE_LEVEL > 1 ? 'on' : 'off',
-      'system.hide.version' => HIDE_LEVEL > 0 ? 'on' : 'off',
-    ));
+    $this->m
+      ->Configuration
+      ->setDefault(
+        array('site.title' => $this->app
+            ->name, 'site.subtitle' => 'Powered by ' . $this->app
+                ->name,
+          'system.hide.identity' => HIDE_LEVEL > 1 ? 'on' : 'off',
+          'system.hide.version' => HIDE_LEVEL > 0 ? 'on' : 'off',
+        ));
 
     $this->setTheme($this->p(null, ''));
 
-    if ($this->m->Configuration->exists('site.meta')) {
-      $meta = $this->m->Configuration->get('site.meta');
+    if ($this->m
+      ->Configuration
+      ->exists('site.meta')) {
+      $meta = $this->m
+        ->Configuration
+        ->get('site.meta');
       if (is_array($meta)) {
         foreach ($meta as $name => $content) {
           $this->insertMeta($name, $content);
@@ -58,8 +65,12 @@ class Templates extends ModuleBase {
       }
     }
 
-    if ($this->m->Configuration->exists('system.hide')) {
-      $hide = $this->m->Configuration->get('system.hide');
+    if ($this->m
+      ->Configuration
+      ->exists('system.hide')) {
+      $hide = $this->m
+        ->Configuration
+        ->get('system.hide');
       if ($hide['identity'] == 'on') {
         $this->hideLevel = 2;
       }
@@ -81,11 +92,10 @@ class Templates extends ModuleBase {
       case 'html':
       case 'htm':
         $contentType = "text/html";
-        $this->insertHtml(
-          'meta-charset', 'head-meta', 'meta',
-          array('http-equiv' => 'content-type', 'content' => 'text/html;charset=utf-8'),
-          '', 10
-        );
+        $this->insertHtml('meta-charset', 'head-meta', 'meta',
+            array('http-equiv' => 'content-type',
+              'content' => 'text/html;charset=utf-8'
+            ), '', 10);
         break;
       case 'css':
         $contentType = "text/css";
@@ -113,58 +123,36 @@ class Templates extends ModuleBase {
   }
 
   public function addScript($id, $file, $dependencies = array()) {
-    $this->addHtml(
-      $id, 'head-scripts', 'script',
-      array(
-        'type' => 'text/javascript',
-        'src' => $file
-      ), '', 10, $dependencies
-    );
+    $this->addHtml($id, 'head-scripts', 'script',
+        array('type' => 'text/javascript', 'src' => $file), '', 10,
+        $dependencies);
   }
 
   public function addStyle($id, $file, $dependencies = array()) {
-    $this->addHtml(
-      $id, 'head-styles', 'link',
-      array(
-        'rel' => 'stylesheet',
-        'type' => 'text/css',
-        'href' => $file
-      ), '', 20, $dependencies
-    );
+    $this->addHtml($id, 'head-styles', 'link',
+        array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => $file),
+        '', 20, $dependencies);
   }
 
   public function insertScript($id, $file, $dependencies = array()) {
-    $this->insertHtml(
-      $id, 'head-scripts', 'script',
-      array(
-        'type' => 'text/javascript',
-        'src' => $file
-      ), '', 10, $dependencies
-    );
+    $this->insertHtml($id, 'head-scripts', 'script',
+        array('type' => 'text/javascript', 'src' => $file), '', 10,
+        $dependencies);
   }
 
   public function insertStyle($id, $file, $dependencies = array()) {
-    $this->insertHtml(
-      $id, 'head-styles', 'link',
-      array(
-        'rel' => 'stylesheet',
-        'type' => 'text/css',
-        'href' => $file
-      ), '', 20, $dependencies
-    );
+    $this->insertHtml($id, 'head-styles', 'link',
+        array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => $file),
+        '', 20, $dependencies);
   }
 
   public function insertMeta($name, $content) {
-    $this->insertHtml(
-      $name, 'head-meta', 'meta',
-      array(
-        'name' => $name,
-        'content' => $content
-      )
-    );
+    $this->insertHtml($name, 'head-meta', 'meta',
+        array('name' => $name, 'content' => $content));
   }
 
-  public function addHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5, $dependencies = array()) {
+  public function addHtml($id, $location, $tag, $parameters, $innerhtml = '',
+                          $priority = 5, $dependencies = array()) {
     $tag = strtolower($tag);
     if ($tag == 'script' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/javascript';
@@ -172,13 +160,9 @@ class Templates extends ModuleBase {
     if ($tag == 'style' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/css';
     }
-    $this->availableHtml[$id] = array(
-      'tag' => $tag,
-      'location' => $location,
-      'innerhtml' => $innerhtml,
-      'priority' => $priority,
-      'parameters' => $parameters,
-      'dependencies' => $dependencies
+    $this->availableHtml[$id] = array('tag' => $tag, 'location' => $location,
+      'innerhtml' => $innerhtml, 'priority' => $priority,
+      'parameters' => $parameters, 'dependencies' => $dependencies
     );
   }
 
@@ -189,13 +173,11 @@ class Templates extends ModuleBase {
         foreach ($this->availableHtml[$id]['dependencies'] as $dependency) {
           $request = $this->requestHtml($dependency, $priority + 1);
           if (is_int($request) AND $request <= $priority) {
-//            echo "old:$priority;new:$request - 1;";
+            //            echo "old:$priority;new:$request - 1;";
             $priority = $request - 1;
           }
         }
-        $this->html[$location][$id] = array(
-          'priority' => $priority
-        );
+        $this->html[$location][$id] = array('priority' => $priority);
       }
       return $this->html[$location][$id]['priority'];
     }
@@ -203,16 +185,17 @@ class Templates extends ModuleBase {
   }
 
   /**
-  * Insert an HTML-tag (e.g. a script, stylesheet, meta-tag etc.) on the page
-  *
-  * @param string $id A uniqie identifier
-  * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
-  * @param string $tag HTML-tag (e.g. 'meta', 'link', 'script', 'style' etc.)
-  * @param array $parameters HTML-parameters (e.g. array('src' => 'somescript.js'))
-  * @param string $innerhtml Optional string to be placed between start- and end-tag
-  * @param int $priority A high-priority (e.g. 10) tag will be inserted before a low-priority one (e.g 2)
-  */
-  public function insertHtml($id, $location, $tag, $parameters, $innerhtml = '', $priority = 5, $dependencies = array()) {
+   * Insert an HTML-tag (e.g. a script, stylesheet, meta-tag etc.) on the page
+   *
+   * @param string $id A uniqie identifier
+   * @param string $location Location on page (e.g. 'head-top', 'head-bottom', 'body-top' or 'body-bottom')
+   * @param string $tag HTML-tag (e.g. 'meta', 'link', 'script', 'style' etc.)
+   * @param array $parameters HTML-parameters (e.g. array('src' => 'somescript.js'))
+   * @param string $innerhtml Optional string to be placed between start- and end-tag
+   * @param int $priority A high-priority (e.g. 10) tag will be inserted before a low-priority one (e.g 2)
+   */
+  public function insertHtml($id, $location, $tag, $parameters, $innerhtml = '',
+                             $priority = 5, $dependencies = array()) {
     $tag = strtolower($tag);
     if ($tag == 'script' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/javascript';
@@ -220,7 +203,8 @@ class Templates extends ModuleBase {
     if ($tag == 'style' AND !isset($parameters['type'])) {
       $parameters['type'] = 'text/css';
     }
-    $this->addHtml($id, $location, $tag, $parameters, $innerhtml, $priority, $dependencies);
+    $this->addHtml($id, $location, $tag, $parameters, $innerhtml, $priority,
+        $dependencies);
     $this->requestHtml($id);
   }
 
@@ -237,7 +221,7 @@ class Templates extends ModuleBase {
     if (!isset($this->html[$location]) OR !is_array($this->html[$location])) {
       return;
     }
-    uasort($this->html[$location], 'prioritySorter');
+    uasort($this->html[$location], array('Utilities', 'prioritySorter'));
     foreach ($this->html[$location] as $id => $shown) {
       $html = $this->availableHtml[$id];
       echo str_repeat(' ', $this->indentation) . '<' . $html['tag'];
@@ -261,24 +245,33 @@ class Templates extends ModuleBase {
   }
 
   public function setTheme($themeDir) {
-    $this->app->paths->theme = $themeDir;
+    $this->app
+      ->paths
+      ->theme = $themeDir;
   }
 
   /**
-  * Return a link to a file in the current theme
-  *
-  * @param string $file File name
-  * @return string Link
-  */
+   * Return a link to a file in the current theme
+   *
+   * @param string $file File name
+   * @return string Link
+   */
   public function getFile($file) {
     if (file_exists($this->p('theme', $file))) {
-      return $this->m->Assets->getAsset('theme', $file);
+      return $this->m
+        ->Assets
+        ->getAsset('theme', $file);
     }
-    return $this->m->Assets->getAsset($file);
+    return $this->m
+      ->Assets
+      ->getAsset($file);
   }
-  
-  public function link($label, $controller = null, $action = 'index', $parameters = array()) {
-    return $this->Core->Routes->getLink($controller, $action, $parameters);
+
+  public function link($label, $controller = null, $action = 'index',
+                       $parameters = array()) {
+    return $this->Core
+      ->Routes
+      ->getLink($controller, $action, $parameters);
   }
 
   public function set($name, $value, $template = '*') {
@@ -288,12 +281,13 @@ class Templates extends ModuleBase {
     $this->parameters[$template][$name] = $value;
   }
 
-  public function getTemplate($name, $additionalPaths = array(), $return = false) {
-    if (file_exists($this->p('theme', 'templates/' . $name. '.php'))) {
+  public function getTemplate($name, $additionalPaths = array(),
+                              $return = false) {
+    if (file_exists($this->p('theme', 'templates/' . $name . '.php'))) {
       if (!$return) {
         $this->setContentType($name);
       }
-      return $this->p('theme',  'templates/' . $name . '.php');
+      return $this->p('theme', 'templates/' . $name . '.php');
     }
     else if (file_exists($this->p('templates', $name . '.php'))) {
       if (!$return) {
@@ -326,7 +320,9 @@ class Templates extends ModuleBase {
     if (isset($this->parameters[$name])) {
       $data = array_merge($data, $this->parameters[$name]);
     }
-    $data['site'] = $this->m->Configuration->get('site');
+    $data['site'] = $this->m
+      ->Configuration
+      ->get('site');
     return $data;
   }
 
@@ -334,7 +330,8 @@ class Templates extends ModuleBase {
    * @deprecated Replaced by the Template/class
    */
   public function renderTemplate($name, $parameters = array()) {
-    $template = new Template($this, $this->Core->Routes);
+    $template = new Template($this, $this->Core
+      ->Routes);
     $template->set($parameters);
     $template->render($name);
   }

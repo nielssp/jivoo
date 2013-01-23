@@ -23,13 +23,15 @@ class Sqlite3ResultSet implements IResultSet {
     if (!empty($this->rows)) {
       return $this->rowFromAssoc(array_shift($this->rows));
     }
-    return $this->result->fetchArray(SQLITE3_NUM);
+    return $this->result
+      ->fetchArray(SQLITE3_NUM);
   }
 
   public function fetchAssoc() {
     if (!empty($this->rows)) {
       return array_shift($this->rows);
     }
-    return $this->result->fetchArray(SQLITE3_ASSOC);
+    return $this->result
+      ->fetchArray(SQLITE3_ASSOC);
   }
 }

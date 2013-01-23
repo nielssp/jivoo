@@ -1,6 +1,6 @@
 <?php
 class ErrorReporting {
-  private function __construct() { }
+  private function __construct() {}
 
   public static function handleError($type, $message, $file, $line) {
     switch ($type) {
@@ -48,14 +48,14 @@ class ErrorReporting {
       $line = $exception->getLine();
       $message = $exception->getMessage();
       echo 'Uncaught ' . get_class($exception) . ': ' . $message . PHP_EOL;
-  
-      echo tr('An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
-                    get_class($exception),
-                    basename($file), $line);
+
+      echo tr(
+        'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
+        get_class($exception), basename($file), $line);
       echo PHP_EOL;
       echo 'File: ' . $file . PHP_EOL;
       echo 'Stack trace:' . PHP_EOL;
-      foreach ( $exception->getTrace() as $i => $trace ) {
+      foreach ($exception->getTrace() as $i => $trace) {
         echo $trace['class'] . '::';
         echo $trace['function'] . ' in ';
         echo $trace['file'] . ' on line ' . $trace['line'] . PHP_EOL;

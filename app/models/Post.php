@@ -28,89 +28,59 @@
 class Post extends ActiveRecord implements ILinkable {
 
   protected $hasAndBelongsToMany = array(
-  	'Tag' => array('join' => 'posts_tags',
-  	               'otherKey' => 'tag_id',
-  	               'thisKey' => 'post_id'),
+    'Tag' => array('join' => 'posts_tags', 'otherKey' => 'tag_id',
+      'thisKey' => 'post_id'
+    ),
   );
 
   protected $hasMany = array(
-  	'Comment' => array('thisKey' => 'post_id',
-                       'count' => 'comments'),
+    'Comment' => array('thisKey' => 'post_id', 'count' => 'comments'),
   );
 
   protected $belongsTo = array(
-    'User' => array('connection' => 'this',
-                    'otherKey' => 'user_id')
+    'User' => array('connection' => 'this', 'otherKey' => 'user_id')
   );
 
-  protected $hasOne = array(
-    'Category' => array('class' => 'Tag')
-  );
+  protected $hasOne = array('Category' => array('class' => 'Tag'));
 
   protected $validate = array(
-    'title' => array(
-      'presence' => true,
-    ),
-    'name' => array(
-      'presence' => true,
-      'unique' => true,
-      'minLength' => 1,
+    'title' => array('presence' => true,),
+    'name' => array('presence' => true, 'unique' => true, 'minLength' => 1,
       'maxLength' => 50,
-      'rule0' => array(
-        'match' => '/^[a-z0-9-]+$/',
+      'rule0' => array('match' => '/^[a-z0-9-]+$/',
         'message' => 'Only lowercase letters, numbers and dashes allowed.'
       ),
-    ),
-    'content' => array(
-      'presence' => true,
-    ),
+    ), 'content' => array('presence' => true,),
   );
 
   protected $virtuals = array(
-    'tags' => array(
-      'get' => 'virtualGetTags',
-      'set' => 'virtualSetTags',
+    'tags' => array('get' => 'virtualGetTags', 'set' => 'virtualSetTags',
       'save' => 'virtualSaveTags'
     ),
   );
-  
-  protected $fields = array(
-    'title' => 'Title',
-    'name' => 'Permalink',
-    'content' => 'Content',
-    'tags' => 'Tags',
-    'commenting' => 'Allow comments',
+
+  protected $fields = array('title' => 'Title', 'name' => 'Permalink',
+    'content' => 'Content', 'tags' => 'Tags', 'commenting' => 'Allow comments',
     'status' => 'Status',
   );
 
-  protected $defaults = array(
-    'comments' => 0,
-    'commenting' => 'yes',
-    'date' => array('time'),
-    'user_id' => 0,
-    'state' => 'draft',
+  protected $defaults = array('comments' => 0, 'commenting' => 'yes',
+    'date' => array('time'), 'user_id' => 0, 'state' => 'draft',
     'status' => 'draft'
   );
-
 
   private $virtualTags = null;
 
   public function getRoute() {
-    return array(
-      'controller' => 'Posts',
-      'action' => 'view',
+    return array('controller' => 'Posts', 'action' => 'view',
       'parameters' => array($this->id)
     );
   }
 
   public static function createName($title) {
     return strtolower(
-      preg_replace(
-        '/[ \-]/', '-', preg_replace(
-          '/[^(a-zA-Z0-9 \-)]/', '', $title
-        )
-      )
-    );
+      preg_replace('/[ \-]/', '-',
+        preg_replace('/[^(a-zA-Z0-9 \-)]/', '', $title)));
   }
 
   public function formatDate() {
@@ -120,7 +90,6 @@ class Post extends ActiveRecord implements ILinkable {
   public function formatTime() {
     return ftime($this->date);
   }
-
 
   public function virtualGetTags() {
     if (isset($this->virtualTags)) {
@@ -148,7 +117,7 @@ class Post extends ActiveRecord implements ILinkable {
 
   public function virtualSetTags($csvTags) {
     $this->virtualTags = $csvTags;
-  } 
+  }
 
   public function virtualSaveTags() {
     if (!isset($this->virtualTags)) {
@@ -156,7 +125,7 @@ class Post extends ActiveRecord implements ILinkable {
     }
     $this->removeAllTags();
     $this->createAndAddTags($this->virtualTags);
-  } 
+  }
 
   public function removeAllTags() {
     $tags = $this->getTags();
@@ -174,10 +143,8 @@ class Post extends ActiveRecord implements ILinkable {
         continue;
       }
       $existing = Tag::first(
-        SelectQuery::create()
-          ->where('name = ?')
-          ->addVar($name)
-      );
+        SelectQuery::create()->where('name = ?')
+          ->addVar($name));
       if ($existing !== false) {
         $this->addTag($existing);
       }

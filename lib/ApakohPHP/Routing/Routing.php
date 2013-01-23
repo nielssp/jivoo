@@ -15,37 +15,60 @@
 class Routing extends ModuleBase {
   protected function init() {
     // Set default settings
-    $this->m->Configuration->setDefault(array(
-      'http.rewrite' => 'off',
-      'http.index.path' => 'posts'
-    ));
+    $this->m
+      ->Configuration
+      ->setDefault(
+        array('http.rewrite' => 'off', 'http.index.path' => 'posts'));
 
     $this->request = new Request();
 
     // Determine if the current URL is correct
-    if ($this->m->Configuration->get('http.rewrite') == 'on') {
-      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {
-        array_shift($this->request->path);
-        $this->redirectPath($this->request->path, $this->request->query);
+    if ($this->m
+      ->Configuration
+      ->get('http.rewrite') == 'on') {
+      if (isset($this->request
+        ->path[0]) AND $this->request
+            ->path[0] == 'index.php') {
+        array_shift($this->request
+          ->path);
+        $this->redirectPath($this->request
+            ->path, $this->request
+            ->query);
       }
     }
     else {
-      if (!isset($this->request->path[0]) OR $this->request->path[0] != 'index.php') {
-        $this->redirectPath($this->request->path, $this->request->query);
+      if (!isset($this->request
+        ->path[0]) OR $this->request
+            ->path[0] != 'index.php') {
+        $this->redirectPath($this->request
+            ->path, $this->request
+            ->query);
       }
-      $path = $this->request->path;
+      $path = $this->request
+        ->path;
       array_shift($path);
-      $this->request->path = $path;
+      $this->request
+        ->path = $path;
     }
 
-    $path = explode('/', $this->m->Configuration->get('http.index.path'));
-    $query = $this->m->Configuration->get('http.index.query', true);
-    if (count($this->request->path) < 1) {
-      $this->request->path = $path;
-      $this->request->query = array_merge($query, $this->request->query);
+    $path = explode('/', $this->m
+      ->Configuration
+      ->get('http.index.path'));
+    $query = $this->m
+      ->Configuration
+      ->get('http.index.query', true);
+    if (count($this->request
+      ->path) < 1) {
+      $this->request
+        ->path = $path;
+      $this->request
+        ->query = array_merge($query, $this->request
+        ->query);
     }
-    else if ($path == $this->request->path) {
-      $this->redirectPath(array(), $this->request->query);
+    else if ($path == $this->request
+          ->path) {
+      $this->redirectPath(array(), $this->request
+          ->query);
     }
   }
 

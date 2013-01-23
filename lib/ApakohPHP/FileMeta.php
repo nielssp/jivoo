@@ -6,9 +6,8 @@
  */
 class FileMeta {
   private function __construct() {
-    
   }
-  
+
   public static function read($file, $caching = null) {
     if (!isset($caching)) {
       $caching = false;
@@ -19,13 +18,13 @@ class FileMeta {
       return unserialize($serialized);
     }
     $file = fopen($file, 'r');
-  
+
     if (!$file) {
       return false;
     }
-  
+
     $readingMeta = false;
-  
+
     $metaData = array();
     $lines = 0;
     $currentKey = null;
@@ -44,20 +43,19 @@ class FileMeta {
       $trimmed = trim(substr($trimmed, 2));
       if ($readingMeta) {
         $split = explode(':', $trimmed, 2);
-        if(count($split) > 1) {
+        if (count($split) > 1) {
           $currentKey = strtolower(trim($split[0]));
           $metaData[$currentKey] = trim($split[1]);
         }
         else if ($currentKey != null) {
-          $metaData[$currentKey] = trim($metaData[$currentKey] . ' ' . trim($split[0]));
+          $metaData[$currentKey] = trim(
+            $metaData[$currentKey] . ' ' . trim($split[0]));
         }
       }
       else {
         $type = strtolower($trimmed);
-        if ($type == 'module' OR
-            $type == 'database' OR
-            $type == 'theme' OR
-            $type == 'extension') {
+        if ($type == 'module' OR $type == 'database' OR $type == 'theme'
+            OR $type == 'extension') {
           $readingMeta = true;
           $metaData['type'] = $type;
         }
@@ -70,7 +68,8 @@ class FileMeta {
     if (!isset($metaData['dependencies'])) {
       $metaData['dependencies'] = '';
     }
-    $metaData['dependencies'] = self::readDependencies($metaData['dependencies']);
+    $metaData['dependencies'] = self::readDependencies(
+      $metaData['dependencies']);
     if (!isset($metaData['version'])) {
       $metaData['version'] = '0.0.0';
     }
@@ -83,13 +82,11 @@ class FileMeta {
     }
     return $metaData;
   }
-  
+
   public static function readDependencies($dependencies) {
     $depArray = explode(' ', $dependencies);
-    $result = array(
-        'modules' => array(),
-        'extensions' => array(),
-        'php' => array()
+    $result = array('modules' => array(), 'extensions' => array(),
+      'php' => array()
     );
     foreach ($depArray as $dependency) {
       if (!empty($dependency)) {
@@ -135,16 +132,17 @@ class FileMeta {
     }
     return $result;
   }
-  
+
   public static function matchDependencyVersion($dependency) {
-    if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches) == 1) {
+    if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches)
+        == 1) {
       return $matches;
     }
     else {
       return false;
     }
   }
-  
+
   public static function compareDependencyVersions($versionStr, $versionInfo) {
     if (!is_array($comparisonArray)) {
       return false;

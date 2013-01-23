@@ -17,20 +17,22 @@ class Sqlite3Database extends SqlDatabase {
     }
     catch (Exception $exception) {
       throw new DatabaseConnectionFailedException(
-        tr('SQLite database does not exist and could not be created: %1', $options['filename'])
-      );
+        tr('SQLite database does not exist and could not be created: %1',
+          $options['filename']));
     }
   }
 
   public function close() {
-    $this->handle->close();
+    $this->handle
+      ->close();
   }
 
   public function fromSchematype($type, $length = null) {
     switch ($type) {
       case 'string':
         $type = 'TEXT';
-        if (!isset($length)) $length = 255;
+        if (!isset($length))
+          $length = 255;
         break;
       case 'boolean':
         $type = 'INTEGER';
@@ -61,7 +63,7 @@ class Sqlite3Database extends SqlDatabase {
     if (strpos($type, '(') !== false) {
       list($type, $right) = explode('(', $type);
       list($length) = explode(')', $right);
-      $length = (int)$length;
+      $length = (int) $length;
     }
     else if (strpos($type, 'integer') !== false) {
       if (isset($length) AND $length == 1) {
@@ -85,7 +87,8 @@ class Sqlite3Database extends SqlDatabase {
 
   public function getSchema($table) {
     $schema = new Schema($table);
-    $result = $this->rawQuery('PRAGMA table_info(' . $this->tableName($table) . ')');
+    $result = $this->rawQuery(
+        'PRAGMA table_info(' . $this->tableName($table) . ')');
     while ($row = $result->fetchAssoc()) {
       $info = array();
       $column = $row['name'];
@@ -107,7 +110,8 @@ class Sqlite3Database extends SqlDatabase {
       }
       $schema->addColumn($column, $info);
     }
-    $result = $this->rawQuery('PRAGMA index_list(' . $this->tableName($table) . ')');
+    $result = $this->rawQuery(
+        'PRAGMA index_list(' . $this->tableName($table) . ')');
     while ($row = $result->fetchAssoc()) {
       $index = $row['name'];
       $unique = $row['unique'] == 1;
@@ -122,27 +126,33 @@ class Sqlite3Database extends SqlDatabase {
   }
 
   public function tableExists($table) {
-    $result = $this->rawQuery('PRAGMA table_info(' . $this->tableName($table) . ')');
+    $result = $this->rawQuery(
+        'PRAGMA table_info(' . $this->tableName($table) . ')');
     return $result->hasRows();
   }
 
   public function quoteString($string) {
-    return '"' . $this->handle->escapeString($string) . '"';
+    return '"' . $this->handle
+          ->escapeString($string) . '"';
   }
 
   public function rawQuery($sql) {
-    $result = $this->handle->query($sql);
+    $result = $this->handle
+      ->query($sql);
     if (!$result) {
-      throw new DatabaseQueryFailedException($this->handle->lastErrorMsg());
+      throw new DatabaseQueryFailedException($this->handle
+        ->lastErrorMsg());
     }
     if (preg_match('/^\\s*(pragma|select|show|explain|describe) /i', $sql)) {
       return new Sqlite3ResultSet($result);
     }
     else if (preg_match('/^\\s*(insert|replace) /i', $sql)) {
-      return $this->handle->lastInsertRowID();
+      return $this->handle
+        ->lastInsertRowID();
     }
     else {
-      return $this->handle->changes();
+      return $this->handle
+        ->changes();
     }
   }
 
@@ -161,7 +171,8 @@ class Sqlite3Database extends SqlDatabase {
       $sql .= $column;
       $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
       if (isset($options['key']) AND $options['key'] == 'primary'
-        AND (!isset($schema->indexes['PRIMARY']) OR isset($options['autoIncrement']))) {
+          AND (!isset($schema->indexes['PRIMARY'])
+              OR isset($options['autoIncrement']))) {
         $sql .= ' PRIMARY KEY';
       }
       if (isset($options['autoIncrement'])) {

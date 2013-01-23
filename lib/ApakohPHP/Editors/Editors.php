@@ -39,6 +39,7 @@ class Editors extends ModuleBase {
     if (!isset($this->editors[$name])) {
       $this->editors[$name] = $this->HtmlEditor;
     }
-    return $this->editors[$name]->init($config);
+    return $this->editors[$name]
+      ->init($config);
   }
 }

@@ -101,9 +101,7 @@ class Schema {
       }
       if (isset($this->indexes[$index])) {
         $this->indexes[$index]['columns'] = array_merge(
-          $this->indexes[$index]['columns'],
-          $columns
-        );
+          $this->indexes[$index]['columns'], $columns);
       }
       else {
         $this->indexes[$index] = array();
@@ -153,7 +151,8 @@ class Schema {
   public function export($package = 'PeanutCMS', $subpackage = 'Schemas') {
     $source = '<?php' . PHP_EOL;
     $source .= '/**' . PHP_EOL;
-    $source .= ' * Automatically generated schema for ' . $this->_name . ' table' . PHP_EOL;
+    $source .= ' * Automatically generated schema for ' . $this->_name
+        . ' table' . PHP_EOL;
     $source .= ' * @package ' . $package . PHP_EOL;
     $source .= ' * @subpackage ' . $subpackage . PHP_EOL;
     $source .= ' */' . PHP_EOL;
@@ -162,7 +161,8 @@ class Schema {
     foreach ($this->_schema as $column => $info) {
       $source .= '  public $' . $column . ' = array(' . PHP_EOL;
       foreach ($info as $key => $value) {
-        $source .= "    '" . $key . "' => " . var_export($value, true) . ',' . PHP_EOL;
+        $source .= "    '" . $key . "' => " . var_export($value, true) . ','
+            . PHP_EOL;
       }
       $source .= '  );' . PHP_EOL . PHP_EOL;
     }

@@ -1,11 +1,7 @@
 <?php
 require('../../app/essentials.php');
 
-$paths = array(
-  'app/modules',
-  'app/models',
-  'app/classes',
-  'app/controllers',
+$paths = array('app/modules', 'app/models', 'app/classes', 'app/controllers',
   'app/helpers'
 );
 

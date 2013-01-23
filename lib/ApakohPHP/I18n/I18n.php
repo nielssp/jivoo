@@ -46,19 +46,26 @@ class I18n extends ModuleBase implements ITranslationService {
    */
   private function configure() {
     // Set default language
-    $this->m->Configuration->setDefault('i18n.language', LANGUAGE);
+    $this->m
+      ->Configuration
+      ->setDefault('i18n.language', LANGUAGE);
     // Get language from configuration instead
     $this->getLanguage();
 
     // Set default settings
-    $this->m->Configuration->setDefault(array(
-      'i18n.dateFormat' => $this->dateFormat(),
-      'i18n.timeFormat' => $this->timeFormat(),
-      'i18n.timeZone' => date_default_timezone_get()
-    ));
+    $this->m
+      ->Configuration
+      ->setDefault(
+        array('i18n.dateFormat' => $this->dateFormat(),
+          'i18n.timeFormat' => $this->timeFormat(),
+          'i18n.timeZone' => date_default_timezone_get()
+        ));
 
     // Set time zone
-    if (!date_default_timezone_set($this->m->Configuration->get('i18n.timeZone')))
+    if (!date_default_timezone_set(
+      $this->m
+        ->Configuration
+        ->get('i18n.timeZone')))
       date_default_timezone_set('UTC');
   }
 
@@ -68,33 +75,32 @@ class I18n extends ModuleBase implements ITranslationService {
    * @return void
    */
   private function getLanguage() {
-    if ($language = $this->m->Configuration->get('language')) {
+    if ($language = $this->m
+      ->Configuration
+      ->get('language')) {
       if (file_exists(p(LANG . $language . '.lng.php'))) {
         $this->language = include(p(LANG . $language . '.lng.php'));
         $this->languageCode = $language;
         return;
       }
       else {
-        new GlobalWarning(
-          tr('The language "%1", is missing', $language),
-          'language-missing'
-        );
+        new GlobalWarning(tr('The language "%1", is missing', $language),
+          'language-missing');
       }
     }
     if (!defined('LANGUAGE')) {
-      new GlobalWarning(
-        tr('No default language has been defined'), 'default-language'
-      );
+      new GlobalWarning(tr('No default language has been defined'),
+        'default-language');
       return;
     }
-    if(!file_exists(PATH . LANG . LANGUAGE . '.lng.php')) {
+    if (!file_exists(PATH . LANG . LANGUAGE . '.lng.php')) {
       new GlobalWarning(
         tr('The default language, "%1", is missing', LANGUAGE),
-        'default-language-missing'
-      );
+        'default-language-missing');
       return;
     }
-    $this->language = include(PATH . LANG . LANGUAGE . '.lng.php');;
+    $this->language = include(PATH . LANG . LANGUAGE . '.lng.php');
+    ;
     $this->languageCode = LANGUAGE;
   }
 
@@ -117,7 +123,7 @@ class I18n extends ModuleBase implements ITranslationService {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 1; $i < $numArgs; $i++) {
-        $translated = str_replace('%'.$i, $args[$i], $translated);
+        $translated = str_replace('%' . $i, $args[$i], $translated);
       }
     }
     return $translated;
@@ -173,8 +179,8 @@ class I18n extends ModuleBase implements ITranslationService {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 5; $i < $numArgs; $i++) {
-        $n = $i-4;
-        $translated = str_replace('%'.$n, $args[$i], $translated);
+        $n = $i - 4;
+        $translated = str_replace('%' . $n, $args[$i], $translated);
       }
     }
     return $translated;
@@ -198,7 +204,7 @@ class I18n extends ModuleBase implements ITranslationService {
     if (!empty($this->language['trn'][$translate][1]))
       $plural = $this->language['trn'][$translate][1];
 
-    if ((int)$number == 1)
+    if ((int) $number == 1)
       $translated = $single;
     else
       $translated = $plural;
@@ -207,8 +213,8 @@ class I18n extends ModuleBase implements ITranslationService {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 2; $i < $numArgs; $i++) {
-        $n = $i-1;
-        $translated = str_replace('%'.$n, $args[$i], $translated);
+        $n = $i - 1;
+        $translated = str_replace('%' . $n, $args[$i], $translated);
       }
     }
     return $translated;
@@ -220,7 +226,9 @@ class I18n extends ModuleBase implements ITranslationService {
    * @return string Format string used with date()
    */
   public function dateFormat() {
-    if ($dateFormat = $this->m->Configuration->get('i18n.dateFormat'))
+    if ($dateFormat = $this->m
+      ->Configuration
+      ->get('i18n.dateFormat'))
       return $dateFormat;
     else if (!empty($this->language['defaultDateFormat']))
       return $this->language['defaultDateFormat'];
@@ -234,7 +242,9 @@ class I18n extends ModuleBase implements ITranslationService {
    * @return string Format string used with date()
    */
   public function timeFormat() {
-    if ($timeFormat = $this->m->Configuration->get('i18n.timeFormat'))
+    if ($timeFormat = $this->m
+      ->Configuration
+      ->get('i18n.timeFormat'))
       return $timeFormat;
     else if (!empty($this->language['defaultTimeFormat']))
       return $this->language['defaultTimeFormat'];
@@ -263,28 +273,47 @@ class I18n extends ModuleBase implements ITranslationService {
     if (is_null($timestamp))
       $timestamp = time();
     $month = date('n', $timestamp);
-    if ($month == 1) $F = tr('January');
-    elseif ($month == 2) $F = tr('February');
-    elseif ($month == 3) $F = tr('March');
-    elseif ($month == 4) $F = tr('April');
-    elseif ($month == 5) $F = tr('May');
-    elseif ($month == 6) $F = tr('June');
-    elseif ($month == 7) $F = tr('July');
-    elseif ($month == 8) $F = tr('August');
-    elseif ($month == 9) $F = tr('September');
-    elseif ($month == 10) $F = tr('October');
-    elseif ($month == 11) $F = tr('November');
-    elseif ($month == 12) $F = tr('December ');
+    if ($month == 1)
+      $F = tr('January');
+    elseif ($month == 2)
+      $F = tr('February');
+    elseif ($month == 3)
+      $F = tr('March');
+    elseif ($month == 4)
+      $F = tr('April');
+    elseif ($month == 5)
+      $F = tr('May');
+    elseif ($month == 6)
+      $F = tr('June');
+    elseif ($month == 7)
+      $F = tr('July');
+    elseif ($month == 8)
+      $F = tr('August');
+    elseif ($month == 9)
+      $F = tr('September');
+    elseif ($month == 10)
+      $F = tr('October');
+    elseif ($month == 11)
+      $F = tr('November');
+    elseif ($month == 12)
+      $F = tr('December ');
     $M = utf8_encode(substr(utf8_decode($F), 0, 3));
 
     $weekday = date('w', $timestamp);
-    if ($weekday == 0) $l = tr('Sunday');
-    elseif ($weekday == 1) $l = tr('Monday');
-    elseif ($weekday == 2) $l = tr('Tuesday');
-    elseif ($weekday == 3) $l = tr('Wednesday');
-    elseif ($weekday == 4) $l = tr('Thursday');
-    elseif ($weekday == 5) $l = tr('Friday');
-    elseif ($weekday == 6) $l = tr('Saturday');
+    if ($weekday == 0)
+      $l = tr('Sunday');
+    elseif ($weekday == 1)
+      $l = tr('Monday');
+    elseif ($weekday == 2)
+      $l = tr('Tuesday');
+    elseif ($weekday == 3)
+      $l = tr('Wednesday');
+    elseif ($weekday == 4)
+      $l = tr('Thursday');
+    elseif ($weekday == 5)
+      $l = tr('Friday');
+    elseif ($weekday == 6)
+      $l = tr('Saturday');
     $D = utf8_encode(substr(utf8_decode($l), 0, 3));
     $date = date($format, $timestamp);
     $date = str_replace(date('F', $timestamp), $F, $date);
@@ -308,7 +337,8 @@ class I18n extends ModuleBase implements ITranslationService {
       $simple = array();
       $languages = array();
       while (($language = readdir($dir)) !== false) {
-        if (is_file(p(LANG . $language)) AND $language != '.' AND $language != '..') {
+        if (is_file(p(LANG . $language)) AND $language != '.'
+            AND $language != '..') {
           $languageext = explode('.', $language);
           if ($languageext[2] == 'php' AND $languageext[1] == 'lng') {
             $languages[] = $languageext[0];
@@ -317,13 +347,13 @@ class I18n extends ModuleBase implements ITranslationService {
       }
       closedir($dir);
       asort($languages);
-      foreach($languages as $language) {
+      foreach ($languages as $language) {
         $langdesc = file_get_contents(p(LANG . $language . '.lng.php'));
         $langdesc = explode('/*Language', $langdesc);
         $langdesc = explode('*/', $langdesc[1]);
         $langdesc = explode("\n", $langdesc[0]);
         $return[$language] = array();
-        foreach($langdesc as $line) {
+        foreach ($langdesc as $line) {
           $line = explode(':', $line, 2);
           if (is_array($line) AND isset($line[0]) AND isset($line[1])) {
             list($key, $value) = $line;
@@ -344,7 +374,8 @@ class I18n extends ModuleBase implements ITranslationService {
             }
           }
         }
-        $simple[$language] = $return[$language]['name'] . '/' . $return[$language]['local name'];
+        $simple[$language] = $return[$language]['name'] . '/'
+            . $return[$language]['local name'];
       }
       asort($simple);
       if ($full)

@@ -1,3 +1,3 @@
 <?php
 
-class LocalNotice extends LocalNotification { }
+class LocalNotice extends LocalNotification {}

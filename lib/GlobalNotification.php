@@ -1,3 +1,3 @@
 <?php
 
-abstract class GlobalNotification extends Notification { }
+abstract class GlobalNotification extends Notification {}

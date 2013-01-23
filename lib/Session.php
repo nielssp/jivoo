@@ -7,9 +7,9 @@
  * @package PeanutCMS
  */
 class Session implements arrayaccess {
-  
+
   private $prefix = '';
-  
+
   /**
    * Constructor
    * @param string $prefix Session prefix to use
@@ -26,7 +26,7 @@ class Session implements arrayaccess {
   public function offsetExists($name) {
     return isset($_SESSION[$this->prefix . $name]);
   }
-  
+
   /**
    * Get a value
    * @param string $name Key
@@ -48,7 +48,7 @@ class Session implements arrayaccess {
       $_SESSION[$this->prefix . $name] = $value;
     }
   }
-  
+
   /**
    * Delete a key
    * @param string $name Key
@@ -56,5 +56,5 @@ class Session implements arrayaccess {
   public function offsetUnset($name) {
     unset($_SESSION[$this->prefix . $name]);
   }
-  
+
 }

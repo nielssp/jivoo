@@ -5,8 +5,14 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 
   private $events = null;
 
-  public function onTestEvent1($h) { $this->events->attach($h); }
-  public function onTestEvent2() { $this->events->attach(); }
+  public function onTestEvent1($h) {
+    $this->events
+      ->attach($h);
+  }
+  public function onTestEvent2() {
+    $this->events
+      ->attach();
+  }
 
   public function setUp() {
     $this->events = new Events($this);
@@ -16,19 +22,23 @@ class EventsTest extends PHPUnit_Framework_TestCase {
     $this->onTestEvent1(array($this, 'eventHandler'));
     $this->onTestEvent2(array($this, 'eventHandler'));
 
-    $this->events->trigger('onTestEvent1');
-    $this->events->trigger('onSomethingElse');
+    $this->events
+      ->trigger('onTestEvent1');
+    $this->events
+      ->trigger('onSomethingElse');
 
     $this->assertEquals(1, $this->counter);
 
-    $this->events->trigger('onTestEvent2');
+    $this->events
+      ->trigger('onTestEvent2');
 
     $this->assertEquals(2, $this->counter);
 
     $this->onTestEvent1(array($this, 'eventHandler'));
     $this->onTestEvent1(array($this, 'eventHandler'));
 
-    $this->events->trigger('onTestEvent1');
+    $this->events
+      ->trigger('onTestEvent1');
 
     $this->assertEquals(5, $this->counter);
   }

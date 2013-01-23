@@ -19,14 +19,17 @@ Lib::import('ApakohPHP');
 
 $app = new App(include 'app/app.php');
 
-$app->paths->config = 'config';
-$app->paths->log = 'log';
-$app->paths->tmp = '/tmp/peanutcms';
-$app->paths->extensions = 'extensions';
-$app->paths->themes = 'themes';
+$app->paths
+  ->config = 'config';
+$app->paths
+  ->log = 'log';
+$app->paths
+  ->tmp = '/tmp/peanutcms';
+$app->paths
+  ->extensions = 'extensions';
+$app->paths
+  ->themes = 'themes';
 
 $environment = getenv('APAKOHPHP_ENVIRONMENT') || 'production';
 
 $app->run($environment);
-
-echo Lib::$loadCalls . ' - ' . Lib::$loadIterations;

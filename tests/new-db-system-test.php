@@ -5,12 +5,8 @@ include p(CLASSES . 'database/MysqlDatabase.php');
 
 echo '<pre>';
 
-
-$options = array(
-  'server' => 'localhost',
-  'username' => 'peanutcms-test',
-  'password' => 'peanutcms-test',
-  'database' => 'peanutcms-testing'
+$options = array('server' => 'localhost', 'username' => 'peanutcms-test',
+  'password' => 'peanutcms-test', 'database' => 'peanutcms-testing'
 );
 
 $db = new MysqlDatabase($options);

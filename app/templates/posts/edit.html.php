@@ -13,11 +13,11 @@ $this->render('backend/header.html');
           </p>
           <p>
             <?php echo $Form->label('content', null, array('class' => 'small')); ?>
-            <?php echo $Form ->field('content'); ?>
+            <?php echo $Form->field('content'); ?>
           </p>
           <p>
             <?php echo $Form->label('tags', null, array('class' => 'small')); ?>
-            <?php echo $Form ->field('tags'); ?>
+            <?php echo $Form->field('tags'); ?>
             <span class="description">Comma-separated list of tags</span>
           </p>
         </div>
@@ -34,13 +34,13 @@ $this->render('backend/header.html');
               <div class="element">
                 <div class="permalink-wrapper">
                   <?php echo $beforePermalink;
-                  if ($nameInPermalink) {
-                    echo $Form->field('name', array(
-                      'class' => 'text permalink',
-                      'data-title-id' => $Form->fieldId('title')
-                    ));
-                  }
-                  echo $afterPermalink;
+if ($nameInPermalink) {
+  echo $Form->field('name',
+      array('class' => 'text permalink',
+        'data-title-id' => $Form->fieldId('title')
+      ));
+}
+echo $afterPermalink;
                   ?>
                 </div>
               </div>
@@ -74,7 +74,8 @@ $this->render('backend/header.html');
           </div>
           <div class="aright">
             <?php echo $Form->submit(tr('Save draft'), 'save'); ?>
-            <?php echo $Form->submit(tr('Publish'), 'publish', array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Publish'), 'publish',
+    array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>

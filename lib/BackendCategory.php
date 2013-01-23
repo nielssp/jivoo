@@ -12,7 +12,7 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
     $this->backend = $backend;
     $this->auth = $authentication;
   }
-  
+
   public function __get($property) {
     switch ($property) {
       case 'label':
@@ -28,7 +28,7 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
         $this->$property = $value;
     }
   }
-  
+
   public function setup($label, $group = null) {
     $this->label = $label;
     if (isset($group)) {
@@ -36,15 +36,15 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
     }
     return $this;
   }
-  
+
   public function group() {
-    groupObjects($this->items);
+    Utilities::groupObjects($this->items);
   }
 
   public function getGroup() {
     return $this->group;
   }
-  
+
   public function count() {
     $count = 0;
     foreach ($this->items as $key => $item) {
@@ -65,7 +65,8 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
   public function offsetGet($item) {
     if (!isset($this->items[$item])) {
       $this->items[$item] = new BackendItem($this->backend, $this->auth);
-      $this->items[$item]->label = $item;
+      $this->items[$item]
+        ->label = $item;
     }
     return $this->items[$item];
   }
@@ -83,24 +84,24 @@ class BackendCategory implements arrayaccess, IGroupable, Iterator {
   public function offsetUnset($item) {
     unset($this->items[$item]);
   }
-  
+
   function rewind() {
     $this->position = 0;
     $this->keys = array_keys($this->items);
   }
-  
+
   function current() {
     return $this->items[$this->keys[$this->position]];
   }
-  
+
   function key() {
     return $this->keys[$this->position];
   }
-  
+
   function next() {
     ++$this->position;
   }
-  
+
   function valid() {
     return isset($this->keys[$this->position]);
   }

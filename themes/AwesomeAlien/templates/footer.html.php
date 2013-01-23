@@ -17,7 +17,6 @@ Keine widgets?
 </div>
 
     
-
 <?php $this->output('body-bottom'); ?>
   </body>
 </html>

@@ -1,3 +1,3 @@
 <?php
 
-class GlobalNotice extends GlobalNotification { }
+class GlobalNotice extends GlobalNotification {}

@@ -7,9 +7,9 @@ $this->render('backend/bulk-actions.html');
 
       <div class="section light_section">
         <div class="container">
-<?php if (count($posts) < 1): ?>
+<?php if (count($posts) < 1) : ?>
           <div class="center">
-          <?php echo tr('No posts matched your search criteria.')?>
+          <?php echo tr('No posts matched your search criteria.') ?>
           </div>
 <?php endif; ?>
 <?php
@@ -23,7 +23,6 @@ foreach ($posts as $this->post) {
 ?>
         </div>
       </div>
-
 <?php
 $this->render('backend/bulk-actions.html');
 $this->render('backend/footer.html');

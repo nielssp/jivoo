@@ -22,12 +22,13 @@ class DeleteQuery extends Query implements ICondition {
   }
 
   public function offset($offset) {
-    $this->offset = (int)$offset;
+    $this->offset = (int) $offset;
     return $this;
   }
-  
+
   public function hasClauses() {
-    return $this->where->hasClauses();
+    return $this->where
+      ->hasClauses();
   }
 
   public function where($clause) {
@@ -49,23 +50,18 @@ class DeleteQuery extends Query implements ICondition {
   }
 
   public function addVar($var) {
-    $this->where->addVar($var);
+    $this->where
+      ->addVar($var);
     return $this;
   }
 
   public function orderBy($column) {
-    $this->orderBy[] = array(
-      'column' => $column,
-      'descending' => false
-    );
+    $this->orderBy[] = array('column' => $column, 'descending' => false);
     return $this;
   }
 
   public function orderByDescending($column) {
-    $this->orderBy[] = array(
-      'column' => $column,
-      'descending' => true
-    );
+    $this->orderBy[] = array('column' => $column, 'descending' => true);
     return $this;
   }
 

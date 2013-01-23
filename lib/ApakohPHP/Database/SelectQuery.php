@@ -27,9 +27,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
   }
 
   public function addColumn($column, $alias = null, $function = null) {
-    $this->columns[] = array(
-      'column' => $column,
-      'function' => $function,
+    $this->columns[] = array('column' => $column, 'function' => $function,
       'alias' => $alias
     );
     if (!empty($alias)) {
@@ -43,10 +41,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
   }
 
   public function addSource(IDataSource $source, $alias = null) {
-    $this->sources[] = array(
-      'source' => $source,
-      'alias' => $alias
-    );
+    $this->sources[] = array('source' => $source, 'alias' => $alias);
   }
 
   public function addColumns($columns) {
@@ -60,17 +55,18 @@ class SelectQuery extends Query implements ICondition, ILimitable {
   }
 
   public function limit($limit) {
-    $this->limit = (int)$limit;
+    $this->limit = (int) $limit;
     return $this;
   }
 
   public function offset($offset) {
-    $this->offset = (int)$offset;
+    $this->offset = (int) $offset;
     return $this;
   }
-  
+
   public function hasClauses() {
-    return $this->where->hasClauses();
+    return $this->where
+      ->hasClauses();
   }
 
   public function where($clause) {
@@ -92,23 +88,18 @@ class SelectQuery extends Query implements ICondition, ILimitable {
   }
 
   public function addVar($var) {
-    $this->where->addVar($var);
+    $this->where
+      ->addVar($var);
     return $this;
   }
 
   public function orderBy($column) {
-    $this->orderBy[] = array(
-      'column' => $column,
-      'descending' => false
-    );
+    $this->orderBy[] = array('column' => $column, 'descending' => false);
     return $this;
   }
 
   public function orderByDescending($column) {
-    $this->orderBy[] = array(
-      'column' => $column,
-      'descending' => true
-    );
+    $this->orderBy[] = array('column' => $column, 'descending' => true);
     return $this;
   }
 
@@ -126,10 +117,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
-    $this->groupBy = array(
-      'columns' => $columns,
-      'condition' => $condition,
-    );
+    $this->groupBy = array('columns' => $columns, 'condition' => $condition,);
     return $this;
   }
 
@@ -142,11 +130,8 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
-    $this->joins[] = array(
-      'source' => $dataSource,
-      'type' => 'INNER',
-      'alias' => $alias,
-      'condition' => $condition
+    $this->joins[] = array('source' => $dataSource, 'type' => 'INNER',
+      'alias' => $alias, 'condition' => $condition
     );
     return $this;
   }
@@ -155,11 +140,8 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
-    $this->joins[] = array(
-      'source' => $dataSource,
-      'type' => 'LEFT',
-      'alias' => $alias,
-      'condition' => $condition
+    $this->joins[] = array('source' => $dataSource, 'type' => 'LEFT',
+      'alias' => $alias, 'condition' => $condition
     );
     return $this;
   }
@@ -168,11 +150,8 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
-    $this->joins[] = array(
-      'source' => $dataSource,
-      'type' => 'RIGHT',
-      'alias' => $alias,
-      'condition' => $condition
+    $this->joins[] = array('source' => $dataSource, 'type' => 'RIGHT',
+      'alias' => $alias, 'condition' => $condition
     );
     return $this;
   }

@@ -7,9 +7,9 @@
  * @package PeanutCMS
  */
 class Cookies implements arrayaccess {
-  
+
   private $prefix = '';
-  
+
   private $cookies = array();
 
   /**
@@ -71,7 +71,7 @@ class Cookies implements arrayaccess {
       $this->setCookie($name, $value);
     }
   }
-  
+
   /**
    * Delete a cookie
    * @param string $name Name of cookie
@@ -80,5 +80,5 @@ class Cookies implements arrayaccess {
     $this->setCookie($name, '', time());
     unset($this->cookies[$this->prefix . $name]);
   }
-  
+
 }

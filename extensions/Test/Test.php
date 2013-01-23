@@ -5,13 +5,10 @@
 
 class Test extends ExtensionBase {
   protected function init() {
-    
-    $this->m->Templates->insertHtml(
-      'test-output',
-      'body-bottom',
-      'div',
-      array('style' => 'text-align:center;'),
-      'hello '
-    );
-  } 
+
+    $this->m
+      ->Templates
+      ->insertHtml('test-output', 'body-bottom', 'div',
+        array('style' => 'text-align:center;'), 'hello ');
+  }
 }

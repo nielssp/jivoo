@@ -37,7 +37,7 @@ function tr($text) {
     $numArgs = func_num_args();
     if ($numArgs > 1) {
       for ($i = 1; $i < $numArgs; $i++) {
-        $text = str_replace('%'.$i, $args[$i], $text);
+        $text = str_replace('%' . $i, $args[$i], $text);
       }
     }
     return $text;
@@ -94,8 +94,8 @@ function trl($single, $plural, $glue, $gluel, $pieces) {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 5; $i < $numArgs; $i++) {
-        $n = $i-4;
-        $text = str_replace('%'.$n, $args[$i], $text);
+        $n = $i - 4;
+        $text = str_replace('%' . $n, $args[$i], $text);
       }
     }
     return $text;
@@ -120,7 +120,7 @@ function trn($single, $plural, $number) {
     return call_user_func_array(array($service, 'translateNumeral'), $args);
   }
   else {
-    if ((int)$number == 1) {
+    if ((int) $number == 1) {
       $text = $single;
     }
     else {
@@ -131,8 +131,8 @@ function trn($single, $plural, $number) {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 2; $i < $numArgs; $i++) {
-        $n = $i-1;
-        $text = str_replace('%'.$n, $args[$i], $text);
+        $n = $i - 1;
+        $text = str_replace('%' . $n, $args[$i], $text);
       }
     }
     return $text;
@@ -236,20 +236,19 @@ function readFileMeta($file, $caching = null) {
     $trimmed = trim(substr($trimmed, 2));
     if ($readingMeta) {
       $split = explode(':', $trimmed, 2);
-      if(count($split) > 1) {
+      if (count($split) > 1) {
         $currentKey = strtolower(trim($split[0]));
         $metaData[$currentKey] = trim($split[1]);
       }
       else if ($currentKey != null) {
-        $metaData[$currentKey] = trim($metaData[$currentKey] . ' ' . trim($split[0]));
+        $metaData[$currentKey] = trim(
+          $metaData[$currentKey] . ' ' . trim($split[0]));
       }
     }
     else {
       $type = strtolower($trimmed);
-      if ($type == 'module' OR
-          $type == 'database' OR
-          $type == 'theme' OR
-          $type == 'extension') {
+      if ($type == 'module' OR $type == 'database' OR $type == 'theme'
+          OR $type == 'extension') {
         $readingMeta = true;
         $metaData['type'] = $type;
       }
@@ -278,10 +277,8 @@ function readFileMeta($file, $caching = null) {
 
 function readDependencies($dependencies) {
   $depArray = explode(' ', $dependencies);
-  $result = array(
-    'modules' => array(),
-    'extensions' => array(),
-  	'php' => array()
+  $result = array('modules' => array(), 'extensions' => array(),
+    'php' => array()
   );
   foreach ($depArray as $dependency) {
     if (!empty($dependency)) {
@@ -329,7 +326,8 @@ function readDependencies($dependencies) {
 }
 
 function matchDependencyVersion($dependency) {
-  if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches) == 1) {
+  if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches)
+      == 1) {
     return $matches;
   }
   else {
@@ -360,20 +358,20 @@ function prioritySorter($a, $b) {
 }
 
 /**
-* Check if a string is a serialized array (!)
-*
-* This function will only check
-*
-* @param string $str String
-* @return bool True if string is serialized
-*/
-function isSerialized($str){
+ * Check if a string is a serialized array (!)
+ *
+ * This function will only check
+ *
+ * @param string $str String
+ * @return bool True if string is serialized
+ */
+function isSerialized($str) {
   if (!is_string($str))
-  return false;
+    return false;
   if (trim($str) == "")
-  return false;
+    return false;
   if (preg_match('/^(i|s|a|o|d):(.*);/si', $str) == 0)
-  return false;
+    return false;
   return true;
 }
 
@@ -398,12 +396,10 @@ function precondition($condition) {
   $bt = debug_backtrace();
   $call = $bt[0];
   $lines = file($call['file']);
-  preg_match(
-    '/' . $call['function'] . '\((.+)\)/',
-    $lines[$call['line'] - 1],
-    $matches
-  );
-  throw new InvalidArgumentException('Precondition not met (' . $matches[1] . ').');
+  preg_match('/' . $call['function'] . '\((.+)\)/', $lines[$call['line'] - 1],
+    $matches);
+  throw new InvalidArgumentException(
+    'Precondition not met (' . $matches[1] . ').');
 }
 
 function p($relative) {
@@ -418,10 +414,8 @@ function p($relative) {
 function w($relative) {
   if ($relative[0] == '/') {
     return str_replace(
-      rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/'),
-      '',
-      $relative
-    );
+      rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/'), '',
+      $relative);
   }
   else {
     return WEBPATH . $relative;
@@ -429,7 +423,7 @@ function w($relative) {
 }
 
 function h($string) {
-  return htmlentities($string, ENT_COMPAT, 'UTF-8'); 
+  return htmlentities($string, ENT_COMPAT, 'UTF-8');
   //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
 
@@ -445,11 +439,8 @@ if (!function_exists('get_called_class')) {
       $lines = file($call['file']);
       for ($l = $call['line']; $l > 0; $l--) {
         $line = $lines[$l - 1];
-        preg_match(
-          '/([a-zA-Z0-9\_]+)::' . $call['function'] . '/',
-        $line,
-        $matches
-        );
+        preg_match('/([a-zA-Z0-9\_]+)::' . $call['function'] . '/', $line,
+          $matches);
         if (!empty($matches)) {
           break;
         }

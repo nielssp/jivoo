@@ -43,7 +43,8 @@ $this->render('backend/header.html');
       <div class="section">
         <div class="container">
           <div class="aright">
-            <?php echo $Form->submit(tr('Save'), 'publish', array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Save'), 'publish',
+    array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>

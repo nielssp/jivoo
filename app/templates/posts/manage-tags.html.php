@@ -6,7 +6,7 @@ $this->render('backend/header.html');
         <div class="container">
 
           <p>
-            <?php foreach ($tags as $tag): ?>
+            <?php foreach ($tags as $tag) : ?>
 
             <?php echo $Html->link($tag->tag, $tag); ?>
             (<?php echo $tag->countPosts(); ?>)
@@ -16,7 +16,6 @@ $this->render('backend/header.html');
 
         </div>
       </div>
-
 <?php
 $this->render('backend/footer.html');
 ?>

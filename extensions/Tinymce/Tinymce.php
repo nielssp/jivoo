@@ -8,28 +8,33 @@
 //                Assets ext;Jquery ext;JqueryUi 
 
 class Tinymce extends ExtensionBase {
-  
+
   private $encoder = null;
   private $controller = null;
-  
+
   protected function init() {
     $this->load('TinymceEditor');
     $this->load('TinymceController');
 
-    $this->controller = new TinymceController($this->m->Routes, $this->config);
-    $this->controller->addExtension($this);
-    $this->controller->addRoute('tinymce/init.js', 'initJs');
+    $this->controller = new TinymceController($this->m
+      ->Routes, $this->config);
+    $this->controller
+      ->addExtension($this);
+    $this->controller
+      ->addRoute('tinymce/init.js', 'initJs');
 
-    $this->controller->addTemplatePath($this->p('templates'));
+    $this->controller
+      ->addTemplatePath($this->p('templates'));
 
     $editor = new TinymceEditor($this);
-    $this->m->Editors->TinymceEditor = $editor;
+    $this->m
+      ->Editors
+      ->TinymceEditor = $editor;
 
-    $this->m->Templates->addScript(
-      'tinymce',
-      $this->getAsset('jquery.tinymce.js'),
-      array('jquery', 'jquery-ui')
-    );
+    $this->m
+      ->Templates
+      ->addScript('tinymce', $this->getAsset('jquery.tinymce.js'),
+        array('jquery', 'jquery-ui'));
   }
 
   public function getScriptUrl() {
@@ -41,14 +46,14 @@ class Tinymce extends ExtensionBase {
   }
 
   public function insertScripts() {
-    $this->m->Templates->insertScript(
-      'tinymce-init',
-      $this->m->Routes->getLink(array(
-        'controller' => $this->controller,
-        'action' => 'initJs'
-      )),
-      array('tinymce')
-    );
+    $this->m
+      ->Templates
+      ->insertScript('tinymce-init',
+        $this->m
+          ->Routes
+          ->getLink(
+            array('controller' => $this->controller, 'action' => 'initJs')),
+        array('tinymce'));
   }
 
   public function setEncoder(Encoder $encoder) {

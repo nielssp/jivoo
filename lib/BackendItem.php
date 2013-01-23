@@ -30,7 +30,7 @@ class BackendItem implements IGroupable, ILinkable {
         $this->$property = $value;
     }
   }
-  
+
   public function setup($label, $group = null, $route = null) {
     $this->label = $label;
     if (isset($group)) {
@@ -41,25 +41,24 @@ class BackendItem implements IGroupable, ILinkable {
     }
     return $this;
   }
-  
+
   public function permission($key = null) {
     $this->permission = $key;
     return $this;
   }
-  
+
   public function hasAccess() {
     if (!isset($this->access)) {
-      $this->access = $this->auth->hasPermission($this->permission);
+      $this->access = $this->auth
+        ->hasPermission($this->permission);
     }
     return $this->access;
   }
 
   public function autoRoute(ApplicationController $controller, $action) {
-    $controller->autoRoute($action, $this->backend->prefix);
-    $this->route = array(
-        'controller' => $controller,
-        'action' => $action
-    );
+    $controller->autoRoute($action, $this->backend
+        ->prefix);
+    $this->route = array('controller' => $controller, 'action' => $action);
   }
 
   public function getLabel() {

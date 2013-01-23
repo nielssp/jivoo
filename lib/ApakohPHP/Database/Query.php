@@ -2,8 +2,7 @@
 abstract class Query {
   private $dataSource = null;
 
-  public function __construct() {
-  }
+  public function __construct() {}
 
   public function __get($property) {
     if (isset($this->$property)) {
@@ -28,20 +27,25 @@ abstract class Query {
   public function execute() {
     if (isset($this->dataSource)) {
       if ($this instanceof InsertQuery) {
-        return $this->dataSource->insert($this);
+        return $this->dataSource
+          ->insert($this);
       }
       else if ($this instanceof SelectQuery) {
-        return $this->dataSource->select($this);
+        return $this->dataSource
+          ->select($this);
       }
       else if ($this instanceof UpdateQuery) {
-        return $this->dataSource->update($this);
+        return $this->dataSource
+          ->update($this);
       }
       else if ($this instanceof DeleteQuery) {
-        return $this->dataSource->delete($this);
+        return $this->dataSource
+          ->delete($this);
       }
     }
     else if (isset($this->db) AND $this->db instanceof IDatabase) {
-      return $this->db->execute($this);
+      return $this->db
+        ->execute($this);
     }
     else {
       throw new Exception('No data source to execute on');
@@ -50,7 +54,8 @@ abstract class Query {
 
   protected function tableName($table) {
     if (isset($this->db) AND $this->db instanceof IDatabase) {
-      return $this->db->tableName($table);
+      return $this->db
+        ->tableName($table);
     }
     else {
       return $table;

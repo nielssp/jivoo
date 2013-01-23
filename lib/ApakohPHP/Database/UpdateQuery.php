@@ -33,12 +33,13 @@ class UpdateQuery extends Query implements ICondition {
   }
 
   public function limit($limit) {
-    $this->limit = (int)$limit;
+    $this->limit = (int) $limit;
     return $this;
   }
-  
+
   public function hasClauses() {
-    return $this->where->hasClauses();
+    return $this->where
+      ->hasClauses();
   }
 
   public function where($clause) {
@@ -60,23 +61,18 @@ class UpdateQuery extends Query implements ICondition {
   }
 
   public function addVar($var) {
-    $this->where->addVar($var);
+    $this->where
+      ->addVar($var);
     return $this;
   }
 
   public function orderBy($column) {
-    $this->orderBy[] = array(
-      'column' => $column,
-      'descending' => false
-    );
+    $this->orderBy[] = array('column' => $column, 'descending' => false);
     return $this;
   }
 
   public function orderByDescending($column) {
-    $this->orderBy[] = array(
-      'column' => $column,
-      'descending' => true
-    );
+    $this->orderBy[] = array('column' => $column, 'descending' => true);
     return $this;
   }
 

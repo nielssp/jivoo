@@ -19,5 +19,4 @@ echo PHP_EOL . PHP_EOL;
 echo 'In editor:' . PHP_EOL;
 echo h($format->fromHtml($dbContent));
 
-
 echo '</pre>';

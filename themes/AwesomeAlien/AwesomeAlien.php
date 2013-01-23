@@ -3,5 +3,4 @@
 // Name         : Awesome Alien
 // Dependencies : ext;jquery
 
-class AwesomeAlien extends ApplicationTheme {
-}
+class AwesomeAlien extends ApplicationTheme {}

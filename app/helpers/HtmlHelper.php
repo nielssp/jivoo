@@ -2,10 +2,7 @@
 
 class HtmlHelper extends ApplicationHelper {
 
-  private $endTags = array(
-    '<ul>' => '</ul>',
-    '<li>' => '</li>'
-  );
+  private $endTags = array('<ul>' => '</ul>', '<li>' => '</li>');
 
   public function getEndTag($tag) {
     if (!isset($this->endTags[$tag])) {
@@ -32,8 +29,11 @@ class HtmlHelper extends ApplicationHelper {
   }
 
   public function link($label, $route = null, $attributes = array()) {
-    $url = $this->m->Routes->getLink($route);
-    return '<a href="' . h($url) . '"' . $this->addAttributes($attributes) . '>' . $label . '</a>';
+    $url = $this->m
+      ->Routes
+      ->getLink($route);
+    return '<a href="' . h($url) . '"' . $this->addAttributes($attributes)
+        . '>' . $label . '</a>';
   }
 
   public function nestedList($list, $listTag = '<ul>', $itemTag = '<li>') {
@@ -63,7 +63,7 @@ class HtmlHelper extends ApplicationHelper {
     }
     return '';
   }
-  
+
   public function cleanUrl($url) {
     if (preg_match('/^https?:\/\//i', $url) == 0) {
       $url = '';

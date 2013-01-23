@@ -41,7 +41,7 @@ include '../app/essentials.php';
 include '../../LAB/LabTest.php';
 
 $fileData = explode('?>', file_get_contents(p(CFG . 'config.cfg.php')));
-$testData = Configuration::parseData($fileData[1]);  
+$testData = Configuration::parseData($fileData[1]);
 
 $rounds = 50;
 
@@ -58,7 +58,8 @@ $file = fopen("../cfg/test-config.cfg.php", "w");
 fwrite($file, "<?php\nreturn " . $php_encoded . ";\n");
 fclose($file);
 $test->dumpResult();
-$seri_encoded = $test->testFunction($rounds, array('Configuration', 'compileData'), $testData);
+$seri_encoded = $test->testFunction($rounds,
+    array('Configuration', 'compileData'), $testData);
 $test->dumpResult();
 $exported = $test->testFunction($rounds, 'var_export', $testData, true);
 $test->dumpResult();

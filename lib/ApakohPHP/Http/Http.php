@@ -23,39 +23,62 @@ class Http extends ModuleBase {
 
   protected function init() {
     // Set default settings
-    $this->m->Configuration->setDefault(array(
-      'http.rewrite' => 'off',
-      'http.index.path' => 'posts'
-    ));
+    $this->m
+      ->Configuration
+      ->setDefault(
+        array('http.rewrite' => 'off', 'http.index.path' => 'posts'));
 
     $this->request = new Request();
 
     // Determine if the current URL is correct
-    if ($this->m->Configuration->get('http.rewrite') == 'on') {
-      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {
-        array_shift($this->request->path);
-        $this->redirectPath($this->request->path, $this->request->query);
+    if ($this->m
+      ->Configuration
+      ->get('http.rewrite') == 'on') {
+      if (isset($this->request
+        ->path[0]) AND $this->request
+            ->path[0] == 'index.php') {
+        array_shift($this->request
+          ->path);
+        $this->redirectPath($this->request
+            ->path, $this->request
+            ->query);
       }
     }
     else {
-      if (!isset($this->request->path[0]) OR $this->request->path[0] != 'index.php') {
-        $this->redirectPath($this->request->path, $this->request->query);
+      if (!isset($this->request
+        ->path[0]) OR $this->request
+            ->path[0] != 'index.php') {
+        $this->redirectPath($this->request
+            ->path, $this->request
+            ->query);
       }
-      $path = $this->request->path;
+      $path = $this->request
+        ->path;
       array_shift($path);
-      $this->request->path = $path;
+      $this->request
+        ->path = $path;
     }
 
-    $path = explode('/', $this->m->Configuration->get('http.index.path'));
-    $query = $this->m->Configuration->get('http.index.query', true);
-    if (count($this->request->path) < 1) {
-      $this->request->path = $path;
-      $this->request->query = array_merge($query, $this->request->query);
+    $path = explode('/', $this->m
+      ->Configuration
+      ->get('http.index.path'));
+    $query = $this->m
+      ->Configuration
+      ->get('http.index.query', true);
+    if (count($this->request
+      ->path) < 1) {
+      $this->request
+        ->path = $path;
+      $this->request
+        ->query = array_merge($query, $this->request
+        ->query);
     }
-    else if ($path == $this->request->path) {
-      $this->redirectPath(array(), $this->request->query);
+    else if ($path == $this->request
+          ->path) {
+      $this->redirectPath(array(), $this->request
+          ->query);
     }
-    
+
   }
 
   /**
@@ -70,18 +93,17 @@ class Http extends ModuleBase {
   public function redirect($status, $location) {
     if (!Http::setStatus($status)) {
       /** @todo Should be an exception... */
-      Errors::fatal(
-        tr('Redirect error'),
-        tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
-      );
+      Errors::fatal(tr('Redirect error'),
+        tr('An invalid status code was provided: %1.',
+          '<strong>' . $status . '</strong>'));
     }
-    if (defined('ALLOW_REDIRECT') AND ALLOW_REDIRECT) {
-      header('Location: ' . $location);
-      exit();
-    }
-    else {
-      throw new RedirectNotAllowedException(tr('Redirect not allowed'));
-    }
+    //     if (defined('ALLOW_REDIRECT') AND ALLOW_REDIRECT) {
+    header('Location: ' . $location);
+    exit();
+    //     }
+    //     else {
+    //       throw new RedirectNotAllowedException(tr('Redirect not allowed'));
+    //     }
   }
 
   /**
@@ -93,7 +115,8 @@ class Http extends ModuleBase {
    * if false then a 303 status code will be used
    * @return void
    */
-  public function redirectPath($path = null, $query = null, $moved = true, $fragment = null, $rewrite = false) {
+  public function redirectPath($path = null, $query = null, $moved = true,
+                               $fragment = null, $rewrite = false) {
     $status = $moved ? 301 : 303;
     $this->redirect($status, $this->getLink($path, $query, $fragment));
   }
@@ -106,9 +129,11 @@ class Http extends ModuleBase {
    */
   public function refreshPath($query = null, $fragment = null) {
     if (!isset($query)) {
-      $query = $this->request->query;
+      $query = $this->request
+        ->query;
     }
-    $this->redirectPath($this->request->path, $query, false, $fragment);
+    $this->redirectPath($this->request
+        ->path, $query, false, $fragment);
   }
 
   public static function setStatus($status) {
@@ -157,11 +182,15 @@ class Http extends ModuleBase {
    * @param array $path Path as an array
    * @return string Link
    */
-  public function getLink($path = null, $query = null, $fragment = null, $rewrite = false) {
+  public function getLink($path = null, $query = null, $fragment = null,
+                          $rewrite = false) {
     if (!isset($path)) {
-      $path = $this->request->path;
+      $path = $this->request
+        ->path;
     }
-    $index = explode('/', $this->m->Configuration->get('http.index.path'));
+    $index = explode('/', $this->m
+      ->Configuration
+      ->get('http.index.path'));
     if ($index == $path) {
       $path = array();
     }
@@ -181,8 +210,11 @@ class Http extends ModuleBase {
           $queryStrings[] = urlencode($key) . '=' . urlencode($value);
         }
       }
-      $combined = implode('/', $path) . '?' . implode('&', $queryStrings) . $fragment;
-      if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
+      $combined = implode('/', $path) . '?' . implode('&', $queryStrings)
+          . $fragment;
+      if ($this->m
+        ->Configuration
+        ->get('http.rewrite') === 'on' OR $rewrite) {
         return $this->w($combined);
       }
       else {
@@ -190,7 +222,9 @@ class Http extends ModuleBase {
       }
     }
     else {
-      if ($this->m->Configuration->get('http.rewrite') === 'on' OR $rewrite) {
+      if ($this->m
+        ->Configuration
+        ->get('http.rewrite') === 'on' OR $rewrite) {
         return $this->w(implode('/', $path) . $fragment);
       }
       else {
@@ -222,4 +256,4 @@ class Http extends ModuleBase {
 
 }
 
-class RedirectNotAllowedException extends Exception { }
+class RedirectNotAllowedException extends Exception {}

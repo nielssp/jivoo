@@ -49,14 +49,9 @@ if (!defined('PATH')) {
 
 /** The path of this installation relative to website root */
 if (!defined('WEBPATH')) {
-  define(
-    'WEBPATH',
-    str_replace(
-      rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/'),
-      '',
-      PATH
-    )
-  );
+  define('WEBPATH',
+    str_replace(rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/'),
+      '', PATH));
 }
 
 if (!defined('ALLOW_REDIRECT')) {
@@ -77,7 +72,8 @@ if (!defined('PHP_VERSION_ID')) {
   $version = explode('.', PHP_VERSION);
 
   /** PHP version */
-  define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+  define('PHP_VERSION_ID',
+    ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
 /** Default language */
@@ -150,7 +146,6 @@ if (!defined('LOG')) {
 if (!defined('TMP')) {
   define('TMP', 'tmp/');
 }
-
 
 /** URL of current PeanutCMS installation */
 if (!defined('PEANUT_URL')) {

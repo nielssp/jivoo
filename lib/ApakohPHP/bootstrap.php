@@ -21,11 +21,8 @@ if (!function_exists('get_called_class')) {
       $lines = file($call['file']);
       for ($l = $call['line']; $l > 0; $l--) {
         $line = $lines[$l - 1];
-        preg_match(
-          '/([a-zA-Z0-9\_]+)::' . $call['function'] . '/',
-        $line,
-        $matches
-        );
+        preg_match('/([a-zA-Z0-9\_]+)::' . $call['function'] . '/', $line,
+          $matches);
         if (!empty($matches)) {
           break;
         }
@@ -75,7 +72,7 @@ function tr($text) {
     $numArgs = func_num_args();
     if ($numArgs > 1) {
       for ($i = 1; $i < $numArgs; $i++) {
-        $text = str_replace('%'.$i, $args[$i], $text);
+        $text = str_replace('%' . $i, $args[$i], $text);
       }
     }
     return $text;
@@ -132,8 +129,8 @@ function trl($single, $plural, $glue, $gluel, $pieces) {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 5; $i < $numArgs; $i++) {
-        $n = $i-4;
-        $text = str_replace('%'.$n, $args[$i], $text);
+        $n = $i - 4;
+        $text = str_replace('%' . $n, $args[$i], $text);
       }
     }
     return $text;
@@ -158,7 +155,7 @@ function trn($single, $plural, $number) {
     return call_user_func_array(array($service, 'translateNumeral'), $args);
   }
   else {
-    if ((int)$number == 1) {
+    if ((int) $number == 1) {
       $text = $single;
     }
     else {
@@ -169,8 +166,8 @@ function trn($single, $plural, $number) {
     if ($numArgs > 1) {
       $args = func_get_args();
       for ($i = 2; $i < $numArgs; $i++) {
-        $n = $i-1;
-        $text = str_replace('%'.$n, $args[$i], $text);
+        $n = $i - 1;
+        $text = str_replace('%' . $n, $args[$i], $text);
       }
     }
     return $text;
