@@ -26,3 +26,5 @@ $app->paths->tmp = '/tmp/peanutcms';
 $environment = getenv('APAKOHPHP_ENVIRONMENT') || 'production';
 
 $app->run($environment);
+
+echo Lib::$loadCalls . ' - ' . Lib::$loadIterations;

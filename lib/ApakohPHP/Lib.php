@@ -2,10 +2,10 @@
 class Lib {
 
   private static $paths = array();
-
-  private static $classes = array();
-
+  
   private static $info = array();
+  
+  private static $lastModule = null;
 
   private function __construct() {
   }
@@ -53,13 +53,35 @@ class Lib {
     self::$info[$module] = $meta;
     return $meta;
   }
+  
+  public static $loadCalls = 0;
+  public static $loadIterations = 0;
 
   public static function autoload($className) {
     //echo 'LOAD ' . $className . PHP_EOL;
-    foreach (self::$paths as $module => $path) {
-      $classPath = $path . '/' . $className . '.php';
-      //echo 'TEST ' . $classPath . PHP_EOL;
+    self::$loadCalls++;
+    if (isset(self::$lastModule)) {
+      $classPath = self::$lastModule . '/' . $className . '.php';
       if (file_exists($classPath)) {
+        require $classPath;
+        return true;
+      }
+    }
+    $bt = debug_backtrace();
+    if (isset($bt[1])) {
+      $module = dirname($bt[1]['file']);
+      $classPath = $module . '/' . $className . '.php';
+      if (file_exists($classPath)) {
+        self::$lastModule = $module;
+        require $classPath;
+        return true;
+      }
+    }
+    foreach (self::$paths as $module => $path) {
+      self::$loadIterations++;
+      $classPath = $path . '/' . $className . '.php';
+      if (file_exists($classPath)) {
+        self::$lastModule = $path;
         require $classPath;
         return true;
       }
