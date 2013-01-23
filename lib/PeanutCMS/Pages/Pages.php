@@ -123,13 +123,4 @@ class Pages extends ModuleBase {
     }
     return explode('/', $record->name);
   }
-
-  public function addPageController($path = array(), $parameters = array(),
-                                    $contentType = 'html') {
-    $templateData = array();
-    $templateData['title'] = tr('New Page');
-    $this->m
-      ->Templates
-      ->renderTemplate('backend/edit-post.html', $templateData);
-  }
 }

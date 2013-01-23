@@ -326,14 +326,4 @@ class Templates extends ModuleBase {
     return $data;
   }
 
-  /**
-   * @deprecated Replaced by the Template/class
-   */
-  public function renderTemplate($name, $parameters = array()) {
-    $template = new Template($this, $this->Core
-      ->Routes);
-    $template->set($parameters);
-    $template->render($name);
-  }
-
 }

@@ -194,15 +194,6 @@ class Extensions extends ModuleBase {
       ->delete('extensions.config.' . $extension);
   }
 
-  public function extensionsController($path = array(), $parameters = array(),
-                                       $contentType = 'html') {
-    $templateData = array();
-    $templateData['title'] = tr('Extensions');
-    $this->m
-      ->Templates
-      ->renderTemplate('backend/about.html', $templateData);
-  }
-
 }
 
 class ExtensionNotFoundException extends Exception {}
