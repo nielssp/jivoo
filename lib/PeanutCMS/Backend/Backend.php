@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
-// Dependencies   : Database Authentication Errors Configuration Routes
+// Dependencies   : Database Authentication Errors Routes
 //                  Templates Http
 
 /**
@@ -28,27 +28,19 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
   private $prefix = '';
 
   protected function init() {
-    $this->m
-      ->Configuration
-      ->setDefault('backend.path', 'admin');
+    $this->config->defaults = array(
+      'path' => 'admin',
+    );
 
-    $path = $this->m
-      ->Configuration
-      ->get('backend.path');
+    $path = $this->config['path'];
     $this->prefix = $path . '/';
 
-    $this->controller = new BackendController($this->m
-        ->Routes, $this->m
-        ->Configuration['backend']);
+    $this->controller = new BackendController($this->m->Routes, $this->config);
 
-    $this->controller
-      ->addRoute($path, 'dashboard');
-    $this->controller
-      ->addRoute($this->prefix . 'login', 'login');
-    $this->controller
-      ->addRoute($this->prefix . 'access-denied', 'accessDenied');
-    $this->controller
-      ->addRoute($this->prefix . 'about', 'about');
+    $this->controller->addRoute($path, 'dashboard');
+    $this->controller->addRoute($this->prefix . 'login', 'login');
+    $this->controller->addRoute($this->prefix . 'access-denied', 'accessDenied');
+    $this->controller->addRoute($this->prefix . 'about', 'about');
 
     $this['peanutcms']->setup('PeanutCMS', -2);
     $this['peanutcms']['home']->setup(tr('Home'), 0, null);
@@ -122,9 +114,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
 
   public function getRoute() {
     return array(
-      'path' => explode('/', $this->m
-        ->Configuration
-        ->get('backend.path'))
+      'path' => explode('/', $this->config['path'])
     );
   }
 

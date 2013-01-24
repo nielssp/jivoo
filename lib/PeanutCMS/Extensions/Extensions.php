@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS extension system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Database Routes Templates Http
+// Dependencies   : Errors Database Routes Templates Http
 //                  Authentication Backend
 
 /*
@@ -25,12 +25,10 @@ class Extensions extends ModuleBase {
   private $loading = array();
 
   protected function init() {
-    if (!$this->m
-      ->Configuration
-      ->exists('extensions.installed')) {
-      $this->m
-        ->Configuration
-        ->set('extensions.installed', '');
+    $this->config->defaults = array('config' => array());
+    
+    if (!isset($this->config['installed'])) {
+      $this->config['installed'] = '';
       $preinstall = explode(' ', PREINSTALL_EXTENSIONS);
       foreach ($preinstall as $extension) {
         if (!empty($extension)) {
@@ -39,10 +37,7 @@ class Extensions extends ModuleBase {
       }
     }
 
-    $this->installed = explode(' ',
-      $this->m
-        ->Configuration
-        ->get('extensions.installed'));
+    $this->installed = explode(' ', $this->config['installed']);
 
     $this->m
       ->Backend['settings']['extensions']
@@ -129,20 +124,15 @@ class Extensions extends ModuleBase {
           return false;
         }
       }
-      $config = $this->m
-        ->Configuration
-        ->getSubset('extensions.config.' . $extension);
+      $config = $this->config['config']->getSubset($extension);
       //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
-      $this->extensions[$extension] = new $extension($modules, $extensions,
-        $config, $this);
+      $this->extensions[$extension] = new $extension($modules, $extensions, $config, $this);
     }
     return $this->extensions[$extension];
   }
 
   private function updateConfig() {
-    $this->m
-      ->Configuration
-      ->set('extensions.installed', implode(' ', $this->installed));
+    $this->config['installed'] = implode(' ', $this->installed);
   }
 
   public function getInfo($extension) {
@@ -189,9 +179,7 @@ class Extensions extends ModuleBase {
   }
 
   public function unconfigure($extension) {
-    $this->m
-      ->Configuration
-      ->delete('extensions.config.' . $extension);
+    unset($this->config['config'][$extension]);
   }
 
 }

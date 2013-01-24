@@ -7,7 +7,7 @@ class App {
 
   private $appConfig = array();
 
-  private $userConfig = array();
+  private $config = array();
 
   private $paths = null;
 
@@ -15,9 +15,13 @@ class App {
 
   private $version = '0.0.0';
 
+  private $minPhpVersion = '5.2.0';
+  
   private $modules = array();
 
   private $m = null;
+  
+  private $environment = 'production';
 
   /* EVENTS BEGIN */
   private $events = null;
@@ -27,27 +31,22 @@ class App {
    * @param callback $h Attach an event handler
    * @uses ModuleLoadedEventArgs
    */
-  public function onModuleLoaded($h) {
-    $this->events
-      ->attach($h);
-  }
+  public function onModuleLoaded($h) { $this->events->attach($h); }
   /**
    * Event, triggered when all modules are loaded
    * @param callback $h Attach an event handler
    */
-  public function onModulesLoaded($h) {
-    $this->events
-      ->attach($h);
-  }
+  public function onModulesLoaded($h) { $this->events->attach($h); }
   /**
    * Event, triggered when ready to render page
    * @param callback $h Attach an event handler
    */
-  public function onRender($h) {
-    $this->events
-      ->attach($h);
-  }
+  public function onRender($h) { $this->events->attach($h); }
   /* EVENTS END */
+  
+  public static function getWebRoot() {
+    return dirname($_SERVER['SCRIPT_NAME']);
+  }
 
   /**
    * Create application
@@ -57,19 +56,23 @@ class App {
     if (!isset($appConfig['path'])) {
       throw new Exception('Application path not set.');
     }
+    $this->appConfig = $appConfig;
     $this->events = new Events($this);
     $this->m = new Dictionary();
-    $this->paths = new PathDictionary(dirname($_SERVER['SCRIPT_FILENAME']),
-      $appConfig['path']);
-    $this->paths
-      ->app = $appConfig['path'];
-    $this->paths
-      ->web = dirname($_SERVER['SCRIPT_NAME']);
+    $this->paths = new PathDictionary(
+      dirname($_SERVER['SCRIPT_FILENAME']),
+      $appConfig['path']
+    );
+    $this->paths->app = $appConfig['path'];
+    $this->paths->web = dirname($_SERVER['SCRIPT_NAME']);
     if (isset($appConfig['name'])) {
       $this->name = $appConfig['name'];
     }
     if (isset($appConfig['version'])) {
       $this->version = $appConfig['version'];
+    }
+    if (isset($appConfig['minPhpVersion'])) {
+      $this->minPhpVersion = $appConfig['minPhpVersion'];
     }
     if (isset($appConfig['modules'])) {
       $this->modules = $appConfig['modules'];
@@ -86,6 +89,9 @@ class App {
       case 'paths':
       case 'name':
       case 'version':
+      case 'minPhpVersion':
+      case 'environment':
+      case 'config':
         return $this->$property;
     }
   }
@@ -179,13 +185,10 @@ class App {
               $module, $dependency));
         }
       }
-      $this->paths
-        ->$moduleName = LIB_PATH . '/' . implode('/', $segments);
-      $this->m
-        ->$moduleName = new $moduleName($modules, $this);
+      $this->paths->$moduleName = LIB_PATH . '/' . implode('/', $segments);
+      $this->m->$moduleName = new $moduleName($modules, $this);
     }
-    return $this->m
-      ->$moduleName;
+    return $this->m->$moduleName;
   }
 
   /**
@@ -193,48 +196,41 @@ class App {
    * @param string $environment Configuration environment to use
    */
   public function run($environment = 'production') {
+    $this->environment = $environment;
     if ($environment == 'development') {
       define('DEBUG', true);
-    }
-    define('CFG', $this->paths
-      ->config . '/');
-    define('WEBPATH', $this->paths
-      ->web . '/');
-    if (false AND !require_once(LIB_PATH . '/essentials.php')) {
-      echo 'Essential PeanutCMS files are missing. You should probably reinstall.';
-      return;
     }
 
     // The autoloader has to be registered BEFORE session_start()
     session_start();
 
-    if (PHP_VERSION_ID < 50200) {
-      echo 'Sorry, but PeanutCMS does not support PHP versions below 5.2.0. ';
-      echo 'You are currently using version ' . PHP_VERSION . '. ';
-      echo 'You should contact your webhost. ';
+    if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
+      echo 'Sorry, but ' . $this->name . ' does not support PHP versions below ';
+      echo $this->minPhpVersion . '. ';
+      echo 'You are currently using version ' . phpversion() . '. ';
+      echo 'You should contact your hosting provider. ';
       return;
     }
+    
+    $this->config = new AppConfig($this->p('config', 'config.php'));
+    
+    $environmentConfigFile = $this->p('config', 'environments/' . $environment . '.php');
+    if (file_exists($environmentConfigFile)) {
+      $this->config->defaults = include $environmentConfigFile;
+    }
 
-    Lib::addIncludePath($this->paths
-      ->controllers);
-    Lib::addIncludePath($this->paths
-      ->views);
-    Lib::addIncludePath($this->paths
-      ->helpers);
-    Lib::addIncludePath($this->paths
-      ->models);
-    Lib::addIncludePath($this->paths
-      ->config . '/schemas');
+    Lib::addIncludePath($this->paths->controllers);
+    Lib::addIncludePath($this->paths->views);
+    Lib::addIncludePath($this->paths->helpers);
+    Lib::addIncludePath($this->paths->models);
+    Lib::addIncludePath($this->paths->config . '/schemas');
 
     foreach ($this->modules as $module) {
       $object = $this->loadModule($module);
-      $this->events
-        ->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
+      $this->events->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
     }
-    $this->events
-      ->trigger('onModulesLoaded');
-    $this->events
-      ->trigger('onRender');
+    $this->events->trigger('onModulesLoaded');
+    $this->events->trigger('onRender');
   }
 }
 

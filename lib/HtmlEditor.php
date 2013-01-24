@@ -9,7 +9,7 @@ class HtmlEditor implements IEditor {
     $this->format = new HtmlFormat();
   }
 
-  public function init(Configuration $config = null) {
+  public function init(AppConfig $config = null) {
     $this->config = $config;
     if ($this->initiated) {
       $class = get_class($this);

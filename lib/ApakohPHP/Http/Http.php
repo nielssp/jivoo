@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS http system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration
+// Dependencies   : Errors
 
 /*
  * Class for working with HTTP headers, redirects etc.
@@ -23,60 +23,44 @@ class Http extends ModuleBase {
 
   protected function init() {
     // Set default settings
-    $this->m
-      ->Configuration
-      ->setDefault(
-        array('http.rewrite' => 'off', 'http.index.path' => 'posts'));
-
+    $this->config->defaults = array(
+      'rewrite' => false,
+      'index' => array(
+        'path' => 'posts',
+      ),
+    );
+    
     $this->request = new Request();
 
     // Determine if the current URL is correct
-    if ($this->m
-      ->Configuration
-      ->get('http.rewrite') == 'on') {
-      if (isset($this->request
-        ->path[0]) AND $this->request
-            ->path[0] == 'index.php') {
-        array_shift($this->request
-          ->path);
-        $this->redirectPath($this->request
-            ->path, $this->request
-            ->query);
+    if ($this->config['rewrite']) {
+      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {
+        if (count($this->request->path) <= 1) {
+          $this->redirectPath(array(), $this->request->query);
+        }
+        else {
+          array_shift($this->request->path);
+          $this->redirectPath($this->request->path, $this->request->query);
+        }
       }
     }
     else {
-      if (!isset($this->request
-        ->path[0]) OR $this->request
-            ->path[0] != 'index.php') {
-        $this->redirectPath($this->request
-            ->path, $this->request
-            ->query);
+      if (!isset($this->request->path[0]) OR $this->request->path[0] != 'index.php') {
+        $this->redirectPath($this->request->path, $this->request->query);
       }
-      $path = $this->request
-        ->path;
+      $path = $this->request->path;
       array_shift($path);
-      $this->request
-        ->path = $path;
+      $this->request->path = $path;
     }
 
-    $path = explode('/', $this->m
-      ->Configuration
-      ->get('http.index.path'));
-    $query = $this->m
-      ->Configuration
-      ->get('http.index.query', true);
-    if (count($this->request
-      ->path) < 1) {
-      $this->request
-        ->path = $path;
-      $this->request
-        ->query = array_merge($query, $this->request
-        ->query);
+    $path = explode('/', $this->config['index']['path']);
+    $query = $this->config->get('http.index.query', true);
+    if (count($this->request->path) < 1) {
+      $this->request->path = $path;
+      $this->request->query = array_merge($query, $this->request->query);
     }
-    else if ($path == $this->request
-          ->path) {
-      $this->redirectPath(array(), $this->request
-          ->query);
+    else if ($path == $this->request->path) {
+      $this->redirectPath(array(), $this->request->query);
     }
 
   }
@@ -188,9 +172,7 @@ class Http extends ModuleBase {
       $path = $this->request
         ->path;
     }
-    $index = explode('/', $this->m
-      ->Configuration
-      ->get('http.index.path'));
+    $index = explode('/', $this->config['index']['path']);
     if ($index == $path) {
       $path = array();
     }
@@ -212,9 +194,7 @@ class Http extends ModuleBase {
       }
       $combined = implode('/', $path) . '?' . implode('&', $queryStrings)
           . $fragment;
-      if ($this->m
-        ->Configuration
-        ->get('http.rewrite') === 'on' OR $rewrite) {
+      if ($this->config['rewrite'] OR $rewrite) {
         return $this->w($combined);
       }
       else {
@@ -222,9 +202,7 @@ class Http extends ModuleBase {
       }
     }
     else {
-      if ($this->m
-        ->Configuration
-        ->get('http.rewrite') === 'on' OR $rewrite) {
+      if ($this->config['rewrite'] OR $rewrite) {
         return $this->w(implode('/', $path) . $fragment);
       }
       else {

@@ -23,7 +23,7 @@ class Encoder {
   /** XHTML/HTML5  (not valid to use <br /> in HTML4) */
   private $xhtml = true;
 
-  public function __construct(Configuration $config = NULl) {
+  public function __construct(AppConfig $config = NULl) {
     if (isset($config)) {
       if (isset($config['allow'])) {
         $this->allow = $config['allow'];

@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS template system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Http ApakohPHP/Assets
+// Dependencies   : Errors Http ApakohPHP/Assets
 
 /**
  * Class for setting the template
@@ -40,42 +40,19 @@ class Templates extends ModuleBase {
   }
 
   protected function init() {
-    $this->m
-      ->Configuration
-      ->setDefault(
-        array('site.title' => $this->app
-            ->name, 'site.subtitle' => 'Powered by ' . $this->app
-                ->name,
-          'system.hide.identity' => HIDE_LEVEL > 1 ? 'on' : 'off',
-          'system.hide.version' => HIDE_LEVEL > 0 ? 'on' : 'off',
-        ));
+    $this->config->defaults = array(
+      'title' => $this->app->name,
+      'subtitle' => 'Powered by ' . $this->app->name,
+    );
 
     $this->setTheme($this->p(null, ''));
 
-    if ($this->m
-      ->Configuration
-      ->exists('site.meta')) {
-      $meta = $this->m
-        ->Configuration
-        ->get('site.meta');
+    if (isset($this->config['meta'])) {
+      $meta = $this->config->get('meta');
       if (is_array($meta)) {
         foreach ($meta as $name => $content) {
           $this->insertMeta($name, $content);
         }
-      }
-    }
-
-    if ($this->m
-      ->Configuration
-      ->exists('system.hide')) {
-      $hide = $this->m
-        ->Configuration
-        ->get('system.hide');
-      if ($hide['identity'] == 'on') {
-        $this->hideLevel = 2;
-      }
-      else if ($hide['version'] == 'on' AND $this->hideLevel < 1) {
-        $this->hideLevel = 1;
       }
     }
   }
@@ -320,9 +297,7 @@ class Templates extends ModuleBase {
     if (isset($this->parameters[$name])) {
       $data = array_merge($data, $this->parameters[$name]);
     }
-    $data['site'] = $this->m
-      ->Configuration
-      ->get('site');
+    $data['site'] = $this->config->getArray();
     return $data;
   }
 

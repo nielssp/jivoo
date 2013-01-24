@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Database Routes Templates Http
+// Dependencies   : Errors Database Routes Templates Http
 //                  Authentication Backend
 
 /*
@@ -25,18 +25,11 @@ class Links extends ModuleBase {
 
     $linksSchema = new linksSchema();
 
-    $newInstall = $this->m
-      ->Database
-      ->migrate($linksSchema) == 'new';
+    $newInstall = $this->m->Database->migrate($linksSchema) == 'new';
 
-    $this->m
-      ->Database
-      ->links
-      ->setSchema($linksSchema);
+    $this->m->Database->links->setSchema($linksSchema);
 
-    Link::connect($this->m
-      ->Database
-      ->links);
+    Link::connect($this->m->Database->links);
 
     if ($newInstall) {
       $link = Link::create();
@@ -64,21 +57,14 @@ class Links extends ModuleBase {
       $link->menu = 'main';
       $link->position = 3;
       $link->title = tr('Admin');
-      $link->setRoute($this->m
-          ->Backend);
+      $link->setRoute($this->m->Backend);
       $link->save();
     }
 
-    $this->controller = new LinksController($this->m
-        ->Routes, $this->m
-        ->Configuration
-        ->getSubset('links'));
+    $this->controller = new LinksController($this->m->Routes, $this->config);
 
-    $this->m
-      ->Backend['content']
-      ->setup(tr('Content'), 2);
-    $this->m
-      ->Backend['content']['links-manage']
+    $this->m->Backend['content']->setup(tr('Content'), 2);
+    $this->m->Backend['content']['links-manage']
       ->setup(tr('Menu'), 12)
       ->permission('backend.links.manage')
       ->autoRoute($this->controller, 'menu');

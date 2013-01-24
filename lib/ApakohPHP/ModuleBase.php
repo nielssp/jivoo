@@ -20,6 +20,11 @@ abstract class ModuleBase {
    * @var Dictionary Other modules
    */
   protected $m = null;
+  
+  /**
+   * @var AppConfig Module configuration
+   */
+  protected $config = null;
 
   /**
    * @var Request|null The Request object if available
@@ -43,14 +48,11 @@ abstract class ModuleBase {
     $this->m = new Dictionary($modules, true);
     $this->Core = $app;
     $this->app = $app;
+    $this->config = $app->config[get_class($this)];
 
-    if (isset($this->m
-      ->Http)) {
-      $this->request = $this->m
-        ->Http
-        ->getRequest();
-      $this->session = $this->request
-        ->session;
+    if (isset($this->m->Http)) {
+      $this->request = $this->m->Http->getRequest();
+      $this->session = $this->request->session;
     }
 
     $additionalParameters = func_get_args();

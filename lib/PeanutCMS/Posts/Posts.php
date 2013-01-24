@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS blogging system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Database Routes Templates Http
+// Dependencies   : Errors Database Routes Templates Http
 //                  Authentication Backend
 
 /*
@@ -23,21 +23,21 @@ class Posts extends ModuleBase {
   protected function init() {
 
     // Set default settings
-    $this->m
-      ->Configuration
-      ->setDefault(
-        array('posts.fancyPermalinks' => 'on',
-          'posts.permalink' => '%year%/%month%/%name%',
-          'posts.comments.sorting' => 'desc',
-          'posts.comments.childSorting' => 'asc',
-          'posts.comments.display' => 'thread',
-          'posts.comments.levelLimit' => '2',
-          'posts.commentingDefault' => 'on',
-          'posts.anonymousCommenting' => 'off',
-          'posts.commentApproval' => 'off',
-          'posts.editor.name' => 'TinymceEditor',
-          'posts.comments.editor.name' => 'HtmlEditor'
-        ));
+    $this->config->defaults = array(
+      'fancyPermalinks' => true,
+      'permalink' => '%year%/%month%/%name%',
+      'comments' => array(
+        'sorting' => 'desc',
+        'childSorting' => 'asc',
+        'display' => 'thread',
+        'levelLimit' => 2,
+        'editor' => array('name' => 'HtmlEditor'),
+      ),
+      'commentingDefault' => true,
+      'anonymousCommenting' => false,
+      'commentApproval' => false,
+      'editor' => array('name' => 'TinymceEditor'),
+    );
 
     // Set up models
     $newInstall = false;
@@ -87,8 +87,7 @@ class Posts extends ModuleBase {
       ->Database
       ->comments);
 
-    if ($this->m
-      ->Configuration['posts.anonymousCommenting'] == 'on') {
+    if ($this->config['anonymousCommenting'] == 'on') {
       Comment::setAnonymousCommenting(true);
     }
 
@@ -128,13 +127,9 @@ class Posts extends ModuleBase {
     Post::setEncoder('content', $postsEncoder);
 
     // Create controllers
-    $this->posts = new PostsController($this->m
-        ->Routes, $this->m
-        ->Configuration['posts']);
+    $this->posts = new PostsController($this->m->Routes, $this->config);
 
-    $this->comments = new CommentsController($this->m
-        ->Routes, $this->m
-        ->Configuration['posts.comments']);
+    $this->comments = new CommentsController($this->m->Routes, $this->config['comments']);
 
     // Frontend setup
 
@@ -146,19 +141,14 @@ class Posts extends ModuleBase {
     $this->posts
       ->addRoute('tags/*', 'viewTag');
 
-    if ($this->m
-      ->Configuration
-      ->get('posts.fancyPermalinks') == 'on') {
+    if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m
-        ->Routes
+      $this->m->Routes
         ->addPath('Posts', 'view', array($this, 'getFancyPath'));
-      $this->m
-        ->Routes
+      $this->m->Routes
         ->addPath('Comments', 'index', array($this, 'getFancyPath'));
-      $this->m
-        ->Routes
+      $this->m->Routes
         ->addPath('Comments', 'view', array($this, 'getFancyPath'));
     }
     else {
@@ -227,9 +217,7 @@ class Posts extends ModuleBase {
       ->Http
       ->getRequest()
       ->path;
-    $permalink = explode('/', $this->m
-      ->Configuration
-      ->get('posts.permalink'));
+    $permalink = explode('/', $this->config['permalink']);
     if (!is_array($path) OR !is_array($permalink)) {
       return;
     }
@@ -297,9 +285,7 @@ class Posts extends ModuleBase {
   }
 
   public function getFancyPath($parameters) {
-    $permalink = explode('/', $this->m
-      ->Configuration
-      ->get('posts.permalink'));
+    $permalink = explode('/', $this->config['permalink']);
     if (is_array($permalink)) {
       if (is_object($parameters) AND is_a($parameters, 'Post')) {
         $record = $parameters;

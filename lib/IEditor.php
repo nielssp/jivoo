@@ -1,7 +1,7 @@
 <?php
 
 interface IEditor {
-  public function init(Configuration $config = null);
+  public function init(AppConfig $config = null);
 
   public function getFormat();
 

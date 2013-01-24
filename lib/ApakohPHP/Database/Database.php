@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : Configuration Routes Templates Errors Http Maintenance
+// Dependencies   : Routes Templates Errors Http Maintenance
 
 class Database extends ModuleBase implements IDatabase {
   private $driver;
@@ -52,82 +52,54 @@ class Database extends ModuleBase implements IDatabase {
       return false;
     }
     $name = $schema->getName();
-    if ($this->m
-      ->Configuration
-      ->exists('database.migration.' . $name)) {
-      if ($this->m
-        ->Configuration
-        ->get('database.migration.' . $name) == $this->app
-            ->version) {
+    if (isset($this->config['migration'][$name])) {
+      if ($this->config['migration'][$name] == $this->app->version) {
         return 'unchanged';
       }
     }
     if ($this->connection) {
-      $status = $this->connection
-        ->migrate($schema);
-      $this->m
-        ->Configuration
-        ->set('database.migration.' . $name, $this->app
-          ->version);
+      $status = $this->connection->migrate($schema);
+      $this->config['migration'][$name] = $this->app->version;
       return $status;
     }
   }
   /* End IDatabase implementation */
 
   protected function init() {
-    $this->m
-      ->Configuration
-      ->setDefault(
-        array('database.server' => 'localhost',
-          'database.database' => 'peanutcms',
-          'database.filename' => 'config/db.sqlite3',
-        ));
-    $controller = new DatabaseMaintenanceController($this->m
-        ->Routes, $this->m
-        ->Configuration['database']);
+    $this->config->defaults = array(
+      'server' => 'localhost',
+      'database' => 'peanutcms',
+      'filename' => 'config/db.sqlite3',
+    );
+    $controller = new DatabaseMaintenanceController(
+      $this->m->Routes,
+      $this->config
+    );
     $controller->addModule($this);
-    if (!$this->m
-      ->Configuration
-      ->exists('database.driver')) {
-      $this->m
-        ->Maintenance
-        ->setup($controller, 'selectDriver');
+    if (!isset($this->config['driver'])) {
+      $this->m->Maintenance->setup($controller, 'selectDriver');
     }
     else {
-      $this->driver = $this->m
-        ->Configuration
-        ->get('database.driver');
+      $this->driver = $this->config['driver'];
       $this->driverInfo = $this->checkDriver($this->driver);
       if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
-        $this->m
-          ->Configuration
-          ->delete('database.driver');
-        $this->m
-          ->Routes
-          ->refresh();
+        unset($this->config['driver']);
+        $this->m->Routes->refresh();
       }
-      if ($this->m
-        ->Configuration
-        ->get('database.configured') != 'yes') {
-        $this->m
-          ->Maintenance
+      if ($this->config['configured'] != true) {
+        $this->m->Maintenance
           ->setup($controller, 'setupDriver', array($this->driverInfo));
       }
       foreach ($this->driverInfo['requiredOptions'] as $option) {
-        if (!$this->m
-          ->Configuration
-          ->exists('database.' . $option)) {
-          $this->m
-            ->Maintenance
+        if (!isset($this->config[$option])) {
+          $this->m->Maintenance
             ->setup($controller, 'setupDriver', array($this->driverInfo));
         }
       }
       Lib::import('ApakohPHP/Database/' . $this->driver);
       try {
         $class = $this->driver . 'Database';
-        $this->connection = new $class($this->m
-          ->Configuration
-          ->get('database'));
+        $this->connection = new $class($this->config);
       }
       catch (DatabaseConnectionFailedException $exception) {
         Errors::fatal(tr('Database connection failed'),

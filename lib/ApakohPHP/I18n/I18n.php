@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS internationalization and localization system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration
+// Dependencies   : Errors
 
 /*
  * Internationalization and localization of PeanutCMS
@@ -46,27 +46,21 @@ class I18n extends ModuleBase implements ITranslationService {
    */
   private function configure() {
     // Set default language
-    $this->m
-      ->Configuration
-      ->setDefault('i18n.language', LANGUAGE);
+    $this->config->defaults = array('language' => LANGUAGE);
     // Get language from configuration instead
     $this->getLanguage();
 
     // Set default settings
-    $this->m
-      ->Configuration
-      ->setDefault(
-        array('i18n.dateFormat' => $this->dateFormat(),
-          'i18n.timeFormat' => $this->timeFormat(),
-          'i18n.timeZone' => date_default_timezone_get()
-        ));
+    $this->config->defaults = array(
+      'dateFormat' => $this->dateFormat(),
+      'timeFormat' => $this->timeFormat(),
+      'timeZone' => date_default_timezone_get()
+    );
 
     // Set time zone
-    if (!date_default_timezone_set(
-      $this->m
-        ->Configuration
-        ->get('i18n.timeZone')))
+    if (!date_default_timezone_set($this->config['timeZone'])) {
       date_default_timezone_set('UTC');
+    }
   }
 
   /**
@@ -75,11 +69,9 @@ class I18n extends ModuleBase implements ITranslationService {
    * @return void
    */
   private function getLanguage() {
-    if ($language = $this->m
-      ->Configuration
-      ->get('language')) {
-      if (file_exists(p(LANG . $language . '.lng.php'))) {
-        $this->language = include(p(LANG . $language . '.lng.php'));
+    if ($language = $this->config['language']) {
+      if (file_exists($this->p('languages', $language . '.lng.php'))) {
+        $this->language = include($this->p('languages', $language . '.lng.php'));
         $this->languageCode = $language;
         return;
       }
@@ -93,13 +85,13 @@ class I18n extends ModuleBase implements ITranslationService {
         'default-language');
       return;
     }
-    if (!file_exists(PATH . LANG . LANGUAGE . '.lng.php')) {
+    if (!file_exists($this->p('languages',  LANGUAGE . '.lng.php'))) {
       new GlobalWarning(
         tr('The default language, "%1", is missing', LANGUAGE),
         'default-language-missing');
       return;
     }
-    $this->language = include(PATH . LANG . LANGUAGE . '.lng.php');
+    $this->language = include($this->p('languages', LANGUAGE . '.lng.php'));
     ;
     $this->languageCode = LANGUAGE;
   }
@@ -226,9 +218,7 @@ class I18n extends ModuleBase implements ITranslationService {
    * @return string Format string used with date()
    */
   public function dateFormat() {
-    if ($dateFormat = $this->m
-      ->Configuration
-      ->get('i18n.dateFormat'))
+    if ($dateFormat = $this->config['dateFormat'])
       return $dateFormat;
     else if (!empty($this->language['defaultDateFormat']))
       return $this->language['defaultDateFormat'];
@@ -242,9 +232,7 @@ class I18n extends ModuleBase implements ITranslationService {
    * @return string Format string used with date()
    */
   public function timeFormat() {
-    if ($timeFormat = $this->m
-      ->Configuration
-      ->get('i18n.timeFormat'))
+    if ($timeFormat = $this->config['timeFormat'])
       return $timeFormat;
     else if (!empty($this->language['defaultTimeFormat']))
       return $this->language['defaultTimeFormat'];

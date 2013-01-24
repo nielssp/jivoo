@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS hashing and security system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration
+// Dependencies   : Errors
 
 class Shadow extends ModuleBase {
 
@@ -13,15 +13,11 @@ class Shadow extends ModuleBase {
   );
 
   protected function init() {
-    if (!$this->m
-      ->Configuration
-      ->exists('shadow.hashType')) {
+    if (!isset($this->config['hashType'])) {
       foreach ($this->hashTypes as $hashType) {
         $constant = 'CRYPT_' . strtoupper($hashType);
         if (defined($constant) AND constant($constant) == 1) {
-          $this->m
-            ->Configuration
-            ->set('shadow.hashType', $hashType);
+          $this->config['hashType'] = $hashType;
           break;
         }
       }
@@ -30,9 +26,7 @@ class Shadow extends ModuleBase {
 
   public function genSalt($hashType = null) {
     if (!isset($hashType)) {
-      $hashType = $this->m
-        ->Configuration
-        ->get('shadow.hashType');
+      $hashType = $this->config['hashType'];
       if ($hashType == 'auto') {
         foreach ($this->hashTypes as $t) {
           $constant = 'CRYPT_' . strtoupper($t);

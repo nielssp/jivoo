@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS content page system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Database Routes Templates Http
+// Dependencies   : Errors Database Routes Templates Http
 //                  Authentication Backend Editors
 
 /*
@@ -55,50 +55,37 @@ class Pages extends ModuleBase {
     $pagesEncoder->setAllowAll(true);
     Page::setEncoder('content', $pagesEncoder);
 
-    $this->m
-      ->Configuration
-      ->setDefault('pages.editor.name', 'TinymceEditor');
+    $this->config->defaults = array(
+      'editor' => array(
+        'name' => 'TinymceEditor',
+      ),
+    );
 
-    $this->controller = new PagesController($this->m
-        ->Routes, $this->m
-        ->Configuration['pages']);
+    $this->controller = new PagesController($this->m->Routes, $this->config);
 
     $this->detectFancyPath();
-    $this->m
-      ->Routes
-      ->addPath('Pages', 'view', array($this, 'getFancyPath'));
+    $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
-    $this->m
-      ->Backend['content']
-      ->setup(tr('Content'), 2);
-    $this->m
-      ->Backend['content']['pages-add']
+    $this->m->Backend['content']->setup(tr('Content'), 2);
+    $this->m->Backend['content']['pages-add']
       ->setup(tr('New page'), 2)
       ->permission('backend.pages.add')
       ->autoRoute($this->controller, 'add');
-    $this->m
-      ->Backend['content']['pages-manage']
+    $this->m->Backend['content']['pages-manage']
       ->setup(tr('Manage pages'), 4)
       ->permission('backend.pages.manage')
       ->autoRoute($this->controller, 'manage');
 
-    $this->m
-      ->Backend
-      ->unlisted['pages-edit']
+    $this->m->Backend->unlisted['pages-edit']
       ->permission('backend.pages.edit')
       ->autoRoute($this->controller, 'edit');
-    $this->m
-      ->Backend
-      ->unlisted['pages-delete']
+    $this->m->Backend->unlisted['pages-delete']
       ->permission('backend.pages.delete')
       ->autoRoute($this->controller, 'delete');
   }
 
   private function detectFancyPath() {
-    $path = $this->m
-      ->Http
-      ->getRequest()
-      ->path;
+    $path = $this->request->path;
     if (!is_array($path) OR count($path) < 1) {
       return;
     }

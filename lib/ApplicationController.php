@@ -20,8 +20,7 @@ class ApplicationController {
   protected $helpers = array('Html');
   private $helperObjects = array();
 
-  public final function __construct(Routes $routes,
-                                    Configuration $config = null) {
+  public final function __construct(Routes $routes, AppConfig $config = null) {
     $this->m = new Dictionary();
     $this->e = new Dictionary();
 

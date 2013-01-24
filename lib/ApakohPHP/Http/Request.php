@@ -39,8 +39,8 @@ class Request {
       $this->fragment = $request['fragment'];
     }
     $path = urldecode($request['path']);
-    if (WEBPATH != '/') {
-      $path = str_replace(WEBPATH, '', $path);
+    if (App::getWebRoot() != '/') {
+      $path = str_replace(App::getWebRoot(), '', $path);
     }
     $path = explode('/', $path);
     $this->path = array();

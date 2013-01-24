@@ -29,7 +29,10 @@ class Cookies implements arrayaccess {
    * @param int $expire The time the cookie expires as a UNIX timestamp
    * @param string $path The path on the server in which the cookie will be available on.
    */
-  public function setCookie($name, $value, $expire = null, $path = WEBPATH) {
+  public function setCookie($name, $value, $expire = null, $path = null) {
+    if (!isset($path)) {
+      $path = App::getWebRoot();
+    }
     if (!isset($expire)) {
       $expire = time() + 60 * 60 * 24 * 365;
     }

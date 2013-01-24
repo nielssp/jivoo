@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The ApakohPHP authentication system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Errors ApakohPHP/Configuration ApakohPHP/Shadow
+// Dependencies   : ApakohPHP/Errors ApakohPHP/Shadow
 //                  ApakohPHP/Maintenance ApakohPHP/Templates ApakohPHP/Database
 //                  ApakohPHP/Routes ApakohPHP/Http
 
@@ -21,12 +21,12 @@ class Authentication extends ModuleBase {
   private $unregistered = null;
 
   protected function init() {
-    $this->m
-      ->Configuration
-      ->setDefault(
-        array('authentication.defaultGroups.unregistered' => 'guests',
-          'authentication.defaultGroups.registered' => 'users'
-        ));
+    $this->config->defaults = array(
+      'defaultGroups' => array(
+        'unregistered' => 'guests',
+        'registered' => 'users',
+      ),
+    );
     $newInstall = false;
 
     $usersSchema = new usersSchema();
@@ -86,26 +86,16 @@ class Authentication extends ModuleBase {
 
     }
 
-    if ($newInstall
-        OR $this->m
-          ->Configuration
-          ->get('authentication.rootCreated') != 'yes') {
-      $controller = new AuthenticationController($this->m
-          ->Routes, $this->m
-          ->Configuration
-          ->getSubset('authentication'));
-      $controller->addModule($this->m
-          ->Shadow);
-      $this->m
-        ->Maintenance
-        ->setup($controller, 'setupRoot', array($rootGroup));
+    if ($newInstall OR $this->config['rootCreated'] != true) {
+      $controller = new AuthenticationController($this->m->Routes, $this->config);
+      $controller->addModule($this->m->Shadow);
+      $this->m->Maintenance->setup($controller, 'setupRoot', array($rootGroup));
     }
 
     if (!$this->isLoggedIn()) {
-      $unregistered = Group::first(
-        SelectQuery::create()->where('name = ?',
-            $this->m
-              ->Configuration['authentication.defaultGroups.unregistered']));
+      $unregistered = Group::first(SelectQuery::create()
+        ->where('name = ?', $this->config['defaultGroups']['unregistered'])
+      );
       if ($unregistered) {
         $this->unregistered = $unregistered;
       }

@@ -12,8 +12,7 @@ abstract class ExtensionBase {
 
   protected $config = null;
 
-  public final function __construct($m, $e, Configuration $config,
-                                    Extensions $extensions) {
+  public final function __construct($m, $e, AppConfig $config, Extensions $extensions) {
     $this->config = $config;
     $this->extensions = $extensions;
     $this->m = new Dictionary($m, true);

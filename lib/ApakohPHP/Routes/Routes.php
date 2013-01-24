@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS routing system
 // Author         : PeanutCMS
-// Dependencies   : Errors Http Templates ApakohPHP/Editors Configuration
+// Dependencies   : Errors Http Templates ApakohPHP/Editors
 
 /**
  * Handling routes
@@ -44,8 +44,7 @@ class Routes extends ModuleBase {
   protected function init() {
     $this->events = new Events($this);
 
-    $controller = new ApplicationController($this, $this->m
-      ->Configuration);
+    $controller = new ApplicationController($this, $this->config);
     $controller->setRoute('notFound', 1);
 
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
@@ -152,9 +151,7 @@ class Routes extends ModuleBase {
 
   public function isCurrent($route = null) {
     if (!isset($route)) {
-      $path = explode('/', $this->m
-        ->Configuration
-        ->get('http.index.path'));
+      $path = explode('/', $this->m->Http->config['index']['path']);
       return $path == $this->request
             ->path;
     }

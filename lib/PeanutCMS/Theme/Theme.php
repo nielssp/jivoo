@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS theme system
 // Author         : PeanutCMS
-// Dependencies   : Errors Configuration Templates
+// Dependencies   : Errors Templates
 
 /*
  * Class for loading and manipulating the theme
@@ -38,16 +38,16 @@ class Theme extends ModuleBase {
                 ->Templates
                 ->hideVersion() ? '' : ' ' . PEANUT_VERSION));
     }
-    if ($this->m
-      ->Configuration
-      ->exists('site.description')) {
-      $this->m
-        ->Templates
-        ->insertMeta('description',
-          $this->m
-            ->Configuration
-            ->get('site.description'));
-    }
+//     if ($this->m
+//       ->Configuration
+//       ->exists('site.description')) {
+//       $this->m
+//         ->Templates
+//         ->insertMeta('description',
+//           $this->m
+//             ->Configuration
+//             ->get('site.description'));
+//     }
 
     // Find and load theme
     if ($this->load()) {
@@ -66,12 +66,8 @@ class Theme extends ModuleBase {
    * @return bool False if no theme could be loaded
    */
   private function load() {
-    if ($this->m
-      ->Configuration
-      ->exists('theme.name')) {
-      $theme = $this->m
-        ->Configuration
-        ->get('theme.name');
+    if (isset($this->config['name'])) {
+      $theme = $this->config['name'];
       if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
         $this->theme = $theme;
         return true;
@@ -86,9 +82,7 @@ class Theme extends ModuleBase {
         if (is_dir($this->p('themes', $theme)) AND $theme != '.'
             AND $theme != '..') {
           if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
-            $this->m
-              ->Configuration
-              ->set('theme.name', $theme);
+            $this->config['name'] = $theme;
             $this->theme = $theme;
             return true;
           }
