@@ -68,7 +68,7 @@ function tr($text) {
  */
 function trl($single, $plural, $glue, $gluel, $pieces) {
   $args = func_get_args();
-  return call_user_func_array(array($service, 'translateList'), $args);
+  return call_user_func_array(array('I18n', 'translateList'), $args);
 }
 
 /**
@@ -77,7 +77,7 @@ function trl($single, $plural, $glue, $gluel, $pieces) {
  */
 function trn($single, $plural, $number) {
   $args = func_get_args();
-  return call_user_func_array(array($service, 'translateNumeral'), $args);
+  return call_user_func_array(array('I18n', 'translateNumeral'), $args);
 }
 
 function h($string) {
@@ -87,17 +87,17 @@ function h($string) {
 
 function fdate($timestamp = null) {
   $args = func_get_args();
-  return call_user_func_array(array($service, 'formatDate'), $args);
+  return call_user_func_array(array('I18n', 'formatDate'), $args);
 }
 
 function ftime($timestamp = null) {
   $args = func_get_args();
-  return call_user_func_array(array($service, 'formatTime'), $args);
+  return call_user_func_array(array('I18n', 'formatTime'), $args);
 }
 
 function tdate($format, $timestamp = null) {
   $args = func_get_args();
-  return call_user_func_array(array($service, 'date'), $args);
+  return call_user_func_array(array('I18n', 'date'), $args);
 }
 
 require APAKOH_LIB_PATH . '/Lib.php';
