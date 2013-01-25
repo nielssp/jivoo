@@ -69,7 +69,7 @@ class Database extends ModuleBase implements IDatabase {
     $this->config->defaults = array(
       'server' => 'localhost',
       'database' => 'peanutcms',
-      'filename' => 'config/db.sqlite3',
+      'filename' => $this->p('config', 'db.sqlite3'),
     );
     $controller = new DatabaseMaintenanceController(
       $this->m->Routes,
