@@ -2,9 +2,9 @@
 // Module
 // Name           : Templates
 // Version        : 0.2.0
-// Description    : The PeanutCMS template system
-// Author         : PeanutCMS
-// Dependencies   : Errors Http ApakohPHP/Assets
+// Description    : The ApakohPHP template system
+// Author         : apakoh.dk
+// Dependencies   : ApakohPHP/Errors ApakohPHP/Http ApakohPHP/Assets
 
 /**
  * Class for setting the template

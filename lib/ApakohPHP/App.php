@@ -77,6 +77,9 @@ class App {
     if (isset($appConfig['modules'])) {
       $this->modules = $appConfig['modules'];
     }
+    if (!isset($appConfig['defaultLanguage'])) {
+      $this->appConfig['defaultLanguage'] = 'en';
+    }
   }
 
   /**
@@ -218,6 +221,15 @@ class App {
     if (file_exists($environmentConfigFile)) {
       $this->config->defaults = include $environmentConfigFile;
     }
+    
+    // I18n system
+    $this->config->defaults = array(
+      'core' => array(
+        'language' => $this->appConfig['defaultLanguage'],
+        'timeZone' => date_default_timezone_get(),
+      ),
+    );
+    I18n::setup($this->config['core'], $this->paths->languages);
 
     Lib::addIncludePath($this->paths->controllers);
     Lib::addIncludePath($this->paths->views);

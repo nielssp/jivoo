@@ -4,7 +4,6 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS hashing and security system
 // Author         : PeanutCMS
-// Dependencies   : Errors
 
 class Shadow extends ModuleBase {
 

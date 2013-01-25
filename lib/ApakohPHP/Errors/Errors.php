@@ -260,7 +260,7 @@ class Errors extends ModuleBase {
             <div class="section">
               <div class="container">
                 <div id="sad">
-           			:-(
+                  :-(
                 </div>
                 <h1>' . $title
         . '</h1>
