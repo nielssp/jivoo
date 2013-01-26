@@ -999,9 +999,7 @@ abstract class ActiveRecord implements IModel {
     if (!isset($selector)) {
       $selector = SelectQuery::create();
     }
-    $selector->limit(1);
-    $selector->reverseOrder()
-      ->limit(1);
+    $selector->reverseOrder()->limit(1);
     $result = $dataSource->select($selector);
     if (!$result->hasRows()) {
       return false;

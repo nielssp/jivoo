@@ -2,7 +2,6 @@
 $this->setindent(4);
 $this->requestScript('jquery');
 $this->insertStyle('theme-style', $this->file('style.css'));
-Link::find(2)->moveUp();
 ?>
 <!DOCTYPE html>
 <html>

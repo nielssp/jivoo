@@ -68,8 +68,32 @@ class Link extends ActiveRecord implements ILinkable {
     return Link::all($select);
   }
 
-  public function moveUp() {
+  public function moveToTop() {
     $link = Link::first(SelectQuery::create()
+      ->where('menu = ?', $this->menu)
+      ->and('id != ?', $this->id)
+      ->orderBy('position')
+    );
+    if ($link) {
+      $this->position = $link->position - 1;
+      $this->save();
+    }
+  }
+
+  public function moveToBottom() {
+    $link = Link::last(SelectQuery::create()
+      ->where('menu = ?', $this->menu)
+      ->and('id != ?', $this->id)
+      ->orderBy('position')
+    );
+    if ($link) {
+      $this->position = $link->position + 1;
+      $this->save();
+    }
+  }
+
+  public function moveUp() {
+    $link = Link::last(SelectQuery::create()
       ->where('menu = ?', $this->menu)
       ->and('id != ?', $this->id)
       ->and('position <= ?', $this->position)
@@ -84,23 +108,18 @@ class Link extends ActiveRecord implements ILinkable {
   }
 
   public function moveDown() {
-    $links = Link::all(SelectQuery::create()
+    $link = Link::first(SelectQuery::create()
       ->where('menu = ?', $this->menu)
       ->and('id != ?', $this->id)
-      ->orderByDescending('position')
+      ->and('position >= ?', $this->position)
+      ->orderBy('position')
     );
-    if ($this->position < count($links)) {
+    if ($link) {
+      $link->position = $this->position;
       $this->position++;
+      $link->save();
       $this->save();
     }
-    $i = count($links);
-    foreach ($links as $link) {
-      if ($i == $this->position) {
-        $i--;
-      }
-      $link->position = $i--;
-      $link->save();
-    } 
   }
 }
 
