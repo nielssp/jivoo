@@ -23,6 +23,8 @@ class App {
   
   private $environment = 'production';
 
+  private $sessionPrefix = 'apakoh_';
+
   /* EVENTS BEGIN */
   private $events = null;
 
@@ -80,6 +82,9 @@ class App {
     if (!isset($appConfig['defaultLanguage'])) {
       $this->appConfig['defaultLanguage'] = 'en';
     }
+    if (isset($appConfig['sessionPrefix'])) {
+      $this->sessionPrefix = $appConfig['sessionPrefix'];
+    }
   }
 
   /**
@@ -95,6 +100,7 @@ class App {
       case 'minPhpVersion':
       case 'environment':
       case 'config':
+      case 'sessionPrefix':
         return $this->$property;
     }
   }
@@ -219,8 +225,10 @@ class App {
     
     $environmentConfigFile = $this->p('config', 'environments/' . $environment . '.php');
     if (file_exists($environmentConfigFile)) {
-      $this->config->defaults = include $environmentConfigFile;
+      $this->config->override = include $environmentConfigFile;
     }
+
+    Logger::attachFile($this->p('log', $this->environment . '.log'));
     
     // I18n system
     $this->config->defaults = array(

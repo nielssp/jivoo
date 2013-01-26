@@ -67,7 +67,7 @@ class Lib {
       }
     }
     $bt = debug_backtrace();
-    if (isset($bt[1])) {
+    if (isset($bt[1]) AND isset($bt[1]['file'])) {
       $module = dirname($bt[1]['file']);
       $classPath = $module . '/' . $className . '.php';
       if (file_exists($classPath)) {

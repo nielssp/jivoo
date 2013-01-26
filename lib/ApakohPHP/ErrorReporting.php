@@ -1,5 +1,8 @@
 <?php
 class ErrorReporting {
+
+  private static $handler = null;
+
   private function __construct() {}
 
   public static function handleError($type, $message, $file, $line) {
@@ -19,6 +22,7 @@ class ErrorReporting {
         $line = $backtrace[2]['line'];
       case E_WARNING:
       case E_DEPRECATED:
+        Logger::log($message, Logger::WARNING, $file, $line);
         break;
       case E_USER_NOTICE:
         $backtrace = debug_backtrace();
@@ -27,6 +31,7 @@ class ErrorReporting {
       case E_PARSE:
       case E_NOTICE:
       case E_STRICT:
+        Logger::log($message, Logger::NOTICE, $file, $line);
         break;
       default:
         throw new ErrorException($message, 0, $type, $file, $line);
@@ -34,11 +39,20 @@ class ErrorReporting {
     }
   }
 
+  public static function setHandler($handler) {
+    self::$handler = $handler;
+  }
+
   /**
    * Uncaught Exception handler
    * @param Exception $exception Exception
    */
   public static function handleException(Exception $exception) {
+    Logger::logException($exception);
+    if (isset(self::$handler)) {
+      call_user_func(self::$handler, $exception); 
+      return;
+    }
     if (defined('OUTPUTTING')) {
       echo 'Uncaught exception';
     }

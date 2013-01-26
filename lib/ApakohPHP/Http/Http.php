@@ -28,9 +28,10 @@ class Http extends ModuleBase {
       'index' => array(
         'path' => 'posts',
       ),
+      'sessionPrefix' => $this->app->sessionPrefix,
     );
     
-    $this->request = new Request();
+    $this->request = new Request($this->config['sessionPrefix']);
 
     // Determine if the current URL is correct
     if ($this->config['rewrite']) {

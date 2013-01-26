@@ -1,7 +1,7 @@
 <?php
 return array(
   'logging' => array(
-    'level' => Logger::ERROR,
+    'level' => Logger::ALL,
   ),
   'Maintenance' => array(
     'showErrorReport' => false,

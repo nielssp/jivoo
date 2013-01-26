@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The ApakohPHP template system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Errors ApakohPHP/Http ApakohPHP/Assets
+// Dependencies   : ApakohPHP/Http ApakohPHP/Assets
 
 /**
  * Class for setting the template
@@ -29,7 +29,7 @@ class Templates extends ModuleBase {
 
   private $parameters = array();
 
-  private $hideLevel = HIDE_LEVEL;
+  private $hideLevel = 0;
 
   public function hideVersion() {
     return $this->hideLevel > 0;

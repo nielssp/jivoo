@@ -18,7 +18,7 @@ class AppConfig implements arrayaccess{
   
   private $parent = null;
   
-  public function __construct($configFile) {
+  public function __construct($configFile = null) {
     $this->root = $this;
     if (isset($configFile)) {
       if (file_exists($configFile)) {
@@ -46,6 +46,9 @@ class AppConfig implements arrayaccess{
       case 'defaults':
         $this->setDefaults(is_array($value) ? $value : array());
         break;
+      case 'override':
+        $this->setMultiple(is_array($value) ? $value : array());
+        break;
     }
   }
   
@@ -68,13 +71,16 @@ class AppConfig implements arrayaccess{
    * @return bool True if successful, false if not
    */
   public function set($key, $value) {
+    $oldValue = $this->data[$key];
     if (isset($key) AND isset($value) AND $key != '') {
       $this->data[$key] = $value;
     }
     else {
       $this->data[$key] = null;
     }
-    $this->root->updated = true;
+    if (!$this->root->updated AND $oldValue !== $value) {
+      $this->root->updated = true;
+    }
   }
   
 
@@ -110,6 +116,21 @@ class AppConfig implements arrayaccess{
     }
     else {
       if (!$this->exists($key)) {
+        $this->set($key, $value);
+      }
+    }
+  }
+  
+  /**
+   * Override values
+   * @param array $array Associative array
+   */
+  public function setMultiple($array) {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        $this[$key]->setDefaults($value);
+      }
+      else {
         $this->set($key, $value);
       }
     }

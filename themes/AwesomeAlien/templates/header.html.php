@@ -46,8 +46,7 @@ $rand = floor(time() / 60) % 5 + 1;
       <div id="navigation">
         <ul>
 <?php foreach (Link::getMenu('main') as $link) : ?>
-          <li<?php if ($this->isCurrent($link))
-    echo ' class="selected"'; ?>>
+          <li<?php if ($this->isCurrent($link)) echo ' class="selected"'; ?>>
             <?php echo $Html->link(h($link->title), $link); ?>
           </li>
 <?php endforeach; ?>

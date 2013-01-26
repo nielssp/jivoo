@@ -5,8 +5,8 @@ return array(
   'version' => '0.3.4',
   'defaultLanguage' => 'en',
   'minPhpVersion' => '5.2.0',
+  'sessionPrefix' => 'peanut_',
   'modules' => array(
-    'ApakohPHP/Errors',
     'ApakohPHP/Shadow', 'ApakohPHP/Http',
     'ApakohPHP/Templates', 'ApakohPHP/Routes', 'ApakohPHP/Authentication',
     'ApakohPHP/Database', 'PeanutCMS/Theme', 'PeanutCMS/Backend',
