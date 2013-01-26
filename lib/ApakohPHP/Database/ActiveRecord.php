@@ -23,64 +23,53 @@ abstract class ActiveRecord implements IModel {
       if ($column == $this->primaryKey) {
         continue;
       }
-      if (isset($this->schema
-        ->$column)) {
-        $info = $this->schema
-          ->$column;
+      if (isset($this->schema->$column)) {
+        $info = $this->schema->$column;
         if ($info['type'] == 'integer') {
-          /** @todo Handle signed integers */
-          $validator->$column
-            ->isInteger = true;
-          if (isset($validator->$column
-            ->maxValue)) {
-            $validator->$column
-              ->maxValue = min($validator->$column
-              ->maxValue, 4294967295);
+          if (isset($info['unsigned']) && $info['unsigned'] === true) {
+            $intMin = 0;
+            $intMax = 4294967295;
           }
           else {
-            $validator->$column
-              ->maxValue = 4294967295;
+            $intMin = -2147483648;
+            $intMax = 2147483647;
           }
-          if (isset($validator->$column
-            ->minValue)) {
-            $validator->$column
-              ->minValue = max(0, $validator->$column
-              ->minValue);
+          $maxLength = 
+          $validator->$column->isInteger = true;
+          if (isset($validator->$column->maxValue)) {
+            $validator->$column->maxValue = min($validator->$column->maxValue, $intMax);
           }
           else {
-            $validator->$column
-              ->minValue = 0;
+            $validator->$column->maxValue = $intMax;
+          }
+          if (isset($validator->$column->minValue)) {
+            $validator->$column->minValue = max($intMin, $validator->$column->minValue);
+          }
+          else {
+            $validator->$column->minValue = $intMin;
           }
         }
         else if ($info['type'] == 'float') {
-          $validator->$column
-            ->isFloat = true;
+          $validator->$column->isFloat = true;
         }
         else if ($info['type'] == 'boolean') {
-          $validator->$column
-            ->isBoolean = true;
+          $validator->$column->isBoolean = true;
         }
         if (isset($info['length']) AND $info['type'] != 'float'
             AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
-          if (isset($validator->$column
-            ->maxLength)) {
-            $validator->$column
-              ->maxLength = min($validator->$column
-              ->maxLength, $info['length']);
+          if (isset($validator->$column->maxLength)) {
+            $validator->$column->maxLength = min($validator->$column->maxLength, $info['length']);
           }
           else {
-            $validator->$column
-              ->maxLength = $info['length'];
+            $validator->$column->maxLength = $info['length'];
           }
         }
         if (isset($info['key'])
             AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
-          $validator->$column
-            ->unique = true;
+          $validator->$column->unique = true;
         }
         if (isset($info['null']) AND $info['null'] == false) {
-          $validator->$column
-            ->null = false;
+          $validator->$column->null = false;
         }
       }
     }

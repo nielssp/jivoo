@@ -4,7 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : Routes Templates Errors Http Maintenance
+// Dependencies   : ApakohPHP/Routes ApakohPHP/Templates ApakohPHP/Errors
+//                  ApakohPHP/Http ApakohPHP/Maintenance
 
 class Database extends ModuleBase implements IDatabase {
   private $driver;

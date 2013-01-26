@@ -27,7 +27,7 @@ class Sqlite3Database extends SqlDatabase {
       ->close();
   }
 
-  public function fromSchematype($type, $length = null) {
+  public function fromSchematype($type, $length = null, $unsigned = null) {
     switch ($type) {
       case 'string':
         $type = 'TEXT';

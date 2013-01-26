@@ -20,7 +20,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     }
   }
 
-  public function fromSchematype($type, $length = null) {
+  public function fromSchematype($type, $length = null, $unsigned = null) {
     switch ($type) {
       case 'string':
         $type = 'varchar';
@@ -46,11 +46,18 @@ class PdoMysqlDatabase extends PdoDatabase {
     if (isset($length)) {
       $type .= '(' . $length . ')';
     }
+    if ($unsigned === true) {
+      $type .= ' unsigned';
+    }
     return $type;
   }
 
   public function toSchemaType($type) {
     $length = null;
+    $unsigned = null;
+    if (strpos($type, 'unsigned') !== false) {
+      $unsigned = true;
+    }
     if (strpos($type, '(') !== false) {
       list($type, $right) = explode('(', $type);
       list($length) = explode(')', $right);
@@ -77,7 +84,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     else {
       $type = 'text';
     }
-    return array($type, $length);
+    return array($type, $length, $unsigned);
   }
 
   public function getSchema($table) {
@@ -88,6 +95,9 @@ class PdoMysqlDatabase extends PdoDatabase {
       $column = $row['Field'];
       $type = $this->toSchemaType($row['Type']);
       $info['type'] = $type[0];
+      if (isset($type[2])) {
+        $info['unsigned'] = $type[2];
+      }
       if (isset($type[1])) {
         $info['length'] = $type[1];
       }
@@ -144,7 +154,7 @@ class PdoMysqlDatabase extends PdoDatabase {
         $first = false;
       }
       $sql .= $column;
-      $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
+      $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length'], $options['unsigned']);
       if (!$options['null']) {
         $sql .= ' NOT';
       }
@@ -180,7 +190,7 @@ class PdoMysqlDatabase extends PdoDatabase {
 
   public function addColumn($table, $column, $options = array()) {
     $sql = 'ALTER TABLE ' . $this->tableName($table) . ' ADD ' . $column;
-    $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
+    $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length'], $options['unsigned']);
     if (!$options['null']) {
       $sql .= ' NOT';
     }
@@ -204,7 +214,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     // ALTER TABLE  `posts` CHANGE  `testing`  `testing` INT( 12 ) NOT null
     $sql = 'ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $column
         . ' ' . $column;
-    $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
+    $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length'], $options['unsigned']);
     if (!$options['null']) {
       $sql .= ' NOT';
     }

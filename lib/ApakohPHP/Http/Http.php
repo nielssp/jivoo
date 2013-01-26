@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS http system
 // Author         : PeanutCMS
-// Dependencies   : Errors
+// Dependencies   : ApakohPHP/Errors
 
 /*
  * Class for working with HTTP headers, redirects etc.

@@ -62,9 +62,45 @@ class Link extends ActiveRecord implements ILinkable {
 
   public static function getMenu($menu = 'main') {
     $menu = strtolower($menu);
-    $select = SelectQuery::create()->where('menu = ?')
-      ->addVar($menu);
+    $select = SelectQuery::create()
+      ->where('menu = ?', $menu)
+      ->orderBy('position');
     return Link::all($select);
+  }
+
+  public function moveUp() {
+    $link = Link::first(SelectQuery::create()
+      ->where('menu = ?', $this->menu)
+      ->and('id != ?', $this->id)
+      ->and('position <= ?', $this->position)
+      ->orderBy('position')
+    );
+    if ($link) {
+      $link->position = $this->position;
+      $this->position--;
+      $link->save();
+      $this->save();
+    }
+  }
+
+  public function moveDown() {
+    $links = Link::all(SelectQuery::create()
+      ->where('menu = ?', $this->menu)
+      ->and('id != ?', $this->id)
+      ->orderByDescending('position')
+    );
+    if ($this->position < count($links)) {
+      $this->position++;
+      $this->save();
+    }
+    $i = count($links);
+    foreach ($links as $link) {
+      if ($i == $this->position) {
+        $i--;
+      }
+      $link->position = $i--;
+      $link->save();
+    } 
   }
 }
 

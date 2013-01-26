@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS maintenance system
 // Author         : PeanutCMS
-// Dependencies   : Shadow Errors Routes
+// Dependencies   : ApakohPHP/Shadow ApakohPHP/Errors ApakohPHP/Routes
 
 /**
  * Maintenance module

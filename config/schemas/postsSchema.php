@@ -7,6 +7,7 @@
 class postsSchema extends Schema {
   public $id = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'key' => 'primary',
     'autoIncrement' => true,
@@ -33,6 +34,7 @@ class postsSchema extends Schema {
 
   public $date = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'key' => 'index',
     'null' => false,
@@ -40,6 +42,7 @@ class postsSchema extends Schema {
 
   public $comments = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'null' => false,
   );
@@ -58,6 +61,7 @@ class postsSchema extends Schema {
 
   public $user_id = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'null' => false,
   );

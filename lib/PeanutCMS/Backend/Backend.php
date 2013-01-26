@@ -4,8 +4,9 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
-// Dependencies   : Database Authentication Errors Routes
-//                  Templates Http
+// Dependencies   : ApakohPHP/Database ApakohPHP/Authentication
+//                  ApakohPHP/Errors ApakohPHP/Routes ApakohPHP/Templates
+//                  ApakohPHP/Http
 
 /**
  * PeanutCMS backend

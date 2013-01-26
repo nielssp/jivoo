@@ -7,6 +7,7 @@
 class commentsSchema extends Schema {
   public $id = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'key' => 'primary',
     'autoIncrement' => true,
@@ -15,6 +16,7 @@ class commentsSchema extends Schema {
 
   public $post_id = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'key' => 'index',
     'null' => false,
@@ -22,6 +24,7 @@ class commentsSchema extends Schema {
 
   public $user_id = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'default' => '0',
     'null' => false,
@@ -29,6 +32,7 @@ class commentsSchema extends Schema {
 
   public $parent_id = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'default' => '0',
     'null' => false,
@@ -57,13 +61,9 @@ class commentsSchema extends Schema {
     'null' => false,
   );
 
-  public $content_text = array(
-    'type' => 'text',
-    'null' => false,
-  );
-
   public $date = array(
     'type' => 'integer',
+    'unsigned' => true,
     'length' => 10,
     'null' => false,
   );
@@ -80,6 +80,10 @@ class commentsSchema extends Schema {
     'null' => false,
   );
 
+  public $content_text = array(
+    'type' => 'text',
+    'null' => false,
+  );
 
   public $indexes = array(
     'PRIMARY' => array(
