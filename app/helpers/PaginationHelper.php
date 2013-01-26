@@ -16,33 +16,29 @@ class PaginationHelper extends ApplicationHelper {
 
   public function setCount($count) {
     $this->count = $count;
+    $this->pages = max(ceil($this->count / $this->limit), 1);
     return $this;
   }
 
   public function setLimit($limit) {
     Utilities::precondition($limit > 0);
     $this->limit = $limit;
+    $this->pages = max(ceil($this->count / $this->limit), 1);
     return $this;
   }
 
   public function paginate(ILimitable $select) {
-    $this->pages = max(ceil($this->count / $this->limit), 1);
-    if (isset($this->request
-      ->query['page'])) {
-      $this->page = (int) $this->request
-        ->query['page'];
+    if (isset($this->request->query['page'])) {
+      $this->page = (int) $this->request->query['page'];
       $this->page = min($this->page, $this->pages);
       $this->page = max($this->page, 1);
       $this->offset = ($this->page - 1) * $this->limit;
     }
-    else if (isset($this->request
-      ->query['from']) AND isset($this->request
-          ->query['to'])) {
-      $this->from = min(max($this->request
-        ->query['from'], 1), $this->count);
+    else if (isset($this->request->query['from'])
+        AND isset($this->request->query['to'])) {
+      $this->from = min(max($this->request->query['from'], 1), $this->count);
       $this->offset = $this->from - 1;
-      $this->to = min(max($this->request
-        ->query['to'], 1), $this->count);
+      $this->to = min(max($this->request->query['to'], 1), $this->count);
       $this->limit = $this->to - $this->from + 1;
     }
     $select->limit($this->limit);

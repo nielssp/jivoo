@@ -113,6 +113,7 @@ class Posts extends ModuleBase {
     $commentEncoder = new Encoder();
     $commentEncoder->allowTag('strong');
     $commentEncoder->allowTag('br');
+    $commentEncoder->allowTag('p');
     $commentEncoder->allowTag('a');
     $commentEncoder->allowAttribute('a', 'href');
     $commentEncoder->validateAttribute('a', 'href', 'url', true);

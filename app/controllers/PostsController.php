@@ -53,64 +53,43 @@ class PostsController extends ApplicationController {
 
     $this->post = Post::find($post);
 
-    if (!$this->post
-        OR ($this->post
-          ->status != 'published'
-            AND !$this->auth
-              ->hasPermission('backend.posts.viewDraft'))) {
+    if (!$this->post OR ($this->post->status != 'published'
+        AND !$this->auth->hasPermission('backend.posts.viewDraft'))) {
       return $this->render('404.html');
     }
 
     $select = SelectQuery::create()->orderBy('date')
       ->where('status = "approved"');
 
-    $this->Pagination
-      ->setLimit(10);
+    $this->Pagination->setLimit(10);
 
-    $this->Pagination
-      ->setCount($this->post
-        ->countComments(clone $select));
-    $this->Pagination
-      ->paginate($select);
+    $this->Pagination->setCount($this->post->countComments(clone $select));
+    $this->Pagination->paginate($select);
 
-    $this->user = $this->auth
-      ->getUser();
+    $this->user = $this->auth->getUser();
 
-    Comment::setFieldEditor('content',
-      $this->m
-        ->Editors
-        ->getEditor($this->config['comments.editor']));
+    Comment::setFieldEditor(
+      'content',
+      $this->m->Editors->getEditor($this->config['comments']['editor'])
+    );
 
-    if ($this->auth
-      ->hasPermission('frontend.posts.comments.add')) {
-      if ($this->request
-        ->isPost() AND $this->request
-            ->checkToken()) {
-        $this->newComment = Comment::create($this->request
-            ->data['comment'], array('author', 'email', 'website', 'content'));
-        if (!empty($this->newComment
-          ->website)
-            AND preg_match('/^https?:\/\//', $this->newComment
-              ->website) == 0) {
-          $this->newComment
-            ->website = 'http://' . $this->newComment
-                ->website;
+    if ($this->auth->hasPermission('frontend.posts.comments.add')) {
+      if ($this->request->isPost() AND $this->request->checkToken()) {
+        $this->newComment = Comment::create(
+          $this->request->data['comment'],
+          array('author', 'email', 'website', 'content')
+        );
+        if (!empty($this->newComment->website)
+            AND preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
+          $this->newComment->website = 'http://' . $this->newComment->website;
         }
         if ($this->user) {
-          $this->newComment
-            ->setUser($this->user);
-          $this->newComment
-            ->author = $this->user
-            ->username;
-          $this->newComment
-            ->email = $this->user
-            ->email;
+          $this->newComment->setUser($this->user);
+          $this->newComment->author = $this->user->username;
+          $this->newComment->email = $this->user->email;
         }
-        $this->newComment
-          ->setPost($this->post);
-        $this->newComment
-          ->ip = $this->request
-          ->ip;
+        $this->newComment->setPost($this->post);
+        $this->newComment->ip = $this->request->ip;
         if ($this->config['commentApproval'] == 'on'
             AND !$this->auth
               ->hasPermission('backend.posts.comments.approve')) {
@@ -121,41 +100,26 @@ class PostsController extends ApplicationController {
           $this->newComment
             ->status = 'approved';
         }
-        if ($this->newComment
-          ->isValid()) {
-          $this->newComment
-            ->save();
-          $this->post
-            ->comments += 1;
-          $this->post
-            ->save();
-          $this->Pagination
-            ->setCount($this->post
-              ->comments);
+        if ($this->newComment->isValid()) {
+          $this->newComment->save();
+          $this->post->comments += 1;
+          $this->post->save();
+          $this->Pagination->setCount($this->post->comments);
 
-          if (!empty($this->newComment
-            ->author)) {
-            $this->request
-              ->cookies['comment_author'] = $this->newComment
-              ->author;
+          if (!empty($this->newComment->author)) {
+            $this->request->cookies['comment_author'] = $this->newComment->author;
           }
-          if (!empty($this->newComment
-            ->email)) {
-            $this->request
-              ->cookies['comment_email'] = $this->newComment
-              ->email;
+          if (!empty($this->newComment->email)) {
+            $this->request->cookies['comment_email'] = $this->newComment->email;
           }
-          if (!empty($this->newComment
-            ->website)) {
-            $this->request
-              ->cookies['comment_website'] = $this->newComment
-              ->website;
+          if (!empty($this->newComment->website)) {
+            $this->request->cookies['comment_website'] = $this->newComment->website;
           }
 
-          $this->refresh(array('page' => $this->Pagination
-                ->getPages()
-              ), 'comment' . $this->newComment
-                    ->id);
+          $this->refresh(
+            array('page' => $this->Pagination->getPages()),
+            'comment' . $this->newComment->id
+          );
         }
       }
       else {
