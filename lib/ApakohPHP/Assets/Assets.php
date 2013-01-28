@@ -10,7 +10,7 @@ class Assets extends ModuleBase {
   private $docRoot = '';
   private $docRootLength = 0;
 
-  private $extensionBlacklist = array('php');
+  private $extensionBlacklist = array('php', 'log');
 
   private $pathWhitelist = array();
 

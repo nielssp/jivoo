@@ -9,11 +9,8 @@
 /**
  * Class for setting the template
  *
- * @package PeanutCMS
- */
-
-/**
- * Templates class
+ * @package ApakohPHP
+ * @subpackage Templates
  */
 class Templates extends ModuleBase {
 

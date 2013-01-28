@@ -7,10 +7,6 @@ return array(
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'peanut_',
   'modules' => array(
-    'ApakohPHP/Shadow', 'ApakohPHP/Http',
-    'ApakohPHP/Templates', 'ApakohPHP/Routes', 'ApakohPHP/Authentication',
-    'ApakohPHP/Database', 'PeanutCMS/Theme', 'PeanutCMS/Backend',
-    'PeanutCMS/Extensions', 'PeanutCMS/Posts', 'PeanutCMS/Links',
-    'PeanutCMS/Pages'
+    'ApakohPHP', 'PeanutCMS'
   ),
 );
