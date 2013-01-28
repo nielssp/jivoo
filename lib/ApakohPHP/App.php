@@ -11,7 +11,7 @@ class App {
 
   private $paths = null;
   
-  private $webPath = '';
+  private $webPath = '/';
 
   private $name = 'ApakohPHP Application';
 
@@ -155,7 +155,7 @@ class App {
    * @return string Path
    */
   public function w($path = '') {
-    if ($this->webPath == '') {
+    if ($this->webPath == '/') {
       return '/' . $path;
     }
     return $this->webPath . '/' . $path;
