@@ -155,6 +155,9 @@ class App {
    * @return string Path
    */
   public function w($path = '') {
+    if ($this->webPath == '') {
+      return '/' . $path;
+    }
     return $this->webPath . '/' . $path;
   }
 
