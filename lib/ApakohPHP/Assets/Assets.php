@@ -46,6 +46,10 @@ class Assets extends ModuleBase {
   private function returnAsset($path) {
     if (file_exists($path)) {
       header('Content-Type: ' . Utilities::getContentType($path));
+      $expires = 60*60;
+      header("Pragma: public");
+      header("Cache-Control: maxage=".$expires);
+      header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
       echo file_get_contents($path);
       return true;
     }
