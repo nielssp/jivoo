@@ -53,7 +53,7 @@ class Theme extends ModuleBase {
     if ($this->load()) {
       $this->m
         ->Templates
-        ->setTheme($this->p('themes', $this->theme . '/'));
+        ->setTheme('themes', $this->theme);
     }
     else {
       new GlobalWarning(tr('Please install a theme'), 'theme-missing');

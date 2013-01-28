@@ -30,6 +30,8 @@ class Templates extends ModuleBase {
   private $parameters = array();
 
   private $hideLevel = 0;
+  
+  private $theme = array(null, null);
 
   public function hideVersion() {
     return $this->hideLevel > 0;
@@ -44,8 +46,6 @@ class Templates extends ModuleBase {
       'title' => $this->app->name,
       'subtitle' => 'Powered by ' . $this->app->name,
     );
-
-    $this->setTheme($this->p(null, ''));
 
     if (isset($this->config['meta'])) {
       $meta = $this->config->get('meta');
@@ -221,10 +221,8 @@ class Templates extends ModuleBase {
     }
   }
 
-  public function setTheme($themeDir) {
-    $this->app
-      ->paths
-      ->theme = $themeDir;
+  public function setTheme($key, $path) {
+    $this->theme = array($key, $path);
   }
 
   /**
@@ -234,10 +232,10 @@ class Templates extends ModuleBase {
    * @return string Link
    */
   public function getFile($file) {
-    if (file_exists($this->p('theme', $file))) {
+    if (file_exists($this->p($this->theme[0], $this->theme[1] . '/' . $file))) {
       return $this->m
         ->Assets
-        ->getAsset('theme', $file);
+        ->getAsset($this->theme[0], $this->theme[1] . '/' . $file);
     }
     return $this->m
       ->Assets
@@ -260,11 +258,11 @@ class Templates extends ModuleBase {
 
   public function getTemplate($name, $additionalPaths = array(),
                               $return = false) {
-    if (file_exists($this->p('theme', 'templates/' . $name . '.php'))) {
+    if (file_exists($this->p($this->theme[0], $this->theme[1] . '/' . 'templates/' . $name . '.php'))) {
       if (!$return) {
         $this->setContentType($name);
       }
-      return $this->p('theme', 'templates/' . $name . '.php');
+      return $this->p($this->theme[0], $this->theme[1] . '/' . 'templates/' . $name . '.php');
     }
     else if (file_exists($this->p('templates', $name . '.php'))) {
       if (!$return) {
