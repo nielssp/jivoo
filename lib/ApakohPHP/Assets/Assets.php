@@ -58,7 +58,7 @@ class Assets extends ModuleBase {
       $key = 'assets';
     }
     $p = $this->p($key, $path);
-    if (!strncmp($p, $this->docRoot, $this->docRootLength) == 0) {
+    if (strncmp($p, $this->docRoot, $this->docRootLength) == 0) {
       return substr($p, $this->docRootLength);
     }
     else {
