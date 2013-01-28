@@ -28,6 +28,6 @@ class PathDictionary extends Dictionary {
   }
 
   public function __set($key, $path) {
-    parent::__set($key, rtrim($path, '\\/'));
+    parent::__set($key, str_replace('\\', '/', realpath($path)));
   }
 }

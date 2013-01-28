@@ -10,6 +10,8 @@ class App {
   private $config = array();
 
   private $paths = null;
+  
+  private $webPath = '';
 
   private $name = 'ApakohPHP Application';
 
@@ -66,7 +68,7 @@ class App {
       $appConfig['path']
     );
     $this->paths->app = $appConfig['path'];
-    $this->paths->web = dirname($_SERVER['SCRIPT_NAME']);
+    $this->webPath = dirname($_SERVER['SCRIPT_NAME']);
     if (isset($appConfig['name'])) {
       $this->name = $appConfig['name'];
     }
@@ -153,8 +155,7 @@ class App {
    * @return string Path
    */
   public function w($path = '') {
-    return $this->paths
-      ->web . '/' . $path;
+    return $this->webPath . '/' . $path;
   }
 
   public function loadModule($module) {
