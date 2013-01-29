@@ -5,7 +5,7 @@
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
 // Dependencies   : ApakohPHP/Database ApakohPHP/Authentication
-//                  ApakohPHP/Errors ApakohPHP/Routing ApakohPHP/Templates
+//                  ApakohPHP/Routing ApakohPHP/Templates
 
 /**
  * PeanutCMS backend

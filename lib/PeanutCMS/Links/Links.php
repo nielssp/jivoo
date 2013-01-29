@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
 // Author         : PeanutCMS
-// Dependencies   : ApakohPHP/Errors ApakohPHP/Database ApakohPHP/Routing
+// Dependencies   : ApakohPHP/Database ApakohPHP/Routing
 //                  ApakohPHP/Templates
 //                  ApakohPHP/Authentication PeanutCMS/Backend
 

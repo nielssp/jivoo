@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : ApakohPHP/Routing ApakohPHP/Templates ApakohPHP/Errors
+// Dependencies   : ApakohPHP/Routing ApakohPHP/Templates
 //                  ApakohPHP/Maintenance
 
 class Database extends ModuleBase implements IDatabase {
@@ -103,8 +103,9 @@ class Database extends ModuleBase implements IDatabase {
         $this->connection = new $class($this->config);
       }
       catch (DatabaseConnectionFailedException $exception) {
-        Errors::fatal(tr('Database connection failed'),
-          tr('Could not connect to the database.'),
+        /** @todo Do something ... here */
+        throw new Exception(tr('Database connection failed') .
+          tr('Could not connect to the database.') .
           '<p>' . $exception->getMessage() . '</p>');
       }
     }

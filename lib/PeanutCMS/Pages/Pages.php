@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS content page system
 // Author         : PeanutCMS
-// Dependencies   : Errors Database Routing Templates
-//                  Authentication Backend Editors
+// Dependencies   : ApakohPHP/Database ApakohPHP/Routing ApakohPHP/Templates
+//                  ApakohPHP/Authentication ApakohPHP/Backend ApakohPHP/Editors
 
 /*
  * Static pages

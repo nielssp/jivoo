@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The ApakohPHP authentication system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Errors ApakohPHP/Shadow
+// Dependencies   : ApakohPHP/Shadow
 //                  ApakohPHP/Maintenance ApakohPHP/Templates ApakohPHP/Database
 //                  ApakohPHP/Routing
 
