@@ -251,11 +251,6 @@ class MysqlDatabase extends SqlDatabase {
     if (isset($options['autoIncrement'])) {
       $sql .= ' AUTO_INCREMENT';
     }
-    if (isset($options['key'])) {
-      if ($options['key'] == 'primary') {
-        $sql .= ' PRIMARY';
-      }
-    }
     $this->rawQuery($sql);
   }
 
