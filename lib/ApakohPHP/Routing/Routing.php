@@ -303,7 +303,7 @@ class Routing extends ModuleBase {
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
     $status = $moved ? 301 : 303;
-    $this->redirect($status, $this->getLink($path, $query, $fragment));
+    Http::redirect($status, $this->getLink($path, $query, $fragment));
   }
 
   public function redirect($route = null) {
