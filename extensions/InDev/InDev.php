@@ -23,7 +23,7 @@ class InDev extends ExtensionBase {
           array(
             'style' => 'position:fixed;bottom:30px;right:10px;font-family:Candara, sans-serif;font-size:12px;text-align:right;'
           ),
-          'DEVELOPMENT VERSION<br/>VERSION ' . PEANUT_VERSION . '<br/>BUILD '
+          'DEVELOPMENT VERSION<br/>VERSION ' . 0 . '<br/>BUILD '
               . $build);
     }
   }

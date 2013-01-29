@@ -36,7 +36,7 @@ class Theme extends ModuleBase {
           'PeanutCMS'
               . ($this->m
                 ->Templates
-                ->hideVersion() ? '' : ' ' . PEANUT_VERSION));
+                ->hideVersion() ? '' : ' ' . $this->app->version));
     }
 //     if ($this->m
 //       ->Configuration

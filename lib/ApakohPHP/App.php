@@ -162,13 +162,9 @@ class App {
   }
 
   public function loadModule($module) {
-    $moduleName = $module;
-    if (strpos($module, '/') !== false) {
-      $segments = explode('/', $module);
-      $moduleName = $segments[count($segments) - 1];
-    }
-    if (!isset($this->m
-      ->$moduleName)) {
+    $segments = explode('/', $module);
+    $moduleName = $segments[count($segments) - 1];
+    if (!isset($this->m->$moduleName)) {
       if (!class_exists($moduleName, false)) {
         if (!Lib::import($module)) {
           throw new ModuleNotFoundException(

@@ -86,7 +86,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
           ->hasPermission('backend.access')) {
       $this->m
         ->Templates
-        ->set('version', PEANUT_VERSION);
+        ->set('version', $this->app->version);
     }
     else {
       $this->m

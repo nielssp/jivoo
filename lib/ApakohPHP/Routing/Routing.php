@@ -68,7 +68,7 @@ class Routing extends ModuleBase {
     }
     
     $path = explode('/', $this->config['index']['path']);
-    $query = $this->config['index']['query'];
+    $query = $this->config['index']->get('query', true);
     if (count($this->request->path) < 1) {
       $this->request->path = $path;
       $this->request->query = array_merge($query, $this->request->query);
