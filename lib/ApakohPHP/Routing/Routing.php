@@ -38,7 +38,7 @@ class Routing extends ModuleBase {
     $this->config->defaults = array(
       'rewrite' => false,
       'index' => array(
-        'path' => 'posts',
+        'path' => array('posts'),
         'query' => array()
       ),
       'sessionPrefix' => $this->app->sessionPrefix,
