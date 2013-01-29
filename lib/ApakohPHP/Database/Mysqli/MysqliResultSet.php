@@ -20,15 +20,15 @@ class MysqliResultSet implements IResultSet {
     if (!empty($this->rows)) {
       return $this->rowFromAssoc(array_shift($this->rows));
     }
-    return $this->mysqliResult
-      ->fetch_row();
+    $row = $this->mysqliResult->fetch_row();
+    return $row === null ? false : $row;
   }
 
   public function fetchAssoc() {
     if (!empty($this->rows)) {
       return array_shift($this->rows);
     }
-    return $this->mysqliResult
-      ->fetch_assoc();
+    $assoc = $this->mysqliResult->fetch_assoc();
+    return $assoc === null ? false : $assoc;
   }
 }

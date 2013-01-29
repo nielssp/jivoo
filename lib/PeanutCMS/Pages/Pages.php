@@ -91,8 +91,8 @@ class Pages extends ModuleBase {
     }
     $name = implode('/', $path);
     $page = Page::first(
-      SelectQuery::create()->where('name = ?')
-        ->addVar($name));
+      SelectQuery::create()->where('name = ?', $name)
+    );
     if ($page === false) {
       return;
     }

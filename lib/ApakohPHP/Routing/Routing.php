@@ -38,7 +38,7 @@ class Routing extends ModuleBase {
     $this->config->defaults = array(
       'rewrite' => false,
       'index' => array(
-        'path' => array('posts'),
+        'path' => 'posts',
         'query' => array()
       ),
       'sessionPrefix' => $this->app->sessionPrefix,
@@ -366,8 +366,7 @@ class Routing extends ModuleBase {
       return false;
     }
     $routes = $this->routes;
-    $path = $this->getRequest()
-      ->path;
+    $path = $this->request->path;
     foreach ($routes as $j => $route) {
       if (count($route['path']) != count($path)) {
         if ($route['path'][count($route['path']) - 1] != '**') {
