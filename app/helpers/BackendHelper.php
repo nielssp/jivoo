@@ -25,7 +25,7 @@ class BackendHelper extends ApplicationHelper {
 
   public function accessDenied() {
     $this->m
-      ->Routes
+      ->Routing
       ->redirect(
         array('controller' => 'Backend', 'action' => 'accessDenied'));
   }
@@ -36,7 +36,7 @@ class BackendHelper extends ApplicationHelper {
         ->query
     );
     $this->m
-      ->Routes
+      ->Routing
       ->redirect(
         array('controller' => 'Backend', 'action' => 'login'));
   }

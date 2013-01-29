@@ -6,7 +6,7 @@
 // Author         : apakoh.dk
 // Dependencies   : ApakohPHP/Errors ApakohPHP/Shadow
 //                  ApakohPHP/Maintenance ApakohPHP/Templates ApakohPHP/Database
-//                  ApakohPHP/Routes ApakohPHP/Http
+//                  ApakohPHP/Routing
 
 /**
  * Authentication module
@@ -87,7 +87,7 @@ class Authentication extends ModuleBase {
     }
 
     if ($newInstall OR $this->config['rootCreated'] != true) {
-      $controller = new AuthenticationController($this->m->Routes, $this->config);
+      $controller = new AuthenticationController($this->m->Routing, $this->config);
       $controller->addModule($this->m->Shadow);
       $this->m->Maintenance->setup($controller, 'setupRoot', array($rootGroup));
     }

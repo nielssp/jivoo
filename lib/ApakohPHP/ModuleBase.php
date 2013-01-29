@@ -43,8 +43,8 @@ abstract class ModuleBase {
     $this->app = $app;
     $this->config = $app->config[get_class($this)];
 
-    if (isset($this->m->Http)) {
-      $this->request = $this->m->Http->getRequest();
+    if (isset($this->m->Routing)) {
+      $this->request = $this->m->Routing->getRequest();
       $this->session = $this->request->session;
     }
 

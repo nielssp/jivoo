@@ -13,12 +13,12 @@ abstract class ApplicationHelper {
 
   private $helperObjects = array();
 
-  public final function __construct(Routes $routes, $controller = null) {
+  public final function __construct(Routing $routing, $controller = null) {
     $this->m = new Dictionary();
 
-    $routes->addHelper($this);
+    $routing->addHelper($this);
 
-    $this->request = $routes->getRequest();
+    $this->request = $routing->getRequest();
     $this->session = $this->request
       ->session;
 
@@ -27,7 +27,7 @@ abstract class ApplicationHelper {
     foreach ($this->helpers as $name) {
       $class = $name . 'Helper';
       if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($routes, $this);
+        $this->helperObjects[$name] = new $class($routing, $this);
       }
     }
 
@@ -53,7 +53,7 @@ abstract class ApplicationHelper {
 
   protected function getLink($route) {
     return $this->m
-      ->Routes
+      ->Routing
       ->getLink($route);
   }
 

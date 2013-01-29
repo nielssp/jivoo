@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS database system
 // Author         : PeanutCMS
-// Dependencies   : ApakohPHP/Routes ApakohPHP/Templates ApakohPHP/Errors
-//                  ApakohPHP/Http ApakohPHP/Maintenance
+// Dependencies   : ApakohPHP/Routing ApakohPHP/Templates ApakohPHP/Errors
+//                  ApakohPHP/Maintenance
 
 class Database extends ModuleBase implements IDatabase {
   private $driver;
@@ -73,7 +73,7 @@ class Database extends ModuleBase implements IDatabase {
       'filename' => $this->p('config', 'db.sqlite3'),
     );
     $controller = new DatabaseMaintenanceController(
-      $this->m->Routes,
+      $this->m->Routing,
       $this->config
     );
     $controller->addModule($this);
@@ -85,7 +85,7 @@ class Database extends ModuleBase implements IDatabase {
       $this->driverInfo = $this->checkDriver($this->driver);
       if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
         unset($this->config['driver']);
-        $this->m->Routes->refresh();
+        $this->m->Routing->refresh();
       }
       if ($this->config['configured'] != true) {
         $this->m->Maintenance

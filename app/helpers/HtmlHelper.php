@@ -30,7 +30,7 @@ class HtmlHelper extends ApplicationHelper {
 
   public function link($label, $route = null, $attributes = array()) {
     $url = $this->m
-      ->Routes
+      ->Routing
       ->getLink($route);
     return '<a href="' . h($url) . '"' . $this->addAttributes($attributes)
         . '>' . $label . '</a>';

@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS blogging system
 // Author         : PeanutCMS
-// Dependencies   : Errors Database Routes Templates Http
+// Dependencies   : Errors Database Routing Templates
 //                  Authentication Backend
 
 /*
@@ -128,9 +128,9 @@ class Posts extends ModuleBase {
     Post::setEncoder('content', $postsEncoder);
 
     // Create controllers
-    $this->posts = new PostsController($this->m->Routes, $this->config);
+    $this->posts = new PostsController($this->m->Routing, $this->config);
 
-    $this->comments = new CommentsController($this->m->Routes, $this->config['comments']);
+    $this->comments = new CommentsController($this->m->Routing, $this->config['comments']);
 
     // Frontend setup
 
@@ -145,11 +145,11 @@ class Posts extends ModuleBase {
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m->Routes
+      $this->m->Routing
         ->addPath('Posts', 'view', array($this, 'getFancyPath'));
-      $this->m->Routes
+      $this->m->Routing
         ->addPath('Comments', 'index', array($this, 'getFancyPath'));
-      $this->m->Routes
+      $this->m->Routing
         ->addPath('Comments', 'view', array($this, 'getFancyPath'));
     }
     else {
@@ -214,10 +214,7 @@ class Posts extends ModuleBase {
   }
 
   private function detectFancyPath() {
-    $path = $this->m
-      ->Http
-      ->getRequest()
-      ->path;
+    $path = $this->request->path;
     $permalink = explode('/', $this->config['permalink']);
     if (!is_array($path) OR !is_array($permalink)) {
       return;

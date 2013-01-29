@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The ApakohPHP maintenance system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Shadow ApakohPHP/Routes
+// Dependencies   : ApakohPHP/Shadow ApakohPHP/Routing
 
 /**
  * Maintenance module
@@ -25,8 +25,8 @@ class Maintenance extends ModuleBase {
    */
   public function setup(ApplicationController $controller, $action = 'index',
                         $parameters = array()) {
-    $this->m->Routes->setRoute($controller, $action, 10, $parameters);
-    $this->m->Routes->callController();
+    $this->m->Routing->setRoute($controller, $action, 10, $parameters);
+    $this->m->Routing->callController();
     exit;
   }
 }

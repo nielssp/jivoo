@@ -5,8 +5,7 @@
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
 // Dependencies   : ApakohPHP/Database ApakohPHP/Authentication
-//                  ApakohPHP/Errors ApakohPHP/Routes ApakohPHP/Templates
-//                  ApakohPHP/Http
+//                  ApakohPHP/Errors ApakohPHP/Routing ApakohPHP/Templates
 
 /**
  * PeanutCMS backend
@@ -36,7 +35,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $path = $this->config['path'];
     $this->prefix = $path . '/';
 
-    $this->controller = new BackendController($this->m->Routes, $this->config);
+    $this->controller = new BackendController($this->m->Routing, $this->config);
 
     $this->controller->addRoute($path, 'dashboard');
     $this->controller->addRoute($this->prefix . 'login', 'login');
@@ -75,7 +74,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
         ->Templates
         ->set('aboutLink',
           $this->m
-            ->Routes
+            ->Routing
             ->getLink(array('controller' => 'Backend', 'action' => 'about')),
           'backend/footer.html');
     }
@@ -96,7 +95,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     }
 
     $this->m
-      ->Routes
+      ->Routing
       ->onRendering(array($this, 'createMenu'));
   }
 

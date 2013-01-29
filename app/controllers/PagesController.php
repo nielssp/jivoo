@@ -23,7 +23,7 @@ class PagesController extends ApplicationController {
       ->requireAuth('backend.pages.add');
 
     $this->beforePermalink = $this->m
-      ->Routes
+      ->Routing
       ->getLink();
 
     Page::setFieldEditor('content',
@@ -106,7 +106,7 @@ class PagesController extends ApplicationController {
       ->requireAuth('backend.pages.edit');
 
     $this->beforePermalink = $this->m
-      ->Routes
+      ->Routing
       ->getLink();
     $this->page = Page::find($page);
     if (!$this->page) {

@@ -4,7 +4,7 @@
 // Version        : 0.1.0
 // Description    : The ApakohPHP asset system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Http
+// Dependencies   : ApakohPHP/Routing
 class Assets extends ModuleBase {
 
   private $docRoot = '';
@@ -66,8 +66,8 @@ class Assets extends ModuleBase {
       $pArray = ($key == 'assets' ? array($key) : array('assets', $key));
       $pArray = array_merge($pArray, explode('/', $path));
       return $this->m
-        ->Http
-        ->getLink($pArray);
+        ->Routing
+        ->getLinkFromPath($pArray);
     }
   }
 }

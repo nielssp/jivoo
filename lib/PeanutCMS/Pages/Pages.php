@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS content page system
 // Author         : PeanutCMS
-// Dependencies   : Errors Database Routes Templates Http
+// Dependencies   : Errors Database Routing Templates
 //                  Authentication Backend Editors
 
 /*
@@ -61,10 +61,10 @@ class Pages extends ModuleBase {
       ),
     );
 
-    $this->controller = new PagesController($this->m->Routes, $this->config);
+    $this->controller = new PagesController($this->m->Routing, $this->config);
 
     $this->detectFancyPath();
-    $this->m->Routes->addPath('Pages', 'view', array($this, 'getFancyPath'));
+    $this->m->Routing->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
     $this->m->Backend['content']->setup(tr('Content'), 2);
     $this->m->Backend['content']['pages-add']

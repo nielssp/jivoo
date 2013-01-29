@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The ApakohPHP template system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Http ApakohPHP/Assets
+// Dependencies   : ApakohPHP/Routing ApakohPHP/Assets
 
 /**
  * Class for setting the template
@@ -241,7 +241,7 @@ class Templates extends ModuleBase {
 
   public function link($label, $controller = null, $action = 'index',
                        $parameters = array()) {
-    return $this->app->Routes->getLink($controller, $action, $parameters);
+    return $this->m->Routing->getLink($controller, $action, $parameters);
   }
 
   public function set($name, $value, $template = '*') {

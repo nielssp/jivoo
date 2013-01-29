@@ -21,17 +21,17 @@ class ApplicationController {
   protected $helpers = array('Html');
   private $helperObjects = array();
 
-  public final function __construct(Routes $routes, AppConfig $config = null) {
+  public final function __construct(Routing $routing, AppConfig $config = null) {
     $this->m = new Dictionary();
     $this->e = new Dictionary();
     
-    $this->m->Routes = $routes;
+    $this->m->Routing = $routing;
 
-    $routes->addController($this);
+    $routing->addController($this);
 
     $this->config = $config;
 
-    $this->request = $routes->getRequest();
+    $this->request = $routing->getRequest();
     $this->session = $this->request->session;
 
     $this->name = substr(get_class($this), 0, -10);
@@ -43,7 +43,7 @@ class ApplicationController {
     foreach ($this->helpers as $name) {
       $class = $name . 'Helper';
       if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($routes, $this);
+        $this->helperObjects[$name] = new $class($routing, $this);
       }
     }
 
@@ -117,20 +117,20 @@ class ApplicationController {
 
   public function addRoute($path, $action, $priority = null) {
     $this->m
-      ->Routes
+      ->Routing
       ->addRoute($path, $this, $action, $priority);
   }
 
   public function setRoute($action, $priority = 5, $parameters = array()) {
     $this->m
-      ->Routes
+      ->Routing
       ->setRoute($this, $action, $priority, $parameters);
   }
 
   protected function reroute() {
     list(, $caller) = debug_backtrace(false);
     $this->m
-      ->Routes
+      ->Routing
       ->reroute($this->name, $caller['function'], $caller['args']);
   }
 
@@ -152,13 +152,13 @@ class ApplicationController {
 
   protected function redirect($route = null) {
     $this->m
-      ->Routes
+      ->Routing
       ->redirect($route);
   }
 
   protected function refresh($query = null, $fragment = null) {
     $this->m
-      ->Routes
+      ->Routing
       ->refresh($query, $fragment);
   }
 
@@ -169,7 +169,7 @@ class ApplicationController {
   protected function render($templateName = null, $return = false) {
     $template = new Template($this->m
       ->Templates, $this->m
-      ->Routes, $this);
+      ->Routing, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
       $templateName = Utilities::camelCaseToDashes($this->name) . '/';

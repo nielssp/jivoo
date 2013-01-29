@@ -12,16 +12,16 @@ abstract class ApplicationTemplate {
 
   protected $data = array();
 
-  public final function __construct(Templates $templates, Routes $routes,
+  public final function __construct(Templates $templates, Routing $routing,
                                     $controller = null) {
     $this->m = new Dictionary();
     $this->m
       ->Templates = $templates;
     $this->m
-      ->Routes = $routes;
+      ->Routing = $routing;
 
     $this->request = $this->m
-      ->Routes
+      ->Routing
       ->getRequest();
 
     $this->controller = $controller;
@@ -55,13 +55,13 @@ abstract class ApplicationTemplate {
 
   protected function link($route = null) {
     return $this->m
-      ->Routes
+      ->Routing
       ->getLink($route);
   }
 
   protected function isCurrent($route = null) {
     return $this->m
-      ->Routes
+      ->Routing
       ->isCurrent($route);
   }
 

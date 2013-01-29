@@ -220,7 +220,7 @@ class PostsController extends ApplicationController {
     $examplePost->name = '%name%';
     $examplePost->date = time();
     $exampleLink = explode('%name%', $this->m
-      ->Routes
+      ->Routing
       ->getLink($examplePost));
     $examplePost = null;
     $this->nameInPermalink = count($exampleLink) >= 2;
@@ -335,7 +335,7 @@ class PostsController extends ApplicationController {
     $examplePost->name = '%name%';
     $examplePost->date = time();
     $exampleLink = explode('%name%', $this->m
-      ->Routes
+      ->Routing
       ->getLink($examplePost));
     $examplePost = null;
     $this->nameInPermalink = count($exampleLink) >= 2;
