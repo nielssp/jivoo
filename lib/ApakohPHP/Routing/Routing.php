@@ -48,7 +48,7 @@ class Routing extends ModuleBase {
 
     // Determine if the current URL is correct
     if ($this->config['rewrite']) {
-      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {
+      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {;
         if (count($this->request->path) <= 1) {
           $this->redirectPath(array(), $this->request->query);
         }
@@ -303,7 +303,7 @@ class Routing extends ModuleBase {
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
     $status = $moved ? 301 : 303;
-    Http::redirect($status, $this->getLink($path, $query, $fragment));
+    Http::redirect($status, $this->getLinkFromPath($path, $query, $fragment));
   }
 
   public function redirect($route = null) {
