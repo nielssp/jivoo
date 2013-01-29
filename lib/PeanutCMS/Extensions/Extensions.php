@@ -44,8 +44,7 @@ class Extensions extends ModuleBase {
       ->setup(tr('Extensions'), 2);
 
     // Load installed extensions when all modules are loaded and initialized
-    $this->Core
-      ->onModulesLoaded(array($this, 'loadExtensions'));
+    $this->app->onModulesLoaded(array($this, 'loadExtensions'));
   }
 
   public function loadExtensions() {

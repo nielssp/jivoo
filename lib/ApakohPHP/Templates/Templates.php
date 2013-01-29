@@ -241,9 +241,7 @@ class Templates extends ModuleBase {
 
   public function link($label, $controller = null, $action = 'index',
                        $parameters = array()) {
-    return $this->Core
-      ->Routes
-      ->getLink($controller, $action, $parameters);
+    return $this->app->Routes->getLink($controller, $action, $parameters);
   }
 
   public function set($name, $value, $template = '*') {

@@ -17,20 +17,22 @@ class ApplicationController {
 
   private $data = array();
 
+  protected $modules = array();
   protected $helpers = array('Html');
   private $helperObjects = array();
 
   public final function __construct(Routes $routes, AppConfig $config = null) {
     $this->m = new Dictionary();
     $this->e = new Dictionary();
+    
+    $this->m->Routes = $routes;
 
     $routes->addController($this);
 
     $this->config = $config;
 
     $this->request = $routes->getRequest();
-    $this->session = $this->request
-      ->session;
+    $this->session = $this->request->session;
 
     $this->name = substr(get_class($this), 0, -10);
 
@@ -135,9 +137,9 @@ class ApplicationController {
   protected function returnToThis() {
     //list( , $caller) = debug_backtrace(false);
     //    $this->session['returnTo'] = array('url' => $this->request->url);
-    $this->session['returnTo'] = array('path' => $this->request
-        ->path, 'query' => $this->request
-        ->query
+    $this->session['returnTo'] = array(
+      'path' => $this->request->path,
+      'query' => $this->request->query
     );
   }
 

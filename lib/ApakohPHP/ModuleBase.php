@@ -6,12 +6,6 @@
 abstract class ModuleBase {
 
   /**
-   * @deprecated Core replaced with App
-   * @var Core The Core object
-   */
-  protected $Core = null;
-
-  /**
    * @var App The associated application
    */
   protected $app = null;
@@ -41,12 +35,11 @@ abstract class ModuleBase {
   /**
    * Module constructor
    * @param ModuleBase[] $modules An array of modules
-   * @param Core $core The Core object 
+   * @param App $app The application object 
    * @param mixed $var,... Additional arguments to relay to init() method
    */
   public final function __construct($modules, App $app) {
     $this->m = new Dictionary($modules, true);
-    $this->Core = $app;
     $this->app = $app;
     $this->config = $app->config[get_class($this)];
 

@@ -33,14 +33,8 @@ class Routes extends ModuleBase {
 
   /* Events */
   private $events;
-  public function onRendering($h) {
-    $this->events
-      ->attach($h);
-  }
-  public function onRendered($h) {
-    $this->events
-      ->attach($h);
-  }
+  public function onRendering($h) { $this->events->attach($h); }
+  public function onRendered($h) { $this->events->attach($h); }
 
   protected function init() {
     $this->events = new Events($this);
@@ -50,37 +44,13 @@ class Routes extends ModuleBase {
 
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
-    $this->app
-      ->onRender(array($this, 'callController'));
-    $this->app
-      ->onModuleLoaded(array($this, 'addAuthModule'));
+    $this->app->onRender(array($this, 'callController'));
   }
 
-  public function addAuthModule($sender, ModuleLoadedEventArgs $args) {
-    if ($args->module != 'Authentication') {
-      return;
-    }
-    foreach ($this->controllers as $controller) {
-      $controller->addModule($args->object);
-    }
-    foreach ($this->helpers as $helper) {
-      $helper->addModule($args->object);
-    }
-  }
 
   public function addController(ApplicationController $controller) {
     $name = substr(get_class($controller), 0, -10);
     $this->controllers[$name] = $controller;
-    $controller->addModule($this);
-    $controller->addModule($this->m
-        ->Templates);
-    $controller->addModule($this->m
-        ->Editors);
-    $auth = $this->Core
-      ->requestModule('Authentication');
-    if ($auth) {
-      $controller->addModule($auth);
-    }
   }
 
   public function addHelper(ApplicationHelper $helper) {
@@ -91,7 +61,7 @@ class Routes extends ModuleBase {
         ->Templates);
     $helper->addModule($this->m
         ->Editors);
-    $auth = $this->Core
+    $auth = $this->app
       ->requestModule('Authentication');
     if ($auth) {
       $helper->addModule($auth);
@@ -347,12 +317,17 @@ class Routes extends ModuleBase {
           array($this->selectedRoute['controller'],
             $this->selectedRoute['action']
           ))) {
+      $controller = $this->selectedRoute['controller'];
+      $controller->addModule($this);
+      $controller->addModule($this->app->requestModule('Templates'));
+      $controller->addModule($this->app->requestModule('Editors'));
+      $controller->addModule($this->app->requestModule('Authentication'));
       $this->rendered = true;
-      call_user_func(array($this->selectedRoute['controller'], 'init'));
+      call_user_func(array($controller, 'init'));
       call_user_func_array(
-        array($this->selectedRoute['controller'],
-          $this->selectedRoute['action']
-        ), $this->selectedRoute['parameters']);
+        array($controller, $this->selectedRoute['action']),
+        $this->selectedRoute['parameters']
+      );
     }
     else {
       /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */
