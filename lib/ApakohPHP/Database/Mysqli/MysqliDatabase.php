@@ -153,22 +153,18 @@ class MysqliDatabase extends SqlDatabase {
   }
 
   public function rawQuery($sql) {
-    $result = $this->handle
-      ->query($sql);
+    $result = $this->handle->query($sql);
     if (!$result) {
-      throw new DatabaseQueryFailedException($this->handle
-        ->error);
+      throw new DatabaseQueryFailedException($this->handle->error);
     }
     if (preg_match('/^\\s*(select|show|explain|describe) /i', $sql)) {
       return new MysqliResultSet($result);
     }
     else if (preg_match('/^\\s*(insert|replace) /i', $sql)) {
-      return $this->handle
-        ->insert_id;
+      return $this->handle->insert_id;
     }
     else {
-      return $this->handle
-        ->affected_rows;
+      return $this->handle->affected_rows;
     }
   }
 
