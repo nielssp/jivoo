@@ -6,7 +6,7 @@
  * to get and set configuration values.
  * @package ApakohPHP
  */
-class AppConfig implements arrayaccess{
+class AppConfig implements arrayaccess {
   
   private $data = array();
   

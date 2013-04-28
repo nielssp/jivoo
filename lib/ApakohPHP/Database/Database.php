@@ -2,8 +2,8 @@
 // Module
 // Name           : Database
 // Version        : 0.2.0
-// Description    : The PeanutCMS database system
-// Author         : PeanutCMS
+// Description    : The ApakohPHP database system
+// Author         : apakoh.dk
 // Dependencies   : ApakohPHP/Routing ApakohPHP/Templates
 //                  ApakohPHP/Maintenance
 
@@ -69,7 +69,7 @@ class Database extends ModuleBase implements IDatabase {
   protected function init() {
     $this->config->defaults = array(
       'server' => 'localhost',
-      'database' => 'peanutcms',
+      'database' => $this->app->name,
       'filename' => $this->p('config', 'db.sqlite3'),
     );
     $controller = new DatabaseMaintenanceController(

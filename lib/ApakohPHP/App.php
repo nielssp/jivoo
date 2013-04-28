@@ -217,7 +217,7 @@ class App {
       echo 'Sorry, but ' . $this->name . ' does not support PHP versions below ';
       echo $this->minPhpVersion . '. ';
       echo 'You are currently using version ' . phpversion() . '. ';
-      echo 'You should contact your hosting provider. ';
+      echo 'You should update PHP or contact your hosting provider. ';
       return;
     }
     
