@@ -56,7 +56,9 @@ abstract class ModuleBase {
   }
 
   /**
-   * Get the absolute path of a file
+   * Get the absolute path of a file.
+   * If called with a single parameter, then the name of the current module
+   * is used as location identifier.
    * @param string $key Location-identifier
    * @param string $path File
    * @return string Absolute path

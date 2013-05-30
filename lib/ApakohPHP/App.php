@@ -240,7 +240,6 @@ class App {
     I18n::setup($this->config['core'], $this->paths->languages);
 
     Lib::addIncludePath($this->paths->controllers);
-    Lib::addIncludePath($this->paths->views);
     Lib::addIncludePath($this->paths->helpers);
     Lib::addIncludePath($this->paths->models);
     Lib::addIncludePath($this->paths->config . '/schemas');

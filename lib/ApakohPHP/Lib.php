@@ -15,15 +15,13 @@ class Lib {
     }
     $module = trim($module, '/');
     $path = LIB_PATH . ($module != '' ? '/' : '') . $module;
-    //    echo 'IMPORT ' . $module . ' > ' . $path . PHP_EOL;
     self::$paths[$module] = $path;
     return true;
   }
 
   public static function addIncludePath($path) {
-    //    echo 'ADDPATH ' . $path . PHP_EOL;
     self::$paths[] = $path;
-  }
+  } 
 
   /**
    * Get information about a module
@@ -40,7 +38,6 @@ class Lib {
       $segments = explode('/', $module);
       $moduleName = $segments[count($segments) - 1];
     }
-    //echo 'INFO ' . $module . ' > ' . $moduleName . PHP_EOL;
     $meta = FileMeta::read(
       LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
     if (!$meta OR $meta['type'] != 'module') {
@@ -57,7 +54,6 @@ class Lib {
   public static $loadIterations = 0;
 
   public static function autoload($className) {
-    //echo 'LOAD ' . $className . PHP_EOL;
     self::$loadCalls++;
     if (isset(self::$lastModule)) {
       $classPath = self::$lastModule . '/' . $className . '.php';

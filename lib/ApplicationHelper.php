@@ -19,8 +19,7 @@ abstract class ApplicationHelper {
     $routing->addHelper($this);
 
     $this->request = $routing->getRequest();
-    $this->session = $this->request
-      ->session;
+    $this->session = $this->request->session;
 
     $this->controller = $controller;
 

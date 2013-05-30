@@ -70,9 +70,13 @@ class ErrorReporting {
       echo 'File: ' . $file . PHP_EOL;
       echo 'Stack trace:' . PHP_EOL;
       foreach ($exception->getTrace() as $i => $trace) {
-        echo $trace['file'] . ':';
-        echo $trace['line'] . ' ';
-        echo $trace['class'] . '::';
+        if (isset($trace['file'])) {
+          echo $trace['file'] . ':';
+          echo $trace['line'] . ' ';
+        }
+        if (isset($tace['class'])) {
+          echo $trace['class'] . '::';
+        }
         echo $trace['function'] . '(';
         $arglist = array();
         foreach ($trace['args'] as $arg) {

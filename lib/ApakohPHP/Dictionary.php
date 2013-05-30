@@ -18,7 +18,7 @@ class Dictionary {
       return $this->array[$key];
     }
     else {
-      throw new DictionaryKeyInvalidException(tr('Invalid dictionary key.'));
+      throw new DictionaryKeyInvalidException(tr('Invalid dictionary key: %1', $key));
     }
   }
 

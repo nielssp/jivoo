@@ -6,10 +6,11 @@
  */
 class Logger {
 
-  const NOTICE = 1;
-  const WARNING = 2;
-  const ERROR = 4;
-  const ALL = 7;
+  const DEBUG = 1;
+  const NOTICE = 2;
+  const WARNING = 4;
+  const ERROR = 8;
+  const ALL = 15;
   const NONE = 0;
 
   private static $log = array();
@@ -32,6 +33,7 @@ class Logger {
       foreach (self::$log as $entry) {
         if ($this->level & $entry['type'] != 0) {
           fwrite($filePointer, tdate('c', $entry['time']));
+          fwrite($filePointer, ' ' . Logger::getType($entry['type']) . ':');
           fwrite($filePointer, ' ' . $entry['message']);
           if (isset($entry['file'])) {
             fwrite($filePointer, ' in ' . $entry['file']);
@@ -46,6 +48,19 @@ class Logger {
     }
   }
 
+  public static function getType($type) {
+    switch ($type) {
+      case Logger::DEBUG:
+        return 'DEBUG';
+      case Logger::NOTICE:
+        return 'NOTICE';
+      case Logger::WARNING:
+        return 'WARNING';
+      case Logger::ERROR:
+        return 'ERROR';
+    }
+    return 'UNKNOWN';
+  }
 
   public static function getLog() {
     return self::$log;
@@ -69,6 +84,22 @@ class Logger {
     );
     self::$log[] = $entry;
   }
+  
+  public static function debug($message) {
+    self::log($message, Logger::DEBUG);
+  }
+  
+  public static function notice($message) {
+    self::log($message, Logger::NOTICE);
+  }
+  
+  public static function warning($message) {
+    self::log($message, Logger::WARNING);
+  }
+  
+  public static function error($message) {
+    self::log($message, Logger::ERROR);
+  }
 
   public static function logException(Exception $exception) {
     $file = $exception->getFile();
@@ -83,14 +114,20 @@ class Logger {
     $message .= 'File: ' . $file . PHP_EOL;
     $message .= 'Stack trace:' . PHP_EOL;
     foreach ($exception->getTrace() as $i => $trace) {
-      $message .= $trace['class'] . '::';
+      if (isset($trace['class'])) {
+        $message .= $trace['class'] . '::';
+      }
       $message .= $trace['function'] . ' in ';
-      $message .= $trace['file'] . ' on line ' . $trace['line'] . PHP_EOL;
+      if (isset($trace['file'])) {
+        $message .= $trace['file'] . ' on line ' . $trace['line'] . PHP_EOL;
+      }
     }
     self::$log[] = array(
       'time' => time(),
       'message' => $message,
-      'type' => Logger::ERROR
+      'type' => Logger::ERROR,
+      'file' => null,
+      'line' => null
     );
   }
 }

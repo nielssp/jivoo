@@ -28,4 +28,5 @@ $app->paths->themes = 'themes';
 $environment = getenv('APAKOHPHP_ENVIRONMENT');
 $environment || $environment = 'production';
 
-$app->run($environment);
+//$app->run($environment);
+$app->run('development');

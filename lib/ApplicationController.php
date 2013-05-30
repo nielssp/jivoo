@@ -71,8 +71,7 @@ class ApplicationController {
     if ($object instanceof Authentication) {
       $this->auth = $object;
     }
-    $this->m
-      ->$class = $object;
+    $this->m->$class = $object;
   }
 
   public function addExtension($object) {
