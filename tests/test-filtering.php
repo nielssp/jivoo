@@ -289,10 +289,8 @@ class FilterParser {
       }
       return new ValueNode($value);
     }
-    if ($this->accept(FilterToken::T_STRING)) {
-      return new ValueNode($this->currentToken->value);
-    }
-    return null;
+    $this->expect(FilterToken::T_STRING);
+    return new ValueNode($this->currentToken->value);
   }
 }
 
