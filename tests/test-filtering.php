@@ -244,7 +244,7 @@ class FilterParser {
         return $node;
       }
       $node->children[] = $notTerm;
-      while ($this->nextToken != null) {
+      while ($this->nextToken != null && !$this->lookAhead(FilterToken::T_RPARENTHESIS)) {
         $operator = 'or';
         if ($this->accept(FilterToken::T_AND)) {
           $operator = 'and';
