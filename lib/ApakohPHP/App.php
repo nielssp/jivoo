@@ -227,6 +227,9 @@ class App {
     if (file_exists($environmentConfigFile)) {
       $this->config->override = include $environmentConfigFile;
     }
+    else {
+      Logger::notice('Configuration file for environment "' . $environment . '" not found');
+    }
 
     Logger::attachFile($this->p('log', $this->environment . '.log'));
     

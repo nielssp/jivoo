@@ -35,7 +35,7 @@ class Request {
   public function __construct($sessionPrefix = '') {
     $url = $_SERVER['REQUEST_URI'];
     
-    Logger::debug('Request: ' . $url);
+    Logger::debug('Request for ' . $url . ' from ' . $this->ip);
     
     $request = parse_url($url);
     if (isset($request['fragment'])) {
