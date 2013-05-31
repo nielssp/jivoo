@@ -1,14 +1,13 @@
 <?php
 
 class FilterToken {
-  const T_WORD = 1;
-  const T_STRING = 2;
-  const T_NOT = 3;
-  const T_AND = 4;
-  const T_OR = 5;
-  const T_COLON = 6;
-  const T_LPARENTHESIS = 7;
-  const T_RPARENTHESIS = 8;
+  const T_STRING = 1;
+  const T_NOT = 2;
+  const T_AND = 3;
+  const T_OR = 4;
+  const T_EQUALS = 5;
+  const T_LPARENTHESIS = 6;
+  const T_RPARENTHESIS = 7;
 
   public $type = 0;
   public $value = null;
@@ -20,8 +19,6 @@ class FilterToken {
   
   public static function getType($type) {
     switch ($type) {
-      case FilterToken::T_WORD:
-        return 'T_WORD';
       case FilterToken::T_STRING:
         return 'T_STRING';
       case FilterToken::T_NOT:
@@ -30,8 +27,8 @@ class FilterToken {
         return 'T_AND';
       case FilterToken::T_OR:
         return 'T_OR';
-      case FilterToken::T_COLON:
-        return 'T_COLON';
+      case FilterToken::T_EQUALS:
+        return 'T_EQUALS';
       case FilterToken::T_LPARENTHESIS:
         return 'T_LPARENTHESIS';
       case FilterToken::T_RPARENTHESIS:
@@ -46,7 +43,7 @@ class FilterScanner {
   private $input = array();
   private $current = null;
   
-  private $reserved = ' :()!&|"';
+  private static $reserved = '= ()!&|"';
   
   public function scan($input) {
     $this->input = str_split($input);
@@ -56,6 +53,10 @@ class FilterScanner {
       $tokens[] = $token;
     }
     return $tokens;
+  }
+  
+  public static function getEqualsOperator() {
+    return self::$reserved[0];
   }
   
   private function pop() {
@@ -87,7 +88,7 @@ class FilterScanner {
   
   private function scanWord() {
     $value = '';
-    while ($this->current != null AND strpos($this->reserved, $this->current) === false) {
+    while ($this->current != null AND strpos(self::$reserved, $this->current) === false) {
       if ($this->current == '\\') {
         $this->pop();
       }
@@ -111,7 +112,7 @@ class FilterScanner {
       case 'OR':
         return new FilterToken(FilterToken::T_OR);
     }
-    return new FilterToken(FilterToken::T_WORD, $value);
+    return new FilterToken(FilterToken::T_STRING, $value);
   }
   
   private function scanNext() {
@@ -125,9 +126,9 @@ class FilterScanner {
       return $this->scanString();
     }
     switch ($this->current) {
-      case ':':
+      case self::$reserved[0]:
         $this->pop();
-        return new FilterToken(FilterToken::T_COLON);
+        return new FilterToken(FilterToken::T_EQUALS);
       case '(':
         $this->pop();
         return new FilterToken(FilterToken::T_LPARENTHESIS);
@@ -168,7 +169,7 @@ class NotTermNode extends Node {
   }
 }
 
-class ValueNode extends Node {
+class StringNode extends Node {
   public $value = '';
   
   public function __construct($value) {
@@ -280,18 +281,13 @@ class FilterParser {
       $this->expect(FilterToken::T_RPARENTHESIS);
       return $node;
     }
-    if ($this->accept(FilterToken::T_WORD)) {
-      $value = $this->currentToken->value;
-      if ($this->accept(FilterToken::T_COLON)) {
-        if (!$this->accept(FilterToken::T_WORD)) {
-          $this->expect(FilterToken::T_STRING);
-        }
-        return new ComparisonNode($value, $this->currentToken->value);
-      }
-      return new ValueNode($value);
-    }
     $this->expect(FilterToken::T_STRING);
-    return new ValueNode($this->currentToken->value);
+    $value = $this->currentToken->value;
+    if ($this->accept(FilterToken::T_EQUALS)) {
+      $this->expect(FilterToken::T_STRING);
+      return new ComparisonNode($value, $this->currentToken->value);
+    }
+    return new StringNode($value);
   }
 }
 
@@ -299,7 +295,7 @@ abstract class FilterVisitor {
   protected abstract function visitFilter(FilterNode $node);
   protected abstract function visitNotTerm(NotTermNode $node);
   protected abstract function visitComparison(ComparisonNode $node);
-  protected abstract function visitValue(ValueNode $node);
+  protected abstract function visitString(StringNode $node);
   public function visit(Node $node) {
     if ($node instanceof FilterNode) {
       return $this->visitFilter($node);
@@ -310,8 +306,8 @@ abstract class FilterVisitor {
     if ($node instanceof ComparisonNode) {
       return $this->visitComparison($node);
     }
-    if ($node instanceof ValueNode) {
-      return $this->visitValue($node);
+    if ($node instanceof StringNode) {
+      return $this->visitString($node);
     }
     throw new Exception('Unknown node: ' . get_class($node));
   }
@@ -348,10 +344,12 @@ class OutputVisitor extends FilterVisitor {
     return 'not ' . $this->visit($node->child);
   }
   protected function visitComparison(ComparisonNode $node) {
-    return $node->left . ':"' . $node->right . '"';
+    return '"' . addcslashes($node->left, '\\"')
+      . '" ' . FilterScanner::getEqualsOperator() . ' "'
+      . addcslashes($node->right, '\\"') . '"';
   }
-  protected function visitValue(ValueNode $node) {
-    return '"' . $node->value . '"';
+  protected function visitString(StringNode $node) {
+    return '"' . addcslashes($node->value, '\\"') . '"';
   }
 }
 

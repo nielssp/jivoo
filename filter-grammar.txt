@@ -1,20 +1,21 @@
 
 unichar     ::= any unicode character
 stringchar  ::= unichar - ('"' | "\")
-wordchar    ::= stringchar - (" " | ":" | "(" | ")" | "!" | "&" | "|")
+wordchar    ::= stringchar - (" " | "=" | "(" | ")" | "!" | "&" | "|")
 reserved    ::= not | and | or
 
-word        ::= ((wordchar | escape) {wordchar | escape}) - reserved
 string      ::= '"' {stringchar | escape} '"'
+              | word
+word        ::= ((wordchar | escape) {wordchar | escape}) - reserved
 escape      ::= "\" unichar
 
 filter      ::= [notterm {[operator] notterm}]
 notterm     ::= [not] term
 term        ::= "(" filter ")"
-              | word [":" (word | string)]
-              | string
+              | string ["=" string]
 operator    ::= and | or
 
 not         ::= "!" | "not" | "NOT"
 and         ::= "&" | "and" | "AND"
 or          ::= "|" | "or" | "OR"
+
