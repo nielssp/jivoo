@@ -15,6 +15,6 @@ term        ::= "(" filter ")"
               | string
 operator    ::= and | or
 
-not         ::= "!" | "not"
-and         ::= "&" | "and"
-or          ::= "|" | "or"
+not         ::= "!" | "not" | "NOT"
+and         ::= "&" | "and" | "AND"
+or          ::= "|" | "or" | "OR"

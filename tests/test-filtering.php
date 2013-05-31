@@ -104,6 +104,12 @@ class FilterScanner {
         return new FilterToken(FilterToken::T_AND);
       case 'or':
         return new FilterToken(FilterToken::T_OR);
+      case 'NOT':
+        return new FilterToken(FilterToken::T_NOT);
+      case 'AND':
+        return new FilterToken(FilterToken::T_AND);
+      case 'OR':
+        return new FilterToken(FilterToken::T_OR);
     }
     return new FilterToken(FilterToken::T_WORD, $value);
   }
@@ -239,12 +245,12 @@ class FilterParser {
       }
       $node->children[] = $notTerm;
       while ($this->nextToken != null) {
-        $operator = null;
+        $operator = 'or';
         if ($this->accept(FilterToken::T_AND)) {
           $operator = 'and';
         }
-        else if ($this->accept(FilterToken::T_OR)) {
-          $operator = 'or';
+        else {
+          $this->accept(FilterToken::T_OR);
         }
         $notTerm = $this->parseNotTerm();
         if ($notTerm == null) {
@@ -343,10 +349,10 @@ class OutputVisitor extends FilterVisitor {
     return 'not ' . $this->visit($node->child);
   }
   protected function visitComparison(ComparisonNode $node) {
-    return $node->left . ':' . $node->right;
+    return $node->left . ':"' . $node->right . '"';
   }
   protected function visitValue(ValueNode $node) {
-    return $node->value;
+    return '"' . $node->value . '"';
   }
 }
 
