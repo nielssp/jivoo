@@ -245,12 +245,13 @@ class FilterParser {
       }
       $node->children[] = $notTerm;
       while ($this->nextToken != null && !$this->lookAhead(FilterToken::T_RPARENTHESIS)) {
-        $operator = 'or';
-        if ($this->accept(FilterToken::T_AND)) {
-          $operator = 'and';
+        // default operator is and
+        $operator = 'and';
+        if ($this->accept(FilterToken::T_OR)) {
+          $operator = 'or';
         }
         else {
-          $this->accept(FilterToken::T_OR);
+          $this->accept(FilterToken::T_AND);
         }
         $notTerm = $this->parseNotTerm();
         if ($notTerm == null) {
