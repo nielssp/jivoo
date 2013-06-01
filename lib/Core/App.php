@@ -19,7 +19,7 @@ class App {
 
   private $minPhpVersion = '5.2.0';
   
-  private $modules = array();
+  private $modules = array('Core');
 
   private $m = null;
   

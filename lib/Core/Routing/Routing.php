@@ -80,6 +80,11 @@ class Routing extends ModuleBase {
 
     $this->app->onRender(array($this, 'callController'));
   }
+  
+  public function drawRoutes() {
+    // read config
+    // do stuff
+  }
 
   public function addHelper(Helper $helper) {
     $name = substr(get_class($helper), 0, -6);
@@ -243,9 +248,11 @@ class Routing extends ModuleBase {
       if (isset($route['url'])) {
         return $route['url'];
       }
-      $default = array('path' => null, 'query' => null, 'fragment' => null,
-        'controller' => $this->controllerName(
-            $this->selectedRoute['controller']),
+      $default = array(
+        'path' => null,
+        'query' => null,
+        'fragment' => null,
+        'controller' => $this->controllerName($this->selectedRoute['controller']),
         'action' => $this->selectedRoute['action'],
         'parameters' => $this->selectedRoute['parameters']
       );
