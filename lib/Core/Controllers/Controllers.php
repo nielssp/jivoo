@@ -15,5 +15,8 @@ class Controllers extends ModuleBase {
       if (isset($split[1]) AND $split[1] == 'php') {
       }
     }
+
+    $controller = new ApplicationController($this->m->Routing, $this->config);
+    $controller->setRoute('notFound', 1);
   }
 }

@@ -77,9 +77,6 @@ class Routing extends ModuleBase {
       $this->redirectPath(array(), $this->request->query);
     }
 
-    $controller = new ApplicationController($this, $this->config);
-    $controller->setRoute('notFound', 1);
-
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
     $this->app->onRender(array($this, 'callController'));

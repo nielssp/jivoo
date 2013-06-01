@@ -1,42 +1,36 @@
 <?php
 return array(
-  'shadow' => array(
-    'hashType' => 'sha512',
-  ),
-  'i18n' => array(
-    'language' => 'en',
-    'dateFormat' => 'Y-m-d',
-    'timeFormat' => 'H:i:s',
-    'timeZone' => 'Europe/Copenhagen',
-  ),
-  'language' => NULL,
-  'http' => array(
-    'rewrite' => 'off',
+  'Routing' => array(
+    'rewrite' => false,
     'index' => array(
       'path' => 'posts',
-      'query' => NULL,
+      'query' => array(
+      ),
     ),
+    'sessionPrefix' => 'peanut_',
   ),
-  'site' => array(
+  'Assets' => array(
+  ),
+  'Templates' => array(
     'title' => 'PeanutCMS',
-    'subtitle' => 'The domesticated peanut is an amphidiploid or allotetraploid.',
-    'meta' => NULL,
-    'description' => NULL,
+    'subtitle' => 'Powered by PeanutCMS',
   ),
-  'system' => array(
-    'hide' => array(
-      'identity' => 'off',
-      'version' => 'off',
-    ),
+  'Helpers' => array(
   ),
-  'theme' => array(
-    'name' => 'AwesomeAlien',
+  'Controllers' => array(
   ),
-  'database' => array(
+  'Models' => array(
+  ),
+  'Shadow' => array(
+    'hashType' => 'sha512',
+  ),
+  'Editors' => array(
+  ),
+  'Database' => array(
     'server' => 'localhost',
     'database' => 'peanutcms',
-    'filename' => 'cfg/db.sqlite3',
-    'driver' => 'PdoMysqlDatabase',
+    'filename' => '/home/www/GOTUN/PeanutCMS/config/db.sqlite3',
+    'driver' => 'PdoMysql',
     'configured' => 'yes',
     'username' => 'peanutcms',
     'password' => 'peanutcms',
@@ -45,54 +39,71 @@ return array(
       'users' => '0.3.4',
       'groups' => '0.3.4',
       'groups_permissions' => '0.3.4',
+      'links' => '0.3.4',
+      'pages' => '0.3.4',
       'posts' => '0.3.4',
       'tags' => '0.3.4',
       'posts_tags' => '0.3.4',
       'comments' => '0.3.4',
-      'links' => '0.3.4',
-      'pages' => '0.3.4',
     ),
   ),
-  'authentication' => array(
+  'Authentication' => array(
     'defaultGroups' => array(
       'unregistered' => 'guests',
       'registered' => 'users',
     ),
-    'rootCreated' => 'yes',
-  ),
-  'backend' => array(
-    'path' => 'admin',
-  ),
-  'extensions' => array(
-    'installed' => 'Tinymce Jquery JqueryUi JqueryHotkeys',
-    'config' => array(
-      'JqueryUi' => array(
-        'theme' => 'arachis',
-      ),
+    'rootCreated' => array(
     ),
   ),
-  'posts' => array(
-    'fancyPermalinks' => 'on',
+  'Core' => array(
+  ),
+  'Backend' => array(
+    'path' => 'admin',
+  ),
+  'Extensions' => array(
+    'config' => array(
+    ),
+    'installed' => '',
+  ),
+  'Links' => array(
+  ),
+  'Pages' => array(
+    'editor' => array(
+      'name' => 'TinymceEditor',
+    ),
+  ),
+  'Posts' => array(
+    'fancyPermalinks' => true,
     'permalink' => '%year%/%month%/%name%',
     'comments' => array(
       'sorting' => 'desc',
       'childSorting' => 'asc',
       'display' => 'thread',
-      'levelLimit' => '2',
+      'levelLimit' => 2,
       'editor' => array(
         'name' => 'HtmlEditor',
       ),
     ),
-    'commentingDefault' => 'on',
-    'anonymousCommenting' => 'off',
-    'commentApproval' => 'off',
+    'commentingDefault' => true,
+    'anonymousCommenting' => false,
+    'commentApproval' => false,
     'editor' => array(
       'name' => 'TinymceEditor',
     ),
   ),
-  'pages' => array(
-    'editor' => array(
-      'name' => 'TinymceEditor',
-    ),
+  'Theme' => array(
+    'name' => 'AwesomeAlien',
+  ),
+  'PeanutCMS' => array(
+  ),
+  'logging' => array(
+    'level' => 15,
+  ),
+  'Maintenance' => array(
+    'showErrorReport' => false,
+  ),
+  'core' => array(
+    'language' => 'en',
+    'timeZone' => 'UTC',
   ),
 );
