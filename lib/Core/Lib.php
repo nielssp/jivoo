@@ -10,10 +10,10 @@ class Lib {
   private function __construct() {}
 
   public static function import($module) {
+    $module = trim($module, '/');
     if (isset(self::$paths[$module])) {
       return true;
     }
-    $module = trim($module, '/');
     $path = LIB_PATH . ($module != '' ? '/' : '') . $module;
     self::$paths[$module] = $path;
     return true;

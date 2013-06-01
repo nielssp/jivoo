@@ -4,7 +4,7 @@
  *
  * Implements arrayaccess, so the []-operator can be used
  * to get and set configuration values.
- * @package ApakohPHP
+ * @package Core
  */
 class AppConfig implements arrayaccess {
   
@@ -128,7 +128,7 @@ class AppConfig implements arrayaccess {
   public function setMultiple($array) {
     foreach ($array as $key => $value) {
       if (is_array($value)) {
-        $this[$key]->setDefaults($value);
+        $this[$key]->setMultiple($value);
       }
       else {
         $this->set($key, $value);

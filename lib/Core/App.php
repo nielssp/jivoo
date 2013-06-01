@@ -238,12 +238,11 @@ class App {
     $this->config->defaults = array(
       'core' => array(
         'language' => $this->appConfig['defaultLanguage'],
-        'timeZone' => date_default_timezone_get(),
+        'timeZone' => @date_default_timezone_get(), /** @TODO Reevaluate use of @ */
       ),
     );
     I18n::setup($this->config['core'], $this->paths->languages);
 
-    Lib::addIncludePath($this->paths->controllers);
     Lib::addIncludePath($this->paths->helpers);
     Lib::addIncludePath($this->paths->models);
     Lib::addIncludePath($this->paths->config . '/schemas');

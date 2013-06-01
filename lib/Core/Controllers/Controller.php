@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * A controller, the C of MVC
+ * 
+ * @todo docs
+ * @package Core
+ * @subpackage Controllers
+ */
 class Controller {
 
   private $name;
@@ -20,19 +26,17 @@ class Controller {
   protected $helpers = array('Html');
   private $helperObjects = array();
 
-  public function __construct(Routing $routing, AppConfig $config = null) {
+  public final function __construct(Routing $routing, AppConfig $config = null) {
     $this->m = new Dictionary();
 
     $this->m->Routing = $routing;
-
-    $routing->addController($this);
 
     $this->config = $config;
 
     $this->request = $routing->getRequest();
     $this->session = $this->request->session;
 
-    $this->name = substr(get_class($this), 0, -10);
+    $this->name = str_replace('Controller', '', get_class($this));
 
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
@@ -44,7 +48,7 @@ class Controller {
         $this->helperObjects[$name] = new $class($routing, $this);
       }
     }
-
+    $this->init();
   }
 
   public function __get($name) {
@@ -163,6 +167,9 @@ class Controller {
   }
 
   public function init() {
+  }
+  
+  public function preRender() {
   }
 
   public function notFound() {

@@ -4,8 +4,9 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS blogging system
 // Author         : PeanutCMS
-// Dependencies   : ApakohPHP/Database ApakohPHP/Routing ApakohPHP/Templates
-//                  ApakohPHP/Authentication ApakohPHP/Backend
+// Dependencies   : Core/Database Core/Routing Core/Templates
+//                  Core/Authentication PeanutCMS/Backend
+//                  Core/Controllers
 
 /*
  * Class for working with blog posts
@@ -128,7 +129,8 @@ class Posts extends ModuleBase {
     Post::setEncoder('content', $postsEncoder);
 
     // Create controllers
-    $this->posts = new PostsController($this->m->Routing, $this->config);
+//     $this->posts = new PostsController($this->m->Routing, $this->config);
+    $this->posts = $this->m->Controllers->Posts;
 
     $this->comments = new CommentsController($this->m->Routing, $this->config['comments']);
 

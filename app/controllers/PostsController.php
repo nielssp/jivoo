@@ -6,7 +6,7 @@ class PostsController extends AppController {
     'Backend', 'Json', 'Bulk'
   );
 
-  public function init() {
+  public function preRender() {
     $this->Filtering
       ->addSearchColumn('title');
     $this->Filtering

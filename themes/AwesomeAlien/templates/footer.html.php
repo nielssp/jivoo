@@ -11,7 +11,7 @@ Keine widgets?
   <h2>
     <?php echo $Html->link($site['title']); ?></h2>
   <div id="powered-by">
-    <?php echo $Html->link('Powered by ApakohCMS.', 'http://apakoh.dk'); ?>
+    <?php echo $Html->link('Powered by Apakoh Core.', 'http://apakoh.dk'); ?>
   </div>
 </div>
 </div>

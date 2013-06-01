@@ -13,7 +13,6 @@
  */
 class Routing extends ModuleBase {
 
-  private $controllers = array();
   private $helpers = array();
 
   private $routes = array();
@@ -80,12 +79,6 @@ class Routing extends ModuleBase {
     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
     $this->app->onRender(array($this, 'callController'));
-  }
-
-
-  public function addController(Controller $controller) {
-    $name = substr(get_class($controller), 0, -10);
-    $this->controllers[$name] = $controller;
   }
 
   public function addHelper(Helper $helper) {
@@ -415,7 +408,7 @@ class Routing extends ModuleBase {
       $controller->addModule($this->app->requestModule('Editors'));
       $controller->addModule($this->app->requestModule('Authentication'));
       $this->rendered = true;
-      call_user_func(array($controller, 'init'));
+      call_user_func(array($controller, 'preRender'));
       call_user_func_array(
         array($controller, $this->selectedRoute['action']),
         $this->selectedRoute['parameters']

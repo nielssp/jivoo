@@ -12,7 +12,7 @@ return array(
   'Assets' => array(
   ),
   'Templates' => array(
-    'title' => 'PeanutCMS',
+    'title' => 'Override!',
     'subtitle' => 'Powered by PeanutCMS',
   ),
   'Helpers' => array(
@@ -67,6 +67,8 @@ return array(
       ),
       'JqueryUi' => array(
         'theme' => 'arachis',
+      ),
+      'Tinymce' => array(
       ),
     ),
     'installed' => 'Jquery JqueryHotkeys JqueryUi Tinymce',
