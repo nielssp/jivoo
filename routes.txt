@@ -24,5 +24,9 @@ Some examples:
 Other legal values are:
  - an object implementing ILinkable, in which case ->getRoute() is called
  - null, in which case a link to the frontpage is returned
- - a string, in which case the string is returned (OR NEW FORMAT!!)
+ - a string, in which case the following grammar applies:
+
+route      ::= url
+             | {namespace "/"} controller ["/" action {"/" parameter}]
+
   
