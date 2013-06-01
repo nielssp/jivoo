@@ -13,9 +13,9 @@ define('CACHING', true);
 
 define('TMP', '/tmp/peanutcms/');
 
-require_once 'lib/ApakohPHP/bootstrap.php';
+require_once 'lib/Core/bootstrap.php';
 
-Lib::import('ApakohPHP');
+Lib::import('Core');
 
 $app = new App(include 'app/app.php');
 
@@ -25,7 +25,7 @@ $app->paths->tmp = '/tmp/peanutcms';
 $app->paths->extensions = 'extensions';
 $app->paths->themes = 'themes';
 
-$environment = getenv('APAKOHPHP_ENVIRONMENT');
+$environment = getenv('APP_ENVIRONMENT');
 $environment || $environment = 'production';
 
 //$app->run($environment);

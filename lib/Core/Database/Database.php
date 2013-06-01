@@ -2,11 +2,17 @@
 // Module
 // Name           : Database
 // Version        : 0.2.0
-// Description    : The ApakohPHP database system
+// Description    : The Apakoh Core database system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Routing ApakohPHP/Templates
-//                  ApakohPHP/Maintenance
+// Dependencies   : Core/Routing Core/Templates
+//                  Core/Maintenance
 
+/**
+ * Database module
+ * 
+ * @package Core
+ * @subpackage Database
+ */
 class Database extends ModuleBase implements IDatabase {
   private $driver;
   private $driverInfo;
@@ -97,7 +103,7 @@ class Database extends ModuleBase implements IDatabase {
             ->setup($controller, 'setupDriver', array($this->driverInfo));
         }
       }
-      Lib::import('ApakohPHP/Database/' . $this->driver);
+      Lib::import('Core/Database/' . $this->driver);
       try {
         $class = $this->driver . 'Database';
         $this->connection = new $class($this->config);

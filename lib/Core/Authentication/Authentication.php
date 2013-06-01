@@ -2,16 +2,16 @@
 // Module
 // Name           : Authentication
 // Version        : 0.2.0
-// Description    : The ApakohPHP authentication system
+// Description    : The Apakoh Core authentication system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Shadow
-//                  ApakohPHP/Maintenance ApakohPHP/Templates ApakohPHP/Database
-//                  ApakohPHP/Routing
+// Dependencies   : Core/Shadow
+//                  Core/Maintenance Core/Templates Core/Database
+//                  Core/Routing
 
 /**
  * Authentication module
  *
- * @package ApakohPHP
+ * @package Core
  * @subpackage Authentication
  */
 class Authentication extends ModuleBase {

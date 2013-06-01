@@ -7,6 +7,6 @@ return array(
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'peanut_',
   'modules' => array(
-    'ApakohPHP', 'PeanutCMS'
+    'Core', 'PeanutCMS'
   ),
 );

@@ -2,9 +2,15 @@
 // Module
 // Name           : Shadow
 // Version        : 0.2.0
-// Description    : The PeanutCMS hashing and security system
-// Author         : PeanutCMS
+// Description    : The Apakoh Core hashing and security system
+// Author         : apakoh.dk
 
+/**
+ * Hashing and security
+ * 
+ * @pacakge Core
+ * @subpackage Shadow
+ */
 class Shadow extends ModuleBase {
 
   private $hashTypes = array('sha512', 'sha256', 'blowfish', 'md5', 'ext_des',

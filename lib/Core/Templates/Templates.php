@@ -2,14 +2,14 @@
 // Module
 // Name           : Templates
 // Version        : 0.2.0
-// Description    : The ApakohPHP template system
+// Description    : The Apakoh Core template system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Routing ApakohPHP/Assets
+// Dependencies   : Core/Routing Core/Assets
 
 /**
  * Class for setting the template
  *
- * @package ApakohPHP
+ * @package Core
  * @subpackage Templates
  */
 class Templates extends ModuleBase {

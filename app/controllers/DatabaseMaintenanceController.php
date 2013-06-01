@@ -69,7 +69,7 @@ class DatabaseMaintenanceController extends ApplicationController {
         ->isValid()) {
         $driver = $this->driver['driver'];
         $class = $driver . 'Database';
-        Lib::import('ApakohPHP/Database/' . $driver);
+        Lib::import('Core/Database/' . $driver);
         try {
           new $class($this->request
             ->data['setup']);

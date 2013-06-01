@@ -2,13 +2,13 @@
 // Module
 // Name           : Maintenance
 // Version        : 0.3.0
-// Description    : The ApakohPHP maintenance system
+// Description    : The Apakoh Core maintenance system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Shadow ApakohPHP/Routing
+// Dependencies   : Core/Shadow Core/Routing
 
 /**
  * Maintenance module
- * @package PeanutCMS
+ * @package Core
  * @subpackage Modules
  */
 class Maintenance extends ModuleBase {

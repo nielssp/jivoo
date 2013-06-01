@@ -2,13 +2,13 @@
 // Module
 // Name           : Routing
 // Version        : 0.3.0
-// Description    : The ApakohPHP routing system
+// Description    : The Apakoh Core routing system
 // Author         : apakoh.dk
 
 /**
  * Handling routes
  *
- * @pacakge ApakohPHP
+ * @pacakge Core
  * @subpackage Routing
  */
 class Routing extends ModuleBase {

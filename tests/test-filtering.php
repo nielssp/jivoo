@@ -353,23 +353,67 @@ class OutputVisitor extends FilterVisitor {
   }
 }
 
-$input = $_GET['filter'];
+class QueryVisitor extends FilterVisitor {
+  
+//   private $query;
+  
+//   public function __construct(ICondition $query) {
+//     $this->query = $query;
+//   }
+  
+  protected function visitFilter(FilterNode $node) {
+    $condition = new Condition();
+    foreach ($node->children as $child) {
+      if ($child->operator == 'or') {
+        $condition->orWhere($this->visit($child));
+      }
+      else {
+        $condition->andWhere($this->visit($child));
+      }
+    }
+    return $condition;
+  }
+  protected function visitNotTerm(NotTermNode $node) {
+    // new NotCondition()...
+  }
+  protected function visitComparison(ComparisonNode $node) {
+    /// @TODO check for existence of column
+    return new Condition($node->left . ' = ?', $node->right);
+  }
+  protected function visitString(StringNode $node) {
+    // Foreach search column add condition
+  }
+}
+
+include '/home/www/LAB/LabTest.php';
+
+$input = 'author = root and something (foo | bar | baz)';
+
+$test = new LabTest('Configuration serialization');
+
 
 $scanner = new FilterScanner();
-$tokens = $scanner->scan($input);
 
-echo 'Scanner result:<br/>';
+$rounds = 100;
 
-foreach ($tokens as $token) {
-  echo 'token ' . FilterToken::getType($token->type) . ': ' . $token->value . '<br/>';
-}
+$tokens = $test->testFunction($rounds, array($scanner, 'scan'), $input);
+$test->dumpResult();
+
+// $test->puts('Scanner result:' . PHP_EOL);
+
+// foreach ($tokens as $token) {
+//   $test->puts(FilterToken::getType($token->type) . ': ' . $token->value . PHP_EOL);
+// }
 
 $parser = new FilterParser();
 
-$root = $parser->parse($tokens);
+$root = $test->testFunction($rounds, array($parser, 'parse'), $tokens);
+$test->dumpResult();
 
-$visitor = new OutputVisitor();
+// $visitor = new OutputVisitor();
 
-echo 'PrettyPrinter result:<br/>';
-echo $visitor->visit($root);
+// echo 'PrettyPrinter result:<br/>';
+// echo $visitor->visit($root);
+
+$test->report();
 

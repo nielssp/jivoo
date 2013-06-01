@@ -4,8 +4,14 @@
 // Version        : 0.3.14
 // Description    : For helpers
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Routing ApakohPHP/Templates
+// Dependencies   : Core/Routing Core/Templates
 
+/**
+ * Helpers module
+ * 
+ * @package Core
+ * @subpackage Helpers
+ */
 class Helpers extends ModuleBase {
   
   private $helpers = array();

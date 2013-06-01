@@ -2,9 +2,16 @@
 // Module
 // Name           : Assets
 // Version        : 0.1.0
-// Description    : The ApakohPHP asset system
+// Description    : The Apakoh Core asset system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Routing
+// Dependencies   : Core/Routing
+
+/**
+ * Assets module
+ * 
+ * @package Core
+ * @subpackage Assets
+ */
 class Assets extends ModuleBase {
 
   private $docRoot = '';

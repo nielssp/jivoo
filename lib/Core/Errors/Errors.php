@@ -9,6 +9,7 @@
  * Errors module
  * @package PeanutCMS
  * @subpackage Modules
+ * @deprecated Error handling now built-in
  */
 class Errors extends ModuleBase {
 

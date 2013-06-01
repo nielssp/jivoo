@@ -4,8 +4,8 @@
 // Version        : 0.3.14
 // Description    : For contollers
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Routing ApakohPHP/Templates
-//                  ApakohPHP/Helpers
+// Dependencies   : Core/Routing Core/Templates
+//                  Core/Helpers
 
 class Controllers extends ModuleBase {
   protected function init() {
