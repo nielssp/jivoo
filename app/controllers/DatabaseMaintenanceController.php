@@ -23,7 +23,12 @@ class DatabaseMaintenanceController extends ApplicationController {
               ->data[$driver['driver']])) {
           $this->config
             ->set('driver', $driver['driver']);
-          $this->refresh();
+          if ($this->config->save()) {
+            $this->refresh();
+          }
+          else {
+            $this->title = '!!! CONFIG ERROR !!!';
+          }
         }
       }
     }
