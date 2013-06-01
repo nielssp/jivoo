@@ -26,6 +26,7 @@ class Authentication extends ModuleBase {
         'unregistered' => 'guests',
         'registered' => 'users',
       ),
+      'rootCreated' => false, 
     );
     $newInstall = false;
 
@@ -33,35 +34,17 @@ class Authentication extends ModuleBase {
     $groupsSchema = new groupsSchema();
     $groups_permissionsSchema = new groups_permissionsSchema();
 
-    $this->m
-      ->Database
-      ->migrate($usersSchema);
-    $newInstall = $this->m
-      ->Database
-      ->migrate($groupsSchema) == 'new';
-    $this->m
-      ->Database
-      ->migrate($groups_permissionsSchema);
+    $this->m->Database->migrate($usersSchema);
+    $newInstall = $this->m->Database->migrate($groupsSchema) == 'new';
+    $this->m->Database->migrate($groups_permissionsSchema);
 
-    $this->m
-      ->Database
-      ->users
-      ->setSchema($usersSchema);
-    $this->m
-      ->Database
-      ->groups
-      ->setSchema($groupsSchema);
-    $this->m
-      ->Database
-      ->groups_permissions
+    $this->m->Database->users->setSchema($usersSchema);
+    $this->m->Database->groups->setSchema($groupsSchema);
+    $this->m->Database->groups_permissions
       ->setSchema($groups_permissionsSchema);
 
-    User::connect($this->m
-      ->Database
-      ->users);
-    Group::connect($this->m
-      ->Database
-      ->groups);
+    User::connect($this->m->Database->users);
+    Group::connect($this->m->Database->groups);
 
     $rootGroup = null;
     if ($newInstall) {
@@ -86,15 +69,18 @@ class Authentication extends ModuleBase {
 
     }
 
-    if ($newInstall OR $this->config['rootCreated'] != true) {
-      $controller = new AuthenticationController($this->m->Routing, $this->config);
+    if ($newInstall OR $this->config['rootCreated'] !== true) {
+      Logger::debug('Authentication: No root user created');
+      $controller = new AuthenticationController($this->m->Routing,
+        $this->config);
       $controller->addModule($this->m->Shadow);
       $this->m->Maintenance->setup($controller, 'setupRoot', array($rootGroup));
     }
 
     if (!$this->isLoggedIn()) {
-      $unregistered = Group::first(SelectQuery::create()
-        ->where('name = ?', $this->config['defaultGroups']['unregistered'])
+      $unregistered = Group::first(
+        SelectQuery::create()
+          ->where('name = ?', $this->config['defaultGroups']['unregistered'])
       );
       if ($unregistered) {
         $this->unregistered = $unregistered;
@@ -117,12 +103,10 @@ class Authentication extends ModuleBase {
 
   public function hasPermission($permission) {
     if ($this->isLoggedIn()) {
-      return $this->user
-        ->hasPermission($permission);
+      return $this->user->hasPermission($permission);
     }
     else if (isset($this->unregistered)) {
-      return $this->unregistered
-        ->hasPermission($permission);
+      return $this->unregistered->hasPermission($permission);
     }
     else {
       return false;
@@ -138,9 +122,10 @@ class Authentication extends ModuleBase {
       $sid = session_id();
       $ip = $_SERVER['REMOTE_ADDR'];
       $user = User::first(
-        SelectQuery::create()->where('username = ?', $this->session['username'])
-          ->and('session = ?', $sid)
-          ->and('ip = ?', $ip));
+        SelectQuery::create()
+          ->where('username = ?', $this->session['username'])
+          ->and('session = ?', $sid)->and('ip = ?', $ip)
+      );
       if ($user) {
         $this->user = $user;
         return true;
@@ -150,20 +135,18 @@ class Authentication extends ModuleBase {
   }
 
   protected function checkCookie() {
-    if (isset($this->request
-      ->cookies['login'])) {
-      list($username, $cookie) = explode(':', $this->request
-        ->cookies['login']);
+    if (isset($this->request->cookies['login'])) {
+      list($username, $cookie) = explode(':', $this->request->cookies['login']);
       $user = User::first(
         SelectQuery::create()->where('username = ?', $username)
-          ->and('cookie = ?', $cookie));
+          ->and('cookie = ?', $cookie)
+      );
       if ($user) {
         $this->user = $user;
         return true;
       }
       else {
-        unset($this->request
-          ->cookies['login']);
+        unset($this->request->cookies['login']);
       }
     }
     return false;
@@ -173,39 +156,29 @@ class Authentication extends ModuleBase {
     session_regenerate_id();
     $sid = session_id();
     $ip = $_SERVER['REMOTE_ADDR'];
-    $username = $this->user
-      ->username;
-    $cookie = $this->user
-      ->cookie;
+    $username = $this->user->username;
+    $cookie = $this->user->cookie;
     $this->session['username'] = $username;
     if ($remember) {
       $cookie = md5($username . rand() . time());
       $cookieval = implode(':', array($username, $cookie));
-      $this->request
-        ->cookies['login'] = $cookieval;
+      $this->request->cookies['login'] = $cookieval;
     }
-    $this->user
-      ->session = $sid;
-    $this->user
-      ->cookie = $cookie;
-    $this->user
-      ->ip = $ip;
-    if (!$this->user
-      ->save(array('validate' => false))) {
+    $this->user->session = $sid;
+    $this->user->cookie = $cookie;
+    $this->user->ip = $ip;
+    if (!$this->user->save(array('validate' => false))) {
       throw new Exception(tr('Could not save user session data.'));
     }
 
   }
 
   public function logIn($username, $password, $remember = false) {
-    $user = User::first(
-      SelectQuery::create()->where('username = ?', $username));
+    $user = User::first(SelectQuery::create()->where('username = ?', $username));
     if (!$user) {
       return false;
     }
-    if (!$this->m
-      ->Shadow
-      ->compare($password, $user->password)) {
+    if (!$this->m->Shadow->compare($password, $user->password)) {
       return false;
     }
     $this->user = $user;
@@ -216,8 +189,7 @@ class Authentication extends ModuleBase {
   public function logOut() {
     $this->sessionDefaults();
     if (isset($this->cookies['login'])) {
-      unset($this->request
-        ->cookies['login']);
+      unset($this->request->cookies['login']);
     }
     $this->user = null;
   }

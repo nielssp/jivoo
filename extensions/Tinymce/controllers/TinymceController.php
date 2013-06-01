@@ -1,6 +1,6 @@
 <?php
 
-class TinymceController extends ApplicationController {
+class TinymceController extends AppController {
   public function initJs() {
     $this->scriptUrl = $this->e
       ->Tinymce

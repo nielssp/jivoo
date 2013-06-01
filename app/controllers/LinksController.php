@@ -1,6 +1,6 @@
 <?php
 
-class LinksController extends ApplicationController {
+class LinksController extends AppController {
 
   public function menu() {
     $this->render();

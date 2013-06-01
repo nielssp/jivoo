@@ -16,7 +16,7 @@ class Controllers extends ModuleBase {
       }
     }
 
-    $controller = new ApplicationController($this->m->Routing, $this->config);
+    $controller = new Controller($this->m->Routing, $this->config);
     $controller->setRoute('notFound', 1);
   }
 }

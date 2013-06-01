@@ -1,6 +1,6 @@
 <?php
 
-class BulkHelper extends ApplicationHelper {
+class BulkHelper extends Helper {
 
   private $actions = array();
   private $action = null;

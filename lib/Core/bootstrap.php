@@ -5,8 +5,8 @@ if (!defined('LIB_PATH')) {
   define('LIB_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))));
 }
 
-if (!defined('APAKOH_LIB_PATH')) {
-  define('APAKOH_LIB_PATH', str_replace('\\', '/', dirname(__FILE__)));
+if (!defined('CORE_LIB_PATH')) {
+  define('CORE_LIB_PATH', str_replace('\\', '/', dirname(__FILE__)));
 }
 
 // PHP 5.2 compatibility
@@ -100,8 +100,8 @@ function tdate($format, $timestamp = null) {
   return call_user_func_array(array('I18n', 'date'), $args);
 }
 
-require APAKOH_LIB_PATH . '/Lib.php';
-require APAKOH_LIB_PATH . '/ErrorReporting.php';
+require CORE_LIB_PATH . '/Lib.php';
+require CORE_LIB_PATH . '/ErrorReporting.php';
 
 error_reporting(-1);
 set_error_handler(array('ErrorReporting', 'handleError'));

@@ -1,6 +1,6 @@
 <?php
 
-class BackendController extends ApplicationController {
+class BackendController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Backend');
 

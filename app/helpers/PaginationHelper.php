@@ -1,6 +1,6 @@
 <?php
 
-class PaginationHelper extends ApplicationHelper {
+class PaginationHelper extends Helper {
 
   private $limit = 5;
 

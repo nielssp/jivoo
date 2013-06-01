@@ -1,13 +1,12 @@
 <?php
 
-class ApplicationController {
+class Controller {
 
   private $name;
 
   protected $config = null;
   protected $auth = null;
   protected $m = null;
-  protected $e = null;
   protected $request = null;
   protected $session = null;
 
@@ -21,10 +20,9 @@ class ApplicationController {
   protected $helpers = array('Html');
   private $helperObjects = array();
 
-  public final function __construct(Routing $routing, AppConfig $config = null) {
+  public function __construct(Routing $routing, AppConfig $config = null) {
     $this->m = new Dictionary();
-    $this->e = new Dictionary();
-    
+
     $this->m->Routing = $routing;
 
     $routing->addController($this);
@@ -74,12 +72,6 @@ class ApplicationController {
     $this->m->$class = $object;
   }
 
-  public function addExtension($object) {
-    $class = get_class($object);
-    $this->e
-      ->$class = $object;
-  }
-
   private function createRoute($action, $prefix = '') {
     $reflect = new ReflectionMethod(get_class($this), $action);
     $required = $reflect->getNumberOfRequiredParameters();
@@ -115,21 +107,16 @@ class ApplicationController {
   }
 
   public function addRoute($path, $action, $priority = null) {
-    $this->m
-      ->Routing
-      ->addRoute($path, $this, $action, $priority);
+    $this->m->Routing->addRoute($path, $this, $action, $priority);
   }
 
   public function setRoute($action, $priority = 5, $parameters = array()) {
-    $this->m
-      ->Routing
-      ->setRoute($this, $action, $priority, $parameters);
+    $this->m->Routing->setRoute($this, $action, $priority, $parameters);
   }
 
   protected function reroute() {
     list(, $caller) = debug_backtrace(false);
-    $this->m
-      ->Routing
+    $this->m->Routing
       ->reroute($this->name, $caller['function'], $caller['args']);
   }
 
@@ -150,15 +137,11 @@ class ApplicationController {
   }
 
   protected function redirect($route = null) {
-    $this->m
-      ->Routing
-      ->redirect($route);
+    $this->m->Routing->redirect($route);
   }
 
   protected function refresh($query = null, $fragment = null) {
-    $this->m
-      ->Routing
-      ->refresh($query, $fragment);
+    $this->m->Routing->refresh($query, $fragment);
   }
 
   public function addTemplatePath($path) {
@@ -166,22 +149,21 @@ class ApplicationController {
   }
 
   protected function render($templateName = null, $return = false) {
-    $template = new Template($this->m
-      ->Templates, $this->m
-      ->Routing, $this);
+    $template = new Template($this->m->Templates, $this->m->Routing, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
       $templateName = Utilities::camelCaseToDashes($this->name) . '/';
       list(, $caller) = debug_backtrace(false);
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
-          . '.html';
+        . '.html';
     }
     $templateData = array_merge($this->data, $this->helperObjects);
     $template->set($templateData);
     return $template->render($templateName, $return);
   }
 
-  public function init() {}
+  public function init() {
+  }
 
   public function notFound() {
     $this->render('404.html');

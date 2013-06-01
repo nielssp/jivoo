@@ -1,6 +1,6 @@
 <?php
 
-class PagesController extends ApplicationController {
+class PagesController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Pagination', 'Backend');
 

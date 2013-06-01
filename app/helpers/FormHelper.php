@@ -1,6 +1,6 @@
 <?php
 
-class FormHelper extends ApplicationHelper {
+class FormHelper extends Helper {
 
   private $record = null;
   private $currentForm = '';

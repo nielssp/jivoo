@@ -1,6 +1,6 @@
 <?php
 
-class DatabaseMaintenanceController extends ApplicationController {
+class DatabaseMaintenanceController extends AppController {
 
   protected $helpers = array('Html', 'Form');
 

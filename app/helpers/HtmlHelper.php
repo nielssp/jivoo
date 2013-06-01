@@ -1,6 +1,6 @@
 <?php
 
-class HtmlHelper extends ApplicationHelper {
+class HtmlHelper extends Helper {
 
   private $endTags = array('<ul>' => '</ul>', '<li>' => '</li>');
 

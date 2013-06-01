@@ -55,7 +55,7 @@ class BackendItem implements IGroupable, ILinkable {
     return $this->access;
   }
 
-  public function autoRoute(ApplicationController $controller, $action) {
+  public function autoRoute(Controller $controller, $action) {
     $controller->autoRoute($action, $this->backend
         ->prefix);
     $this->route = array('controller' => $controller, 'action' => $action);

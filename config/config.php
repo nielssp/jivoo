@@ -52,8 +52,7 @@ return array(
       'unregistered' => 'guests',
       'registered' => 'users',
     ),
-    'rootCreated' => array(
-    ),
+    'rootCreated' => true,
   ),
   'Core' => array(
   ),
@@ -62,8 +61,15 @@ return array(
   ),
   'Extensions' => array(
     'config' => array(
+      'Jquery' => array(
+      ),
+      'JqueryHotkeys' => array(
+      ),
+      'JqueryUi' => array(
+        'theme' => 'arachis',
+      ),
     ),
-    'installed' => '',
+    'installed' => 'Jquery JqueryHotkeys JqueryUi Tinymce',
   ),
   'Links' => array(
   ),

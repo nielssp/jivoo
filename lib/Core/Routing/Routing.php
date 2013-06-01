@@ -83,12 +83,12 @@ class Routing extends ModuleBase {
   }
 
 
-  public function addController(ApplicationController $controller) {
+  public function addController(Controller $controller) {
     $name = substr(get_class($controller), 0, -10);
     $this->controllers[$name] = $controller;
   }
 
-  public function addHelper(ApplicationHelper $helper) {
+  public function addHelper(Helper $helper) {
     $name = substr(get_class($helper), 0, -6);
     $this->helpers[$name] = $helper;
     $helper->addModule($this);
@@ -320,7 +320,7 @@ class Routing extends ModuleBase {
     $this->refresh($query, $fragment);
   }
 
-  public function addRoute($path, ApplicationController $controller, $action,
+  public function addRoute($path, Controller $controller, $action,
                            $priority = 5) {
     if (!is_array($path)) {
       $path = explode('/', $path);
@@ -345,7 +345,7 @@ class Routing extends ModuleBase {
     );
   }
 
-  public function setRoute(ApplicationController $controller, $action,
+  public function setRoute(Controller $controller, $action,
                            $priority = 7, $parameters = array()) {
     if ($this->rendered) {
       return false;
@@ -404,7 +404,7 @@ class Routing extends ModuleBase {
     $this->mapRoute();
 
     if (isset($this->selectedRoute)
-        AND $this->selectedRoute['controller'] instanceof ApplicationController
+        AND $this->selectedRoute['controller'] instanceof Controller
         AND is_callable(
           array($this->selectedRoute['controller'],
             $this->selectedRoute['action']

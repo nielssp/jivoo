@@ -1,6 +1,6 @@
 <?php
 
-class CommentsController extends ApplicationController {
+class CommentsController extends AppController {
 
   protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering',
     'Backend', 'Json', 'Bulk'

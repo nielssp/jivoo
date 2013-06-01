@@ -1,6 +1,6 @@
 <?php
 
-class PostsController extends ApplicationController {
+class PostsController extends AppController {
 
   protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering',
     'Backend', 'Json', 'Bulk'

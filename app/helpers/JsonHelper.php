@@ -1,6 +1,6 @@
 <?php
 
-class JsonHelper extends ApplicationHelper {
+class JsonHelper extends Helper {
   public function respond($response = null) {
     $template = new Template($this->m
       ->Templates, $this->m

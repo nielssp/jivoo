@@ -1,6 +1,6 @@
 <?php
 
-class AuthenticationController extends ApplicationController {
+class AuthenticationController extends AppController {
 
   protected $helpers = array('Html', 'Form');
 
@@ -8,8 +8,7 @@ class AuthenticationController extends ApplicationController {
     $this->title = tr('Welcome to PeanutCMS');
 
     if (!isset($rootGroup)) {
-      $rootGroup = Group::first(
-        SelectQuery::create()->where('name = "root"'));
+      $rootGroup = Group::first(SelectQuery::create()->where('name = "root"'));
       if (!$rootGroup) {
         $rootGroup = Group::create();
         $rootGroup->name = 'root';
@@ -19,36 +18,22 @@ class AuthenticationController extends ApplicationController {
       }
     }
 
-    if ($this->request
-      ->isPost() AND $this->request
-          ->checkToken()) {
-      $this->user = User::create($this->request
-        ->data['user']);
-      $this->user
-        ->password = $this->m
-        ->Shadow
-        ->hash($this->user
-          ->password);
-      $this->user
-        ->confirm_password = $this->m
-        ->Shadow
-        ->hash($this->user
-          ->confirm_password);
-      if ($this->user
-        ->isValid()) {
-        $this->user
-          ->setGroup($rootGroup);
-        $this->user
-          ->save();
-        $this->config
-          ->set('rootCreated', 'yes');
+    if ($this->request->isPost() AND $this->request->checkToken()) {
+      $this->user = User::create($this->request->data['user']);
+      $this->user->password = $this->m->Shadow
+        ->hash($this->user->password);
+      $this->user->confirm_password = $this->m->Shadow
+        ->hash($this->user->confirm_password);
+      if ($this->user->isValid()) {
+        $this->user->setGroup($rootGroup);
+        $this->user->save();
+        $this->config->set('rootCreated', true);
         $this->refresh();
       }
     }
     else {
       $this->user = User::create();
-      $this->user
-        ->username = 'root';
+      $this->user->username = 'root';
     }
 
     $this->render();

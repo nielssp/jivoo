@@ -1,6 +1,6 @@
 <?php
 
-class BackendHelper extends ApplicationHelper {
+class BackendHelper extends Helper {
   public function requireAuth() {
     $permissions = func_get_args();
     $access = true;

@@ -6,6 +6,7 @@ return array(
   'defaultLanguage' => 'en',
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'peanut_',
+  'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce'),
   'modules' => array(
     'Core', 'PeanutCMS'
   ),

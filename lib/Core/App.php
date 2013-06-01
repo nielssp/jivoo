@@ -102,6 +102,7 @@ class App {
       case 'minPhpVersion':
       case 'environment':
       case 'config':
+      case 'appConfig':
       case 'sessionPrefix':
         return $this->$property;
     }

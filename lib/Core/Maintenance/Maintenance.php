@@ -19,11 +19,11 @@ class Maintenance extends ModuleBase {
 
   /**
    * Present a setup page then exit
-   * @param ApplicationController $controller Controller for page
+   * @param Controller $controller Controller for page
    * @param string $action Action to call in controller
    * @param mixed[] $parameters Additional parameters for action
    */
-  public function setup(ApplicationController $controller, $action = 'index',
+  public function setup(Controller $controller, $action = 'index',
                         $parameters = array()) {
     $this->m->Routing->setRoute($controller, $action, 10, $parameters);
     $this->m->Routing->callController();

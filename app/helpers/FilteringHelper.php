@@ -1,6 +1,6 @@
 <?php
 
-class FilteringHelper extends ApplicationHelper {
+class FilteringHelper extends Helper {
 
   private $predefined = array();
   private $searchColumns = array();

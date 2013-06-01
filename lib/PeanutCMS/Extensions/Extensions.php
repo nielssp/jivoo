@@ -25,11 +25,13 @@ class Extensions extends ModuleBase {
   private $loading = array();
 
   protected function init() {
-    $this->config->defaults = array('config' => array());
+    $this->config->defaults = array(
+      'config' => array()
+    );
     
     if (!isset($this->config['installed'])) {
       $this->config['installed'] = '';
-      $preinstall = explode(' ', PREINSTALL_EXTENSIONS);
+      $preinstall = $this->app->appConfig['extensions'];
       foreach ($preinstall as $extension) {
         if (!empty($extension)) {
           $this->install($extension);

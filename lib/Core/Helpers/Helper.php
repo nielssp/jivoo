@@ -1,6 +1,6 @@
 <?php
 
-abstract class ApplicationHelper {
+abstract class Helper {
 
   protected $m = null;
   protected $request = null;
