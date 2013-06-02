@@ -138,7 +138,7 @@ class Routing extends ModuleBase {
     if (!isset($controller)) {
       return null;
     }
-    $controller = $this->controllerName($controller, true);
+    $controller = $this->controllerName($controller);
     if (isset($this->paths[$controller][$action])) {
       $function = $this->paths[$controller][$action]['function'];
       $additional = $this->paths[$controller][$action]['additional'];
@@ -331,7 +331,7 @@ class Routing extends ModuleBase {
         );
         break;
       }
-      else if (isset($path[$j])) {
+      else if (!isset($path[$j])) {
         $isMatch = false;
         break;
       }
@@ -366,10 +366,12 @@ class Routing extends ModuleBase {
         $this->selection['route'] = $route;
       }
     }
-    $this->addPath(
-      $route['controller'], $route['action'],
-      array($this, 'insertParameters'), array($pattern)
-    );
+    if (isset($route['controller']) AND isset($route['action'])) {
+      $this->addPath(
+        $route['controller'], $route['action'],
+        array($this, 'insertParameters'), array($pattern)
+      );
+    }
   }
 
 //   public function addRoute($path, Controller $controller, $action,
@@ -386,25 +388,26 @@ class Routing extends ModuleBase {
 
   public function addPath($controller, $action, $pathFunction,
                           $additional = array()) {
-    if (substr($controller, -10) != 'Controller') {
-      $controller .= 'Controller';
-    }
+    $controller = $this->controllerName($controller);
     if (!isset($this->paths[$controller])) {
       $this->paths[$controller] = array();
     }
-    $this->paths[$controller][$action] = array('function' => $pathFunction,
+    $this->paths[$controller][$action] = array(
+      'function' => $pathFunction,
       'additional' => $additional
     );
   }
 
-  public function setRoute(Controller $controller, $action,
+  public function setRoute($controller, $action,
                            $priority = 7, $parameters = array()) {
     if ($this->rendered) {
       return false;
     }
-    if ($priority > $this->selectedRoute['priority']) {
-      $this->selectedRoute = array('controller' => $controller,
-        'action' => $action, 'priority' => $priority,
+    $controller = $this->controllerName($controller);
+    if ($priority > $this->selection['priority']) {
+      $this->selection['route'] = array(
+        'controller' => $controller,
+        'action' => $action,
         'parameters' => $parameters
       );
     }
@@ -504,6 +507,9 @@ class Routing extends ModuleBase {
         }
       }
     }
+    else if (is_object($route) AND $route instanceof ILinkable) {
+      return $this->validateRoute($route->getRoute());
+    }
     if (!is_array($route)) {
       throw new Exception(tr('Not a valid route, must be array or string'));
     }
@@ -550,6 +556,8 @@ class Routing extends ModuleBase {
         throw new Exception(tr('Invalid controller: %1', $route['controller']));
       }
       $action = $route['action'];
+      $this->rendered = true;
+      $controller->preRender();
       call_user_func_array(array($controller, $action), $route['parameters']);
     }
     

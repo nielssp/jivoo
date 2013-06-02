@@ -134,7 +134,7 @@ class Posts extends ModuleBase {
     $this->posts->setConfig($this->config);
 
     $this->comments = $this->m->Controllers->Comments;
-    $this->posts->setConfig($this->config['comments']);
+    $this->comments->setConfig($this->config['comments']);
 
     // Frontend setup
 

@@ -5,6 +5,8 @@ class PostsController extends AppController {
   protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering',
     'Backend', 'Json', 'Bulk'
   );
+  
+  protected $modules = array('Authentication', 'Editors');
 
   public function preRender() {
     $this->Filtering

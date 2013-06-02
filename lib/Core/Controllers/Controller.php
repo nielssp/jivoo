@@ -125,7 +125,7 @@ class Controller {
     }
   }
 
-  public function addRoute($path, $action, $priority = null) {
+  public function addRoute($path, $action, $priority = 5) {
     $this->m->Routing->addRoute(
       $path,
       array('controller' => $this->name, 'action' => $action),
@@ -134,7 +134,7 @@ class Controller {
   }
 
   public function setRoute($action, $priority = 5, $parameters = array()) {
-    $this->m->Routing->setRoute($this, $action, $priority, $parameters);
+    $this->m->Routing->setRoute($this->name, $action, $priority, $parameters);
   }
 
   protected function reroute() {
