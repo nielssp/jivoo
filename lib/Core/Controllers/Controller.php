@@ -33,7 +33,7 @@ class Controller {
 
     $this->config = $config;
 
-    $this->request = $routing->getRequest();
+    $this->request = $routing->getRequest(); 
     $this->session = $this->request->session;
 
     $this->name = str_replace('Controller', '', get_class($this));
@@ -42,12 +42,6 @@ class Controller {
     $parentMethods = get_class_methods(__CLASS__);
     $this->actions = array_diff($classMethods, $parentMethods);
 
-    foreach ($this->helpers as $name) {
-      $class = $name . 'Helper';
-      if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($routing, $this);
-      }
-    }
     $this->init();
   }
 
@@ -63,9 +57,21 @@ class Controller {
   public function __set($name, $value) {
     $this->data[$name] = $value;
   }
+  
+  public function setConfig(AppConfig $config) {
+    $this->config = $config;
+  }
 
   public function getData() {
     return $this->data;
+  }
+  
+  public function getModuleList() {
+    return $this->modules;
+  }
+  
+  public function getHelperList() {
+    return $this->helpers;
   }
 
   public function addModule($object) {
@@ -75,8 +81,16 @@ class Controller {
     }
     $this->m->$class = $object;
   }
+  
+  public function addHelper($helper) {
+    $name = str_replace('Helper', '', get_class($object));
+    $this->helperObjects[$name] = $helper;
+  }
 
   private function createRoute($action, $prefix = '') {
+    if (!in_array($action, $this->actions)) {
+      throw new Exception(tr('Invalid action "%1"', $action));
+    }
     $reflect = new ReflectionMethod(get_class($this), $action);
     $required = $reflect->getNumberOfRequiredParameters();
     $total = $reflect->getNumberOfParameters();
@@ -166,7 +180,7 @@ class Controller {
     return $template->render($templateName, $return);
   }
 
-  public function init() {
+  protected function init() {
   }
   
   public function preRender() {

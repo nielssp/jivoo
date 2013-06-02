@@ -28,5 +28,3 @@ Other legal values are:
 
 route      ::= url
              | {namespace "/"} controller ["/" action {"/" parameter}]
-
-  

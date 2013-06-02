@@ -131,85 +131,57 @@ class Posts extends ModuleBase {
     // Create controllers
 //     $this->posts = new PostsController($this->m->Routing, $this->config);
     $this->posts = $this->m->Controllers->Posts;
+    $this->posts->setConfig($this->config);
 
-    $this->comments = new CommentsController($this->m->Routing, $this->config['comments']);
+    $this->comments = $this->m->Controllers->Comments;
+    $this->posts->setConfig($this->config['comments']);
 
     // Frontend setup
 
-    $this->posts
-      ->addRoute('posts', 'index');
+    $this->posts->addRoute('posts', 'index');
 
-    $this->posts
-      ->addRoute('tags', 'tagIndex');
-    $this->posts
-      ->addRoute('tags/*', 'viewTag');
+    $this->posts->addRoute('tags', 'tagIndex');
+    $this->posts->addRoute('tags/*', 'viewTag');
 
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m->Routing
-        ->addPath('Posts', 'view', array($this, 'getFancyPath'));
+      $this->m->Routing->addPath('Posts', 'view', array($this, 'getFancyPath'));
       $this->m->Routing
         ->addPath('Comments', 'index', array($this, 'getFancyPath'));
       $this->m->Routing
         ->addPath('Comments', 'view', array($this, 'getFancyPath'));
     }
     else {
-      $this->posts
-        ->addRoute('posts/*', 'view');
-      $this->comments
-        ->addRoute('posts/*/comments', 'index');
-      $this->comments
-        ->addRoute('posts/*/comments/*', 'view');
+      $this->posts->addRoute('posts/*', 'view');
+      $this->comments->addRoute('posts/*/comments', 'index');
+      $this->comments->addRoute('posts/*/comments/*', 'view');
     }
 
     // Backend setup
 
-    $this->m
-      ->Backend['content']
-      ->setup(tr('Content'), 2);
-    $this->m
-      ->Backend['content']['posts-add']
-      ->setup(tr('New post'), 2)
-      ->permission('backend.posts.add')
-      ->autoRoute($this->posts, 'add');
-    $this->m
-      ->Backend['content']['posts-manage']
-      ->setup(tr('Manage posts'), 4)
-      ->permission('backend.posts.manage')
-      ->autoRoute($this->posts, 'manage');
+    $this->m->Backend['content']->setup(tr('Content'), 2);
+    $this->m->Backend['content']['posts-add']->setup(tr('New post'), 2)
+      ->permission('backend.posts.add')->autoRoute($this->posts, 'add');
+    $this->m->Backend['content']['posts-manage']->setup(tr('Manage posts'), 4)
+      ->permission('backend.posts.manage')->autoRoute($this->posts, 'manage');
 
-    $this->m
-      ->Backend['content']['comments']
-      ->setup(tr('Comments'), 8)
+    $this->m->Backend['content']['comments']->setup(tr('Comments'), 8)
       ->permission('backend.comments.manage')
       ->autoRoute($this->comments, 'manage');
-    $this->m
-      ->Backend['content']['tags']
-      ->setup(tr('Tags'), 8)
+    $this->m->Backend['content']['tags']->setup(tr('Tags'), 8)
       ->permission('backend.tags.manage')
       ->autoRoute($this->posts, 'manageTags');
 
-    $this->m
-      ->Backend
-      ->unlisted['posts-edit']
-      ->permission('backend.posts.edit')
+    $this->m->Backend->unlisted['posts-edit']->permission('backend.posts.edit')
       ->autoRoute($this->posts, 'edit');
-    $this->m
-      ->Backend
-      ->unlisted['posts-delete']
-      ->permission('backend.posts.delete')
-      ->autoRoute($this->posts, 'delete');
-    $this->m
-      ->Backend
-      ->unlisted['comment.delete']
+    $this->m->Backend->unlisted['posts-delete']
+      ->permission('backend.posts.delete')->autoRoute($this->posts, 'delete');
+    $this->m->Backend->unlisted['comment.delete']
       ->permission('backend.comments.delete')
       ->autoRoute($this->comments, 'delete');
-    $this->m
-      ->Backend
-      ->unlisted['comments-edit']
-      ->permission('backend.comments.edit')
-      ->autoRoute($this->comments, 'edit');
+    $this->m->Backend->unlisted['comments-edit']
+      ->permission('backend.comments.edit')->autoRoute($this->comments, 'edit');
     //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
     //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
     //$this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);

@@ -10,7 +10,7 @@ class App {
   private $config = array();
 
   private $paths = null;
-  
+
   private $webPath = '/';
 
   private $name = 'ApakohPHP Application';
@@ -18,11 +18,11 @@ class App {
   private $version = '0.0.0';
 
   private $minPhpVersion = '5.2.0';
-  
+
   private $modules = array('Core');
 
   private $m = null;
-  
+
   private $environment = 'production';
 
   private $sessionPrefix = 'apakoh_';
@@ -35,19 +35,25 @@ class App {
    * @param callback $h Attach an event handler
    * @uses ModuleLoadedEventArgs
    */
-  public function onModuleLoaded($h) { $this->events->attach($h); }
+  public function onModuleLoaded($h) {
+    $this->events->attach($h);
+  }
   /**
    * Event, triggered when all modules are loaded
    * @param callback $h Attach an event handler
    */
-  public function onModulesLoaded($h) { $this->events->attach($h); }
+  public function onModulesLoaded($h) {
+    $this->events->attach($h);
+  }
   /**
    * Event, triggered when ready to render page
    * @param callback $h Attach an event handler
    */
-  public function onRender($h) { $this->events->attach($h); }
+  public function onRender($h) {
+    $this->events->attach($h);
+  }
   /* EVENTS END */
-  
+
   public static function getWebRoot() {
     return dirname($_SERVER['SCRIPT_NAME']);
   }
@@ -63,10 +69,8 @@ class App {
     $this->appConfig = $appConfig;
     $this->events = new Events($this);
     $this->m = new Dictionary();
-    $this->paths = new PathDictionary(
-      dirname($_SERVER['SCRIPT_FILENAME']),
-      $appConfig['path']
-    );
+    $this->paths = new PathDictionary(dirname($_SERVER['SCRIPT_FILENAME']),
+      $appConfig['path']);
     $this->paths->app = $appConfig['path'];
     $this->webPath = dirname($_SERVER['SCRIPT_NAME']);
     if (isset($appConfig['name'])) {
@@ -131,8 +135,7 @@ class App {
       $moduleName = $segments[count($segments) - 1];
     }
     try {
-      return $this->m
-        ->$moduleName;
+      return $this->m->$moduleName;
     }
     catch (DictionaryKeyInvalidException $e) {
       return false;
@@ -146,8 +149,7 @@ class App {
    * @return string Absolute path
    */
   public function p($key, $path = '') {
-    return $this->paths
-      ->$key . '/' . $path;
+    return $this->paths->$key . '/' . $path;
   }
 
   /**
@@ -169,17 +171,20 @@ class App {
       if (!class_exists($moduleName, false)) {
         if (!Lib::import($module)) {
           throw new ModuleNotFoundException(
-            tr('The "%1" module could not be found', $module));
+            tr('The "%1" module could not be found', $module)
+          );
         }
         if (!Lib::autoLoad($module . '/' . $moduleName)) {
           throw new ModuleInvalidException(
-            tr('The "%1" module does not have a main class', $module));
+            tr('The "%1" module does not have a main class', $module)
+          );
         }
       }
       $info = Lib::getModuleInfo($module);
       if (!$info) {
         throw new ModuleInvalidException(
-          tr('The "%1" module is invalid', $module));
+          tr('The "%1" module is invalid', $module)
+        );
       }
       $dependencies = $info['dependencies']['modules'];
       $modules = array();
@@ -189,10 +194,10 @@ class App {
           $modules[get_class($dependencyObject)] = $dependencyObject;
         }
         catch (ModuleNotFoundException $e) {
-          throw new ModuleMissingDependencyException(
-            tr(
-              'The "%1" module depends on the "%2" module, which could not be found',
-              $module, $dependency));
+          throw new ModuleMissingDependencyException(tr(
+            'The "%1" module depends on the "%2" module, which could not be found',
+            $module, $dependency
+          ));
         }
       }
       $this->paths->$moduleName = LIB_PATH . '/' . implode('/', $segments);
@@ -215,29 +220,32 @@ class App {
     session_start();
 
     if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
-      echo 'Sorry, but ' . $this->name . ' does not support PHP versions below ';
+      echo 'Sorry, but ' . $this->name
+        . ' does not support PHP versions below ';
       echo $this->minPhpVersion . '. ';
       echo 'You are currently using version ' . phpversion() . '. ';
       echo 'You should update PHP or contact your hosting provider. ';
       return;
     }
-    
+
     $this->config = new AppConfig($this->p('config', 'config.php'));
-    
-    $environmentConfigFile = $this->p('config', 'environments/' . $environment . '.php');
+
+    $environmentConfigFile = $this
+      ->p('config', 'environments/' . $environment . '.php');
     if (file_exists($environmentConfigFile)) {
       $this->config->override = include $environmentConfigFile;
     }
     else {
-      Logger::notice('Configuration file for environment "' . $environment . '" not found');
+      Logger::notice(
+        'Configuration file for environment "' . $environment . '" not found'
+      );
     }
 
     Logger::attachFile($this->p('log', $this->environment . '.log'));
-    
+
     // I18n system
     $this->config->defaults = array(
-      'core' => array(
-        'language' => $this->appConfig['defaultLanguage'],
+      'core' => array('language' => $this->appConfig['defaultLanguage'],
         'timeZone' => @date_default_timezone_get(), /** @TODO Reevaluate use of @ */
       ),
     );
@@ -249,7 +257,8 @@ class App {
 
     foreach ($this->modules as $module) {
       $object = $this->loadModule($module);
-      $this->events->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
+      $this->events
+        ->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
     }
     $this->events->trigger('onModulesLoaded');
     $this->events->trigger('onRender');
@@ -260,27 +269,32 @@ class App {
  * Thrown when a requested module is not loaded
  * @package ApakohCMS
  */
-class ModuleNotLoadedException extends Exception {}
+class ModuleNotLoadedException extends Exception {
+}
 /**
  * Thrown when a module does not exist
  * @package ApakohCMS
  */
-class ModuleNotFoundException extends Exception {}
+class ModuleNotFoundException extends Exception {
+}
 /**
  * Thrown when a module is invalid
  * @package ApakohCMS
  */
-class ModuleInvalidException extends Exception {}
+class ModuleInvalidException extends Exception {
+}
 /**
  * Thrown when a module is missing dependencies
  * @package ApakohCMS
  */
-class ModuleMissingDependencyException extends ModuleNotFoundException {}
+class ModuleMissingDependencyException extends ModuleNotFoundException {
+}
 /**
  * Thrown when a module is blacklisted
  * @package ApakohPHP
  */
-class ModuleBlacklistedException extends Exception {}
+class ModuleBlacklistedException extends Exception {
+}
 
 /**
  * EventArgs to be sent with the onModuleLoaded event

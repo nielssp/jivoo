@@ -1,12 +1,13 @@
 <?php
 
 class CommentsController extends AppController {
-
-  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering',
+  
+  protected $helpers = array(
+    'Html', 'Pagination', 'Form', 'Filtering',
     'Backend', 'Json', 'Bulk'
   );
 
-  public function init() {
+  public function preRender() {
     $this->Filtering
       ->addSearchColumn('content');
     $this->Filtering

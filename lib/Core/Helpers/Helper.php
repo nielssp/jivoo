@@ -7,28 +7,18 @@ abstract class Helper {
   protected $session = null;
   protected $auth = null;
 
-  protected $controller = null;
-
+  protected $modules = array();
   protected $helpers = array();
 
   private $helperObjects = array();
 
-  public final function __construct(Routing $routing, $controller = null) {
+  public final function __construct(Routing $routing) {
     $this->m = new Dictionary();
-
-    $routing->addHelper($this);
+    
+    $this->m->Routing = $routing;
 
     $this->request = $routing->getRequest();
     $this->session = $this->request->session;
-
-    $this->controller = $controller;
-
-    foreach ($this->helpers as $name) {
-      $class = $name . 'Helper';
-      if (class_exists($class)) {
-        $this->helperObjects[$name] = new $class($routing, $this);
-      }
-    }
 
     $this->init();
   }
@@ -41,19 +31,31 @@ abstract class Helper {
 
   protected function init() {}
 
+  
+  public function getModuleList() {
+    return $this->modules;
+  }
+  
+  public function getHelperList() {
+    return $this->helpers;
+  }
+
   public function addModule($object) {
     $class = get_class($object);
     if ($object instanceof Authentication) {
       $this->auth = $object;
     }
-    $this->m
-      ->$class = $object;
+    $this->m->$class = $object;
   }
+  
+  public function addHelper(Helper $helper) {
+    $name = str_replace('Helper', '', get_class($object));
+    $this->helperObjects[$name] = $helper;
+  }
+  
 
   protected function getLink($route) {
-    return $this->m
-      ->Routing
-      ->getLink($route);
+    return $this->m->Routing->getLink($route);
   }
 
 }

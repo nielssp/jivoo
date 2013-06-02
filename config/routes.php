@@ -9,10 +9,4 @@ return array(
   Route::match('posts/:1/comments/:2', 'Comments::view'),
   Route::match(':*', 'Pages/view', 4),
   Route::match(':controller/:action/:*', array()),
-  'posts' => 'Posts/index',
-  'posts/*' => 'Posts/view',
-  'tags' => 'Posts/tagIndex',
-  'tags/*' => 'Posts/viewTag',
-  'posts/*/comments' => 'Comments/index',
-  'posts/*/comments/*' => 'Comments/view',
 );

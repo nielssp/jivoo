@@ -12,9 +12,11 @@
  * @subpackage Routing
  */
 class Routing extends ModuleBase {
+  
+  private $matchTree = array();
 
-  private $helpers = array();
-
+  private $controllers = null;
+  
   private $routes = array();
 
   private $paths = array();
@@ -76,27 +78,19 @@ class Routing extends ModuleBase {
       $this->redirectPath(array(), $this->request->query);
     }
 
-    $this->addPath('home', 'index', array($this, 'insertParamters'), array());
+//     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
 
-    $this->app->onRender(array($this, 'callController'));
+    $this->app->onRender(array($this, 'findRoute'));
   }
   
-  public function drawRoutes() {
-    // read config
-    // do stuff
+  public function setRoot($route) {
+    /** @todo unimplemented */
   }
-
-  public function addHelper(Helper $helper) {
-    $name = substr(get_class($helper), 0, -6);
-    $this->helpers[$name] = $helper;
-    $helper->addModule($this);
-    $helper->addModule($this->app->Templates);
-    $helper->addModule($this->app->Editors);
-    $auth = $this->app->requestModule('Authentication');
-    if ($auth) {
-      $helper->addModule($auth);
-    }
+  
+  public function setError($route) {
+    /** @todo unimplemented */
   }
+  
 
   protected function controllerName($controller, $withSuffix = false) {
     if (is_object($controller)) {
@@ -175,11 +169,11 @@ class Routing extends ModuleBase {
           ->path == $route['path'];
       }
       return $this->controllerName($this->selectedRoute['controller'])
-          == $route['controller']
-          AND ($route['action'] == '*'
-              OR $this->selectedRoute['action'] == $route['action'])
-          AND ($route['parameters'] == '*'
-              OR $this->selectedRoute['parameters'] == $route['parameters']);
+        == $route['controller']
+        AND ($route['action'] == '*'
+          OR $this->selectedRoute['action'] == $route['action'])
+        AND ($route['parameters'] == '*'
+          OR $this->selectedRoute['parameters'] == $route['parameters']);
     }
     else {
       return false;
@@ -319,6 +313,26 @@ class Routing extends ModuleBase {
     $this->redirectPath($this->request->path, $query, false, $fragment);
     $this->refresh($query, $fragment);
   }
+  
+  public function addRoute($pattern, $route, $priority = 5) {
+    $route = $this->validateRoute($route);
+    $pattern = explode('/', $pattern);
+    $matchTree = &$this->matchTree;
+    foreach ($pattern as $part) {
+      if (!isset($matchTree[$part])) {
+        $matchTree[$part] = array();
+      }
+      $matchTree = &$matchTree[$part];
+    }
+    if (!isset($matchTree[''])) {
+      $matchTree[''] = array();
+    }
+    $this->matchTree[''][] = Route::match($pattern, $route, $priority);
+    $this->addPath(
+      $route['controller'], $route['action'],
+      array($this, 'insertParameters'), array($pattern)
+    );
+  }
 
   public function addRoute($path, Controller $controller, $action,
                            $priority = 5) {
@@ -430,6 +444,59 @@ class Routing extends ModuleBase {
       ));
     }
 
+    $this->events->trigger('onRendered');
+  }
+  
+  
+  public function validateRoute($route) {
+    if (is_string($route)) {
+      if (preg_match('/^https?:\/\//i', $route)) {
+        return array('url' => $route);
+      }
+      $parts = explode('::', $route);
+      $route = array();
+      if (isset($parts[0])) {
+        $route['controller'] = $parts[0];
+        if (isset($parts[1])) {
+          $route['action'] = $parts[1];
+          $route['parameters'] = array();
+          for ($i = 2; $i < count($parts); $i++) {
+            $route['parameters'][] = $parts[$i];
+          }
+        }
+      }
+    }
+    if (!is_array($route)) {
+      throw new Exception(tr('Not a valid route, must be array or string'));
+    }
+    if (isset($route['controller'])) {
+      $route['controller'] = $this->controllerName($route['controller']);
+    }
+    return $route;
+  }
+
+  /** @todo WIP */
+  private function drawRoutes() {
+    $routeFile = $this->p('config', 'routes.php');
+    if (file_exists($routeFile)) {
+      $routes = include $routeFile;
+      foreach ($routes as $route) {
+        $route->draw($this, $this->controllers);
+      }
+    }
+  }
+  
+  /** @todo WIP */
+  public function findRoute() {
+    $this->events->trigger('onRendering');
+    
+    $this->controllers = $this->app->requestModule('Controllers');
+    if (!$this->controllers) {
+      throw new Exception('Missing controllers module');
+    }
+    
+    $this->drawRoutes();
+    
     $this->events->trigger('onRendered');
   }
 
