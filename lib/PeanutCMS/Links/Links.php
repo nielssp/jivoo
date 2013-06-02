@@ -4,9 +4,9 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
 // Author         : PeanutCMS
-// Dependencies   : ApakohPHP/Database ApakohPHP/Routing
-//                  ApakohPHP/Templates
-//                  ApakohPHP/Authentication PeanutCMS/Backend
+// Dependencies   : Core/Database Core/Routing
+//                  Core/Templates Core/Controllers
+//                  Core/Authentication PeanutCMS/Backend
 
 /*
  * Menu system
@@ -62,7 +62,8 @@ class Links extends ModuleBase {
       $link->save();
     }
 
-    $this->controller = new LinksController($this->m->Routing, $this->config);
+    $this->controller = $this->m->Controllers->Links;
+    $this->controller->setConfig($this->config);
 
     $this->m->Backend['content']->setup(tr('Content'), 2);
     $this->m->Backend['content']['links-manage']

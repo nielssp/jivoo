@@ -5,7 +5,7 @@
 // Description    : The Apakoh Core database system
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Templates
-//                  Core/Maintenance
+//                  Core/Maintenance Core/Controllers
 
 /**
  * Database module
@@ -78,10 +78,8 @@ class Database extends ModuleBase implements IDatabase {
       'database' => $this->app->name,
       'filename' => $this->p('config', 'db.sqlite3'),
     );
-    $controller = new DatabaseMaintenanceController(
-      $this->m->Routing,
-      $this->config
-    );
+    $controller = $this->m->Controllers->DatabaseMaintenance;
+    $controller->setConfig($this->config);
     $controller->addModule($this);
     if (!isset($this->config['driver'])) {
       $this->m->Maintenance->setup($controller, 'selectDriver');

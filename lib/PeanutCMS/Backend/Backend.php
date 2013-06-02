@@ -5,7 +5,7 @@
 // Description    : The PeanutCMS administration system
 // Author         : PeanutCMS
 // Dependencies   : Core/Database Core/Authentication
-//                  Core/Routing Core/Templates
+//                  Core/Routing Core/Templates Core/Controllers
 
 /**
  * PeanutCMS backend
@@ -35,7 +35,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $path = $this->config['path'];
     $this->prefix = $path . '/';
 
-    $this->controller = new BackendController($this->m->Routing, $this->config);
+    $this->controller = $this->m->Controllers->Backend;
 
     $this->controller->addRoute($path, 'dashboard');
     $this->controller->addRoute($this->prefix . 'login', 'login');

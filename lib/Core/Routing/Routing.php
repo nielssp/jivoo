@@ -13,19 +13,22 @@
  */
 class Routing extends ModuleBase {
   
+  /** @deprecated */
   private $matchTree = array();
 
   private $controllers = null;
   
+  /** @deprecated */
   private $routes = array();
+  
+  private $selection = array('route' => null, 'priority' => 0);
 
   private $paths = array();
 
   private $rendered = false;
 
+  /** @deprecated */
   private $selectedRoute = null;
-
-  private $parameters;
 
   /* Events */
   private $events;
@@ -317,34 +320,69 @@ class Routing extends ModuleBase {
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
     $pattern = explode('/', $pattern);
-    $matchTree = &$this->matchTree;
-    foreach ($pattern as $part) {
-      if (!isset($matchTree[$part])) {
-        $matchTree[$part] = array();
+    
+    $path = $this->request->path;
+    $isMatch = true;
+    foreach ($pattern as $j => $part) {
+      if ($part == '**' || $part == ':*') {
+        $route['parameters'] = array_merge(
+          $route['parameters'],
+          array_slice($path, $j)
+        );
+        break;
       }
-      $matchTree = &$matchTree[$part];
+      else if (isset($path[$j])) {
+        $isMatch = false;
+        break;
+      }
+      if ($path[$j] == $part) {
+        continue;
+      }
+      if ($part == '*') {
+        $route['parameters'][] = $path[$j];
+        continue;
+      }
+      if ($part[0] == ':') {
+        $var = substr($part, 1);
+        if (is_numeric($var)) {
+          $route['parameters'][(int)$var] = $path[$j];
+        }
+        else if ($var == ':controller') {
+          $route['controller'] = Utilities::dashesToCamelCase($path[$j]);
+        }
+        else if ($var == ':action') {
+          $route['action'] = lcfirst(Utilities::dashesToCamelCase($path[$j]));
+        }
+        else {
+          throw new Exception(tr('Unknown pattern "%1" in route configuration', $part));
+        }
+        continue;
+      }
+      $isMatch = false;
+      break;
     }
-    if (!isset($matchTree[''])) {
-      $matchTree[''] = array();
+    if ($isMatch) {
+      if ($priority > $this->selection['priority']) { // or >= ??
+        $this->selection['route'] = $route;
+      }
     }
-    $this->matchTree[''][] = Route::match($pattern, $route, $priority);
     $this->addPath(
       $route['controller'], $route['action'],
       array($this, 'insertParameters'), array($pattern)
     );
   }
 
-  public function addRoute($path, Controller $controller, $action,
-                           $priority = 5) {
-    if (!is_array($path)) {
-      $path = explode('/', $path);
-    }
-    $this->routes[] = array('path' => $path, 'controller' => $controller,
-      'action' => $action, 'priority' => 5, 'parameters' => array()
-    );
-    $this->addPath(get_class($controller), $action,
-        array($this, 'insertParameters'), array($path));
-  }
+//   public function addRoute($path, Controller $controller, $action,
+//                            $priority = 5) {
+//     if (!is_array($path)) {
+//       $path = explode('/', $path);
+//     }
+//     $this->routes[] = array('path' => $path, 'controller' => $controller,
+//       'action' => $action, 'priority' => 5, 'parameters' => array()
+//     );
+//     $this->addPath(get_class($controller), $action,
+//         array($this, 'insertParameters'), array($path));
+//   }
 
   public function addPath($controller, $action, $pathFunction,
                           $additional = array()) {
@@ -472,6 +510,9 @@ class Routing extends ModuleBase {
     if (isset($route['controller'])) {
       $route['controller'] = $this->controllerName($route['controller']);
     }
+    if (!isset($route['parameters'])) {
+      $route['parameters'] = array();
+    }
     return $route;
   }
 
@@ -496,6 +537,21 @@ class Routing extends ModuleBase {
     }
     
     $this->drawRoutes();
+    
+    if ($this->selection['route'] == null) {
+      throw new Exception(tr('No route selected'));
+    }
+    
+    $route = $this->selection['route'];
+    
+    if (isset($route['controller'])) {
+      $controller = $this->controllers->getController($route['controller']);
+      if (!$controller) {
+        throw new Exception(tr('Invalid controller: %1', $route['controller']));
+      }
+      $action = $route['action'];
+      call_user_func_array(array($controller, $action), $route['parameters']);
+    }
     
     $this->events->trigger('onRendered');
   }

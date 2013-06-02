@@ -26,10 +26,11 @@ class Controller {
   protected $helpers = array('Html');
   private $helperObjects = array();
 
-  public final function __construct(Routing $routing, AppConfig $config = null) {
+  public final function __construct(Routing $routing, Templates $templates, AppConfig $config = null) {
     $this->m = new Dictionary();
 
     $this->m->Routing = $routing;
+    $this->m->Templates = $templates;
 
     $this->config = $config;
 
@@ -83,7 +84,7 @@ class Controller {
   }
   
   public function addHelper($helper) {
-    $name = str_replace('Helper', '', get_class($object));
+    $name = str_replace('Helper', '', get_class($helper));
     $this->helperObjects[$name] = $helper;
   }
 
@@ -125,7 +126,11 @@ class Controller {
   }
 
   public function addRoute($path, $action, $priority = null) {
-    $this->m->Routing->addRoute($path, $this, $action, $priority);
+    $this->m->Routing->addRoute(
+      $path,
+      array('controller' => $this->name, 'action' => $action),
+      $priority
+    );
   }
 
   public function setRoute($action, $priority = 5, $parameters = array()) {

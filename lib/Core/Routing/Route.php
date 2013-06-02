@@ -50,6 +50,7 @@ class Route {
         $routing->setError($this->route);
         break;
       case self::TYPE_MATCH:
+        $routing->addRoute($this->pattern, $this->route, $this->priority);
         break;
     }
   }

@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The PeanutCMS content page system
 // Author         : PeanutCMS
-// Dependencies   : ApakohPHP/Database ApakohPHP/Routing ApakohPHP/Templates
-//                  ApakohPHP/Authentication ApakohPHP/Backend ApakohPHP/Editors
+// Dependencies   : Core/Database Core/Routing Core/Templates Core/Controllers
+//                  Core/Authentication PeanutCMS/Backend Core/Editors
 
 /*
  * Static pages
@@ -61,7 +61,8 @@ class Pages extends ModuleBase {
       ),
     );
 
-    $this->controller = new PagesController($this->m->Routing, $this->config);
+    $this->controller = $this->m->Controllers->Pages;
+    $this->controller->setConfig($this->config);
 
     $this->detectFancyPath();
     $this->m->Routing->addPath('Pages', 'view', array($this, 'getFancyPath'));

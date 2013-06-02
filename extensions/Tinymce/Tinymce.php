@@ -17,7 +17,7 @@ class Tinymce extends ExtensionBase {
     $this->load('controllers/TinymceController');
     $this->load('helpers/TinymceHelper');
 
-    $this->controller = new TinymceController($this->m->Routing, $this->config);
+    $this->controller = new TinymceController($this->m->Routing, $this->m->Templates, $this->config);
     $this->controller->addHelper(new TinymceHelper(
       $this->getAsset('tiny_mce.js'),
       $this->getAsset('css/content.css')
