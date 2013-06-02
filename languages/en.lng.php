@@ -2,7 +2,7 @@
 // Language
 // Name           : English
 // Local name     : English
-// Translator     : PeanutCMS
+// Translator     : apakoh.dk
 // Version        : 0.1.0
 
 return array('defaultDateFormat' => 'F j, Y', 'defaultTimeFormat' => 'g:i a',

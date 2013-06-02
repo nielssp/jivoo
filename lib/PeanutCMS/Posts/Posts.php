@@ -94,9 +94,9 @@ class Posts extends ModuleBase {
 
     if ($newInstall) {
       $post = Post::create();
-      $post->title = 'Welcome to PeanutCMS';
+      $post->title = tr('Welcome to PeanutCMS');
       $post->name = 'welcome-to-peanutcms';
-      $post->content = '<p>Welcome to PeanutCMS.</p>';
+      $post->content = include $this->p('welcomePost.php');
       $post->date = time();
       $post->comments = 0;
       $post->status = 'published';
