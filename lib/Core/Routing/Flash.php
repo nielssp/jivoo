@@ -7,12 +7,23 @@ class Flash {
   private $label;
   private $uid;
   
-  public function __construct(Session $session, $message, $type, $label = null) {
+  public function __construct(Session $session, $message, $type, $label = null, $uid = null) {
     $this->session = $session;
     $this->message = $message;
     $this->type = $type;
     $this->label = $label;
-    $this->uid = md5($message);
+    if (!isset($uid)) {
+      $uid = md5($message);
+    }
+    $this->uid = $uid;
+  }
+  
+  public static function fromArray(Session $session, $array) {
+    return Flash($session, $array[0], $array[1], $array[2], $array[3]);
+  }
+  
+  public function toArray() {
+    return array($this->message, $this->type, $this->label, $this->uid);
   }
   
   public function __get($property) {

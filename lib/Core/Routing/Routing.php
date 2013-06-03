@@ -48,8 +48,6 @@ class Routing extends ModuleBase {
       'sessionPrefix' => $this->app->sessionPrefix,
     );
 
-    // The autoloader has to be registered BEFORE session_start()
-    session_start();
     $this->request = new Request($this->config['sessionPrefix']);
 
     // Determine if the current URL is correct
