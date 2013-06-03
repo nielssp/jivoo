@@ -97,8 +97,6 @@ class Routing extends ModuleBase {
       $this->setRoot($this->config['root'], 10);
     }
 
-//     $this->addPath('home', 'index', array($this, 'insertParamters'), array());
-
     $this->app->onRender(array($this, 'findRoute'));
   }
   
