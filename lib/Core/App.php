@@ -216,9 +216,6 @@ class App {
       define('DEBUG', true);
     }
 
-    // The autoloader has to be registered BEFORE session_start()
-    session_start();
-
     if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
       echo 'Sorry, but ' . $this->name
         . ' does not support PHP versions below ';

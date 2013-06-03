@@ -60,9 +60,6 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     if ($this->m
       ->Authentication
       ->hasPermission('backend.access')) {
-      $this->m
-        ->Templates
-        ->set('notifications', LocalNotification::all());
     }
     if (!$this->m
       ->Templates

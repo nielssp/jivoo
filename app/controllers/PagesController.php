@@ -52,14 +52,14 @@ class PagesController extends AppController {
           $this->redirect($this->page);
         }
         else {
-          new LocalNotice(tr('Page successfully created'));
+          $this->session->notice(tr('Page successfully created'));
           $this->refresh();
         }
       }
       else {
         foreach ($this->page
           ->getErrors() as $field => $error) {
-          new LocalWarning($this->page
+          $this->session->alert($this->page
             ->getFieldLabel($field) . ': ' . $error);
         }
       }
@@ -141,14 +141,14 @@ class PagesController extends AppController {
           $this->redirect($this->page);
         }
         else {
-          new LocalNotice(tr('Page successfully saved'));
+          $this->session->notice(tr('Page successfully saved'));
           $this->refresh();
         }
       }
       else {
         foreach ($this->page
           ->getErrors() as $field => $error) {
-          new LocalWarning($this->page
+          $this->session->alert($this->page
             ->getFieldLabel($field) . ': ' . $error);
         }
       }

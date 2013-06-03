@@ -59,16 +59,16 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
 
     <div id="content">
   
-<?php foreach (LocalNotification::all() as $notification) : ?>
+<?php foreach ($messages as $flash) : ?>
 
 <div class="section">
-  <div class="container notification notification-<?php echo $notification->type; ?>">
+  <div class="container notification notification-<?php echo $flash->type; ?>">
     <strong>
-      <?php echo $notification->label; ?>
+      <?php echo $flash->label; ?>
     </strong>
-    <?php echo $notification->message; ?>
+    <?php echo $flash->message; ?>
   </div>
 </div>
-<?php $notification->delete(); ?>
+<?php $flash->delete(); ?>
 
 <?php endforeach; ?>

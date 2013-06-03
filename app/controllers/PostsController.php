@@ -260,14 +260,14 @@ class PostsController extends AppController {
           $this->redirect($this->post);
         }
         else {
-          new LocalNotice(tr('Post successfully created'));
+          $this->session->notice(tr('Post successfully created'));
           $this->refresh();
         }
       }
       else {
         foreach ($this->post
           ->getErrors() as $field => $error) {
-          new LocalWarning($this->post
+          $this->session->alert($this->post
             ->getFieldLabel($field) . ': ' . $error);
         }
       }
@@ -320,7 +320,7 @@ class PostsController extends AppController {
             $this->redirect($this->post);
           }
           else {
-            new LocalNotice(tr('Post successfully saved'));
+            $this->session->notice(tr('Post successfully saved'));
             $this->refresh();
           }
         }
@@ -328,7 +328,7 @@ class PostsController extends AppController {
       else {
         foreach ($this->post
           ->getErrors() as $field => $error) {
-          new LocalWarning($this->post
+          $this->session->alert($this->post
             ->getFieldLabel($field) . ': ' . $error);
         }
       }
