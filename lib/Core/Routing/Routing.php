@@ -122,7 +122,7 @@ class Routing extends ModuleBase {
       if ($fragment == '*') {
         $fragment = array_shift($parameters);
       }
-      if ($fragment == '**') {
+      if ($fragment == '**' || $fragment == ':*') {
         while (current($parameters) !== false) {
           $result[] = array_shift($parameters);
         }
@@ -144,6 +144,7 @@ class Routing extends ModuleBase {
       $additional = $this->paths[$controller][$action]['additional'];
       return call_user_func($function, $parameters, $additional);
     }
+    Logger::error('Coould not find path for ' . $controller . '::' . $action);
     return null;
   }
 
@@ -319,6 +320,8 @@ class Routing extends ModuleBase {
   
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
+    
+    Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;
