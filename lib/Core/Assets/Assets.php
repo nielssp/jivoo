@@ -25,7 +25,7 @@ class Assets extends ModuleBase {
     $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
     $this->docRootLength = strlen($this->docRoot);
 
-    if ($this->request->path[0] == 'assets' AND isset($this->request->path[1])) {
+    if (isset($this->request->path[1]) AND $this->request->path[0] == 'assets') {
       $path = $this->request->path;
       array_shift($path);
       $filename = explode('.', $path[(count($path) - 1)]);

@@ -11,5 +11,7 @@
  * @subpackage Models
  */
 class Models extends ModuleBase {
-  protected function init() { }
+  protected function init() {
+    Lib::addIncludePath($this->app->paths->models);
+  }
 }

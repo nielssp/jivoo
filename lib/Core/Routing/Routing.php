@@ -381,49 +381,56 @@ class Routing extends ModuleBase {
   
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
-    
+
 //     Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;
     $isMatch = true;
-    foreach ($pattern as $j => $part) {
-      if ($part == '**' || $part == ':*') {
-        $route['parameters'] = array_merge(
-          $route['parameters'],
-          array_slice($path, $j)
-        );
-        break;
-      }
-      else if (!isset($path[$j])) {
+    $patternc = count($pattern);
+    if ($patternc < count($path) AND $pattern[$patternc - 1] != '**'
+      AND $pattern[$patternc - 1] != ':*') {
+      $isMatch = false;
+    }
+    else {
+      foreach ($pattern as $j => $part) {
+        if ($part == '**' || $part == ':*') {
+          $route['parameters'] = array_merge(
+            $route['parameters'],
+            array_slice($path, $j)
+          );
+          break;
+        }
+        else if (!isset($path[$j])) {
+          $isMatch = false;
+          break;
+        }
+        if ($path[$j] == $part) {
+          continue;
+        }
+        if ($part == '*') {
+          $route['parameters'][] = $path[$j];
+          continue;
+        }
+        if ($part[0] == ':') {
+          $var = substr($part, 1);
+          if (is_numeric($var)) {
+            $route['parameters'][(int)$var] = $path[$j];
+          }
+          else if ($var == ':controller') {
+            $route['controller'] = Utilities::dashesToCamelCase($path[$j]);
+          }
+          else if ($var == ':action') {
+            $route['action'] = lcfirst(Utilities::dashesToCamelCase($path[$j]));
+          }
+          else {
+            throw new Exception(tr('Unknown pattern "%1" in route configuration', $part));
+          }
+          continue;
+        }
         $isMatch = false;
         break;
       }
-      if ($path[$j] == $part) {
-        continue;
-      }
-      if ($part == '*') {
-        $route['parameters'][] = $path[$j];
-        continue;
-      }
-      if ($part[0] == ':') {
-        $var = substr($part, 1);
-        if (is_numeric($var)) {
-          $route['parameters'][(int)$var] = $path[$j];
-        }
-        else if ($var == ':controller') {
-          $route['controller'] = Utilities::dashesToCamelCase($path[$j]);
-        }
-        else if ($var == ':action') {
-          $route['action'] = lcfirst(Utilities::dashesToCamelCase($path[$j]));
-        }
-        else {
-          throw new Exception(tr('Unknown pattern "%1" in route configuration', $part));
-        }
-        continue;
-      }
-      $isMatch = false;
-      break;
     }
     if ($isMatch) {
       if ($priority > $this->selection['priority']) { // or >= ??
@@ -505,6 +512,7 @@ class Routing extends ModuleBase {
     }
     
     if (isset($route['controller'])) {
+      Logger::debug('Select action: ' . $route['controller'] . '::' . $route['action']);
       $controller = $this->controllers->getController($route['controller']);
       if (!$controller) {
         throw new Exception(tr('Invalid controller: %1', $route['controller']));

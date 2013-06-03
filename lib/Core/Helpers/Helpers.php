@@ -18,6 +18,7 @@ class Helpers extends ModuleBase {
   private $helpers = array();
   
   protected function init() {
+    Lib::addIncludePath($this->app->paths->helpers);
     $dir = opendir($this->p('helpers', ''));
     while ($file = readdir($dir)) {
       $split = explode('.', $file);
