@@ -1,6 +1,9 @@
 <?php
 
 class BackendHelper extends Helper {
+  
+  protected $modules = array('Authentication');
+  
   public function requireAuth() {
     $permissions = func_get_args();
     $access = true;
