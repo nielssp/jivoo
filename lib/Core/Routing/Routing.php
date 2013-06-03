@@ -144,8 +144,7 @@ class Routing extends ModuleBase {
       $additional = $this->paths[$controller][$action]['additional'];
       return call_user_func($function, $parameters, $additional);
     }
-    Logger::error('Coould not find path for ' . $controller . '::' . $action);
-    return null;
+    throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action));
   }
 
   public function isCurrent($route = null) {
@@ -235,55 +234,87 @@ class Routing extends ModuleBase {
     }
   }
 
-  public function getLink($route = null) {
+  public function validateRoute($route) {
     if (!isset($route)) {
-      return $this->getLinkFromPath(array());
+      return array('path' => array(), 'query' => null, 'fragment' => null);
     }
-    else if (is_object($route) AND is_a($route, 'ILinkable')) {
-      return $this->getLink($route->getRoute());
+    if (is_string($route)) {
+      if (strpos($route, '/') !== false) {
+        return array('url' => $route);
+      }
+      $parts = explode('::', $route);
+      $route = array();
+      if (isset($parts[0])) {
+        $route['controller'] = $parts[0];
+        if (isset($parts[1])) {
+          $route['action'] = $parts[1];
+          $route['parameters'] = array();
+          for ($i = 2; $i < count($parts); $i++) {
+            $route['parameters'][] = $parts[$i];
+          }
+        }
+      }
     }
-    else if (is_array($route)) {
-      if (isset($route['url'])) {
-        return $route['url'];
+    else if (is_object($route) AND $route instanceof ILinkable) {
+      return $this->validateRoute($route->getRoute());
+    }
+    if (!is_array($route)) {
+      throw new InvalidRouteException(tr('Not a valid route, must be array or string'));
+    }
+    if (isset($route['url'])) {
+      return $route;
+    }
+    if (isset($route['query'])){
+      if (isset($route['mergeQuery']) AND $route['mergeQuery'] == true) {
+        $route['query'] = array_merge($this->request->query, $route['query']);
       }
-      $default = array(
-        'path' => null,
-        'query' => null,
-        'fragment' => null,
-        'controller' => $this->controllerName($this->selectedRoute['controller']),
-        'action' => $this->selectedRoute['action'],
-        'parameters' => $this->selectedRoute['parameters']
-      );
-      if (isset($route['controller'])
-          AND $route['controller'] != $default['controller']) {
-        $default['action'] = 'index';
-        $default['parameters'] = array();
+    }
+    else {
+      $route['query'] = null;
+    }
+    if (!isset($route['fragment'])) {
+      $route['fragment'] = null;
+    }
+    if (isset($route['path'])) {
+      return $route;
+    }
+    if (isset($route['controller'])) {
+      $route['controller'] = $this->controllerName($route['controller']);
+      if (!isset($route['action'])) {
+        $route['action'] = 'index';
       }
-      $route = array_merge($default, $route);
-      if (isset($route['query']) AND isset($route['mergeQuery'])
-          AND $route['mergeQuery'] == true) {
-        $route['query'] = array_merge($this->request
-          ->query, $route['query']);
+      if (!isset($route['parameters'])) {
+        $route['parameters'] = array();
       }
-      if (isset($route['path'])) {
-        return $this->getLinkFromPath($route['path'], $route['query'], $route['fragment']);
+    }
+    else if (isset($this->selection['route']['controller'])) {
+      $route['controller'] = $this->selection['route']['controller'];
+      if (!isset($route['action'])) {
+        $route['action'] = $this->selection['route']['action'];
       }
-      if (!isset($route['query'])
-          AND $route['controller'] == $default['controller']
-          AND $route['action'] == $default['action']
-          AND $route['parameters'] == $default['parameters']) {
-        $route['query'] = $this->request
-          ->query;
+      if (!isset($route['parameters'])) {
+        $route['parameters'] = $this->selection['route']['parameters'];
       }
+    }
+    return $route;
+  }
+  
+  public function getLink($route = null) {
+    $route = $this->validateRoute($route);
+    if (isset($route['url'])) {
+      return $route['url'];
+    }
+    if (isset($route['path'])) {
+      return $this->getLinkFromPath($route['path'], $route['query'], $route['fragment']);
+    }
+    if (isset($route['controller']) AND isset($route['action'])) {
       return $this->getLinkFromPath(
         $this->getPath($route['controller'], $route['action'], $route['parameters']),
         $route['query'],
         $route['fragment']
       );
     }
-    else {
-      return $route;
-    }
+    throw new InvalidRouteException(tr('Incomplete route'));
   }
   
   /**
@@ -321,7 +352,7 @@ class Routing extends ModuleBase {
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
     
-    Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
+//     Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;
@@ -377,18 +408,6 @@ class Routing extends ModuleBase {
     }
   }
 
-//   public function addRoute($path, Controller $controller, $action,
-//                            $priority = 5) {
-//     if (!is_array($path)) {
-//       $path = explode('/', $path);
-//     }
-//     $this->routes[] = array('path' => $path, 'controller' => $controller,
-//       'action' => $action, 'priority' => 5, 'parameters' => array()
-//     );
-//     $this->addPath(get_class($controller), $action,
-//         array($this, 'insertParameters'), array($path));
-//   }
-
   public function addPath($controller, $action, $pathFunction,
                           $additional = array()) {
     $controller = $this->controllerName($controller);
@@ -416,114 +435,6 @@ class Routing extends ModuleBase {
     }
   }
 
-  private function mapRoute() {
-    if ($this->rendered) {
-      return false;
-    }
-    $routes = $this->routes;
-    $path = $this->request->path;
-    foreach ($routes as $j => $route) {
-      if (count($route['path']) != count($path)) {
-        if ($route['path'][count($route['path']) - 1] != '**') {
-          unset($routes[$j]);
-        }
-      }
-    }
-    foreach ($routes as $i => $route) {
-      foreach ($route['path'] as $j => $fragment) {
-        if ($fragment == '**') {
-          $routes[$i]['parameters'] = array_merge($routes[$i]['parameters'],
-            array_slice($path, $j));
-          break;
-        }
-        else if (!isset($path[$j])
-            OR ($fragment != $path[$j] AND $fragment != '*')) {
-          unset($routes[$i]);
-          break;
-        }
-        if ($fragment == '*') {
-          $routes[$i]['parameters'][] = $path[$j];
-        }
-      }
-    }
-    uasort($routes, array('Utilities', 'prioritySorter'));
-    reset($routes);
-    $route = current($routes);
-    if (isset($route['controller'])) {
-      $this->setRoute($route['controller'], $route['action'],
-          $route['priority'], $route['parameters']);
-    }
-  }
-
-  public function callController($sender, $eventArgs) {
-    $this->events
-      ->trigger('onRendering');
-
-    $this->mapRoute();
-
-    if (isset($this->selectedRoute)
-        AND $this->selectedRoute['controller'] instanceof Controller
-        AND is_callable(
-          array($this->selectedRoute['controller'],
-            $this->selectedRoute['action']
-          ))) {
-      $controller = $this->selectedRoute['controller'];
-      $controller->addModule($this);
-      $controller->addModule($this->app->requestModule('Templates'));
-      $controller->addModule($this->app->requestModule('Editors'));
-      $controller->addModule($this->app->requestModule('Authentication'));
-      $this->rendered = true;
-      call_user_func(array($controller, 'preRender'));
-      call_user_func_array(
-        array($controller, $this->selectedRoute['action']),
-        $this->selectedRoute['parameters']
-      );
-    }
-    else {
-      /** @todo Don't leave this in .... Don't wait until now to check if controller is callable */
-      throw new Exception(tr(
-        '%1#%2 is not a valid action',
-        get_class($this->selectedController[0]),
-        $this->selectedController[1]
-      ));
-    }
-
-    $this->events->trigger('onRendered');
-  }
-  
-  
-  public function validateRoute($route) {
-    if (is_string($route)) {
-      if (preg_match('/^https?:\/\//i', $route)) {
-        return array('url' => $route);
-      }
-      $parts = explode('::', $route);
-      $route = array();
-      if (isset($parts[0])) {
-        $route['controller'] = $parts[0];
-        if (isset($parts[1])) {
-          $route['action'] = $parts[1];
-          $route['parameters'] = array();
-          for ($i = 2; $i < count($parts); $i++) {
-            $route['parameters'][] = $parts[$i];
-          }
-        }
-      }
-    }
-    else if (is_object($route) AND $route instanceof ILinkable) {
-      return $this->validateRoute($route->getRoute());
-    }
-    if (!is_array($route)) {
-      throw new Exception(tr('Not a valid route, must be array or string'));
-    }
-    if (isset($route['controller'])) {
-      $route['controller'] = $this->controllerName($route['controller']);
-    }
-    if (!isset($route['parameters'])) {
-      $route['parameters'] = array();
-    }
-    return $route;
-  }
 
   /** @todo WIP */
   private function drawRoutes() {
@@ -575,3 +486,5 @@ class Routing extends ModuleBase {
     }
   }
 }
+
+class InvalidRouteException extends Exception { }

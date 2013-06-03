@@ -74,30 +74,34 @@ class PaginationHelper extends Helper {
   }
 
   public function prevLink($fragment = null) {
-    return $this->getLink(
-        array('query' => array('page' => $this->page - 1),
-          'fragment' => $fragment, 'mergeQuery' => true
-        ));
+    return array(
+      'query' => array('page' => $this->page - 1),
+      'fragment' => $fragment,
+      'mergeQuery' => true
+    );
   }
 
   public function nextLink($fragment = null) {
-    return $this->getLink(
-        array('query' => array('page' => $this->page + 1),
-          'fragment' => $fragment, 'mergeQuery' => true
-        ));
+    return array(
+      'query' => array('page' => $this->page + 1),
+      'fragment' => $fragment,
+      'mergeQuery' => true
+    );
   }
 
   public function firstLink($fragment = null) {
-    return $this->getLink(
-        array('query' => array('page' => 1), 'fragment' => $fragment,
-          'mergeQuery' => true
-        ));
+    return array(
+      'query' => array('page' => 1),
+      'fragment' => $fragment,
+      'mergeQuery' => true
+    );
   }
 
   public function lastLink($fragment = null) {
-    return $this->getLink(
-        array('query' => array('page' => $this->pages),
-          'fragment' => $fragment, 'mergeQuery' => true
-        ));
+    return array(
+      'query' => array('page' => $this->pages),
+      'fragment' => $fragment,
+      'mergeQuery' => true
+    );
   }
 }
