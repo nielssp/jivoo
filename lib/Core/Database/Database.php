@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The Apakoh Core database system
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Templates
+// Dependencies   : Core/Routing Core/Templates Core/Models
 //                  Core/Maintenance Core/Controllers
 
 /**

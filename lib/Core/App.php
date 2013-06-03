@@ -212,9 +212,6 @@ class App {
    */
   public function run($environment = 'production') {
     $this->environment = $environment;
-    if ($environment == 'development') {
-      define('DEBUG', true);
-    }
 
     if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
       echo 'Sorry, but ' . $this->name

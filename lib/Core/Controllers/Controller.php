@@ -134,7 +134,13 @@ class Controller {
   }
 
   public function setRoute($action, $priority = 5, $parameters = array()) {
-    $this->m->Routing->setRoute($this->name, $action, $priority, $parameters);
+    $this->m->Routing->setRoute(
+      array(
+        'controller' => $this->name,
+        'action' => $action,
+        'parameters' => $parameters
+      ), $priority
+    );
   }
 
   protected function reroute() {
@@ -189,10 +195,6 @@ class Controller {
   }
   
   public function preRender() {
-  }
-
-  public function notFound() {
-    $this->render('404.html');
   }
 
 }

@@ -38,9 +38,6 @@ class Controllers extends ModuleBase {
         }
       }
     }
-
-    //     $controller = new Controller($this->m->Routing, $this->config);
-    //     $controller->setRoute('notFound', 1);
   }
 
   private function getInstance($name) {
