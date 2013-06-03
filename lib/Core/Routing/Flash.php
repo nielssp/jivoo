@@ -19,7 +19,7 @@ class Flash {
   }
   
   public static function fromArray(Session $session, $array) {
-    return Flash($session, $array[0], $array[1], $array[2], $array[3]);
+    return new Flash($session, $array[0], $array[1], $array[2], $array[3]);
   }
   
   public function toArray() {

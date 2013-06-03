@@ -33,10 +33,17 @@ class Session implements arrayaccess {
       case 'messages':
         return $this->messages;
       case 'alerts':
+        $result = array();
+        foreach ($this->messages as $flash) {
+          if ($flash->type == 'alert') {
+            $result[] = $flash;
+          }
+        }
+        return $result;
       case 'notices':
         $result = array();
         foreach ($this->messages as $flash) {
-          if ($flash->type == $property) {
+          if ($flash->type == 'notice') {
             $result[] = $flash;
           }
         }
