@@ -113,11 +113,11 @@ class Posts extends ModuleBase {
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m->Routing->addPath('Posts', 'view', 1, array($this, 'getFancyPath'));
+      $this->m->Routing->addPath('Posts', 'view', array($this, 'getFancyPath'));
       $this->m->Routing
-        ->addPath('Comments', 'index', 0, array($this, 'getFancyPath'));
+        ->addPath('Comments', 'index', array($this, 'getFancyPath'));
       $this->m->Routing
-        ->addPath('Comments', 'view', 1, array($this, 'getFancyPath'));
+        ->addPath('Comments', 'view', array($this, 'getFancyPath'));
     }
     else {
       $this->posts->addRoute('posts/*', 'view');
