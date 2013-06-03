@@ -49,15 +49,13 @@ class BackendItem implements IGroupable, ILinkable {
 
   public function hasAccess() {
     if (!isset($this->access)) {
-      $this->access = $this->auth
-        ->hasPermission($this->permission);
+      $this->access = $this->auth->hasPermission($this->permission);
     }
     return $this->access;
   }
 
   public function autoRoute(Controller $controller, $action) {
-    $controller->autoRoute($action, $this->backend
-        ->prefix);
+    $controller->autoRoute($action, $this->backend->prefix);
     $this->route = array('controller' => $controller, 'action' => $action);
   }
 

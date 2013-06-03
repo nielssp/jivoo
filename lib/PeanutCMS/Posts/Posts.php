@@ -24,20 +24,13 @@ class Posts extends ModuleBase {
   protected function init() {
 
     // Set default settings
-    $this->config->defaults = array(
-      'fancyPermalinks' => true,
+    $this->config->defaults = array('fancyPermalinks' => true,
       'permalink' => '%year%/%month%/%name%',
-      'comments' => array(
-        'sorting' => 'desc',
-        'childSorting' => 'asc',
-        'display' => 'thread',
-        'levelLimit' => 2,
+      'comments' => array('sorting' => 'desc', 'childSorting' => 'asc',
+        'display' => 'thread', 'levelLimit' => 2,
         'editor' => array('name' => 'HtmlEditor'),
-      ),
-      'commentingDefault' => true,
-      'anonymousCommenting' => false,
-      'commentApproval' => false,
-      'editor' => array('name' => 'TinymceEditor'),
+      ), 'commentingDefault' => true, 'anonymousCommenting' => false,
+      'commentApproval' => false, 'editor' => array('name' => 'TinymceEditor'),
     );
 
     // Set up models
@@ -48,45 +41,19 @@ class Posts extends ModuleBase {
     $posts_tagsSchema = new posts_tagsSchema();
     $commentsSchema = new commentsSchema();
 
-    $newInstall = $this->m
-      ->Database
-      ->migrate($postsSchema) == 'new';
-    $this->m
-      ->Database
-      ->migrate($tagsSchema);
-    $this->m
-      ->Database
-      ->migrate($posts_tagsSchema);
-    $this->m
-      ->Database
-      ->migrate($commentsSchema);
+    $newInstall = $this->m->Database->migrate($postsSchema) == 'new';
+    $this->m->Database->migrate($tagsSchema);
+    $this->m->Database->migrate($posts_tagsSchema);
+    $this->m->Database->migrate($commentsSchema);
 
-    $this->m
-      ->Database
-      ->posts
-      ->setSchema($postsSchema);
-    $this->m
-      ->Database
-      ->tags
-      ->setSchema($tagsSchema);
-    $this->m
-      ->Database
-      ->posts_tags
-      ->setSchema($posts_tagsSchema);
-    $this->m
-      ->Database
-      ->comments
-      ->setSchema($commentsSchema);
+    $this->m->Database->posts->setSchema($postsSchema);
+    $this->m->Database->tags->setSchema($tagsSchema);
+    $this->m->Database->posts_tags->setSchema($posts_tagsSchema);
+    $this->m->Database->comments->setSchema($commentsSchema);
 
-    Post::connect($this->m
-      ->Database
-      ->posts);
-    Tag::connect($this->m
-      ->Database
-      ->tags);
-    Comment::connect($this->m
-      ->Database
-      ->comments);
+    Post::connect($this->m->Database->posts);
+    Tag::connect($this->m->Database->tags);
+    Comment::connect($this->m->Database->comments);
 
     if ($this->config['anonymousCommenting'] == 'on') {
       Comment::setAnonymousCommenting(true);
@@ -129,7 +96,7 @@ class Posts extends ModuleBase {
     Post::setEncoder('content', $postsEncoder);
 
     // Create controllers
-//     $this->posts = new PostsController($this->m->Routing, $this->config);
+    //     $this->posts = new PostsController($this->m->Routing, $this->config);
     $this->posts = $this->m->Controllers->Posts;
     $this->posts->setConfig($this->config);
 
@@ -146,11 +113,11 @@ class Posts extends ModuleBase {
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m->Routing->addPath('Posts', 'view', array($this, 'getFancyPath'));
+      $this->m->Routing->addPath('Posts', 'view', 1, array($this, 'getFancyPath'));
       $this->m->Routing
-        ->addPath('Comments', 'index', array($this, 'getFancyPath'));
+        ->addPath('Comments', 'index', 0, array($this, 'getFancyPath'));
       $this->m->Routing
-        ->addPath('Comments', 'view', array($this, 'getFancyPath'));
+        ->addPath('Comments', 'view', 1, array($this, 'getFancyPath'));
     }
     else {
       $this->posts->addRoute('posts/*', 'view');
@@ -238,19 +205,17 @@ class Posts extends ModuleBase {
       $post = Post::find($id);
       if ($post !== false) {
         $post->addToCache();
-        $this->posts
-          ->setRoute('view', 6, array($post->id));
+        $this->posts->setRoute('view', 6, array($post->id));
         return;
       }
     }
     else if (!empty($name)) {
       $post = Post::first(
-        SelectQuery::create()->where('name = ?')
-          ->addVar($name));
+        SelectQuery::create()->where('name = ?')->addVar($name)
+      );
       if ($post !== false) {
         $post->addToCache();
-        $this->posts
-          ->setRoute('view', 6, array($post->id));
+        $this->posts->setRoute('view', 6, array($post->id));
         return;
       }
     }
