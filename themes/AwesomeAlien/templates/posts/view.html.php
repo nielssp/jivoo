@@ -131,7 +131,7 @@ endif;
 
 <p class="input">
 <label>
-  <?php echo tr('Logged in as %1.', $Html->link(h($user->username), $user)) ?>
+  <?php echo tr('Logged in as %1.', h($user->username)) ?>
 </label>
 (<?php echo $Html->link(tr('Log out?'), array('query' => array('logout' => ''))) ?>)
 </p>

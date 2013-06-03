@@ -727,7 +727,7 @@ span.description {
   font-size: 1.2em;
 }
 
-.notification-error {
+.notification-alert {
   color: #fff;
   background-color: #a22121;
   box-shadow: 0 0 8px 0px #a22121;

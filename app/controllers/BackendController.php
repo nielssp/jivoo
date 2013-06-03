@@ -3,6 +3,8 @@
 class BackendController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Backend');
+  
+  protected $modules = array('Authentication');
 
   public function dashboard() {
     $this->Backend

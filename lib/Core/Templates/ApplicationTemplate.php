@@ -25,6 +25,10 @@ abstract class ApplicationTemplate {
       ->getRequest();
 
     $this->controller = $controller;
+    
+    $this->data['messages'] = $this->request->session->messages;
+    $this->data['alerts'] = $this->request->session->alerts;
+    $this->data['notices'] = $this->request->session->notices;
   }
 
   public function __get($name) {

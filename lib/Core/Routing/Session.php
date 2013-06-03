@@ -4,18 +4,67 @@
  *
  * Implements arrayaccess, so the []-operator can be used
  * to get and set session values.
- * @package PeanutCMS
+ * @package Core
+ * @subpackage Routing
  */
 class Session implements arrayaccess {
 
   private $prefix = '';
-
+  private $messages = array();
+  
+  
   /**
    * Constructor
    * @param string $prefix Session prefix to use
    */
   public function __construct($prefix = '') {
+    session_start();
     $this->prefix = $prefix;
+    if (!isset($this['messages'])) {
+      $this['messages'] = array();
+    }
+    foreach ($this['messages'] as $uid => $flash) {
+      $this->messages[$uid] = Flash::fromArray($this, $flash);
+    }
+  }
+  
+  public function __get($property) {
+    switch ($property) {
+      case 'messages':
+        return $this->messages;
+      case 'alerts':
+        $result = array();
+        foreach ($this->messages as $flash) {
+          if ($flash->type == 'alert') {
+            $result[] = $flash;
+          }
+        }
+        return $result;
+      case 'notices':
+        $result = array();
+        foreach ($this->messages as $flash) {
+          if ($flash->type == 'notice') {
+            $result[] = $flash;
+          }
+        }
+        return $result;
+    }
+  }
+  
+  public function notice($message, $label = null) {
+    $flash = new Flash($this, $message, 'notice', $label);
+    $this->messages[$flash->uid] = $flash;
+    $messages = $this['messages'];
+    $messages[$flash->uid] = $flash->toArray();
+    $this['messages'] = $messages;
+  }
+  
+  public function alert($message, $label = null) {
+    $flash = new Flash($this, $message, 'alert', $label);
+    $this->messages[$flash->uid] = $flash;
+    $messages = $this['messages'];
+    $messages[$flash->uid] = $flash->toArray();
+    $this['messages'] = $messages;
   }
 
   /**
