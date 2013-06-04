@@ -34,7 +34,7 @@ return array(
     'tablePrefix' => '',
     'driver' => 'PdoMysql',
     'server' => 'localhost',
-    'configured' => false,
+    'configured' => true,
     'migration' => array(
       'users' => '0.3.4',
       'groups' => '0.3.4',

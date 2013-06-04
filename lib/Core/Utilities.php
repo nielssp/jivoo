@@ -5,6 +5,7 @@
  * @package ApakohPHP
  */
 class Utilities {
+ 
   private function __construct() {
   }
 
@@ -34,6 +35,24 @@ class Utilities {
     return $camelCase;
   }
 
+  /**
+   * Returns the portion of string specified by the start and length parameters.
+   * @param string $string
+   * @param int $start
+   * @param int $length
+   * @return string Returns the extracted part of string; or FALSE on failure, or an empty string.
+   */
+  public static function substr($string, $start, $length = NULL) {
+    if (function_exists('mb_substr')) {
+      return mb_substr($string, $start, $length, 'UTF-8');
+    }
+    else {
+      return join('', array_slice(
+        preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY), $start, $length
+      ));
+    }
+  }
+  
   /**
    * Test a condition and throw an exception if it's false 
    * @param boolean $condition Condition

@@ -194,7 +194,7 @@ class Encoder {
     }
     $shortened = false;
     if ($maxLength > 0 AND strlen($text) > $maxLength) {
-      $text = substr($text, 0, $maxLength);
+      $text = Utilities::substr($text, 0, $maxLength);
       $shortened = true;
     }
     $text = preg_replace_callback(
