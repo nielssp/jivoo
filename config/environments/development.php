@@ -3,7 +3,7 @@ return array(
   'logging' => array(
     'level' => Logger::ALL,
   ),
-  'Maintenance' => array(
-    'showErrorReport' => false,
+  'Setup' => array(
+    'showExceptions' => true,
   ),
 );

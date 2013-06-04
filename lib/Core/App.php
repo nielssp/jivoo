@@ -241,7 +241,7 @@ class App {
     // I18n system
     $this->config->defaults = array(
       'core' => array('language' => $this->appConfig['defaultLanguage'],
-        'timeZone' => @date_default_timezone_get(), /** @TODO Reevaluate use of @ */
+        'timeZone' => @date_default_timezone_get(), /** @todo Reevaluate use of @ */
       ),
     );
     I18n::setup($this->config['core'], $this->paths->languages);

@@ -298,7 +298,7 @@ Powered by <a href="#"><?php echo $app; ?>
 </div>
 
 <div class="footer" id="links">
-<a href="#">About</a>
+<a href="http://apakoh.dk">Help</a>
 </div>
 
 </body>
