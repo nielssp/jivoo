@@ -98,6 +98,8 @@ class Routing extends ModuleBase {
     }
 
     $this->app->onRender(array($this, 'findRoute'));
+    
+    throw new Exception('This is not a real exception');
   }
   
   public function setRoot($route, $priority = 9) {
