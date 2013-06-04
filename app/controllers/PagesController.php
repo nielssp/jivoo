@@ -3,6 +3,8 @@
 class PagesController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Pagination', 'Backend');
+  
+  protected $modules = array('Editors');
 
   public function view($page) {
     $this->page = Page::find($page);
