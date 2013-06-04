@@ -44,7 +44,7 @@ class Routing extends ModuleBase {
       'sessionPrefix' => $this->app->sessionPrefix,
     );
 
-    $this->request = new Request($this->config['sessionPrefix']);
+    $this->request = new Request($this->config['sessionPrefix'], $this->app->basePath);
 
     // Determine if the current URL is correct
     if ($this->config['rewrite']) {

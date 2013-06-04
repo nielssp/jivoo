@@ -11,7 +11,7 @@ class App {
 
   private $paths = null;
 
-  private $webPath = '/';
+  private $basePath = '/';
 
   private $name = 'ApakohPHP Application';
 
@@ -54,10 +54,6 @@ class App {
   }
   /* EVENTS END */
 
-  public static function getWebRoot() {
-    return dirname($_SERVER['SCRIPT_NAME']);
-  }
-
   /**
    * Create application
    * @param array $appConfig Associative array containing at least the 'path'-key
@@ -69,10 +65,12 @@ class App {
     $this->appConfig = $appConfig;
     $this->events = new Events($this);
     $this->m = new Dictionary();
-    $this->paths = new PathDictionary(dirname($_SERVER['SCRIPT_FILENAME']),
-      $appConfig['path']);
+    $this->paths = new PathDictionary(
+      dirname($_SERVER['SCRIPT_FILENAME']),
+      $appConfig['path']
+    );
     $this->paths->app = $appConfig['path'];
-    $this->webPath = dirname($_SERVER['SCRIPT_NAME']);
+    $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
     if (isset($appConfig['name'])) {
       $this->name = $appConfig['name'];
     }
@@ -108,6 +106,7 @@ class App {
       case 'config':
       case 'appConfig':
       case 'sessionPrefix':
+      case 'basePath':
         return $this->$property;
     }
   }
@@ -119,6 +118,8 @@ class App {
    */
   public function __set($property, $value) {
     switch ($property) {
+      case 'basePath':
+        $this->$property = $value;
     }
   }
 
@@ -158,10 +159,10 @@ class App {
    * @return string Path
    */
   public function w($path = '') {
-    if ($this->webPath == '/') {
+    if ($this->basePath == '/') {
       return '/' . $path;
     }
-    return $this->webPath . '/' . $path;
+    return $this->basePath . '/' . $path;
   }
 
   public function loadModule($module) {

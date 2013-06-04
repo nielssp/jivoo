@@ -11,15 +11,18 @@ class Cookies implements arrayaccess {
   private $prefix = '';
 
   private $cookies = array();
+  
+  private $basePath = '/'; 
 
   /**
    * Constructor
    * @param array $cookies Key/value pairs, e.g. from $_COOKIE.
    * @param string $prefix Cookie prefix to use.
    */
-  public function __construct($cookies = array(), $prefix = '') {
+  public function __construct($cookies = array(), $prefix = '', $basePath = '/') {
     $this->cookies = $cookies;
     $this->prefix = $prefix;
+    $this->basePath = $basePath;
   }
 
   /**
@@ -31,7 +34,7 @@ class Cookies implements arrayaccess {
    */
   public function setCookie($name, $value, $expire = null, $path = null) {
     if (!isset($path)) {
-      $path = App::getWebRoot();
+      $path = $this->basePath;
     }
     if (!isset($expire)) {
       $expire = time() + 60 * 60 * 24 * 365;

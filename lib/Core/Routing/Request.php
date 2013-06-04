@@ -32,19 +32,18 @@ class Request {
   /**
    * Initializes the request-object
    */
-  public function __construct($sessionPrefix = '') {
+  public function __construct($sessionPrefix = '', $basePath = '/') {
     $url = $_SERVER['REQUEST_URI'];
-    
-    Logger::debug('Request for ' . $url . ' from ' . $this->ip);
-    
+       
     $request = parse_url($url);
     if (isset($request['fragment'])) {
       $this->fragment = $request['fragment'];
     }
     $path = urldecode($request['path']);
-    if (App::getWebRoot() != '/') {
-      $path = str_replace(App::getWebRoot(), '', $path);
+    if ($basePath != '/') {
+      $path = str_replace($basePath, '', $path);
     }
+    Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
     $path = explode('/', $path);
     $this->path = array();
     foreach ($path as $dir) {
@@ -58,7 +57,7 @@ class Request {
     $this->query = $_GET;
     $this->data = $_POST;
 
-    $this->cookies = new Cookies($_COOKIE, $sessionPrefix);
+    $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
     $this->session = new Session($sessionPrefix);
   }
 
