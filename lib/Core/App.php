@@ -70,6 +70,8 @@ class App {
       $appConfig['path']
     );
     $this->paths->app = $appConfig['path'];
+    $this->paths->lib = LIB_PATH;
+    $this->paths->core = CORE_LIB_PATH;
     $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
     if (isset($appConfig['name'])) {
       $this->name = $appConfig['name'];

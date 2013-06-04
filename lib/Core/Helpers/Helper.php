@@ -1,6 +1,6 @@
 <?php
 
-abstract class Helper {
+abstract class Helper implements IHelpable {
 
   protected $m = null;
   protected $request = null;
@@ -48,7 +48,7 @@ abstract class Helper {
     $this->m->$class = $object;
   }
   
-  public function addHelper(Helper $helper) {
+  public function addHelper($helper) {
     $name = str_replace('Helper', '', get_class($object));
     $this->helperObjects[$name] = $helper;
   }

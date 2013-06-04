@@ -1,15 +1,15 @@
 <?php
 // Render the header
-$this->render('backend/header.html');
+$this->render('setup/header.html');
 ?>
 
 <?php echo $Form->begin($user); ?>
 
       <div class="section">
         <div class="container">
-          <h1><?php echo tr('Welcome to PeanutCMS'); ?></h1>
+          <h1><?php echo tr('Welcome to %1', $app['name']); ?></h1>
           <p>
-            <?php echo tr('Please select a username and password.'); ?>
+            <?php echo tr('Please select a username and a password.'); ?>
           </p>
           <p>
             <?php echo $Form->label('username', null, array('class' => 'small')); ?>
@@ -79,6 +79,6 @@ else : ?>
 <?php echo $Form->end(); ?>
 
 <?php
-$this->render('backend/footer.html');
+$this->render('setup/footer.html');
 ?>
 

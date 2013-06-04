@@ -4,8 +4,8 @@
 // Version        : 0.2.0
 // Description    : The Apakoh Core database system
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Templates Core/Models
-//                  Core/Maintenance Core/Controllers
+// Dependencies   : Core/Routing Core/Templates Core/Models Core/Helpers
+//                  Core/Controllers Core/Setup
 
 /**
  * Database module
@@ -75,15 +75,18 @@ class Database extends ModuleBase implements IDatabase {
   protected function init() {
     $this->config->defaults = array(
       'server' => 'localhost',
-      'database' => $this->app->name,
+      'database' => strtolower($this->app->name),
       'filename' => $this->p('config', 'db.sqlite3'),
     );
     Lib::addIncludePath($this->p('config', 'schemas'));
-    $controller = $this->m->Controllers->DatabaseMaintenance;
-    $controller->setConfig($this->config);
+    $controller = new SetupDatabaseController(
+      $this->m->Routing, $this->m->Templates, $this->config
+    );
     $controller->addModule($this);
+    $this->m->Helpers->addHelpers($controller);
+    $controller->addTemplatePath($this->p('templates'));
     if (!isset($this->config['driver'])) {
-      $this->m->Maintenance->setup($controller, 'selectDriver');
+      $this->m->Setup->enterSetup($controller, 'selectDriver');
     }
     else {
       $this->driver = $this->config['driver'];
@@ -92,14 +95,14 @@ class Database extends ModuleBase implements IDatabase {
         unset($this->config['driver']);
         $this->m->Routing->refresh();
       }
-      if ($this->config['configured'] != true) {
-        $this->m->Maintenance
-          ->setup($controller, 'setupDriver', array($this->driverInfo));
+      if ($this->config['configured'] !== true) {
+        $controller->driver = $this->driverInfo;
+        $this->m->Setup->enterSetup($controller, 'setupDriver');
       }
       foreach ($this->driverInfo['requiredOptions'] as $option) {
         if (!isset($this->config[$option])) {
-          $this->m->Maintenance
-            ->setup($controller, 'setupDriver', array($this->driverInfo));
+          $controller->driver = $this->driverInfo;
+          $this->m->Setup->enterSetup($controller, 'setupDriver');
         }
       }
       Lib::import('Core/Database/' . $this->driver);

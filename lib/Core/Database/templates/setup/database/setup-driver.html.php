@@ -11,10 +11,11 @@ $this->render('backend/header.html');
 
       <div class="section">
         <div class="container">
-          <h1>Welcome to PeanutCMS</h1>
+          <h1><?php echo tr('Welcome to %1', $app['name']); ?></h1>
           <p>
-          	You have selected the <strong><?php echo $driver['name']; ?></strong> database driver.
-          	The following information is required.
+          <?php echo tr('You have selected the %1 database driver.',
+            '<strong>' . $driver['name'] . '</strong>'); ?>
+          	<?php echo tr('The following information is required.'); ?>
           </p>
           <?php if (isset($exception)) : ?>
           <p class="error">

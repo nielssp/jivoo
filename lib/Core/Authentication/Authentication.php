@@ -5,8 +5,8 @@
 // Description    : The Apakoh Core authentication system
 // Author         : apakoh.dk
 // Dependencies   : Core/Shadow
-//                  Core/Maintenance Core/Templates Core/Database
-//                  Core/Routing
+//                  Core/Setup Core/Templates Core/Database
+//                  Core/Routing Core/Helpers
 
 /**
  * Authentication module
@@ -71,10 +71,14 @@ class Authentication extends ModuleBase {
 
     if ($newInstall OR $this->config['rootCreated'] !== true) {
       Logger::debug('Authentication: No root user created');
-      $controller = new AuthenticationController($this->m->Routing,
-        $this->config);
+      $controller = new SetupAuthenticationController(
+        $this->m->Routing, $this->m->Templates, $this->config
+      );
       $controller->addModule($this->m->Shadow);
-      $this->m->Maintenance->setup($controller, 'setupRoot', array($rootGroup));
+      $this->m->Helpers->addHelpers($controller);
+      $controller->addTemplatePath($this->p('templates'));
+      $controller->rootGroup = $rootGroup;
+      $this->m->Setup->enterSetup($controller, 'setupRoot');
     }
 
     if (!$this->isLoggedIn()) {

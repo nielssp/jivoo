@@ -4,7 +4,7 @@
 // Version        : 0.2.0
 // Description    : The Apakoh Core template system
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Assets
+// Dependencies   : Core/Routing Core/Assets Core/Helpers
 
 /**
  * Class for setting the template
@@ -230,13 +230,10 @@ class Templates extends ModuleBase {
    */
   public function getFile($file) {
     if (file_exists($this->p($this->theme[0], $this->theme[1] . '/' . $file))) {
-      return $this->m
-        ->Assets
+      return $this->m->Assets
         ->getAsset($this->theme[0], $this->theme[1] . '/' . $file);
     }
-    return $this->m
-      ->Assets
-      ->getAsset($file);
+    return $this->m->Assets->getAsset($file);
   }
 
   public function link($label, $controller = null, $action = 'index',

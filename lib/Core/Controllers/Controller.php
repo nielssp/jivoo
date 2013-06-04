@@ -6,7 +6,7 @@
  * @package Core
  * @subpackage Controllers
  */
-class Controller {
+class Controller implements IHelpable {
 
   private $name;
 
@@ -98,7 +98,17 @@ class Controller {
     if (!empty($prefix) AND substr($prefix, -1) != '/') {
       $prefix .= '/';
     }
-    $controller = $prefix . Utilities::camelCaseToDashes($this->name);
+    $controller = $prefix;
+    $thisName = $this->name;
+    $class = get_parent_class($this);
+    if ($class !== false AND $class != 'Controller'
+      AND $class != 'AppController') {
+      $name = str_replace('Controller', '', $class);
+      $thisName = str_replace($name, '', $thisName);
+      $controller .= Utilities::camelCaseToDashes($name) . '/';
+      //         $class = get_parent_class($class);
+    }
+    $controller .= Utilities::camelCaseToDashes($thisName);
     $paction = Utilities::camelCaseToDashes($action);
     if ($action == 'index') {
       $this->addRoute($controller, $action);
@@ -181,7 +191,17 @@ class Controller {
     $template = new Template($this->m->Templates, $this->m->Routing, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
-      $templateName = Utilities::camelCaseToDashes($this->name) . '/';
+      $templateName = '';
+      $thisName = $this->name;
+      $class = get_parent_class($this);
+      if ($class !== false AND $class != 'Controller'
+        AND $class != 'AppController') {
+        $name = str_replace('Controller', '', $class);
+        $thisName = str_replace($name, '', $thisName);
+        $templateName .= Utilities::camelCaseToDashes($name) . '/';
+//         $class = get_parent_class($class);
+      }
+      $templateName .= Utilities::camelCaseToDashes($thisName) . '/';
       list(, $caller) = debug_backtrace(false);
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';

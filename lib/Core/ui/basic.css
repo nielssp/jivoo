@@ -171,7 +171,7 @@ input {
   font-family: "Segoe UI", Tahoma, Arial, sans-serif;
 }
 
-input.text,textarea {
+input.text, textarea {
   font-size: 12px;
   width: 750px;
   padding: 4px 8px;
@@ -181,6 +181,16 @@ input.text,textarea {
   font-family: "Segoe UI", Tahoma, Arial, sans-serif;
   background-color: #fff;
 }
+
+input.text:focus,textarea:focus {
+  outline: none;
+  box-shadow: 0 0 16px 0px #444;
+}
+
+.button {
+  width: 128px;
+}
+
 
 .narrow_container input.text,.narrow_container textarea {
   width: 350px;
@@ -196,11 +206,41 @@ input.text:focus,textarea:focus {
 }
 
 
+div.input {
+  margin: 8px 0;
+}
+
+div.input p.label {
+  float: left;
+  width: 172px;
+  line-height: 21px;
+  margin: 0;
+  color: #252830;
+  font-size: 16px;
+}
+
 #sad {
   font-size: 100px;
   color: #540303;
   float: left;
   margin-right: 30px;
+}
+
+label.small {
+  display: block;
+  text-align: left;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #aaa;
+}
+
+
+span.description {
+  display: block;
+  text-align: right;
+  font-style: italic;
+  color: #777;
 }
 
 body.exception h1 {
@@ -253,4 +293,28 @@ table.trace tr.even {
 
 table.trace td {
   padding: 2px 4px 2px 4px;
+}
+
+.db_driver h2 {
+  float: left;
+  width: 196px;
+  height: 48px;
+  line-height: 48px;
+  margin: 0;
+}
+
+.db_driver p {
+  float: left;
+  width: 444px;
+  height: 48px;
+  margin: 0;
+  line-height: 48px;
+  color: #383C44;
+}
+
+.db_driver .button_container {
+  float: left;
+  width: 128px;
+  height: 48px;
+  line-height: 48px;
 }

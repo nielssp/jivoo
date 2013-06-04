@@ -4,7 +4,7 @@
 // Version        : 0.3.14
 // Description    : For helpers
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Templates
+// Dependencies   : Core/Routing
 
 /**
  * Helpers module
@@ -34,7 +34,7 @@ class Helpers extends ModuleBase {
     if (isset($this->helpers[$name])) {
       if (!isset($this->helperObjects[$name])) {
         $class = $this->helpers[$name];
-        $this->helperObjects[$name] = new $class($this->m->Routing, $this->app->config);
+        $this->helperObjects[$name] = new $class($this->m->Routing);
         $helper = $this->helperObjects[$name];
 
         $modules = $helper->getModuleList();
@@ -44,23 +44,36 @@ class Helpers extends ModuleBase {
             $helper->addModule($module);
           }
           else {
-            Logger::error(tr('Module "%1" not found in helper %2', $moduleName, $name));
+            Logger::error(tr('Module "%1" not found for helper %2', $moduleName, $name));
           }
         }
         $helpers = $helper->getHelperList();
         foreach ($helpers as $helperName) {
-          $helper = $this->getHelper($helperName);
+          $helperObj = $this->getHelper($helperName);
           if ($helper != null) {
-            $helper->addHelper($helper);
+            $helper->addHelper($helperObj);
           }
           else {
-            Logger::error(tr('Helper "%1" not found in helper %2', $helperName, $name));
+            Logger::error(tr('Helper "%1" not found for helper %2', $helperName, $name));
           }
         }
       }
       return $this->helperObjects[$name];
     }
     return null;
+  }
+  
+  public function addHelpers(IHelpable $helpable) {
+    $helpers = $helpable->getHelperList();
+    foreach ($helpers as $helperName) {
+      $helper = $this->getHelper($helperName);
+      if ($helper != null) {
+        $helpable->addHelper($helper);
+      }
+      else {
+        Logger::error(tr('Helper "%1" not found for %2', $helperName, get_class($helpable)));
+      }
+    }
   }
   
   public function addHelper(Helper $helper) {

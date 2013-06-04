@@ -27,24 +27,24 @@ return array(
   'Editors' => array(
   ),
   'Database' => array(
-    'server' => 'localhost',
     'database' => 'peanutcms',
     'filename' => '/home/www/GOTUN/PeanutCMS/config/db.sqlite3',
-    'driver' => 'PdoMysql',
-    'configured' => 'yes',
     'username' => 'peanutcms',
     'password' => 'peanutcms',
     'tablePrefix' => '',
+    'driver' => 'PdoMysql',
+    'server' => 'localhost',
+    'configured' => false,
     'migration' => array(
       'users' => '0.3.4',
       'groups' => '0.3.4',
       'groups_permissions' => '0.3.4',
       'links' => '0.3.4',
       'pages' => '0.3.4',
+      'posts' => '0.3.4',
       'tags' => '0.3.4',
       'posts_tags' => '0.3.4',
       'comments' => '0.3.4',
-      'posts' => '0.3.4',
     ),
   ),
   'Authentication' => array(
