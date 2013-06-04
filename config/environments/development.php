@@ -1,9 +1,7 @@
 <?php
 return array(
-  'logging' => array(
-    'level' => Logger::ALL,
-  ),
-  'Setup' => array(
+  'core' => array(
     'showExceptions' => true,
+    'logLevel' => Logger::ALL,
   ),
 );

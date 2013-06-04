@@ -206,6 +206,22 @@ class App {
     }
     return $this->m->$moduleName;
   }
+  
+  public function handleError(Exception $exception) {
+    /** @todo attempt to create error report */
+    if ($this->config['core']['showExceptions']) {
+      $app = $this->name;
+      $version = $this->version;
+      $title = tr('Uncaught exception');
+      include CORE_LIB_PATH . '/ui/layout.php';
+      $this->stop();
+    }
+    else {
+      /** @todo allow custom error page */
+      include CORE_LIB_PATH . '/ui/error.php';
+      $this->stop();
+    }
+  }
 
   /**
    * Run the application
@@ -235,26 +251,40 @@ class App {
         'Configuration file for environment "' . $environment . '" not found'
       );
     }
-
-    Logger::attachFile($this->p('log', $this->environment . '.log'));
-
-    // I18n system
+    
     $this->config->defaults = array(
-      'core' => array('language' => $this->appConfig['defaultLanguage'],
+      'core' => array(
+        'language' => $this->appConfig['defaultLanguage'],
         'timeZone' => @date_default_timezone_get(), /** @todo Reevaluate use of @ */
+        'showExceptions' => false,
+        'logLevel' => Logger::ALL,
       ),
     );
+
+    Logger::attachFile(
+      $this->p('log', $this->environment . '.log'),
+      $this->config['core']['logLevel']
+    );
+
+    // I18n system
     I18n::setup($this->config['core'], $this->paths->languages);
 
-    Lib::addIncludePath($this->paths->config . '/schemas');
+    // Error handling
+    ErrorReporting::setHandler(array($this, 'handleError'));
 
     foreach ($this->modules as $module) {
       $object = $this->loadModule($module);
-      $this->events
-        ->trigger('onModuleLoaded', new ModuleLoadedEventArgs($module, $object));
+      $this->events->trigger(
+        'onModuleLoaded',
+        new ModuleLoadedEventArgs($module, $object)
+      );
     }
     $this->events->trigger('onModulesLoaded');
     $this->events->trigger('onRender');
+  }
+  
+  public function stop($status = 0) {
+    exit($status);
   }
 }
 

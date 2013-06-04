@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title><?php echo $title; ?></title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<style type="text/css">
 * {
   padding: 0;
   margin: 0;
@@ -39,17 +32,16 @@ strong,em {
   top: 0px;
   left: 0px;
   width: 100%;
-  height: 50px;
-}
-
-
-#header #bar {
-  background: #000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAgCAYAAADT5RIaAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYECyktb5rr2QAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAANElEQVQI13WMQQoAIAzDwthH/f8XdPVWRdyltISGkakoIABiupUDx5Lu2d4eQXXgqCR9wQYhXhZ9vEbfAAAAAABJRU5ErkJggg==) repeat-x;
   height: 32px;
   color: #fff;
+  background: #252830 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAgCAYAAADT5RIaAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYEDDIkuj+OYgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAQUlEQVQI112Nuw3AUBDCLMZKkTL7T4Rfcfl3SMbAth9GJSCTFIKSDuAGV69KLB8NiX2mIFqCnLSz3Lcx1N95icACJ4ZCs3JGsS8AAAAASUVORK5CYII=) repeat-x;
   border-top: 1px solid #666;
   border-bottom: 1px solid #222;
   box-shadow: 1px 1px 16px #555;
+}
+
+body.exception #header {
+  background: #540303 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAgCAYAAADT5RIaAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYECyktb5rr2QAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAANElEQVQI13WMQQoAIAzDwthH/f8XdPVWRdyltISGkakoIABiupUDx5Lu2d4eQXXgqCR9wQYhXhZ9vEbfAAAAAABJRU5ErkJggg==) repeat-x;
 }
 
 #header div.right {
@@ -62,8 +54,9 @@ strong,em {
   text-shadow: 1px 1px 2px #000;
 }
 
-#header div.right a:link,#header div.right a:visited,#header div.right a:active
-  {
+#header div.right a:link,
+#header div.right a:visited,
+#header div.right a:active {
   text-decoration: none;
   color: #fff;
 }
@@ -97,7 +90,9 @@ strong,em {
   font-size: 1.2em;
 }
 
-.footer a:link,.footer a:visited,.footer a:active {
+.footer a:link,
+.footer a:visited,
+.footer a:active {
   color: inherit;
   font-weight: bold;
   text-decoration: none;
@@ -208,21 +203,22 @@ input.text:focus,textarea:focus {
   margin-right: 30px;
 }
 
-h1 {
+body.exception h1 {
   font-size: 40px;
   color: #540303;
   font-weight: normal;
   line-height: 150px;
 }
 
-h2 {
+body.exception h2 {
   font-size: 20px;
   color: #540303;
   font-weight: normal;
   margin: 5px 0 10px;
 }
 
-strong,em {
+body.exception strong,
+body.exception em {
   color: #540303;
 }
 
@@ -237,11 +233,11 @@ table.trace {
   font-size: 1.2em;
 }
 
-table thead tr {
+table.trace thead tr {
   background-color: #705151;
 }
 
-table thead th {
+table.trace thead th {
   color: #fff;
   padding: 2px 4px 2px 4px;
   font-weight: normal;
@@ -258,48 +254,3 @@ table.trace tr.even {
 table.trace td {
   padding: 2px 4px 2px 4px;
 }
-
-</style>
-</head>
-<body>
-
-<div id="header">
-<div id="bar">
-<div class="right"><?php echo $app; ?></div>
-</div>
-</div>
-
-<div id="content">
-<div class="section">
-<div class="container">
-<div id="sad">
-:-(
-</div>
-<h1><?php echo $title; ?></h1>
-
-<div class="clearl"></div>
-
-<?php
-if (isset($exception)) {
-  include $this->p('exception.php');
-}
-else {
-  echo $body;
-}
-?>
-
-</div>
-</div>
-</div>
-
-<div class="footer" id="poweredby">
-Powered by <a href="#"><?php echo $app; ?> 
-<?php echo $version; ?></a>
-</div>
-
-<div class="footer" id="links">
-<a href="http://apakoh.dk">Help</a>
-</div>
-
-</body>
-</html>

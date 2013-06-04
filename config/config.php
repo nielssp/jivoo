@@ -105,7 +105,7 @@ return array(
   'PeanutCMS' => array(
   ),
   'logging' => array(
-    'level' => 8,
+    'level' => 15,
   ),
   'Maintenance' => array(
     'showErrorReport' => false,
@@ -113,9 +113,11 @@ return array(
   'core' => array(
     'language' => 'en',
     'timeZone' => 'UTC',
+    'showExceptions' => true,
+    'logLevel' => 15,
   ),
   'Setup' => array(
     'verbose' => false,
-    'showExceptions' => false,
+    'showExceptions' => true,
   ),
 );
