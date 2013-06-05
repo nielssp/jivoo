@@ -54,37 +54,40 @@ class ErrorReporting {
       return;
     }
     if (defined('OUTPUTTING')) {
-      echo 'Uncaught exception';
+      echo '<pre>';
     }
     else {
       header('Content-Type:text/plain');
-      $file = $exception->getFile();
-      $line = $exception->getLine();
-      $message = $exception->getMessage();
-      echo 'Uncaught ' . get_class($exception) . ': ' . $message . PHP_EOL;
+    }
+    $file = $exception->getFile();
+    $line = $exception->getLine();
+    $message = $exception->getMessage();
+    echo 'Uncaught ' . get_class($exception) . ': ' . $message . PHP_EOL;
 
-      echo tr(
-        'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
-        get_class($exception), basename($file), $line);
-      echo PHP_EOL;
-      echo 'File: ' . $file . PHP_EOL;
-      echo 'Stack trace:' . PHP_EOL;
-      foreach ($exception->getTrace() as $i => $trace) {
-        if (isset($trace['file'])) {
-          echo $trace['file'] . ':';
-          echo $trace['line'] . ' ';
-        }
-        if (isset($tace['class'])) {
-          echo $trace['class'] . '::';
-        }
-        echo $trace['function'] . '(';
-        $arglist = array();
-        foreach ($trace['args'] as $arg) {
-          $arglist[] = (is_scalar($arg) ? $arg : gettype($arg));
-        }
-        echo implode(', ', $arglist);
-        echo ')' . PHP_EOL;
+    echo tr(
+      'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
+      get_class($exception), basename($file), $line);
+    echo PHP_EOL;
+    echo 'File: ' . $file . PHP_EOL;
+    echo 'Stack trace:' . PHP_EOL;
+    foreach ($exception->getTrace() as $i => $trace) {
+      if (isset($trace['file'])) {
+        echo $trace['file'] . ':';
+        echo $trace['line'] . ' ';
       }
+      if (isset($tace['class'])) {
+        echo $trace['class'] . '::';
+      }
+      echo $trace['function'] . '(';
+      $arglist = array();
+      foreach ($trace['args'] as $arg) {
+        $arglist[] = (is_scalar($arg) ? $arg : gettype($arg));
+      }
+      echo implode(', ', $arglist);
+      echo ')' . PHP_EOL;
+    }
+    if (defined('OUTPUTTING')) {
+      echo '</pre>';
     }
   }
 }

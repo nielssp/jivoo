@@ -19,21 +19,24 @@ interface IDataSource {
    * The R of CRUD (Retrieve).
    * @since 0.3.0
    * @param SelectQuery $query The select query
-   * @return int The number of return rows
+   * @return int|SelectQuery The number of returned rows or a new SelectQuery
+   *                         if $query is null
    */
   public function select(SelectQuery $query = null);
   /**
    * The U of CRUD (Update).
    * @since 0.3.0
    * @param UpdateQuery $query The update query
-   * @return int The number of affected rows
+   * @return int|UpdateQuery The number of affected rows or a new SelectQuery
+   *                         if $query is null
    */
   public function update(UpdateQuery $query = null);
   /**
    * The D of CRUD (Delete).
    * @since 0.3.0
    * @param DeleteQuery $query The delete query
-   * @return int The number of affected rows
+   * @return int|DeleteQuery The number of affected rows or a new SelectQuery
+   *                         if $query is null
    */
   public function delete(DeleteQuery $query = null);
   public function count(SelectQuery $query = null);
