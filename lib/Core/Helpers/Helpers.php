@@ -15,7 +15,11 @@
 class Helpers extends ModuleBase {
   
   private $helperObjects = array();
-  private $helpers = array();
+  private $helpers = array(
+    'Html' => 'HtmlHelper',
+    'Json' => 'JsonHelper',
+    'Form' => 'FormHelper',
+  );
   
   protected function init() {
     Lib::addIncludePath($this->app->paths->helpers);
