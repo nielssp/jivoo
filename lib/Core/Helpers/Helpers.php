@@ -22,7 +22,7 @@ class Helpers extends ModuleBase {
   );
   
   protected function init() {
-    Lib::addIncludePath($this->app->paths->helpers);
+    Lib::addIncludePath($this->p('helpers', ''));
     $dir = opendir($this->p('helpers', ''));
     while ($file = readdir($dir)) {
       $split = explode('.', $file);
@@ -32,6 +32,7 @@ class Helpers extends ModuleBase {
         $this->helpers[$name] = $class;
       }
     }
+    closedir($dir);
   }
   
   private function getInstance($name) {

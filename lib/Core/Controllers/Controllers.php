@@ -20,10 +20,9 @@ class Controllers extends ModuleBase {
   private $controllerObjects = array();
 
   protected function init() {
+    Lib::addIncludePath($this->p('controllers', ''));
 
-    Lib::addIncludePath($this->app->paths->controllers);
-
-    $dir = opendir($this->app->paths->controllers);
+    $dir = opendir($this->p('controllers', ''));
     while ($file = readdir($dir)) {
       $split = explode('.', $file);
       if (isset($split[1]) AND $split[1] == 'php') {
@@ -34,41 +33,41 @@ class Controllers extends ModuleBase {
         }
       }
     }
+    closedir($dir);
   }
 
   private function getInstance($name) {
     if (isset($this->controllers[$name])) {
       if (!isset($this->controllerObjects[$name])) {
         $class = $this->controllers[$name];
-        $this->controllerObjects[$name] = new $class($this->m
-            ->Routing, $this->m
-            ->Templates, $this->app
-            ->config);
+        $this->controllerObjects[$name] = new $class(
+          $this->m->Routing, $this->m->Templates,
+          $this->app->config
+        );
         $controller = $this->controllerObjects[$name];
 
         $modules = $controller->getModuleList();
         foreach ($modules as $moduleName) {
-          $module = $this->app
-            ->requestModule($moduleName);
+          $module = $this->app->requestModule($moduleName);
           if ($module) {
             $controller->addModule($module);
           }
           else {
             Logger::error(
-              tr('Module "%1" not found in controller %2', $moduleName, $name));
+              tr('Module "%1" not found for controller %2', $moduleName, $name)
+            );
           }
         }
         $helpers = $controller->getHelperList();
         foreach ($helpers as $helperName) {
-          $helper = $this->m
-            ->Helpers
-            ->getHelper($helperName);
+          $helper = $this->m->Helpers->getHelper($helperName);
           if ($helper != null) {
             $controller->addHelper($helper);
           }
           else {
             Logger::error(
-              tr('Helper "%1" not found in controller %2', $helperName, $name));
+              tr('Helper "%1" not found for controller %2', $helperName, $name)
+            );
           }
         }
       }

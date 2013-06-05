@@ -490,7 +490,7 @@ class Routing extends ModuleBase {
       $route->draw($this, $this->controllers);
     }
     
-    if ($this->selection['route'] == null) {
+    if (!isset($this->selection['route'])) {
       throw new Exception(tr('No route selected'));
     }
     

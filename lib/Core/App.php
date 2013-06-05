@@ -177,7 +177,7 @@ class App {
             tr('The "%1" module could not be found', $module)
           );
         }
-        if (!Lib::autoLoad($module . '/' . $moduleName)) {
+        if (!Lib::classExists($moduleName)) {
           throw new ModuleInvalidException(
             tr('The "%1" module does not have a main class', $module)
           );

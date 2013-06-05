@@ -171,7 +171,7 @@ abstract class ActiveRecord implements IModel {
         $options['thisKey'] = strtolower(get_class($this)) . '_id';
       }
       if (!isset($options['otherKey'])) {
-        $options['otherKey'] = strtolower($identifier) . '_id';
+        $options['otherKey'] = strtolower($otherClass) . '_id';
       }
 
       if ($association == 'hasAndBelongsToMany' AND !isset($options['join'])) {
