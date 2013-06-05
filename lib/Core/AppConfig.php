@@ -30,7 +30,9 @@ class AppConfig implements arrayaccess {
   
   public function __destruct() {
     if (!isset($this->parent)) {
-      $this->save();
+      if ($this->save()) {
+        Logger::error(tr('Unable to save config file: %1', $this->file));
+      }
     }
   }
   
@@ -201,9 +203,9 @@ class AppConfig implements arrayaccess {
     if ($this->updated == false) {
       return false;
     }
-    if (!is_writable($this->file)) {
-      return false;
-    }
+//     if (!is_writable($this->file)) {
+//       return false;
+//     }
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
       return false;
