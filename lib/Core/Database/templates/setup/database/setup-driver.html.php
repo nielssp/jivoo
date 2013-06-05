@@ -1,10 +1,6 @@
 <?php
-/*
- * Template for "404 not found"
- */
-
 // Render the header
-$this->render('backend/header.html');
+$this->render('setup/header.html');
 ?>
 
 <?php echo $Form->begin($setupForm); ?>
@@ -62,6 +58,6 @@ $this->render('backend/header.html');
 <?php echo $Form->end(); ?>
 
 <?php
-$this->render('backend/footer.html');
+$this->render('setup/footer.html');
 ?>
 
