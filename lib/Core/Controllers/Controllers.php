@@ -28,7 +28,7 @@ class Controllers extends ModuleBase {
       $split = explode('.', $file);
       if (isset($split[1]) AND $split[1] == 'php') {
         $class = $split[0];
-        if (class_exists($class) && is_subclass_of($class, 'Controller')) {
+        if (Lib::classExists($class) && is_subclass_of($class, 'Controller')) {
           $name = str_replace('Controller', '', $class);
           $this->controllers[$name] = $class;
         }

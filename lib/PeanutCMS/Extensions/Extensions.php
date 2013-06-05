@@ -78,9 +78,10 @@ class Extensions extends ModuleBase {
         throw new ExtensionNotFoundException(
           tr('The "%1" extension could not be found', $extension));
       }
-      require_once($this->p('extensions',
-          $extension . '/' . $extension . '.php'));
-      if (!class_exists($extension)) {
+      require_once(
+        $this->p('extensions', $extension . '/' . $extension . '.php')
+      );
+      if (!Lib::classExists($extension, false)) {
         throw new ExtensionInvalidException(
           tr('The "%1" extension does not have a main class', $extension));
       }

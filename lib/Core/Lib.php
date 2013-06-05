@@ -52,6 +52,21 @@ class Lib {
 
   public static $loadCalls = 0;
   public static $loadIterations = 0;
+  
+  public static $throwExceptions = true;
+  
+  public static function classExists($className, $autoload = true) {
+    if (!$autoload) {
+      return class_exists($className, false);
+    }
+    if (self::$throwExceptions) {
+      self::$throwExceptions = false;
+      $result = class_exists($className, true);
+      self::$throwExceptions = true;
+      return $result;
+    }
+    return class_exists($className, true);
+  }
 
   public static function autoload($className) {
     self::$loadCalls++;
@@ -81,6 +96,11 @@ class Lib {
         return true;
       }
     }
+    if (self::$throwExceptions) {
+      throw new ClassNotFoundException(tr('Class not found: %1', $className));
+    }
     return false;
   }
 }
+
+class ClassNotFoundException extends Exception { }

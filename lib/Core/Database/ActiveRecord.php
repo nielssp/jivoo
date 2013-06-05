@@ -548,7 +548,7 @@ abstract class ActiveRecord implements IModel {
   }
 
   private static function createFromAssoc($class, $assoc) {
-    if (!class_exists($class)) {
+    if (!Lib::classExists($class)) {
       throw new Exception(tr('%1 is not a class', $class));
     }
     $new = new $class($assoc, true);
