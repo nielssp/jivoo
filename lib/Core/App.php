@@ -211,6 +211,13 @@ class App {
   
   public function handleError(Exception $exception) {
     /** @todo attempt to create error report */
+    $hash = substr(md5($exception->__toString()), 0, 10);
+    if (!file_exists($this->p('log', 'crash-' . $hash . '.log'))) {
+      Logger::attachFile(
+        $this->p('log', 'crash-' . $hash . '.log'),
+        Logger::ALL
+      );
+    }
     if ($this->config['core']['showExceptions']) {
       $app = $this->name;
       $version = $this->version;
