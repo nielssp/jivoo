@@ -32,22 +32,6 @@ class Comment extends ActiveRecord implements ILinkable {
     'status' => 'unapproved', 'email' => '', 'website' => ''
   );
 
-  public static function setAnonymousCommenting($value = false) {
-    $validator = Comment::getModelValidator();
-    if ($value) {
-      unset($validator->author
-        ->presence);
-      unset($validator->email
-        ->presence);
-    }
-    else {
-      $validator->author
-        ->presence = true;
-      $validator->email
-        ->presence = true;
-    }
-  }
-
   public function getRoute() {
     return array('controller' => 'Posts', 'action' => 'viewComment',
       'parameters' => array($this->post_id, $this->id)

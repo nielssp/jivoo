@@ -6,7 +6,7 @@
 // Author         : PeanutCMS
 // Dependencies   : Core/Database Core/Routing Core/Templates
 //                  Core/Authentication PeanutCMS/Backend
-//                  Core/Controllers
+//                  Core/Controllers Core/Models
 
 /*
  * Class for working with blog posts
@@ -33,34 +33,10 @@ class Posts extends ModuleBase {
       'commentApproval' => false, 'editor' => array('name' => 'TinymceEditor'),
     );
 
-    // Set up models
-    $newInstall = false;
 
-    $postsSchema = new postsSchema();
-    $tagsSchema = new tagsSchema();
-    $posts_tagsSchema = new posts_tagsSchema();
-    $commentsSchema = new commentsSchema();
 
-    $newInstall = $this->m->Database->migrate($postsSchema) == 'new';
-    $this->m->Database->migrate($tagsSchema);
-    $this->m->Database->migrate($posts_tagsSchema);
-    $this->m->Database->migrate($commentsSchema);
-
-    $this->m->Database->posts->setSchema($postsSchema);
-    $this->m->Database->tags->setSchema($tagsSchema);
-    $this->m->Database->posts_tags->setSchema($posts_tagsSchema);
-    $this->m->Database->comments->setSchema($commentsSchema);
-
-    Post::connect($this->m->Database->posts);
-    Tag::connect($this->m->Database->tags);
-    Comment::connect($this->m->Database->comments);
-
-    if ($this->config['anonymousCommenting'] == 'on') {
-      Comment::setAnonymousCommenting(true);
-    }
-
-    if ($newInstall) {
-      $post = Post::create();
+    if ($this->m->Database->isNew('posts')) {
+      $post = $this->m->Models->Post->create();
       $post->title = tr('Welcome to PeanutCMS');
       $post->name = 'welcome-to-peanutcms';
       $post->content = include $this->p('welcomePost.php');
@@ -69,7 +45,7 @@ class Posts extends ModuleBase {
       $post->status = 'published';
       $post->commenting = 'yes';
       $post->save();
-      $comment = Comment::create();
+      $comment = $this->m->Models->Comment->create();
       $comment->author = 'PeanutCMS';
       $comment->content = 'Welcome to PeanutCMS.';
       $comment->date = time();
@@ -77,6 +53,16 @@ class Posts extends ModuleBase {
       $comment->save();
     }
 
+    $commentValidator = $this->m->Models->Comment->validator;
+    if ($this->config['anonymousCommenting']) {
+      unset($commentValidator->author->presence);
+      unset($commentValidator->email->presence);
+    }
+    else {
+      $commentValidator->author->presence = true;
+      $commentValidator->email->presence = true;
+    }
+    
     // Encoder
     $commentEncoder = new Encoder();
     $commentEncoder->allowTag('strong');
@@ -89,11 +75,11 @@ class Posts extends ModuleBase {
     $commentEncoder->allowTag('img');
     $commentEncoder->allowAttribute('img', 'src');
     $commentEncoder->validateAttribute('img', 'src', 'url', true);
-    Comment::setEncoder('content', $commentEncoder);
+    $this->m->Models->Comment->setEncoder('content', $commentEncoder);
 
     $postsEncoder = new Encoder();
     $postsEncoder->setAllowAll(true);
-    Post::setEncoder('content', $postsEncoder);
+    $this->m->Models->Post->setEncoder('content', $postsEncoder);
 
     // Create controllers
     //     $this->posts = new PostsController($this->m->Routing, $this->config);
@@ -202,7 +188,7 @@ class Posts extends ModuleBase {
       }
     }
     if ($id > 0) {
-      $post = Post::find($id);
+      $post = $this->m->Models->Post->find($id);
       if ($post !== false) {
         $post->addToCache();
         $this->posts->setRoute('view', 6, array($post->id));
@@ -210,7 +196,7 @@ class Posts extends ModuleBase {
       }
     }
     else if (!empty($name)) {
-      $post = Post::first(
+      $post = $this->m->Models->Post->first(
         SelectQuery::create()->where('name = ?')->addVar($name)
       );
       if ($post !== false) {
@@ -229,12 +215,12 @@ class Posts extends ModuleBase {
       }
       else {
         if ($parameters[0] == 0) {
-          $record = Post::create();
+          $record = $this->m->Models->Post->create();
           $record->name = '%name%';
           $record->date = time();
         }
         else {
-          $record = Post::find($parameters[0]);
+          $record = $this->m->Models->Post->find($parameters[0]);
         }
       }
       $time = $record->date;

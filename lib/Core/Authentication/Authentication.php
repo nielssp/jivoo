@@ -6,7 +6,7 @@
 // Author         : apakoh.dk
 // Dependencies   : Core/Shadow
 //                  Core/Setup Core/Templates Core/Database
-//                  Core/Routing Core/Helpers
+//                  Core/Routing Core/Helpers Core/Models
 
 /**
  * Authentication module
@@ -28,40 +28,24 @@ class Authentication extends ModuleBase {
       ),
       'rootCreated' => false, 
     );
-    $newInstall = false;
 
-    $usersSchema = new usersSchema();
-    $groupsSchema = new groupsSchema();
-    $groups_permissionsSchema = new groups_permissionsSchema();
-
-    $this->m->Database->migrate($usersSchema);
-    $newInstall = $this->m->Database->migrate($groupsSchema) == 'new';
-    $this->m->Database->migrate($groups_permissionsSchema);
-
-    $this->m->Database->users->setSchema($usersSchema);
-    $this->m->Database->groups->setSchema($groupsSchema);
-    $this->m->Database->groups_permissions
-      ->setSchema($groups_permissionsSchema);
-
-    User::connect($this->m->Database->users);
-    Group::connect($this->m->Database->groups);
-
+    $newInstall = $this->m->Database->isNew('users');
     $rootGroup = null;
     if ($newInstall) {
-      $group = Group::create();
+      $group = $this->m->Models->Group->crate();
       $group->name = 'root';
       $group->title = tr('Admin');
       $group->save();
       $group->setPermission('*', true);
       $rootGroup = $group;
 
-      $group = Group::create();
+      $group = $this->m->Models->Group->crate();
       $group->name = 'users';
       $group->title = tr('User');
       $group->save();
       $group->setPermission('frontend', true);
 
-      $group = Group::create();
+      $group = $this->m->Models->Group->crate();
       $group->name = 'guests';
       $group->title = tr('Guest');
       $group->save();
@@ -82,7 +66,7 @@ class Authentication extends ModuleBase {
     }
 
     if (!$this->isLoggedIn()) {
-      $unregistered = Group::first(
+      $unregistered = $this->m->Models->Group->first(
         SelectQuery::create()
           ->where('name = ?', $this->config['defaultGroups']['unregistered'])
       );
@@ -125,7 +109,7 @@ class Authentication extends ModuleBase {
     if (isset($this->session['username'])) {
       $sid = session_id();
       $ip = $_SERVER['REMOTE_ADDR'];
-      $user = User::first(
+      $user = $this->m->Models->User->first(
         SelectQuery::create()
           ->where('username = ?', $this->session['username'])
           ->and('session = ?', $sid)->and('ip = ?', $ip)
@@ -141,7 +125,7 @@ class Authentication extends ModuleBase {
   protected function checkCookie() {
     if (isset($this->request->cookies['login'])) {
       list($username, $cookie) = explode(':', $this->request->cookies['login']);
-      $user = User::first(
+      $user = $this->m->Models->User->first(
         SelectQuery::create()->where('username = ?', $username)
           ->and('cookie = ?', $cookie)
       );
@@ -178,7 +162,8 @@ class Authentication extends ModuleBase {
   }
 
   public function logIn($username, $password, $remember = false) {
-    $user = User::first(SelectQuery::create()->where('username = ?', $username));
+    $user = $this->m->Models->User
+      ->first(SelectQuery::create()->where('username = ?', $username));
     if (!$user) {
       return false;
     }

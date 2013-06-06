@@ -12,6 +12,10 @@ class SqlTable implements ITable {
   public function getName() {
     return $this->name;
   }
+  
+  public function getPrimaryKey() {
+    return $this->getSchema()->getPrimaryKey();
+  }
 
   public function getSchema() {
     if (!isset($this->schema)) {
@@ -152,18 +156,23 @@ class SqlTable implements ITable {
     }
     if (!empty($query->joins)) {
       foreach ($query->joins as $join) {
-        if (is_string($join['source'])) {
-          $table = $join['source'];
-        }
-        else if ($join['source'] instanceof SqlTable) {
+        if ($join['source'] instanceof SqlTable) {
+          if ($join['source']->getOwner() !== $this->owner) {
+            throw new Exception(tr(
+              'Unable to join SqlTable with table of different database'
+            ));
+          }
           $table = $join['source']->name;
         }
         else {
+          throw new Exception(tr(
+            'Unable to join SqlTable with data source of type "%1"',
+            get_class($join['source'])
+          ));
           continue;
         }
         $sqlString .= ' ' . $join['type'] . ' JOIN '
-            . $this->owner
-              ->tableName($table);
+          . $this->owner->tableName($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];
         }

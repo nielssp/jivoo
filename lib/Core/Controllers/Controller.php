@@ -24,9 +24,15 @@ class Controller implements IHelpable {
 
   protected $modules = array();
   protected $helpers = array('Html');
+  protected $models = array();
   private $helperObjects = array();
+  private $modelObjects = array();
 
-  public final function __construct(Routing $routing, Templates $templates, AppConfig $config = null) {
+  public final function __construct(Routing $routing, Templates $templates,
+                                    AppConfig $config = null, $temp = false) {
+    if ($temp) {
+      return;
+    }
     $this->m = new Dictionary();
 
     $this->m->Routing = $routing;
@@ -42,11 +48,28 @@ class Controller implements IHelpable {
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
     $this->actions = array_diff($classMethods, $parentMethods);
-
+    
+    $class = get_parent_class($this);
+    while ($class !== false AND $class != 'Controller') {
+      $temp = new $class($routing, $templates, null, true);
+      $this->helpers = array_unique(
+        array_merge($this->helpers, $temp->helpers)
+      );
+      $this->models = array_unique(
+        array_merge($this->models, $temp->models)
+      );
+      $this->modules = array_unique(
+        array_merge($this->modules, $temp->modules)
+      );
+      $class = get_parent_class($class);
+    }
     $this->init();
   }
 
   public function __get($name) {
+    if (isset($this->modelObjects[$name])) {
+      return $this->modelObjects[$name];
+    }
     if (isset($this->helperObjects[$name])) {
       return $this->helperObjects[$name];
     }
@@ -74,6 +97,10 @@ class Controller implements IHelpable {
   public function getHelperList() {
     return $this->helpers;
   }
+  
+  public function getModelList() {
+    return $this->models;
+  }
 
   public function addModule($object) {
     $class = get_class($object);
@@ -86,6 +113,10 @@ class Controller implements IHelpable {
   public function addHelper($helper) {
     $name = str_replace('Helper', '', get_class($helper));
     $this->helperObjects[$name] = $helper;
+  }
+  
+  public function addModel($name, IModel $model) {
+    $this->modelObjects[$name] = $model;
   }
 
   private function createRoute($action, $prefix = '') {

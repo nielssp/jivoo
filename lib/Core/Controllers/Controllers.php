@@ -5,7 +5,7 @@
 // Description    : For contollers
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Templates
-//                  Core/Helpers
+//                  Core/Helpers Core/Models
 
 /**
  * Controllers module
@@ -58,18 +58,8 @@ class Controllers extends ModuleBase {
             );
           }
         }
-        $helpers = $controller->getHelperList();
-        foreach ($helpers as $helperName) {
-          $helper = $this->m->Helpers->getHelper($helperName);
-          if ($helper != null) {
-            $controller->addHelper($helper);
-          }
-          else {
-            Logger::error(
-              tr('Helper "%1" not found for controller %2', $helperName, $name)
-            );
-          }
-        }
+        $this->m->Helpers->addHelpers($controller);
+        $this->m->Models->addModels($controller);
       }
       return $this->controllerObjects[$name];
     }

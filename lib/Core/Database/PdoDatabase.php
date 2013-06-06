@@ -10,6 +10,7 @@ abstract class PdoDatabase extends SqlDatabase {
   }
 
   public function rawQuery($sql) {
+//     Logger::debug($sql);
     $result = $this->pdo
       ->query($sql);
     if (!$result) {

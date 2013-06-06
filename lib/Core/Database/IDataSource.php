@@ -1,6 +1,8 @@
 <?php
 interface IDataSource {
   public function getName();
+  
+  public function getPrimaryKey();
   /**
    * @return Schema
    */

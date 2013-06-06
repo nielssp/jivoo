@@ -121,12 +121,12 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function join($table, $leftColumn, $rightColumn) {
-    $this->innerJoin($table, $leftColumn . ' = %' . $table . '.' . $rightColumn);
+  public function join(IDataSource $dataSource, $leftColumn, $rightColumn) {
+    $this->innerJoin($dataSource, $leftColumn . ' = %' . $dataSource->getName() . '.' . $rightColumn);
     return $this;
   }
 
-  public function innerJoin($dataSource, $condition = null, $alias = null) {
+  public function innerJoin(IDataSource $dataSource, $condition = null, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
@@ -136,7 +136,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function leftJoin($dataSource, $condition, $alias = null) {
+  public function leftJoin(IDataSource $dataSource, $condition, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
@@ -146,7 +146,7 @@ class SelectQuery extends Query implements ICondition, ILimitable {
     return $this;
   }
 
-  public function rightJoin($dataSource, $condition, $alias = null) {
+  public function rightJoin(IDataSource $dataSource, $condition, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }

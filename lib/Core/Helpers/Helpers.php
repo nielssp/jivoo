@@ -4,7 +4,7 @@
 // Version        : 0.3.14
 // Description    : For helpers
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing
+// Dependencies   : Core/Routing Core/Models
 
 /**
  * Helpers module
@@ -52,16 +52,8 @@ class Helpers extends ModuleBase {
             Logger::error(tr('Module "%1" not found for helper %2', $moduleName, $name));
           }
         }
-        $helpers = $helper->getHelperList();
-        foreach ($helpers as $helperName) {
-          $helperObj = $this->getHelper($helperName);
-          if ($helper != null) {
-            $helper->addHelper($helperObj);
-          }
-          else {
-            Logger::error(tr('Helper "%1" not found for helper %2', $helperName, $name));
-          }
-        }
+        $this->addHelpers($helper);
+        $this->m->Models->addModels($helper);
       }
       return $this->helperObjects[$name];
     }

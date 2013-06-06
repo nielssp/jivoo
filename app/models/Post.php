@@ -54,13 +54,19 @@ class Post extends ActiveRecord implements ILinkable {
   );
 
   protected $virtuals = array(
-    'tags' => array('get' => 'virtualGetTags', 'set' => 'virtualSetTags',
+    'tags' => array(
+      'get' => 'virtualGetTags',
+      'set' => 'virtualSetTags',
       'save' => 'virtualSaveTags'
     ),
   );
 
-  protected $fields = array('title' => 'Title', 'name' => 'Permalink',
-    'content' => 'Content', 'tags' => 'Tags', 'commenting' => 'Allow comments',
+  protected $fields = array(
+    'title' => 'Title',
+    'name' => 'Permalink',
+    'content' => 'Content',
+    'tags' => 'Tags',
+    'commenting' => 'Allow comments',
     'status' => 'Status',
   );
 
@@ -136,20 +142,21 @@ class Post extends ActiveRecord implements ILinkable {
 
   public function createAndAddTags($csvTags) {
     $tags = explode(',', $csvTags);
+    $Tag = $this->getModel()->otherModels->Tag;
     foreach ($tags as $title) {
       $title = trim($title);
       $name = Tag::createName($title);
       if ($title == '' OR $name == '') {
         continue;
       }
-      $existing = Tag::first(
+      $existing = $Tag->first(
         SelectQuery::create()->where('name = ?')
           ->addVar($name));
       if ($existing !== false) {
         $this->addTag($existing);
       }
       else {
-        $tag = Tag::create();
+        $tag = $Tag->create();
         $tag->tag = $title;
         $tag->name = $name;
         $tag->save();

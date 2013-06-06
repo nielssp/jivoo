@@ -37,6 +37,7 @@ $app->basePath = dirname(implode('/', $script));
 // Paths are relative to the current directory (dirname($_SERVER['SCRIPT_FILENAME']))
 // unless they begin with '/' or 'x:' where x is any drive letter.
 $app->paths->config = 'config';
+$app->paths->schemas = 'config/schemas';
 $app->paths->log = 'log';
 $app->paths->tmp = '/tmp/peanutcms';
 $app->paths->extensions = 'extensions';

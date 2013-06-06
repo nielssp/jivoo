@@ -7,6 +7,8 @@ class PostsController extends AppController {
   );
 
   protected $modules = array('Authentication', 'Editors');
+  
+  protected $models = array('Post', 'Comment', 'Tag');
 
   public function preRender() {
     $this->Filtering->addSearchColumn('title');
@@ -32,11 +34,11 @@ class PostsController extends AppController {
   public function index() {
     $select = SelectQuery::create()->where('status = "published"')
       ->orderByDescending('date');
-    $this->Pagination->setCount(Post::count());
+    $this->Pagination->setCount($this->Post->count());
 
     $this->Pagination->paginate($select);
 
-    $this->posts = Post::all($select);
+    $this->posts = $this->Post->all($select);
 
     $this->render();
   }
@@ -44,7 +46,7 @@ class PostsController extends AppController {
   public function view($post) {
     $this->reroute();
 
-    $this->post = Post::find($post);
+    $this->post = $this->Post->find($post);
 
     if (!$this->post
       OR ($this->post->status != 'published'
@@ -62,13 +64,13 @@ class PostsController extends AppController {
 
     $this->user = $this->auth->getUser();
 
-    Comment::setFieldEditor('content',
+    $this->Comment->setFieldEditor('content',
       $this->m->Editors->getEditor($this->config['comments']['editor'])
     );
 
     if ($this->auth->hasPermission('frontend.posts.comments.add')) {
       if ($this->request->isPost() AND $this->request->checkToken()) {
-        $this->newComment = Comment::create($this->request->data['comment'],
+        $this->newComment = $this->Comment->create($this->request->data['comment'],
           array('author', 'email', 'website', 'content')
         );
         if (!empty($this->newComment->website)
@@ -114,7 +116,7 @@ class PostsController extends AppController {
         }
       }
       else {
-        $this->newComment = Comment::create();
+        $this->newComment = $this->Comment->create();
         if (isset($this->request->cookies['comment_author'])) {
           $this->newComment->author = $this->request->cookies['comment_author'];
         }
@@ -142,10 +144,10 @@ class PostsController extends AppController {
     $this->Filtering->filter($select);
 
     if (isset($this->request->query['filter'])) {
-      $this->Pagination->setCount(Post::count($select));
+      $this->Pagination->setCount($this->Post->count($select));
     }
     else {
-      $this->Pagination->setCount(Post::count());
+      $this->Pagination->setCount($this->Post->count());
     }
 
     if ($this->Bulk->isBulk()) {
@@ -157,7 +159,7 @@ class PostsController extends AppController {
       }
       $this->Filtering->filter($query);
       $this->Bulk->select($query);
-      Post::execute($query);
+      $this->Post->dataSource->execute($query);
       if (!$this->request->isAjax()) {
         $this->refresh();
       }
@@ -165,7 +167,7 @@ class PostsController extends AppController {
 
     $this->Pagination->paginate($select);
 
-    $this->posts = Post::all($select);
+    $this->posts = $this->Post->all($select);
     $this->title = tr('Manage posts');
     if ($this->request->isAjax()) {
       $html = '';
@@ -183,7 +185,7 @@ class PostsController extends AppController {
   public function add() {
     $this->Backend->requireAuth('backend.posts.add');
 
-    $examplePost = Post::create();
+    $examplePost = $this->Post->create();
     $examplePost->name = '%name%';
     $examplePost->date = time();
     $exampleLink = explode('%name%',
@@ -194,13 +196,13 @@ class PostsController extends AppController {
     $this->beforePermalink = $exampleLink[0];
     $this->afterPermalink = $exampleLink[1];
 
-    Post::setFieldEditor('content',
+    $this->Post->setFieldEditor('content',
       $this->m->Editors->getEditor($this->config['editor'])
     );
 
     if ($this->request->isPost()
       AND $this->request->checkToken('post')) {
-      $this->post = Post::create($this->request->data['post']);
+      $this->post = $this->Post->create($this->request->data['post']);
       if (isset($this->request->data['publish'])) {
         $this->post->status = 'published';
       }
@@ -222,13 +224,13 @@ class PostsController extends AppController {
         foreach ($this->post->getErrors() as $field => $error) {
           $this->session
             ->alert(
-              $this->post->getFieldLabel($field) . ': ' . $error
+              $this->Post->getFieldLabel($field) . ': ' . $error
             );
         }
       }
     }
     else {
-      $this->post = Post::create();
+      $this->post = $this->Post->create();
     }
     $this->title = tr('New post');
     $this->render('posts/edit.html');
@@ -237,12 +239,12 @@ class PostsController extends AppController {
   public function edit($post) {
     $this->Backend->requireAuth('backend.posts.edit');
 
-    $this->post = Post::find($post);
+    $this->post = $this->Post->find($post);
     if (!$this->post) {
       return $this->notFound();
     }
 
-    Post::setFieldEditor('content',
+    $this->Post->setFieldEditor('content',
       $this->m->Editors->getEditor($this->config['editor'])
     );
 
@@ -276,7 +278,7 @@ class PostsController extends AppController {
         }
       }
     }
-    $examplePost = Post::create();
+    $examplePost = $this->Post->create();
     $examplePost->name = '%name%';
     $examplePost->date = time();
     $exampleLink = explode('%name%',
@@ -307,7 +309,7 @@ class PostsController extends AppController {
   }
 
   public function viewTag($tag) {
-    $this->tag = Tag::first(SelectQuery::create()->where('name = ?', $tag));
+    $this->tag = $this->Tag->first(SelectQuery::create()->where('name = ?', $tag));
 
     /** @todo This includes unpublished posts */
     $this->Pagination->setCount($this->tag->countPosts());
@@ -327,7 +329,7 @@ class PostsController extends AppController {
   public function manageTags() {
     $this->Backend->requireAuth('backend.tags.manage');
     $this->title = tr('Tags');
-    $this->tags = Tag::all();
+    $this->tags = $this->Tag->all();
     $this->render();
   }
 

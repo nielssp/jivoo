@@ -9,8 +9,10 @@ abstract class Helper implements IHelpable {
 
   protected $modules = array();
   protected $helpers = array();
+  protected $models = array();
 
   private $helperObjects = array();
+  private $modelObjects = array();
 
   public final function __construct(Routing $routing) {
     $this->m = new Dictionary();
@@ -24,6 +26,9 @@ abstract class Helper implements IHelpable {
   }
 
   public function __get($name) {
+    if (isset($this->modelObjects[$name])) {
+      return $this->modelObjects[$name];
+    }
     if (isset($this->helperObjects[$name])) {
       return $this->helperObjects[$name];
     }
@@ -39,6 +44,10 @@ abstract class Helper implements IHelpable {
   public function getHelperList() {
     return $this->helpers;
   }
+  
+  public function getModelList() {
+    return $this->models;
+  }
 
   public function addModule($object) {
     $class = get_class($object);
@@ -51,6 +60,10 @@ abstract class Helper implements IHelpable {
   public function addHelper($helper) {
     $name = str_replace('Helper', '', get_class($object));
     $this->helperObjects[$name] = $helper;
+  }
+  
+  public function addModel($name, IModel $model) {
+    $this->modelObjects[$name] = $model;
   }
   
 

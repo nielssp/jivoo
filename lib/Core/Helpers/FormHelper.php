@@ -3,30 +3,28 @@
 class FormHelper extends Helper {
 
   private $record = null;
+  private $model = null;
   private $currentForm = '';
   private $post = false;
   private $errors = array();
 
-  public function begin(IModel $record = null, $fragment = null) {
+  public function begin(IRecord $record = null, $fragment = null) {
     if (!isset($record)) {
       $record = new Form('form');
     }
-    $this->post = $this->request
-      ->isPost();
+    $this->post = $this->request->isPost();
     $this->record = $record;
+    $this->model = $record->getModel();
     if ($this->post) {
       $this->errors = $record->getErrors();
     }
-    $this->currentForm = $record->getName();
+    $this->currentForm = $this->model->getName();
     $html = '<form action="' . $this->getLink(array('fragment' => $fragment))
-        . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
+      . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
     $html .= '<input type="hidden" name="access_token" value="'
-        . $this->request
-          ->getToken() . '" />' . PHP_EOL;
-    foreach ($this->record
-      ->getFields() as $field) {
-      if ($this->record
-        ->getFieldType($field) == 'hidden') {
+      . $this->request->getToken() . '" />' . PHP_EOL;
+    foreach ($this->model->getFields() as $field) {
+      if ($this->model->getFieldType($field) == 'hidden') {
         $html .= $this->hidden($field);
       }
     }
@@ -55,8 +53,7 @@ class FormHelper extends Helper {
     if (!isset($this->record)) {
       return;
     }
-    $required = $this->record
-      ->isFieldRequired($field);
+    $required = $this->model->isFieldRequired($field);
     if (isset($output)) {
       return $required ? $output : '';
     }
@@ -69,8 +66,7 @@ class FormHelper extends Helper {
     if (!isset($this->record)) {
       return;
     }
-    $required = $this->record
-      ->isFieldRequired($field);
+    $required = $this->model->isFieldRequired($field);
     if (isset($output)) {
       return $required ? '' : $output;
     }
@@ -117,8 +113,7 @@ class FormHelper extends Helper {
       $html .= ' class="' . $options['class'] . '"';
     }
     if (!isset($label)) {
-      $label = $this->record
-        ->getFieldLabel($field);
+      $label = $this->model->getFieldLabel($field);
     }
     $html .= '>' . $label . '</label>' . PHP_EOL;
     return $html;
@@ -128,13 +123,11 @@ class FormHelper extends Helper {
     if (!isset($this->record)) {
       return;
     }
-    $editor = $this->record
-      ->getFieldEditor($field);
+    $editor = $this->model->getFieldEditor($field);
     if (isset($editor)) {
       return $editor->field($this, $field, $options);
     }
-    $type = $this->record
-      ->getFieldType($field);
+    $type = $this->model->getFieldType($field);
     switch ($type) {
       case 'text':
         return $this->textarea($field, $options);
@@ -152,28 +145,22 @@ class FormHelper extends Helper {
     if (!isset($this->record)) {
       return;
     }
-    $editor = $this->record
-      ->getFieldEditor($field);
+    $editor = $this->model->getFieldEditor($field);
     if (isset($editor)) {
       $format = $editor->getFormat();
       if ($encode) {
-        return h($format->fromHtml($this->record
-            ->$field));
+        return h($format->fromHtml($this->record->$field));
       }
       else {
-        return $format->fromHtml($this->record
-            ->$field);
+        return $format->fromHtml($this->record->$field);
       }
     }
-    if (isset($this->record
-      ->$field)) {
+    if ($this->model->isField($field)) {
       if ($encode) {
-        return h($this->record
-          ->$field);
+        return h($this->record->$field);
       }
       else {
-        return $this->record
-          ->$field;
+        return $this->record->$field;
       }
     }
     return '';
@@ -211,8 +198,9 @@ class FormHelper extends Helper {
       $options['class'] = 'text';
     }
     $html .= $this->addAttributes($options);
-    if ($this->fieldValue($field) != '') {
-      $html .= ' value="' . $this->fieldValue($field) . '"';
+    $value = $this->fieldValue($field); 
+    if ($value != '') {
+      $html .= ' value="' . $value . '"';
     }
     $html .= ' />' . PHP_EOL;
     return $html;
@@ -255,9 +243,7 @@ class FormHelper extends Helper {
     $html .= ' id="' . $this->fieldId($field) . '"';
     $html .= $this->addAttributes($options);
     $html .= '>';
-    if ($this->fieldValue($field) != '') {
-      $html .= $this->fieldValue($field);
-    }
+    $html .= $this->fieldValue($field);
     $html .= '</textarea>' . PHP_EOL;
     return $html;
   }
@@ -279,6 +265,7 @@ class FormHelper extends Helper {
 
   public function end() {
     $this->record = null;
+    $this->model = null;
     $this->errors = array();
     return '</form>';
   }

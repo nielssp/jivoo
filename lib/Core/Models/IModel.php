@@ -1,50 +1,31 @@
 <?php
 /**
- * Represents a data record containing
+ * Represents a data model containing
  * labeled fields.
- * @package PeanutCMS
- * @subpackage Interfaces
+ * @package Core
+ * @subpackage Models
  */
 interface IModel {
   /**
-   * Get value of field
-   * @param string $field Field name
-   * @return mixed Value
+   * Create a new record of model
+   * @param array $data Data for record
+   * @param string[] $allowedFields If set, only allow setting these fields
+   * @return IRecord New record
    */
-  public function __get($field);
-
+  public function create($data = array(), $allowedFields = null);
+  
   /**
-   * Set value of field
-   * @param string $field Field name
-   * @param mixed $value Value
-   */
-  public function __set($field, $value);
-
-  /**
-   * Check if a field exists
-   * @param string $field Field name
-   * @return bool True if it does, false otherwise
-   */
-  public function __isset($field);
-
-  /**
-   * Add data to record
-   * @param array $data An associative array containing key/value-pairs
-   */
-  public function addData($data);
-
-  /**
-   * Get name of record/model if applicable
+   * Get name of model if applicable
    * @return string Name
    */
   public function getName();
-
+  
   /**
-   * Get a list of fields in record
+   * Get a list of fields in model
    * @return string[] An array containing field names
-   */
+  */
   public function getFields();
-
+  
   /**
    * Get the type of a field
    * @param string $field Field name
@@ -72,32 +53,42 @@ interface IModel {
    * @return bool True if required, false otherwise
    */
   public function isFieldRequired($field);
-
+  
   /**
    * Whether a field exists
    * @param string $field Field name
    * @return bool True if it does, false otherwise
    */
   public function isField($field);
-
+  
   /**
-   * Whether or not the data in the current record is valid
-   * @return bool True if it is, false otherwise
+   * Get all records associated with model matching an optional
+   * query
+   * @param SelectQuery $query Optional query to match.
+   * @return IRecord[] Array of records
    */
-  public function isValid();
-
+  public function all(SelectQuery $query = null);
+  
   /**
-   * Get a list of errors in current record
-   * @return array An associative array where the key is a field
-   * and the value is an error string
+   * Get first record associated with model matching an optional
+   * query
+   * @param SelectQuery $query Optional query to match.
+   * @return IRecord A single record
    */
-  public function getErrors();
-
+  public function first(SelectQuery $query = null);
+  
   /**
-   * Encode a field
-   * @param string $field Field name
-   * @param array $options Options for the encoder
-   * @return string Encoded field value
+   * Get last record associated with model matching an optional
+   * query
+   * @param SelectQuery $query Optional query to match.
+   * @return IRecord A single record
    */
-  public function encode($field, $options = array());
+  public function last(SelectQuery $query = null);
+  
+  /**
+   * Get number of records associated with model
+   * @param SelectQuery $query Optional query to match.
+   * @return int Number of records
+   */
+  public function count(SelectQuery $query = null);
 }

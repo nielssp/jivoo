@@ -6,6 +6,7 @@
 // Author         : PeanutCMS
 // Dependencies   : Core/Database Core/Routing Core/Templates Core/Controllers
 //                  Core/Authentication PeanutCMS/Backend Core/Editors
+//                  Core/Models
 
 /*
  * Static pages
@@ -21,25 +22,8 @@ class Pages extends ModuleBase {
   private $controller;
 
   protected function init() {
-    $newInstall = false;
-
-    $pagesSchema = new pagesSchema();
-
-    $newInstall = $this->m
-      ->Database
-      ->migrate($pagesSchema) == 'new';
-
-    $this->m
-      ->Database
-      ->pages
-      ->setSchema($pagesSchema);
-
-    Page::connect($this->m
-      ->Database
-      ->pages);
-
-    if ($newInstall) {
-      $page = Page::create();
+    if ($this->m->Database->isNew('pages')) {
+      $page = $this->m->Models->Page->create();
       $page->title = 'About';
       $page->name = 'about';
       $page->content = '<p>';
@@ -53,7 +37,7 @@ class Pages extends ModuleBase {
 
     $pagesEncoder = new Encoder();
     $pagesEncoder->setAllowAll(true);
-    Page::setEncoder('content', $pagesEncoder);
+    $this->m->Models->Page->setEncoder('content', $pagesEncoder);
 
     $this->config->defaults = array(
       'editor' => array(
@@ -91,15 +75,14 @@ class Pages extends ModuleBase {
       return;
     }
     $name = implode('/', $path);
-    $page = Page::first(
+    $page = $this->m->Models->Page->first(
       SelectQuery::create()->where('name = ?', $name)
     );
     if ($page === false) {
       return;
     }
     $page->addToCache();
-    $this->controller
-      ->setRoute('view', 6, array($page->id));
+    $this->controller->setRoute('view', 6, array($page->id));
   }
 
   public function getFancyPath($parameters) {
@@ -107,7 +90,7 @@ class Pages extends ModuleBase {
       $record = $parameters;
     }
     else {
-      $record = Page::find($parameters[0]);
+      $record = $this->m->Models->Page->find($parameters[0]);
     }
     return explode('/', $record->name);
   }

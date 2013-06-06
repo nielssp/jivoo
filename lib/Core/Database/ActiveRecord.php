@@ -1,97 +1,13 @@
 <?php
-abstract class ActiveRecord implements IModel {
-  private static $models = array();
+abstract class ActiveRecord implements IRecord {
 
-  public static function connect(IDataSource $dataSource) {
-    $class = get_called_class();
-    $schema = $dataSource->getSchema();
-    self::$models[$class] = array('source' => $dataSource,
-      'table' => $dataSource->getName(), 'schema' => $schema,
-      'columns' => $schema->getColumns(),
-      'primaryKey' => $schema->getPrimaryKey(), 'encoders' => array(),
-      'editors' => array(), 'validator' => null
-    );
-    $object = new $class();
-    self::$models[$class]['validator'] = $object->createValidator();
-    unset($object);
-  }
-
-  private function createValidator() {
-    $class = get_class($this);
-    $validator = new Validator($this->validate);
-    foreach (self::$models[$class]['columns'] as $column) {
-      if ($column == $this->primaryKey) {
-        continue;
-      }
-      if (isset($this->schema->$column)) {
-        $info = $this->schema->$column;
-        if ($info['type'] == 'integer') {
-          if (isset($info['unsigned']) && $info['unsigned'] === true) {
-            $intMin = 0;
-            $intMax = 4294967295;
-          }
-          else {
-            $intMin = -2147483648;
-            $intMax = 2147483647;
-          }
-          $maxLength = 
-          $validator->$column->isInteger = true;
-          if (isset($validator->$column->maxValue)) {
-            $validator->$column->maxValue = min($validator->$column->maxValue, $intMax);
-          }
-          else {
-            $validator->$column->maxValue = $intMax;
-          }
-          if (isset($validator->$column->minValue)) {
-            $validator->$column->minValue = max($intMin, $validator->$column->minValue);
-          }
-          else {
-            $validator->$column->minValue = $intMin;
-          }
-        }
-        else if ($info['type'] == 'float') {
-          $validator->$column->isFloat = true;
-        }
-        else if ($info['type'] == 'boolean') {
-          $validator->$column->isBoolean = true;
-        }
-        if (isset($info['length']) AND $info['type'] != 'float'
-            AND $info['type'] != 'integer' AND $info['type'] != 'boolean') {
-          if (isset($validator->$column->maxLength)) {
-            $validator->$column->maxLength = min($validator->$column->maxLength, $info['length']);
-          }
-          else {
-            $validator->$column->maxLength = $info['length'];
-          }
-        }
-        if (isset($info['key'])
-            AND ($info['key'] == 'primary' OR $info['key'] == 'unique')) {
-          $validator->$column->unique = true;
-        }
-        if (isset($info['null']) AND $info['null'] == false) {
-          $validator->$column->null = false;
-        }
-      }
-    }
-    return $validator;
-  }
-
-  private static $cache = array();
-
-  private $table;
-  private $schema;
-  private $dataSource;
-  private $primaryKey;
-  private $data;
-  private $changed;
-
-  private $isNew = false;
-  private $isSaved = true;
-  private $isDeleted = false;
-
-  private $editors = array();
-
-  protected $virtualData = array();
+  private $model;
+  private $saved = false;
+  private $new = true;
+  private $deleted = false;
+  private $errors = array();
+  private $data = array();
+  private $virtualData = array();
 
   protected $validate = array();
 
@@ -99,515 +15,108 @@ abstract class ActiveRecord implements IModel {
 
   protected $virtuals = array();
 
-  protected $fields = array();
+  protected $fields = null;
 
   protected $hasOne = array();
   protected $hasMany = array();
   protected $belongsTo = array();
   protected $hasAndBelongsToMany = array();
 
-  private $associations = array();
-
-  private $errors = array();
-
-  public function __set($property, $value) {
-    if (isset($this->virtuals[$property])
-        AND isset($this->virtuals[$property]['set'])) {
-      call_user_func(array($this, $this->virtuals[$property]['set']), $value);
-      $this->isSaved = false;
+  public final function __construct(ActiveModel $model, $data = array(), $new = true) {
+    $this->model = $model;
+    $this->new = $new;
+    if (!$new) {
+      $this->saved = true;
     }
-    else if (array_key_exists($property, $this->data)
-        AND $property != $this->primaryKey) {
-      $this->data[$property] = $value;
-      $this->changed[$property] = true;
-      $this->isSaved = false;
+    if (!is_array($data)) {
+      return;
     }
-    else if (isset($this->fields[$property])) {
-      $this->virtualData[$property] = $value;
-      $this->isSaved = false;
-    }
-    else {
-      throw new RecordPropertyNotFoundException(
-        tr('Property "%1" was not found in model "%2".', $property,
-          get_class($this)));
-    }
-  }
-
-  public function __get($property) {
-    if (isset($this->virtuals[$property])
-        AND isset($this->virtuals[$property]['get'])) {
-      return call_user_func(array($this, $this->virtuals[$property]['get']));
-    }
-    else if (array_key_exists($property, $this->data)) {
-      return $this->data[$property];
-    }
-    else if (isset($this->virtualData[$property])) {
-      return $this->virtualData[$property];
-    }
-    else {
-      throw new RecordPropertyNotFoundException(
-        tr('Property "%1" was not found in model "%2".', $property,
-          get_class($this)));
-    }
-  }
-
-  public function __isset($property) {
-    return isset($this->data[$property]) OR isset($this->virtuals[$property]);
-  }
-
-  public function __call($method, $arguments) {
-    if (isset($this->associations[$method])) {
-      $association = $this->associations[$method][0];
-      $procedure = $this->associations[$method][1];
-      $assocProc = $association . '_' . $procedure;
-      $identifier = $this->associations[$method][2];
-      $options = $this->$association;
-      $options = $options[$identifier];
-      if (!isset($options['class'])) {
-        $options['class'] = $identifier;
-      }
-      $otherClass = $options['class'];
-      if (!isset($options['thisKey'])) {
-        $options['thisKey'] = strtolower(get_class($this)) . '_id';
-      }
-      if (!isset($options['otherKey'])) {
-        $options['otherKey'] = strtolower($otherClass) . '_id';
-      }
-
-      if ($association == 'hasAndBelongsToMany' AND !isset($options['join'])) {
-        if (strcmp($this->table, self::$models[$otherClass]['table']) < 0) {
-          $options['join'] = $this->table . '_'
-              . self::$models[$otherClass]['table'];
-        }
-        else {
-          $options['join'] = self::$models[$otherClass]['table'] . '_'
-              . $this->table;
-        }
-        // if table does not exist
-      }
-
-      if (!isset($arguments[0])) {
-        $arguments[0] = null;
-      }
-
-      if ($association == 'hasMany' OR $association == 'hasAndBelongsToMany') {
-        if ($this->isNew) {
-          return false;
-        }
-        switch ($procedure) {
-          case 'get':
-            return $this->manyGet($options, $arguments[0]);
-          case 'count':
-            return $this->manyCount($options, $arguments[0]);
-          case 'has':
-            return $this->manyHas($options, $arguments[0]);
-          case 'add':
-            return $this->manyAdd($options, $arguments[0]);
-          case 'remove':
-            return $this->manyRemove($options, $arguments[0]);
-        }
-      }
-      else if ($association == 'hasOne' OR $association == 'belongsTo') {
-        if (!isset($options['connection'])) {
-          //           $options['connection'] = 'this';
-          if ($association == 'hasOne') {
-            $options['connection'] = 'other';
-          }
-          else {
-            $options['connection'] = 'this';
-          }
-        }
-        if ($this->isNew AND $options['connection'] == 'other') {
-          return false;
-        }
-        switch ($procedure) {
-          case 'get':
-            return $this->oneGet($options);
-          case 'set':
-            return $this->oneSet($options, $arguments[0]);
-        }
-      }
-    }
-    else {
-      throw new RecordMethodNotFoundException(
-        tr('Method "%1" was not found in model "%2".', $method,
-          get_class($this)));
-    }
-  }
-
-  private function manyGet($options, SelectQuery $customSelect = null) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    $otherPrimaryKey = self::$models[$otherClass]['primaryKey'];
-
-    if (!isset($customSelect)) {
-      $select = SelectQuery::create();
-    }
-    else {
-      $select = $customSelect;
-    }
-    if (isset($options['join'])) {
-      $select->join($options['join'], $otherPrimaryKey, $options['otherKey']);
-    }
-
-    $select->where($options['thisKey'] . ' = ?');
-    $select->addVar($this->data[$this->primaryKey]);
-
-    $result = self::$models[$otherClass]['source']->select($select);
-
-    $allArray = array();
-    $count = 0;
-    while ($assoc = $result->fetchAssoc()) {
-      $allArray[] = self::createFromAssoc($otherClass, $assoc);
-      $count++;
-    }
-    if (isset($options['count']) AND !isset($customSelect)) {
-      if ($this->data[$options['count']] != $count) {
-        $this->data[$options['count']] = $count;
-        $this->isSaved = false;
-        $this->save();
-      }
-    }
-    return $allArray;
-  }
-
-  private function manyCount($options, SelectQuery $customSelect = null) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    $otherPrimaryKey = self::$models[$otherClass]['primaryKey'];
-
-    if (!isset($customSelect)) {
-      $select = SelectQuery::create();
-    }
-    else {
-      $select = $customSelect;
-    }
-    if (isset($options['join'])) {
-      $select->join($options['join'], $otherPrimaryKey, $options['otherKey']);
-    }
-
-    $select->where($options['thisKey'] . ' = ?');
-    $select->addVar($this->data[$this->primaryKey]);
-
-    $result = self::$models[$otherClass]['source']->count($select);
-
-    if (isset($options['count']) AND !isset($customSelect)) {
-      if ($this->data[$options['count']] != $result) {
-        $this->data[$options['count']] = $result;
-        $this->isSaved = false;
-        $this->save();
-      }
-    }
-    return $result;
-  }
-
-  private function manyHas($options, ActiveRecord $record) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    $otherPrimaryKey = self::$models[$otherClass]['primaryKey'];
-
-    $query = SelectQuery::create();
-    if (isset($options['join'])) {
-      if ($this->dataSource instanceof ITable) {
-        $query->where(
-            $options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
-        $query->addVar($this->data[$this->primaryKey]);
-        $query->addVar($record->data[$record->primaryKey]);
-        /** @todo Maybe find some better way of doing this.... */
-        return $this->dataSource
-          ->getOwner()
-          ->getTable($options['join'])
-          ->count($query) > 0;
-      }
-    }
-    else {
-      $query->where($options['thisKey'] . ' = ?');
-      $query->addVar($this->data[$this->primaryKey]);
-      return $this->dataSource
-        ->count($query) > 0;
-    }
-  }
-
-  private function manyAdd($options, ActiveRecord $record) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    if ($this->manyHas($options, $record)) {
-      return false;
-    }
-
-    if (isset($options['join'])) {
-      if ($record->isNew) {
-        return false;
-      }
-      if ($this->dataSource instanceof ITable) {
-        $query = $this->dataSource
-          ->getOwner()
-          ->getTable($options['join'])
-          ->insert();
-        $query->addPair($options['thisKey'], $this->data[$this->primaryKey]);
-        $query->addPair($options['otherKey'],
-            $record->data[$record->primaryKey]);
-        $query->execute();
-        return true;
-      }
-      return false;
-    }
-    else {
-      $record->data[$options['thisKey']] = $this->data[$this->primaryKey];
-      $record->isSaved = false;
-      if (!$record->isNew) {
-        $record->save();
-      }
-      return true;
-    }
-
-  }
-
-  private function manyRemove($options, ActiveRecord $record) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    if (isset($options['join'])) {
-      if ($record->isNew) {
-        return false;
-      }
-      if ($this->dataSource instanceof ITable) {
-        $query = $this->dataSource
-          ->getOwner()
-          ->getTable($options['join'])
-          ->delete();
-        $query->where(
-            $options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
-        $query->addVar($this->data[$this->primaryKey]);
-        $query->addVar($record->data[$record->primaryKey]);
-        $query->execute();
-        return true;
-      }
-      return false;
-    }
-    else {
-      $record->data[$options['thisKey']] = 0;
-      $record->isSaved = false;
-      if (!$record->isNew) {
-        $record->save();
-      }
-      return true;
-    }
-  }
-
-  private function oneGet($options) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    if ($options['connection'] == 'this') {
-      if (!isset($this->data[$options['otherKey']])) {
-        return false;
-      }
-      $primaryKey = $this->data[$options['otherKey']];
-      if (isset(self::$cache[$otherClass][$primaryKey])) {
-        return self::$cache[$otherClass][$primaryKey];
-      }
-      $query = self::connection($otherClass)->select();
-      $query->where(self::$models[$otherClass]['primaryKey'] . ' = ?');
-    }
-    else {
-      $primaryKey = $this->data[$this->primaryKey];
-      $query = self::connection($otherClass)->select();
-      $query->where($options['thisKey'] . ' = ?');
-    }
-    $query->addVar($primaryKey);
-    $query->limit(1);
-    $result = $query->execute();
-    if (!$result->hasRows()) {
-      return false;
-    }
-    return self::createFromAssoc($otherClass, $result->fetchAssoc());
-  }
-
-  private function oneSet($options, ActiveRecord $record) {
-    $thisClass = get_class($this);
-    $otherClass = $options['class'];
-
-    if ($options['connection'] == 'this') {
-      if ($record->isNew) {
-        return false;
-      }
-      $this->data[$options['otherKey']] = $record->data[$record->primaryKey];
-      $this->isSaved = false;
-      if (!$this->isNew) {
-        $this->save();
-      }
-    }
-    else {
-      $record->data[$options['thisKey']] = $this->data[$this->primaryKey];
-      $record->isSaved = false;
-      if (!$record->isNew) {
-        $record->save();
-      }
-    }
-  }
-
-  private function __construct($data = array()) {
-    $class = get_class($this);
-    if (!isset(self::$models[$class])) {
-      throw new InvalidModelException(
-        tr('The model "%1" has not been connected to ActiveRecord.', $class));
-    }
-    $this->dataSource = self::$models[$class]['source'];
-    $this->table = self::$models[$class]['table'];
-    $this->primaryKey = self::$models[$class]['primaryKey'];
-    $this->schema = self::$models[$class]['schema'];
-    $this->data = array();
-
-    foreach (self::$models[$class]['columns'] as $column) {
-      if (isset($data[$column])) {
-        $this->data[$column] = $data[$column];
+    $allFields = array_unique(array_merge(
+      $this->model->columns,
+      $this->model->getFields()
+    ));
+    foreach ($allFields as $field) {
+      if (isset($data[$field])) {
+        $this->data[$field] = $data[$field];
       }
       else {
-        $this->data[$column] = null;
+        $this->data[$field] = null;
       }
-      if (isset($this->schema
-        ->$column)) {
-        $info = $this->schema
-          ->$column;
-        if (isset($info['default'])) {
-          if (!isset($this->defaults[$column])) {
-            $this->defaults[$column] = $info['default'];
-          }
-        }
-      }
-    }
-    foreach ($this->hasOne as $class => $options) {
-      $this->associations['get' . $class] = array('hasOne', 'get', $class);
-      $this->associations['set' . $class] = array('hasOne', 'set', $class);
-    }
-    foreach ($this->hasMany as $class => $options) {
-      if (!isset($options['plural'])) {
-        $options['plural'] = $class . 's';
-      }
-      $this->associations['get' . $options['plural']] = array('hasMany', 'get',
-        $class
-      );
-      $this->associations['count' . $options['plural']] = array('hasMany',
-        'count', $class
-      );
-      $this->associations['has' . $class] = array('hasMany', 'has', $class);
-      $this->associations['add' . $class] = array('hasMany', 'add', $class);
-      $this->associations['remove' . $class] = array('hasMany', 'remove',
-        $class
-      );
-    }
-    foreach ($this->belongsTo as $class => $options) {
-      $this->associations['get' . $class] = array('belongsTo', 'get', $class);
-      $this->associations['set' . $class] = array('belongsTo', 'set', $class);
-    }
-    foreach ($this->hasAndBelongsToMany as $class => $options) {
-      if (!isset($options['plural'])) {
-        $options['plural'] = $class . 's';
-      }
-      $this->associations['get' . $options['plural']] = array(
-        'hasAndBelongsToMany', 'get', $class
-      );
-      $this->associations['count' . $options['plural']] = array(
-        'hasAndBelongsToMany', 'count', $class
-      );
-      $this->associations['has' . $class] = array('hasAndBelongsToMany', 'has',
-        $class
-      );
-      $this->associations['add' . $class] = array('hasAndBelongsToMany', 'add',
-        $class
-      );
-      $this->associations['remove' . $class] = array('hasAndBelongsToMany',
-        'remove', $class
-      );
     }
   }
-
-  public function getValidator() {
-    $class = get_class($this);
-    return self::$models[$class]['validator'];
+  
+  public function addToCache() {
+    $this->model->addToCache($this);
   }
 
-  public static function getModelValidator($class = null) {
-    if (!isset($class)) {
-      $class = get_called_class();
-    }
-    return self::$models[$class]['validator'];
+  public function getModelSettings() {
+    return array(
+      'validate' => $this->validate,
+      'defaults' => $this->defaults,
+      'virtuals' => $this->virtuals,
+      'fields' => $this->fields,
+      'hasOne' => $this->hasOne,
+      'hasMany' => $this->hasMany,
+      'belongsTo' => $this->belongsTo,
+      'hasAndBelongsToMany' => $this->hasAndBelongsToMany,
+    );
   }
 
-  protected static function connection($class) {
-    if (!isset(self::$models[$class])) {
-      throw new DatabaseNotConnectedException(
-        'This ActiveRecord is not connected to a database.');
+  public function __get($field) {
+    if (isset($this->virtuals[$field])
+    AND isset($this->virtuals[$field]['get'])) {
+      return call_user_func(array($this, $this->virtuals[$field]['get']));
     }
-    return self::$models[$class]['source'];
+    else if (array_key_exists($field, $this->data)) {
+      return $this->data[$field];
+    }
+    else {
+      throw new RecordPropertyNotFoundException(tr(
+        'Field "%1" was not found in active record "%2".',
+        $field, get_class($this)
+      ));
+    }
   }
-
-  private static function createFromAssoc($class, $assoc) {
-    if (!Lib::classExists($class)) {
-      throw new Exception(tr('%1 is not a class', $class));
+  public function __set($field, $value) {
+    if (isset($this->virtuals[$field])
+    AND isset($this->virtuals[$field]['set'])) {
+      call_user_func(array($this, $this->virtuals[$field]['set']), $value);
+      $this->isSaved = false;
     }
-    $new = new $class($assoc, true);
-    /*
-    foreach ($assoc as $property => $value) {
-      if (in_array($property, self::$models[$class]['columns'])) {
-        $new->data[$property] = $value;
+    if (array_key_exists($field, $this->data)
+    AND $field != $this->model->primaryKey) {
+      $this->data[$field] = $value;
+      $this->saved = false;
+    }
+    else {
+      throw new RecordPropertyNotFoundException(tr(
+        'Field "%1" was not found in active record "%2".',
+        $field, get_class($this)
+      ));
+    }
+  }
+  
+  public function __isset($field) {
+    return isset($this->data[$field]) OR isset($this->virtuals[$field]);
+  }
+  
+  public function __call($method, $parameters) {
+    if (isset($this->model->associations[$method])) {
+      $association = $this->model->associations[$method];
+      if (!isset($parameters[0])) {
+        $parameters[0] = null;
       }
+      return call_user_func(array($this, $association[0]), $association[1],
+        $parameters[0]
+      );
     }
-     */
-    $new->addToCache();
-    return $new;
+    throw new RecordMethodNotFoundException(tr(
+      'Method "%1" was not found in active record "%2".',
+      $method, get_class($this)
+    ));
   }
 
-  public static function create($data = array(), $allowedFields = null) {
-    $class = get_called_class();
-    $new = new $class();
-    $new->isNew = true;
-    $new->isSaved = false;
-    if (is_array($allowedFields)) {
-      $allowedFields = array_flip($allowedFields);
-      $data = array_intersect_key($data, $allowedFields);
-    }
-    $keys = array_unique(
-      array_merge(array_keys($new->defaults), array_keys($data)));
-    foreach ($keys as $key) {
-      try {
-        if (isset($data[$key])
-            AND (isset($new->fields[$key]) OR $allowedFields === true)) {
-          $editor = $new->getFieldEditor($key);
-          if (isset($editor)) {
-            $format = $editor->getFormat();
-            $new->$key = $format->toHtml($data[$key]);
-          }
-          else {
-            $new->$key = $data[$key];
-          }
-        }
-        else if (isset($new->defaults[$key])) {
-          $value = $new->defaults[$key];
-          if (is_array($value)) {
-            if (is_callable($value[0])) {
-              $function = array_shift($value);
-              $new->$key = call_user_func_array($function, $value);
-            }
-          }
-          else {
-            $new->$key = $value;
-          }
-        }
-      }
-      catch (RecordPropertyNotFoundException $ex) {
-        // ignore
-      }
-    }
-    return $new;
-  }
-
-  public function addData($data, $allowedFields = NULl) {
+  public function addData($data, $allowedFields = null) {
     if (!is_array($data)) {
       return;
     }
@@ -615,28 +124,93 @@ abstract class ActiveRecord implements IModel {
       $allowedFields = array_flip($allowedFields);
       $data = array_intersect_key($data, $allowedFields);
     }
-    foreach ($data as $key => $value) {
-      if (isset($this->fields[$key])) {
-        $editor = $this->getFieldEditor($key);
+    foreach ($data as $field => $value) {
+      if ($this->model->isField($field)) {
+        $editor = $this->model->getFieldEditor($field);
         if (isset($editor)) {
           $format = $editor->getFormat();
-          $this->$key = $format->toHtml($data[$key]);
+          $this->$field = $format->toHtml($data[$field]);
         }
         else {
-          $this->$key = $data[$key];
+          $this->$field = $data[$field];
         }
       }
     }
   }
 
+  /**
+   * @return ActiveModel The model associated with this record
+   */
+  public function getModel() {
+    return $this->model;
+  }
+
+  protected function beforeSave($options) {}
+  protected function afterSave($options) {}
+
+  public function save($options = array()) {
+    if ($this->deleted) {
+      return false;
+    }
+    $defaultOptions = array('validate' => true);
+    $options = array_merge($defaultOptions, $options);
+    $this->beforeSave($options);
+    if ($options['validate'] AND !$this->isValid()) {
+      return false;
+    }
+    if ($this->saved) {
+      return true;
+    }
+    foreach ($this->virtuals as $tasks) {
+      if (isset($tasks['presave'])) {
+        call_user_func(array($this, $tasks['presave']));
+      }
+    }
+    if ($this->new) {
+      $query = $this->model->dataSource->insert();
+      $data = array_intersect_key($this->data, array_flip($this->model->columns));
+      $this->data[$this->model->primaryKey] = $query->addPairs($data)
+      ->execute();
+    }
+    else {
+      $query = $this->model->dataSource->update();
+      foreach ($this->model->columns as $column) {
+        $query->set($column, $this->$column);
+      }
+      $query->where($this->model->primaryKey. ' = ?');
+      $query->addVar($this->data[$this->model->primaryKey]);
+      $query->execute();
+    }
+    $this->new = false;
+    $this->saved = true;
+    $this->afterSave($options);
+    foreach ($this->virtuals as $tasks) {
+      if (isset($tasks['save'])) {
+        call_user_func(array($this, $tasks['save']));
+      }
+    }
+    return true;
+  }
+  public function delete() {
+    $this->model->dataSource->delete()
+    ->where($this->model->primaryKey . ' = ?')
+    ->addVar($this->data[$this->model->primaryKey])->execute();
+    $this->deleted = true;
+  }
+
+  public function isNew() {
+    return $this->new;
+  }
+  public function isSaved() {
+    return $this->saved;
+  }
   protected function validateValue($column, $value, $conditionKey,
-                                   $conditionValue) {
+    $conditionValue) {
     $validate = array();
-    $class = get_class($this);
     if ($conditionValue instanceof ValidatorRule) {
       foreach ($conditionValue->getRules() as $subConditionKey => $subConditionValue) {
-        $validate = $this->validateValue($column, $value, $subConditionKey,
-            $subConditionValue);
+        $validate = $this
+        ->validateValue($column, $value, $subConditionKey, $subConditionValue);
         if (!$validate) {
           return false;
         }
@@ -644,7 +218,7 @@ abstract class ActiveRecord implements IModel {
       return true;
     }
     if ($conditionKey != 'presence' AND $conditionKey != 'null'
-        AND empty($value) AND !is_numeric($value)) {
+      AND empty($value) AND !is_numeric($value)) {
       return true;
     }
     switch ($conditionKey) {
@@ -654,11 +228,11 @@ abstract class ActiveRecord implements IModel {
         return is_null($value) == $conditionValue;
       case 'email':
         return preg_match(
-          "/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i",
-          $value) == 1;
+        "/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i",
+        $value) == 1;
       case 'url':
         return preg_match("/^https?:\/\/[-a-z0-9@:%_\+\.~#\?&\/=\[\]]+$/i",
-          $value) == 1;
+        $value) == 1;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -669,7 +243,7 @@ abstract class ActiveRecord implements IModel {
         return (preg_match('/^[-+]?\d+$/', $value) == 1) == $conditionValue;
       case 'isFloat':
         return (preg_match('/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/', $value)
-            == 1) == $conditionValue;
+        == 1) == $conditionValue;
       case 'isBoolean':
         return ($value == 1 OR $value == 0) == $conditionValue;
       case 'minValue':
@@ -681,22 +255,19 @@ abstract class ActiveRecord implements IModel {
       case 'match':
         return preg_match($conditionValue, $value) == 1;
       case 'unique':
-        $query = $this->dataSource
-          ->select()
-          ->limit(1);
+        $query = $this->model->dataSource->select()->limit(1);
         if (!$this->isNew()) {
-          $query->where($this->primaryKey . ' != ? AND ' . $column . ' = ?')
-            ->addVar($this->data[$this->primaryKey]);
+          $query->where($this->model->primaryKey . ' != ? AND ' . $column . ' = ?')
+          ->addVar($this->data[$this->model->primaryKey]);
         }
         else {
           $query->where($column . ' = ?');
         }
-        $result = $query->addVar($value)
-          ->execute();
+        $result = $query->addVar($value)->execute();
         return $result->hasRows() != $conditionValue;
       case 'callback':
         return !is_callable(array($this, $conditionValue))
-            OR call_user_func(array($this, $conditionValue), $value);
+        OR call_user_func(array($this, $conditionValue), $value);
     }
     return true;
   }
@@ -716,21 +287,23 @@ abstract class ActiveRecord implements IModel {
         return tr('Not a valid URL.');
       case 'minLength':
         return trn('Minimum length of %1 character.',
-          'Minimum length of %1 characters.', $value);
+        'Minimum length of %1 characters.', $value
+        );
       case 'maxLength':
         return trn('Maximum length of %1 character.',
-          'Maximum length of %1 characters.', $value);
+        'Maximum length of %1 characters.', $value
+        );
       case 'isNumeric':
         return $value ? tr('Must be numeric.') : tr('Must not be numeric.');
       case 'isInteger':
         return $value ? tr('Must be an integer.')
-            : tr('Must not be an integer.');
+        : tr('Must not be an integer.');
       case 'isFloat':
         return $value ? tr('Must be a decimal number.')
-            : tr('Must not be a decimal number.');
+        : tr('Must not be a decimal number.');
       case 'isBoolean':
         return $value ? tr('Must be boolean (1 or 0).')
-            : tr('Must not be boolean.');
+        : tr('Must not be boolean.');
       case 'minValue':
         return tr('Minimum value of %1.', $value);
       case 'maxValue':
@@ -749,21 +322,27 @@ abstract class ActiveRecord implements IModel {
   public function isValid() {
     $this->errors = array();
     $this->beforeValidate();
-    $validator = $this->getValidator();
-    foreach ($this->data as $column => $value) {
-      if (!is_scalar($value) AND !is_null($value)) {
-        $this->errors[$column] = tr('Value not a scalar.');
+    $validator = $this->model->validator;
+    foreach ($this->virtuals as $field => $tasks) {
+      if (isset($tasks['validate'])) {
+        $error = call_user_func(array($this, $tasks['validate']));
+        if ($error !== true) {
+          $this->errors[$field] = $error;
+        }
       }
-      if (!isset($validator->$column)) {
+    }
+    foreach ($this->data as $field => $value) {
+      if (!is_scalar($value) AND !is_null($value)) {
+        $this->errors[$field] = tr('Value not a scalar.');
+      }
+      if (!isset($validator->$field)) {
         continue;
       }
-      foreach ($validator->$column
-        ->getRules() as $conditionKey => $conditionValue) {
-        $validate = $this->validateValue($column, $value, $conditionKey,
-            $conditionValue);
+      foreach ($validator->$field->getRules() as $conditionKey => $conditionValue) {
+        $validate = $this->validateValue($field, $value, $conditionKey, $conditionValue);
         if (!$validate) {
-          $this->errors[$column] = $this->getMessage($conditionKey,
-              $conditionValue);
+          $this->errors[$field] = $this
+          ->getMessage($conditionKey, $conditionValue);
           break;
         }
       }
@@ -777,255 +356,210 @@ abstract class ActiveRecord implements IModel {
 
   protected function afterValidate() {}
 
-  public function getName() {
-    return Utilities::camelCaseToDashes(get_class($this));
-  }
-
-  public function getFields() {
-    $fields = array_keys($this->fields);
-    $virtualFields = array_keys($this->virtuals);
-    return array_unique(array_merge($fields, $virtualFields));
-  }
-
-  public function getFieldType($field) {
-    if (isset($this->schema
-      ->$field)) {
-      $field = $this->schema
-        ->$field;
-      return $field['type'];
-    }
-  }
-
-  public function getFieldLabel($field) {
-    if (!isset($this->fields[$field])) {
-      return '';
-    }
-    return tr($this->fields[$field]);
-  }
-
-  public function getFieldEditor($field) {
-    $class = get_class($this);
-    if (isset(self::$models[$class]['editors'][$field])) {
-      return self::$models[$class]['editors'][$field];
-    }
-    return null;
-  }
-
-  public static function setFieldEditor($field, IEditor $editor) {
-    $class = get_called_class();
-    self::$models[$class]['editors'][$field] = $editor;
-  }
-
-  public function isFieldRequired($field) {
-    $validator = $this->getValidator();
-    return isset($validator->$field) AND isset($validator->$field
-          ->presence) AND $validator->$field
-          ->presence;
-  }
-
-  public function isField($field) {
-    return isset($this->fields[$field]);
-  }
-
   public function getErrors() {
     return $this->errors;
   }
 
-  public static function setEncoder($field, Encoder $encoder = null) {
-    $class = get_called_class();
-    self::$models[$class]['encoders'][$field] = $encoder;
-  }
-
-  public static function getEncoder($field) {
-    $class = get_called_class();
-    if (isset(self::$models[$class]['encoders'][$field])) {
-      return self::$models[$class]['encoders'][$field];
-    }
-    return null;
-  }
-
   public function encode($field, $options = array()) {
-    $class = get_class($this);
-    if (isset($this->fields[$field])) {
-      $text = $this->data[$field];
-      if (isset(self::$models[$class]['encoders'][$field])) {
-        return self::$models[$class]['encoders'][$field]->encode($text,
-            $options);
+    if ($this->model->isField($field)) {
+      $text = $this->$field;
+      $encoder = $this->model->getEncoder($field);
+      if (isset($encoder)) {
+        return $encoder->encode($text, $options);
       }
       else {
-        return h($this->data[$field]);
+        return h($text);
       }
     }
   }
+  
+  /// ASSOCIATION METHODS
 
-  public function isNew() {
-    return $this->isNew;
+
+  private function manyGet($options, SelectQuery $customSelect = null) {
+    $otherModel = $options['model'];
+  
+    if (!isset($customSelect)) {
+      $select = SelectQuery::create();
+    }
+    else {
+      $select = $customSelect;
+    }
+    if (isset($options['join'])) {
+      $select->join(
+        $options['join'],
+        $otherModel->primaryKey,
+        $options['otherKey']
+      );
+    }
+  
+    $select->where($options['thisKey'] . ' = ?');
+    $select->addVar($this->data[$this->model->primaryKey]);
+  
+    $result = $otherModel->all($select);
+    if (isset($options['count']) AND !isset($customSelect)) {
+      $count = count($result);
+      if ($this->data[$options['count']] != $count) {
+        $this->data[$options['count']] = $count;
+        $this->isSaved = false;
+        $this->save();
+      }
+    }
+    return $result;
   }
-
-  public function isSaved() {
-    return $this->isSaved;
+  
+  private function manyCount($options, SelectQuery $customSelect = null) {
+    $otherModel = $options['model'];
+  
+    if (!isset($customSelect)) {
+      $select = SelectQuery::create();
+    }
+    else {
+      $select = $customSelect;
+    }
+    if (isset($options['join'])) {
+      $select->join(
+        $options['join'],
+        $otherModel->primaryKey,
+        $options['otherKey']
+      );
+    }
+  
+    $select->where($options['thisKey'] . ' = ?');
+    $select->addVar($this->data[$this->model->primaryKey]);
+  
+    $result = $otherModel->count($select);
+    if (isset($options['count']) AND !isset($customSelect)) {
+      if ($this->data[$options['count']] != $result) {
+        $this->data[$options['count']] = $result;
+        $this->isSaved = false;
+        $this->save();
+      }
+    }
+    return $result;
   }
-
-  protected function beforeSave($options) {}
-
-  public function save($options = array()) {
-    if ($this->isDeleted) {
+  
+  private function manyHas($options, ActiveRecord $record) {
+    $otherModel = $options['model'];
+    $query = SelectQuery::create();
+    if (isset($options['join'])) {
+      $query->where(
+        $options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?');
+      $query->addVar($this->data[$this->model->primaryKey]);
+      $query->addVar($record->data[$record->model->primaryKey]);
+      return $options['join']->count($query) > 0;
+    }
+    else {
+      $query->where($options['thisKey'] . ' = ?');
+      $query->addVar($this->data[$this->model->primaryKey]);
+      return $otherModel->count($query) > 0;
+    }
+  }
+  
+  private function manyAdd($options, ActiveRecord $record) {
+    if ($this->manyHas($options, $record)) {
       return false;
     }
-    $defaultOptions = array('validate' => true);
-    $options = array_merge($defaultOptions, $options);
-    $this->beforeSave($options);
-    if ($options['validate'] AND !$this->isValid()) {
+    
+    if ($this->new) {
       return false;
     }
-    if ($this->isSaved) {
+  
+    if (isset($options['join'])) {
+      if ($record->new) {
+        return false;
+      }
+      $query = $options['join']->insert();
+      $query->addPair($options['thisKey'], $this->data[$this->model->primaryKey]);
+      $query->addPair($options['otherKey'],
+        $record->data[$record->model->primaryKey]
+      );
+      $query->execute();
       return true;
     }
-    foreach ($this->virtuals as $tasks) {
-      if (isset($tasks['presave'])) {
-        call_user_func(array($this, $tasks['presave']));
-      }
-    }
-    if ($this->isNew) {
-      $query = $this->dataSource
-        ->insert();
-      $this->data[$this->primaryKey] = $query->addPairs($this->data)
-        ->execute();
-    }
     else {
-      $query = $this->dataSource
-        ->update();
-      foreach ($this->data as $column => $value) {
-        $query->set($column, $value);
+      $record->data[$options['thisKey']] = $this->data[$this->model->primaryKey];
+      $record->saved = false;
+      if (!$record->new) {
+        $record->save();
       }
-      $query->where($this->primaryKey . ' = ?');
-      $query->addVar($this->data[$this->primaryKey]);
+      return true;
+    }
+  
+  }
+  
+  private function manyRemove($options, ActiveRecord $record) {
+  
+    if ($this->new) {
+      return false;
+    }
+    
+    if (isset($options['join'])) {
+      if ($record->isNew) {
+        return false;
+      }
+      $query = $options['join']->delete();
+      $query->where(
+        $options['thisKey'] . ' = ? AND ' . $options['otherKey'] . ' = ?'
+      );
+      $query->addVar($this->data[$this->model->primaryKey]);
+      $query->addVar($record->data[$record->model->primaryKey]);
       $query->execute();
-    }
-    $this->isNew = false;
-    $this->isSaved = true;
-    $this->afterSave($options);
-    foreach ($this->virtuals as $tasks) {
-      if (isset($tasks['save'])) {
-        call_user_func(array($this, $tasks['save']));
-      }
-    }
-    return true;
-  }
-
-  protected function afterSave($options) {}
-
-  public function delete() {
-    $this->dataSource
-      ->delete()
-      ->where($this->primaryKey . ' = ?')
-      ->addVar($this->data[$this->primaryKey])
-      ->execute();
-  }
-
-  public static function execute(Query $query) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    return $query->setDataSource($dataSource)
-      ->execute();
-  }
-
-  public static function all(SelectQuery $selector = null) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    if (!isset($selector)) {
-      $selector = SelectQuery::create();
-    }
-    $result = $dataSource->select($selector);
-    $allArray = array();
-    while ($assoc = $result->fetchAssoc()) {
-      $allArray[] = self::createFromAssoc($class, $assoc);
-    }
-    return $allArray;
-  }
-
-  public function addToCache() {
-    $class = get_class($this);
-    if (!isset(self::$cache[$class]) OR !is_array(self::$cache[$class])) {
-      self::$cache[$class] = array();
-    }
-    self::$cache[$class][$this->data[$this->primaryKey]] = $this;
-  }
-
-  public static function find($primaryKey) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    if (isset(self::$cache[$class][$primaryKey])) {
-      return self::$cache[$class][$primaryKey];
-    }
-    $result = $dataSource->select()
-      ->where(self::$models[$class]['primaryKey'] . ' = ?')
-      ->addVar($primaryKey)
-      ->limit(1)
-      ->execute();
-    if (!$result->hasRows()) {
-      return false;
-    }
-    $record = self::createFromAssoc($class, $result->fetchAssoc());
-    $record->addToCache();
-    return $record;
-  }
-
-  public static function exists($primaryKey) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    $query = SelectQuery::create()->where(
-        self::$models[$class]['primaryKey'] . ' = ?')
-      ->addVar($primaryKey);
-    return $dataSource->count($query) > 0;
-  }
-
-  public static function first(SelectQuery $selector = null) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    if (!isset($selector)) {
-      $selector = SelectQuery::create();
-    }
-    $selector->limit(1);
-    $result = $dataSource->select($selector);
-    if (!$result->hasRows()) {
-      return false;
-    }
-    return self::createFromAssoc($class, $result->fetchAssoc());
-  }
-  public static function last(SelectQuery $selector = null) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    if (!isset($selector)) {
-      $selector = SelectQuery::create();
-    }
-    $selector->reverseOrder()->limit(1);
-    $result = $dataSource->select($selector);
-    if (!$result->hasRows()) {
-      return false;
-    }
-    return self::createFromAssoc($class, $result->fetchAssoc());
-  }
-
-  public static function count(SelectQuery $selector = null) {
-    $class = get_called_class();
-    $dataSource = self::connection($class);
-    return $dataSource->count($selector);
-  }
-
-  public function json() {
-    if (extension_loaded('json')) {
-      return json_encode($this->data);
+      return true;
     }
     else {
-      return tr('Unsupported');
+      $record->data[$options['thisKey']] = 0;
+      $record->isSaved = false;
+      if (!$record->isNew) {
+        $record->save();
+      }
+      return true;
+    }
+  }
+  
+  private function oneGet($options) {
+    $otherClass = $options['class'];
+    $query = SelectQuery::create();
+    if ($options['connection'] == 'this') {
+      if (!isset($this->data[$options['otherKey']])) {
+        return false;
+      }
+      $query->where(
+        $options['model']->primaryKey . ' = ?',
+        $this->data[$options['otherKey']]
+      );
+    }
+    else {
+      $query->where($options['thisKey'] . ' = ?', $this->data[$this->primaryKey]);
+    }
+    return $options['model']->first($query);
+  }
+  
+  private function oneSet($options, ActiveRecord $record) {
+    $otherClass = $options['class'];
+  
+    if ($options['connection'] == 'this') {
+      if ($record->new) {
+        return false;
+      }
+      $this->data[$options['otherKey']] = $record->data[$record->model->primaryKey];
+      $this->saved = false;
+      if (!$this->new) {
+        $this->save();
+      }
+    }
+    else {
+      if ($this->new) {
+        return false;
+      }
+      $record->data[$options['thisKey']] = $this->data[$this->model->primaryKey];
+      $record->saved = false;
+      if (!$record->new) {
+        $record->save();
+      }
     }
   }
 }
-
-class InvalidModelException extends Exception {}
-class DatabaseNotConnectedException extends Exception {}
-class TableNotFoundException extends Exception {}
 
 class RecordPropertyNotFoundException extends Exception {}
 class RecordMethodNotFoundException extends Exception {}

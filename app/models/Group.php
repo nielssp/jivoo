@@ -6,18 +6,14 @@ class Group extends ActiveRecord {
   private $permissions;
 
   private function fetchPermissions() {
-    $dataSource = self::connection('Group');
-    if ($dataSource instanceof ITable) {
-      $dataSource = $dataSource->getOwner()
-        ->groups_permissions;
-      $result = $dataSource->select()
-        ->where('group_id = ?')
-        ->addVar($this->id)
-        ->execute();
-      $this->permissions = array();
-      while ($row = $result->fetchAssoc()) {
-        $this->permissions[$row['permission']] = true;
-      }
+    $dataSource = $this->getModel()->otherSources->groups_permissions;
+    $result = $dataSource->select()
+      ->where('group_id = ?')
+      ->addVar($this->id)
+      ->execute();
+    $this->permissions = array();
+    while ($row = $result->fetchAssoc()) {
+      $this->permissions[$row['permission']] = true;
     }
   }
 
@@ -53,12 +49,7 @@ class Group extends ActiveRecord {
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
     }
-    $dataSource = self::connection('Group');
-    if (!($dataSource instanceof ITable)) {
-      return;
-    }
-    $dataSource = $dataSource->getOwner()
-      ->groups_permissions;
+    $dataSource = $this->getModel()->otherSources->groups_permissions;
     if ($value == true AND !$this->hasPermission($key)) {
       $this->permissions[$key] = true;
       $dataSource->insert()

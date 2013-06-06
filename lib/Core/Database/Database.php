@@ -17,6 +17,9 @@ class Database extends ModuleBase implements IDatabase {
   private $driver;
   private $driverInfo;
   private $connection;
+  
+  private $schemas = array();
+  private $migrations = array();
 
   /* Begin IDatabase implementation */
   public function __get($table) {
@@ -78,7 +81,6 @@ class Database extends ModuleBase implements IDatabase {
       'database' => strtolower($this->app->name),
       'filename' => $this->p('config', 'db.sqlite3'),
     );
-    Lib::addIncludePath($this->p('config', 'schemas'));
     $controller = new SetupDatabaseController(
       $this->m->Routing, $this->m->Templates, $this->config
     );
@@ -117,6 +119,40 @@ class Database extends ModuleBase implements IDatabase {
           '<p>' . $exception->getMessage() . '</p>');
       }
     }
+    
+    $sources = new Dictionary();
+
+    Lib::addIncludePath($this->p('schemas', ''));
+    $dir = opendir($this->p('schemas', ''));
+    while ($file = readdir($dir)) {
+      $split = explode('.', $file);
+      if (isset($split[1]) AND $split[1] == 'php') {
+        $class = $split[0];
+        $name = str_replace('Schema', '', $class);
+        $this->schemas[$name] = new $class();
+        $this->migrations[$name] = $this->migrate($this->schemas[$name]);
+        $this->$name->setSchema($this->schemas[$name]);
+        $sources->$name = $this->$name;
+      }
+    }
+    closedir($dir);
+    
+    $classes = $this->m->Models->getRecordClasses();
+    foreach ($classes as $class) {
+      if (is_subclass_of($class, 'ActiveRecord')) {
+        $table = Utilities::getPlural(strtolower($class));
+        if (!isset($this->$table)) {
+          throw new Exception(tr('Table not found: "%1"', $table));
+        }
+        $model = new ActiveModel($class, $this->$table, $this->m->Models, $sources);
+        $this->m->Models->setModel($class, $model);
+      }
+    }
+  }
+  
+  public function isNew($table) {
+    return isset($this->migrations[$table])
+      AND $this->migrations[$table] == 'new';
   }
 
   public function checkDriver($driver) {

@@ -4,7 +4,7 @@
 // Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
 // Author         : PeanutCMS
-// Dependencies   : Core/Database Core/Routing
+// Dependencies   : Core/Database Core/Routing Core/Models
 //                  Core/Templates Core/Controllers
 //                  Core/Authentication PeanutCMS/Backend
 
@@ -22,39 +22,30 @@ class Links extends ModuleBase {
   private $controller;
 
   protected function init() {
-    $newInstall = false;
 
-    $linksSchema = new linksSchema();
-
-    $newInstall = $this->m->Database->migrate($linksSchema) == 'new';
-
-    $this->m->Database->links->setSchema($linksSchema);
-
-    Link::connect($this->m->Database->links);
-
-    if ($newInstall) {
-      $link = Link::create();
+    if ($this->m->Database->isNew('links')) {
+      $link = $this->m->Models->Link->create();
       $link->menu = 'main';
       $link->position = 0;
       $link->title = tr('Home');
       $link->setRoute();
       $link->save();
 
-      $link = Link::create();
+      $link = $this->m->Models->Link->create();
       $link->menu = 'main';
       $link->position = 1;
       $link->title = tr('About');
       $link->setRoute(array('path' => array('about')));
       $link->save();
 
-      $link = Link::create();
+      $link = $this->m->Models->Link->create();
       $link->menu = 'main';
       $link->position = 2;
       $link->title = tr('Get help');
       $link->setRoute('http://apakoh.dk');
       $link->save();
 
-      $link = Link::create();
+      $link = $this->m->Models->Link->create();
       $link->menu = 'main';
       $link->position = 3;
       $link->title = tr('Admin');

@@ -1,46 +1,25 @@
 <?php
 
-class Form implements IModel {
-  private $name;
-  private $fields = array();
+class Form implements IRecord {
+  private $model;
   private $data = array();
   private $errors = array();
 
-  public function __construct($name) {
-    $this->name = $name;
-  }
-
-  public function addData($data) {
-    foreach ($data as $field => $value) {
-      if (isset($this->fields[$field])) {
-        $this->data[$field] = $value;
-      }
+  public function __construct($name, $data = array()) {
+    if ($name instanceof FormModel) {
+      $this->model = $name;
     }
-  }
-
-  public function addField($field, $type = 'string', $label = null,
-                           $required = true) {
-    if (!isset($label)) {
-      $label = tr(ucfirst($field));
+    else {
+      $this->model = new FormModel($name);
     }
-    $this->fields[$field] = array('label' => $label, 'type' => $type,
-      'required' => $required
-    );
-  }
-
-  public function addString($field, $label = null, $required = true) {
-    $this->addField($field, 'string', $label, $required);
-  }
-
-  public function addText($field, $label = null, $required = true) {
-    $this->addField($field, 'text', $label, $required);
+    $this->data = $data;
   }
 
   public function addError($field, $errorMsg) {
     $this->errors[$field] = $errorMsg;
   }
 
-  /* IModel implementation */
+  /* IRecord implementation */
 
   public function __get($field) {
     if (isset($this->data[$field])) {
@@ -50,7 +29,7 @@ class Form implements IModel {
   }
 
   public function __set($field, $value) {
-    if (isset($this->fields[$field])) {
+    if (isset($this->model->fields[$field])) {
       $this->data[$field] = $value;
     }
   }
@@ -59,42 +38,39 @@ class Form implements IModel {
     return isset($this->data[$field]);
   }
 
-  public function getName() {
-    return $this->name;
-  }
-
-  public function getFields() {
-    return array_keys($this->fields);
-  }
-
-  public function getFieldType($field) {
-    if (isset($this->fields[$field])) {
-      return $this->fields[$field]['type'];
+  public function addData($data, $allowedFields = null) {
+    if (is_array($allowedFields)) {
+      $allowedFields = array_flip($allowedFields);
+      $data = array_intersect_key($data, $allowedFields);
+    }
+    foreach ($data as $field => $value) {
+      if (isset($this->model->fields[$field])) {
+        $this->data[$field] = $value;
+      }
     }
   }
-
-  public function getFieldLabel($field) {
-    if (isset($this->fields[$field])) {
-      return $this->fields[$field]['label'];
-    }
+  
+  public function getModel() {
+    return $this->model;
   }
-
-  public function getFieldEditor($field) {
-    return null;
+  
+  public function save($options = array()) {
+    return false;
   }
-
-  public function isFieldRequired($field) {
-    if (isset($this->fields[$field])) {
-      return $this->fields[$field]['required'];
-    }
+  
+  public function delete() {
   }
-
-  public function isField($field) {
-    return isset($this->fields[$field]);
+  
+  public function isNew() {
+    return false;
+  }
+  
+  public function isSaved() {
+    return true;
   }
 
   public function isValid() {
-    foreach ($this->fields as $field => $options) {
+    foreach ($this->model->fields as $field => $options) {
       if ($options['required'] AND empty($this->data[$field])
           AND !is_numeric($this->data[$field])) {
         $this->addError($field, tr('Must not be empty.'));

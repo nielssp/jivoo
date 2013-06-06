@@ -1,9 +1,9 @@
 <?php
 /**
  * A collection of key/value pairs
- * @package PeanutCMS
+ * @package Core
  */
-class Dictionary {
+class Dictionary implements IDictionary {
   private $array = array();
   private $readOnly = false;
 
@@ -74,15 +74,3 @@ class Dictionary {
     $this->readOnly = $readOnly;
   }
 }
-
-/**
- * Exception thrown when a key does not exist in a dictionary
- * @package PeanutCMS
- */
-class DictionaryKeyInvalidException extends Exception {}
-
-/**
- * Exception thrown when writing to a read-only dictionary
- * @package PeanutCMS
- */
-class DictionaryReadOnlyException extends Exception {}

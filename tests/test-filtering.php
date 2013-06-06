@@ -385,11 +385,16 @@ class QueryVisitor extends FilterVisitor {
   }
 }
 
-include '/home/www/LAB/LabTest.php';
+include '../../LAB/LabTest.php';
 
 $input = 'author = root and something (foo | bar | baz)';
 
-$test = new LabTest('Configuration serialization');
+$test = new LabTest('Filtering');
+
+include '../lib/Core/bootstrap.php';
+
+Lib::import('Core');
+Lib::import('Core/Helpers');
 
 
 $scanner = new FilterScanner();

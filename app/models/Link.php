@@ -60,16 +60,8 @@ class Link extends ActiveRecord implements ILinkable {
     }
   }
 
-  public static function getMenu($menu = 'main') {
-    $menu = strtolower($menu);
-    $select = SelectQuery::create()
-      ->where('menu = ?', $menu)
-      ->orderBy('position');
-    return Link::all($select);
-  }
-
   public function moveToTop() {
-    $link = Link::first(SelectQuery::create()
+    $link = $this->getModel()->first(SelectQuery::create()
       ->where('menu = ?', $this->menu)
       ->and('id != ?', $this->id)
       ->orderBy('position')
@@ -81,7 +73,7 @@ class Link extends ActiveRecord implements ILinkable {
   }
 
   public function moveToBottom() {
-    $link = Link::last(SelectQuery::create()
+    $link = $this->getModel()->last(SelectQuery::create()
       ->where('menu = ?', $this->menu)
       ->and('id != ?', $this->id)
       ->orderBy('position')
@@ -93,7 +85,7 @@ class Link extends ActiveRecord implements ILinkable {
   }
 
   public function moveUp() {
-    $link = Link::last(SelectQuery::create()
+    $link = $this->getModel()->last(SelectQuery::create()
       ->where('menu = ?', $this->menu)
       ->and('id != ?', $this->id)
       ->and('position <= ?', $this->position)
@@ -108,7 +100,7 @@ class Link extends ActiveRecord implements ILinkable {
   }
 
   public function moveDown() {
-    $link = Link::first(SelectQuery::create()
+    $link = $this->getModel()->first(SelectQuery::create()
       ->where('menu = ?', $this->menu)
       ->and('id != ?', $this->id)
       ->and('position >= ?', $this->position)

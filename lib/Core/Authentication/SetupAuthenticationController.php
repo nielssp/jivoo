@@ -3,14 +3,16 @@
 class SetupAuthenticationController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
+  
+  protected $models = array('User', 'Group');
 
   public function setupRoot() {
     $this->title = tr('Welcome to PeanutCMS');
 
     if (!isset($this->rootGroup)) {
-      $this->rootGroup = Group::first(SelectQuery::create()->where('name = "root"'));
+      $this->rootGroup = $this->Group->first(SelectQuery::create()->where('name = "root"'));
       if (!$this->rootGroup) {
-        $this->rootGroup = Group::create();
+        $this->rootGroup = $this->Group->create();
         $this->rootGroup->name = 'root';
         $this->rootGroup->title = tr('Admin');
         $this->rootGroup->save();
@@ -19,7 +21,7 @@ class SetupAuthenticationController extends SetupController {
     }
 
     if ($this->request->isPost() AND $this->request->checkToken()) {
-      $this->user = User::create($this->request->data['user']);
+      $this->user = $this->User->create($this->request->data['user']);
       $this->user->password = $this->m->Shadow
         ->hash($this->user->password);
       $this->user->confirm_password = $this->m->Shadow
@@ -32,7 +34,7 @@ class SetupAuthenticationController extends SetupController {
       }
     }
     else {
-      $this->user = User::create();
+      $this->user = $this->User->create();
       $this->user->username = 'root';
     }
 

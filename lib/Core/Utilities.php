@@ -34,6 +34,15 @@ class Utilities {
     }
     return $camelCase;
   }
+  
+  /**
+   * Get plural form of word
+   * @param string $word Word
+   * @return string Plural
+   */
+  public static function getPlural($word) {
+    return $word . 's';
+  } 
 
   /**
    * Returns the portion of string specified by the start and length parameters.
