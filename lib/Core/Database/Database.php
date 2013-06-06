@@ -75,7 +75,7 @@ class Database extends ModuleBase implements IDatabase {
       'database' => strtolower($this->app->name),
       'filename' => $this->p('config', 'db.sqlite3'),
     );
-    $controller = new SetupDatabaseController($this->m->Routing,
+    $controller = new DatabaseSetupController($this->m->Routing,
       $this->m->Templates, $this->config);
     $controller->addModule($this);
     $this->m->Helpers->addHelpers($controller);

@@ -1,6 +1,6 @@
 <?php
 
-class SetupAuthenticationController extends SetupController {
+class AuthenticationSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 

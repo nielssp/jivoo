@@ -129,17 +129,18 @@ class Controller implements IHelpable {
     if (!empty($prefix) AND substr($prefix, -1) != '/') {
       $prefix .= '/';
     }
-    $controller = $prefix;
-    $thisName = $this->name;
-    $class = get_parent_class($this);
-    if ($class !== false AND $class != 'Controller'
-      AND $class != 'AppController') {
-      $name = str_replace('Controller', '', $class);
-      $thisName = str_replace($name, '', $thisName);
-      $controller .= Utilities::camelCaseToDashes($name) . '/';
-      //         $class = get_parent_class($class);
+    $controller = '';
+    $class = get_class($this);
+    $parent = get_parent_class($class);
+    while ($parent !== false AND $parent != 'Controller'
+      AND $parent != 'AppController') {
+      $name = str_replace($parent, '', $class);
+      $controller = '/' . Utilities::camelCaseToDashes($name) . $controller;
+      $class = $parent;
+      $parent = get_parent_class($class);
     }
-    $controller .= Utilities::camelCaseToDashes($thisName);
+    $name = str_replace('Controller', '', $class);
+    $controller = $prefix . Utilities::camelCaseToDashes($name) . $controller;
     $paction = Utilities::camelCaseToDashes($action);
     if ($action == 'index') {
       $this->addRoute($controller, $action);
@@ -224,15 +225,19 @@ class Controller implements IHelpable {
     if (!isset($templateName)) {
       $templateName = '';
       $thisName = $this->name;
-      $class = get_parent_class($this);
-      if ($class !== false AND $class != 'Controller'
-        AND $class != 'AppController') {
+      if ($thisName != 'App') {
+        $class = get_class($this);
+        $parent = get_parent_class($class);
+        while ($parent !== false AND $parent != 'Controller'
+          AND $parent != 'AppController') {
+          $name = str_replace($parent, '', $class);
+          $templateName = Utilities::camelCaseToDashes($name) . '/' . $templateName;
+          $class = $parent;
+          $parent = get_parent_class($class);
+        }
         $name = str_replace('Controller', '', $class);
-        $thisName = str_replace($name, '', $thisName);
-        $templateName .= Utilities::camelCaseToDashes($name) . '/';
-//         $class = get_parent_class($class);
+        $templateName = Utilities::camelCaseToDashes($name) . '/' . $templateName;
       }
-      $templateName .= Utilities::camelCaseToDashes($thisName) . '/';
       list(, $caller) = debug_backtrace(false);
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';

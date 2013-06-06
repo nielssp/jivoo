@@ -55,7 +55,7 @@ class Authentication extends ModuleBase {
     if ($this->m->Database->isNew('users') OR $this->config['rootCreated'] !== true) {
       $this->config['rootCreated'] = false;
       Logger::debug('Authentication: No root user created');
-      $controller = new SetupAuthenticationController(
+      $controller = new AuthenticationSetupController(
         $this->m->Routing, $this->m->Templates, $this->config
       );
       $controller->addModule($this->m->Shadow);

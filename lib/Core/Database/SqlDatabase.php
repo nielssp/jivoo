@@ -30,6 +30,17 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   protected function tableCreated($name) {
     $this->tables[$name] = new SqlTable($this, $name);
   }
+  
+  protected function initTables(IResultSet $result) {
+    $prefixLength = strlen($this->tablePrefix);
+    while ($row = $result->fetchRow()) {
+      $name = $row[0];
+      if (substr($name, 0, $prefixLength) == $this->tablePrefix) {
+        $name = substr($name, $prefixLength);
+        $this->tables[$name] = new SqlTable($this, $name);
+      }
+    }
+  }
 
   public abstract function quoteString($string);
 

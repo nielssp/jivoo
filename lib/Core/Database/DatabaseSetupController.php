@@ -1,6 +1,6 @@
 <?php
 
-class SetupDatabaseController extends SetupController {
+class DatabaseSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 

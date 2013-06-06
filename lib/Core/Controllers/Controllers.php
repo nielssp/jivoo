@@ -20,20 +20,36 @@ class Controllers extends ModuleBase {
   private $controllerObjects = array();
 
   protected function init() {
-    Lib::addIncludePath($this->p('controllers', ''));
-
-    $dir = opendir($this->p('controllers', ''));
-    while ($file = readdir($dir)) {
-      $split = explode('.', $file);
-      if (isset($split[1]) AND $split[1] == 'php') {
-        $class = $split[0];
-        if (Lib::classExists($class) && is_subclass_of($class, 'Controller')) {
-          $name = str_replace('Controller', '', $class);
-          $this->controllers[$name] = $class;
+    $this->findControllers();
+  }
+  
+  private function findControllers($dir = '') {
+    Lib::addIncludePath($this->p('controllers', $dir));
+    $handle = opendir($this->p('controllers', $dir));
+    while ($file = readdir($handle)) {
+      if ($file[0] == '.') {
+        continue;
+      }
+      if (is_dir($this->p('controllers', $file))) {
+        if ($dir == '') {
+          $this->findControllers($file);
+        }
+        else {
+          $this->findControllers($dir . '/' . $file);
+        }
+      }
+      else {
+        $split = explode('.', $file);
+        if (isset($split[1]) AND $split[1] == 'php') {
+          $class = $split[0];
+          if (Lib::classExists($class) AND is_subclass_of($class, 'Controller')) {
+            $name = str_replace('Controller', '', $class);
+            $this->controllers[$name] = $class;
+          }
         }
       }
     }
-    closedir($dir);
+    closedir($handle);
   }
 
   private function getInstance($name) {

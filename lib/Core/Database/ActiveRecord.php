@@ -520,20 +520,15 @@ abstract class ActiveRecord implements IRecord {
   
   private function oneGet($options) {
     $otherClass = $options['class'];
-    $query = SelectQuery::create();
     if ($options['connection'] == 'this') {
       if (!isset($this->data[$options['otherKey']])) {
         return false;
       }
-      $query->where(
-        $options['model']->primaryKey . ' = ?',
-        $this->data[$options['otherKey']]
-      );
+      return $options['model']->find($this->data[$options['otherKey']]);
     }
-    else {
-      $query->where($options['thisKey'] . ' = ?', $this->data[$this->primaryKey]);
-    }
-    return $options['model']->first($query);
+    return $options['model']->first(SelectQuery::create()
+      ->where($options['thisKey'] . ' = ?', $this->data[$this->primaryKey])
+    );
   }
   
   private function oneSet($options, ActiveRecord $record) {
