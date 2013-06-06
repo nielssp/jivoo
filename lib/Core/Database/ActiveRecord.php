@@ -25,9 +25,6 @@ abstract class ActiveRecord implements IRecord {
   public final function __construct(ActiveModel $model, $data = array(), $new = true) {
     $this->model = $model;
     $this->new = $new;
-    if (!$new) {
-      $this->saved = true;
-    }
     if (!is_array($data)) {
       return;
     }
@@ -42,6 +39,10 @@ abstract class ActiveRecord implements IRecord {
       else {
         $this->data[$field] = null;
       }
+    }
+    if (!$new) {
+      $this->saved = true;
+      $this->addToCache();
     }
   }
   

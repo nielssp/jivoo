@@ -12,18 +12,23 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   public function __isset($name) {
-    return $this->tableExists($name);
+    return isset($this->tables[$name]);
+//     return $this->tableExists($name);
   }
 
   public function getTable($name) {
-    if (!isset($this->tables[$name])) {
-      $this->tables[$name] = new SqlTable($this, $name);
-    }
+//     if (!isset($this->tables[$name])) {
+//       $this->tables[$name] = new SqlTable($this, $name);
+//     }
     return $this->tables[$name];
   }
 
   public function tableName($name) {
     return $this->tablePrefix . $name;
+  }
+  
+  protected function tableCreated($name) {
+    $this->tables[$name] = new SqlTable($this, $name);
   }
 
   public abstract function quoteString($string);

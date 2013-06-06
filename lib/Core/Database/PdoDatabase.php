@@ -2,20 +2,18 @@
 abstract class PdoDatabase extends SqlDatabase {
   protected $pdo;
 
-  public function close() {}
+  public function close() {
+  }
 
   public function quoteString($string) {
-    return $this->pdo
-      ->quote($string);
+    return $this->pdo->quote($string);
   }
 
   public function rawQuery($sql) {
-//     Logger::debug($sql);
-    $result = $this->pdo
-      ->query($sql);
+    Logger::query($sql);
+    $result = $this->pdo->query($sql);
     if (!$result) {
-      $errorInfo = $this->pdo
-        ->errorInfo();
+      $errorInfo = $this->pdo->errorInfo();
       throw new DatabaseQueryFailedException(
         $errorInfo[0] . ' - ' . $errorInfo[1] . ' - ' . $errorInfo[2]);
     }
@@ -23,8 +21,7 @@ abstract class PdoDatabase extends SqlDatabase {
       return new PdoResultSet($result);
     }
     else if (preg_match('/^\\s*(insert|replace) /i', $sql)) {
-      return $this->pdo
-        ->lastInsertId();
+      return $this->pdo->lastInsertId();
     }
     else {
       return $result->rowCount();
@@ -32,4 +29,3 @@ abstract class PdoDatabase extends SqlDatabase {
   }
 
 }
-

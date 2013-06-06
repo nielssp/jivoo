@@ -6,11 +6,12 @@
  */
 class Logger {
 
-  const DEBUG = 1;
-  const NOTICE = 2;
-  const WARNING = 4;
-  const ERROR = 8;
-  const ALL = 15;
+  const QUERY = 1;
+  const DEBUG = 2;
+  const NOTICE = 4;
+  const WARNING = 8;
+  const ERROR = 16;
+  const ALL = 31;
   const NONE = 0;
 
   private static $log = array();
@@ -50,6 +51,8 @@ class Logger {
 
   public static function getType($type) {
     switch ($type) {
+      case Logger::QUERY:
+        return 'QUERY';
       case Logger::DEBUG:
         return 'DEBUG';
       case Logger::NOTICE:
@@ -85,6 +88,10 @@ class Logger {
     self::$log[] = $entry;
   }
   
+  public static function query($message) {
+    self::log($message, Logger::QUERY);
+  }
+  
   public static function debug($message) {
     self::log($message, Logger::DEBUG);
   }
@@ -112,15 +119,23 @@ class Logger {
     ) . PHP_EOL;
     $message .= 'Message: ' . $exception->getMessage() . PHP_EOL;
     $message .= 'File: ' . $file . PHP_EOL;
+    $message .= 'Line: ' . $line . PHP_EOL;
     $message .= 'Stack trace:' . PHP_EOL;
     foreach ($exception->getTrace() as $i => $trace) {
-      if (isset($trace['class'])) {
-        $message .= $trace['class'] . '::';
-      }
-      $message .= $trace['function'] . ' in ';
       if (isset($trace['file'])) {
-        $message .= $trace['file'] . ' on line ' . $trace['line'] . PHP_EOL;
+        $message .=  $trace['file'] . ':';
+        $message .=  $trace['line'] . ' ';
       }
+      if (isset($trace['class'])) {
+        $message .=  $trace['class'] . '::';
+      }
+      $message .=  $trace['function'] . '(';
+      $arglist = array();
+      foreach ($trace['args'] as $arg) {
+        $arglist[] = (is_scalar($arg) ? var_export($arg, true) : gettype($arg));
+      }
+      $message .=  implode(', ', $arglist);
+      $message .=  ')' . PHP_EOL;
     }
     self::$log[] = array(
       'time' => time(),

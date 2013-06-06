@@ -19,7 +19,7 @@ $this->render('setup/header.html');
             <?php echo $exception->getMessage(); ?>
           </p>
           <?php endif; ?>
-          <?php foreach ($setupForm->getFields() as $field) : ?>
+          <?php foreach ($setupForm->getModel()->getFields() as $field) : ?>
           <p>
             <?php echo $Form->label($field, null, array('class' => 'small')); ?>
             <?php echo $Form->field($field); ?>

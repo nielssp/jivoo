@@ -43,10 +43,10 @@ class SetupDatabaseController extends SetupController {
     $this->setupForm = new Form('setup');
     $this->exception = null;
     foreach ($this->driver['requiredOptions'] as $option) {
-      $this->setupForm->addString($option, $this->getOptionLabel($option));
+      $this->setupForm->getModel()->addString($option, $this->getOptionLabel($option));
     }
     foreach ($this->driver['optionalOptions'] as $option) {
-      $this->setupForm
+      $this->setupForm->getModel()
         ->addString($option, $this->getOptionLabel($option), false);
     }
     if ($this->request->isPost() AND $this->request->checkToken()) {

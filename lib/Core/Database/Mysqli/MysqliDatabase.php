@@ -19,6 +19,20 @@ class MysqliDatabase extends SqlDatabase {
       throw new DatabaseConnectionFailedException($this->handle
         ->connect_error);
     }
+    try {
+      $result = $this->rawQuery('SHOW TABLES');
+      $prefixLength = strlen($this->tablePrefix);
+      while ($row = $result->fetchRow()) {
+        $name = $row[0];
+        if (substr($name, 0, $prefixLength) == $this->tablePrefix) {
+          $name = substr($name, $prefixLength);
+          $this->tables[$name] = new SqlTable($this, $name);
+        }
+      }
+    }
+    catch (DatabaseQueryFailedException $exception) {
+      throw new DatabaseConnectionFailedException($exception->getMessage());
+    }
   }
 
   public function close() {
@@ -153,6 +167,7 @@ class MysqliDatabase extends SqlDatabase {
   }
 
   public function rawQuery($sql) {
+    Logger::query($sql);
     $result = $this->handle->query($sql);
     if (!$result) {
       throw new DatabaseQueryFailedException($this->handle->error);

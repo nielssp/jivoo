@@ -75,13 +75,13 @@ class ErrorReporting {
         echo $trace['file'] . ':';
         echo $trace['line'] . ' ';
       }
-      if (isset($tace['class'])) {
+      if (isset($trace['class'])) {
         echo $trace['class'] . '::';
       }
       echo $trace['function'] . '(';
       $arglist = array();
       foreach ($trace['args'] as $arg) {
-        $arglist[] = (is_scalar($arg) ? $arg : gettype($arg));
+        $arglist[] = (is_scalar($arg) ? var_export($arg, true) : gettype($arg));
       }
       echo implode(', ', $arglist);
       echo ')' . PHP_EOL;

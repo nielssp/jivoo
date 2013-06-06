@@ -17,52 +17,47 @@ class Database extends ModuleBase implements IDatabase {
   private $driver;
   private $driverInfo;
   private $connection;
-  
+
   private $schemas = array();
   private $migrations = array();
 
   /* Begin IDatabase implementation */
   public function __get($table) {
     if ($this->connection) {
-      return $this->connection
-        ->__get($table);
+      return $this->connection->__get($table);
     }
   }
 
   public function __isset($table) {
     if ($this->connection) {
-      return $this->connection
-        ->__isset($table);
+      return $this->connection->__isset($table);
     }
   }
 
   public function close() {
     if ($this->connection) {
-      $this->connection
-        ->close();
+      $this->connection->close();
     }
   }
 
   public function getTable($table) {
     if ($this->connection) {
-      return $this->connection
-        ->getTable($table);
+      return $this->connection->getTable($table);
     }
   }
 
   public function tableExists($table) {
     if ($this->connection) {
-      return $this->connection
-        ->tableExists($table);
+      return $this->connection->tableExists($table);
     }
   }
 
-  public function migrate(Schema $schema) {
+  public function migrate(Schema $schema, $force = false) {
     if ($schema->getName() == 'undefined') {
       return false;
     }
     $name = $schema->getName();
-    if (isset($this->config['migration'][$name])) {
+    if (!$force AND isset($this->config['migration'][$name])) {
       if ($this->config['migration'][$name] == $this->app->version) {
         return 'unchanged';
       }
@@ -76,14 +71,12 @@ class Database extends ModuleBase implements IDatabase {
   /* End IDatabase implementation */
 
   protected function init() {
-    $this->config->defaults = array(
-      'server' => 'localhost',
+    $this->config->defaults = array('server' => 'localhost',
       'database' => strtolower($this->app->name),
       'filename' => $this->p('config', 'db.sqlite3'),
     );
-    $controller = new SetupDatabaseController(
-      $this->m->Routing, $this->m->Templates, $this->config
-    );
+    $controller = new SetupDatabaseController($this->m->Routing,
+      $this->m->Templates, $this->config);
     $controller->addModule($this);
     $this->m->Helpers->addHelpers($controller);
     $controller->addTemplatePath($this->p('templates'));
@@ -114,12 +107,13 @@ class Database extends ModuleBase implements IDatabase {
       }
       catch (DatabaseConnectionFailedException $exception) {
         /** @todo Do something ... here */
-        throw new Exception(tr('Database connection failed') .
-          tr('Could not connect to the database.') .
-          '<p>' . $exception->getMessage() . '</p>');
+        throw new Exception(
+          tr('Database connection failed')
+            . tr('Could not connect to the database.') . '<p>'
+            . $exception->getMessage() . '</p>');
       }
     }
-    
+
     $sources = new Dictionary();
 
     Lib::addIncludePath($this->p('schemas', ''));
@@ -131,12 +125,15 @@ class Database extends ModuleBase implements IDatabase {
         $name = str_replace('Schema', '', $class);
         $this->schemas[$name] = new $class();
         $this->migrations[$name] = $this->migrate($this->schemas[$name]);
+        if (!isset($this->$name) AND $this->migrations[$name] == 'unchanged') {
+          $this->migrations[$name] = $this->migrate($this->schemas[$name], true);
+        }
         $this->$name->setSchema($this->schemas[$name]);
         $sources->$name = $this->$name;
       }
     }
     closedir($dir);
-    
+
     $classes = $this->m->Models->getRecordClasses();
     foreach ($classes as $class) {
       if (is_subclass_of($class, 'ActiveRecord')) {
@@ -144,12 +141,13 @@ class Database extends ModuleBase implements IDatabase {
         if (!isset($this->$table)) {
           throw new Exception(tr('Table not found: "%1"', $table));
         }
-        $model = new ActiveModel($class, $this->$table, $this->m->Models, $sources);
+        $model = new ActiveModel($class, $this->$table, $this->m->Models,
+          $sources);
         $this->m->Models->setModel($class, $model);
       }
     }
   }
-  
+
   public function isNew($table) {
     return isset($this->migrations[$table])
       AND $this->migrations[$table] == 'new';

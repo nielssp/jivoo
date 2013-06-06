@@ -20,6 +20,20 @@ class MysqlDatabase extends SqlDatabase {
     if (!mysql_select_db($options['database'], $this->handle)) {
       throw new DatabaseSelectFailedException(mysql_error());
     }
+    try {
+      $result = $this->rawQuery('SHOW TABLES');
+      $prefixLength = strlen($this->tablePrefix);
+      while ($row = $result->fetchRow()) {
+        $name = $row[0];
+        if (substr($name, 0, $prefixLength) == $this->tablePrefix) {
+          $name = substr($name, $prefixLength);
+          $this->tables[$name] = new SqlTable($this, $name);
+        }
+      }
+    }
+    catch (DatabaseQueryFailedException $exception) {
+      throw new DatabaseConnectionFailedException($exception->getMessage());
+    }
   }
 
   public function close() {
@@ -152,6 +166,7 @@ class MysqlDatabase extends SqlDatabase {
   }
 
   public function rawQuery($sql) {
+    Logger::query($sql);
     $result = mysql_query($sql, $this->handle);
     if (!$result) {
       throw new DatabaseQueryFailedException(mysql_error());

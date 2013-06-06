@@ -3,14 +3,15 @@
 class SetupAuthenticationController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
-  
+
   protected $models = array('User', 'Group');
 
   public function setupRoot() {
     $this->title = tr('Welcome to PeanutCMS');
 
     if (!isset($this->rootGroup)) {
-      $this->rootGroup = $this->Group->first(SelectQuery::create()->where('name = "root"'));
+      $this->rootGroup = $this->Group
+        ->first(SelectQuery::create()->where('name = "root"'));
       if (!$this->rootGroup) {
         $this->rootGroup = $this->Group->create();
         $this->rootGroup->name = 'root';
@@ -21,16 +22,21 @@ class SetupAuthenticationController extends SetupController {
     }
 
     if ($this->request->isPost() AND $this->request->checkToken()) {
-      $this->user = $this->User->create($this->request->data['user']);
-      $this->user->password = $this->m->Shadow
-        ->hash($this->user->password);
-      $this->user->confirm_password = $this->m->Shadow
-        ->hash($this->user->confirm_password);
+      $this->user = $this->User->create($this->request->data['user']);  
       if ($this->user->isValid()) {
+        $this->user->password = $this->m->Shadow->hash($this->user->password);
+        $this->user->confirm_password = $this->m->Shadow
+          ->hash($this->user->confirm_password);
         $this->user->setGroup($this->rootGroup);
-        $this->user->save();
+        $this->user->save(array('validate' => false));
         $this->config->set('rootCreated', true);
-        $this->redirect(null);
+        if ($this->config->save()) {
+          $this->redirect(null);
+        }
+        else {
+          /** @todo goto Setup::saveConfig or something */
+          $this->title = '!!! CONFIG ERROR !!!';
+        }
       }
     }
     else {

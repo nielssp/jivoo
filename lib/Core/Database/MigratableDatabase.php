@@ -61,7 +61,11 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
     else {
       $this->migrationMethod($schema, 'createTable')
           OR $this->createTable($schema);
+      $this->tableCreated($schema->getName());
       return 'new';
     }
+  }
+  
+  protected function tableCreated($name) {
   }
 }

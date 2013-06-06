@@ -114,7 +114,7 @@ return array(
     'language' => 'en',
     'timeZone' => 'UTC',
     'showExceptions' => true,
-    'logLevel' => 15,
+    'logLevel' => 31,
   ),
   'Setup' => array(
     'verbose' => false,

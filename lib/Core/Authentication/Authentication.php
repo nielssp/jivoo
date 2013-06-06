@@ -32,20 +32,20 @@ class Authentication extends ModuleBase {
     $newInstall = $this->m->Database->isNew('users');
     $rootGroup = null;
     if ($newInstall) {
-      $group = $this->m->Models->Group->crate();
+      $group = $this->m->Models->Group->create();
       $group->name = 'root';
       $group->title = tr('Admin');
       $group->save();
       $group->setPermission('*', true);
       $rootGroup = $group;
 
-      $group = $this->m->Models->Group->crate();
+      $group = $this->m->Models->Group->create();
       $group->name = 'users';
       $group->title = tr('User');
       $group->save();
       $group->setPermission('frontend', true);
 
-      $group = $this->m->Models->Group->crate();
+      $group = $this->m->Models->Group->create();
       $group->name = 'guests';
       $group->title = tr('Guest');
       $group->save();
@@ -60,6 +60,7 @@ class Authentication extends ModuleBase {
       );
       $controller->addModule($this->m->Shadow);
       $this->m->Helpers->addHelpers($controller);
+      $this->m->Models->addModels($controller);
       $controller->addTemplatePath($this->p('templates'));
       $controller->rootGroup = $rootGroup;
       $this->m->Setup->enterSetup($controller, 'setupRoot');
