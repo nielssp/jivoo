@@ -43,6 +43,16 @@ class Utilities {
   public static function getPlural($word) {
     return $word . 's';
   } 
+  
+  public static function isUpper($char) {
+    $ascii = ord($char);
+    return $ascii >= 65 AND $ascii <= 90;
+  }
+  
+  public static function isLower($char) {
+    $ascii = ord($char);
+    return $ascii >= 97 AND $ascii <= 122;
+  }
 
   /**
    * Returns the portion of string specified by the start and length parameters.

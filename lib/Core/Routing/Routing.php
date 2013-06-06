@@ -276,10 +276,15 @@ class Routing extends ModuleBase {
       $route = array();
       if (isset($parts[0])) {
         $route['controller'] = $parts[0];
-        if (isset($parts[1])) {
-          $route['action'] = $parts[1];
+        $i = 1;
+        while (isset($parts[$i]) AND Utilities::isUpper($parts[$i][0])) {
+          $route['controller'] = $parts[$i] . $route['controller'];
+          $i++;
+        }
+        if (isset($parts[$i])) {
+          $route['action'] = $parts[$i];
           $route['parameters'] = array();
-          for ($i = 2; $i < count($parts); $i++) {
+          for ($i++; $i < count($parts); $i++) {
             $route['parameters'][] = $parts[$i];
           }
         }
