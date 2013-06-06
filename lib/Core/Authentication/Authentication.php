@@ -29,9 +29,8 @@ class Authentication extends ModuleBase {
       'rootCreated' => false, 
     );
 
-    $newInstall = $this->m->Database->isNew('users');
     $rootGroup = null;
-    if ($newInstall) {
+    if ($this->m->Database->isNew('groups')) {
       $group = $this->m->Models->Group->create();
       $group->name = 'root';
       $group->title = tr('Admin');
@@ -53,7 +52,8 @@ class Authentication extends ModuleBase {
 
     }
 
-    if ($newInstall OR $this->config['rootCreated'] !== true) {
+    if ($this->m->Database->isNew('users') OR $this->config['rootCreated'] !== true) {
+      $this->config['rootCreated'] = false;
       Logger::debug('Authentication: No root user created');
       $controller = new SetupAuthenticationController(
         $this->m->Routing, $this->m->Templates, $this->config
