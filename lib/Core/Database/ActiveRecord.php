@@ -85,7 +85,7 @@ abstract class ActiveRecord implements IRecord {
     if (isset($this->virtuals[$field])
     AND isset($this->virtuals[$field]['set'])) {
       call_user_func(array($this, $this->virtuals[$field]['set']), $value);
-      $this->isSaved = false;
+      $this->saved = false;
     }
     if (array_key_exists($field, $this->data)
     AND $field != $this->model->primaryKey) {
@@ -405,7 +405,7 @@ abstract class ActiveRecord implements IRecord {
       $count = count($result);
       if ($this->data[$options['count']] != $count) {
         $this->data[$options['count']] = $count;
-        $this->isSaved = false;
+        $this->saved = false;
         $this->save();
       }
     }
@@ -436,7 +436,7 @@ abstract class ActiveRecord implements IRecord {
     if (isset($options['count']) AND !isset($customSelect)) {
       if ($this->data[$options['count']] != $result) {
         $this->data[$options['count']] = $result;
-        $this->isSaved = false;
+        $this->saved = false;
         $this->save();
       }
     }
@@ -499,7 +499,7 @@ abstract class ActiveRecord implements IRecord {
     }
     
     if (isset($options['join'])) {
-      if ($record->isNew) {
+      if ($record->new) {
         return false;
       }
       $query = $options['join']->delete();
@@ -513,8 +513,8 @@ abstract class ActiveRecord implements IRecord {
     }
     else {
       $record->data[$options['thisKey']] = 0;
-      $record->isSaved = false;
-      if (!$record->isNew) {
+      $record->saved = false;
+      if (!$record->new) {
         $record->save();
       }
       return true;

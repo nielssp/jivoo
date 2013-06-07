@@ -9,12 +9,6 @@
  * @since 0.1.0
  */
 
-/** @deprecated */
-define('CACHING', true);
-
-/** @deprecated */
-define('TMP', '/tmp/peanutcms/');
-
 require_once 'lib/Core/bootstrap.php';
 
 Lib::import('Core');

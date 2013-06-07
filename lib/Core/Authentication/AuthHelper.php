@@ -2,7 +2,7 @@
 
 class AuthHelper extends Helper {
 
-  protected $modules = array('Authentication');
+  protected $modules = array('Authentication', 'Shadow');
 
   private $loginRoute = array('action' => 'login');
   
@@ -57,5 +57,17 @@ class AuthHelper extends Helper {
       'query' => $this->request->query
     );
     $this->m->Routing->redirect($this->loginRoute);
+  }
+  
+  public function save(User $user, Group $group = null) {
+    if (!$user->isValid()) {
+      return false;
+    }
+    $user->password = $this->m->Shadow->hash($user->password);
+    if (!isset($group)) {
+      $group = $this->m->Authentication->getDefaultGroup();
+    }
+    $user->setGroup($group);
+    return $user->save(array('validate' => false));
   }
 }

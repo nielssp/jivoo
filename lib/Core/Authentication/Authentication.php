@@ -68,6 +68,7 @@ class Authentication extends ModuleBase {
     
     $authHelper = new AuthHelper($this->m->Routing);
     $authHelper->addModule($this);
+    $authHelper->addModule($this->m->Shadow);
     $this->m->Helpers->addHelper($authHelper);
 
     if (!$this->isLoggedIn()) {
@@ -104,6 +105,13 @@ class Authentication extends ModuleBase {
     else {
       return false;
     }
+  }
+  
+  public function getDefaultGroup() {
+    return $this->m->Models->Group->first(
+      SelectQuery::create()
+        ->where('name = ?', $this->config['defaultGroups']['unregistered'])
+    );
   }
 
   public function getUser() {
