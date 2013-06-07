@@ -139,7 +139,16 @@ class Database extends ModuleBase implements IDatabase {
       if (is_subclass_of($class, 'ActiveRecord')) {
         $table = Utilities::getPlural(strtolower($class));
         if (!isset($this->$table)) {
-          throw new Exception(tr('Table not found: "%1"', $table));
+          $table2 = ActiveModel::getTable($class);
+          if (isset($table2)) {
+            if (!isset($this->$table2)) {
+              throw new Exception(tr('Table not found: "%1"', $table2));
+            }
+            $table = $table2;
+          }
+          else {
+            throw new Exception(tr('Table not found: "%1"', $table));
+          }
         }
         $model = new ActiveModel($class, $this->$table, $this->m->Models,
           $sources);

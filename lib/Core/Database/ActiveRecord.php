@@ -8,6 +8,8 @@ abstract class ActiveRecord implements IRecord {
   private $errors = array();
   private $data = array();
   private $virtualData = array();
+  
+  protected $table = null;
 
   protected $validate = array();
 
@@ -22,10 +24,10 @@ abstract class ActiveRecord implements IRecord {
   protected $belongsTo = array();
   protected $hasAndBelongsToMany = array();
 
-  public final function __construct(ActiveModel $model, $data = array(), $new = true) {
+  public final function __construct(ActiveModel $model = null, $data = array(), $new = true) {
     $this->model = $model;
     $this->new = $new;
-    if (!is_array($data)) {
+    if (!is_array($data) OR !isset($model)) {
       return;
     }
     $allFields = array_unique(array_merge(
@@ -52,6 +54,7 @@ abstract class ActiveRecord implements IRecord {
 
   public function getModelSettings() {
     return array(
+      'table' => $this->table,
       'validate' => $this->validate,
       'defaults' => $this->defaults,
       'virtuals' => $this->virtuals,

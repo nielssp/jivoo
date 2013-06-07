@@ -45,7 +45,7 @@ class ActiveModel implements IModel {
                                     $config = array()) {
     if (!is_subclass_of($recordClass, 'ActiveRecord')) {
       throw new InvalidActiveRecordException(
-        tr('Invalid record class, must extend ActiveRecord')
+        tr('Invalid record class "%1", must extend ActiveRecord', $recordClass)
       );
     }
     $this->recordClass = $recordClass;
@@ -94,6 +94,17 @@ class ActiveModel implements IModel {
         }
       }
     }
+  }
+  
+  public static function getTable($recordClass) {
+    if (!is_subclass_of($recordClass, 'ActiveRecord')) {
+      throw new InvalidActiveRecordException(
+        tr('Invalid record class "%1", must extend ActiveRecord', $recordClass)
+      );
+    }
+    $recordObj = new $recordClass();
+    $settings = $recordObj->getModelSettings();
+    return $settings['table'];
   }
 
   private function createAssociations() {
