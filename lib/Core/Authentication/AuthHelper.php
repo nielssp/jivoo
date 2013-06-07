@@ -67,7 +67,9 @@ class AuthHelper extends Helper {
     if (!isset($group)) {
       $group = $this->m->Authentication->getDefaultGroup();
     }
-    $user->setGroup($group);
+    if ($group) {
+      $user->setGroup($group);
+    }
     return $user->save(array('validate' => false));
   }
 }
