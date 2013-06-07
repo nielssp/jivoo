@@ -406,7 +406,7 @@ class Routing extends ModuleBase {
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
 
-    Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
+//     Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;
