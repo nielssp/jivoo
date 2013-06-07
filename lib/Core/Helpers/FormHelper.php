@@ -105,10 +105,14 @@ class FormHelper extends Helper {
   }
 
   public function label($field, $label = null, $options = array()) {
+    return $this->radioLabel($field, null, $label, $options);
+  }
+
+  public function radioLabel($field, $value, $label = null, $options = array()) {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<label for="' . $this->fieldId($field) . '"';
+    $html = '<label for="' . $this->fieldId($field, $value) . '"';
     if (isset($options['class'])) {
       $html .= ' class="' . $options['class'] . '"';
     }
@@ -117,6 +121,10 @@ class FormHelper extends Helper {
     }
     $html .= '>' . $label . '</label>' . PHP_EOL;
     return $html;
+  }
+  
+  public function checkboxLabel($field, $value, $label = null, $options = array()) {
+    return $this->radioLabel($field, $value, $label, $options);
   }
 
   public function field($field, $options = array()) {
@@ -211,6 +219,21 @@ class FormHelper extends Helper {
       return;
     }
     $html = '<input type="radio" name="' . $this->fieldName($field) . '"';
+    $html .= ' id="' . $this->fieldId($field, $value) . '"';
+    $html .= ' value="' . $value . '"';
+    $html .= $this->addAttributes($options);
+    if ($this->fieldValue($field) == $value) {
+      $html .= ' checked="checked"';
+    }
+    $html .= ' /> ' . PHP_EOL;
+    return $html;
+  }
+  
+  public function checkbox($field, $value, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
+    $html = '<input type="checkbox" name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field, $value) . '"';
     $html .= ' value="' . $value . '"';
     $html .= $this->addAttributes($options);

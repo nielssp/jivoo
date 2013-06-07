@@ -23,7 +23,7 @@ class AuthHelper extends Helper {
   }
   
   public function logIn($username, $password, $remember = false) {
-    return $this->m->Authentication->logIn($username, $password, $remember = false);
+    return $this->m->Authentication->logIn($username, $password, $remember);
   }
   
   public function logOut() {

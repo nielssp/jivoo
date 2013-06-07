@@ -182,7 +182,7 @@ class Authentication extends ModuleBase {
 
   public function logOut() {
     $this->sessionDefaults();
-    if (isset($this->cookies['login'])) {
+    if (isset($this->request->cookies['login'])) {
       unset($this->request->cookies['login']);
     }
     $this->user = null;

@@ -99,12 +99,20 @@ class ActiveModel implements IModel {
   private function createAssociations() {
     foreach (array('hasOne', 'belongsTo') as $associationType) {
       foreach ($this->settings[$associationType] as $class => $options) {
+        if (is_string($options)) {
+          $class = $options;
+          $options = array();
+        }
         $this->createAssociation($associationType, 'get', $class, $options);
         $this->createAssociation($associationType, 'set', $class, $options);
       }
     }
     foreach (array('hasMany', 'hasAndBelongsToMany') as $associationType) {
       foreach ($this->settings[$associationType] as $class => $options) {
+        if (is_string($options)) {
+          $class = $options;
+          $options = array();
+        }
         $this->createAssociation($associationType, 'get', $class, $options);
         $this->createAssociation($associationType, 'count', $class, $options);
         $this->createAssociation($associationType, 'has', $class, $options);
@@ -160,7 +168,7 @@ class ActiveModel implements IModel {
     $association = null;
     if ($type == 'hasMany' OR $type == 'hasAndBelongsToMany') {
       if (!isset($options['plural'])) {
-        $options['plural'] = $class . 's';
+        $options['plural'] = Utilities::getPlural($class);
       }
       switch ($method) {
         case 'get':
