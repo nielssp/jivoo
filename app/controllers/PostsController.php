@@ -6,7 +6,7 @@ class PostsController extends AppController {
     'Backend', 'Json', 'Bulk'
   );
 
-  protected $modules = array('Authentication', 'Editors');
+  protected $modules = array('Editors');
   
   protected $models = array('Post', 'Comment', 'Tag');
 
@@ -50,7 +50,7 @@ class PostsController extends AppController {
 
     if (!$this->post
       OR ($this->post->status != 'published'
-        AND !$this->auth->hasPermission('backend.posts.viewDraft'))) {
+        AND !$this->Auth->hasPermission('backend.posts.viewDraft'))) {
       return $this->render('404.html');
     }
 
@@ -62,13 +62,13 @@ class PostsController extends AppController {
     $this->Pagination->setCount($this->post->countComments(clone $select));
     $this->Pagination->paginate($select);
 
-    $this->user = $this->auth->getUser();
+    $this->user = $this->Auth->getUser();
 
     $this->Comment->setFieldEditor('content',
       $this->m->Editors->getEditor($this->config['comments']['editor'])
     );
 
-    if ($this->auth->hasPermission('frontend.posts.comments.add')) {
+    if ($this->Auth->hasPermission('frontend.posts.comments.add')) {
       if ($this->request->isPost() AND $this->request->checkToken()) {
         $this->newComment = $this->Comment->create($this->request->data['comment'],
           array('author', 'email', 'website', 'content')
@@ -85,7 +85,7 @@ class PostsController extends AppController {
         $this->newComment->setPost($this->post);
         $this->newComment->ip = $this->request->ip;
         if ($this->config['commentApproval'] == 'on'
-          AND !$this->auth->hasPermission('backend.posts.comments.approve')) {
+          AND !$this->Auth->hasPermission('backend.posts.comments.approve')) {
           $this->newComment->status = 'pending';
         }
         else {
@@ -210,7 +210,7 @@ class PostsController extends AppController {
         $this->post->status = 'draft';
       }
       if ($this->post->isValid()) {
-        $this->post->setUser($this->auth->getUser());
+        $this->post->setUser($this->Auth->getUser());
         $this->post->save();
         if ($this->post->status == 'published') {
           $this->redirect($this->post);

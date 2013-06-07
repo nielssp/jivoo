@@ -11,7 +11,6 @@ class Controller implements IHelpable {
   private $name;
 
   protected $config = null;
-  protected $auth = null;
   protected $m = null;
   protected $request = null;
   protected $session = null;
@@ -104,9 +103,6 @@ class Controller implements IHelpable {
 
   public function addModule($object) {
     $class = get_class($object);
-    if ($object instanceof Authentication) {
-      $this->auth = $object;
-    }
     $this->m->$class = $object;
   }
   
@@ -130,22 +126,27 @@ class Controller implements IHelpable {
       $prefix .= '/';
     }
     $controller = '';
+    $paction = '';
     $class = get_class($this);
-    $parent = get_parent_class($class);
-    while ($parent !== false AND $parent != 'Controller'
-      AND $parent != 'AppController') {
-      $name = str_replace($parent, '', $class);
-      $controller = '/' . Utilities::camelCaseToDashes($name) . $controller;
-      $class = $parent;
+    if ($class != 'AppController') {
       $parent = get_parent_class($class);
+      while ($parent !== false AND $parent != 'Controller'
+        AND $parent != 'AppController') {
+        $name = str_replace($parent, '', $class);
+        $controller = '/' . Utilities::camelCaseToDashes($name) . $controller;
+        $class = $parent;
+        $parent = get_parent_class($class);
+      }
+      $name = str_replace('Controller', '', $class);
+      $controller = $prefix . Utilities::camelCaseToDashes($name) . $controller;
+      $paction = '/';
     }
-    $name = str_replace('Controller', '', $class);
-    $controller = $prefix . Utilities::camelCaseToDashes($name) . $controller;
-    $paction = Utilities::camelCaseToDashes($action);
+    
+    $paction .= Utilities::camelCaseToDashes($action);
     if ($action == 'index') {
       $this->addRoute($controller, $action);
     }
-    $path = $controller . '/' . $paction;
+    $path = $controller . $paction;
     if ($required < 1) {
       $this->addRoute($path, $action);
     }

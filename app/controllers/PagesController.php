@@ -12,7 +12,7 @@ class PagesController extends AppController {
     $this->page = $this->Page->find($page);
     if (!$this->page
       OR ($this->page->state != 'published'
-        AND !$this->auth->hasPermission('backend.pages.viewDraft'))) {
+        AND !$this->Auth->hasPermission('backend.pages.viewDraft'))) {
       return $this->notFound();
     }
     $this->title = $this->page->title;

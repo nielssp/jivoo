@@ -88,7 +88,7 @@ class Routing extends ModuleBase {
           $this->setError($route->route);
         }
         else {
-          $this->routes = $route;
+          $this->routes[] = $route;
         }
       }
     }
@@ -157,17 +157,37 @@ class Routing extends ModuleBase {
   public function insertParameters($parameters, $additional) {
     $path = $additional[0];
     $result = array();
-    foreach ($path as $fragment) {
-      if ($fragment == '*') {
-        $fragment = array_shift($parameters);
-      }
-      if ($fragment == '**' || $fragment == ':*') {
+    foreach ($path as $part) {
+      if ($part == '**' || $part == ':*') {
         while (current($parameters) !== false) {
           $result[] = array_shift($parameters);
         }
         break;
       }
-      $result[] = $fragment;
+      else if ($part == '*') {
+        $part = array_shift($parameters);
+      }
+      else if ($part[0] == ':') {
+        $var = substr($part, 1);
+        if (is_numeric($var)) {
+          $offset = (int)$var;
+          $part = $parameters[$offset];
+          unset($parameters[$offset]);
+        }
+        else if ($var == 'controller') {
+          // ???
+        }
+        else if ($var == 'action') {
+          // ???
+        }
+        else {
+          throw new InvalidRouteException(tr(
+            'Unknown pattern "%1" in route configuration', $part
+          ));
+        }
+        continue;
+      }
+      $result[] = $part;
     }
     return $result;
   }
@@ -274,19 +294,19 @@ class Routing extends ModuleBase {
       }
       $parts = explode('::', $route);
       $route = array();
-      if (isset($parts[0])) {
-        $route['controller'] = $parts[0];
-        $i = 1;
-        while (isset($parts[$i]) AND Utilities::isUpper($parts[$i][0])) {
-          $route['controller'] = $parts[$i] . $route['controller'];
-          $i++;
+      $i = 0;
+      while (isset($parts[$i]) AND Utilities::isUpper($parts[$i][0])) {
+        if (!isset($route['controller'])) {
+          $route['controller'] = '';
         }
-        if (isset($parts[$i])) {
-          $route['action'] = $parts[$i];
-          $route['parameters'] = array();
-          for ($i++; $i < count($parts); $i++) {
-            $route['parameters'][] = $parts[$i];
-          }
+        $route['controller'] = $parts[$i] . $route['controller'];
+        $i++;
+      }
+      if (isset($parts[$i])) {
+        $route['action'] = $parts[$i];
+        $route['parameters'] = array();
+        for ($i++; $i < count($parts); $i++) {
+          $route['parameters'][] = $parts[$i];
         }
       }
     }
@@ -422,14 +442,14 @@ class Routing extends ModuleBase {
           if (is_numeric($var)) {
             $route['parameters'][(int)$var] = $path[$j];
           }
-          else if ($var == ':controller') {
+          else if ($var == 'controller') {
             $route['controller'] = Utilities::dashesToCamelCase($path[$j]);
           }
-          else if ($var == ':action') {
+          else if ($var == 'action') {
             $route['action'] = lcfirst(Utilities::dashesToCamelCase($path[$j]));
           }
           else {
-            throw new Exception(tr('Unknown pattern "%1" in route configuration', $part));
+            throw new InvalidRouteException(tr('Unknown pattern "%1" in route configuration', $part));
           }
           continue;
         }
@@ -496,7 +516,7 @@ class Routing extends ModuleBase {
     }
     
     if (!isset($this->selection['route'])) {
-      throw new Exception(tr('No route selected'));
+      throw new InvalidRouteException(tr('No route selected'));
     }
     
     $route = $this->selection['route'];
@@ -520,15 +540,21 @@ class Routing extends ModuleBase {
       Logger::debug('Select action: ' . $route['controller'] . '::' . $route['action']);
       $controller = $this->controllers->getController($route['controller']);
       if (!$controller) {
-        throw new Exception(tr('Invalid controller: %1', $route['controller']));
+        throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
       }
       $action = $route['action'];
+      if (!is_callable(array($controller, $action))) {
+        throw new InvalidRouteException(
+          tr('Invalid action: %1::%2',
+          $route['controller'], $route['action']
+        ));
+      }
       $this->rendered = true;
       $controller->preRender();
       call_user_func_array(array($controller, $action), $route['parameters']);
     }
     else {
-      throw new Exception(tr('No controller selected'));
+      throw new InvalidRouteException(tr('No controller selected'));
     }
     
     $this->events->trigger('onRendered');

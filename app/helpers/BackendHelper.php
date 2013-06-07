@@ -1,15 +1,14 @@
 <?php
 
 class BackendHelper extends Helper {
-  
-  protected $modules = array('Authentication');
-  
+
+  protected $helpers = array('Auth');
+
   public function requireAuth() {
     $permissions = func_get_args();
     $access = true;
     foreach ($permissions as $permission) {
-      if (!$this->auth
-        ->hasPermission($permission)) {
+      if (!$this->Auth->hasPermission($permission)) {
         $access = false;
         break;
       }
@@ -17,8 +16,7 @@ class BackendHelper extends Helper {
     if ($access) {
       return;
     }
-    if ($this->auth
-      ->hasPermission('backend.access')) {
+    if ($this->Auth->hasPermission('backend.access')) {
       $this->accessDenied();
     }
     else {
@@ -27,20 +25,16 @@ class BackendHelper extends Helper {
   }
 
   public function accessDenied() {
-    $this->m
-      ->Routing
-      ->redirect(
-        array('controller' => 'Backend', 'action' => 'accessDenied'));
+    $this->m->Routing
+      ->redirect(array('controller' => 'Backend', 'action' => 'accessDenied'));
   }
 
   public function login() {
-    $this->session['returnTo'] = array('path' => $this->request
-        ->path, 'query' => $this->request
-        ->query
+    $this->session['returnTo'] = array(
+      'path' => $this->request->path,
+      'query' => $this->request->query
     );
-    $this->m
-      ->Routing
-      ->redirect(
-        array('controller' => 'Backend', 'action' => 'login'));
+    $this->m->Routing
+      ->redirect(array('controller' => 'Backend', 'action' => 'login'));
   }
 }

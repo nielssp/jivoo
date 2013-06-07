@@ -65,6 +65,10 @@ class Authentication extends ModuleBase {
       $controller->rootGroup = $rootGroup;
       $this->m->Setup->enterSetup($controller, 'setupRoot');
     }
+    
+    $authHelper = new AuthHelper($this->m->Routing);
+    $authHelper->addModule($this);
+    $this->m->Helpers->addHelper($authHelper);
 
     if (!$this->isLoggedIn()) {
       $unregistered = $this->m->Models->Group->first(

@@ -4,8 +4,6 @@ class BackendController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Backend');
 
-  protected $modules = array('Authentication');
-
   public function dashboard() {
     $this->Backend->requireAuth('backend.access');
     $this->title = tr('Dashboard');
@@ -35,16 +33,16 @@ class BackendController extends AppController {
   }
 
   public function logout() {
-    if (!$this->auth->isLoggedIn()) {
+    if (!$this->Auth->isLoggedIn()) {
       $this->redirect(null);
     }
-    $this->auth->logOut();
+    $this->Auth->logOut();
     $this->goBack();
     $this->refresh();
   }
 
   public function login() {
-    if ($this->auth->isLoggedIn()) {
+    if ($this->Auth->isLoggedIn()) {
       $this->redirect(array('action' => 'dashboard'));
     }
     $this->title = tr('Log in');
@@ -58,7 +56,7 @@ class BackendController extends AppController {
     if ($this->request->isPost()) {
       $this->login->addData($this->request->data['login']);
       if ($this->login->isValid()) {
-        if ($this->auth
+        if ($this->Auth
           ->logIn($this->login->username, $this->login->password)) {
           $this->goBack();
           $this->refresh();

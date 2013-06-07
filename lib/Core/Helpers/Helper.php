@@ -5,7 +5,6 @@ abstract class Helper implements IHelpable {
   protected $m = null;
   protected $request = null;
   protected $session = null;
-  protected $auth = null;
 
   protected $modules = array();
   protected $helpers = array();
@@ -51,14 +50,11 @@ abstract class Helper implements IHelpable {
 
   public function addModule($object) {
     $class = get_class($object);
-    if ($object instanceof Authentication) {
-      $this->auth = $object;
-    }
     $this->m->$class = $object;
   }
   
   public function addHelper($helper) {
-    $name = str_replace('Helper', '', get_class($object));
+    $name = str_replace('Helper', '', get_class($helper));
     $this->helperObjects[$name] = $helper;
   }
   

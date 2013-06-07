@@ -37,6 +37,9 @@ $this->render('backend/header.html');
           </div>
         </div>
       </div>
+      
+      <?php echo $Form->end(); ?>
+      
 <?php
 $this->render('backend/footer.html');
 ?>
