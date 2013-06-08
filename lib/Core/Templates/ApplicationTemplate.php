@@ -15,17 +15,13 @@ abstract class ApplicationTemplate {
   public final function __construct(Templates $templates, Routing $routing,
                                     $controller = null) {
     $this->m = new Dictionary();
-    $this->m
-      ->Templates = $templates;
-    $this->m
-      ->Routing = $routing;
+    $this->m->Templates = $templates;
+    $this->m->Routing = $routing;
 
-    $this->request = $this->m
-      ->Routing
-      ->getRequest();
+    $this->request = $this->m->Routing->getRequest();
 
     $this->controller = $controller;
-    
+
     $this->data['messages'] = $this->request->session->messages;
     $this->data['alerts'] = $this->request->session->alerts;
     $this->data['notices'] = $this->request->session->notices;
@@ -58,63 +54,51 @@ abstract class ApplicationTemplate {
   }
 
   protected function link($route = null) {
-    return $this->m
-      ->Routing
-      ->getLink($route);
+    return $this->m->Routing->getLink($route);
   }
 
   protected function isCurrent($route = null) {
-    return $this->m
-      ->Routing
-      ->isCurrent($route);
+    return $this->m->Routing->isCurrent($route);
   }
 
   protected function file($file) {
-    return $this->m
-      ->Templates
-      ->getFile($file);
+    return $this->m->Templates->getFile($file);
+  }
+
+  protected function addScript($id, $file, $dependencies = array()) {
+    $this->m->Templates->addScript($id, $file, $dependencies);
+  }
+  
+  protected function addStyle($id, $file, $dependencies = array()) {
+    $this->m->Templates->addStyle($id, $file, $dependencies);
   }
 
   protected function insertScript($id, $file, $dependencies = array()) {
-    $this->m
-      ->Templates
-      ->insertScript($id, $file, $dependencies);
+    $this->m->Templates->insertScript($id, $file, $dependencies);
   }
 
   protected function requestScript($id) {
-    return $this->m
-      ->Templates
-      ->requestHtml($id);
+    return $this->m->Templates->requestHtml($id);
   }
 
   protected function requestStyle($id) {
-    return $this->m
-      ->Templates
-      ->requestHtml($id);
+    return $this->m->Templates->requestHtml($id);
   }
 
   protected function insertStyle($id, $file, $dependencies = array()) {
-    $this->m
-      ->Templates
-      ->insertStyle($id, $file, $dependencies);
+    $this->m->Templates->insertStyle($id, $file, $dependencies);
   }
 
-  protected function insertMeta($id, $file, $dependencies = array()) {
-    $this->m
-      ->Templates
-      ->insertMeta($id, $file, $dependencies);
+  protected function insertMeta($name, $content) {
+    $this->m->Templates->insertMeta($name, $content);
   }
 
   protected function setIndent($indentation = 0) {
-    $this->m
-      ->Templates
-      ->setHtmlIndent($indentation);
+    $this->m->Templates->setHtmlIndent($indentation);
   }
 
   protected function output($location, $linePrefix = '') {
-    $this->m
-      ->Templates
-      ->outputHtml($location, $linePrefix);
+    $this->m->Templates->outputHtml($location, $linePrefix);
   }
 
   public function setTemplatePaths($paths) {
@@ -122,15 +106,12 @@ abstract class ApplicationTemplate {
   }
 
   protected function getTemplate($template, $return = false) {
-    return $this->m
-      ->Templates
+    return $this->m->Templates
       ->getTemplate($template, $this->templatePaths, $return);
   }
 
   protected function getTemplateData($template) {
-    return $this->m
-      ->Templates
-      ->getTemplateData($template);
+    return $this->m->Templates->getTemplateData($template);
   }
 
   public abstract function render($template, $return = false);
