@@ -41,7 +41,11 @@ class Request {
     }
     $path = urldecode($request['path']);
     if ($basePath != '/') {
-      $path = str_replace($basePath, '', $path);
+      $l = strlen($basePath);
+      if (substr($path, 0, $l) == $basePath) {
+        $path = substr($path, $l);
+      }
+//       $path = str_replace($basePath, '', $path);
     }
     Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
     $path = explode('/', $path);
