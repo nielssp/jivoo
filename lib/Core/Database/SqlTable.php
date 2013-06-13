@@ -230,7 +230,7 @@ class SqlTable implements ITable {
                 ->escapeQuery(key($sets) . ' = ?', array($value));
         }
         else {
-          $sqlString .= ' ' . key($sets);
+          $sqlString .= ' ' . key($sets) . ' = NULL';
         }
         if (next($sets) !== false) {
           $sqlString .= ',';
