@@ -208,9 +208,9 @@ abstract class ActiveRecord implements IRecord {
   public function isSaved() {
     return $this->saved;
   }
-  protected function validateValue($column, $value, $conditionKey,
-    $conditionValue) {
+  protected function validateField($column, $conditionKey, $conditionValue) {
     $validate = array();
+    $value = $this->$column;
     if ($conditionValue instanceof ValidatorRule) {
       foreach ($conditionValue->getRules() as $subConditionKey => $subConditionValue) {
         $validate = $this
@@ -237,6 +237,21 @@ abstract class ActiveRecord implements IRecord {
       case 'url':
         return preg_match("/^https?:\/\/[-a-z0-9@:%_\+\.~#\?&\/=\[\]]+$/i",
         $value) == 1;
+      case 'date':
+        if (preg_match('/^[-+]?\d+$/', $value) == 1) {
+          $timestamp = (int)$value;
+        }
+        else {
+          $timestamp = strtotime($value);
+          if ($timestamp === false) {
+            return !$conditionValue;
+          }
+        }
+        if (!$conditionValue) {
+          return false;
+        }
+        $this->$column = $timestamp;
+        return true;
       case 'minLength':
         return strlen($value) >= $conditionValue;
       case 'maxLength':
@@ -289,6 +304,8 @@ abstract class ActiveRecord implements IRecord {
         return tr('Not a valid email address.');
       case 'url':
         return tr('Not a valid URL.');
+      case 'date':
+        return tr('Must be a valid date.');
       case 'minLength':
         return trn('Minimum length of %1 character.',
         'Minimum length of %1 characters.', $value
@@ -343,7 +360,7 @@ abstract class ActiveRecord implements IRecord {
         continue;
       }
       foreach ($validator->$field->getRules() as $conditionKey => $conditionValue) {
-        $validate = $this->validateValue($field, $value, $conditionKey, $conditionValue);
+        $validate = $this->validateField($field, $conditionKey, $conditionValue);
         if (!$validate) {
           $this->errors[$field] = $this
           ->getMessage($conditionKey, $conditionValue);

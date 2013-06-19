@@ -8,7 +8,7 @@ class FormHelper extends Helper {
   private $post = false;
   private $errors = array();
 
-  public function begin(IRecord $record = null, $fragment = null) {
+  public function begin(IRecord $record = null, $fragment = null, $route = array()) {
     if (!isset($record)) {
       $record = new Form('form');
     }
@@ -19,7 +19,8 @@ class FormHelper extends Helper {
       $this->errors = $record->getErrors();
     }
     $this->currentForm = $this->model->getName();
-    $html = '<form action="' . $this->getLink(array('fragment' => $fragment))
+    $route['fragment'] = $fragment;
+    $html = '<form action="' . $this->getLink($route)
       . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
     $html .= '<input type="hidden" name="access_token" value="'
       . $this->request->getToken() . '" />' . PHP_EOL;
@@ -145,6 +146,9 @@ class FormHelper extends Helper {
         if (strpos($field, 'pass') !== false) {
           return $this->password($field, $options);
         }
+        if (strpos($field, 'date') !== false) {
+          return $this->date($field, $options);
+        }
         return $this->text($field, $options);
     }
   }
@@ -152,6 +156,9 @@ class FormHelper extends Helper {
   public function fieldValue($field, $encode = true) {
     if (!isset($this->record)) {
       return;
+    }
+    if ($this->model->getFieldType($field) == 'date') {
+      return fdate($this->record->$field);
     }
     $editor = $this->model->getFieldEditor($field);
     if (isset($editor)) {
@@ -209,6 +216,24 @@ class FormHelper extends Helper {
     $value = $this->fieldValue($field); 
     if ($value != '') {
       $html .= ' value="' . $value . '"';
+    }
+    $html .= ' />' . PHP_EOL;
+    return $html;
+  }
+
+  public function date($field, $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
+    $html = '<input type="text" name="' . $this->fieldName($field) . '"';
+    $html .= ' id="' . $this->fieldId($field) . '"';
+    if (!isset($options['class'])) {
+      $options['class'] = 'text date';
+    }
+    $html .= $this->addAttributes($options);
+    $value = $this->fieldValue($field); 
+    if ($value != '') {
+      $html .= ' value="' . fdate($value) . '"';
     }
     $html .= ' />' . PHP_EOL;
     return $html;
