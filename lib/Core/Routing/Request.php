@@ -51,7 +51,7 @@ class Request {
     $path = explode('/', $path);
     $this->path = array();
     foreach ($path as $dir) {
-      if (!empty($dir)) {
+      if ($dir != '') {
         $this->path[] = $dir;
       }
     }
