@@ -116,6 +116,7 @@ class ActiveModel implements IModel {
         }
         $this->createAssociation($associationType, 'get', $class, $options);
         $this->createAssociation($associationType, 'set', $class, $options);
+        $this->createAssociation($associationType, 'remove', $class, $options);
       }
     }
     foreach (array('hasMany', 'hasAndBelongsToMany') as $associationType) {
@@ -216,6 +217,9 @@ class ActiveModel implements IModel {
           break;
         case 'set':
           $association = array('oneSet', $options);
+          break;
+        case 'remove':
+          $association = array('oneRemove', $options);
           break;
       }
     }

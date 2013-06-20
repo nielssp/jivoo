@@ -496,7 +496,6 @@ abstract class ActiveRecord implements IRecord {
         $record->data[$record->model->primaryKey]
       );
       $query->execute();
-      return true;
     }
     else {
       $record->data[$options['thisKey']] = $this->data[$this->model->primaryKey];
@@ -504,9 +503,8 @@ abstract class ActiveRecord implements IRecord {
       if (!$record->new) {
         $record->save();
       }
-      return true;
     }
-  
+    return $this;
   }
   
   private function manyRemove($options, ActiveRecord $record) {
@@ -526,7 +524,6 @@ abstract class ActiveRecord implements IRecord {
       $query->addVar($this->data[$this->model->primaryKey]);
       $query->addVar($record->data[$record->model->primaryKey]);
       $query->execute();
-      return true;
     }
     else {
       $record->data[$options['thisKey']] = 0;
@@ -534,8 +531,8 @@ abstract class ActiveRecord implements IRecord {
       if (!$record->new) {
         $record->save();
       }
-      return true;
     }
+    return $this;
   }
   
   private function oneGet($options) {
@@ -574,6 +571,33 @@ abstract class ActiveRecord implements IRecord {
         $record->save();
       }
     }
+    return $this;
+  }
+  
+  private function oneRemove($options) {
+    $otherClass = $options['class'];
+  
+    if ($options['connection'] == 'this') {
+      $this->data[$options['otherKey']] = 0;
+      $this->saved = false;
+      if (!$this->new) {
+        $this->save();
+      }
+    }
+    else {
+      if ($this->new) {
+        return false;
+      }
+      $record = $options['model']->first(SelectQuery::create()
+        ->where($options['thisKey'] . ' = ?', $this->data[$this->primaryKey])
+      );
+      $record->data[$options['thisKey']] = 0;
+      $record->saved = false;
+      if (!$record->new) {
+        $record->save();
+      }
+    }
+    return $this;
   }
 }
 
