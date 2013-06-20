@@ -214,7 +214,7 @@ abstract class ActiveRecord implements IRecord {
     if ($conditionValue instanceof ValidatorRule) {
       foreach ($conditionValue->getRules() as $subConditionKey => $subConditionValue) {
         $validate = $this
-        ->validateValue($column, $value, $subConditionKey, $subConditionValue);
+        ->validateField($column, $subConditionKey, $subConditionValue);
         if (!$validate) {
           return false;
         }
