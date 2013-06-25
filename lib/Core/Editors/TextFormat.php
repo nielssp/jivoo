@@ -7,6 +7,9 @@ class TextFormat implements IContentFormat {
     /** @todo Improve URL-detection */
     $html = preg_replace('/([\n\r \A])(https?:\/\/([^\n\r"< \Z]+))/i',
       '\\1<a href="\\2">\\3</a>', $html);
+    if ($html == '') {
+      return $html;
+    }
     return '<p>' . $html . '</p>';
   }
 
