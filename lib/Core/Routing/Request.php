@@ -28,6 +28,8 @@ class Request {
   private $fragment = null;
 
   private $data;
+  
+  private $route = null;
 
   /**
    * Initializes the request-object
@@ -72,6 +74,7 @@ class Request {
    */
   public function __get($name) {
     switch ($name) {
+      case 'route':
       case 'path':
       case 'realPath':
       case 'data':
@@ -96,6 +99,7 @@ class Request {
    */
   public function __set($name, $value) {
     switch ($name) {
+      case 'route':
       case 'path':
       case 'query':
       case 'fragment':

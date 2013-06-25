@@ -549,6 +549,7 @@ class Routing extends ModuleBase {
         ));
       }
       $this->rendered = true;
+      $this->request->route = $route;
       $controller->preRender();
       call_user_func_array(array($controller, $action), $route['parameters']);
     }
