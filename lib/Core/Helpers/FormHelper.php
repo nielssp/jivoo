@@ -225,7 +225,7 @@ class FormHelper extends Helper {
     if (!isset($this->record)) {
       return;
     }
-    $html = '<input type="text" name="' . $this->fieldName($field) . '"';
+    $html = '<input type="date" name="' . $this->fieldName($field) . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';
     if (!isset($options['class'])) {
       $options['class'] = 'text date';
