@@ -2,7 +2,7 @@
 class TextFormat implements IContentFormat {
 
   public function toHtml($text) {
-    $html = preg_replace('/((\r\n|\n\r|\n|\r) *){2}\n/i', "</p><p>", $text);
+    $html = preg_replace('/((\r\n|\n\r|\n|\r) *){2}/i', "</p><p>", $text);
     $html = preg_replace('/(\r\n|\n\r|\n|\r)/i', "<br />\n", $html);
     /** @todo Improve URL-detection */
     $html = preg_replace('/([\n\r \A])(https?:\/\/([^\n\r"< \Z]+))/i',
