@@ -249,6 +249,7 @@ class App {
     }
 
     $this->config = new AppConfig($this->p('config', 'config.php'));
+    $this->config->setVirtual('app', $this->appConfig);
 
     $environmentConfigFile = $this
       ->p('config', 'environments/' . $environment . '.php');

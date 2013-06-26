@@ -10,6 +10,8 @@ class AppConfig implements arrayaccess {
   
   private $data = array();
   
+  private $virtual = array();
+  
   private $file;
   
   private $updated = false;
@@ -97,6 +99,10 @@ class AppConfig implements arrayaccess {
    */
   public function delete($key) {
     unset($this->data[$key]);
+  }
+  
+  public function setVirtual($key, $value) {
+    $this->virtual[$key] = $value;
   }
   
   /**
@@ -235,6 +241,9 @@ class AppConfig implements arrayaccess {
    * @return mixed Value
    */
   public function offsetGet($key) {
+    if (isset($this->virtual[$key])) {
+      return $this->virtual[$key];
+    }
     if (!isset($this->data[$key]) OR is_array($this->data[$key])) {
       return $this->getSubset($key);
     }
@@ -250,7 +259,12 @@ class AppConfig implements arrayaccess {
     if (is_null($key)) {
     }
     else {
-      $this->set($key, $value);
+      if (isset($this->virtual[$key])) {
+        $this->virtual[$key] = $value;
+      }
+      else {
+        $this->set($key, $value);
+      }
     }
   }
   
