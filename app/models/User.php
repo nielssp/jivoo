@@ -33,8 +33,7 @@ class User extends ActiveRecord implements ILinkable {
   }
 
   public function hasPermission($key) {
-    return $this->getGroup()
-      ->hasPermission($key);
+    return $group AND $group->hasPermission($key);
   }
 
   protected function confirmPassword($value) {
