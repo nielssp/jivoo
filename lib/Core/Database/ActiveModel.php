@@ -408,6 +408,9 @@ class ActiveModel implements IModel {
   }
   
   public function find($primaryKey) {
+    if ($primaryKey == 0) {
+      return false;
+    }
     if (isset($this->cache[$primaryKey])) {
       return $this->cache[$primaryKey];
     }
@@ -424,6 +427,9 @@ class ActiveModel implements IModel {
   }
   
   public function exists($primaryKey) {
+    if ($primaryKey == 0) {
+      return false;
+    }
     if (isset($this->cache[$primaryKey])) {
       return true;
     }
