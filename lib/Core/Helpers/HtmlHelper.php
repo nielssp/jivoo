@@ -29,9 +29,14 @@ class HtmlHelper extends Helper {
   }
 
   public function link($label, $route = null, $attributes = array()) {
-    $url = $this->m
-      ->Routing
-      ->getLink($route);
+    try {
+      $url = $this->m
+        ->Routing
+        ->getLink($route);
+    }
+    catch (InvalidRouteException $e) {
+      return false;
+    }
     return '<a href="' . h($url) . '"' . $this->addAttributes($attributes)
         . '>' . $label . '</a>';
   }
