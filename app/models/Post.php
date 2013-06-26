@@ -75,8 +75,6 @@ class Post extends ActiveRecord implements ILinkable {
     'status' => 'draft'
   );
 
-  private $virtualTags = null;
-
   public function getRoute() {
     return array('controller' => 'Posts', 'action' => 'view',
       'parameters' => array($this->id)
@@ -97,6 +95,8 @@ class Post extends ActiveRecord implements ILinkable {
     return ftime($this->date);
   }
 
+  private $virtualTags = null;
+  
   public function virtualGetTags() {
     if (isset($this->virtualTags)) {
       return $this->virtualTags;

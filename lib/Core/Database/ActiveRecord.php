@@ -222,6 +222,7 @@ abstract class ActiveRecord implements IRecord {
       return true;
     }
     if ($conditionKey != 'presence' AND $conditionKey != 'null'
+      AND $conditionKey != 'callback'
       AND empty($value) AND !is_numeric($value)) {
       return true;
     }
