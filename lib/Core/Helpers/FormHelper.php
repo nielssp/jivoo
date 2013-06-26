@@ -247,10 +247,29 @@ class FormHelper extends Helper {
     $html .= ' id="' . $this->fieldId($field, $value) . '"';
     $html .= ' value="' . $value . '"';
     $html .= $this->addAttributes($options);
-    if ($this->fieldValue($field) == $value) {
+    if ('' . $this->fieldValue($field) == "$value") {
       $html .= ' checked="checked"';
     }
     $html .= ' /> ' . PHP_EOL;
+    return $html;
+  }
+  
+  public function select($field, $values = array(), $options = array()) {
+    if (!isset($this->record)) {
+      return;
+    }
+    $html = '<select name="' . $this->fieldName($field) . '"';
+    $html .= ' id="' . $this->fieldId($field, $value) . '"';
+    $html .= $this->addAttributes($options);
+    $html .= '>' . PHP_EOL;
+    foreach ($values as $value => $label) {
+      $html .= '<option value="' . h($value) . '"';
+      if ('' . $this->fieldValue($field) == "$value") {
+        $html .= ' selected="selected"';
+      }
+      $html .= '>' . h($label) . '</option>' . PHP_EOL;
+    }
+    $html .= '</select>' . PHP_EOL;
     return $html;
   }
   
