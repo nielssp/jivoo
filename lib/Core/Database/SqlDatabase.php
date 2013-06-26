@@ -8,7 +8,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   public function __get($name) {
-    return $this->getTable($name);
+    return $this->tables[$name];
   }
 
   public function __isset($name) {
@@ -17,9 +17,9 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   public function getTable($name) {
-//     if (!isset($this->tables[$name])) {
-//       $this->tables[$name] = new SqlTable($this, $name);
-//     }
+    if (!isset($this->tables[$name])) {
+      $this->tables[$name] = new SqlTable($this, $name);
+    }
     return $this->tables[$name];
   }
 
