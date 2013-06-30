@@ -3,7 +3,7 @@
  * @TODO find another, more general way of doing this
  */
 class NoEscape {
-  $string = '';
+  private $string = '';
 
   public function __construct($string) {
     $this->string = $string;
