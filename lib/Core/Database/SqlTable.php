@@ -225,9 +225,14 @@ class SqlTable implements ITable {
       reset($sets);
       while (($value = current($sets)) !== false) {
         if (isset($value)) {
-          $sqlString .= ' '
+          if ($value instanceof NoEscape) {
+            $sqlString .= ' ' . key($sets) . ' = ' . $value;
+          }
+          else {
+            $sqlString .= ' '
               . $this->owner
-                ->escapeQuery(key($sets) . ' = ?', array($value));
+              ->escapeQuery(key($sets) . ' = ?', array($value));
+          }
         }
         else {
           $sqlString .= ' ' . key($sets) . ' = NULL';
