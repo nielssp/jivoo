@@ -66,6 +66,14 @@ class Session implements arrayaccess {
     $messages[$flash->uid] = $flash->toArray();
     $this['messages'] = $messages;
   }
+  
+  /**
+   * Close session and store data. Unlocks session data.
+   * Allows other scripts to use session.
+   */
+  public function close() {
+    session_write_close();
+  }
 
   /**
    * Whether or not a key exists.
