@@ -195,11 +195,18 @@ abstract class ActiveRecord implements IRecord {
     }
     return true;
   }
+
+  protected function beforeDelete() {}
+  protected function afterDelete() {}
+  
   public function delete() {
+    $this->beforeDelete();
     $this->model->dataSource->delete()
-    ->where($this->model->primaryKey . ' = ?')
-    ->addVar($this->data[$this->model->primaryKey])->execute();
+      ->where($this->model->primaryKey . ' = ?')
+      ->addVar($this->data[$this->model->primaryKey])
+      ->execute();
     $this->deleted = true;
+    $this->afterDelete();
   }
 
   public function isNew() {
