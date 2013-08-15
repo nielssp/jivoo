@@ -1,5 +1,57 @@
 <?php
 
+// MISSING DEFAULT VALUE!
+
+class Field {
+  const UNSIGNED = 0x1;
+  const AUTO_INCREMENT = 0x2;
+  const NOT_NULL = 0x4;
+
+  public static function integer($name, $flags = 0) {
+    
+  }
+  
+  public static function string($name, $length = 255, $flags = 0) {
+    
+  }
+  
+  public static function boolean($name, $flags = 0) {
+    
+  }
+  
+  public static function text($name, $flags = 0) {
+    
+  }
+  
+  public static function binary($name, $flags = 0) {
+    
+  }
+  
+  public static function float($name, $flags = 0) {
+    
+  }
+  
+  public static function date($name, $flags = 0) {
+    
+  }
+  
+  public static function dateTime($name, $flags = 0) {
+    
+  }
+}
+
+class Index {
+  public static function primary($field) {
+    
+  }
+  public static function unique($name, $field) {
+    
+  }
+  public static function index($name, $field) {
+    
+  }
+}
+
 // example schema file:
 
 return array(
