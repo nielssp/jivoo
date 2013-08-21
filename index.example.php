@@ -33,12 +33,11 @@ $app->basePath = dirname(implode('/', $script));
 $app->paths->config = 'config';
 $app->paths->schemas = 'config/schemas';
 $app->paths->log = 'log';
-$app->paths->tmp = '/tmp/peanutcms';
+$app->paths->tmp = 'tmp';
 $app->paths->extensions = 'extensions';
 $app->paths->themes = 'themes';
 
 $environment = getenv('APP_ENVIRONMENT');
 $environment || $environment = 'production';
 
-//$app->run($environment);
-$app->run('development');
+$app->run($environment);
