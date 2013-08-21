@@ -6,6 +6,10 @@
  * to get and set session values.
  * @package Core
  * @subpackage Routing
+ * @property-read string $id Session id
+ * @property-read array $messages Associative array of uid => Flash-objects
+ * @property-read Flash[] $alerts Alerts only
+ * @property-read Flash[] $notices Notices only
  */
 class Session implements arrayaccess {
 
@@ -30,6 +34,8 @@ class Session implements arrayaccess {
   
   public function __get($property) {
     switch ($property) {
+      case 'id':
+        return session_id();
       case 'messages':
         return $this->messages;
       case 'alerts':
@@ -51,6 +57,11 @@ class Session implements arrayaccess {
     }
   }
   
+  /**
+   * Flash a notice to the user
+   * @param string $message Message
+   * @param string $label Message label, i.e. 'Alert'
+   */
   public function notice($message, $label = null) {
     $flash = new Flash($this, $message, 'notice', $label);
     $this->messages[$flash->uid] = $flash;
@@ -58,7 +69,12 @@ class Session implements arrayaccess {
     $messages[$flash->uid] = $flash->toArray();
     $this['messages'] = $messages;
   }
-  
+
+  /**
+   * Flash an alert to the user
+   * @param string $message Message
+   * @param string $label Message label, i.e. 'Alert'
+   */
   public function alert($message, $label = null) {
     $flash = new Flash($this, $message, 'alert', $label);
     $this->messages[$flash->uid] = $flash;
@@ -68,11 +84,27 @@ class Session implements arrayaccess {
   }
   
   /**
+   * Reopen a closed session
+   * @return boolean True on success, false on failure
+   */
+  public function open() {
+    return session_start();
+  }
+  
+  /**
    * Close session and store data. Unlocks session data.
    * Allows other scripts to use session.
    */
   public function close() {
     session_write_close();
+  }
+  
+  /**
+   * Replace session id with new one
+   * @return boolean True on success, false on failure
+   */
+  public function regenerate() {
+    return session_regenerate_id();
   }
 
   /**

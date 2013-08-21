@@ -154,8 +154,9 @@ class Authentication extends ModuleBase {
   }
 
   protected function setSession($remember = false) {
-    session_regenerate_id();
-    $sid = session_id();
+    /** @TODO rethink sessions */
+    $this->session->regenerate();
+    $sid = $this->session->id;
     $ip = $_SERVER['REMOTE_ADDR'];
     $username = $this->user->username;
     $cookie = $this->user->cookie;

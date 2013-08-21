@@ -33,9 +33,13 @@ class Lib {
     if (isset(self::$info[$module])) {
       return self::$info[$module];
     }
+    $parent = null;
     $moduleName = $module;
     if (strpos($module, '/') !== false) {
       $segments = explode('/', $module);
+      if (count($segments) >= 2) {
+        $parent = implode('/', array_slice($segments, 0, -1));
+      }
       $moduleName = $segments[count($segments) - 1];
     }
     $meta = FileMeta::read(
@@ -45,6 +49,10 @@ class Lib {
     }
     if (!isset($meta['name'])) {
       $meta['name'] = $moduleName;
+    }
+    if (!isset($meta['version']) AND isset($parent)) {
+      $parentInfo = Lib::getModuleInfo($parent);
+      $meta['version'] = $parentInfo['version'];
     }
     self::$info[$module] = $meta;
     return $meta;
