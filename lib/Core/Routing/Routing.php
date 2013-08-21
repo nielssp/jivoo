@@ -53,7 +53,7 @@ class Routing extends ModuleBase {
           $this->redirectPath(array(), $this->request->query);
         }
         else {
-          array_shift($this->request->path);
+          $this->request->path = array_slice($this->request->path, 1);
           $this->redirectPath($this->request->path, $this->request->query);
         }
       }
