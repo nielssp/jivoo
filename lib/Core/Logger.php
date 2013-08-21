@@ -32,7 +32,7 @@ class Logger {
     $filePointer = fopen($this->file, $this->append ? 'a' : 'w');
     if ($filePointer) {
       foreach (self::$log as $entry) {
-        if ($this->level & $entry['type'] != 0) {
+        if (($this->level & $entry['type']) != 0) {
           fwrite($filePointer, tdate('c', $entry['time']));
           fwrite($filePointer, ' ' . Logger::getType($entry['type']) . ':');
           fwrite($filePointer, ' ' . $entry['message']);
