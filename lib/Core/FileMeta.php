@@ -116,12 +116,10 @@ class FileMeta {
       if (!empty($dependency)) {
         if (strpos($dependency, ';') === false) {
           if (($matches = self::matchDependencyVersion($dependency)) !== false) {
-            /** @TODO figure out what this line is about */
-            $matches[1] = $matches[1];
-            if (!isset($result['modules'][$matches[1]])) {
-              $result['modules'][$matches[1]] = array();
+            if (!isset($result['modules'][$matches[0]])) {
+              $result['modules'][$matches[0]] = array();
             }
-            $result['modules'][$matches[1]][$matches[2]] = $matches[3];
+            $result['modules'][$matches[0]][$matches[1]] = $matches[2];
           }
           else {
             $result['modules'][$dependency] = array();
@@ -131,11 +129,10 @@ class FileMeta {
           $split = explode(';', $dependency, 2);
           if ($split[0] == 'ext') {
             if (($matches = self::matchDependencyVersion($split[1])) !== false) {
-              $matches[1] = $matches[1];
-              if (!isset($result['extensions'][$matches[1]])) {
-                $result['extensions'][$matches[1]] = array();
+              if (!isset($result['extensions'][$matches[0]])) {
+                $result['extensions'][$matches[0]] = array();
               }
-              $result['extensions'][$matches[1]][$matches[2]] = $matches[3];
+              $result['extensions'][$matches[0]][$matches[1]] = $matches[2];
             }
             else {
               $result['extensions'][$split[1]] = array();
@@ -143,10 +140,10 @@ class FileMeta {
           }
           else if ($split[0] == 'php') {
             if (($matches = self::matchDependencyVersion($split[1])) !== false) {
-              if (!isset($result['php'][$matches[1]])) {
-                $result['php'][$matches[1]] = array();
+              if (!isset($result['php'][$matches[0]])) {
+                $result['php'][$matches[0]] = array();
               }
-              $result['php'][$matches[1]][$matches[2]] = $matches[3];
+              $result['php'][$matches[0]][$matches[1]] = $matches[2];
             }
             else {
               $result['php'][$split[1]] = array();
@@ -163,12 +160,13 @@ class FileMeta {
    *
    * The following operators are supported: <>, <=, >=, ==, !=, <, >, =
    *
-   * @param string $dependency A dependency e.g. Core<0.1
+   * @param string $dependency A dependency e.g. 'Core<0.1'
    * @return string[]|false An array e.g. array('Core', '<', '0.1') or false if wrong format
    */
   public static function matchDependencyVersion($dependency) {
     if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches)
         == 1) {
+      array_shift($matches);
       return $matches;
     }
     else {
@@ -177,14 +175,18 @@ class FileMeta {
   }
 
   /**
-   * 
+   * Compare a version string with a dependency version array as returned by readDependencies
+   * @param string $versionStr A version string e.g. '1.5.6'
+   * @param array $versionInfo An associative array of operators/versions
+   * e.g. array('>=' => '1.5.0')
+   * @return bool True if all conditions are met, false otherwise
    * @uses version_compare() to compare versions
    */
   public static function compareDependencyVersions($versionStr, $versionInfo) {
-    if (!is_array($comparisonArray)) {
+    if (!is_array($versionInfo)) {
       return false;
     }
-    foreach ($comparisonArray as $operator => $version) {
+    foreach ($versionInfo as $operator => $version) {
       if (!version_compare($versionStr, $version, $operator)) {
         return false;
       }
