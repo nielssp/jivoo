@@ -383,7 +383,7 @@ class Routing extends ModuleBase {
     /**
      * @TODO Either 307 or 303... 
      */
-    $status = $moved ? 301 : 307;
+    $status = $moved ? 301 : 303;
     Http::redirect($status, $this->getLinkFromPath($path, $query, $fragment));
   }
 
@@ -391,7 +391,7 @@ class Routing extends ModuleBase {
     /**
      * @TODO Either 307 or 303... 
      */
-    Http::redirect(307, $this->getLink($route));
+    Http::redirect(303, $this->getLink($route));
   }
 
   public function moved($route = null) {
