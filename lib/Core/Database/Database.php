@@ -84,6 +84,7 @@ class Database extends ModuleBase implements IDatabase {
       $this->m->Setup->enterSetup($controller, 'selectDriver');
     }
     else {
+      Logger::debug('Check driver: ' . $this->config['driver']);
       $this->driver = $this->config['driver'];
       $this->driverInfo = $this->checkDriver($this->driver);
       if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {

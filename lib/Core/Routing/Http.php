@@ -1,4 +1,9 @@
 <?php
+/**
+ * Provides functions related to redirects and HTTP status codes
+ * @package Core
+ * @subpackage Routing
+ */
 class Http {
   private function __construct() { }
   
@@ -21,6 +26,11 @@ class Http {
     exit();
   }
   
+  /**
+   * Set HTTP status code
+   * @param int $status Status code
+   * @return boolean False if invalid/unknown/unimplemented code, true otherwise
+   */
   public static function setStatus($status) {
     $phrase = Http::statusPhrase($status);
     if ($phrase === false) {
@@ -32,7 +42,6 @@ class Http {
   
   /**
    * Returns the phrase for a HTTP status code
-   *
    * @param int $status HTTP status code
    * @return string Phrase
    */
@@ -64,9 +73,9 @@ class Http {
   
   /**
    * Append a query string to a URI.
-   *
    * @param string $query Query string e.g. 'p=4&k=3'
    * @param string $uri URI Optional. Default is content of $_SERVER['REQUEST_URI']
+   * @deprecated Not used anywhere... Use routing system instead
    * @return string Uri + query string
    */
   public static function appendQuery($query, $uri = null) {

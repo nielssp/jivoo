@@ -6,10 +6,8 @@
 // Author         : apakoh.dk
 
 /**
- * Handling routes
- *
- * @pacakge Core
- * @subpackage Routing
+ * Module for handling routes
+ * @pacakge Core\Routing
  */
 class Routing extends ModuleBase {
   
@@ -382,12 +380,18 @@ class Routing extends ModuleBase {
    */
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
-    $status = $moved ? 301 : 303;
+    /**
+     * @TODO Either 307 or 303... 
+     */
+    $status = $moved ? 301 : 307;
     Http::redirect($status, $this->getLinkFromPath($path, $query, $fragment));
   }
 
   public function redirect($route = null) {
-    Http::redirect(303, $this->getLink($route));
+    /**
+     * @TODO Either 307 or 303... 
+     */
+    Http::redirect(307, $this->getLink($route));
   }
 
   public function moved($route = null) {
@@ -569,4 +573,7 @@ class Routing extends ModuleBase {
   }
 }
 
+/**
+ * @pacakge Core\Routing
+ */
 class InvalidRouteException extends Exception { }

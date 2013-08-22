@@ -22,11 +22,7 @@ class AuthenticationSetupController extends SetupController {
     }
 
     if ($this->request->isPost() AND $this->request->checkToken()) {
-      $this->user = $this->User->create($this->request->data['user']);  
-      if ($this->user->isValid()) {
-        $this->user->password = $this->m->Shadow->hash($this->user->password);
-        $this->user->setGroup($this->rootGroup);
-        $this->user->save(array('validate' => false));
+      if (isset($this->request->data['skip'])) {
         $this->config->set('rootCreated', true);
         if ($this->config->save()) {
           $this->redirect(null);
@@ -34,6 +30,22 @@ class AuthenticationSetupController extends SetupController {
         else {
           /** @todo goto Setup::saveConfig or something */
           $this->title = '!!! CONFIG ERROR !!!';
+        }
+      }
+      else {
+        $this->user = $this->User->create($this->request->data['user']);  
+        if ($this->user->isValid()) {
+          $this->user->password = $this->m->Shadow->hash($this->user->password);
+          $this->user->setGroup($this->rootGroup);
+          $this->user->save(array('validate' => false));
+          $this->config->set('rootCreated', true);
+          if ($this->config->save()) {
+            $this->redirect(null);
+          }
+          else {
+            /** @todo goto Setup::saveConfig or something */
+            $this->title = '!!! CONFIG ERROR !!!';
+          }
         }
       }
     }

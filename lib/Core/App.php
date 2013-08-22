@@ -1,7 +1,7 @@
 <?php
 /**
  * Application class for initiating ApakohPHP applications
- * @package ApakohPHP
+ * @package Core
  */
 class App {
 
@@ -300,31 +300,31 @@ class App {
 
 /**
  * Thrown when a requested module is not loaded
- * @package ApakohCMS
+ * @package Core
  */
 class ModuleNotLoadedException extends Exception {
 }
 /**
  * Thrown when a module does not exist
- * @package ApakohCMS
+ * @package Core
  */
 class ModuleNotFoundException extends Exception {
 }
 /**
  * Thrown when a module is invalid
- * @package ApakohCMS
+ * @package Core
  */
 class ModuleInvalidException extends Exception {
 }
 /**
  * Thrown when a module is missing dependencies
- * @package ApakohCMS
+ * @package Core
  */
 class ModuleMissingDependencyException extends ModuleNotFoundException {
 }
 /**
  * Thrown when a module is blacklisted
- * @package ApakohPHP
+ * @package Core
  */
 class ModuleBlacklistedException extends Exception {
 }
@@ -333,7 +333,7 @@ class ModuleBlacklistedException extends Exception {
  * EventArgs to be sent with the onModuleLoaded event
  * @property-read string $module Module name
  * @property-read ModuleBase $object Module object
- * @package ApakohPHP
+ * @package Core
  */
 class ModuleLoadedEventArgs extends EventArgs {
   protected $module;

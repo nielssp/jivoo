@@ -53,7 +53,13 @@ class DatabaseSetupController extends SetupController {
       $this->setupForm->addData($this->request->data['setup']);
       if (isset($this->request->data['cancel'])) {
         $this->config->delete('driver');
-        $this->refresh();
+        if ($this->config->save()) {
+          $this->redirect(null);
+        }
+        else {
+          /** @todo goto Setup::saveConfig or something */
+          $this->title = '!!! CONFIG ERROR !!!';
+        }
       }
       else if ($this->setupForm->isValid()) {
         $driver = $this->driver['driver'];

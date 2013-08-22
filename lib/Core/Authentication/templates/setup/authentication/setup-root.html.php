@@ -71,6 +71,7 @@ else : ?>
       <div class="section">
         <div class="container">
           <div class="aright">
+            <?php echo $Form->submit(tr('Skip'), 'skip'); ?>
             <?php echo $Form->submit(tr('Save'), 'save',
     array('class' => 'button publish')); ?>
           </div>

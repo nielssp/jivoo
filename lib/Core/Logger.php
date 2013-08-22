@@ -1,33 +1,86 @@
 <?php
 /**
- * ApakohPHP logger
+ * Apakoh Core logger
  *
- * @package ApakohPHP
+ * @package Core
  */
 class Logger {
 
+  /**
+   * @var int Database query log level
+   */
   const QUERY = 1;
+  
+  /**
+   * @var int Debug log level
+   */
   const DEBUG = 2;
+  
+  /**
+   * @var int Notice log level
+   */
   const NOTICE = 4;
+  
+  /**
+   * @var int Warning log level
+   */
   const WARNING = 8;
+  
+  /**
+   * @var int Error log level
+   */
   const ERROR = 16;
+  
+  /**
+   * @var int All log levels
+   */
   const ALL = 31;
+  
+  /**
+   * @var int No log levels
+   */
   const NONE = 0;
 
+  /**
+   * @var array[] List of log messages
+   */
   private static $log = array();
 
+  /**
+   * @var Logger[] List of active loggers
+   */
   private static $files = array();
 
+  /**
+   * @var string File path
+   */
   private $file;
+  
+  /**
+   * @var int Log level bit mask
+   */
   private $level;
+  
+  /**
+   * @var bool Whether to append messages to file
+   */
   private $append;
 
+  /**
+   * Constructor
+   * @param string $logFile Log file path
+   * @param int $level Log level bit mask
+   * @param string $append Whether to append messages to file
+   */
   private function __construct($logFile, $level = Logger::ALL, $append = true) {
     $this->file = $logFile;
     $this->level = $level;
     $this->append = $append;
   }
 
+  /**
+   * Destructor will attempt to save the log
+   */
   function __destruct() {
     $filePointer = fopen($this->file, $this->append ? 'a' : 'w');
     if ($filePointer) {
@@ -49,6 +102,11 @@ class Logger {
     }
   }
 
+  /**
+   * Get a string representation of a log level
+   * @param int $type Log level e.g. Logger::NOTICE
+   * @return string String representation e.g. 'NOTICE'
+   */
   public static function getType($type) {
     switch ($type) {
       case Logger::QUERY:
@@ -65,10 +123,29 @@ class Logger {
     return 'UNKNOWN';
   }
 
+  /**
+   * Get list of all log messages
+   * 
+   * Each message is of the format:
+   *     array(
+   *       'time' => ..., // Unix timestamp (int)
+   *       'message' => ..., // Message (string)
+   *       'type' => ..., // Message level (int)
+   *       'file' => ..., // File path if applicable
+   *       'line' => ... // Line if applicable
+   *     )
+   * @return array[] List of log messages
+   */
   public static function getLog() {
     return self::$log;
   }
 
+  /**
+   * Attach a log file
+   * @param string $logFile Log file path
+   * @param int $level Log level bit mask, e.g. Logger::Notice | Logger::Error 
+   * @param string $append Whether or not to append messages to file
+   */
   public static function attachFile($logFile, $level = Logger::ALL, $append = true) {
     self::$files[] = new Logger($logFile, $level, $append);
   }
@@ -76,6 +153,9 @@ class Logger {
   /**
    * Log a message to the log
    * @param string $message Log message
+   * @param int $type Log level e.g. Logger::WARNING
+   * @param string $file File if applicable
+   * @param int $line Line if applicable
    */
   public static function log($message, $type = Logger::NOTICE, $file = null, $line = null) {
     $entry = array(
@@ -88,26 +168,50 @@ class Logger {
     self::$log[] = $entry;
   }
   
+  /**
+   * Log a database query
+   * @param string $message Log message
+   */
   public static function query($message) {
     self::log($message, Logger::QUERY);
   }
-  
+
+  /**
+   * Log a debug message
+   * @param string $message Log message
+   */
   public static function debug($message) {
     self::log($message, Logger::DEBUG);
   }
-  
+
+  /**
+   * Log a notice
+   * @param string $message Log message
+   */
   public static function notice($message) {
     self::log($message, Logger::NOTICE);
   }
-  
+
+  /**
+   * Log a warning
+   * @param string $message Log message
+   */
   public static function warning($message) {
     self::log($message, Logger::WARNING);
   }
-  
+
+  /**
+   * Log an error
+   * @param string $message Log message
+   */
   public static function error($message) {
     self::log($message, Logger::ERROR);
   }
 
+  /**
+   * Log an exception
+   * @param Exception $exception Exception
+   */
   public static function logException(Exception $exception) {
     $file = $exception->getFile();
     $line = $exception->getLine();

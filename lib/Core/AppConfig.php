@@ -5,39 +5,77 @@
  * Implements arrayaccess, so the []-operator can be used
  * to get and set configuration values.
  * @package Core
+ * @property-read AppConfig $parent Get parent configuration
+ * @property-write array $defaults Set default key-value pairs
+ * @property-write array $override Set override key-value pairs 
  */
 class AppConfig implements arrayaccess {
   
+  /**
+   * @var array Associatve array of key-value pairs for current subset
+   */
   private $data = array();
-  
+
+  /**
+   * @var array Associative array of virtual data (not saved)
+   */
   private $virtual = array();
-  
+
+  /**
+   * @var string File name of configuration file
+   */
   private $file;
-  
+
+  /**
+   * @var bool True if configuration has been updated
+   */
   private $updated = false;
-  
+
+  /**
+   * @var AppConfig|null Root configuration
+   */
   private $root = null;
   
+  /**
+   * @var AppConfig|null Parent configuration
+   */
   private $parent = null;
   
+  /**
+   * Constructor
+   * @param string $configFile File name of configuration file
+   */
   public function __construct($configFile = null) {
     $this->root = $this;
     if (isset($configFile)) {
       if (file_exists($configFile)) {
-        $this->data = include $configFile;
+        /** @TODO Temporary work-around for opcode caching */
+        $content = file_get_contents($configFile);
+        $content = str_replace('<?php', '', $content);
+        $this->data = eval($content);
+//         $this->data = include $configFile;
       }
       $this->file = $configFile;
     }
   }
   
+  /**
+   * Destructor will attempt to save unsaved configuration data
+   * @uses Logger::error() to log an error if unable to save
+   */
   public function __destruct() {
     if (!isset($this->parent)) {
-      if ($this->save()) {
+      if (!$this->save()) {
         Logger::error(tr('Unable to save config file: %1', $this->file));
       }
     }
   }
   
+  /**
+   * Get the value of a property
+   * @param string $property Property name
+   * @return mixed Value
+   */
   public function __get($property) {
     switch ($property) {
       case 'parent':
@@ -45,6 +83,11 @@ class AppConfig implements arrayaccess {
     }
   }
   
+  /**
+   * Set the value of a property
+   * @param string $property Property name
+   * @param mixed $value Value
+   */
   public function __set($property, $value) {
     switch ($property) {
       case 'defaults':
@@ -56,6 +99,11 @@ class AppConfig implements arrayaccess {
     }
   }
   
+  /**
+   * Get a subset AppConfig
+   * @param string $key Key
+   * @return AppConfig A subset
+   */
   public function getSubset($key) {
     $config = new AppConfig();
     if (!isset($this->data[$key])) {
@@ -69,13 +117,15 @@ class AppConfig implements arrayaccess {
   
   /**
    * Update a configuration key
-   *
    * @param string $key The configuration key to access
    * @param mixed $value The variable to associate with the key. Could be a string/array/object etc.
    * @return bool True if successful, false if not
    */
   public function set($key, $value) {
-    $oldValue = $this->data[$key];
+    $oldValue = null;
+    if (isset($this->data[$key])) {
+      $oldValue = $this->data[$key];
+    }
     if (isset($key) AND isset($value) AND $key != '') {
       $this->data[$key] = $value;
     }
@@ -90,17 +140,21 @@ class AppConfig implements arrayaccess {
 
   /**
    * Delete a configuration key
-   *
-   * Function is an alias for update($key, null)
-   *
-   * @uses update()
    * @param string $key The configuration key to delete
    * @return bool True if successful, false if not
    */
   public function delete($key) {
-    unset($this->data[$key]);
+    if (isset($this->data[$key])) {
+      unset($this->data[$key]);
+      $this->root->updated = true;
+    }
   }
   
+  /**
+   * Set virtual data (this key-value pair will not be saved)
+   * @param string $key Key
+   * @param mixed $value Value
+   */
   public function setVirtual($key, $value) {
     $this->virtual[$key] = $value;
   }
@@ -146,7 +200,6 @@ class AppConfig implements arrayaccess {
   
   /**
    * Return the value of a configuration key
-   *
    * @param string $key Configuration key
    * @param bool $arrayOnly Only return arrays
    * @return mixed The content of the configuration key or false if key
@@ -168,7 +221,6 @@ class AppConfig implements arrayaccess {
   
   /**
    * Check if a key exists
-   *
    * @param string $key Configuration key
    * @return bool True if it exists false if not
    */
@@ -197,6 +249,21 @@ class AppConfig implements arrayaccess {
     }
     return $php . $prefix . ')';
   }
+  
+  /** 
+   * Touch the configuration file (attempt to create it if it doesn't exist)
+   * @return boolean True if file exists and is writable, false otherwise
+   */
+  public function touch() {
+    if ($this->root !== $this) {
+      return $this->root->touch();
+    }
+    $filePointer = fopen($this->file, 'w');
+    if (!$filePointer)
+      return false;
+    fclose($filePointer);
+    return true;
+  }
 
   /**
    * Save configuration to config-file
@@ -207,8 +274,11 @@ class AppConfig implements arrayaccess {
       return $this->root->save();
     }
     if ($this->updated == false) {
-      return false;
+      /** @TODO If not updated, it's successful, no? */
+      return true;
     }
+    // The following returns false when file doesn't exist, even if it can be
+    // created:
 //     if (!is_writable($this->file)) {
 //       return false;
 //     }
@@ -218,9 +288,17 @@ class AppConfig implements arrayaccess {
     $data = AppConfig::phpPrettyPrint($this->data);
     fwrite($filePointer, '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL);
     fclose($filePointer);
+
+//     opcache_invalidate($this->file);
+//     apc_delete_file($this->file);
+    $this->updated = false;
     return true;
   }
   
+  /**
+   * @deprecated Unknown origin and purpose
+   * @param array $array
+   */
   public function merge($array) {
   }
   
