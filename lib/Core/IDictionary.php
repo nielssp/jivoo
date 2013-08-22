@@ -44,12 +44,12 @@ interface IDictionary {
 
 /**
  * Exception thrown when a key does not exist in a dictionary
- * @package PeanutCMS
+ * @package Core
  */
 class DictionaryKeyInvalidException extends Exception {}
 
 /**
  * Exception thrown when writing to a read-only dictionary
- * @package PeanutCMS
+ * @package Core
  */
 class DictionaryReadOnlyException extends Exception {}

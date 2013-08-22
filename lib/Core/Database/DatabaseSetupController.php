@@ -8,7 +8,7 @@ class DatabaseSetupController extends SetupController {
     if ($this->config->exists('driver')) {
       $this->refresh();
     }
-    $this->title = tr('Welcome to PeanutCMS');
+    $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
     $this->drivers = $this->m->Database->listDrivers();
     if ($this->request->isPost() AND $this->request->checkToken()) {
       foreach ($this->drivers as $driver) {
@@ -38,7 +38,7 @@ class DatabaseSetupController extends SetupController {
   }
 
   public function setupDriver() {
-    $this->title = tr('Welcome to PeanutCMS');
+    $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
     $this->backendMenu = false;
     $this->setupForm = new Form('setup');
     $this->exception = null;

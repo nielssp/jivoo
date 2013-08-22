@@ -2,7 +2,7 @@
 /**
  * Useful functions
  * 
- * @package ApakohPHP
+ * @package Core
  */
 class Utilities {
  
@@ -44,11 +44,23 @@ class Utilities {
     return $word . 's';
   } 
   
+  /**
+   * Check if a character is uppercase
+   * @TODO Unicode support?
+   * @param string $char A single ascii character
+   * @return boolean True if uppercase, false otherwise
+   */
   public static function isUpper($char) {
     $ascii = ord($char);
     return $ascii >= 65 AND $ascii <= 90;
-  }
+  } 
   
+  /**
+   * Check if a character is lowercase
+   * @TODO Unicode support?
+   * @param string $char A single ascii character
+   * @return boolean True if lowercase, false otherwise
+   */
   public static function isLower($char) {
     $ascii = ord($char);
     return $ascii >= 97 AND $ascii <= 122;
@@ -90,6 +102,11 @@ class Utilities {
       'Precondition not met (' . $matches[1] . ').');
   }
 
+  /**
+   * Get content-type (MIME type) of a file name or file extension
+   * @param string $fileName File name or extension
+   * @return string Content type, 'text/plain' if unknown
+   */
   public static function getContentType($fileName) {
     $fileExt = strtolower($fileName);
     if (strpos($fileExt, '.')) {
@@ -120,13 +137,25 @@ class Utilities {
     }
   }
 
+  /**
+   * Sort an array of IGroupables
+   * @param IGroupable[] $objects An array of IGroupables
+   * @return boolean True if successful, false if empty array or not an array  
+   */
   public static function groupObjects(&$objects) {
     if (!is_array($objects) OR count($objects) < 1) {
       return false;
     }
     uasort($objects, array('Utilities', 'groupSorter'));
+    return true;
   }
 
+  /**
+   * Compare two IGroupable-objects
+   * @param IGroupable $a First
+   * @param IGroupable $b Second
+   * @return int Difference
+   */
   public static function groupSorter(IGroupable $a, IGroupable $b) {
     $groupA = $a->getGroup();
     $groupB = $b->getGroup();
@@ -140,9 +169,10 @@ class Utilities {
   
   /**
    * Comparison function for use with usort() and uasort()
-   *
-   * @param array $a
-   * @param array $b
+   * @depracted Is this still used anywhere?
+   * @param array $a First
+   * @param array $b Second
+   * @return int difference
    */
   public static function prioritySorter($a, $b) {
     return $b['priority'] - $a['priority'];

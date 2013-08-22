@@ -1,19 +1,27 @@
 <?php
 /**
- * Internationalization and localization of ApakohPHP
- *
- * @package ApakohPHP
+ * Internationalization and localization
+ * @package Core
+ * @TODO Rethink some of this. E.g. multiple language files, for extensions etc.
  */
 class I18n {
   
+  /**
+   * @var AppConfig Configuration used to pull language, timeZone, dateFormat
+   * and timeFormat
+   */
   private static $config = null;
 
   /**
-   * Contains the translation strings of the current language
-   * @var array
+   * @var array Contains the translation strings of the current language
    */
   private static $language = null;
   
+  /**
+   * Configure I18n system with a configuration
+   * @param AppConfig $config Configuration
+   * @param string $location Path of language directory
+   */
   public static function setup(AppConfig $config, $location) {
     self::$config = $config;
     if (!date_default_timezone_set(self::$config['timeZone'])) {
@@ -33,7 +41,7 @@ class I18n {
    * %n where n is a number is used as placeholder for the additional arguments
    *
    * @param string $text Text to translate
-   * @param string $args,... Additional OPTIONAL arguments
+   * @param string $args,... Additional OPTIONAL parameters
    * @return string Translated text
    */
   public static function translate($text) {
@@ -171,10 +179,20 @@ class I18n {
       return 'H:i:s';
   }
 
+  /**
+   * Format date using I18n::dateFormat() 
+   * @param int|null $timestamp UNIX timestamp or null for now 
+   * @return string Formatted date string
+   */
   public static function formatDate($timestamp = null) {
     return self::date(self::dateFormat(), $timestamp);
   }
 
+  /**
+   * Format time using I18n::timeFormat() 
+   * @param int|null $timestamp UNIX timestamp or null for now 
+   * @return string Formatted time string
+   */
   public static function formatTime($timestamp = null) {
     return self::date(self::timeFormat(), $timestamp);
   }

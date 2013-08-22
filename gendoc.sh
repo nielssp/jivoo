@@ -1,5 +1,6 @@
 #!/bin/bash
 apigen --source app \
+  --source lib \
   --destination doc \
   --exclude "app/templates/*" \
   --title PeanutCMS \

@@ -7,7 +7,7 @@ class AuthenticationSetupController extends SetupController {
   protected $models = array('User', 'Group');
 
   public function setupRoot() {
-    $this->title = tr('Welcome to PeanutCMS');
+    $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
 
     if (!isset($this->rootGroup)) {
       $this->rootGroup = $this->Group

@@ -1,12 +1,12 @@
 <?php
 /**
  * Base class for modules
- * @package PeanutCMS
+ * @package Core
  */
 abstract class ModuleBase {
 
   /**
-   * @var App The associated application
+   * @var App The application that has loaded this module
    */
   protected $app = null;
 
@@ -29,8 +29,6 @@ abstract class ModuleBase {
    * @var Session|null Session storage object if available
    */
   protected $session = null;
-
-  private $modules = array();
 
   /**
    * Module constructor
@@ -85,7 +83,7 @@ abstract class ModuleBase {
   }
 
   /**
-   * Module initializer
+   * Module initialisation
    */
   protected abstract function init();
 }

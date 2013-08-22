@@ -90,17 +90,19 @@ class FileMeta {
    * Read a string of dependencies and return an array
    *
    * The array will be of the format:
-   *    array(
-   *      'modules' => array(
-   *        ...
-   *      ),
-   *      'extensions' => array(
-   *        ...
-   *      ),
-   *      'php' => array(
-   *        ...
-   *      )
-   *    )
+   * <code>
+   * array(
+   *   'modules' => array(
+   *     ...
+   *   ),
+   *   'extensions' => array(
+   *     ...
+   *   ),
+   *   'php' => array(
+   *    ...
+   *   )
+   * )
+   * </code>
    *
    * @param string $dependencies A space-separated list of dependencies
    * @return array Associative array

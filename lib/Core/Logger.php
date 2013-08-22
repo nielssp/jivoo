@@ -127,13 +127,15 @@ class Logger {
    * Get list of all log messages
    * 
    * Each message is of the format:
-   *     array(
-   *       'time' => ..., // Unix timestamp (int)
-   *       'message' => ..., // Message (string)
-   *       'type' => ..., // Message level (int)
-   *       'file' => ..., // File path if applicable
-   *       'line' => ... // Line if applicable
-   *     )
+   * <code>
+   * array(
+   *   'time' => ..., // Unix timestamp (int)
+   *   'message' => ..., // Message (string)
+   *   'type' => ..., // Message level (int)
+   *   'file' => ..., // File path if applicable
+   *   'line' => ... // Line if applicable
+   * )
+   * </code>
    * @return array[] List of log messages
    */
   public static function getLog() {

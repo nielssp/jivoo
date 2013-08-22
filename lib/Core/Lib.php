@@ -1,14 +1,37 @@
 <?php
+/**
+ * Library system
+ * @package Core
+ */
 class Lib {
 
+  /**
+   * @var array List of paths (strings) to look for classes
+   */
   private static $paths = array();
 
+  /**
+   * @var array Associative array of module info as returned by getModuleInfo()
+   */
   private static $info = array();
 
+  /**
+   * @var string|null The last module to be used
+   */
   private static $lastModule = null;
+  
+  /**
+   * @var bool Whether or not to throw exceptions
+   */
+  public static $throwExceptions = true;
 
   private function __construct() {}
 
+  /**
+   * Import a module, i.e. add to include paths
+   * @param string $module Module name/path
+   * @return boolean True if successful, false otherwise
+   */
   public static function import($module) {
     $module = trim($module, '/');
     if (isset(self::$paths[$module])) {
@@ -19,6 +42,10 @@ class Lib {
     return true;
   }
 
+  /**
+   * Add just an include path
+   * @param string $path Path
+   */
   public static function addIncludePath($path) {
     self::$paths[] = $path;
   } 
@@ -58,11 +85,22 @@ class Lib {
     return $meta;
   }
 
+  /**
+   * @var int Number of calls to auto loader
+   */
   public static $loadCalls = 0;
+  
+  /**
+   * @var int Number of places looked for classes
+   */
   public static $loadIterations = 0;
   
-  public static $throwExceptions = true;
-  
+  /**
+   * Check if a class exists anywhere
+   * @param string $className Name of class
+   * @param string $autoload Whether or not to autoload it if it does
+   * @return boolean True if it exists, false otherwise
+   */
   public static function classExists($className, $autoload = true) {
     if (!$autoload) {
       return class_exists($className, false);
@@ -75,7 +113,14 @@ class Lib {
     }
     return class_exists($className, true);
   }
-
+  
+  /**
+   * Auto loader
+   * @param string $className Name of class
+   * @throws ClassNotFoundException if class not found (and Lib::$throwExceptions
+   * is true)
+   * @return boolean True on success false on failure
+   */
   public static function autoload($className) {
     self::$loadCalls++;
     if (isset(self::$lastModule)) {
@@ -111,4 +156,8 @@ class Lib {
   }
 }
 
+/**
+ * Thrown when a class could not be found
+ * @package Core
+ */
 class ClassNotFoundException extends Exception { }
