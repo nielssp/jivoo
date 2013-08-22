@@ -1,8 +1,7 @@
 <?php
 /**
  * Represents a record
- * @package Core
- * @subpackage Models
+ * @package Core\Models
  */
 interface IRecord {
   /**

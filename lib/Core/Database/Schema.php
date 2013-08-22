@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a database table schema
- * @package PeanutCMS
+ * @package Core\Database
  */
 class Schema {
   private $_schema = array();

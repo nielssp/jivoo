@@ -2,6 +2,10 @@
 /**
  * Controller for setting up root user
  * @package Core\Authentication
+ * @property-read HtmlHelper $Html Html helper
+ * @property-read FormHelper $Form Form helper
+ * $property-read ActiveModel $User User model
+ * $property-read ActiveModel $Group Group model
  */
 class AuthenticationSetupController extends SetupController {
 

@@ -2,8 +2,7 @@
 /**
  * Represents a data model containing
  * labeled fields.
- * @package Core
- * @subpackage Models
+ * @package Core\Models
  */
 interface IModel {
   /**

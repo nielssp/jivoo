@@ -1,5 +1,12 @@
 <?php
+/**
+ * A generic PDO SQL database
+ * @package Core\Database
+ */
 abstract class PdoDatabase extends SqlDatabase {
+  /**
+   * @var PDO PDO Connection
+   */
   protected $pdo;
 
   public function close() {

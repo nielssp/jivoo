@@ -1,48 +1,114 @@
 <?php
+/**
+ * Active model
+ * @package Core\Database
+ * @property-read array $associations An associative array of association
+ * method names and arrays describing the association. 
+ * @property-read string $table Name of associated database table
+ * @property-read IDataSource $dataSource Associated data source
+ * @property-read IDictionary $otherSources A collection of other data sources
+ * for use with association
+ * @property-read IDictionary $otherModels A collection of other models for use
+ * with associations
+ * @property-read string $primaryKey The primary key of the associated database
+ * table
+ * @property-read Validator $validator Associated validator
+ * @property-read string[] $columns List of column names
+ */
 class ActiveModel implements IModel {
-
   /**
-   * @var string
+   * @var string Name of the class used for records of this model
    */
   private $recordClass;
 
   /**
-   * @var IDataSource
+   * @var IDataSource The data source associated with this model
    */
   private $dataSource;
   
+  /**
+   * @var IDictionary Other models
+   */
   private $otherModels;
   
+  /**
+   * @var IDictionary Other data sources
+   */
   private $otherSources;
-
+  
+  /**
+   * @var string Associated database table name
+   */
   private $table;
 
+  /**
+   * @var Schema Associated database table schema
+   */
   private $schema;
 
+  /**
+   * @var array An associative array of field names and labels
+   */
   private $fields = array();
 
+  /**
+   * @var array An associative array of field names and default values
+   */
   private $defaults = array();
 
+  /**
+   * @var string[] A list of columns in associated table
+   */
   private $columns = array();
 
+  /**
+   * @var string Primary key of table
+   */
   private $primaryKey;
 
+  /**
+   * @var array An associative array of field names and {@see Editor} objects
+   */
   private $editors = array();
 
+  /**
+   * @var array An associative array of field names ad {@see Encoder} objects
+   */
   private $encoders = array();
   
+  /**
+   * @var array An associative array of primary key values and
+   * {@see ActiveRecord} objects
+   */
   private $cache = array();
 
+  /**
+   * @var Validator Associated validator
+   */
   private $validator;
 
+  /**
+   * @var array Settings as defined in the {@see ActiveRecord} class
+   */
   private $settings;
   
+  /**
+   * @var array An associative array of association method names and info
+   */
   private $associations;
 
+  /**
+   * Constructor. Will get settings from $recordClass
+   * @param string $recordClass Name of {@see ActiveRecord} class
+   * @param IDataSource $dataSource Data source for model
+   * @param IDictionary $otherModels Additional models for associations 
+   * @param IDictionary $otherSources Additional data sources for associations
+   * @throws InvalidActiveRecordException If $recordClass does not extend
+   * {@see ActiveRecord}
+   */
   public final function __construct($recordClass, IDataSource $dataSource,
                                     IDictionary $otherModels = null,
-                                    IDictionary $otherSources = null,
-                                    $config = array()) {
+                                    IDictionary $otherSources = null) {
     if (!is_subclass_of($recordClass, 'ActiveRecord')) {
       throw new InvalidActiveRecordException(
         tr('Invalid record class "%1", must extend ActiveRecord', $recordClass)
@@ -96,6 +162,13 @@ class ActiveModel implements IModel {
     }
   }
   
+  /**
+   * Get name of table associated with an {@see ActiveRecord} class
+   * @param string $recordClass Name of {@see ActiveRecord} class
+   * @throws InvalidActiveRecordException If $recordClass does not extend
+   * {@see ActiveRecord}
+   * @return string Name of table
+   */
   public static function getTable($recordClass) {
     if (!is_subclass_of($recordClass, 'ActiveRecord')) {
       throw new InvalidActiveRecordException(
@@ -107,6 +180,9 @@ class ActiveModel implements IModel {
     return $settings['table'];
   }
 
+  /**
+   * Create associations
+   */
   private function createAssociations() {
     foreach (array('hasOne', 'belongsTo') as $associationType) {
       foreach ($this->settings[$associationType] as $class => $options) {
@@ -134,6 +210,19 @@ class ActiveModel implements IModel {
     }
   }
   
+  /**
+   * Create a single association
+   * @param string $type Association type: 'hasOne', 'belongsTo', 'hasMany'
+   * or 'hasAndBelongsToMany' 
+   * @param string $method Method prefix: 'get', 'set', 'remove', 'get',
+   * 'count', 'has', 'add' or 'remove'
+   * @param string $class Name of other record class
+   * @param array $options An associative array of options for the association
+   * @throws ModelNotFoundException If other model not found
+   * @throws InvalidModelException If model is not an ActiveRecord
+   * @throws DataSourceNotFoundException If the data source required could not
+   * be fou
+   */
   private function createAssociation($type, $method, $class, $options) {
     if (!isset($options['class'])) {
       $options['class'] = $class;
@@ -228,6 +317,11 @@ class ActiveModel implements IModel {
     }
   }
 
+  /**
+   * Create validator for model
+   * @param array $validateArray Validtor settings from record class
+   * @return Validator The validator
+   */
   private function createValidator($validateArray) {
     $validator = new Validator($validateArray);
     foreach ($this->columns as $column) {
@@ -286,6 +380,10 @@ class ActiveModel implements IModel {
     return $validator;
   }
 
+  /**
+   * Get value of a property
+   * @param string $property Property name
+   */
   public function __get($property) {
     switch ($property) {
       case 'associations':
@@ -303,6 +401,16 @@ class ActiveModel implements IModel {
     }
   }
 
+  /**
+   * Call a method of format 'findBySomething', where 'Something' is the name
+   * of any field in the model. Will return all records that matches the
+   * one parameter, e.g. ->findByName('test') will return all records where
+   * the field 'name' equals 'test'.
+   * @param string $method Method name
+   * @param mixed[] $parameters Parameters
+   * @throws ModelMethodNotFoundException If the method does not exist 
+   * @return ActiveRecord[] List of records
+   */
   public function __call($method, $parameters) {
     if (substr($method, 0, 6) == 'findBy') {
       $field = str_replace('-', '_',
@@ -318,6 +426,9 @@ class ActiveModel implements IModel {
     ));
   }
 
+  /**
+   * @return ActiveRecord New record
+   */
   public function create($data = array(), $allowedFields = null) {
     if (is_array($allowedFields)) {
       $allowedFields = array_flip($allowedFields);
@@ -402,11 +513,20 @@ class ActiveModel implements IModel {
     return isset($this->fields[$field]);
   }
   
+  /**
+   * Add record to cache for quick retrieval with find() later
+   * @param ActiveRecord $record Record
+   */
   public function addToCache(ActiveRecord $record) {
     $primaryKey = $this->primaryKey;
     $this->cache[$record->$primaryKey] = $record;
   }
   
+  /**
+   * Find a record whose primary key matches the parameter
+   * @param mixed $primaryKey Value for primary key
+   * @return ActiveRecord|false A matching record or false if not found
+   */
   public function find($primaryKey) {
     if ($primaryKey == 0) {
       return false;
@@ -426,6 +546,11 @@ class ActiveModel implements IModel {
     return $record;
   }
   
+  /**
+   * Check if a record with the specified primary key value exists
+   * @param mixed $primaryKey Value for primary key
+   * @return boolean True if a record exists, false if not
+   */
   public function exists($primaryKey) {
     if ($primaryKey == 0) {
       return false;
@@ -476,6 +601,11 @@ class ActiveModel implements IModel {
     return $this->dataSource->count($query);
   }
 
+  /**
+   * Get encoder of a field
+   * @param string $field Field name
+   * @return Encoder|null An encoder object or null if not set
+   */
   public function getEncoder($field) {
     if (isset($this->encoders[$field])) {
       return $this->encoders[$field];
@@ -483,13 +613,42 @@ class ActiveModel implements IModel {
     return null;
   }
 
+  /**
+   * Set the encoder of a field
+   * @param string $field Field name
+   * @param Encoder $encoder Encoder object
+   */
   public function setEncoder($field, Encoder $encoder = null) {
     $this->encoders[$field] = $encoder;
   }
 }
 
+/**
+ * A model is invalid
+ * @package Core\Database
+ */
 class InvalidModelException extends Exception {}
+
+/**
+ * An ActiveRecord is invalid
+ * @package Core\Database
+ */
 class InvalidActiveRecordException extends Exception { }
+
+/**
+ * A model method was not found
+ * @package Core\Database
+ */
 class ModelMethodNotFoundException extends Exception { }
+
+/**
+ * A model was not found
+ * @package Core\Database
+ */
 class ModelNotFoundException extends Exception { }
+
+/**
+ * A data source was not found
+ * @package Core\Database
+ */
 class DataSourceNotFoundException extends Exception { }

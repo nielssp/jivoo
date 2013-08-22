@@ -1,8 +1,7 @@
 <?php
 /**
  * Represents a database query result
- * @package ApakohPHP
- * @subpackage Database
+ * @package Core\Database
  */
 interface IResultSet {
 
@@ -13,8 +12,8 @@ interface IResultSet {
   public function hasRows();
   
   /**
-   * Fetch the next row as an array
-   * @return array|false The array or false if no more rows
+   * Fetch the next row as an ordered array
+   * @return mixed[]|false The array or false if no more rows
    */
   public function fetchRow();
   

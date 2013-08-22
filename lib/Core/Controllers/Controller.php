@@ -1,32 +1,82 @@
 <?php
 /**
  * A controller, the C of MVC
- * 
- * @todo docs
- * @package Core
- * @subpackage Controllers
+ * @package Core\Controllers
  */
 class Controller implements IHelpable {
-
+  /**
+   * @var string Name of controller (without 'Controller'-part)
+   */
   private $name;
 
+  /**
+   * @var AppConfig Configuration
+   */
   protected $config = null;
+  
+  /**
+   * @var Dictionary Collection of modules
+   */
   protected $m = null;
+  
+  /**
+   * @var Request Current request
+   */
   protected $request = null;
+  
+  /**
+   * @var Session Current session
+   */
   protected $session = null;
-
+  
+  /**
+   * @var string[] List of actions
+   */
   private $actions = array();
 
+  /**
+   * @var string[] List of template paths
+   */
   private $templatePaths = array();
 
+  /**
+   * @var array Associative array of data to be passed along to template
+   */
   private $data = array();
 
+  /**
+   * @var string[] List of modules needed by controller
+   */
   protected $modules = array();
+
+  /**
+   * @var string[] List of helpers needed by controller
+   */
   protected $helpers = array('Html');
+
+  /**
+   * @var string[] List of models needed by controller
+   */
   protected $models = array();
+  
+  /**
+   * @var array Associative array of helper names and {@see Helper} objects
+   */
   private $helperObjects = array();
+  
+  /**
+   * @var array Associative array of model names and {@see Model} objects
+   */
   private $modelObjects = array();
 
+  /**
+   * Constructor
+   * @param Routing $routing Routing module
+   * @param Templates $templates Templates module
+   * @param AppConfig $config Configuration
+   * @param bool $temp Set to true if temporary (used to get list of helpers,
+   * modules and models without spending time initialising)
+   */
   public final function __construct(Routing $routing, Templates $templates,
                                     AppConfig $config = null, $temp = false) {
     if ($temp) {
@@ -65,6 +115,11 @@ class Controller implements IHelpable {
     $this->init();
   }
 
+  /**
+   * Get an associated model, helper or data-value (in that order)
+   * @param string $name Name of model/helper or key for data-value
+   * @return Model|Helper|mixed Associated value 
+   */
   public function __get($name) {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
@@ -77,18 +132,35 @@ class Controller implements IHelpable {
     }
   }
 
+  /**
+   * Set data value, the data is passed along to the template when rendering
+   * @param string $name Key
+   * @param mixed $value Value
+   */
   public function __set($name, $value) {
     $this->data[$name] = $value;
   }
   
+  /**
+   * Set configuration
+   * @param AppConfig $config Configuration
+   */
   public function setConfig(AppConfig $config) {
     $this->config = $config;
   }
 
+  /**
+   * Get all data
+   * @return array Associative array
+   */
   public function getData() {
     return $this->data;
   }
   
+  /**
+   * Get list of modules that this controller requires
+   * @return string[] List of module names
+   */
   public function getModuleList() {
     return $this->modules;
   }
@@ -97,10 +169,18 @@ class Controller implements IHelpable {
     return $this->helpers;
   }
   
+  /**
+   * Get list of models that controller requires
+   * @return string[] List of model names
+   */
   public function getModelList() {
     return $this->models;
   }
 
+  /**
+   * Add a module to the {@see Controller::$m} dictionary
+   * @param ModuleBase $object Module
+   */
   public function addModule($object) {
     $class = get_class($object);
     $this->m->$class = $object;
@@ -111,10 +191,21 @@ class Controller implements IHelpable {
     $this->helperObjects[$name] = $helper;
   }
   
+  /**
+   * Add a model to this controller
+   * @param string $name Name of model
+   * @param IModel $model Model object
+   */
   public function addModel($name, IModel $model) {
     $this->modelObjects[$name] = $model;
   }
 
+  /**
+   * Create a route to an action for auto routing
+   * @param string $action Action name
+   * @param string $prefix Prefix for the resulting path
+   * @throws Exception If action does not exist
+   */
   private function createRoute($action, $prefix = '') {
     if (!in_array($action, $this->actions)) {
       throw new Exception(tr('Invalid action "%1"', $action));
@@ -158,6 +249,11 @@ class Controller implements IHelpable {
     }
   }
 
+  /**
+   * Automatically route a single or all actions in this controller
+   * @param string $action If set, the name of the single action to auto route
+   * @param string $prefix A prefix to use for all resulting paths
+   */
   public function autoRoute($action = null, $prefix = '') {
     if (isset($action)) {
       $this->createRoute($action, $prefix);
@@ -168,6 +264,12 @@ class Controller implements IHelpable {
     }
   }
 
+  /**
+   * Add a custom route to an action
+   * @param string $path Path that should lead to action
+   * @param string $action Action name
+   * @param int $priority Priority of route
+   */
   public function addRoute($path, $action, $priority = 5) {
     $this->m->Routing->addRoute(
       $path,
@@ -176,6 +278,12 @@ class Controller implements IHelpable {
     );
   }
 
+  /**
+   * Set the current route
+   * @param stirng $action Action name
+   * @param int $priority Priority of route
+   * @param mixed[] $parameters Array of additional parameters for action
+   */
   public function setRoute($action, $priority = 5, $parameters = array()) {
     $this->m->Routing->setRoute(
       array(
@@ -186,12 +294,20 @@ class Controller implements IHelpable {
     );
   }
 
+  /**
+   * Ensure that the current path matches the current action, redirect to
+   * the correct path if not.
+   */
   protected function reroute() {
     list(, $caller) = debug_backtrace(false);
     $this->m->Routing
       ->reroute($this->name, $caller['function'], $caller['args']);
   }
 
+  /**
+   * Set return path
+   * @see Controller::goBack()
+   */
   protected function returnToThis() {
     //list( , $caller) = debug_backtrace(false);
     //    $this->session['returnTo'] = array('url' => $this->request->url);
@@ -201,6 +317,11 @@ class Controller implements IHelpable {
     );
   }
 
+  /**
+   * Return to a previously set return path
+   * @see Controller::returnToThis()
+   * @return false False if nothing to return path set
+   */
   protected function goBack() {
     if (!isset($this->session['returnTo'])) {
       return false;
@@ -208,18 +329,47 @@ class Controller implements IHelpable {
     $this->redirect($this->session['returnTo']);
   }
 
+  /**
+   * Redirect to at route
+   * @param string $route Route, see {@see Routing}
+   */
   protected function redirect($route = null) {
     $this->m->Routing->redirect($route);
   }
 
+  /**
+   * Refresh the current path with optional query data and fragment
+   * @param array $query Associative array of query data
+   * @param string $fragment Fragment of page
+   */
   protected function refresh($query = null, $fragment = null) {
     $this->m->Routing->refresh($query, $fragment);
   }
 
+  /**
+   * Add a template directory
+   * @param string $path Directory path
+   */
   public function addTemplatePath($path) {
     $this->templatePaths[] = $path;
   }
 
+  /**
+   * Render a template
+   * 
+   * If $templateName is not set, the path of the template will be computed
+   * based on the name of the controller and the name of the action. Each level
+   * of inheritance will be an additional directory level. The AppController
+   * does not count, and will result in the root of the template directory. An
+   * example is {@see AuthenticationSetupController} which inherits from
+   * {@see SetupController}. If the action is 'setupRoot', the resulting
+   * template path is 'setup/authentication/setup-root.html'.
+   * {@see Utilities::camelCaseToDashes()} is used on each level.
+   * 
+   * @param string $templateName Name of template to render
+   * @param bool $return Whether or not to return the result rather than outputting
+   * @return string The output of $return is set to true
+   */
   protected function render($templateName = null, $return = false) {
     $template = new Template($this->m->Templates, $this->m->Routing, $this);
     $template->setTemplatePaths($this->templatePaths);
@@ -248,9 +398,16 @@ class Controller implements IHelpable {
     return $template->render($templateName, $return);
   }
 
+  /**
+   * Controller initialisation, called by constructor
+   */
   protected function init() {
   }
   
+  /**
+   * Called just before the selected action is called, useful for doing stuff
+   * for all actions.
+   */
   public function preRender() {
   }
 

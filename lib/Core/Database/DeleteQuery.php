@@ -1,4 +1,8 @@
 <?php
+/**
+ * Query for deleting rows
+ * @package Core\Database
+ */
 class DeleteQuery extends Query implements ICondition {
   protected $orderBy;
   protected $descending = false;

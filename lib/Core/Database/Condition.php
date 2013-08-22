@@ -1,9 +1,23 @@
 <?php
-
+/**
+ * A condition for selecting rows in a database table
+ * @package Core\Database
+ * @property-read array[] A list of clauses in the form of arrays of the format
+ * array('glue' => ..., 'clause' => ..., 'vars' => array(...)) where the glue
+ * is either 'AND' or 'OR'. 
+ */
 class Condition implements ICondition {
+  /**
+   * @var array[] A list of clauses
+   */
   private $clauses = array();
-  private $vars = array();
 
+  /**
+   * Constructor
+   * @param ICondition|string $clause
+   * @param mixed $vars,... Additional values to replace question marks in
+   * $clause with
+   */
   public function __construct($clause = null) {
     if (isset($clause) AND !empty($clause)) {
       $args = func_get_args();
@@ -11,6 +25,10 @@ class Condition implements ICondition {
     }
   }
 
+  /**
+   * Get value of property
+   * @param string $property Property name
+   */
   public function __get($property) {
     if (isset($this->$property)) {
       return $this->$property;
@@ -26,10 +44,22 @@ class Condition implements ICondition {
     }
   }
 
+  /**
+   * Check if property is set
+   * @param string $property Property name
+   * @return bool True if set, false otherwise
+   */
   public function __isset($property) {
     return isset($this->$property);
   }
 
+  /**
+   * Create condition, can be used instead of constructor for chaining purposes
+   * @param ICondition|string $clause
+   * @param mixed $vars,... Additional values to replace question marks in
+   * $clause with
+   * @return Condition A new condition
+   */
   public static function create() {
     $args = func_get_args();
     $obj = new self();

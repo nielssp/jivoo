@@ -1,7 +1,6 @@
 <?php
 // Module
 // Name           : Database
-// Version        : 0.2.0
 // Description    : The Apakoh Core database system
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Templates Core/Models Core/Helpers
@@ -9,15 +8,33 @@
 
 /**
  * Database module
- * 
  * @package Core\Database
  */
 class Database extends ModuleBase implements IDatabase {
+  /**
+   * @var string Driver name
+   */
   private $driver;
+  
+  /**
+   * @var array Associative array of driver info
+   */
   private $driverInfo;
+  
+  /**
+   * @var IDatabase Database connection
+   */
   private $connection;
 
+  /**
+   * 
+   * @var array Associative array of table names and schemas
+   */
   private $schemas = array();
+  
+  /**
+   * @var array Associative array of table names and migration status
+   */
   private $migrations = array();
 
   /* Begin IDatabase implementation */
@@ -157,11 +174,34 @@ class Database extends ModuleBase implements IDatabase {
     }
   }
 
+  /**
+   * Check if a table is newly created
+   * @param string $table Table name
+   * @return boolean True if new, false otherwise
+   */
   public function isNew($table) {
     return isset($this->migrations[$table])
       AND $this->migrations[$table] == 'new';
   }
 
+  /**
+   * Get information about a database driver.
+   * 
+   * The returned information array is of the format:
+   * <code>
+   * array(
+   *   'driver' => ..., // Driver name (string)
+   *   'name' => ..., // Formal name, e.g. 'MySQL' instead of 'MySql' (string)
+   *   'requiredOptions' => array(...), // List of required options (string[])
+   *   'optionalOptions' => array(...), // List of optional options (string[])
+   *   'isAvailable' => ..., // Whether or not driver is available (bool)
+   *   'missingExtensions => array(...) // List of missing extensions (string[])
+   * )
+   * </code>
+   * @param string $driver Driver name
+   * @return array|false Driver information as an associative array or false if
+   * not found
+   */
   public function checkDriver($driver) {
     if (!file_exists($this->p($driver . '/' . $driver . 'Database.php'))) {
       return false;
@@ -183,6 +223,11 @@ class Database extends ModuleBase implements IDatabase {
     );
   }
 
+  /**
+   * Get an array of all drivers and their information 
+   * @return array An associative array of driver names and driver information
+   * as returned by {@see Database::checkDriver()}
+   */
   public function listDrivers() {
     $drivers = array();
     $dir = opendir($this->p(''));

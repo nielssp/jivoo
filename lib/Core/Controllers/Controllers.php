@@ -1,28 +1,37 @@
 <?php
 // Module
 // Name           : Controllers
-// Version        : 0.3.14
 // Description    : For contollers
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Templates
 //                  Core/Helpers Core/Models
 
 /**
- * Controllers module
- * 
- * @package Core
- * @subpackage Controllers
+ * Controller module. Will automatically find controllers in the controllers
+ * directory (and subdirectories). 
+ * @package Core\Controllers
  */
 class Controllers extends ModuleBase {
 
+  /**
+   * @var array An associative array of controller names and associated class
+   * names
+   */
   private $controllers = array();
 
+  /**
+   * @var array An associative array of controller names and associated objects
+   */
   private $controllerObjects = array();
 
   protected function init() {
     $this->findControllers();
   }
   
+  /**
+   * Find controllers 
+   * @param string $dir Directory
+   */
   private function findControllers($dir = '') {
     Lib::addIncludePath($this->p('controllers', $dir));
     $handle = opendir($this->p('controllers', $dir));
@@ -52,6 +61,11 @@ class Controllers extends ModuleBase {
     closedir($handle);
   }
 
+  /**
+   * Get instance of controller
+   * @param string $name Controller name
+   * @return Controller|null Controller object or null if not found
+   */
   private function getInstance($name) {
     if (isset($this->controllers[$name])) {
       if (!isset($this->controllerObjects[$name])) {
@@ -82,11 +96,20 @@ class Controllers extends ModuleBase {
     return null;
   }
 
+  /**
+   * Add a controller object
+   * @param Controller $controller Controller object
+   */
   public function addController(Controller $controller) {
     $name = str_replace('Controller', '', get_class($controller));
     $this->controllerObjects[$name] = $controller;
   }
 
+  /**
+   * Get a controller object
+   * @param string $name Controller name
+   * @return Controller|null Controller object or null if not found
+   */
   public function getController($name) {
     if (isset($this->controllerObjects[$name])) {
       return $this->controllerObjects[$name];
@@ -94,6 +117,11 @@ class Controllers extends ModuleBase {
     return $this->getInstance($name);
   }
 
+  /**
+   * Get a controller object
+   * @param string $name Controller name
+   * @return Controller|null Controller object or null if not found
+   */
   public function __get($name) {
     return $this->getController($name);
   }

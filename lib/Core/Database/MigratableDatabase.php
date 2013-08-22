@@ -1,6 +1,16 @@
 <?php
-
+/**
+ * A generic migratable database
+ * @package Core\Database
+ */
 abstract class MigratableDatabase implements IDatabase, IMigratable {
+  /**
+   * Call migration method
+   * @param Schema $schema Table schema
+   * @param string $method Method name
+   * @param string $subject Subject (column name or index name
+   * @return boolean
+   */
   private function migrationMethod(Schema $schema, $method, $subject = '') {
     if (!empty($subject)) {
       $method = $method . '_' . $subject;
@@ -66,6 +76,10 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
     }
   }
   
+  /**
+   * Called after a table has been created
+   * @param string $name Table name
+   */
   protected function tableCreated($name) {
   }
 }

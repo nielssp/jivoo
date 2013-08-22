@@ -14,7 +14,7 @@ class AuthHelper extends Helper {
   
   /**
    * Set route to login page
-   * @param array $route Route {@see Routing}
+   * @param array $route Route, see {@see Routing}
    */
   public function setLoginRoute($route = null) {
     $this->loginRoute = $route;

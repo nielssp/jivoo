@@ -1,9 +1,17 @@
 <?php
-
+/**
+ * Controller for setting up database 
+ * @package Core\Database
+ * @property-read HtmlHelper $Html Html helper
+ * @property-read FormHelper $Form Form helper
+ */
 class DatabaseSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 
+  /**
+   * Action for selecting database driver
+   */
   public function selectDriver() {
     if ($this->config->exists('driver')) {
       $this->refresh();
@@ -28,6 +36,11 @@ class DatabaseSetupController extends SetupController {
     $this->render();
   }
 
+  /**
+   * Get label for a driver option
+   * @param string $option Option name
+   * @return string Translated label
+   */
   private function getOptionLabel($option) {
     switch ($option) {
       case 'tablePrefix':
@@ -37,6 +50,9 @@ class DatabaseSetupController extends SetupController {
     }
   }
 
+  /**
+   * Action for configuring database driver
+   */
   public function setupDriver() {
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
     $this->backendMenu = false;
