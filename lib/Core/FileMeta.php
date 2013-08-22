@@ -1,17 +1,20 @@
 <?php
 /**
  * Accessing meta data in source files
- * 
- * @package ApakohPHP
+ * @package Core
  */
 class FileMeta {
   private function __construct() {
   }
 
-  public static function read($file, $caching = null) {
-    if (!isset($caching)) {
-      $caching = false;
-    }
+  /**
+   * Read metadata from a file
+   * @todo Reimplement caching
+   * @param string $file File path
+   * @param bool $caching Whether to use caching
+   * @return array|false An associative array of meta data or false on failure
+   */
+  public static function read($file, $caching = false) {
     $uid = md5($file);
     if ($caching AND file_exists(p(TMP . $uid))) {
       $serialized = file_get_contents(p(TMP . $uid));
@@ -70,9 +73,9 @@ class FileMeta {
     }
     $metaData['dependencies'] = self::readDependencies(
       $metaData['dependencies']);
-    if (!isset($metaData['version'])) {
-      $metaData['version'] = '0.0.0';
-    }
+//    if (!isset($metaData['version'])) {
+//      $metaData['version'] = '0.0.0';
+//    }
     if ($caching AND is_writable(p(TMP))) {
       $cacheFile = fopen(p(TMP . $uid), 'w');
       if ($cacheFile) {
@@ -83,15 +86,37 @@ class FileMeta {
     return $metaData;
   }
 
+  /**
+   * Read a string of dependencies and return an array
+   *
+   * The array will be of the format:
+   *    array(
+   *      'modules' => array(
+   *        ...
+   *      ),
+   *      'extensions' => array(
+   *        ...
+   *      ),
+   *      'php' => array(
+   *        ...
+   *      )
+   *    )
+   *
+   * @param string $dependencies A space-separated list of dependencies
+   * @return array Associative array
+   */
   public static function readDependencies($dependencies) {
     $depArray = explode(' ', $dependencies);
-    $result = array('modules' => array(), 'extensions' => array(),
+    $result = array( 
+      'modules' => array(),
+      'extensions' => array(),
       'php' => array()
     );
     foreach ($depArray as $dependency) {
       if (!empty($dependency)) {
         if (strpos($dependency, ';') === false) {
           if (($matches = self::matchDependencyVersion($dependency)) !== false) {
+            /** @TODO figure out what this line is about */
             $matches[1] = $matches[1];
             if (!isset($result['modules'][$matches[1]])) {
               $result['modules'][$matches[1]] = array();
@@ -133,6 +158,14 @@ class FileMeta {
     return $result;
   }
 
+  /**
+   * Will split a dependency of the format Database>=0.1.5 into name, operator and version
+   *
+   * The following operators are supported: <>, <=, >=, ==, !=, <, >, =
+   *
+   * @param string $dependency A dependency e.g. Core<0.1
+   * @return string[]|false An array e.g. array('Core', '<', '0.1') or false if wrong format
+   */
   public static function matchDependencyVersion($dependency) {
     if (preg_match('/^(.+?)(<>|<=|>=|==|!=|<|>|=)(.+)/', $dependency, $matches)
         == 1) {
@@ -143,6 +176,10 @@ class FileMeta {
     }
   }
 
+  /**
+   * 
+   * @uses version_compare() to compare versions
+   */
   public static function compareDependencyVersions($versionStr, $versionInfo) {
     if (!is_array($comparisonArray)) {
       return false;

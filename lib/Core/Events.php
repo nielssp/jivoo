@@ -4,9 +4,15 @@
  * @package Core
  */
 class Events {
-
+  /**
+   * @var array Associative array where the key is an event name and the value
+   * is an array of callbacks
+   */
   private $events = array();
 
+  /**
+   * @var object The object that triggers events in this collection
+   */
   private $sender = null;
 
   /**
