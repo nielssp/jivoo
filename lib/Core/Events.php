@@ -1,7 +1,7 @@
 <?php
 /**
  * Collection of events and handlers
- * @package PeanutCMS
+ * @package Core
  */
 class Events {
 

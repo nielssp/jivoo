@@ -10,6 +10,10 @@
 //                  Core/Editors Core/Shadow 
 //                  Core/Database Core/Authentication
 
+/**
+ * Dummy module
+ * @package Core
+ */
 class Core extends ModuleBase {
   protected function init() { }
 }

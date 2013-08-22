@@ -1,8 +1,7 @@
 <?php
 /**
  * Provides functions related to redirects and HTTP status codes
- * @package Core
- * @subpackage Routing
+ * @package Core\Routing
  */
 class Http {
   private function __construct() { }

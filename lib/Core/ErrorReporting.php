@@ -1,10 +1,25 @@
 <?php
+/**
+ * Utility class for handling errors/exceptions
+ * @package Core
+ */
 class ErrorReporting {
 
+  /**
+   * @var callback Exception handler
+   */
   private static $handler = null;
 
   private function __construct() {}
 
+  /**
+   * Handle PHP error
+   * @param int $type Type
+   * @param string $message Message
+   * @param string $file File
+   * @param int $line Line
+   * @throws ErrorException to convert PHP errors to exceptions
+   */
   public static function handleError($type, $message, $file, $line) {
     switch ($type) {
       case E_USER_ERROR:
@@ -39,6 +54,10 @@ class ErrorReporting {
     }
   }
 
+  /**
+   * Set exception handler
+   * @param callback $handler Function/method for handling exceptions
+   */
   public static function setHandler($handler) {
     self::$handler = $handler;
   }

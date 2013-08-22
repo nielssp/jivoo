@@ -4,7 +4,7 @@
  * When extended, protected member variables are made
  * available as read-only properties. These properties
  * can be set using the constructor.
- * @package PeanutCMS
+ * @package Core
  */
 class EventArgs {
   /**

@@ -10,8 +10,7 @@
 /**
  * Database module
  * 
- * @package Core
- * @subpackage Database
+ * @package Core\Database
  */
 class Database extends ModuleBase implements IDatabase {
   private $driver;

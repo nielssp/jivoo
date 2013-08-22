@@ -2,32 +2,76 @@
 /**
  * Application class for initiating ApakohPHP applications
  * @package Core
+ * @property string $basePath Web base path
+ * @property-read PathDictionary $paths Paths
+ * @property-read string $name Application name
+ * @property-read string $version Application version
+ * @property-read string $minPhpVersion Minimum PHP version
+ * @property-read string $environment Environment name
+ * @property-read AppConfig $config User configuration
+ * @property-read array $appConfig Application configuration
+ * @property-read string $sessionPrefix Application session prefix
  */
 class App {
-
+  /**
+   * @var array Application configuration
+   */
   private $appConfig = array();
 
-  private $config = array();
+  /**
+   * @var AppConfig User configuration
+   */
+  private $config = null;
 
+  /**
+   * @var PathDictionary Paths
+   */
   private $paths = null;
 
+  /**
+   * @var string Web base path
+   */
   private $basePath = '/';
 
+  /**
+   * @var string Application name
+   */
   private $name = 'ApakohPHP Application';
 
+  /**
+   * @var string Application version
+   */
   private $version = '0.0.0';
 
+  /**
+   * @var string Minimum PHP version
+   */
   private $minPhpVersion = '5.2.0';
 
+  /**
+   * @var string[] List of modules to load
+   */
   private $modules = array('Core');
 
+  /**
+   * @var Dictionary Dictionary of modules
+   */
   private $m = null;
 
+  /**
+   * @var string Environment name
+   */
   private $environment = 'production';
 
+  /**
+   * @var string Application session prefix
+   */
   private $sessionPrefix = 'apakoh_';
 
   /* EVENTS BEGIN */
+  /**
+   * @var Events Event handling object
+   */
   private $events = null;
 
   /**
@@ -57,6 +101,7 @@ class App {
   /**
    * Create application
    * @param array $appConfig Associative array containing at least the 'path'-key
+   * @throws Exception if $appconfig['path'] is not set
    */
   public function __construct($appConfig) {
     if (!isset($appConfig['path'])) {
@@ -167,6 +212,13 @@ class App {
     return $this->basePath . '/' . $path;
   }
 
+  /**
+   * Load a module
+   * @param string $module Module name
+   * @throws ModuleNotFoundException if module not found
+   * @throws ModuleInvalidException if module isn't valid
+   * @throws ModuleMissingDependencyException if module is missing dependencies
+   */
   public function loadModule($module) {
     $segments = explode('/', $module);
     $moduleName = $segments[count($segments) - 1];
@@ -209,6 +261,10 @@ class App {
     return $this->m->$moduleName;
   }
   
+  /**
+   * Handler for uncaught exceptions
+   * @param Exception $exception The exception
+   */
   public function handleError(Exception $exception) {
     /** @todo attempt to create error report */
     $hash = substr(md5($exception->__toString()), 0, 10);
@@ -293,6 +349,10 @@ class App {
     $this->events->trigger('onRender');
   }
   
+  /**
+   * Stop application (exit PHP execution)
+   * @param int $status Return code
+   */
   public function stop($status = 0) {
     exit($status);
   }
@@ -336,6 +396,13 @@ class ModuleBlacklistedException extends Exception {
  * @package Core
  */
 class ModuleLoadedEventArgs extends EventArgs {
+  /**
+   * @var string Module name
+   */
   protected $module;
+
+  /**
+   * @var ModuleBase Module object
+   */
   protected $object;
 }

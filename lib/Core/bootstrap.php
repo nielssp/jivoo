@@ -11,6 +11,10 @@ if (!defined('CORE_LIB_PATH')) {
 
 // PHP 5.2 compatibility
 if (!function_exists('get_called_class')) {
+  /**
+   * Gets the name of the class the static method is called in
+   * @return boolean|string Returns the class name of false on failure.
+   */
   function get_called_class() {
     $bt = debug_backtrace();
     $matches = array();
@@ -47,6 +51,11 @@ if (!function_exists('get_called_class')) {
 
 // PHP 5.2 compatibility
 if (!function_exists('lcfirst')) {
+  /**
+   * Convert first character of string to lowercase
+   * @param string $str Input
+   * @return string Output
+   */
   function lcfirst($str) {
     $str[0] = strtolower($str[0]);
     return $str;
@@ -80,21 +89,35 @@ function trn($single, $plural, $number) {
   return call_user_func_array(array('I18n', 'translateNumeral'), $args);
 }
 
+/**
+ * Encode string for HTML usage
+ * @param string $string Input
+ * @return string Input
+ */
 function h($string) {
   return htmlentities($string, ENT_COMPAT, 'UTF-8');
   //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
 
+/**
+ * @see I18n::foramtDate()
+ */
 function fdate($timestamp = null) {
   $args = func_get_args();
   return call_user_func_array(array('I18n', 'formatDate'), $args);
 }
 
+/**
+ * @see I18n::formatTime()
+ */
 function ftime($timestamp = null) {
   $args = func_get_args();
   return call_user_func_array(array('I18n', 'formatTime'), $args);
 }
 
+/**
+ * @see I18n::date()
+ */
 function tdate($format, $timestamp = null) {
   $args = func_get_args();
   return call_user_func_array(array('I18n', 'date'), $args);

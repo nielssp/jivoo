@@ -4,13 +4,20 @@
  * @package Core
  */
 class Dictionary implements IDictionary {
+  /**
+   * @var array Key/value pairs
+   */
   private $array = array();
+  
+  /**
+   * @var bool Whether or not dictionary is read-only
+   */
   private $readOnly = false;
 
   /**
    * Get the value associated with a key
    * @param string $key Key
-   * @throws DictionaryKeyInvalidException If key does note exist
+   * @throws DictionaryKeyInvalidException if key does note exist
    * @return mixed Value associated with key
    */
   public function __get($key) {
