@@ -1,7 +1,6 @@
 <?php
 // Module
 // Name           : Authentication
-// Version        : 0.2.0
 // Description    : The Apakoh Core authentication system
 // Author         : apakoh.dk
 // Dependencies   : Core/Shadow
@@ -11,13 +10,17 @@
 /**
  * Authentication module
  *
- * @package Core
- * @subpackage Authentication
+ * @package Core\Authentication
  */
 class Authentication extends ModuleBase {
-
+  /**
+   * @var User Current user if logged in
+   */
   private $user = null;
 
+  /**
+   * @var Group The group associated with unregisterd visitors (guests)
+   */
   private $unregistered = null;
 
   protected function init() {
@@ -82,6 +85,10 @@ class Authentication extends ModuleBase {
     }
   }
 
+  /**
+   * Check if anyone is logged in
+   * @return boolean True if logged in, false otherwise
+   */
   public function isLoggedIn() {
     if (isset($this->user)) {
       return true;
@@ -95,6 +102,11 @@ class Authentication extends ModuleBase {
     return false;
   }
 
+  /**
+   * Check current user or guest for a permission
+   * @param string $permission Permission key
+   * @return boolean True if user has permission, false otherwise
+   */
   public function hasPermission($permission) {
     if ($this->isLoggedIn()) {
       return $this->user->hasPermission($permission);
@@ -107,17 +119,29 @@ class Authentication extends ModuleBase {
     }
   }
   
+  /**
+   * Get default group for registered users
+   * @return Group|false A group or false if unavailable
+   */
   public function getDefaultGroup() {
     return $this->m->Models->Group->first(
       SelectQuery::create()
-        ->where('name = ?', $this->config['defaultGroups']['unregistered'])
+        ->where('name = ?', $this->config['defaultGroups']['registered'])
     );
   }
 
+  /**
+   * Get the current user
+   * @return User|false The current user or false if not logged in
+   */
   public function getUser() {
     return $this->isLoggedIn() ? $this->user : false;
   }
-
+  
+  /**
+   * Check session for logged in user
+   * @return boolean True if logged in, false otherwise
+   */
   protected function checkSession() {
     if (isset($this->session['username'])) {
       $sid = session_id();
@@ -135,6 +159,10 @@ class Authentication extends ModuleBase {
     return false;
   }
 
+  /**
+   * Check cookie for logged in user
+   * @return boolean True if logged in, false otherwise
+   */
   protected function checkCookie() {
     if (isset($this->request->cookies['login'])) {
       list($username, $cookie) = explode(':', $this->request->cookies['login']);
@@ -153,6 +181,11 @@ class Authentication extends ModuleBase {
     return false;
   }
 
+  /**
+   * Create session to log user in
+   * @param bool $remember Whether or not to remember log in (set cookie)
+   * @throws Exception if unable to save user session data
+   */
   protected function setSession($remember = false) {
     /** @TODO rethink sessions */
     $this->session->regenerate();
@@ -175,6 +208,13 @@ class Authentication extends ModuleBase {
 
   }
 
+  /**
+   * Log in to user
+   * @param string $username Username
+   * @param string $password Password
+   * @param bool $remember Whether or not to remember log in (set cookie)
+   * @return bool True if successful, false otherwise
+   */
   public function logIn($username, $password, $remember = false) {
     $user = $this->m->Models->User
       ->first(SelectQuery::create()->where('username = ?', $username));
@@ -189,6 +229,9 @@ class Authentication extends ModuleBase {
     return true;
   }
 
+  /**
+   * Log out of current user and unset sessions and cookies
+   */
   public function logOut() {
     $this->sessionDefaults();
     if (isset($this->request->cookies['login'])) {
@@ -197,6 +240,9 @@ class Authentication extends ModuleBase {
     $this->user = null;
   }
 
+  /**
+   * Unset sessions
+   */
   protected function sessionDefaults() {
     unset($this->session['username']);
   }

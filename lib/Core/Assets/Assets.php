@@ -1,7 +1,6 @@
 <?php
 // Module
 // Name           : Assets
-// Version        : 0.1.0
 // Description    : The Apakoh Core asset system
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing
@@ -9,17 +8,23 @@
 /**
  * Assets module
  * 
- * @package Core
- * @subpackage Assets
+ * @package Core\Assets
  */
 class Assets extends ModuleBase {
-
+  /**
+   * @var string Document root
+   */
   private $docRoot = '';
+  
+  /**
+   * @var int Length of document root
+   */
   private $docRootLength = 0;
 
+  /**
+   * @var string[] List of blacklisted extensions
+   */
   private $extensionBlacklist = array('php', 'log');
-
-  private $pathWhitelist = array();
 
   protected function init() {
     $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
@@ -47,6 +52,11 @@ class Assets extends ModuleBase {
     }
   }
 
+  /**
+   * Find an asset an return it to the client
+   * @param string $path Path to asset
+   * @return boolean True if file exists, false otherwise
+   */
   private function returnAsset($path) {
     if (file_exists($path)) {
       header('Content-Type: ' . Utilities::getContentType($path));
@@ -60,6 +70,13 @@ class Assets extends ModuleBase {
     return false;
   }
 
+  /**
+   * Get a link to an asset
+   * @param string $key Path key or path if second parameter undefined
+   * @param string $path Path to file, if undefined first parameter is used and
+   * key is set to 'assets'
+   * @return string A link to the asset
+   */
   public function getAsset($key, $path = null) {
     if (!isset($path)) {
       $path = $key;

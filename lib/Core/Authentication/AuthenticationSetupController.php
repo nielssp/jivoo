@@ -1,11 +1,17 @@
 <?php
-
+/**
+ * Controller for setting up root user
+ * @package Core\Authentication
+ */
 class AuthenticationSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 
   protected $models = array('User', 'Group');
 
+  /**
+   * Action for setting up root user
+   */
   public function setupRoot() {
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
 
