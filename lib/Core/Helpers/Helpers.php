@@ -1,20 +1,28 @@
 <?php
 // Module
 // Name           : Helpers
-// Version        : 0.3.14
 // Description    : For helpers
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Models
 
 /**
- * Helpers module
- * 
- * @package Core
- * @subpackage Helpers
+ * Helpers module. All helpers added to the module, can be accessed as
+ * read-only properties.
+ * @package Core\Helpers
+ * @property-read HtmlHelper $Html HTML helper
+ * @property-read JsonHelper $Json JSON helper
+ * @property-read FormHelper $Form Form helper
  */
 class Helpers extends ModuleBase {
   
+  /**
+   * @var array Associative array of helper names and objects
+   */
   private $helperObjects = array();
+  
+  /**
+   * @var array Associative array of helper names and class names
+   */
   private $helpers = array(
     'Html' => 'HtmlHelper',
     'Json' => 'JsonHelper',
@@ -35,6 +43,11 @@ class Helpers extends ModuleBase {
     closedir($dir);
   }
   
+  /**
+   * Get instance of helper
+   * @param string $name Helper name
+   * @return Helper|null A helper object or null on failure
+   */
   private function getInstance($name) {
     if (isset($this->helpers[$name])) {
       if (!isset($this->helperObjects[$name])) {
@@ -60,6 +73,10 @@ class Helpers extends ModuleBase {
     return null;
   }
   
+  /**
+   * Add helpers to a helpable object
+   * @param IHelpable $helpable Object to accept helpers
+   */
   public function addHelpers(IHelpable $helpable) {
     $helpers = $helpable->getHelperList();
     foreach ($helpers as $helperName) {
@@ -73,11 +90,20 @@ class Helpers extends ModuleBase {
     }
   }
   
+  /**
+   * Add a helper
+   * @param Helper $helper helper
+   */
   public function addHelper(Helper $helper) {
     $name = str_replace('Helper', '', get_class($helper));
     $this->helperObjects[$name] = $helper;
   }
   
+  /**
+   * Get a helper instance
+   * @param string $name Helper name
+   * @return Helper|null A helper object or null on failure
+   */
   public function getHelper($name) {
     if (isset($this->helperObjects[$name])) {
       return $this->helperObjects[$name];
@@ -85,6 +111,11 @@ class Helpers extends ModuleBase {
     return $this->getInstance($name);
   }
   
+  /**
+   * Get a helper instance
+   * @param string $name Helper name
+   * @return Helper|null A helper object or null on failure
+   */
   public function __get($name) {
     return $this->getHelper($name);
   }

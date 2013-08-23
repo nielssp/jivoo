@@ -331,7 +331,7 @@ class Controller implements IHelpable {
 
   /**
    * Redirect to at route
-   * @param string $route Route, see {@see Routing}
+   * @param mixed $route Route, see {@see Routing}
    */
   protected function redirect($route = null) {
     $this->m->Routing->redirect($route);

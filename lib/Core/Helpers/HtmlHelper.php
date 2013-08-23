@@ -1,9 +1,20 @@
 <?php
-
+/**
+ * HTML helper. Adds some useful methods when working with HTML views.
+ * @package Core\Helpers
+ */
 class HtmlHelper extends Helper {
 
+  /**
+   * @var array Associative array of begin and end tags.
+   */
   private $endTags = array('<ul>' => '</ul>', '<li>' => '</li>');
 
+  /**
+   * Get end tag for a begin tag
+   * @param string $tag Begin tag, e.g. '<ul>'
+   * @return string End tag, e.g. '</ul>'
+   */
   public function getEndTag($tag) {
     if (!isset($this->endTags[$tag])) {
       $matches = array();
@@ -13,6 +24,11 @@ class HtmlHelper extends Helper {
     return $this->endTags[$tag];
   }
 
+  /**
+   * Convert an array of attributes into valid HTML.
+   * @param array $options Associative array of attributes.
+   * @return string Attributes
+   */
   private function addAttributes($options) {
     $html = '';
     if (isset($options['data'])) {
@@ -28,11 +44,17 @@ class HtmlHelper extends Helper {
     return $html;
   }
 
+  /**
+   * Create a link
+   * @param string $label Label for link
+   * @param mixed $route Route for link, default is frontpage, see
+   * {@see Routing}.
+   * @param array $attributes Associative array of attributes to add to link.
+   * @return string|false An HTML link or false if invalid route.
+   */
   public function link($label, $route = null, $attributes = array()) {
     try {
-      $url = $this->m
-        ->Routing
-        ->getLink($route);
+      $url = $this->m->Routing->getLink($route);
     }
     catch (InvalidRouteException $e) {
       return false;
@@ -41,6 +63,13 @@ class HtmlHelper extends Helper {
         . '>' . $label . '</a>';
   }
 
+  /**
+   * Create a nested list from a nested array structure
+   * @param array $list Nested array structure
+   * @param string $listTag List begin tag, default is <code><ul></code>
+   * @param string $itemTag Item begin tag, default is <code><li></code>
+   * @return string An HTML nested list.
+   */
   public function nestedList($list, $listTag = '<ul>', $itemTag = '<li>') {
     if (is_string($list)) {
       return $list;
@@ -69,6 +98,11 @@ class HtmlHelper extends Helper {
     return '';
   }
 
+  /**
+   * Clean a URL
+   * @param string $url URL
+   * @return string URL
+   */
   public function cleanUrl($url) {
     if (preg_match('/^https?:\/\//i', $url) == 0) {
       $url = '';
