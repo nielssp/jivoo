@@ -1,9 +1,9 @@
 <?php
 /**
- * A query for inserting rows into table
+ * A query for inserting rows into table. All protected attributes in
+ * this class are available as public read-only properties thanks to
+ * {@see Query::__get()}.
  * @package Core\Database
- * @property-read string[] $columns List of columns
- * @property-read mixed[] $values List of values
  */
 class InsertQuery extends Query {
 

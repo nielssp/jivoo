@@ -5,9 +5,23 @@
 // Required          : server username database
 // Optional          : password tablePrefix
 
+/**
+ * MySQLi database driver
+ * @package Core\Database\Mysqli
+ */
 class MysqliDatabase extends SqlDatabase {
+  /**
+   * @var mysqli MySQLi object
+   */
   private $handle;
 
+  /**
+   * Constructor.
+   * @param array $options An associative array with options for at least
+   * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
+   * @throws DatabaseConnectionFailedException if connection fails
+   * @throws DatabaseSelectFailedException if database selection fails
+   */
   public function __construct($options = array()) {
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];
@@ -32,6 +46,13 @@ class MysqliDatabase extends SqlDatabase {
       ->close();
   }
 
+  /**
+   * Convert a schema type to a MySQL type
+   * @param string $type Schema type name
+   * @param string $length Length
+   * @param bool|null $unsigned Unsigned if applicable
+   * @return string MySQL type
+   */
   public function fromSchematype($type, $length = null, $unsigned = null) {
     switch ($type) {
       case 'string':
@@ -64,6 +85,11 @@ class MysqliDatabase extends SqlDatabase {
     return $type;
   }
 
+  /**
+   * Convert a MySQL type to a Schema type
+   * @param string $type MySQL type
+   * @return array A 3-tuple of type name, length and unsigned
+   */
   public function toSchemaType($type) {
     $length = null;
     $unsigned = null;

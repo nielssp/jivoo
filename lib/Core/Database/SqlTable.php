@@ -1,9 +1,29 @@
 <?php
+/**
+ * Table implementation for {@see SqlDatabase} classes
+ * @package Core\Database
+ */
 class SqlTable implements ITable {
+  /**
+   * @var SqlDatabase Owner database
+   */
   protected $owner = null;
+  
+  /**
+   * @var string Table name (without prefix)
+   */
   protected $name = '';
+  
+  /**
+   * @var Schema|null Table schema if set
+   */
   protected $schema = null;
 
+  /**
+   * Constructor.
+   * @param SqlDatabase $database Owner database
+   * @param string $table Table name (without prefix)
+   */
   public function __construct(SqlDatabase $database, $table) {
     $this->owner = $database;
     $this->name = $table;
@@ -29,6 +49,9 @@ class SqlTable implements ITable {
     $this->schema = $schema;
   }
 
+  /**
+   * @return SqlDatabase Owner database
+   */
   public function getOwner() {
     return $this->owner;
   }
@@ -60,6 +83,11 @@ class SqlTable implements ITable {
       ->rawQuery($sqlString);
   }
 
+  /**
+   * Convert a condition to SQL
+   * @param Condition $where The condition
+   * @return string SQL subquery
+   */
   protected function conditionToSql(Condition $where) {
     $sqlString = '';
     foreach ($where->clauses as $clause) {
@@ -80,16 +108,37 @@ class SqlTable implements ITable {
     return $sqlString;
   }
 
+  /**
+   * Replace all column names of style '%table.column' or '%column' with real
+   * column names
+   * @param string $query Input query
+   * @return string Output query
+   */
   public function replaceColumns($query) {
     return preg_replace_callback(
       '/(\A|[^\\\\])%([a-z][a-z0-9_]*([.][a-z][a-z0-9_]*)?)/i',
       array($this, 'replaceColumn'), $query);
   }
 
+  /**
+   * Replace a single column match
+   * @param string[] $matches Matched from preg_replace_callback()
+   * @return string Output column
+   */
   protected function replaceColumn($matches) {
     return $matches[1] . $this->columnName($matches[2]);
   }
 
+  /**
+   * Get real column name. If $column includes a dot, whatever is in front of
+   * the dot is prefixed and used as table name. If not and $table is set, that
+   * name is prefixed and put in front of the column name, if no dot, and $table
+   * is not set, the current table name is used.
+   * @param string $column Column name
+   * @param string $table Optional table name (unprefixed)
+   * @return string A column name with prefixed table name in front, e.g.
+   * 'pfrx_table.column'
+   */
   public function columnName($column, $table = null) {
     if (!isset($table)) {
       $table = $this->name;
@@ -107,6 +156,14 @@ class SqlTable implements ITable {
     }
   }
 
+  /**
+   * For use with array_walk(), will run {@see SqlTable::replaceColumns()} on
+   * each column in an array. The input $value should be an associative array
+   * as described in the documentation for {@see SelectQuery::$columns}.
+   * The resulting $value vil be a string.
+   * @param array $value Array reference
+   * @param mixed $key Key (not used)
+   */
   protected function getColumnList(&$value, $key) {
     $columnName = $this->replaceColumns($value['column']);
     if (isset($value['function'])) {

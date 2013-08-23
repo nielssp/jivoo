@@ -5,9 +5,22 @@
 // Required          : filename
 // Optional          : tablePrefix
 
+/**
+ * SQLite3 database driver
+ * @package Core\Database\Sqlite3
+ */
 class Sqlite3Database extends SqlDatabase {
+  /**
+   * @var SQLite3 SQLite3 object
+   */
   private $handle;
 
+  /**
+   * Constructor.
+   * @param array $options An associative array with options for at least
+   * 'filename'. 'tablePrefix' is optional.
+   * @throws DatabaseConnectionFailedException if connection fails
+   */
   public function __construct($options = array()) {
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];
@@ -31,6 +44,15 @@ class Sqlite3Database extends SqlDatabase {
       ->close();
   }
 
+  /**
+   * Convert a schema type to an SQLite type
+   * @param string $type Schema type name
+   * @param string $length Length
+   * @param bool|null $unsigned Unsigned if applicable
+   * @TODO This is the same in PdoSqlite and Sqlite3... Move to a single
+   * location!
+   * @return string SQLite type
+   */
   public function fromSchematype($type, $length = null, $unsigned = null) {
     switch ($type) {
       case 'string':
@@ -62,6 +84,11 @@ class Sqlite3Database extends SqlDatabase {
     return $type;
   }
 
+  /**
+   * Convert an SQLite type to a Schema type
+   * @param string $type SQLite type
+   * @return array A 2-tuple of type name and length
+   */
   public function toSchemaType($type) {
     $length = null;
     if (strpos($type, '(') !== false) {

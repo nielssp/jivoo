@@ -1,15 +1,38 @@
 <?php
 /**
- * Query for deleting rows
+ * Query for deleting rows. All protected attributes in
+ * this class are available as public read-only properties thanks to
+ * {@see Query::__get()}.
  * @package Core\Database
  */
 class DeleteQuery extends Query implements ICondition {
+  /**
+   * List of arrays describing ordering.
+   *
+   * Each array is of the format:
+   * <code>
+   * array(
+   *   'column' => ..., // Column name (string)
+   *   'descending' => .... // Whether or not to order in descending order (bool)
+   * )
+   * </code>
+   * @var array[]
+   */
   protected $orderBy;
-  protected $descending = false;
+  
+  /**
+   * @var int|null Limit
+   */
   protected $limit;
-  protected $where;
-  protected $join;
+  
+  /**
+   * @var Condition Select condition
+   */
+  protected $where = null;
 
+  /**
+   * Constructor.
+   */
   public function __construct() {
     $this->where = new Condition();
   }
@@ -25,8 +48,13 @@ class DeleteQuery extends Query implements ICondition {
     }
   }
 
-  public function offset($offset) {
-    $this->offset = (int) $offset;
+  /**
+   * Limit number of rows affected
+   * @param int $limit Limit
+   * @return self Self
+   */
+  public function limit($limit) {
+    $this->limit = (int) $limit;
     return $this;
   }
 
@@ -59,16 +87,30 @@ class DeleteQuery extends Query implements ICondition {
     return $this;
   }
 
+  /**
+   * Order by a column in ascending order
+   * @param string $column Column name
+   * @return self Self
+   */
   public function orderBy($column) {
     $this->orderBy[] = array('column' => $column, 'descending' => false);
     return $this;
   }
 
+  /**
+   * Order by a column in descending order
+   * @param string $column Column name
+   * @return self Self
+   */
   public function orderByDescending($column) {
     $this->orderBy[] = array('column' => $column, 'descending' => true);
     return $this;
   }
 
+  /**
+   * Reverse order of all orderBy's
+   * @return self Self
+   */
   public function reverseOrder() {
     foreach ($this->orderBy as $key => $orderBy) {
       $this->orderBy[$key]['descending'] = !$orderBy['descending'];

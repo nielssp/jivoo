@@ -4,8 +4,17 @@
 // Dependencies      : php;pdo_mysql
 // Required          : server username database
 // Optional          : password tablePrefix
-
+/**
+ * PDO MySQL database driver
+ * @package Core\Database\PdoMysql
+ */
 class PdoMysqlDatabase extends PdoDatabase {
+  /**
+   * Constructor.
+   * @param array $options An associative array with options for at least
+   * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
+   * @throws DatabaseConnectionFailedException if connection fails
+   */
   public function __construct($options = array()) {
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];
@@ -24,6 +33,15 @@ class PdoMysqlDatabase extends PdoDatabase {
     }
   }
 
+  /**
+   * Convert a schema type to a MySQL type
+   * @param string $type Schema type name
+   * @param string $length Length
+   * @param bool|null $unsigned Unsigned if applicable
+   * @TODO This is the same in Mysql Mysqli and PdoMysql... Move to a single
+   * location!
+   * @return string MySQL type
+   */
   public function fromSchematype($type, $length = null, $unsigned = null) {
     switch ($type) {
       case 'string':
@@ -56,6 +74,11 @@ class PdoMysqlDatabase extends PdoDatabase {
     return $type;
   }
 
+  /**
+   * Convert a MySQL type to a Schema type
+   * @param string $type MySQL type
+   * @return array A 3-tuple of type name, length and unsigned
+   */
   public function toSchemaType($type) {
     $length = null;
     $unsigned = null;

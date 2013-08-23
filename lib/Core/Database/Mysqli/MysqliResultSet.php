@@ -1,9 +1,23 @@
 <?php
+/**
+ * Result set for MySQLi driver
+ * @package Core\Database\Mysqli
+ */
 class MysqliResultSet implements IResultSet {
-
+  /**
+   * @var mysqli_result MySQLi result object
+   */
   private $mysqliResult;
+  
+  /**
+   * @var array[] List of saved rows
+   */
   private $rows = array();
 
+  /**
+   * Constructor.
+   * @param mysqli_result $result MySQLi result object
+   */
   public function __construct(mysqli_result $result) {
     $this->mysqliResult = $result;
   }
@@ -12,6 +26,11 @@ class MysqliResultSet implements IResultSet {
     return ($this->rows[] = $this->fetchAssoc()) !== false;
   }
 
+  /**
+   * Get ordered array from associative array
+   * @param array $assoc Associative array
+   * @return mixed[] Ordered array
+   */
   private function rowFromAssoc($assoc) {
     return array_values($assoc);
   }
