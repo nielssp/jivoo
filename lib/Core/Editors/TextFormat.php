@@ -1,4 +1,9 @@
 <?php
+/**
+ * Content format used by {@see TextEditor}. Will automatically convert links,
+ * line breaks and paragraphs.
+ * @package Core\Editors
+ */
 class TextFormat implements IContentFormat {
 
   public function toHtml($text) {

@@ -1,10 +1,27 @@
 <?php
-
+/**
+ * An editor for editing HTMl
+ * @package Core\Editors
+ */
 class HtmlEditor implements IEditor {
+  /**
+   * @var IContentFormat Content format
+   */
   protected $format = null;
+  
+  /**
+   * @var AppConfig Configuration
+   */
   protected $config = null;
+  
+  /**
+   * @var bool Whether or not editor has been initialised
+   */
   protected $initiated = false;
 
+  /**
+   * Constructor
+   */
   public function __construct() {
     $this->format = new HtmlFormat();
   }
