@@ -1,7 +1,6 @@
 <?php
 // Module
 // Name           : Templates
-// Version        : 0.2.0
 // Description    : The Apakoh Core template system
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Assets Core/Helpers
@@ -9,8 +8,7 @@
 /**
  * Class for setting the template
  *
- * @package Core
- * @subpackage Templates
+ * @package Core\Templates
  */
 class Templates extends ModuleBase {
 

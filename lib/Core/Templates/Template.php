@@ -1,6 +1,9 @@
 <?php
-
-class Template extends ApplicationTemplate {
+/**
+ * Concrete template class used for outputting templates to browser
+ * @package Core\Templates
+ */
+class Template extends TemplateBase {
 
   public function render($_templateName, $_return = false) {
     extract($this->data, EXTR_SKIP);
