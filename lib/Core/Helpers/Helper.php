@@ -1,6 +1,7 @@
 <?php
 /**
  * A helper for use in controllers and views
+ * @package Core\Helpers
  */
 abstract class Helper implements IHelpable {
   /**

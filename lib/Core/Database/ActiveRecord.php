@@ -49,7 +49,8 @@ abstract class ActiveRecord implements IRecord {
   protected $table = null;
 
   /**
-   * @var array An associative array of field names and validation rules
+   * @var array An associative array of field names and validation rules, see
+   * {@see Validator}
    */
   protected $validate = array();
 

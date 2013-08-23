@@ -1,20 +1,27 @@
 <?php
 // Module
 // Name           : Models
-// Version        : 0.3.14
 // Description    : Apakoh Core model system
 // Author         : apakoh.dk
 
 /**
- * 
- * @package Core
- * @subpackage Models
+ * Models module, finds all models in application
+ * @package Core\Models
  */
 class Models extends ModuleBase implements IDictionary {
-  
+  /**
+   * @var array Associative array of record class names
+   */
   private $recordClasses = array();
+  
+  /**
+   * @var array Associative array of model names and class names
+   */
   private $modelClasses = array();
   
+  /**
+   * @var array Associative array of model names and objects
+   */
   private $modelObjects = array();
   
   protected function init() {
@@ -36,14 +43,26 @@ class Models extends ModuleBase implements IDictionary {
     closedir($dir);
   }
   
+  /**
+   * Get list of record classes
+   * @return string[] Record class names
+   */
   public function getRecordClasses() {
     return $this->recordClasses;
   }
   
+  /**
+   * Get list of model classes
+   * @return array Associative array of model names and class names
+   */
   public function getModelClasses() {
     return $this->modelClasses;
   }
   
+  /** 
+   * Add models needed by a controller or helper
+   * @param Controller|Helper $controller Controller or helper objects
+   */
   public function addModels($controller) {
     $models = $controller->getModelList();
     foreach ($models as $name) {
@@ -57,6 +76,11 @@ class Models extends ModuleBase implements IDictionary {
     }
   }
   
+  /**
+   * Add/set model
+   * @param string $name Model name
+   * @param IModel $model Model objects
+   */
   public function setModel($name, IModel $model) {
     if (isset($this->modelClasses[$name])) {
       unset($this->modelClasses[$name]);
@@ -67,12 +91,19 @@ class Models extends ModuleBase implements IDictionary {
     $this->modelObjects[$name] = $model;
   }
   
+  /**
+   * Get a model
+   * @param string $name Model name
+   * @return IModel||null Model object or null if not found
+   */
   public function getModel($name) {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
     return null;
   }
+  
+  /* IDictionary implementation */
   
   public function __get($name) {
       if (isset($this->modelObjects[$name])) {

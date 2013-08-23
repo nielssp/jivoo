@@ -1,10 +1,29 @@
 <?php
-
+/**
+ * A generic form
+ * @package Core\Models
+ */
 class Form implements IRecord {
+  /**
+   * @var FormModel Model
+   */
   private $model;
+  
+  /**
+   * @var array Associative array of data
+   */
   private $data = array();
+  
+  /**
+   * @var array Associative array of field names and error messages
+   */
   private $errors = array();
 
+  /**
+   * Constructor.
+   * @param string|FormModel $name Form name or model
+   * @param array $data Associative array of data
+   */
   public function __construct($name, $data = array()) {
     if ($name instanceof FormModel) {
       $this->model = $name;
@@ -50,6 +69,9 @@ class Form implements IRecord {
     }
   }
   
+  /**
+   * @return FormModel Form model
+   */
   public function getModel() {
     return $this->model;
   }

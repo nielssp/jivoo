@@ -68,7 +68,7 @@ class FormHelper extends Helper {
    * Get full name of form field, will be FORM[FIELD] where FORM is the name of
    * the form.
    * @param string $field Field name in model
-   * @return void|string Name of form field
+   * @return string Name of form field
    */
   public function fieldName($field) {
     if (!isset($this->record)) {
@@ -82,7 +82,7 @@ class FormHelper extends Helper {
    * checkboxes and radios, where FORM is the name of the form.
    * @param string $field Field name in model
    * @param string $value Optional value for field (for checkboxes and radios)
-   * @return void|string Id of form field
+   * @return string Id of form field
    */
   public function fieldId($field, $value = null) {
     if (!isset($this->record)) {
@@ -101,7 +101,7 @@ class FormHelper extends Helper {
    * @param string|null $output If set, instead of returning a boolean, the
    * value of $output will be returned if the field is required, and an empty
    * string will be returned if the field is not required.
-   * @return void|string|boolean If $output is not set, then true will be
+   * @return string|boolean If $output is not set, then true will be
    * returned if the field is required, and false otherwise. If $output is set,
    * the value of $output is returned if field is required, and '' otherwise.
    */
@@ -123,7 +123,7 @@ class FormHelper extends Helper {
    * @see FormHelper::isRequired();
    * @param unknown $field Field name
    * @param string $output Optional output to return instead of boolean.
-   * @return void|string|boolean If $output is not set, then true will be
+   * @return string|boolean If $output is not set, then true will be
    * returned if the field is optional, and false otherwise. If $output is set,
    * the value of $output is returned if field is optional, and '' otherwise.
    */
@@ -144,7 +144,7 @@ class FormHelper extends Helper {
    * Check whether or not a field, or the entire form, is valid
    * @param string $field Name of field to check. If not set, the entire form
    * is checked.
-   * @return void|boolean True if field/form is valid, false otherwise
+   * @return boolean True if field/form is valid, false otherwise
    */
   public function isValid($field = null) {
     if (!isset($this->record)) {
@@ -163,7 +163,7 @@ class FormHelper extends Helper {
 
   /**
    * Get all errors
-   * @return void|array An associative array of field names and error messages
+   * @return array An associative array of field names and error messages
    */
   public function getErrors() {
     if (!isset($this->record)) {
@@ -175,7 +175,7 @@ class FormHelper extends Helper {
   /**
    * Get the error message for a specific field
    * @param string $field Field name
-   * @return void|string An error message if it exists, or an empty string
+   * @return string An error message if it exists, or an empty string
    * otherwise
    */
   public function getError($field) {
@@ -192,7 +192,7 @@ class FormHelper extends Helper {
    * retrieved from the model.
    * @param array $options An associative array of options, the only supported
    * option is 'class', which sets the class-attribute of the label-tag
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function label($field, $label = null, $options = array()) {
     return $this->radioLabel($field, null, $label, $options);
@@ -206,7 +206,7 @@ class FormHelper extends Helper {
    * retrieved from the model.
    * @param array $options An associative array of options, the only supported
    * option is 'class', which sets the class-attribute of the label-tag
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function radioLabel($field, $value, $label = null, $options = array()) {
     if (!isset($this->record)) {
@@ -230,7 +230,7 @@ class FormHelper extends Helper {
    * retrieved from the model.
    * @param array $options An associative array of options, the only supported
    * option is 'class', which sets the class-attribute of the label-tag
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function checkboxLabel($field, $value, $label = null, $options = array()) {
     return $this->radioLabel($field, $value, $label, $options);
@@ -276,7 +276,7 @@ class FormHelper extends Helper {
    * Get the HTML encoded value of a field
    * @param string $field Field name
    * @param bool $encode Whether or not to encode, default is true
-   * @return void|string Field value
+   * @return string Field value
    */
   public function fieldValue($field, $encode = true) {
     if (!isset($this->record)) {
@@ -325,7 +325,7 @@ class FormHelper extends Helper {
    * @param string $field Field name
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function hidden($field, $options = array()) {
     if (!isset($this->record)) {
@@ -346,7 +346,7 @@ class FormHelper extends Helper {
    * @param string $field Field name
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function text($field, $options = array()) {
     if (!isset($this->record)) {
@@ -371,7 +371,7 @@ class FormHelper extends Helper {
    * @param string $field Field name
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function date($field, $options = array()) {
     if (!isset($this->record)) {
@@ -397,7 +397,7 @@ class FormHelper extends Helper {
    * @param mixed $value Field value 
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function radio($field, $value, $options = array()) {
     if (!isset($this->record)) {
@@ -420,7 +420,7 @@ class FormHelper extends Helper {
    * @param array $values An associative array of values and labels
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function select($field, $values = array(), $options = array()) {
     if (!isset($this->record)) {
@@ -447,7 +447,7 @@ class FormHelper extends Helper {
    * @param mixed $value Field value
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function checkbox($field, $value, $options = array()) {
     if (!isset($this->record)) {
@@ -469,7 +469,7 @@ class FormHelper extends Helper {
    * @param string $field Field name
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function password($field, $options = array()) {
     if (!isset($this->record)) {
@@ -490,7 +490,7 @@ class FormHelper extends Helper {
    * @param string $field Field name
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function textarea($field, $options = array()) {
     if (!isset($this->record)) {
@@ -511,7 +511,7 @@ class FormHelper extends Helper {
    * @param string $field Field name, default is 'submit'
    * @param array $options An associative array of additional attributes to add
    * to field
-   * @return void|string HTML code
+   * @return string HTML code
    */
   public function submit($value, $field = 'submit', $options = array()) {
     if (!isset($this->record)) {

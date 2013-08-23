@@ -1,18 +1,21 @@
 <?php
 // Module
 // Name           : Shadow
-// Version        : 0.2.0
 // Description    : The Apakoh Core hashing and security system
 // Author         : apakoh.dk
 
 /**
- * Hashing and security
+ * Hashing and security module
  * 
- * @pacakge Core
- * @subpackage Shadow
+ * Supported hash types: 'sha512', 'sha256',
+ * 'blowfish', 'md5', 'ext_des' and 'std_des'
+ * @pacakge Core\Shadow
  */
 class Shadow extends ModuleBase {
 
+  /**
+   * @var string[] List of supported hash types
+   */
   private $hashTypes = array('sha512', 'sha256', 'blowfish', 'md5', 'ext_des',
     'std_des'
   );
@@ -29,6 +32,13 @@ class Shadow extends ModuleBase {
     }
   }
 
+  /**
+   * Generate a random salt for a specific hash
+   * @uses mt_rand() for random numbers
+   * @param string $hashType Hash type, if not set the configuration will be
+   * used to determine hash type.
+   * @return string Random salt
+   */
   public function genSalt($hashType = null) {
     if (!isset($hashType)) {
       $hashType = $this->config['hashType'];
@@ -81,23 +91,58 @@ class Shadow extends ModuleBase {
     return $prefix . $salt;
   }
 
+  /**
+   * Hash a string
+   * @uses crypt() to hash string
+   * @param string $string String to hash
+   * @param string $hashType Hash type, if not set the configuration will be
+   * used to determine hash type.
+   * @return string Hashed string 
+   */
   public function hash($string, $hashType = null) {
     return crypt($string, $this->genSalt($hashType));
   }
 
+  /**
+   * Compare an unhashed string with a hashed string
+   * @uses crypt() to hash string
+   * @param string $string Unhashed string
+   * @param string $hash Hashed string
+   * @return boolean True if the two strings are equal, false otherwise
+   */
   public function compare($string, $hash) {
     return crypt($string, $hash) == $hash;
   }
 
+  /**
+   * Save a password in shadow-file
+   * @TODO implementation  
+   * @param string $name Name of password
+   * @param string $password Password to save
+   * @param bool $hash Whether or not hash the password, default is to not hash.
+   * If hashed, the original password can't be retrieved again.
+   */
   public function setPassword($name, $password, $hash = false) {
     if ($hash) {
       $password = $this->hash($password);
     }
   }
 
+  /**
+   * Get a password or password hash from shadow-file
+   * @TODO implementation  
+   * @param string $name Name of password
+   */
   public function getPassword($name) {
   }
 
+  /**
+   * Compare a password with a password in the shadow-file
+   * @TODO implementation  
+   * @param string $name Name of password
+   * @param string $password Unhashed password
+   * @param string $hash Whether or not to hash password before comparing
+   */
   public function comparePassword($name, $password, $hash = false) {
     if ($hash) {
       $password = $this->hash($password);
