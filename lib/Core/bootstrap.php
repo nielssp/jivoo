@@ -1,4 +1,8 @@
 <?php
+/**
+ * Apakoh Core bootstrap script
+ * @package Core
+ */
 ini_set('magic_quotes_runtime', 0);
 
 if (!defined('LIB_PATH')) {
@@ -100,7 +104,7 @@ function h($string) {
 }
 
 /**
- * @see I18n::foramtDate()
+ * @see I18n::formatDate()
  */
 function fdate($timestamp = null) {
   $args = func_get_args();

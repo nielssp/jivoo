@@ -60,7 +60,8 @@
  * characters. An example of a string would be 'Setup::Database::setup', in
  * which 'Setup' is a namespace, 'Database' is the controller and 'setup' is
  * the action. The resulting controller would be 'DatabaseSetupController'.
- * @pacakge Core\Routing
+ * 
+ * @package Core\Routing
  */
 class Routing extends ModuleBase {
   /**
@@ -570,8 +571,8 @@ class Routing extends ModuleBase {
    * 
    * A pattern is a path such as 'admin/login'. Different placeholders can be
    * used:
-   * * A '*' can be used instead of a parameter. For instance if the path
-   *   'users/view/*' is pointed at the UsersController and the view-action,
+   * * A '\*' can be used instead of a parameter. For instance if the path
+   *   'users/view/\*' is pointed at the UsersController and the view-action,
    *   any string can be used in place of the asterisk, and the value will be
    *   used as a parameter for the view-action. Multiple asterisks will be used
    *   as multiple parameters.
@@ -789,6 +790,6 @@ class Routing extends ModuleBase {
 
 /**
  * Invalid route
- * @pacakge Core\Routing
+ * @package Core\Routing
  */
 class InvalidRouteException extends Exception { }
