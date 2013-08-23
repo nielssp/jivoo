@@ -1,20 +1,14 @@
 <?php
 // Module
 // Name           : Extensions
-// Version        : 0.2.0
 // Description    : The PeanutCMS extension system
-// Author         : PeanutCMS
+// Author         : apakoh.dk
 // Dependencies   : ApakohPHP/Database ApakohPHP/Routing ApakohPHP/Templates
 //                  ApakohPHP/Authentication ApakohPHP/Backend
 
-/*
- * Extension system
- *
- * @package PeanutCMS
- */
-
 /**
- * Extensions class
+ * Extension system
+ * @package PeanutCMS\Extensions
  */
 class Extensions extends ModuleBase {
   private $info = array();

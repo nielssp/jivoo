@@ -8,6 +8,10 @@
 //                  PeanutCMS/Links PeanutCMS/Pages
 //                  PeanutCMS/Posts PeanutCMS/Theme
 
+/**
+ * PeanutCMS dummy module
+ * @package PeanutCMS
+ */
 class PeanutCMS extends ModuleBase {
   protected function init() { }
 }

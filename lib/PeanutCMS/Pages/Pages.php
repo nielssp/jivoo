@@ -1,21 +1,15 @@
 <?php
 // Module
 // Name           : Pages
-// Version        : 0.2.0
 // Description    : The PeanutCMS content page system
-// Author         : PeanutCMS
+// Author         : apakoh.dk
 // Dependencies   : Core/Database Core/Routing Core/Templates Core/Controllers
 //                  Core/Authentication PeanutCMS/Backend Core/Editors
 //                  Core/Models
 
-/*
- * Static pages
- *
- * @package PeanutCMS
- */
-
 /**
- * Pages class
+ * Static pages
+ * @package PeanutCMS\Pages
  */
 class Pages extends ModuleBase {
 

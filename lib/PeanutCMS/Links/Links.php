@@ -1,21 +1,15 @@
 <?php
 // Module
 // Name           : Links
-// Version        : 0.3.0
 // Description    : The PeanutCMS graphical menu system
-// Author         : PeanutCMS
+// Author         : apakoh.dk
 // Dependencies   : Core/Database Core/Routing Core/Models
 //                  Core/Templates Core/Controllers
 //                  Core/Authentication PeanutCMS/Backend
 
-/*
- * Menu system
- *
- * @package PeanutCMS
- */
-
 /**
- * Links class
+ * Menu system
+ * @package PeanutCMS\Links
  */
 class Links extends ModuleBase {
 

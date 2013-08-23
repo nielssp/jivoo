@@ -1,25 +1,18 @@
 <?php
 // Module
 // Name           : Theme
-// Version        : 0.2.0
 // Description    : The PeanutCMS theme system
-// Author         : PeanutCMS
+// Author         : apakoh.dk
 // Dependencies   : ApakohPHP/Templates
 
-/*
- * Class for loading and manipulating the theme
- *
- * @package PeanutCMS
- */
-
 /**
- * Theme class
+ * Class for loading and managing themes
+ * @package PeanutCMS\Theme
  */
 class Theme extends ModuleBase {
 
   /**
-   * The current theme
-   * @var string
+   * @var string The current theme
    */
   private $theme;
 
@@ -27,18 +20,15 @@ class Theme extends ModuleBase {
 
   protected function init() {
     // Create meta-tags
-    if (!$this->m
-      ->Templates
-      ->hideIdentity()) {
-      $this->m
-        ->Templates
+    if (!$this->m->Templates->hideIdentity()) {
+      $this->m->Templates
         ->insertMeta('generator',
           'PeanutCMS'
-              . ($this->m
-                ->Templates
-                ->hideVersion() ? '' : ' ' . $this->app->version));
+            . ($this->m->Templates->hideVersion() ? ''
+              : ' ' . $this->app->version)
+        );
     }
-//     if ($this->m
+    //     if ($this->m
 //       ->Configuration
 //       ->exists('site.description')) {
 //       $this->m
@@ -51,9 +41,7 @@ class Theme extends ModuleBase {
 
     // Find and load theme
     if ($this->load()) {
-      $this->m
-        ->Templates
-        ->setTheme('themes', $this->theme);
+      $this->m->Templates->setTheme('themes', $this->theme);
     }
     else {
       new GlobalWarning(tr('Please install a theme'), 'theme-missing');

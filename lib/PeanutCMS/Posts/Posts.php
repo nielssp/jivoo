@@ -1,21 +1,15 @@
 <?php
 // Module
 // Name           : Posts
-// Version        : 0.3.0
 // Description    : The PeanutCMS blogging system
-// Author         : PeanutCMS
+// Author         : apakoh.dk
 // Dependencies   : Core/Database Core/Routing Core/Templates
 //                  Core/Authentication PeanutCMS/Backend
 //                  Core/Controllers Core/Models
 
-/*
- * Class for working with blog posts
- *
- * @package PeanutCMS
- */
-
 /**
- * Posts class
+ * Class for working with blog posts
+ * @package PeanutCMS\Posts
  */
 class Posts extends ModuleBase {
   private $posts;

@@ -1,20 +1,15 @@
 <?php
 // Module
 // Name           : Backend
-// Version        : 0.2.0
 // Description    : The PeanutCMS administration system
-// Author         : PeanutCMS
+// Author         : apakoh.dk
 // Dependencies   : Core/Database Core/Authentication
 //                  Core/Routing Core/Templates Core/Controllers
 
 /**
- * PeanutCMS backend
+ * PeanutCMS backend module
  *
- * @package PeanutCMS
- */
-
-/**
- * Backend class
+ * @package PeanutCMS\Backend
  */
 class Backend extends ModuleBase implements ILinkable, arrayaccess {
 

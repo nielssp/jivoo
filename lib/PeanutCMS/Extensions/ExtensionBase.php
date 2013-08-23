@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Extension base class
+ * @package PeanutCMS\Extensions
+ */
 abstract class ExtensionBase {
 
   private $extensions;

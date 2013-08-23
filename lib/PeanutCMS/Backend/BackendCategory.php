@@ -1,4 +1,8 @@
 <?php
+/**
+ * A category in the backend menu
+ * @package PeanutCMS\Backend
+ */
 class BackendCategory implements arrayaccess, IGroupable, Iterator {
   private $items = array();
   private $keys = array();

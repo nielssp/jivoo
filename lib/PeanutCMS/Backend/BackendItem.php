@@ -1,4 +1,8 @@
 <?php
+/**
+ * A menu item in the PeanutCMS backend
+ * @package PeanutCMS\Backend
+ */
 class BackendItem implements IGroupable, ILinkable {
   private $route = null;
   private $label = '';
