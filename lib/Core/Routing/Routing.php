@@ -1,33 +1,125 @@
 <?php
 // Module
 // Name           : Routing
-// Version        : 0.3.0
 // Description    : The Apakoh Core routing system
 // Author         : apakoh.dk
 
 /**
- * Module for handling routes
+ * Module for handling routes and HTTP requests.
+ * 
+ * A "route" as a value is either an array, an {@see ILinkable} object,
+ * a string or `null`.
+ * 
+ * The format of the array is:
+ * <code>
+ * array(
+ *   'url' => ..., // a URL (should be absolute)
+ *   'path' => ..., // a path array e.g. array('posts', '23') : /posts/23
+ *   'query' => ..., // query array e.g. array('p' => '27') : ?p=27
+ *   'mergeQuery' => ..., // boolean, whether to merge with current query
+ *   'fragment' => ..., // fragment string e.g. 'bottom' : #bottom
+ *   'controller' => ..., // Controller-object or name (w/ or w/o 'Controller'-suffix)
+ *   'action' => ..., // name of action as string
+ *   'parameters' => ... // array of parameters e.g. array(23, 1)
+ * )
+ * </code>
+ * 
+ * The array is validated before use by {@see Routing::validateRoute()}. The
+ * following rules are used when converting a route to a link:
+ * * If 'url' is set, the url is returned.
+ * * If 'controller' isn't set, 'controller', 'action' and 'parameters' default
+ *   to their current values.
+ * * If 'controller' is set, 'action' defaults to 'index' and 'parameters'
+ *   defaults to array().
+ * * If 'path' is set, a link based on 'path', 'query' and 'fragment' is
+ *   returned.
+ * * If 'query' isn't set and 'controller', 'action' and 'parameters' are
+ *   left unchanged, the 'query' is set to the current query.
+ * 
+ * Some examples:
+ * * `array()`
+ *   A link to the current page.
+ * * `array('fragment' => 'test')`
+ *   A link to the current page + the fragment #test.
+ * * `array('controller' => 'Pages')`
+ *   A link to the index-action of the PagesController.
+ *   
+ * Other legal values are:
+ * * An object implementing {@see ILinkable}, in which case the
+ *   {@see ILinkable::getRoute()} method is called
+ * * `null`, in which case a link to the frontpage is returned
+ * * A string, in which case the following grammar applies:
+ * <code>
+ * route      ::= url
+ *             | {namespace "::"} controller ["::" action {"::" parameter}]
+ * </code>
+ * If the string contains at least one forward slash, it's interpretted as a
+ * URL, and returned unchanged. If not it is interpretted as a combination of
+ * controller name, action and parameters.
+ * Controller namespace and controller names always begin with uppercase
+ * characters. An example of a string would be 'Setup::Database::setup', in
+ * which 'Setup' is a namespace, 'Database' is the controller and 'setup' is
+ * the action. The resulting controller would be 'DatabaseSetupController'.
  * @pacakge Core\Routing
  */
 class Routing extends ModuleBase {
-  
+  /**
+   * @var Route[] Routing configuration
+   */
   private $routes = array();
   
+  /**
+   * @var Controllers Controllers module
+   */
   private $controllers = null;
   
+  /**
+   * @var array Selected route and priority
+   */
   private $selection = array('route' => null, 'priority' => 0);
 
+  /**
+   * @var array Linking paths to routes
+   */
   private $paths = array();
 
+  /**
+   * @var bool Whether or not the page has rendered yet
+   */
   private $rendered = false;
   
+  /**
+   * @var array Root route and priority
+   */
   private $root = array('route' => null, 'priority' => 0);
+  
+  /**
+   * @var mixed Error route
+   */
   private $errorRoute = null;
 
-  /* Events */
+  /* EVENTS BEGIN */
+  /**
+   * @var Events Event handling object
+   */
   private $events;
-  public function onRendering($h) { $this->events->attach($h); }
-  public function onRendered($h) { $this->events->attach($h); }
+  
+  /**
+   * Event, triggered when ready to render page
+   * @param callback $h Attach an event handler
+   */
+  public function onRendering($h) {
+    $this->events->attach($h);
+  }
+  
+  /**
+   * Event, triggered when page has rendered
+   * @param callback $h Attach an event handler
+   */
+  public function onRendered($h) {
+    $this->events->attach($h);
+  }
+  /* EVENTS END */
 
   protected function init() {
     $this->events = new Events($this);
@@ -98,6 +190,11 @@ class Routing extends ModuleBase {
     $this->app->onRender(array($this, 'findRoute'));
   }
   
+  /**
+   * Set current route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param number $priority Priority of route
+   */
   public function setRoot($route, $priority = 9) {
     $route = $this->validateRoute($route);
     $this->root['route'] = $route;
@@ -126,12 +223,21 @@ class Routing extends ModuleBase {
     }
   }
   
+  /**
+   * Set error route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   */
   public function setError($route) {
     $this->errorRoute = $route;
     $this->setRoute($route, 1);
   }
   
-
+  /**
+   * Get a controller name with or without suffix
+   * @param string|Controller $controller Controller name or object
+   * @param bool $withSuffix Whether or not to include 'Controller'-suffix
+   * @return string Controller name
+   */
   protected function controllerName($controller, $withSuffix = false) {
     if (is_object($controller)) {
       $controller = get_class($controller);
@@ -148,10 +254,22 @@ class Routing extends ModuleBase {
     }
   }
 
+  /**
+   * Get current request object
+   * @return Request Current request
+   */
   public function getRequest() {
     return $this->request;
   }
 
+  /**
+   * Will replace **, :*, * and :n in path with parameters
+   * @param mixed[] $parameters Parameters list
+   * @param mixed[] $additional Additional parameters, one is used. The first
+   * one is used as a path-array (string[])
+   * @throws InvalidRouteException if unknown pattern
+   * @return mixed[] Resulting path
+   */
   public function insertParameters($parameters, $additional) {
     $path = $additional[0];
     $result = array();
@@ -189,6 +307,14 @@ class Routing extends ModuleBase {
     return $result;
   }
 
+  /**
+   * Get path associated with an action
+   * @param string|Controller $controller Controller name or object
+   * @param string $action Action name
+   * @param mixed[] $parameters Parameters list
+   * @throws InvalidRouteException if path was not found
+   * @return mixed[] A path
+   */
   public function getPath($controller = null, $action = 'index',
                           $parameters = array()) {
     if (!isset($controller)) {
@@ -203,6 +329,12 @@ class Routing extends ModuleBase {
     throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action));
   }
 
+  /**
+   * Check whether or not a route matches the current request
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @throws InvalidRouteException If route is not valid
+   * @return boolean True if current route, false otherwise
+   */
   public function isCurrent($route = null) {
     $route = $this->validateRoute($route);
     if (isset($route['url'])) {
@@ -231,10 +363,12 @@ class Routing extends ModuleBase {
   }
   
   /**
-   * Create a link to a page
-   *
-   * @param array $path Path as an array
-   * @return string Link
+   * Get a URL from a path, query and fragment
+   * @param string[] $path Path as array
+   * @param array $query GET query
+   * @param string $fragment Fragment
+   * @param string $rewrite If true 'index.php/' will not be included in link.
+   * @return string A URL
    */
   public function getLinkFromPath($path = null, $query = null, $fragment = null,
     $rewrite = false) {
@@ -281,6 +415,12 @@ class Routing extends ModuleBase {
     }
   }
 
+  /**
+   * Validate route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @throws InvalidRouteException If invalid route
+   * @return array A valid route array
+   */
   public function validateRoute($route) {
     if (!isset($route)) {
       return array('path' => array(), 'query' => array(), 'fragment' => null);
@@ -351,6 +491,12 @@ class Routing extends ModuleBase {
     return $route;
   }
   
+  /**
+   * Get a URL for a route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @throws InvalidRouteException if incomplete route
+   * @return A URl
+   */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);
     if (isset($route['url'])) {
@@ -370,13 +516,12 @@ class Routing extends ModuleBase {
   }
   
   /**
-   * An internal redirect
-   *
-   * @param array $path A new path
-   * @param array $parameters Additional parameters
-   * @param bool $moved If true (default) then a 301 status code will be used,
-   * if false then a 303 status code will be used
-   * @return void
+   * Perform a redirect
+   * @param string[] $path Path array
+   * @param array $query GET query
+   * @param string $moved Whether or not to use a 301 status code
+   * @param string $fragment Fragment
+   * @param string $rewrite If true 'index.php/' will not be included
    */
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
@@ -387,6 +532,10 @@ class Routing extends ModuleBase {
     Http::redirect($status, $this->getLinkFromPath($path, $query, $fragment));
   }
 
+  /**
+   * Perform a redirect
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   */
   public function redirect($route = null) {
     /**
      * @TODO Either 307 or 303... 
@@ -394,19 +543,50 @@ class Routing extends ModuleBase {
     Http::redirect(303, $this->getLink($route));
   }
 
+  /**
+   * Perform a permanent redirect
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   */
   public function moved($route = null) {
     Http::redirect(301, $this->getLink($route));
   }
 
+  /**
+   * Refresh current page
+   * @param array $query GET query, default is current
+   * @param string $fragment Fragment, default is none
+   */
   public function refresh($query = null, $fragment = null) {
     if (!isset($query)) {
-      $query = $this->request
-      ->query;
+      $query = $this->request->query;
     }
     $this->redirectPath($this->request->path, $query, false, $fragment);
     $this->refresh($query, $fragment);
   }
   
+  /**
+   * Add a route/path combination. Set route if pattern matches current
+   * path.
+   * 
+   * A pattern is a path such as 'admin/login'. Different placeholders can be
+   * used:
+   * * A '*' can be used instead of a parameter. For instance if the path
+   *   'users/view/*' is pointed at the UsersController and the view-action,
+   *   any string can be used in place of the asterisk, and the value will be
+   *   used as a parameter for the view-action. Multiple asterisks will be used
+   *   as multiple parameters.
+   * * A colon ':' followed by a number refers to a specific parameter, starting
+   *   from 0. The same example as above with a numbered parameter would be
+   *   'users/view/:0'.
+   * * The placeholders '**' and ':*' are identical, and results in the rest
+   *   of the path being put into parameters.
+   * * The placeholder ':controller' will set the controller, and ':action' will
+   *   set the action. 
+   * @param string $pattern A path pattern
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param number $priority Priority of route
+   * @throws InvalidRouteException if unknown placeholder
+   */
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
 
@@ -474,6 +654,21 @@ class Routing extends ModuleBase {
     }
   }
 
+  /**
+   * Add a path for a controller/action combination. This is done automatically
+   * with the use of {@see Routing::addRoute()}. The path function provided is
+   * called with a parameters-array as its first parameter and $additional as
+   * its second parameter. It is used when converting a route to a path. For an
+   * example of a path function see {@see Routing::insertParameters()}.
+   * @param string|Controller $controller Controller name or object
+   * @param string $action Action name
+   * @param callback $pathFunction Path function used to compute path
+   * @param mixed[] $additional Additional parameters, the second parameter for
+   * the path function
+   * @param number $priority Priority of path
+   * @return boolean True if path function added, false if a path function with
+   * a higher priority already exists for that controller and action
+   */
   public function addPath($controller, $action, $pathFunction,
                           $additional = array(), $priority = 5) {
     $controller = $this->controllerName($controller);
@@ -493,6 +688,13 @@ class Routing extends ModuleBase {
     return true;
   }
 
+  /**
+   * Set current route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param int $priority Priority of route
+   * @return boolean True if successful, false if a route with higher priority
+   * was previously set.
+   */
   public function setRoute($route, $priority = 7) {
     if ($this->rendered) {
       return false;
@@ -506,12 +708,17 @@ class Routing extends ModuleBase {
     return false;
   }
   
+  /**
+   * Find the best route and execute action
+   * @throws ModuleNotLoadedException if Controllers module is missing
+   * @throws InvalidRouteException if no route selected or no controller selected
+   */
   public function findRoute() {
     $this->events->trigger('onRendering');
     
     $this->controllers = $this->app->requestModule('Controllers');
     if (!$this->controllers) {
-      throw new Exception('Missing controllers module');
+      throw new ModuleNotLoadedException(tr('Missing controllers module'));
     }
     
     foreach ($this->routes as $route) {
@@ -564,6 +771,13 @@ class Routing extends ModuleBase {
     $this->events->trigger('onRendered');
   }
 
+  /**
+   * Make sure that the current path matches the controller and action. If not,
+   * redirect to the right path.
+   * @param string|Controller $controller Controller name or object
+   * @param string $action Action name
+   * @param mixed[] $parameters Action parameters
+   */
   public function reroute($controller, $action, $parameters = array()) {
     $currentPath = $this->request->path;
     $actionPath = $this->getPath($controller, $action, $parameters);
@@ -574,6 +788,7 @@ class Routing extends ModuleBase {
 }
 
 /**
+ * Invalid route
  * @pacakge Core\Routing
  */
 class InvalidRouteException extends Exception { }

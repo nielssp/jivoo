@@ -47,7 +47,7 @@ class HtmlHelper extends Helper {
   /**
    * Create a link
    * @param string $label Label for link
-   * @param mixed $route Route for link, default is frontpage, see
+   * @param array|ILinkable|string|null $route Route for link, default is frontpage, see
    * {@see Routing}.
    * @param array $attributes Associative array of attributes to add to link.
    * @return string|false An HTML link or false if invalid route.

@@ -36,7 +36,7 @@ class FormHelper extends Helper {
    * @param IRecord $record Record to base form on
    * @param string $fragment Fragment of page to return to i.e. 'create-comment'
    * to append '#create-comment' to form action
-   * @param mixed $route Route to submit form to, default is current page. See
+   * @param array|ILinkable|string|null $route Route to submit form to, default is current page. See
    * {@see Routing}.
    * @return string HTML code
    */

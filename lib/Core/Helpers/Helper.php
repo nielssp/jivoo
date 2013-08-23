@@ -114,7 +114,7 @@ abstract class Helper implements IHelpable {
   
   /**
    * Convert a route to a link
-   * @param mixed $route Route, see {@see Routing}
+   * @param array|ILinkable|string|null $route Route, see {@see Routing}
    * @return string A link
    */
   protected function getLink($route) {

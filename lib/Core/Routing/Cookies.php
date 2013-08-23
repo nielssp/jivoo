@@ -4,12 +4,18 @@
  * 
  * Implements arrayaccess, so the []-operator can be used
  * to get and set cookies.
- * @package PeanutCMS
+ * @package Core\Routing
  */
 class Cookies implements arrayaccess {
 
+  /**
+   * @var string Cookie prefix
+   */
   private $prefix = '';
 
+  /**
+   * @var unknown
+   */
   private $cookies = array();
   
   private $basePath = '/'; 
@@ -18,6 +24,7 @@ class Cookies implements arrayaccess {
    * Constructor
    * @param array $cookies Key/value pairs, e.g. from $_COOKIE.
    * @param string $prefix Cookie prefix to use.
+   * @param string $basePath Default path for cookies to be available on
    */
   public function __construct($cookies = array(), $prefix = '', $basePath = '/') {
     $this->cookies = $cookies;
@@ -29,7 +36,8 @@ class Cookies implements arrayaccess {
    * Create a cookie.
    * @param string $name Name of cookie
    * @param string $value Value of cookie
-   * @param int $expire The time the cookie expires as a UNIX timestamp
+   * @param int $expire The time the cookie expires as a UNIX timestamp, default
+   * is a year
    * @param string $path The path on the server in which the cookie will be available on.
    */
   public function setCookie($name, $value, $expire = null, $path = null) {

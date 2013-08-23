@@ -7,13 +7,20 @@
  * @package Core
  * @subpackage Routing
  * @property-read string $id Session id
- * @property-read array $messages Associative array of uid => Flash-objects
+ * @property-read array $messages Associative array of uid and
+ * {@see Flash} objects
  * @property-read Flash[] $alerts Alerts only
  * @property-read Flash[] $notices Notices only
  */
 class Session implements arrayaccess {
-
+  /**
+   * @var string Session prefix
+   */
   private $prefix = '';
+  
+  /**
+   * @var array Associative array of uid and Flash-objects
+   */
   private $messages = array();
   
   
@@ -32,6 +39,11 @@ class Session implements arrayaccess {
     }
   }
   
+  /**
+   * Get value of property
+   * @param string $property Name of property
+   * @return mixed Value
+   */
   public function __get($property) {
     switch ($property) {
       case 'id':

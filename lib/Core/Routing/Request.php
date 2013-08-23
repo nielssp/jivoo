@@ -1,12 +1,12 @@
 <?php
 /**
  * A class representing a HTTP request
- * @package PeanutCMS
- * @property array $path The path relative to the application root as an array
- * @property array $query The GET query as an array
+ * @package Core\Routing
+ * @property string[] $path The path relative to the application root as an array
+ * @property array $query The GET query as an associative array
  * @property string $fragment The fragment
- * @property-read array $realPath The original $path
- * @property-read array $data POST data as an array
+ * @property-read string[] $realPath The original $path
+ * @property-read array $data POST data as an associative array
  * @property-read Cookies $cookies Cookie access object
  * @property-read Session $session Session storage access object
  * @property-read string|null $ip The remote address or null if not set
@@ -15,24 +15,45 @@
  */
 class Request {
 
+  /**
+   * @var string[] Original path
+   */
   private $realPath;
 
+  /**
+   * @var string[] Path as array
+   */
   private $path;
 
+  /**
+   * @var array GET query
+   */
   private $query;
 
+  /**
+   * @var Cookies Cookies object
+   */
   private $cookies;
 
+  /**
+   * @var Session Session object
+   */
   private $session;
 
+  /**
+   * @var string Fragment 
+   */
   private $fragment = null;
 
+  /**
+   * @var array POST data
+   */
   private $data;
-  
-  private $route = null;
 
   /**
-   * Initializes the request-object
+   * Constructor
+   * @param string $sessionPrefix Session prefix to use for session variables
+   * @param string $basePath Base path of application
    */
   public function __construct($sessionPrefix = '', $basePath = '/') {
     $url = $_SERVER['REQUEST_URI'];
