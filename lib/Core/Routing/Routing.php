@@ -496,7 +496,7 @@ class Routing extends ModuleBase {
    * Get a URL for a route
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException if incomplete route
-   * @return A URl
+   * @return string A URL
    */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);

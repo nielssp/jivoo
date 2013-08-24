@@ -180,5 +180,14 @@ class Extensions extends ModuleBase {
 
 }
 
+/**
+ * Extension not found
+ * @package PeanutCMS\Extensions
+ */
 class ExtensionNotFoundException extends Exception {}
+
+/**
+ * Extension is invalid
+ * @package PeanutCMS\Extensions
+ */
 class ExtensionInvalidException extends Exception {}

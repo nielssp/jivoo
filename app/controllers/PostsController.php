@@ -152,14 +152,14 @@ class PostsController extends AppController {
 
     if ($this->Bulk->isBulk()) {
       if ($this->Bulk->isDelete()) {
-        $query = SelectQuery::create();
+        $query = $this->Post->dataSource->select();
       }
       else {
-        $query = UpdateQuery::create();
+        $query = $this->Post->dataSource->update();
       }
       $this->Filtering->filter($query);
       $this->Bulk->select($query);
-      $this->Post->dataSource->execute($query);
+      $query->execute();
       if (!$this->request->isAjax()) {
         $this->refresh();
       }

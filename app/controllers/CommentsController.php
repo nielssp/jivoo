@@ -59,14 +59,14 @@ class CommentsController extends AppController {
 
     if ($this->Bulk->isBulk()) {
       if ($this->Bulk->isDelete()) {
-        $query = SelectQuery::create();
+        $query = $this->Comment->dataSource->select();
       }
       else {
-        $query = UpdateQuery::create();
+        $query = $this->Comment->dataSource->update();
       }
       $this->Filtering->filter($query);
       $this->Bulk->select($query);
-      $this->Comment->dataSource->execute($query);
+      $query->execute();
       if (!$this->request->isAjax()) {
         $this->refresh();
       }

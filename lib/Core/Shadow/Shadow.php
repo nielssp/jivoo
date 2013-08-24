@@ -9,7 +9,7 @@
  * 
  * Supported hash types: 'sha512', 'sha256',
  * 'blowfish', 'md5', 'ext_des' and 'std_des'
- * @pacakge Core\Shadow
+ * @package Core\Shadow
  */
 class Shadow extends ModuleBase {
 

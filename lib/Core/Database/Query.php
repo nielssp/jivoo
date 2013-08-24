@@ -78,27 +78,8 @@ abstract class Query {
           ->delete($this);
       }
     }
-    else if (isset($this->db) AND $this->db instanceof IDatabase) {
-      return $this->db
-        ->execute($this);
-    }
     else {
       throw new Exception('No data source to execute on');
-    }
-  }
-
-  /**
-   * Get the real table name of a table (with table prefix)
-   * @param string $table Table name without prefix
-   * @return string Table name with prefix
-   */
-  protected function tableName($table) {
-    if (isset($this->db) AND $this->db instanceof IDatabase) {
-      return $this->db
-        ->tableName($table);
-    }
-    else {
-      return $table;
     }
   }
 
