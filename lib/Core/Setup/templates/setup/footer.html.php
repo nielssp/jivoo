@@ -2,8 +2,15 @@
 </div>
 
 <div class="footer" id="poweredby">
-<a href="#"><?php echo $app['name']; ?> 
-<?php echo $app['version']; ?></a>
+<?php if (isset($app['website'])): ?>
+<?php echo $Html->link(
+  $app['name'] . ' ' . $app['version'],
+  $app['website']
+); ?>
+<?php else: ?>
+<?php echo $app['name']; ?> 
+<?php echo $app['version']; ?>
+<?php endif; ?>
 </div>
 
 <div class="footer" id="links">

@@ -286,10 +286,10 @@ class Templates extends ModuleBase {
       $data = array_merge($data, $this->parameters[$name]);
     }
     $data['site'] = $this->config->getArray();
-    $data['app'] = array(
-      'name' => $this->app->name,
-      'version' => $this->app->version,
-    );
+    $data['app'] = $this->app->appConfig;
+//       'name' => $this->app->name,
+//       'version' => $this->app->version,
+//     );
     return $data;
   }
 
