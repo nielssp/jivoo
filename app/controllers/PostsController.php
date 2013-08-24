@@ -34,7 +34,7 @@ class PostsController extends AppController {
   public function index() {
     $select = SelectQuery::create()->where('status = "published"')
       ->orderByDescending('date');
-    $this->Pagination->setCount($this->Post->count());
+    $this->Pagination->setCount($this->Post->count(clone $select));
 
     $this->Pagination->paginate($select);
 
@@ -311,18 +311,14 @@ class PostsController extends AppController {
   public function viewTag($tag) {
     $this->tag = $this->Tag->first(SelectQuery::create()->where('name = ?', $tag));
 
-    /** @todo This includes unpublished posts */
-    $this->Pagination->setCount($this->tag->countPosts());
-
     $select = SelectQuery::create()->where('status = "published"')
       ->orderByDescending('date');
 
+    $this->Pagination->setCount($this->tag->countPosts(clone $select));
+
     $this->Pagination->paginate($select);
-
     $this->posts = $this->tag->getPosts($select);
-
     $this->title = $this->tag->tag;
-
     $this->render('posts/index.html');
   }
 
