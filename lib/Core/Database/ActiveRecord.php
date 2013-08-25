@@ -70,22 +70,48 @@ abstract class ActiveRecord implements IRecord {
   protected $fields = null;
 
   /**
-   * @var array An associative array of 'hasOne'-associations
+   * @var array An associative array of 'hasOne'-associations. Each association
+   * creates the following methods (using Post model as example):
+   * * `Post getPost()` Get associated record
+   * * `setPost(Post $record)` Set associated record
+   * * `removePost()` Unset associated record
    */
   protected $hasOne = array();
 
   /**
-   * @var array An associative array of 'hasMany'-associations
+   * @var array An associative array of 'hasMany'-associations. Each association
+   * creates the following methods (using Post model as example):
+   * * `Post[] getPosts(SelectQuery $customSelect = null)` Get associated records,
+   *   optionally matching a custom select query
+   * * `int countPosts(SelectQuery $customSelect = null)` Get number of associated records,
+   *   optionally matching a custom select query
+   * * `bool hasPost(Post $record)` Check whether or not a record is associated
+   *   with this one
+   * * `addPost(Post $record)` Add another record
+   * * `removePost(Post $record)` Remove an associated record
    */
   protected $hasMany = array();
 
   /**
-   * @var array An associative array of 'belongsTo'-associations
+   * @var array An associative array of 'belongsTo'-associations. Each association
+   * creates the following methods (using Post model as example):
+   * * `Post getPost()` Get associated record
+   * * `setPost(Post $record)` Set associated record
+   * * `removePost()` Unset associated record
    */
   protected $belongsTo = array();
 
   /**
-   * @var array An associative array of 'hasAndBelongsToMany'-associations
+   * @var array An associative array of 'hasAndBelongsToMany'-associations.
+   * Each association creates the following methods (using Post model as example):
+   * * `Post[] getPosts(SelectQuery $customSelect = null)` Get associated records,
+   *   optionally matching a custom select query
+   * * `int countPosts(SelectQuery $customSelect = null)` Get number of associated records,
+   *   optionally matching a custom select query
+   * * `bool hasPost(Post $record)` Check whether or not a record is associated
+   *   with this one
+   * * `addPost(Post $record)` Add another record
+   * * `removePost(Post $record)` Remove an associated record
    */
   protected $hasAndBelongsToMany = array();
 
@@ -146,6 +172,7 @@ abstract class ActiveRecord implements IRecord {
   }
 
   /**
+   * Get value of property
    * @throws RecordPropertyNotFoundException if the property doesn't exist
    */
   public function __get($field) {
@@ -165,6 +192,7 @@ abstract class ActiveRecord implements IRecord {
   }
   
   /**
+   * Set value of property
    * @throws RecordPropertyNotFoundException if the property doesn't exist
    */
   public function __set($field, $value) {
