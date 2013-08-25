@@ -25,6 +25,11 @@ class AppConfig implements arrayaccess {
    * @var string File name of configuration file
    */
   private $file;
+  
+  /**
+   * @var string File type
+   */
+  private $type = null;
 
   /**
    * @var bool True if configuration has been updated
@@ -44,18 +49,36 @@ class AppConfig implements arrayaccess {
   /**
    * Constructor
    * @param string $configFile File name of configuration file
+   * @param string $fileType Configuration file type. Supported types are: 'php'
+   * and 'json'. Default is to use file extension.
    */
-  public function __construct($configFile = null) {
+  public function __construct($configFile = null, $type = null) {
     $this->root = $this;
     if (isset($configFile)) {
-      if (file_exists($configFile)) {
-        /** @TODO Temporary work-around for opcode caching */
-        $content = file_get_contents($configFile);
-        $content = str_replace('<?php', '', $content);
-        $this->data = eval($content);
-//         $this->data = include $configFile;
+      if (!isset($type)) {
+        $type = strtolower(array_pop(explode('.', $configFile)));
       }
+      $this->type = $type;
       $this->file = $configFile;
+      if (file_exists($configFile)) {
+        switch ($this->type) {
+          case 'php':
+            /** @TODO Temporary work-around for opcode caching */
+            $content = file_get_contents($this->file);
+            $content = str_replace('<?php', '', $content);
+            $this->data = eval($content);
+//         $this->data = include $configFile;
+            break;
+          case 'json':
+            $content = file_get_contents($this->file);
+            $this->data = json_decode($content);
+            break;
+          default:
+            throw new UnsupportedConfigurationFormat(
+              tr('Unsupported file format: "%1"', $this->type)
+            );
+        }
+      }
     }
   }
   
@@ -354,3 +377,9 @@ class AppConfig implements arrayaccess {
     $this->delete($key);
   }
 }
+
+/**
+ * A configuration file format is not supported
+ * @package Core
+ */
+class UnsupportedConfigurationFormatException extends Exception { }

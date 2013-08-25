@@ -5,16 +5,21 @@ function var_import($data) {
 
 function json_pretty_printer($data, $prefix = '') {
   $json = '{' . PHP_EOL;
+  $lines = array();
   foreach ($data as $key => $value) {
-    $json .= $prefix . '  ' . $key . ': ';
+    $line = $prefix . '  "' . addslashes($key) . '": ';
     if (is_array($value)) {
-      $json .= json_pretty_printer($value, $prefix . '  ');
+      $line .= json_pretty_printer($value, $prefix . '  ');
+    }
+    else if (is_string($value)) {
+      $line .= '"' . addslashes($value) . '"';
     }
     else {
-      $json .= var_export($value, true);
+      $line .= var_export($value, true);
     }
-    $json .= ',' . PHP_EOL;
+    $lines[] = $line;
   }
+  $json .= implode(',' . PHP_EOL, $lines) . PHP_EOL;
   return $json . $prefix . '}';
 }
 
@@ -33,44 +38,59 @@ function php_pretty_printer($data, $prefix = '') {
   return $json . $prefix . ')';
 }
 
-function read_config() {
-  return include '../cfg/test-config.cfg.php';
+function include_config() {
+  return include '../config/test-config.php';
 }
 
-include '../app/essentials.php';
-include '../../LAB/LabTest.php';
+function eval_config() {
+  $content = file_get_contents('../config/test-config.php');
+  $content = str_replace('<?php', '', $content);
+  return eval($content);
+}
 
-$fileData = explode('?>', file_get_contents(p(CFG . 'config.cfg.php')));
-$testData = Configuration::parseData($fileData[1]);
+function decode_config() {
+  $content = file_get_contents('../config/test-config.json');
+  return json_decode($content, true);
+}
+
+function new_appconfig() {
+  $config = new AppConfig('../config/test-config.php');
+  return $config;
+}
+
+include '../lib/Core/bootstrap.php';
+include '../../LAB/LabTest.php';
+Lib::import('Core');
+
+$config = new AppConfig('../config/config.php');
+$testData = $config->getArray();
 
 $rounds = 50;
 
 $test = new LabTest('Configuration serialization');
 $json_encoded = $test->testFunction($rounds, 'json_encode', $testData);
 $test->dumpResult();
-$test->testFunction($rounds, 'json_pretty_printer', $testData);
+$json_encoded = $test->testFunction($rounds, 'json_pretty_printer', $testData);
 $test->dumpResult();
-$file = fopen("../cfg/test-config.json", "w");
+$file = fopen("../config/test-config.json", "w");
 fwrite($file, $json_encoded);
 fclose($file);
 $php_encoded = $test->testFunction($rounds, 'php_pretty_printer', $testData);
-$file = fopen("../cfg/test-config.cfg.php", "w");
+$file = fopen("../config/test-config.php", "w");
 fwrite($file, "<?php\nreturn " . $php_encoded . ";\n");
 fclose($file);
 $test->dumpResult();
-$seri_encoded = $test->testFunction($rounds,
-    array('Configuration', 'compileData'), $testData);
-$test->dumpResult();
 $exported = $test->testFunction($rounds, 'var_export', $testData, true);
 $test->dumpResult();
-$test->testFunction($rounds, 'json_decode', $json_encoded);
-$test->dumpResult();
-$test->testFunction($rounds, array('Configuration', 'parseData'), $seri_encoded);
+$test->testFunction($rounds, 'json_decode', $json_encoded, true);
 $test->dumpResult();
 $test->testFunction($rounds, 'var_import', $exported);
 $test->dumpResult();
-$test->testFunction($rounds, 'read_config');
-$test->dumpResult();
+$r1 = $test->testFunction($rounds, 'include_config');
+$r2 = $test->testFunction($rounds, 'eval_config');
+$r3 = $test->testFunction($rounds, 'decode_config');
+$test->dump($r1 == $r2, 'r1 == r2');
+$test->dump($r2 == $r3, 'r2 == r3');
 
 $test->report();
 
