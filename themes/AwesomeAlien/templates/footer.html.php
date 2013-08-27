@@ -1,8 +1,7 @@
 </div>
 
 <div id="sidebar">
-
-Keine widgets?
+<?php $this->output('sidebar'); ?>
 </div>
 
 <div class="clear"></div>
