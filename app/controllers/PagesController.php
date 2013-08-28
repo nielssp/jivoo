@@ -50,7 +50,7 @@ class PagesController extends AppController {
         foreach ($this->page->getErrors() as $field => $error) {
           $this->session
             ->alert(
-              $this->page->getFieldLabel($field) . ': ' . $error
+              $this->Page->getFieldLabel($field) . ': ' . $error
             );
         }
       }

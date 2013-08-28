@@ -1,7 +1,4 @@
-<?php
-// Render the header
-$this->render('backend/header.html');
-?>
+<?php $this->extend('backend/layout.html'); ?>
       <div class="section">
         <div class="container">
 
@@ -16,6 +13,3 @@ $this->render('backend/header.html');
 
         </div>
       </div>
-<?php
-$this->render('backend/footer.html');
-?>

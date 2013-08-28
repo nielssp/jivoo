@@ -80,7 +80,7 @@ class CommentsController extends AppController {
     if ($this->request->isAjax()) {
       $html = '';
       foreach ($this->comments as $this->comment) {
-        $html .= $this->render('comments/comment.html', true);
+        $html .= $this->view->fetch('comments/comment.html');
       }
       $this->Json->respond(array('html' => $html));
     }
@@ -113,7 +113,7 @@ class CommentsController extends AppController {
     }
     else {
       $this->Json
-        ->respond(array('html' => $this->render('comments/comment.html', true)));
+        ->respond(array('html' => $this->view->fetch('comments/comment.html')));
     }
   }
 

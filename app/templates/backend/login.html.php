@@ -1,7 +1,4 @@
-<?php
-// Render the header
-$this->render('backend/header.html');
-?>
+<?php $this->extend('backend/layout.html'); ?>
 
       <div class="section header_section">
         <div class="container">
@@ -39,8 +36,3 @@ $this->render('backend/header.html');
       </div>
       
       <?php echo $Form->end(); ?>
-      
-<?php
-$this->render('backend/footer.html');
-?>
-

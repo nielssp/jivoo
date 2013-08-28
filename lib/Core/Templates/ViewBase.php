@@ -8,6 +8,11 @@ abstract class ViewBase {
    * @var array Associative array of data from controller
    */
   protected $data = array();
+  
+  /**
+   * @var array Associative array of template data
+   */
+  protected $templateData = array();
 
   /**
    * @var array Associative array of block names and content
@@ -54,6 +59,11 @@ abstract class ViewBase {
    * @var Request Current request
    */
   private $request;
+  
+  /**
+   * @var array Associative array of template dirs and priorities
+   */
+  private $templateDirs = array();
 
   /**
    * Constructor.
@@ -65,10 +75,6 @@ abstract class ViewBase {
     $this->m->Routing = $routing;
 
     $this->request = $this->m->Routing->getRequest();
-
-    $this->data['messages'] = $this->request->session->messages;
-    $this->data['alerts'] = $this->request->session->alerts;
-    $this->data['notices'] = $this->request->session->notices;
   }
   
   /**
@@ -179,7 +185,7 @@ abstract class ViewBase {
    * @param string $file Asset
    * @return string Absolute path to asset
    */
-  protected function asset($file) {
+  protected function file($file) {
     return $this->m->Templates->getAsset($file);
   }
 
@@ -350,11 +356,44 @@ abstract class ViewBase {
   }
   
   /**
+   * Add a template directory
+   * @param string $dir Absolute path to directory
+   * @param int $priority Priority
+   */
+  public function addTemplateDir($dir, $priority = 5) {
+    $this->templateDirs[$dir] = $priority;
+  }
+  
+  /**
+   * Add data to a specific template
+   * @param string $template Template
+   * @param string $var Variable name
+   * @param mixed $value Value
+   */
+  public function setTemplateVar($template, $var, $value) {
+    if (!isset($this->templateData[$template])) {
+      $this->templateData[$template] = array();
+    }
+    $this->templateData[$template][$var] = $value;
+  }
+  
+  /**
    * Find template
    * @param string $template Template
+   * @return string $path Absolute path to template
+   * @throws TemplateNotFoundException when template cannot be found
    */
   protected function findTemplate($template) {
-    
+    foreach ($this->templateDirs as $dir => $priority) {
+      if (substr($dir, -1, 1) != '/') {
+        $dir .= '/';
+      }
+      $path = $dir . $template . '.php';
+      if (file_exists($path)) {
+        return $path;
+      }
+    }
+    throw new TemplateNotFoundException(tr('Template not found: %1', $template));
   }
 
   /**
@@ -380,13 +419,13 @@ abstract class ViewBase {
       $this->assign('content', $this->content);
       return $this->render($template);
     }
-    else if (isset($this->layout)) {
-      $template = $this->layout;
-      $this->layout = null;
-      $this->content .= ob_get_clean();
-      $this->assign('content', $this->content);
-      return $this->render($template);
-    }
+//     else if (isset($this->layout)) {
+//       $template = $this->layout;
+//       $this->layout = null;
+//       $this->content .= ob_get_clean();
+//       $this->assign('content', $this->content);
+//       return $this->render($template);
+//     }
     return ob_get_clean();
   }
 
@@ -396,6 +435,10 @@ abstract class ViewBase {
    * @return string Output of template
    */
   public function fetch($template) {
+    arsort($this->templateDirs);
+    $this->data['messages'] = $this->request->session->messages;
+    $this->data['alerts'] = $this->request->session->alerts;
+    $this->data['notices'] = $this->request->session->notices;
     return $this->render($template);
   }
 
@@ -407,3 +450,9 @@ abstract class ViewBase {
     echo $this->fetch($template);
   }
 }
+
+/**
+ * When a template cannout be found
+ * @package Core\Templates
+ */
+class TemplateNotFoundException extends Exception { }

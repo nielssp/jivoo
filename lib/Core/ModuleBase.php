@@ -23,12 +23,17 @@ abstract class ModuleBase {
   /**
    * @var Request|null The Request object if available
    */
-
   protected $request = null;
+  
   /**
    * @var Session|null Session storage object if available
    */
   protected $session = null;
+  
+  /**
+   * @var View|null Current view if available
+   */
+  protected $view = null;
 
   /**
    * Module constructor
@@ -44,6 +49,10 @@ abstract class ModuleBase {
     if (isset($this->m->Routing)) {
       $this->request = $this->m->Routing->getRequest();
       $this->session = $this->request->session;
+    }
+    
+    if (isset($this->m->Templates)) {
+      $this->view = $this->m->Templates->view;
     }
 
     $additionalParameters = func_get_args();

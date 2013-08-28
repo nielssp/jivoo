@@ -1,22 +1,21 @@
 <?php
-$this->setIndent(4);
-$this->insertScript('backend-js', $this->file('js/backend.js'),
-    array('jquery-ui', 'jquery-hotkeys'));
-$this->insertStyle('backend-css', $this->file('css/backend.css'));
+$this->script(array(
+  'jquery-ui.js', 'jquery-hotkeys.js', 'backend.js'
+));
+$this->style('backend.css');
 ?>
 <!DOCTYPE html>
 <html>
   <head>
     <title><?php echo $title; ?> | PeanutCMS</title>
-<?php $this->output('head-meta'); ?>
 
-<?php $this->output('head-styles'); ?>
-
-<?php $this->output('head-scripts'); ?>
+<?php echo $this->block('meta'); ?>
+<?php echo $this->block('style'); ?>
+<?php echo $this->block('script'); ?>
 
   </head>
   <body>
-<?php $this->output('body-top'); ?>
+<?php echo $this->block('body-top'); ?>
 
 <?php if (!isset($noHeader) OR !$noHeader) : ?>
     <div id="header">
@@ -72,3 +71,26 @@ $this->insertStyle('backend-css', $this->file('css/backend.css'));
 <?php $flash->delete(); ?>
 
 <?php endforeach; ?>
+
+<?php echo $this->block('content'); ?>
+
+
+    </div>
+<?php if (isset($aboutLink)) : ?>
+    <div class="footer" id="poweredby">
+      Powered by
+      <a href="<?php echo $aboutLink; ?>">
+        PeanutCMS
+<?php echo $version ?>
+      </a>
+    </div>
+<?php endif; ?>
+
+    <div class="footer" id="links">
+      <a href="#">Help</a>
+    </div>
+<?php echo $this->block('body-bottom'); ?>
+
+  </body>
+</html>
+

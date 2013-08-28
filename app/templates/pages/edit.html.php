@@ -1,7 +1,4 @@
-<?php
-// Render the header
-$this->render('backend/header.html');
-?>
+<?php $this->extend('backend/layout.html'); ?>
       
     <?php echo $Form->begin($page); ?>
 
@@ -57,7 +54,3 @@ echo $Form->field('name',
         </div>
       </div>
     <?php echo $Form->end(); ?>
-
-<?php
-$this->render('backend/footer.html');
-?>

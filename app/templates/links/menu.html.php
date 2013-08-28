@@ -1,8 +1,1 @@
-<?php
-// Render the header
-$this->render('backend/header.html');
-?>
-
-<?php
-$this->render('backend/footer.html');
-?>
+<?php $this->extend('backend/layout.html'); ?>

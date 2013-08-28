@@ -1,7 +1,4 @@
-<?php
-// Render the header
-$this->render('backend/header.html');
-?>
+<?php $this->extend('backend/layout.html'); ?>
 
       <div class="section light_section">
         <div class="container pagination" id="pagination">
@@ -51,7 +48,5 @@ $this->render('backend/header.html');
 
       <?php echo $Form->end(); ?>
 
-<?php
-$this->render('backend/footer.html');
-?>
+
 

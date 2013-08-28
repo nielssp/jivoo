@@ -172,7 +172,7 @@ class PostsController extends AppController {
     if ($this->request->isAjax()) {
       $html = '';
       foreach ($this->posts as $this->post) {
-        $html .= $this->render('posts/post.html', true);
+        $html .= $this->view->fetch('posts/post.html');
       }
       $this->Json->respond(array('html' => $html));
     }
@@ -294,7 +294,7 @@ class PostsController extends AppController {
     }
     else {
       $this->Json
-        ->respond(array('html' => $this->render('posts/post.html', true)));
+        ->respond(array('html' => $this->view->fetch('posts/post.html')));
     }
   }
 

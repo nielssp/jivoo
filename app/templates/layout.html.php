@@ -1,7 +1,4 @@
-<?php
-$this->setIndent(4);
-$this->insertStyle('theme-style', $this->file('css/style.css'));
-?>
+<?php $this->style('style.css'); ?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,14 +12,14 @@ else {
 }
 ?>
    </title>
-<?php $this->output('head-meta'); ?>
+   
+<?php echo $this->block('meta'); ?>
+<?php echo $this->block('style'); ?>
+<?php echo $this->block('script'); ?>
 
-<?php $this->output('head-styles'); ?>
-
-<?php $this->output('head-scripts'); ?>
   </head>
   <body>
-<?php $this->output('body-top'); ?>
+<?php echo $this->block('body-top'); ?>
 
     <h1><?php echo $Html->link($site['title']); ?></h1>
     <h2><?php echo $site['subtitle']; ?></h2>
@@ -31,3 +28,9 @@ else {
     <?php echo $Html->link(h($link->title), $link); ?>
 
 <?php endforeach; ?>
+
+<?php echo $this->block('content'); ?>
+
+<?php echo $this->block('body-bottom'); ?>
+  </body>
+</html>

@@ -64,7 +64,7 @@ class Authentication extends ModuleBase {
       $controller->addModule($this->m->Shadow);
       $this->m->Helpers->addHelpers($controller);
       $this->m->Models->addModels($controller);
-      $controller->addTemplatePath($this->p('templates'));
+      $this->view->addTemplateDir($this->p('templates'), 3);
       $controller->rootGroup = $rootGroup;
       $this->m->Setup->enterSetup($controller, 'setupRoot');
     }

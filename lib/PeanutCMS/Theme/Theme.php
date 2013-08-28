@@ -3,7 +3,7 @@
 // Name           : Theme
 // Description    : The PeanutCMS theme system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Templates
+// Dependencies   : Core/Templates Core/Assets
 
 /**
  * Class for loading and managing themes
@@ -41,10 +41,18 @@ class Theme extends ModuleBase {
 
     // Find and load theme
     if ($this->load()) {
-      $this->m->Templates->setTheme('themes', $this->theme);
+      $this->view->addTemplateDir(
+        $this->p('themes', $this->theme . '/templates'),
+        10
+      );
+      $this->m->Assets->addAssetDir(
+        'themes',
+        $this->theme . '/assets',
+        10
+      );
     }
     else {
-      new GlobalWarning(tr('Please install a theme'), 'theme-missing');
+//       new GlobalWarning(tr('Please install a theme'), 'theme-missing');
     }
   }
 

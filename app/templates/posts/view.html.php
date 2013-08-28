@@ -1,11 +1,4 @@
-<?php
-/*
- * Template for blog post
- */
-
-// Render the header
-$this->render('header');
-?>
+<?php $this->extend('layout.html'); ?>
 
 <h2><?php echo h($post->title); ?></h2>
 
@@ -54,7 +47,3 @@ Published by <?php
 endforeach;
 ?>
 
-<?php
-// Render the footer
-$this->render('footer');
-?>

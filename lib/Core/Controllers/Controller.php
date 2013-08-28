@@ -97,7 +97,7 @@ class Controller implements IHelpable {
     $this->request = $routing->getRequest(); 
     $this->session = $this->request->session;
     
-    $this->view = $templats->view;
+    $this->view = $templates->view;
 
     $this->name = str_replace('Controller', '', get_class($this));
 
@@ -131,12 +131,7 @@ class Controller implements IHelpable {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
-    if (isset($this->helperObjects[$name])) {
-      return $this->helperObjects[$name];
-    }
-    if (isset($this->data[$name])) {
-      return $this->data[$name];
-    }
+    return $this->view->$name;
   }
 
   /**
@@ -145,7 +140,7 @@ class Controller implements IHelpable {
    * @param mixed $value Value
    */
   public function __set($name, $value) {
-    $this->data[$name] = $value;
+    $this->view->$name = $value;
   }
   
   /**
@@ -154,14 +149,6 @@ class Controller implements IHelpable {
    */
   public function setConfig(AppConfig $config) {
     $this->config = $config;
-  }
-
-  /**
-   * Get all data
-   * @return array Associative array
-   */
-  public function getData() {
-    return $this->data;
   }
   
   /**
@@ -195,6 +182,7 @@ class Controller implements IHelpable {
   
   public function addHelper($helper) {
     $name = str_replace('Helper', '', get_class($helper));
+    $this->$name = $helper;
     $this->helperObjects[$name] = $helper;
   }
   
@@ -354,14 +342,6 @@ class Controller implements IHelpable {
   }
 
   /**
-   * Add a template directory
-   * @param string $path Directory path
-   */
-  public function addTemplatePath($path) {
-    $this->templatePaths[] = $path;
-  }
-
-  /**
    * Render a template
    * 
    * If $templateName is not set, the path of the template will be computed
@@ -374,12 +354,9 @@ class Controller implements IHelpable {
    * {@see Utilities::camelCaseToDashes()} is used on each level.
    * 
    * @param string $templateName Name of template to render
-   * @param bool $return Whether or not to return the result rather than outputting
    * @return string The output of $return is set to true
    */
   protected function render($templateName = null) {
-    $template = new Template($this->m->Templates, $this->m->Routing, $this);
-    $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {
       $templateName = '';
       $thisName = $this->name;
@@ -400,9 +377,7 @@ class Controller implements IHelpable {
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';
     }
-    $templateData = array_merge($this->data, $this->helperObjects);
-    $template->set($templateData);
-    return $template->render($templateName, $return);
+    $this->view->display($templateName);
   }
 
   /**

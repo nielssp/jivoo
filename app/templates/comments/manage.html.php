@@ -1,8 +1,7 @@
 <?php
-// Render the header
-$this->render('backend/header.html');
-$this->render('backend/pagination.html');
-$this->render('backend/bulk-actions.html');
+$this->extend('backend/layout.html');
+$this->embed('backend/pagination.html');
+$this->embed('backend/bulk-actions.html');
 ?>
 
       <div class="section light_section">
@@ -15,7 +14,7 @@ $this->render('backend/bulk-actions.html');
 <?php
 $this->first = true;
 foreach ($comments as $this->comment) {
-  $this->render('comments/comment.html');
+  $this->embed('comments/comment.html');
   if ($this->first) {
     $this->first = false;
   }
@@ -24,7 +23,6 @@ foreach ($comments as $this->comment) {
         </div>
       </div>
 <?php
-$this->render('backend/bulk-actions.html');
-$this->render('backend/footer.html');
+$this->embed('backend/bulk-actions.html');
 ?>
 

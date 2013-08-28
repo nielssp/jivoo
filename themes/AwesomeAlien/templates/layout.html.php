@@ -1,7 +1,6 @@
 <?php
-$this->setindent(4);
-$this->requestScript('jquery');
-$this->insertStyle('theme-style', $this->file('style.css'));
+$this->script('jquery.js');
+$this->style('theme.css');
 ?>
 <!DOCTYPE html>
 <html>
@@ -16,11 +15,10 @@ else {
 }
 ?>
    </title>
-<?php $this->output('head-meta'); ?>
 
-<?php $this->output('head-styles'); ?>
-
-<?php $this->output('head-scripts'); ?>
+<?php echo $this->block('meta'); ?>
+<?php echo $this->block('style'); ?>
+<?php echo $this->block('script'); ?>
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -29,7 +27,7 @@ else {
     </script>
   </head>
   <body>
-<?php $this->output('body-top'); ?>
+<?php echo $this->block('body-top'); ?>
 
     <div id="main">
 
@@ -55,3 +53,28 @@ $rand = floor(time() / 60) % 5 + 1;
     </div>
 
     <div id="content">
+    
+    <?php echo $this->block('content'); ?>
+
+    </div>
+
+<div id="sidebar">
+<?php echo $this->block('sidebar'); ?>
+</div>
+
+<div class="clear"></div>
+
+<div id="footer">
+  <h2>
+    <?php echo $Html->link($site['title']); ?></h2>
+  <div id="powered-by">
+    <?php echo $Html->link('Powered by Apakoh Core.', 'http://apakoh.dk'); ?>
+  </div>
+</div>
+</div>
+
+    
+<?php echo $this->block('body-bottom'); ?>
+  </body>
+</html>
+    

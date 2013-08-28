@@ -1,11 +1,4 @@
-<?php
-/* 
- * Template for blog post
- */
-
-// Render the header
-$this->render('header');
-?>
+<?php $this->extend('layout.html'); ?>
 
 <h1><?php echo h($page->title); ?></h1>
 <?php if ($page->state == 'draft') : ?>
@@ -19,7 +12,3 @@ $this->render('header');
 <?php echo $Html->link('Edit',
     array('action' => 'edit', 'parameters' => array($page->id))); ?>
 </p>
-<?php
-// Render the footer
-$this->render('footer');
-?>

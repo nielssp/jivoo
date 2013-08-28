@@ -1,11 +1,4 @@
-<?php
-/*
- * Template for blog post listing
- */
-
-// Render the header
-$this->render('header.html');
-?>
+<?php $this->extend('layout.html'); ?>
 
 <?php foreach ($posts as $post) : ?>
 
@@ -29,7 +22,4 @@ $this->render('header.html');
   <?php if (!$Pagination->isFirst())
   echo $Html->link('Newer &#8594;', $Pagination->prevLink()); ?>
 </p>
-<?php
-// Render the footer
-$this->render('footer.html');
-?>
+

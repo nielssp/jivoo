@@ -1,12 +1,4 @@
-<?php
-/* 
- * Template for blog post
- */
-
-// Render the header
-$this->render('header');
-?>
-
+<?php $this->extend('layout.html'); ?>
 <div class="post">
 
 <h1><?php echo h($post->title); ?></h1>
@@ -174,7 +166,3 @@ endif;
 
 <?php endif; ?>
 
-<?php
-// Render the footer
-$this->render('footer');
-?>

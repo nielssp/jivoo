@@ -35,11 +35,6 @@ class Templates extends ModuleBase {
   public function hideIdentity() {
     return $this->hideLevel > 1;
   }
-  
-  /**
-   * @var View Current view
-   */
-  private $view = null;
 
   protected function init() {
     $this->config->defaults = array(
@@ -48,6 +43,9 @@ class Templates extends ModuleBase {
     );
     
     $this->view = new View($this, $this->m->Routing);
+    $this->view->addTemplateDir($this->p('templates', ''), 4);
+    $this->view->site = $this->config->getArray();
+    $this->view->app = $this->app->appConfig;
 
     if (isset($this->config['meta'])) {
       $meta = $this->config->get('meta');
@@ -84,6 +82,8 @@ class Templates extends ModuleBase {
     }
     return $this->m->Assets->getAsset($file);
   }
+  
+  /** EVERYTHIN BELOW IS DEPRECATED AND SHOULD BE REMOVED SOON */
 
   /** @todo Move to Http module !! */
   private function setContentType($name) {

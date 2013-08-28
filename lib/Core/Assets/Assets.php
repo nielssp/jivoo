@@ -25,6 +25,16 @@ class Assets extends ModuleBase {
    * @var string[] List of blacklisted extensions
    */
   private $extensionBlacklist = array('php', 'log');
+  
+  /**
+   * @var array[] List of additional asset dirs
+   */
+  private $assetDirs = array();
+  
+  /**
+   * @var bool Whether or not $assetDirs is sorted
+   */
+  private $sorted = true;
 
   protected function init() {
     $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
@@ -69,6 +79,21 @@ class Assets extends ModuleBase {
     }
     return false;
   }
+  
+  /**
+   * Add additional asset dirs
+   * @param string $key Location-identifier
+   * @param string $path Dir path
+   * @param int $priority Priority
+   */
+  public function addAssetDir($key, $path, $priority = 5) {
+    $this->sorted = false;
+    $this->assetDirs[] = array(
+      'key' => $key,
+      'path' => $path,
+      'priority' => $priority
+    );
+  }
 
   /**
    * Get a link to an asset
@@ -81,6 +106,16 @@ class Assets extends ModuleBase {
     if (!isset($path)) {
       $path = $key;
       $key = 'assets';
+      if (!$this->sorted) {
+        uasort($this->assetDirs, 'prioritySorter');
+        $this->sorted = true;
+      }
+      foreach ($this->assetDirs as $dir) {
+        if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
+          $key = $dir['key'];
+          $path = $dir['path'] . '/' . $path;
+        }
+      }
     }
     $p = $this->p($key, $path);
     if (strncmp($p, $this->docRoot, $this->docRootLength) == 0) {

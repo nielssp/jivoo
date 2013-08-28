@@ -1,7 +1,4 @@
-<?php
-// Render the header
-$this->render('backend/header.html');
-?>
+<?php $this->extend('backend/layout.html'); ?>
       
     <?php echo $Form->begin($post); ?>
 
@@ -80,8 +77,3 @@ echo $afterPermalink;
         </div>
       </div>
     <?php echo $Form->end(); ?>
-
-<?php
-$this->render('backend/footer.html');
-?>
-

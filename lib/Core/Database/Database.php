@@ -95,7 +95,7 @@ class Database extends ModuleBase implements IDatabase {
       $this->m->Templates, $this->config);
     $controller->addModule($this);
     $this->m->Helpers->addHelpers($controller);
-    $controller->addTemplatePath($this->p('templates'));
+    $this->view->addTemplateDir($this->p('templates'), 3);
     if (!isset($this->config['driver'])) {
       $this->m->Setup->enterSetup($controller, 'selectDriver');
     }

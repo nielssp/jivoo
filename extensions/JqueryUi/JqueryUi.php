@@ -10,21 +10,20 @@ class JqueryUi extends ExtensionBase {
   private $theme;
 
   protected function init() {
-    if (!$this->config
-      ->exists('theme')) {
-      $this->config
-        ->set('theme', 'arachis');
+    if (!$this->config->exists('theme')) {
+      $this->config->set('theme', 'arachis');
     }
-    $this->theme = $this->config
-      ->get('theme');
-    $this->m
-      ->Templates
-      ->addScript('jquery-ui',
-        $this->getAsset('js/jquery-ui-1.8.17.custom.min.js'),
-        array('jquery', 'jquery-ui-css'));
-    $this->m
-      ->Templates
-      ->addStyle('jquery-ui-css',
-        $this->getAsset('css/' . $this->theme . '/jquery-ui-1.8.17.custom.css'));
+    $this->theme = $this->config->get('theme');
+
+    $this->view->provide(
+      'jquery-ui.js',
+      $this->getAsset('js/jquery-ui-1.8.17.custom.min.js'),
+      array('jquery.js', 'jquery-ui.css')
+    );
+
+    $this->view->provide(
+      'jquery-ui.css',
+      $this->getAsset('css/' . $this->theme . '/jquery-ui-1.8.17.custom.css')
+    );
   }
 }

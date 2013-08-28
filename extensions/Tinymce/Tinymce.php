@@ -24,27 +24,30 @@ class Tinymce extends ExtensionBase {
     ));
     $this->controller->addRoute('tinymce/init.js', 'initJs');
 
-    $this->controller->addTemplatePath($this->p('templates'));
+    $this->view->addTemplateDir($this->p('templates'));
     
     $this->m->Controllers->addController($this->controller);
 
     $editor = new TinymceEditor($this);
     $this->m->Editors->TinymceEditor = $editor;
 
-    $this->m->Templates
-      ->addScript('tinymce', $this->getAsset('jquery.tinymce.js'),
-        array('jquery', 'jquery-ui')
-      );
+    $this->view->provide(
+      'jquery-tinymce.js',
+      $this->getAsset('jquery.tinymce.js'),
+      array('jquery.js', 'jquery-ui.js')
+    );
+    $this->view->provide(
+      'tinymce-init.js',
+      $this->m->Routing->getLink(array(
+        'controller' => $this->controller,
+        'action' => 'initJs')
+      ),
+      array('jquery-tinymce.js')
+    );
   }
 
   public function insertScripts() {
-    $this->m->Templates
-      ->insertScript('tinymce-init',
-        $this->m->Routing
-          ->getLink(
-            array('controller' => $this->controller, 'action' => 'initJs')
-          ), array('tinymce')
-      );
+    $this->view->script('tinymce-init.js');
   }
 
   public function setEncoder(Encoder $encoder) {

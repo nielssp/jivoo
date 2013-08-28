@@ -116,9 +116,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     if (!$this->m
       ->Authentication
       ->hasPermission('backend.access')) {
-      $this->m
-        ->Templates
-        ->set('menu', array(), 'backend/header.html');
+      $this->view->setTemplateVar('backend/layout.html', 'menu', array());
       return array();
     }
     $menu = array();
@@ -129,9 +127,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
       }
     }
     Utilities::groupObjects($menu);
-    $this->m
-      ->Templates
-      ->set('menu', $menu, 'backend/header.html');
+    $this->view->setTemplateVar('backend/layout.html', 'menu', $menu);
     return $menu;
   }
 

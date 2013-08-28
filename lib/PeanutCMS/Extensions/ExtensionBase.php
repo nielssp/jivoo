@@ -14,6 +14,12 @@ abstract class ExtensionBase {
   protected $e = null;
 
   protected $config = null;
+  
+  protected $request = null;
+  
+  protected $session = null;
+  
+  protected $view = null;
 
   public final function __construct($m, $e, AppConfig $config, Extensions $extensions) {
     $this->config = $config;
@@ -21,6 +27,16 @@ abstract class ExtensionBase {
     $this->m = new Dictionary($m, true);
     $this->e = new Dictionary($e, true);
     $this->extensionDir = get_class($this);
+    
+    if (isset($this->m->Routing)) {
+      $this->request = $this->m->Routing->getRequest();
+      $this->session = $this->request->session;
+    }
+    
+    if (isset($this->m->Templates)) {
+      $this->view = $this->m->Templates->view;
+    }
+    
     $this->init();
   }
 

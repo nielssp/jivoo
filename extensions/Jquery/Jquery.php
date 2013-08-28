@@ -8,8 +8,9 @@
 
 class Jquery extends ExtensionBase {
   protected function init() {
-    $this->m
-      ->Templates
-      ->addScript('jquery', $this->getAsset('js/jquery-1.7.1.min.js'));
+    $this->view->provide(
+      'jquery.js',
+      $this->getAsset('js/jquery-1.7.1.min.js')
+    );
   }
 }

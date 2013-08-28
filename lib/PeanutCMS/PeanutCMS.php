@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : PeanutCMS
-// Version        : 0.3.14
+// Version        : 0.4.0
 // Description    : Dummy module that includes all PeanutCMS modules
 // Author         : apakoh.dk
 // Dependencies   : Core PeanutCMS/Backend PeanutCMS/Widgets
