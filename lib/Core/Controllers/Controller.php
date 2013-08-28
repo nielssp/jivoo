@@ -70,6 +70,11 @@ class Controller implements IHelpable {
   private $modelObjects = array();
 
   /**
+   * @var View Current view
+   */
+  protected $view = null;
+  
+  /**
    * Constructor
    * @param Routing $routing Routing module
    * @param Templates $templates Templates module
@@ -91,6 +96,8 @@ class Controller implements IHelpable {
 
     $this->request = $routing->getRequest(); 
     $this->session = $this->request->session;
+    
+    $this->view = $templats->view;
 
     $this->name = str_replace('Controller', '', get_class($this));
 
@@ -370,7 +377,7 @@ class Controller implements IHelpable {
    * @param bool $return Whether or not to return the result rather than outputting
    * @return string The output of $return is set to true
    */
-  protected function render($templateName = null, $return = false) {
+  protected function render($templateName = null) {
     $template = new Template($this->m->Templates, $this->m->Routing, $this);
     $template->setTemplatePaths($this->templatePaths);
     if (!isset($templateName)) {

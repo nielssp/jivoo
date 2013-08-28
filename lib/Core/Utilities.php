@@ -101,6 +101,15 @@ class Utilities {
     throw new InvalidArgumentException(
       'Precondition not met (' . $matches[1] . ').');
   }
+  
+  /**
+   * Get lower case file extension from file name
+   * @param string $file File name
+   * @return string File extension
+   */
+  public static function getFileExtension($file) {
+    return strtolower(array_pop(explode('.', $file)));
+  }
 
   /**
    * Get content-type (MIME type) of a file name or file extension

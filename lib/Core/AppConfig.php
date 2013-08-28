@@ -56,7 +56,7 @@ class AppConfig implements arrayaccess {
     $this->root = $this;
     if (isset($configFile)) {
       if (!isset($type)) {
-        $type = strtolower(array_pop(explode('.', $configFile)));
+        $type = Utilities::getFileExtension($configFile);
       }
       $this->type = $type;
       $this->file = $configFile;

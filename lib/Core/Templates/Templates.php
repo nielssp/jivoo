@@ -1,14 +1,14 @@
 <?php
 // Module
 // Name           : Templates
-// Description    : The Apakoh Core template system
+// Description    : The Apakoh Core template/view system
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Assets Core/Helpers
 
 /**
- * Class for setting the template
- *
+ * Templats and views module
  * @package Core\Templates
+ * @property-read View $view The current view
  */
 class Templates extends ModuleBase {
 
@@ -35,21 +35,54 @@ class Templates extends ModuleBase {
   public function hideIdentity() {
     return $this->hideLevel > 1;
   }
+  
+  /**
+   * @var View Current view
+   */
+  private $view = null;
 
   protected function init() {
     $this->config->defaults = array(
       'title' => $this->app->name,
       'subtitle' => 'Powered by ' . $this->app->name,
     );
+    
+    $this->view = new View($this, $this->m->Routing);
 
     if (isset($this->config['meta'])) {
       $meta = $this->config->get('meta');
       if (is_array($meta)) {
         foreach ($meta as $name => $content) {
+          $this->view->meta($name, $content);
           $this->insertMeta($name, $content);
         }
       }
     }
+  }
+  
+  /**
+   * Get value of property
+   * @param string $property Property
+   * @return mixed Value
+   */
+  public function __get($property) {
+    switch ($property) {
+      case 'view':
+        return $this->$property;
+    }
+  }
+
+  /**
+   * Return a link to an asset
+   * @param string $file File name
+   * @return string Link
+   */
+  public function getAsset($file) {
+    if (file_exists($this->p($this->theme[0], $this->theme[1] . '/' . $file))) {
+      return $this->m->Assets
+        ->getAsset($this->theme[0], $this->theme[1] . '/' . $file);
+    }
+    return $this->m->Assets->getAsset($file);
   }
 
   /** @todo Move to Http module !! */

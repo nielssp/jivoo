@@ -215,6 +215,7 @@ class App {
   /**
    * Load a module
    * @param string $module Module name
+   * @return ModuleBase Module
    * @throws ModuleNotFoundException if module not found
    * @throws ModuleInvalidException if module isn't valid
    * @throws ModuleMissingDependencyException if module is missing dependencies
