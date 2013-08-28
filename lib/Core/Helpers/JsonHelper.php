@@ -12,10 +12,7 @@ class JsonHelper extends Helper {
    * @param mixed Data
    */
   public function respond($response) {
-    $template = new Template($this->m
-      ->Templates, $this->m
-      ->Routing);
-    $template->json = json_encode($response);
-    $template->render('default.json');
+    $this->m->Templates->view->json = json_encode($response);
+    $this->m->Templates->view->display('default.json');
   }
 }
