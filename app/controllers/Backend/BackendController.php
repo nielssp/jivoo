@@ -11,9 +11,7 @@ class BackendController extends AppController {
   }
 
   public function about() {
-    if ($this->m->Templates->hideIdentity()) {
-      $this->Backend->requireAuth('backend.access');
-    }
+    $this->Backend->requireAuth('backend.access');
     $this->title = tr('About');
     $this->render();
   }
