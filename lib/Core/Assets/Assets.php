@@ -107,7 +107,7 @@ class Assets extends ModuleBase {
       $path = $key;
       $key = 'assets';
       if (!$this->sorted) {
-        uasort($this->assetDirs, 'prioritySorter');
+        uasort($this->assetDirs, array('Utilities', 'prioritySorter'));
         $this->sorted = true;
       }
       foreach ($this->assetDirs as $dir) {

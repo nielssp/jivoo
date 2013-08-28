@@ -20,14 +20,7 @@ class Theme extends ModuleBase {
 
   protected function init() {
     // Create meta-tags
-    if (!$this->m->Templates->hideIdentity()) {
-      $this->m->Templates
-        ->insertMeta('generator',
-          'PeanutCMS'
-            . ($this->m->Templates->hideVersion() ? ''
-              : ' ' . $this->app->version)
-        );
-    }
+    $this->view->meta('generator', 'PeanutCMS');
     //     if ($this->m
 //       ->Configuration
 //       ->exists('site.description')) {

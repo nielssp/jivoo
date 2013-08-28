@@ -108,7 +108,8 @@ class Utilities {
    * @return string File extension
    */
   public static function getFileExtension($file) {
-    return strtolower(array_pop(explode('.', $file)));
+    $array = explode('.', $file);
+    return strtolower(array_pop($array));
   }
 
   /**

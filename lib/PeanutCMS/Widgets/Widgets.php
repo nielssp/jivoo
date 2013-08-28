@@ -12,7 +12,7 @@
  */
 class Widgets extends ModuleBase {
   protected function init() {
-    $this->m->Templates->insertHtml('sidebar', 'sidebar', 'div', array(), 'widgets');
+    $this->view->appendTo('sidebar', 'widgets');
   }
   
   /**

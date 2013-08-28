@@ -56,47 +56,23 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
       ->Authentication
       ->hasPermission('backend.access')) {
     }
-    if (!$this->m
-      ->Templates
-      ->hideIdentity()
-        OR $this->m
-          ->Authentication
-          ->hasPermission('backend.access')) {
-      $this->m
-        ->Templates
-        ->set('aboutLink',
-          $this->m
-            ->Routing
-            ->getLink(array('controller' => 'Backend', 'action' => 'about')),
-          'backend/footer.html');
-    }
-    if (!$this->m
-      ->Templates
-      ->hideVersion()
-        OR $this->m
-          ->Authentication
-          ->hasPermission('backend.access')) {
-      $this->m
-        ->Templates
-        ->set('version', $this->app->version);
-    }
-    else {
-      $this->m
-        ->Templates
-        ->set('version', '');
-    }
+    $this->view->setTemplateVar(
+      'backend/layout.html',
+      'aboutLink',
+      $this->m->Routing->getLink(array(
+        'controller' => 'Backend', 'action' => 'about'
+      ))
+    );
 
-    $this->m
-      ->Routing
-      ->onRendering(array($this, 'createMenu'));
+    $this->m->Routing->onRendering(array($this, 'createMenu'));
   }
 
   public function __get($property) {
     switch ($property) {
       case 'unlisted':
         if (!isset($this->unlisted)) {
-          $this->unlisted = new BackendCategory($this, $this->m
-            ->Authentication);
+          $this->unlisted = new BackendCategory($this,
+            $this->m->Authentication);
         }
         return $this->unlisted;
       case 'prefix':

@@ -76,15 +76,11 @@ $this->style('backend.css');
 
 
     </div>
-<?php if (isset($aboutLink)) : ?>
+
     <div class="footer" id="poweredby">
       Powered by
-      <a href="<?php echo $aboutLink; ?>">
-        PeanutCMS
-<?php echo $version ?>
-      </a>
+      <?php echo $Html->link('PeanutCMS ' . $app['version'], 'Backend::about'); ?>
     </div>
-<?php endif; ?>
 
     <div class="footer" id="links">
       <a href="#">Help</a>
