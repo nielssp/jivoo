@@ -197,20 +197,20 @@ class Request {
       $agent = strtolower($this->userAgent);
       $this->mobile = false;
       if (isset($agent)) {
-        if (strstr($agent, 'android')
-            OR strstr($agent, 'iphone')
-            OR strstr($agent, 'ipad')
-            OR strstr($agent, 'mobile') // e.g. IEMobile
-            OR strstr($agent, 'phone') // e.g. Windows Phone OS
-            OR strstr($agent, 'opera mini')
-            OR strstr($agent, 'maemo')
-            OR strstr($agent, 'blackberry')
-            OR strstr($agent, 'nokia')
-            OR strstr($agent, 'sonyericsson')
-            OR strstr($agent, 'opera mobi')
-            OR strstr($agent, 'symbos')
-            OR strstr($agent, 'symbianos')
-            OR strstr($agent, 'j2me')) {
+        if (strstr($agent, 'android') !== false
+            OR strstr($agent, 'iphone') !== false
+            OR strstr($agent, 'ipad') !== false
+            OR strstr($agent, 'mobile') !== false // e.g. IEMobile
+            OR strstr($agent, 'phone') !== false // e.g. Windows Phone OS
+            OR strstr($agent, 'opera mini') !== false
+            OR strstr($agent, 'maemo') !== false
+            OR strstr($agent, 'blackberry') !== false
+            OR strstr($agent, 'nokia') !== false
+            OR strstr($agent, 'sonyericsson') !== false
+            OR strstr($agent, 'opera mobi') !== false
+            OR strstr($agent, 'symbos') !== false
+            OR strstr($agent, 'symbianos') !== false
+            OR strstr($agent, 'j2me') !== false) {
           $this->mobile = true;
         }
       }
