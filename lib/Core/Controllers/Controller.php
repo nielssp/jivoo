@@ -60,11 +60,6 @@ class Controller implements IHelpable {
   protected $models = array();
   
   /**
-   * @var array Associative array of helper names and {@see Helper} objects
-   */
-  private $helperObjects = array();
-  
-  /**
    * @var array Associative array of model names and {@see Model} objects
    */
   private $modelObjects = array();
@@ -183,7 +178,6 @@ class Controller implements IHelpable {
   public function addHelper($helper) {
     $name = str_replace('Helper', '', get_class($helper));
     $this->$name = $helper;
-    $this->helperObjects[$name] = $helper;
   }
   
   /**

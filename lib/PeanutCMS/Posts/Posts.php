@@ -5,7 +5,7 @@
 // Author         : apakoh.dk
 // Dependencies   : Core/Database Core/Routing Core/Templates
 //                  Core/Authentication PeanutCMS/Backend
-//                  Core/Controllers Core/Models
+//                  Core/Controllers Core/Models PeanutCMS/Widgets
 
 /**
  * Class for working with blog posts
@@ -27,7 +27,10 @@ class Posts extends ModuleBase {
       'commentApproval' => false, 'editor' => array('name' => 'TinymceEditor'),
     );
 
-
+    $this->m->Widgets->register(new RecentPostsWidget(
+      $this->m->Routing,
+      $this->p('templates/recent-posts-widget.html.php')
+    ));
 
     if ($this->m->Database->isNew('posts')) {
       $post = $this->m->Models->Post->create();

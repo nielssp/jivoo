@@ -263,6 +263,10 @@ h1 a:hover {
   border-radius:5px;
 }
 
+#sidebar .widget-content ul {
+  margin-bottom:0;
+}
+
 #footer {
   border-bottom: 5px solid #000;
   height: 40px;

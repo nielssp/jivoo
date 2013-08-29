@@ -20,10 +20,17 @@ class WidgetView {
   private $default = true;
   
   /**
+   * @var Routing Routing module
+   */
+  private $routing = null;
+  
+  /**
    * Constructor.
+   * @param Dictionary $routing Routing module
    * @param string $defaultTemplate Absolute path to default widget template
    */
-  public function __construct($defaultTemplate) {
+  public function __construct(Routing $routing, $defaultTemplate) {
+    $this->routing = $routing;
     $this->template = $defaultTemplate;
   }
   
@@ -68,6 +75,24 @@ class WidgetView {
    */
   public function isDefaultTemplate() {
     return $this->default;
+  }
+  
+  /**
+   * Convert a route to a URL
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @return string URl
+   */
+  public function link($route = null) {
+    return $this->m->Routing->getLink($route);
+  }
+  
+  /**
+   * Check whether or not a route is the current route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @return bool True if current, fals otherwise
+   */
+  public function isCurrent($route = null) {
+    return $this->m->Routing->isCurrent($route);
   }
   
   /**

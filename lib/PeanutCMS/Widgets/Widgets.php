@@ -11,16 +11,46 @@
  * @package PeanutCMS\Widgets
  */
 class Widgets extends ModuleBase {
-  
+  /**
+   * @var array Associative array of widget names and objects
+   */
+  private $loaded = array();
+
+  /**
+   * @var array Associative array of widget names and objects
+   */
   private $available = array();
   
+  /**
+   * @var array Associative array of widget areas and widget lists
+   */
   private $areas = array();
   
   protected function init() {
+    if (!isset($this->config['areas'])) {
+      $this->config['areas'] = array(
+        'sidebar' => array(
+          array(
+            'name' => 'TextWidget',
+            'title' => tr('Welcome to PeanutCMS'),
+            'config' => array('text' => tr('Welcome to PeanutCMS. This is a widget for displaying basic information in the sidebar.'))
+          ),
+          array(
+            'name' => 'RecentPostsWidget',
+            'title' => tr('Recent posts'),
+            'config' => array()
+          ),
+        )
+      );
+    }
+    
     /** @TODO Temporary work-around. Fix backend stuff! */
     $this->m->Helpers->Widgets->addModule($this);
     
-    $this->register(new TextWidget($this->p('templates/text-widget.html.php')));
+    $this->register(new TextWidget(
+      $this->m->Routing,
+      $this->p('templates/text-widget.html.php')
+    ));
     
     $this->m->Routing->onRendering(array($this, 'renderWidgets'));
   }
@@ -45,11 +75,19 @@ class Widgets extends ModuleBase {
       foreach ($widgets as $widget) {
         $name = $widget['name'];
         $config = $widget['config'];
-        if (!isset($this->available[$name])) {
+        if (isset($this->loaded[$name])) {
+          $object = $this->loaded[$name];
+        }
+        else if (isset($this->available[$name])) {
+          $object = $this->available[$name];
+          $this->loaded[$name] = $object;
+          $this->m->Helpers->addHelpers($object);
+          $this->m->Models->addModels($object);
+        }
+        else {
           // Widget not available.. Remove and inform user
           continue;
         }
-        $object = $this->available[$name];
         if (isset($widget['title'])) {
           $title = $widget['title'];
         }
