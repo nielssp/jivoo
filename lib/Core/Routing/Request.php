@@ -200,7 +200,7 @@ class Request {
   public function isMobile() {
     if (!isset($this->mobile)) {
       $agent = strtolower($this->userAgent);
-      $this->mobile = false;
+      $this->mobile = true;
       if (isset($agent)) {
         if (strpos($agent, 'android') !== false
             OR strpos($agent, 'iphone') !== false
