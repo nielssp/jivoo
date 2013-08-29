@@ -21,7 +21,6 @@ class Widgets extends ModuleBase {
     $this->m->Helpers->Widgets->addModule($this);
     
     $this->register(new TextWidget($this->p('templates/text-widget.html.php')));
-    $this->register(new TestWidget($this->p('test-widget.html.php')));
     
     $this->m->Routing->onRendering(array($this, 'renderWidgets'));
   }
