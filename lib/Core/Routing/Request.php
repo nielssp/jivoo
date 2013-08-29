@@ -12,6 +12,7 @@
  * @property-read string|null $ip The remote address or null if not set
  * @property-read string|null $url The request uri or null if not set
  * @property-read string|null $referer HTTP referer or null if not set
+ * @property-read string|null $userAgent HTTP user agent or null if not set
  */
 class Request {
 
@@ -110,6 +111,8 @@ class Request {
         return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
       case 'referer':
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+      case 'userAgent':
+        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
   }
 
@@ -187,6 +190,32 @@ class Request {
   public function isAjax() {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
         AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+  }
+  
+  public function isMobile() {
+    if (!isset($this->mobile)) {
+      $agent = strtolower($this->userAgent);
+      $this->mobile = false;
+      if (isset($agent)) {
+        if (strstr($agent, 'android')
+            OR strstr($agent, 'iphone')
+            OR strstr($agent, 'ipad')
+            OR strstr($agent, 'mobile') // e.g. IEMobile
+            OR strstr($agent, 'phone') // e.g. Windows Phone OS
+            OR strstr($agent, 'opera mini')
+            OR strstr($agent, 'maemo')
+            OR strstr($agent, 'blackberry')
+            OR strstr($agent, 'nokia')
+            OR strstr($agent, 'sonyericsson')
+            OR strstr($agent, 'opera mobi')
+            OR strstr($agent, 'symbos')
+            OR strstr($agent, 'symbianos')
+            OR strstr($agent, 'j2me')) {
+          $this->mobile = true;
+        }
+      }
+    }
+    return $this->mobile;
   }
 
 }

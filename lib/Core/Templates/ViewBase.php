@@ -66,6 +66,11 @@ abstract class ViewBase {
   private $templateDirs = array();
 
   /**
+   * @var bool Whether or not request was made from a phone
+   */
+  private $mobile = false;
+  
+  /**
    * Constructor.
    * @param Templates $templates Templates module
    */
@@ -75,6 +80,7 @@ abstract class ViewBase {
     $this->m->Routing = $routing;
 
     $this->request = $this->m->Routing->getRequest();
+    $this->mobile = $this->request->isMobile();
   }
   
   /**
@@ -383,6 +389,17 @@ abstract class ViewBase {
    * @return string|false $path Absolute path to template or false if not found
    */
   public function findTemplate($template) {
+    if ($this->mobile) {
+      foreach ($this->templateDirs as $dir => $priority) {
+        if (substr($dir, -1, 1) != '/') {
+          $dir .= '/';
+        }
+        $path = $dir . 'mobile/' . $template . '.php';
+        if (file_exists($path)) {
+          return $path;
+        }
+      }
+    }
     foreach ($this->templateDirs as $dir => $priority) {
       if (substr($dir, -1, 1) != '/') {
         $dir .= '/';
