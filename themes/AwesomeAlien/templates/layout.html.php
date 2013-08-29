@@ -59,6 +59,13 @@ $rand = floor(time() / 60) % 5 + 1;
     </div>
 
 <div id="sidebar">
+<?php foreach ($Widgets->get('sidebar') as $widget): ?>
+<div class="widget">
+<div class="widget-title"><?php echo $widget['title']; ?></div>
+<div class="widget-content"><?php echo $widget['content']; ?></div>
+</div>
+<?php endforeach; ?>
+
 <?php echo $this->block('sidebar'); ?>
 </div>
 

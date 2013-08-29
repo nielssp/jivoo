@@ -275,6 +275,8 @@ class App {
         Logger::ALL
       );
     }
+    // Clean the view
+    ob_end_clean();
     if ($this->config['core']['showExceptions']) {
       $app = $this->name;
       $version = $this->version;

@@ -239,9 +239,28 @@ h1 a:hover {
   font-size: 1.15em;
 }
 
-#sidebar h2 {
-  font-weight: bold;
-  margin-bottom: 2px;
+#sidebar .widget {
+  margin-bottom:30px;
+  padding-bottom:5px;
+  font-size:14px;
+  color:#444;
+}
+
+#sidebar .widget-title {
+  font-size:12px;
+  margin-bottom:10px;
+  color:#777;
+  text-transform: uppercase;
+  font-family: Corbel, "Segoe UI", "Bitstream Vera Sans", Verdana,
+    "DejaVu Sans", sans-serif;
+  margin-left:10px;
+}
+
+#sidebar .widget-content {
+  line-height:20px;
+  background-color:#eee;
+  padding:10px;
+  border-radius:5px;
 }
 
 #footer {

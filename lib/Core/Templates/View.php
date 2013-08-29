@@ -10,6 +10,10 @@ class View extends ViewBase {
     if (isset($this->templateData[$_template])) {
       extract($this->templateData[$_template], EXTR_SKIP);
     }
-    require($this->findTemplate($_template));
+    $_file = $this->findTemplate($_template);
+    if ($_file === false) {
+      throw new TemplateNotFoundException(tr('Template not found: %1', $_template));
+    }
+    require $_file;
   }
 }

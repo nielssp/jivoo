@@ -378,12 +378,11 @@ abstract class ViewBase {
   }
   
   /**
-   * Find template
+   * Find template in available template directories
    * @param string $template Template
-   * @return string $path Absolute path to template
-   * @throws TemplateNotFoundException when template cannot be found
+   * @return string|false $path Absolute path to template or false if not found
    */
-  protected function findTemplate($template) {
+  public function findTemplate($template) {
     foreach ($this->templateDirs as $dir => $priority) {
       if (substr($dir, -1, 1) != '/') {
         $dir .= '/';
@@ -393,13 +392,14 @@ abstract class ViewBase {
         return $path;
       }
     }
-    throw new TemplateNotFoundException(tr('Template not found: %1', $template));
+    return false;
   }
 
   /**
    * Embed content another template into the current template
    * @param string $_template Template
    * @param string $_data Additional data for template
+   * @throws TemplateNotFoundException when template cannot be found
    */
   protected abstract function embed($_template, $_data = array());
 
