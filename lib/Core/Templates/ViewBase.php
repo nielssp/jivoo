@@ -81,6 +81,7 @@ abstract class ViewBase {
 
     $this->request = $this->m->Routing->getRequest();
     $this->mobile = $this->request->isMobile();
+    echo $this->mobile;
   }
   
   /**

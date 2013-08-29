@@ -50,6 +50,11 @@ class Request {
    * @var array POST data
    */
   private $data;
+  
+  /**
+   * @var bool Whether or not request is from mobile browser
+   */
+  private $mobile = null;
 
   /**
    * Constructor
@@ -197,20 +202,20 @@ class Request {
       $agent = strtolower($this->userAgent);
       $this->mobile = false;
       if (isset($agent)) {
-        if (strstr($agent, 'android') !== false
-            OR strstr($agent, 'iphone') !== false
-            OR strstr($agent, 'ipad') !== false
-            OR strstr($agent, 'mobile') !== false // e.g. IEMobile
-            OR strstr($agent, 'phone') !== false // e.g. Windows Phone OS
-            OR strstr($agent, 'opera mini') !== false
-            OR strstr($agent, 'maemo') !== false
-            OR strstr($agent, 'blackberry') !== false
-            OR strstr($agent, 'nokia') !== false
-            OR strstr($agent, 'sonyericsson') !== false
-            OR strstr($agent, 'opera mobi') !== false
-            OR strstr($agent, 'symbos') !== false
-            OR strstr($agent, 'symbianos') !== false
-            OR strstr($agent, 'j2me') !== false) {
+        if (strpos($agent, 'android') !== false
+            OR strpos($agent, 'iphone') !== false
+            OR strpos($agent, 'ipad') !== false
+            OR strpos($agent, 'mobile') !== false // e.g. IEMobile
+            OR strpos($agent, 'phone') !== false // e.g. Windows Phone OS
+            OR strpos($agent, 'opera mini') !== false
+            OR strpos($agent, 'maemo') !== false
+            OR strpos($agent, 'blackberry') !== false
+            OR strpos($agent, 'nokia') !== false
+            OR strpos($agent, 'sonyericsson') !== false
+            OR strpos($agent, 'opera mobi') !== false
+            OR strpos($agent, 'symbos') !== false
+            OR strpos($agent, 'symbianos') !== false
+            OR strpos($agent, 'j2me') !== false) {
           $this->mobile = true;
         }
       }
