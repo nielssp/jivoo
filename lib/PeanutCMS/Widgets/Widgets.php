@@ -94,12 +94,12 @@ class Widgets extends ModuleBase {
         else {
           $title = $object->getDefaultTitle();
         }
-        if ($object->getView()->isDefaultTemplate()) {
+        if ($object->isDefaultTemplate()) {
           // Find alternate widget template:
           $templateName = Utilities::camelCaseToDashes($name);
           $template = $this->view->findTemplate('widgets/' . $templateName . '.html');
           if ($template !== false) {
-            $object->getView()->setTemplate($template);
+            $object->setTemplate($template);
           }
         }
         $html = $object->main($config);

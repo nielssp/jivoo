@@ -5,14 +5,24 @@
  */
 abstract class WidgetBase implements IHelpable {
   /**
-   * @var WidgetView Widget view
+   * @var array Associative array of widget data
    */
-  protected $view;
+  private $data = array();
+  
+  /**
+   * @var string Absolute path to template
+  */
+  private $template;
+  
+  /**
+   * @var bool Whether or not template is default
+   */
+  private $default = true;
   
   /**
    * @var Dictionary Collection of modules
    */
-  private $m = null;
+  protected $m = null;
 
   /**
    * @var string[] List of helpers needed by controller
@@ -45,7 +55,7 @@ abstract class WidgetBase implements IHelpable {
    * @param string $defaultTemplate Absolute path to default widget template
    */
   public function __construct(Routing $routing, $defaultTemplate) {
-    $this->view = new WidgetView($routing, $defaultTemplate);
+    $this->template = $defaultTemplate;
     $this->m = new Dictionary();
     $this->m->Routing = $routing;
     $this->request = $routing->getRequest(); 
@@ -56,21 +66,64 @@ abstract class WidgetBase implements IHelpable {
    * Get value of data variable
    * @param string $name Variable name
    * @return mixed Value
-   */
+  */
   public function __get($name) {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
-    return $this->view->$name;
+    return $this->data[$name];
   }
-  
+
   /**
    * Set value of data variable
    * @param string $name Variable name
    * @param mixed $value Value
    */
   public function __set($name, $value) {
-    $this->view->$name = $value;
+    $this->data[$name] = $value;
+  }
+
+  /**
+   * Check whether or not a variable is set
+   * @param string $name Variable name
+   */
+  public function __isset($name) {
+    return isset($this->data[$name]);
+  }
+  
+  /**
+   * Set alternate widget template
+   * @param string $template Absolute path to template
+   */
+  public function setTemplate($template) {
+    $this->default = false;
+    $this->template = $template;
+  }
+  
+  /**
+   * Whether or not the current template is the default
+   * @return boolean True if default template, false otherwise
+   */
+  public function isDefaultTemplate() {
+    return $this->default;
+  }
+  
+  /**
+   * Convert a route to a URL
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @return string URl
+   */
+  public function link($route = null) {
+    return $this->m->Routing->getLink($route);
+  }
+  
+  /**
+   * Check whether or not a route is the current route
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @return bool True if current, fals otherwise
+   */
+  public function isCurrent($route = null) {
+    return $this->m->Routing->isCurrent($route);
   }
   
   public function getHelperList() {
@@ -123,6 +176,17 @@ abstract class WidgetBase implements IHelpable {
    */
   public function getDefaultTitle() {
     return '';
+  }
+  
+  /**
+   * Fetch template for widget
+   * @return string Widget HTML
+   */
+  public function fetch() {
+    extract($this->data);
+    ob_start();
+    require $this->template;
+    return ob_get_clean();
   }
   
   /**

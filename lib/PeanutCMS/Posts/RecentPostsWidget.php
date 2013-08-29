@@ -22,6 +22,6 @@ class RecentPostsWidget extends WidgetBase {
       ->orderByDescending('date')
       ->limit($limit)
     );
-    return $this->view->fetch();
+    return $this->fetch();
   }
 }
