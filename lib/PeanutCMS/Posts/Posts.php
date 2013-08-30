@@ -179,7 +179,12 @@ class Posts extends ModuleBase {
       );
       if ($post !== false) {
         $post->addToCache();
-        $this->posts->setRoute('view', 6, array($post->id));
+        $this->m->Routing->setRoute(array(
+          'controller' => 'Posts',
+          'action' => 'view',
+          'parameters' => array($post->id)
+          ), 6
+        );
         return;
       }
     }
