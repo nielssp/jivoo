@@ -825,7 +825,7 @@ class Routing extends ModuleBase {
     if (isset($route['query'])) {
       $this->request->query = array_merge($route['query'], $this->request->query);
     }
-    
+
     if (isset($route['controller'])) {
       Logger::debug('Select action: ' . $route['controller'] . '::' . $route['action']);
       $controller = $this->controllers->getController($route['controller']);

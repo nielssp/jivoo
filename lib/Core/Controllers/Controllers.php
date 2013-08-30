@@ -109,7 +109,7 @@ class Controllers extends ModuleBase {
       if (!isset($this->actions[$controller])) {
         $class = $this->controllers[$controller];
         $classMethods = get_class_methods($class);
-        $parentMethods = get_class_methods('Controller');
+        $parentMethods = get_class_methods(get_parent_class($class));
         $this->actions[$controller] = array_diff($classMethods, $parentMethods);
       }
       return $this->actions[$controller];

@@ -65,7 +65,7 @@ class Pages extends ModuleBase {
     $this->m->Routing->setRoute(array(
       'controller' => 'Pages',
       'action' => 'view',
-      array($page->id)
+      'parameters' => array($page->id)
     ), 6);
   }
 
