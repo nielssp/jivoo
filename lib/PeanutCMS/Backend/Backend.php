@@ -41,6 +41,11 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     $this->controller->addRoute($this->prefix . 'access-denied', 'accessDenied');
     $this->controller->addRoute($this->prefix . 'about', 'about');
 
+    // Proper way to do menu:
+//     $this->m->Backend['content']->setup(tr('Content'), -2);
+//     $this->m->Backend['content']
+//       ->item(tr('Add post'), 'Backend::Posts::add', 2, 'backend.access');
+    
     $this['peanutcms']->setup('PeanutCMS', -2);
     $this['peanutcms']['home']->setup(tr('Home'), 0, null);
     $this['peanutcms']['dashboard']->setup(tr('Dashboard'), 0,
