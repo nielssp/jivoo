@@ -605,12 +605,12 @@ class Routing extends ModuleBase {
         while ($parent !== false AND $parent != 'Controller'
           AND $parent != 'AppController') {
           $name = str_replace($parent, '', $class);
-          $controller = '/' . Utilities::camelCaseToDashes($name) . $controller;
+          $controller = '/' . $this->controllers->getControllerPath($name) . $controller;
           $class = $parent;
           $parent = get_parent_class($class);
         }
         $name = str_replace('Controller', '', $class);
-        $controller = $prefix . Utilities::camelCaseToDashes($name) . $controller;
+        $controller = $prefix . $this->controllers->getControllerPath($name) . $controller;
         $paction = '/';
       }
       

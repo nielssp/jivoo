@@ -23,6 +23,11 @@ class Controllers extends ModuleBase {
    * @var array An associative array of controller names and actions
    */
   private $actions = array();
+  
+  /**
+   * @var array Associative array of controller names and paths
+   */
+  private $paths = array();
 
   /**
    * @var array An associative array of controller names and associated objects
@@ -76,6 +81,22 @@ class Controllers extends ModuleBase {
       return $this->controllers[$controller];
     }
     return false;
+  }
+  
+  /**
+   * Get path for controller
+   * @param string $controller Controller name
+   * @return string|false Path or false if not found
+   */
+  public function getControllerPath($controller) {
+    if (!isset($this->paths[$controller])) {
+      $this->paths[$controller] = Utilities::camelCaseToDashes($controller);
+    }
+    return $this->paths[$controller];
+  }
+  
+  public function setControllerPath($controller, $path) {
+    $this->paths[$controller] = $path;
   }
   
   /**
