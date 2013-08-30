@@ -13,8 +13,6 @@
  */
 class Links extends ModuleBase {
 
-  private $controller;
-
   protected function init() {
 
     if ($this->m->Database->isNew('links')) {
@@ -47,14 +45,10 @@ class Links extends ModuleBase {
       $link->save();
     }
 
-    $this->controller = $this->m->Controllers->Links;
-    $this->controller->setConfig($this->config);
-
-    $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['links-manage']
-      ->setup(tr('Menu'), 12)
-      ->permission('backend.links.manage')
-      ->autoRoute($this->controller, 'menu');
+    $this->m->Routing->autoRoute('Links');
+    
+    $this->m->Backend['content']->setup(tr('Content'), 2)
+      ->item(tr('Menu'), 'Links::menu', 12, 'backend.links.manage');
   }
 
 }

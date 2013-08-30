@@ -35,9 +35,8 @@ class Extensions extends ModuleBase {
 
     $this->installed = explode(' ', $this->config['installed']);
 
-    $this->m
-      ->Backend['settings']['extensions']
-      ->setup(tr('Extensions'), 2);
+    $this->m->Backend['settings']
+      ->item(tr('Extensions'), null, 2);
 
     // Load installed extensions when all modules are loaded and initialized
     $this->app->onModulesLoaded(array($this, 'loadExtensions'));

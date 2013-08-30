@@ -12,8 +12,6 @@
  * @package PeanutCMS\Posts
  */
 class Posts extends ModuleBase {
-  private $posts;
-  private $comments;
 
   protected function init() {
 
@@ -80,11 +78,10 @@ class Posts extends ModuleBase {
 
     // Create controllers
     //     $this->posts = new PostsController($this->m->Routing, $this->config);
-    $this->posts = $this->m->Controllers->Posts;
-    $this->posts->setConfig($this->config);
 
-    $this->comments = $this->m->Controllers->Comments;
-    $this->comments->setConfig($this->config['comments']);
+//     $this->posts->setConfig($this->config);
+
+//     $this->comments->setConfig($this->config['comments']);
 
     // Frontend setup
 

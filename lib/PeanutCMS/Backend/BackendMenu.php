@@ -33,8 +33,14 @@ class BackendMenu implements IGroupable, Iterator {
     }
   }
   
+  public function add(BackendMenuItem $item) {
+    $this->items[] = $item;
+    return $this;
+  }
+  
   public function item($label, $route = null, $group = 0, $permission = 'backend.access') {
     $this->items[] = new BackendMenuItem($label, $route, $group, $permission);
+    return $this;
   }
   
   public function setup($label, $group = null) {
@@ -63,26 +69,29 @@ class BackendMenu implements IGroupable, Iterator {
         $hasItems = true;
       }
     }
+    if ($hasItems) {
+      $this->group();
+    }
     return $hasItems;
   }
 
-  function rewind() {
+  public function rewind() {
     $this->position = 0;
   }
   
-  function current() {
+  public function current() {
     return $this->items[$this->position];
   }
   
-  function key() {
+  public function key() {
     return $this->keys[$this->position];
   }
   
-  function next() {
+  public function next() {
     ++$this->position;
   }
   
-  function valid() {
+  public function valid() {
     return isset($this->keys[$this->position]);
   }
 }

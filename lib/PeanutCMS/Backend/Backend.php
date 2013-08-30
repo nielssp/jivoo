@@ -13,14 +13,7 @@
  */
 class Backend extends ModuleBase implements ILinkable, arrayaccess {
 
-  private $categories = array();
-  private $unlisted = null;
-
-  private $controller;
-
-  private $shortcuts = array();
-
-  private $prefix = '';
+  private $submenus = array();
 
   protected function init() {
     $this->config->defaults = array(
@@ -28,65 +21,31 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     );
 
     $path = $this->config['path'];
-    $this->prefix = $path . '/';
 
-    $this->controller = $this->m->Controllers->Backend;
     $this->m->Controllers->setControllerPath('Backend', $path);
 
-//  Proper way to do this:
-//     $this->m->Routing->autoRoute('Backend');
-    $this->m->Routing->addRoute($path, 'Backend::dashboard');
-    $this->controller->addRoute($path, 'dashboard');
-    $this->controller->addRoute($this->prefix . 'login', 'login');
-    $this->controller->addRoute($this->prefix . 'access-denied', 'accessDenied');
-    $this->controller->addRoute($this->prefix . 'about', 'about');
+    $this->m->Routing->autoRoute('Backend');
 
-    // Proper way to do menu:
-//     $this->m->Backend['content']->setup(tr('Content'), -2);
-//     $this->m->Backend['content']
-//       ->item(tr('Add post'), 'Backend::Posts::add', 2, 'backend.access');
+    $this['peanutcms']->setup('PeanutCMS', -2)
+      ->item(tr('Home'), null, 0) 
+      ->item(tr('Dashboard'), 'Backend::dashboard', 0)
+      ->item(tr('About'), 'Backend::about', 8)
+      ->item(tr('Log out'), 'Backend::logout', 10);
     
-    $this['peanutcms']->setup('PeanutCMS', -2);
-    $this['peanutcms']['home']->setup(tr('Home'), 0, null);
-    $this['peanutcms']['dashboard']->setup(tr('Dashboard'), 0,
-        array('path' => explode('/', $path)));
-    $this['peanutcms']['about']->setup(tr('About'), 8)
-      ->autoRoute($this->controller, 'about');
-    $this['peanutcms']['logout']->setup(tr('Log out'), 10)
-      ->autoRoute($this->controller, 'logout');
+    $this['settings']->setup(tr('Settings'), 10)
+      ->item(tr('Themes'), null, 2)
+      ->item(tr('Modules'), null, 2)
+      ->item(tr('Configuration'), 'Backend::configuration', 10);
 
-    $this['settings']->setup(tr('Settings'), 10);
-    $this['settings']['configuration']->setup(tr('Configuration'), 10)
-      ->autoRoute($this->controller, 'configuration');
-    $this['settings']['themes']->setup(tr('Themes'), 2);
-    $this['settings']['modules']->setup(tr('Modules'), 2);
-
-    if ($this->m
-      ->Authentication
-      ->hasPermission('backend.access')) {
-    }
-    $this->view->setTemplateVar(
-      'backend/layout.html',
-      'aboutLink',
-      $this->m->Routing->getLink(array(
-        'controller' => 'Backend', 'action' => 'about'
-      ))
+    $this->view
+      ->setTemplateVar('backend/layout.html', 'aboutLink',
+        $this->m->Routing
+          ->getLink(
+            array('controller' => 'Backend', 'action' => 'about')
+          )
     );
 
-    $this->m->Routing->onRendering(array($this, 'createMenu'));
-  }
-
-  public function __get($property) {
-    switch ($property) {
-      case 'unlisted':
-        if (!isset($this->unlisted)) {
-          $this->unlisted = new BackendCategory($this,
-            $this->m->Authentication);
-        }
-        return $this->unlisted;
-      case 'prefix':
-        return $this->$property;
-    }
+    $this->m->Routing->onRendering(array($this, 'prepareMenu'));
   }
 
   public function getRoute() {
@@ -94,46 +53,38 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
       'path' => explode('/', $this->config['path'])
     );
   }
-
-  /** @todo In case of overflow; combine remaining categories under one "More"-category */
-  /** @todo actually... it should be handled in the theme... */
-  public function createMenu($sender, $eventArgs) {
-    if (!$this->m
-      ->Authentication
-      ->hasPermission('backend.access')) {
+  
+  public function prepareMenu($sender, $eventArgs) {
+    if (!$this->m->Authentication->hasPermission('backend.access')) {
       $this->view->setTemplateVar('backend/layout.html', 'menu', array());
       return array();
     }
     $menu = array();
-    foreach ($this->categories as $category) {
-      if ($category->count() > 0) {
-        $category->group();
-        $menu[] = $category;
+    foreach ($this->submenus as $submenu) {
+      if ($submenu->prepare()) {
+        $menu[] = $submenu;
       }
     }
     Utilities::groupObjects($menu);
     $this->view->setTemplateVar('backend/layout.html', 'menu', $menu);
-    return $menu;
   }
 
-  public function offsetExists($category) {
-    return isset($this->categories[$category]);
+  public function offsetExists($submenu) {
+    return isset($this->submenus[$submenu]);
   }
 
-  public function offsetGet($category) {
-    if (!isset($this->categories[$category])) {
-      $this->categories[$category] = new BackendCategory($this,
-        $this->m
-          ->Authentication);
+  public function offsetGet($submenu) {
+    if (!isset($this->submenus[$submenu])) {
+      $this->submenus[$submenu] = new BackendMenu($submenu);
     }
-    return $this->categories[$category];
+    return $this->submenus[$submenu];
   }
 
-  public function offsetSet($category, $value) {
+  public function offsetSet($submenu, $value) {
     // not implemented
   }
 
-  public function offsetUnset($category) {
-    unset($this->categories[$category]);
+  public function offsetUnset($submenu) {
+    unset($this->submenus[$submenu]);
   }
 }

@@ -13,8 +13,6 @@
  */
 class Pages extends ModuleBase {
 
-  private $controller;
-
   protected function init() {
     if ($this->m->Database->isNew('pages')) {
       $page = $this->m->Models->Page->create();
@@ -39,28 +37,14 @@ class Pages extends ModuleBase {
       ),
     );
 
-    $this->controller = $this->m->Controllers->Pages;
-    $this->controller->setConfig($this->config);
+//     $this->controller->setConfig($this->config);
 
     $this->detectFancyPath();
     $this->m->Routing->addPath('Pages', 'view', array($this, 'getFancyPath'));
 
-    $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['pages-add']
-      ->setup(tr('New page'), 2)
-      ->permission('backend.pages.add')
-      ->autoRoute($this->controller, 'add');
-    $this->m->Backend['content']['pages-manage']
-      ->setup(tr('Manage pages'), 4)
-      ->permission('backend.pages.manage')
-      ->autoRoute($this->controller, 'manage');
-
-    $this->m->Backend->unlisted['pages-edit']
-      ->permission('backend.pages.edit')
-      ->autoRoute($this->controller, 'edit');
-    $this->m->Backend->unlisted['pages-delete']
-      ->permission('backend.pages.delete')
-      ->autoRoute($this->controller, 'delete');
+    $this->m->Backend['content']->setup(tr('Content'), 2)
+      ->item(tr('New page'), 'Pages::add', 2, 'backend.pages.add')
+      ->item(tr('Manage pages'), 'Pages::manage', 4, 'backend.pages.manage');
   }
 
   private function detectFancyPath() {
@@ -76,7 +60,11 @@ class Pages extends ModuleBase {
       return;
     }
     $page->addToCache();
-    $this->controller->setRoute('view', 6, array($page->id));
+    $this->m->Routing->setRoute(array(
+      'controller' => 'Pages',
+      'action' => 'view',
+      array($page->id)
+    ), 6);
   }
 
   public function getFancyPath($parameters) {

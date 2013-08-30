@@ -39,4 +39,8 @@ class BackendMenuItem implements IGroupable, ILinkable {
   public function getGroup() {
     return $this->group;
   }
+  
+  public function getRoute() {
+    return $this->route;
+  }
 }
