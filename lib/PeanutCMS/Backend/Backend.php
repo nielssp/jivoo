@@ -61,7 +61,7 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
     }
     $menu = array();
     foreach ($this->submenus as $submenu) {
-      if ($submenu->prepare()) {
+      if ($submenu->prepare($this->m->Authentication)) {
         $menu[] = $submenu;
       }
     }

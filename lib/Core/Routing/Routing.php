@@ -586,7 +586,7 @@ class Routing extends ModuleBase {
     if (isset($action)) {
       $class = $this->controllers->getClass($controller);
       if (!$class) {
-        throw new Exception(tr('Invalid controller'));
+        throw new Exception(tr('Invalid controller: %1', $controller));
       }
       $route = array(
         'controller' => $controller,
@@ -631,6 +631,9 @@ class Routing extends ModuleBase {
     }
     else {
       $actions = $this->controllers->getActions($controller);
+      if ($actions === false) {
+        throw new Exception(tr('Invalid controller: %1', $controller));
+      }
       foreach ($actions as $action) {
         $this->autoRoute($controller, $action, $prefix);
       }

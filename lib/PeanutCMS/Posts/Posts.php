@@ -85,10 +85,10 @@ class Posts extends ModuleBase {
 
     // Frontend setup
 
-    $this->posts->addRoute('posts', 'index');
+    $this->m->Routing->addRoute('posts', 'Posts::index');
 
-    $this->posts->addRoute('tags', 'tagIndex');
-    $this->posts->addRoute('tags/*', 'viewTag');
+    $this->m->Routing->addRoute('tags', 'Posts::tagIndex');
+    $this->m->Routing->addRoute('tags/*', 'Posts::viewTag');
 
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
@@ -100,38 +100,22 @@ class Posts extends ModuleBase {
         ->addPath('Comments', 'view', array($this, 'getFancyPath'));
     }
     else {
-      $this->posts->addRoute('posts/*', 'view');
-      $this->comments->addRoute('posts/*/comments', 'index');
-      $this->comments->addRoute('posts/*/comments/*', 'view');
+      $this->m->Routing->addRoute('posts/*', 'Posts::view');
+      $this->m->Routing->addRoute('posts/*/comments', 'Posts::index');
+      $this->m->Routing->addRoute('posts/*/comments/*', 'Posts::view');
     }
 
     // Backend setup
+    
+    $this->m->Routing->autoRoute('PostsBackend');
+    $this->m->Routing->autoRoute('CommentsBackend');
 
-    $this->m->Backend['content']->setup(tr('Content'), 2);
-    $this->m->Backend['content']['posts-add']->setup(tr('New post'), 2)
-      ->permission('backend.posts.add')->autoRoute($this->posts, 'add');
-    $this->m->Backend['content']['posts-manage']->setup(tr('Manage posts'), 4)
-      ->permission('backend.posts.manage')->autoRoute($this->posts, 'manage');
+    $this->m->Backend['content']->setup(tr('Content'), 2)
+      ->item(tr('New post'), 'Backend::Posts::add', 'backend.posts.add')
+      ->item(tr('Manage posts'), 'Backend::Posts::manage', 'backend.posts.manage')
+      ->item(tr('Comments'), 'Backend::Comments::manage', 'backend.comments.manage')
+      ->item(tr('Tags'), 'Backend::Posts::manageTags', 'backend.tags.manage');
 
-    $this->m->Backend['content']['comments']->setup(tr('Comments'), 8)
-      ->permission('backend.comments.manage')
-      ->autoRoute($this->comments, 'manage');
-    $this->m->Backend['content']['tags']->setup(tr('Tags'), 8)
-      ->permission('backend.tags.manage')
-      ->autoRoute($this->posts, 'manageTags');
-
-    $this->m->Backend->unlisted['posts-edit']->permission('backend.posts.edit')
-      ->autoRoute($this->posts, 'edit');
-    $this->m->Backend->unlisted['posts-delete']
-      ->permission('backend.posts.delete')->autoRoute($this->posts, 'delete');
-    $this->m->Backend->unlisted['comment.delete']
-      ->permission('backend.comments.delete')
-      ->autoRoute($this->comments, 'delete');
-    $this->m->Backend->unlisted['comments-edit']
-      ->permission('backend.comments.edit')->autoRoute($this->comments, 'edit');
-    //$this->m->Backend->addPage('content', 'manage-posts', tr('Manage Posts'), array($this, 'newPostController'), 4);
-    //$this->m->Backend->addPage('content', 'tags', tr('Tags'), array($this, 'newPostController'), 8);
-    //$this->m->Backend->addPage('content', 'categories', tr('Categories'), array($this, 'newPostController'), 8);
   }
 
   private function detectFancyPath() {

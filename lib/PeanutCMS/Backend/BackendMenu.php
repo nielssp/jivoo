@@ -84,7 +84,7 @@ class BackendMenu implements IGroupable, Iterator {
   }
   
   public function key() {
-    return $this->keys[$this->position];
+    return $this->position;
   }
   
   public function next() {
@@ -92,6 +92,6 @@ class BackendMenu implements IGroupable, Iterator {
   }
   
   public function valid() {
-    return isset($this->keys[$this->position]);
+    return isset($this->items[$this->position]);
   }
 }
