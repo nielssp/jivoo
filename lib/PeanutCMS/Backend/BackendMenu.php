@@ -51,10 +51,6 @@ class BackendMenu implements IGroupable, Iterator {
     return $this;
   }
 
-  public function group() {
-    Utilities::groupObjects($this->items);
-  }
-
   public function getGroup() {
     return $this->group;
   }
@@ -70,7 +66,8 @@ class BackendMenu implements IGroupable, Iterator {
       }
     }
     if ($hasItems) {
-      $this->group();
+      Utilities::groupObjects($this->items);
+      $this->items = array_values($this->items);
     }
     return $hasItems;
   }
