@@ -4,6 +4,13 @@ class BackendController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Backend');
 
+  public function index() {
+    if ($this->Auth->isLoggedIn()) {
+      $this->redirect('dashboard');
+    }
+    $this->redirect('login');
+  }
+  
   public function dashboard() {
     $this->Backend->requireAuth('backend.access');
     $this->title = tr('Dashboard');

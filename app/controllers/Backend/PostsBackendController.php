@@ -127,7 +127,7 @@ class PostsBackendController extends BackendController {
       $this->post = $this->Post->create();
     }
     $this->title = tr('New post');
-    $this->render('posts/edit.html');
+    $this->render('backend/posts/edit.html');
   }
   
   public function edit($post) {

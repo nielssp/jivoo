@@ -48,7 +48,7 @@ class PagesBackendController extends BackendController {
       $this->page = $this->Page->create();
     }
     $this->title = tr('New page');
-    $this->render('pages/edit.html');
+    $this->render('backend/pages/edit.html');
   }
 
   public function manage() {
