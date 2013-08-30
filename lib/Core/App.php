@@ -258,6 +258,10 @@ class App {
       }
       $this->paths->$moduleName = LIB_PATH . '/' . implode('/', $segments);
       $this->m->$moduleName = new $moduleName($modules, $this);
+      $this->events->trigger(
+        'onModuleLoaded',
+        new ModuleLoadedEventArgs($moduleName, $this->m->$moduleName)
+      );
     }
     return $this->m->$moduleName;
   }
@@ -343,10 +347,6 @@ class App {
 
     foreach ($this->modules as $module) {
       $object = $this->loadModule($module);
-      $this->events->trigger(
-        'onModuleLoaded',
-        new ModuleLoadedEventArgs($module, $object)
-      );
     }
     $this->events->trigger('onModulesLoaded');
     $this->events->trigger('onRender');

@@ -244,13 +244,7 @@ class Controller implements IHelpable {
    * @param string $prefix A prefix to use for all resulting paths
    */
   public function autoRoute($action = null, $prefix = '') {
-    if (isset($action)) {
-      $this->createRoute($action, $prefix);
-      return;
-    }
-    foreach ($this->actions as $action) {
-      $this->createRoute($action, $prefix);
-    }
+    $this->m->Routing->autoRoute($this->name, $action, $prefix);
   }
 
   /**

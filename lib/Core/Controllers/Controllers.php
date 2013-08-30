@@ -18,6 +18,11 @@ class Controllers extends ModuleBase {
    * names
    */
   private $controllers = array();
+  
+  /**
+   * @var array An associative array of controller names and actions
+   */
+  private $actions = array();
 
   /**
    * @var array An associative array of controller names and associated objects
@@ -60,6 +65,40 @@ class Controllers extends ModuleBase {
     }
     closedir($handle);
   }
+  
+  /**
+   * Get class name of controller
+   * @param string $controller Controller name
+   * @return string|false Class name or false if not found
+   */
+  public function getClass($controller) {
+    if (isset($this->controllers[$controller])) {
+      return $this->controllers[$controller];
+    }
+    return false;
+  }
+  
+  /**
+   * Get list of actions
+   * @param string $controller Controller name
+   * @return string[]|boolean List of actions or false if controller not found 
+   */
+  public function getActions($controller) {
+    if (isset($this->controllers[$controller])) {
+      if (!isset($this->actions[$controller])) {
+        $class = $this->controllers[$controller];
+        $classMethods = get_class_methods($class);
+        $parentMethods = get_class_methods('Controller');
+        $this->actions[$controller] = array_diff($classMethods, $parentMethods);
+      }
+      return $this->actions[$controller];
+    }
+    return false;
+  }
+  
+  /**
+   * 
+   */
 
   /**
    * Get instance of controller
@@ -102,6 +141,7 @@ class Controllers extends ModuleBase {
    */
   public function addController(Controller $controller) {
     $name = str_replace('Controller', '', get_class($controller));
+    $this->controllers[$name] = get_class($controller);
     $this->controllerObjects[$name] = $controller;
   }
 

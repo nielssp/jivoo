@@ -83,22 +83,20 @@ class Route {
   /**
    * Make route
    * @param Routing $routing Routing module 
-   * @param Controllers $controllers Controllers module
    * @throws Exception if type is auto routing and controller is not set
    */
-  public function draw(Routing $routing, Controllers $controllers) {
+  public function draw(Routing $routing) {
     $this->route = $routing->validateRoute($this->route);
     switch ($this->type) {
       case self::TYPE_AUTO:
         if (!isset($this->route['controller'])) {
           throw new Exception(tr('Auto routing requires controller'));
         }
-        $controller = $controllers->getController($this->route['controller']);
         if (isset($this->route['action'])) {
-          $controller->autoRoute($this->route['action']);
+          $routing->autoRoute($this->route['controller'], $this->route['action']);
         }
         else {
-          $controller->autoRoute();
+          $routing->autoRoute($this->route['controller']);
         }
         break;
       case self::TYPE_ROOT:

@@ -72,7 +72,7 @@ class Routing extends ModuleBase {
   /**
    * @var Controllers Controllers module
    */
-  private $controllers = null;
+  private $controllers;
   
   /**
    * @var array Selected route and priority
@@ -188,7 +188,15 @@ class Routing extends ModuleBase {
       $this->setRoot($this->config['root'], 10);
     }
 
+    $this->app->onModuleLoaded(array($this, 'addControllersModule'));
     $this->app->onRender(array($this, 'findRoute'));
+  }
+  
+  public function addControllersModule($sender, ModuleLoadedEventArgs $eventArgs) {
+    if ($eventArgs->module == 'Controllers') {
+      $this->controllers = $eventArgs->object;
+      $this->drawRoutes();
+    }
   }
   
   /**
@@ -566,6 +574,70 @@ class Routing extends ModuleBase {
   }
   
   /**
+   * Automatically create routes for a controller
+   * @param string $controller Controller name, e.g. 'Posts'
+   * @param string $action Optional action name
+   * @param string $prefix Prefix...
+   */
+  public function autoRoute($controller, $action = null, $prefix = '') {
+    if (!isset($this->controllers)) {
+      throw new ModuleNotLoadedException(tr('Missing controllers module'));
+    }
+    if (isset($action)) {
+      $class = $this->controllers->getClass($controller);
+      if (!$class) {
+        throw new Exception(tr('Invalid controller'));
+      }
+      $route = array(
+        'controller' => $controller,
+        'action' => $action
+      );
+      $reflect = new ReflectionMethod($class, $action);
+      $required = $reflect->getNumberOfRequiredParameters();
+      $total = $reflect->getNumberOfParameters();
+      if (!empty($prefix) AND substr($prefix, -1) != '/') {
+        $prefix .= '/';
+      }
+      $controller = '';
+      $paction = '';
+      if ($class != 'AppController') {
+        $parent = get_parent_class($class);
+        while ($parent !== false AND $parent != 'Controller'
+          AND $parent != 'AppController') {
+          $name = str_replace($parent, '', $class);
+          $controller = '/' . Utilities::camelCaseToDashes($name) . $controller;
+          $class = $parent;
+          $parent = get_parent_class($class);
+        }
+        $name = str_replace('Controller', '', $class);
+        $controller = $prefix . Utilities::camelCaseToDashes($name) . $controller;
+        $paction = '/';
+      }
+      
+      $paction .= Utilities::camelCaseToDashes($action);
+      if ($action == 'index') {
+        $this->addRoute($controller, $route);
+      }
+      $path = $controller . $paction;
+      if ($required < 1) {
+        $this->addRoute($path, $route);
+      }
+      for ($i = 0; $i < $total; $i++) {
+        $path .= '/*';
+        if ($i <= $required) {
+          $this->addRoute($path, $route);
+        }
+      }
+    }
+    else {
+      $actions = $this->controllers->getActions($controller);
+      foreach ($actions as $action) {
+        $this->autoRoute($controller, $action, $prefix);
+      }
+    }
+  }
+  
+  /**
    * Add a route/path combination. Set route if pattern matches current
    * path.
    * 
@@ -710,20 +782,24 @@ class Routing extends ModuleBase {
   }
   
   /**
+   * Create routes as desbribed by the routes configuration file
+   */
+  public function drawRoutes() {
+    foreach ($this->routes as $route) {
+      $route->draw($this);
+    }
+  }
+  
+  /**
    * Find the best route and execute action
    * @throws ModuleNotLoadedException if Controllers module is missing
    * @throws InvalidRouteException if no route selected or no controller selected
    */
   public function findRoute() {
     $this->events->trigger('onRendering');
-    
-    $this->controllers = $this->app->requestModule('Controllers');
-    if (!$this->controllers) {
+
+    if (!isset($this->controllers)) {
       throw new ModuleNotLoadedException(tr('Missing controllers module'));
-    }
-    
-    foreach ($this->routes as $route) {
-      $route->draw($this, $this->controllers);
     }
     
     if (!isset($this->selection['route'])) {
