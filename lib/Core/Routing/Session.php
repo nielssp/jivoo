@@ -27,10 +27,29 @@ class Session implements arrayaccess {
   /**
    * Constructor
    * @param string $prefix Session prefix to use
+   * @param string $clientIp Client IP for verification
    */
-  public function __construct($prefix = '') {
+  public function __construct($prefix = '', $clientIp = null) {
     session_start();
     $this->prefix = $prefix;
+//     if (isset($clientIp)) {
+//       if (isset($this['ip'])) {
+//         if ($clientIp != $this['ip']) {
+//           // Verification failed, reset session data
+//           $prefixLength = strlen($this->prefix);
+//           foreach ($_SESSION as $key => $value) {
+//             $compare = substr($key, 0, $prefixLength);
+//             if ($compare == $this->prefix) {
+//               unset($_SESSION[$key]);
+//             }
+//           }
+//           $this['ip'] = $clientIp;
+//         }
+//       }
+//       else {
+//         $this['ip'] = $clientIp;
+//       }
+//     }
     if (!isset($this['messages'])) {
       $this['messages'] = array();
     }
@@ -118,7 +137,7 @@ class Session implements arrayaccess {
   public function regenerate() {
     return session_regenerate_id();
   }
-
+  
   /**
    * Whether or not a key exists.
    * @param string $name Key

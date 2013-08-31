@@ -91,7 +91,7 @@ class Request {
     $this->data = $_POST;
 
     $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
-    $this->session = new Session($sessionPrefix);
+    $this->session = new Session($sessionPrefix, $this->ip);
   }
 
   /**
@@ -141,7 +141,7 @@ class Request {
    * @param string $key A specific key to unset
    */
   public function unsetQuery($key = null) {
-    if (isset($key)) {
+    if (!isset($key)) {
       $this->query = array();
     }
     else {
@@ -197,6 +197,10 @@ class Request {
         AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
   }
   
+  /**
+   * Whether or  not the current request was made by a mobile browser
+   * @return boolean True if a mobile browser was detected, false otherwise
+   */
   public function isMobile() {
     if (!isset($this->mobile)) {
       $agent = strtolower($this->userAgent);

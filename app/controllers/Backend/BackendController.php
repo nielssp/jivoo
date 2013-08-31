@@ -61,8 +61,7 @@ class BackendController extends AppController {
     if ($this->request->isPost()) {
       $this->login->addData($this->request->data['login']);
       if ($this->login->isValid()) {
-        if ($this->Auth
-          ->logIn($this->login->username, $this->login->password)) {
+        if ($this->Auth->logIn($this->login->username, $this->login->password)) {
           $this->goBack();
           $this->refresh();
         }

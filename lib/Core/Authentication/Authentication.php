@@ -143,13 +143,14 @@ class Authentication extends ModuleBase {
    * @return boolean True if logged in, false otherwise
    */
   protected function checkSession() {
-    if (isset($this->session['username'])) {
-      $sid = session_id();
-      $ip = $_SERVER['REMOTE_ADDR'];
+    if (isset($this->session['auth_username'])
+      AND isset($this->session['auth_token'])) {
+      $ip = $this->request->ip;
       $user = $this->m->Models->User->first(
         SelectQuery::create()
-          ->where('username = ?', $this->session['username'])
-          ->and('session = ?', $sid)->and('ip = ?', $ip)
+          ->where('username = ?', $this->session['auth_username'])
+          ->and('session = ?', $this->session['auth_token'])
+//           ->and('ip = ?', $ip)
       );
       if ($user) {
         $this->user = $user;
@@ -165,9 +166,9 @@ class Authentication extends ModuleBase {
    */
   protected function checkCookie() {
     if (isset($this->request->cookies['login'])) {
-      list($username, $cookie) = explode(':', $this->request->cookies['login']);
+      list($userId, $cookie) = explode(':', $this->request->cookies['login']);
       $user = $this->m->Models->User->first(
-        SelectQuery::create()->where('username = ?', $username)
+        SelectQuery::create()->where('id = ?', $userId)
           ->and('cookie = ?', $cookie)
       );
       if ($user) {
@@ -188,18 +189,21 @@ class Authentication extends ModuleBase {
    */
   protected function setSession($remember = false) {
     /** @TODO rethink sessions */
-    $this->session->regenerate();
+//     $this->session->regenerate();
+    if (empty($this->user->session)) {
+      $this->user->session = md5($sid . time() . mt_rand());
+    }
     $sid = $this->session->id;
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = $this->request->ip;
     $username = $this->user->username;
     $cookie = $this->user->cookie;
-    $this->session['username'] = $username;
+    $this->session['auth_token'] = $this->user->session;
+    $this->session['auth_username'] = $username;
     if ($remember) {
-      $cookie = md5($username . rand() . time());
+      $cookie = md5($userId . mt_rand() . time());
       $cookieval = implode(':', array($username, $cookie));
       $this->request->cookies['login'] = $cookieval;
     }
-    $this->user->session = $sid;
     $this->user->cookie = $cookie;
     $this->user->ip = $ip;
     if (!$this->user->save(array('validate' => false))) {
@@ -244,6 +248,7 @@ class Authentication extends ModuleBase {
    * Unset sessions
    */
   protected function sessionDefaults() {
-    unset($this->session['username']);
+    unset($this->session['auth_username']);
+    unset($this->session['auth_token']);
   }
 }
