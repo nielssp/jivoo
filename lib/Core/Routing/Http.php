@@ -21,6 +21,7 @@ class Http {
         tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
       );
     }
+    Http::assumeHeadersNotSent();
     header('Location: ' . $location);
     exit();
   }
@@ -71,6 +72,18 @@ class Http {
   }
   
   /**
+   * Throw an exception if headers have already been sent and can't be changed
+   * @throws HeadersAlreadySentException if headers already sent
+   */
+  public static function assumeHeadersNotSent() {
+    if (headers_sent($file, $line)) {
+      throw new HeadersAlreadySentException(tr(
+        'Headers already sent in file %1 on line %2', $file, $line
+      ));
+    }
+  }
+  
+  /**
    * Append a query string to a URI.
    * @param string $query Query string e.g. 'p=4&k=3'
    * @param string $uri URI Optional. Default is content of $_SERVER['REQUEST_URI']
@@ -91,3 +104,9 @@ class Http {
     }
   }
 }
+
+/**
+ * Headers have already been sent and cannot be changed
+ * @package Core\Routing
+ */
+class HeadersAlreadySentException extends Exception { }
