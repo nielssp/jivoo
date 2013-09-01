@@ -1,16 +1,13 @@
 <?php
-$this->extend('backend/layout.html');
-$this->embed('backend/pagination.html');
-$this->embed('backend/bulk-actions.html');
+$this->extend('backend/index-layout.html');
 ?>
 
-      <div class="section light_section">
-        <div class="container">
 <?php if (count($posts) < 1) : ?>
-          <div class="center">
-          <?php echo tr('No posts matched your search criteria.') ?>
-          </div>
+<div class="center">
+<?php echo tr('No posts matched your search criteria.') ?>
+</div>
 <?php endif; ?>
+
 <?php
 $this->first = true;
 foreach ($posts as $this->post) {
@@ -20,9 +17,3 @@ foreach ($posts as $this->post) {
   }
 }
 ?>
-        </div>
-      </div>
-<?php
-$this->embed('backend/bulk-actions.html');
-?>
-

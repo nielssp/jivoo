@@ -45,10 +45,10 @@ class Links extends ModuleBase {
       $link->save();
     }
 
-    $this->m->Routing->autoRoute('Links');
+    $this->m->Routing->autoRoute('LinksBackend');
     
     $this->m->Backend['content']->setup(tr('Content'), 2)
-      ->item(tr('Menu'), 'Links::menu', 12, 'backend.links.manage');
+      ->item(tr('Menu'), 'Backend::Links::menu', 12, 'backend.links.manage');
   }
 
 }
