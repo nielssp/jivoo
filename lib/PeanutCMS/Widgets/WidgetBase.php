@@ -150,7 +150,6 @@ abstract class WidgetBase implements IHelpable {
   public function addHelper($helper) {
     $name = str_replace('Helper', '', get_class($helper));
     $this->$name = $helper;
-    $this->helperObjects[$name] = $helper;
   }
   
   /**

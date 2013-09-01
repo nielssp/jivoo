@@ -200,7 +200,9 @@ class Authentication extends ModuleBase {
     $this->session['auth_token'] = $this->user->session;
     $this->session['auth_username'] = $username;
     if ($remember) {
-      $cookie = md5($userId . mt_rand() . time());
+      if (empty($cookie)) {
+        $cookie = md5($userId . mt_rand() . time());
+      }
       $cookieval = implode(':', array($username, $cookie));
       $this->request->cookies['login'] = $cookieval;
     }

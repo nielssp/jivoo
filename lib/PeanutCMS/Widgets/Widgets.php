@@ -44,9 +44,6 @@ class Widgets extends ModuleBase {
       );
     }
     
-    /** @TODO Temporary work-around. Fix backend stuff! */
-    $this->m->Helpers->Widgets->addModule($this);
-    
     $this->register(new TextWidget(
       $this->m->Routing,
       $this->p('templates/text-widget.html.php')
