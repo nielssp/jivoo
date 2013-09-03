@@ -24,7 +24,7 @@
     echo '#comment">' . tr('Leave a comment');
   else
     echo '#comments">' . trn('%1 comment', '%1 comments', $post->comments);
-            ?></a></div>
+?></a></div>
 </div>
 <?php endforeach; ?>
 

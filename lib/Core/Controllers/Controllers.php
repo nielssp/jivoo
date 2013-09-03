@@ -108,9 +108,14 @@ class Controllers extends ModuleBase {
     if (isset($this->controllers[$controller])) {
       if (!isset($this->actions[$controller])) {
         $class = $this->controllers[$controller];
-        $classMethods = get_class_methods($class);
-        $parentMethods = get_class_methods(get_parent_class($class));
-        $this->actions[$controller] = array_diff($classMethods, $parentMethods);
+        $reflection = new ReflectionClass($class);
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+        $this->actions[$controller] = array();
+        foreach ($methods as $method) {
+          if ($method->class == $class) {
+            $this->actions[$controller][] = $method->name;
+          }
+        }
       }
       return $this->actions[$controller];
     }

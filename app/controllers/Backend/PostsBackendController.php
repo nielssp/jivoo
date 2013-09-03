@@ -30,8 +30,8 @@ class PostsBackendController extends BackendController {
   }
   
 
-  public function manage() {
-    $this->Backend->requireAuth('backend.posts.manage');
+  public function index() {
+    $this->Backend->requireAuth('backend.posts.index');
   
     $select = SelectQuery::create()->orderByDescending('date');
   
@@ -196,13 +196,6 @@ class PostsBackendController extends BackendController {
     $this->Backend->requireAuth('backend.posts.delete');
   
     $this->render('not-implemented.html');
-  }
-
-  public function manageTags() {
-    $this->Backend->requireAuth('backend.tags.manage');
-    $this->title = tr('Tags');
-    $this->tags = $this->Tag->all();
-    $this->render();
   }
   
 }

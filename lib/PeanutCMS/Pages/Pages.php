@@ -46,7 +46,7 @@ class Pages extends ModuleBase {
     
     $this->m->Backend['content']->setup(tr('Content'), 2)
       ->item(tr('New page'), 'Backend::Pages::add', 2, 'backend.pages.add')
-      ->item(tr('Manage pages'), 'Backend::Pages::manage', 4, 'backend.pages.manage');
+      ->item(tr('Manage pages'), 'Backend::Pages', 4, 'backend.pages.index');
   }
 
   private function detectFancyPath() {

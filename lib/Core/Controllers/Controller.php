@@ -303,17 +303,18 @@ class Controller implements IHelpable {
   /**
    * Return to a previously set return path
    * @see Controller::returnToThis()
-   * @return false False if nothing to return path set
+   * @return false False if no return path set
    */
   protected function goBack() {
     if (!isset($this->session['returnTo'])) {
       return false;
     }
+    unset($this->session['returnTo']);
     $this->redirect($this->session['returnTo']);
   }
 
   /**
-   * Redirect to at route
+   * Redirect to a route
    * @param array|ILinkable|string|null $route Route, see {@see Routing}
    */
   protected function redirect($route = null) {

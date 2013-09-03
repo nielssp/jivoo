@@ -2,12 +2,33 @@
 
 class PagesBackendController extends BackendController {
 
-  protected $helpers = array('Html', 'Form', 'Pagination', 'Backend');
+  protected $helpers = array('Html', 'Form', 'Pagination', 'Backend', 'Filtering', 'Bulk');
 
   protected $modules = array('Editors');
 
   protected $models = array('Page');
 
+  public function preRender() {
+    $this->Filtering->addSearchColumn('title');
+    $this->Filtering->addSearchColumn('content');
+    $this->Filtering->addFilterColumn('status');
+    $this->Filtering->addFilterColumn('date');
+  
+    $this->Filtering->addPredefined(tr('Published'), 'status:published');
+    $this->Filtering->addPredefined(tr('Draft'), 'status:draft');
+  
+    $this->Pagination->setLimit(10);
+  
+    $this->Bulk
+    ->addUpdateAction('publish', tr('Publish'),
+      array('status' => 'published')
+    );
+    $this->Bulk
+    ->addUpdateAction('conceal', tr('Conceal'), array('status' => 'draft'));
+  
+    $this->Bulk->addDeleteAction('delete', tr('Delete'));
+  }
+  
   public function add() {
     $this->Backend->requireAuth('backend.pages.add');
 
@@ -51,23 +72,37 @@ class PagesBackendController extends BackendController {
     $this->render('backend/pages/edit.html');
   }
 
-  public function manage() {
-    $this->Backend->requireAuth('backend.pages.manage');
+  public function index() {
+    $this->Backend->requireAuth('backend.pages.index');
 
     $select = SelectQuery::create()->orderByDescending('date');
 
+    $this->Filtering->filter($select);
+    
     if (isset($this->request->query['filter'])) {
-      $this->filter = $this->request->query['filter'];
-      $select->where('content LIKE ? OR title LIKE ?')
-        ->addVar('%' . $this->filter . '%')->addVar('%' . $this->filter . '%');
-      $this->Pagination->setCount($this->Page->count(clone $select));
+      $this->Pagination->setCount($this->Page->count($select));
     }
     else {
       $this->Pagination->setCount($this->Page->count());
     }
-
-    $this->Pagination->setLimit(10)->paginate($select);
-
+    
+    if ($this->Bulk->isBulk()) {
+      if ($this->Bulk->isDelete()) {
+        $query = $this->Page->dataSource->select();
+      }
+      else {
+        $query = $this->Page->dataSource->update();
+      }
+      $this->Filtering->filter($query);
+      $this->Bulk->select($query);
+      $query->execute();
+      if (!$this->request->isAjax()) {
+        $this->refresh();
+      }
+    }
+    
+    $this->Pagination->paginate($select);
+    
     $this->pages = $this->Page->all($select);
     $this->title = tr('Manage pages');
     $this->render();
@@ -114,7 +149,7 @@ class PagesBackendController extends BackendController {
       }
     }
     $this->title = tr('Edit page');
-    $this->render('pages/edit.html');
+    $this->render();
   }
 
   public function delete($page) {

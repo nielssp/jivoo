@@ -35,8 +35,8 @@ class CommentsBackendController extends BackendController {
     $this->Bulk->addDeleteAction('delete', tr('Delete'));
   }
 
-  public function manage() {
-    $this->Backend->requireAuth('backend.comments.manage');
+  public function index() {
+    $this->Backend->requireAuth('backend.comments.index');
 
     $select = SelectQuery::create()->orderByDescending('date');
 

@@ -47,13 +47,63 @@ class Index {
   public static function unique($name, $field) {
     
   }
-  public static function index($name, $field) {
+//   public static function index($name, $field) {
     
+//   }
+}
+
+abstract class Enum {
+  protected $values = array();
+  private $value = null;
+  private $ordinal = null;
+  
+  public final function __construct($value) {
+    $ordinal = array_search($value, $this->values);
+    if ($ordinal === false) {
+      throw new EnumValueInvalidException('Invalid enum value');
+    }
+    $this->ordinal = $ordinal;
+    $this->value = $value;
+  }
+  
+  public final function toOrdinal() {
+    return $this->ordinal;
+  }
+  
+  public final function toString() {
+    return $this->value;
+  }
+  
+  public final function __toString() {
+    return $this->value;
   }
 }
 
+class EnumValueInvalidException extends Exception { }
+
+final class DataType extends Enum {  
+  protected $values = array('text', 'string', 'integer');
+}
+
+$type = new DataType('integer');
+// $type = DataType::TEXT;
+// $type = Schema::TYPE_TEXT;
+
 // example schema file:
 
+function something(DataType $type) {
+  switch ($type) {
+    case 'text':
+      echo 'text';
+      break;
+    default:
+      echo $type;
+  }
+}
+
+something($type);
+
+exit;
 return array(
   Field::integer('id', Field::UNSIGNED | Field::AUTO_INCREMENT | Field::NOT_NULL),
   Field::string('username', 255, Field::NOT_NULL),

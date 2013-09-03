@@ -4,7 +4,7 @@ class LinksBackendController extends BackendController {
 
   protected $models = array('Link');
   
-  public function menu() {
+  public function menus() {
     $this->links = $this->Link->all();
     $this->render();
   }

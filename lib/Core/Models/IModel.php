@@ -6,6 +6,18 @@
  */
 interface IModel {
   /**
+   * @var Model field types
+   */
+  const TYPE_TEXT = 1,
+        TYPE_STRING = 2,
+        TYPE_INTEGER = 3,
+        TYPE_BOOLEAN = 4,
+        TYPE_FLOAT = 5,
+        TYPE_BINARY = 6,
+        TYPE_DATE = 7,
+        TYPE_DATETIME = 8;
+  
+  /**
    * Create a new record of model
    * @param array $data Data for record
    * @param string[] $allowedFields If set, only allow setting these fields

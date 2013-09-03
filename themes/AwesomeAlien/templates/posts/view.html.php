@@ -125,7 +125,7 @@ endif;
 <label>
   <?php echo tr('Logged in as %1.', h($user->username)) ?>
 </label>
-(<?php echo $Html->link(tr('Log out?'), array('query' => array('logout' => ''))) ?>)
+(<?php echo $Html->link(tr('Log out?'), 'Backend::logout') ?>)
 </p>
 <?php 
     else : ?>

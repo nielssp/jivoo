@@ -234,7 +234,7 @@ class I18n {
       $F = tr('November');
     else if ($month == 12)
       $F = tr('December ');
-    $M = utf8_encode(substr(utf8_decode($F), 0, 3));
+    $M = Utilities::substr($F, 0, 3);
 
     $weekday = date('w', $timestamp);
     if ($weekday == 0)
@@ -251,7 +251,7 @@ class I18n {
       $l = tr('Friday');
     else if ($weekday == 6)
       $l = tr('Saturday');
-    $D = utf8_encode(substr(utf8_decode($l), 0, 3));
+    $D = Utilities::substr($l, 0, 3);
     $date = date($format, $timestamp);
     $date = str_replace(date('F', $timestamp), $F, $date);
     $date = str_replace(date('M', $timestamp), $M, $date);
@@ -259,6 +259,4 @@ class I18n {
     $date = str_replace(date('D', $timestamp), $D, $date);
     return $date;
   }
-
-
 }
