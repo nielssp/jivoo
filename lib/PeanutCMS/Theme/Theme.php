@@ -3,7 +3,7 @@
 // Name           : Theme
 // Description    : The PeanutCMS theme system
 // Author         : apakoh.dk
-// Dependencies   : Core/Templates Core/Assets
+// Dependencies   : Core/Templates Core/Assets PeanutCMS/Backend
 
 /**
  * Class for loading and managing themes
@@ -47,6 +47,10 @@ class Theme extends ModuleBase {
     else {
 //       new GlobalWarning(tr('Please install a theme'), 'theme-missing');
     }
+    
+    $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
+      ->item(tr('Themes'), null, 0)
+      ->item(tr('Customize'), null, 0);
   }
 
   /**

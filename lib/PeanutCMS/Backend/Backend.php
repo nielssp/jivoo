@@ -33,7 +33,6 @@ class Backend extends ModuleBase implements ILinkable, arrayaccess {
       ->item(tr('Log out'), 'Backend::logout', 10);
     
     $this['settings']->setup(tr('Settings'), 10)
-      ->item(tr('Themes'), null, 2)
       ->item(tr('Modules'), null, 2)
       ->item(tr('Configuration'), 'Backend::configuration', 10);
 

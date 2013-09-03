@@ -50,6 +50,9 @@ class Widgets extends ModuleBase {
     ));
     
     $this->m->Routing->onRendering(array($this, 'renderWidgets'));
+    
+    $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
+      ->item(tr('Widgets'), null, 4);
   }
   
   /**
