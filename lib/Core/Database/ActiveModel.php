@@ -132,6 +132,8 @@ class ActiveModel implements IModel {
     $this->schema = $dataSource->getSchema();
     $this->columns = $this->schema->getColumns();
     $this->primaryKey = $this->schema->getPrimaryKey();
+    // TODO: Only one column primary keys supported
+    $this->primaryKey = $this->primaryKey[0];
 
     $recordObj = new $recordClass($this, null);
     $this->settings = $recordObj->getModelSettings();

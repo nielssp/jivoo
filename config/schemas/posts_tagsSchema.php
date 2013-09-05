@@ -1,30 +1,12 @@
 <?php
 /**
  * Automatically generated schema for posts_tags table
- * @package PeanutCMS
- * @subpackage Schemas
+ * @package PeanutCMS\Schemas
  */
 class posts_tagsSchema extends Schema {
-  public $post_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'primary',
-    'null' => false,
-  );
-
-  public $tag_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'primary',
-    'null' => false,
-  );
-
-  public $indexes = array(
-    'PRIMARY' => array(
-      'columns' => array('post_id', 'tag_id'),
-      'unique' => true
-    ),
-  );
+  protected function createSchema() {
+    $this->addInteger('post_id', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addInteger('tag_id', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->setPrimaryKey('post_id', 'tag_id');
+  }
 }

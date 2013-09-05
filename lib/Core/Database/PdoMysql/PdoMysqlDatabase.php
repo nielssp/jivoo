@@ -189,16 +189,14 @@ class PdoMysqlDatabase extends PdoDatabase {
       if (isset($options['default'])) {
         $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
       }
-      if (isset($options['autoIncrement'])) {
+      if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
         $sql .= ' AUTO_INCREMENT';
       }
     }
-    foreach ($schema->indexes as $index => $options) {
+    $sql .= ', PRIMARY KEY (' . implode(', ', $schema->getPrimaryKey()) . ')';
+    foreach ($schema->getIndexes() as $index => $options) {
       $sql .= ', ';
-      if ($index == 'PRIMARY') {
-        $sql .= 'PRIMARY KEY (';
-      }
-      else if ($options['unique']) {
+      if ($options['unique']) {
         $sql .= 'UNIQUE (';
       }
       else {
@@ -306,5 +304,9 @@ class PdoMysqlDatabase extends PdoDatabase {
     $sql .= implode(', ', $options['columns']);
     $sql .= ')';
     $this->rawQuery($sql);
+  }
+  
+  public function alterPrimaryKey($table, $columns) {
+    $this->alterIndex($table, 'PRIMARY', array('columns' => $columns));
   }
 }

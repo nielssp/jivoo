@@ -1,98 +1,23 @@
 <?php
 /**
  * Automatically generated schema for comments table
- * @package PeanutCMS
- * @subpackage Schemas
+ * @package PeanutCMS\Schemas
  */
 class commentsSchema extends Schema {
-  public $id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'primary',
-    'autoIncrement' => true,
-    'null' => false,
-  );
-
-  public $post_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'index',
-    'null' => false,
-  );
-
-  public $user_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'default' => '0',
-    'null' => false,
-  );
-
-  public $parent_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'default' => '0',
-    'null' => false,
-  );
-
-  public $author = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $email = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $website = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $content = array(
-    'type' => 'text',
-    'null' => false,
-  );
-
-  public $date = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'null' => false,
-  );
-
-  public $ip = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $status = array(
-    'type' => 'string',
-    'length' => 50,
-    'null' => false,
-  );
-
-  public $content_text = array(
-    'type' => 'text',
-    'null' => false,
-  );
-
-  public $indexes = array(
-    'PRIMARY' => array(
-      'columns' => array('id'),
-      'unique' => true
-    ),
-    'post_id' => array(
-      'columns' => array('post_id'),
-      'unique' => false
-    ),
-  );
+  protected function createSchema() {
+    $this->addInteger('id', Schema::AUTO_INCREMENT | Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addInteger('post_id', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addInteger('user_id', Schema::NOT_NULL | Schema::UNSIGNED, '0');
+    $this->addInteger('parent_id', Schema::NOT_NULL | Schema::UNSIGNED, '0');
+    $this->addString('author', 255, Schema::NOT_NULL);
+    $this->addString('email', 255, Schema::NOT_NULL);
+    $this->addString('website', 255, Schema::NOT_NULL);
+    $this->addText('content', Schema::NOT_NULL);
+    $this->addInteger('date', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addString('ip', 255, Schema::NOT_NULL);
+    $this->addString('status', 50, Schema::NOT_NULL);
+    $this->addText('content_text', Schema::NOT_NULL);
+    $this->setPrimaryKey('id');
+    $this->addIndex('post_id', 'post_id');
+  }
 }

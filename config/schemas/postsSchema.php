@@ -1,89 +1,22 @@
 <?php
 /**
  * Automatically generated schema for posts table
- * @package PeanutCMS
- * @subpackage Schemas
+ * @package PeanutCMS\Schemas
  */
 class postsSchema extends Schema {
-  public $id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'primary',
-    'autoIncrement' => true,
-    'null' => false,
-  );
-
-  public $name = array(
-    'type' => 'string',
-    'length' => 255,
-    'key' => 'unique',
-    'null' => false,
-  );
-
-  public $title = array(
-    'type' => 'string',
-    'length' => 255,
-    'null' => false,
-  );
-
-  public $content = array(
-    'type' => 'text',
-    'null' => false,
-  );
-
-  public $date = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'index',
-    'null' => false,
-  );
-
-  public $comments = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'null' => false,
-  );
-
-  public $state = array(
-    'type' => 'string',
-    'length' => 50,
-    'null' => false,
-  );
-
-  public $commenting = array(
-    'type' => 'string',
-    'length' => 10,
-    'null' => false,
-  );
-
-  public $user_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'null' => false,
-  );
-
-  public $status = array(
-    'type' => 'string',
-    'length' => 50,
-    'null' => false,
-  );
-
-  public $indexes = array(
-    'PRIMARY' => array(
-      'columns' => array('id'),
-      'unique' => true
-    ),
-    'name' => array(
-      'columns' => array('name'),
-      'unique' => true
-    ),
-    'date' => array(
-      'columns' => array('date'),
-      'unique' => false
-    ),
-  );
+  protected function createSchema() {
+    $this->addInteger('id', Schema::AUTO_INCREMENT | Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addString('name', 255, Schema::NOT_NULL);
+    $this->addString('title', 255, Schema::NOT_NULL);
+    $this->addText('content', Schema::NOT_NULL);
+    $this->addInteger('date', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addInteger('comments', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addString('state', 50, Schema::NOT_NULL);
+    $this->addString('commenting', 10, Schema::NOT_NULL);
+    $this->addInteger('user_id', Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addString('status', 50, Schema::NOT_NULL);
+    $this->setPrimaryKey('id');
+    $this->addUnique('name', 'name');
+    $this->addIndex('date', 'date');
+  }
 }

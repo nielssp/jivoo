@@ -46,23 +46,29 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
           $status = 'updated';
         }
       }
-      $indexes = array_keys($schema->indexes);
-      $oldIndexes = array_keys($oldSchema->indexes);
+      $primaryKey = $schema->getPrimaryKey();
+      $oldPrimaryKey = $oldSchema->getPrimaryKey();
+      if ($primaryKey != $oldPrimaryKey) {
+        $this->migrationMethod($schema, 'alterPrimaryKey')
+            OR $this->alterPrimaryKey($table, $primarykey);
+      } 
+      $indexes = array_keys($schema->getIndexes());
+      $oldIndexes = array_keys($oldSchema->getIndexes());
       $allIndexes = array_unique(array_merge($indexes, $oldIndexes));
       foreach ($allIndexes as $index) {
-        if (!isset($oldSchema->indexes[$index])) {
+        if (!$oldSchema->indexExists($index)) {
           $this->migrationMethod($schema, 'createIndex', $index)
-              OR $this->createIndex($table, $index, $schema->indexes[$index]);
+              OR $this->createIndex($table, $index, $schema->getIndex($index));
           $status = 'updated';
         }
-        else if (!isset($schema->indexes[$index])) {
+        else if (!$schema->indexExists($index)) {
           $this->migrationMethod($schema, 'deleteIndex', $index)
               OR $this->deleteIndex($table, $index);
           $status = 'updated';
         }
-        else if ($schema->indexes[$index] != $oldSchema->indexes[$index]) {
+        else if ($schema->getIndex($index) != $oldSchema->getIndex($index)) {
           $this->migrationMethod($schema, 'alterIndex', $index)
-              OR $this->alterIndex($table, $index, $schema->indexes[$index]);
+              OR $this->alterIndex($table, $index, $schema->getIndex($index));
           $status = 'updated';
         }
       }

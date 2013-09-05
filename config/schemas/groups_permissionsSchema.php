@@ -1,30 +1,12 @@
 <?php
 /**
  * Automatically generated schema for groups_permissions table
- * @package PeanutCMS
- * @subpackage Schemas
+ * @package PeanutCMS\Schemas
  */
 class groups_permissionsSchema extends Schema {
-  public $group_id = array(
-    'type' => 'integer',
-    'unsigned' => true,
-    'length' => 10,
-    'key' => 'primary',
-    'autoIncrement' => true,
-    'null' => false,
-  );
-
-  public $permission = array(
-    'type' => 'string',
-    'length' => 255,
-    'key' => 'primary',
-    'null' => false,
-  );
-
-  public $indexes = array(
-    'PRIMARY' => array(
-      'columns' => array('group_id', 'permission'),
-      'unique' => true
-    ),
-  );
+  protected function createSchema() {
+    $this->addInteger('group_id', Schema::AUTO_INCREMENT | Schema::NOT_NULL | Schema::UNSIGNED);
+    $this->addString('permission', 255, Schema::NOT_NULL);
+    $this->setPrimaryKey('group_id', 'permission');
+  }
 }

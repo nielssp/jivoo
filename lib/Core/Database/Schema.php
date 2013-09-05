@@ -4,43 +4,41 @@
  * @package Core\Database
  */
 class Schema {
-  private $_schema = array();
-  private $_columns = array();
-  private $_primaryKey = null;
-  private $_readOnly = false;
-  private $_name = 'undefined';
+  const UNSIGNED = 0x1;
+  const AUTO_INCREMENT = 0x2;
+  const NOT_NULL = 0x4;
+
+  private $schema = array();
+  private $columns = array();
+  private $primaryKey = null;
+  private $readOnly = false;
+  private $name = 'undefined';
 
   /**
    * @var array List of indexes in format `array(
    *   'indexname' => array(
-   *     'columnts' => array('columnname1', 'columnname2'),
+   *     'columns' => array('columnname1', 'columnname2'),
    *     'unique' => true
    *   )
-   * )
+   * )`
    */
-  public $indexes = array();
+  private $indexes = array();
 
   /**
    * Create schema
    * @param string $name Name of schema
-   */
+  */
   public function __construct($name = null) {
     $className = get_class($this);
     if ($className != __CLASS__) {
       if (!isset($name)) {
         $name = substr($className, 0, -6);
       }
-      $classVars = get_class_vars($className);
-      foreach ($classVars as $key => $value) {
-        if ($key[0] != '_' AND $key != 'indexes') {
-          $this->_schema[$key] = $value;
-          $this->_columns[] = $key;
-        }
-      }
-      $this->_readOnly = true;
+      $this->createSchema();
+      $this->readOnly = true;
     }
     if (isset($name)) {
-      $this->_name = $name;
+      $this->name = $name;
     }
   }
 
@@ -48,11 +46,11 @@ class Schema {
    * Get information about column
    * @param string $column Column name
    * @return array Key/value pairs with possible keys:
-   * 'type', 'length', 'null', 'default', 'autoIncrement', 'key'
+   * 'type', 'length', 'null', 'default', 'autoIncrement', 'key', 'unsigned'
    */
   public function __get($column) {
-    if (isset($this->_schema[$column])) {
-      return $this->_schema[$column];
+    if (isset($this->schema[$column])) {
+      return $this->schema[$column];
     }
   }
 
@@ -62,7 +60,7 @@ class Schema {
    * @return bool True if it does, false otherwise
    */
   public function __isset($column) {
-    return isset($this->_schema[$column]);
+    return isset($this->schema[$column]);
   }
 
   /**
@@ -70,8 +68,13 @@ class Schema {
    * @return string Name
    */
   public function getName() {
-    return $this->_name;
+    return $this->name;
   }
+
+  /**
+   * Create schema
+   */
+  protected function createSchema() { }
 
   /**
    * Add a column to schema
@@ -79,39 +82,144 @@ class Schema {
    * @param array $info Column information
    */
   public function addColumn($column, $info = array()) {
-    if (!$this->_readOnly) {
-      $this->_columns[] = $column;
-      $this->_schema[$column] = $info;
-      if (isset($info['key']) AND $info['key'] == 'primary') {
-        $this->_primaryKey = $column;
+    if (!$this->readOnly) {
+      $this->columns[] = $column;
+      $this->schema[$column] = $info;
+    }
+  }
+
+  public function addString($name, $length = 255, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'string',
+      'length' => $length,
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addInteger($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'integer',
+      'autoIncrement' => ($flags & self::AUTO_INCREMENT) != 0,
+      'unsigned' => ($flags & self::UNSIGNED) != 0,
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addFloat($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'float',
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addBoolean($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'boolean',
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addText($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'text',
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addBinary($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'binary',
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addDate($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'date',
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function addDateTime($name, $flags = 0, $default = null) {
+    $this->addColumn($name, array(
+      'type' => 'dateTime',
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default
+    ));
+  }
+
+  public function setPrimaryKey($columns) {
+    if (!is_array($columns)) {
+      $params = func_get_args();
+      if (count($params) <= 1) {
+        $columns = $params;
+      }
+      else {
+        $columns = array($columns);
       }
     }
+    $this->primaryKey = $columns;
+  }
+  
+  public function getPrimaryKey() {
+    return $this->primaryKey;
+  }
+  
+  public function isPrimaryKey($column) {
+    return in_array($column, $this->primaryKey);
+  }
+
+  /**
+   * Add a unique index to schema
+   * @param string $index Index name
+   * @param string|string[] $columns An array of column names
+   * @param string $columns,... Additional column names
+   */
+  public function addUnique($name, $columns) {
+    if (!is_array($columns)) {
+      $params = func_get_args();
+      if (count($params) <= 2) {
+        array_shift($params);
+        $columns = $params;
+      }
+      else {
+        $columns = array($columns);
+      }
+    }
+    $this->indexes[$name] = array(
+      'columns' => $columns,
+      'unique' => true
+    );
   }
 
   /**
    * Add an index to schema
    * @param string $index Index name
-   * @param string[] $columns An array of column names
-   * @param bool $unique Whether or not index is unique
+   * @param string|string[] $columns An array of column names
+   * @param string $columns,... Additional column names
    */
-  public function addIndex($index, $columns, $unique = false) {
-    if (!$this->_readOnly) {
-      if (!is_array($columns)) {
-        $columns = array($columns);
-      }
-      if (isset($this->indexes[$index])) {
-        $this->indexes[$index]['columns'] = array_merge(
-          $this->indexes[$index]['columns'], $columns);
+  public function addIndex($name, $columns) {
+    if (!is_array($columns)) {
+      $params = func_get_args();
+      if (count($params) <= 2) {
+        array_shift($params);
+        $columns = $params;
       }
       else {
-        $this->indexes[$index] = array();
-        $this->indexes[$index]['columns'] = $columns;
-        if ($index == 'PRIMARY') {
-          $unique = true;
-        }
-        $this->indexes[$index]['unique'] = $unique;
+        $columns = array($columns);
       }
     }
+    $this->indexes[$name] = array(
+      'columns' => $columns,
+      'unique' => false
+    );
   }
 
   /**
@@ -119,66 +227,84 @@ class Schema {
    * @return string[] Column names
    */
   public function getColumns() {
-    return $this->_columns;
+    return $this->columns;
   }
-
-  /**
-   * Get name of primary key column
-   * @return string Primary key column name
-   */
-  public function getPrimaryKey() {
-    if (!isset($this->_primaryKey)) {
-      $this->findPrimaryKey();
-    }
-    return $this->_primaryKey;
+  
+  public function getIndexes() {
+    return $this->indexes;
   }
-
-  private function findPrimaryKey() {
-    foreach ($this->_schema as $column => $info) {
-      if (isset($info['key']) AND $info['key'] == 'primary') {
-        $this->_primaryKey = $column;
-        return;
-      }
-    }
+  
+  public function indexExists($name) {
+    return isset($this->indexes[$name]);
   }
-
+  
+  public function getIndex($name) {
+    return $this->indexes[$name];
+  }
+  
   /**
    * Export schema to PHP class
    * @param string $package Package (for documentation)
-   * @param string $subpackage Subpackage (for documentation)
    * @return string PHP source
    */
-  public function export($package = 'PeanutCMS', $subpackage = 'Schemas') {
+  public function export($package = 'Core') {
     $source = '<?php' . PHP_EOL;
     $source .= '/**' . PHP_EOL;
-    $source .= ' * Automatically generated schema for ' . $this->_name
-        . ' table' . PHP_EOL;
+    $source .= ' * Automatically generated schema for ' . $this->name
+    . ' table' . PHP_EOL;
     $source .= ' * @package ' . $package . PHP_EOL;
-    $source .= ' * @subpackage ' . $subpackage . PHP_EOL;
     $source .= ' */' . PHP_EOL;
-    $source .= 'class ' . $this->_name . 'Schema extends Schema {' . PHP_EOL;
-
-    foreach ($this->_schema as $column => $info) {
-      $source .= '  public $' . $column . ' = array(' . PHP_EOL;
-      foreach ($info as $key => $value) {
-        $source .= "    '" . $key . "' => " . var_export($value, true) . ','
-            . PHP_EOL;
+    $source .= 'class ' . $this->name . 'Schema extends Schema {' . PHP_EOL;
+    $source .= '  protected function createSchema() {' . PHP_EOL;
+    foreach ($this->schema as $column => $info) {
+      $source .= '    $this->add' . ucfirst($info['type']) . '(';
+      $source .= var_export($column, true);
+      if ($info['type'] == 'string') {
+        $source .= ', ' . var_export($info['length'], true);
       }
-      $source .= '  );' . PHP_EOL . PHP_EOL;
+      $flags = array();
+      if (isset($info['autoIncrement']) AND $info['autoIncrement']) {
+        $flags[] = 'Schema::AUTO_INCREMENT';
+      }
+      if (isset($info['null']) AND !$info['null']) {
+        $flags[] = 'Schema::NOT_NULL';
+      }
+      if (isset($info['unsigned']) AND $info['unsigned']) {
+        $flags[] = 'Schema::UNSIGNED';
+      }
+      if (!empty($flags) OR isset($info['default'])) {
+        if (empty($flags)) {
+          $source .= ', 0';
+        }
+        else {
+          $source .= ', ' . implode(' | ', $flags);
+        } 
+        if (isset($info['default'])) {
+          $source .= ', ' . var_export($info['default'], true);
+        }
+      }
+      $source .= ');' . PHP_EOL;
     }
-
-    $source .= '  public $indexes = array(' . PHP_EOL;
+  
+    $primaryKeyColumns = array();
+    foreach ($this->primaryKey as $column) {
+      $primaryKeyColumns[] = var_export($column, true);
+    }
+    $source .= '    $this->setPrimaryKey(' . implode(', ', $primaryKeyColumns);
+    $source .= ');' . PHP_EOL;
     foreach ($this->indexes as $index => $info) {
-      $source .= "    '" . $index . "' => array(" . PHP_EOL;
-      $source .= "      'columns' => array('";
-      $source .= implode("', '", $info['columns']);
-      $source .= "')," . PHP_EOL;
-      $source .= "      'unique' => ";
-      $source .= var_export($info['unique'], true);
-      $source .= PHP_EOL;
-      $source .= '    ),' . PHP_EOL;
+      if ($info['unique']) {
+        $source .= '    $this->addUnique(' . var_export($index, true);
+      }
+      else {
+        $source .= '    $this->addIndex(' . var_export($index, true);
+      }
+      foreach ($info['columns'] as $column) {
+        $source .= ', ' . var_export($column, true);
+      }
+      $source .= ');' . PHP_EOL;
     }
-    $source .= '  );' . PHP_EOL;
+    $source .= '  }' . PHP_EOL;
     $source .= '}' . PHP_EOL;
     return $source;
   }
