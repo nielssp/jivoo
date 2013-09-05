@@ -9,6 +9,7 @@ class PagesBackendController extends BackendController {
   protected $models = array('Page');
 
   public function preRender() {
+    $this->config = $this->config['Pages'];
     $this->Filtering->addSearchColumn('title');
     $this->Filtering->addSearchColumn('content');
     $this->Filtering->addFilterColumn('status');

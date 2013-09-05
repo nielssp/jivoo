@@ -9,26 +9,28 @@ class PostsBackendController extends BackendController {
   protected $models = array('Post', 'Comment', 'Tag');
   
   public function preRender() {
+    $this->config = $this->config['Posts'];
     $this->Filtering->addSearchColumn('title');
     $this->Filtering->addSearchColumn('content');
     $this->Filtering->addFilterColumn('status');
     $this->Filtering->addFilterColumn('date');
-  
+
     $this->Filtering->addPredefined(tr('Published'), 'status:published');
     $this->Filtering->addPredefined(tr('Draft'), 'status:draft');
-  
+
     $this->Pagination->setLimit(10);
-  
+
     $this->Bulk
-    ->addUpdateAction('publish', tr('Publish'),
-      array('status' => 'published')
-    );
+      ->addUpdateAction('publish', tr('Publish'),
+        array('status' => 'published')
+      );
     $this->Bulk
-    ->addUpdateAction('conceal', tr('Conceal'), array('status' => 'draft'));
-  
+      ->addUpdateAction('conceal', tr('Conceal'), array('status' => 'draft'));
+
     $this->Bulk->addDeleteAction('delete', tr('Delete'));
   }
-  
+
+ 
 
   public function index() {
     $this->Backend->requireAuth('backend.posts.index');

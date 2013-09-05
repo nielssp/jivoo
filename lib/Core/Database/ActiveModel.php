@@ -142,7 +142,8 @@ class ActiveModel implements IModel {
     // TODO: Only one column primary keys supported
     $pk = $pk[0];
     $this->primaryKey = $pk;
-    if ($this->schema->$pk['autoIncrement']) {
+    $pkInfo = $this->schema->$pk;
+    if ($pkInfo['autoIncrement']) {
       $this->aiPrimaryKey = true;
     }
 
