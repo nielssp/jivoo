@@ -1,14 +1,8 @@
 <?php
 
 class BackendHelper extends Helper {
-
-  protected $modules = array('Theme');
   
   protected $helpers = array('Auth');
-
-  public function setTheme() {
-    $this->m->Theme->loadThemeFor('backend');
-  }
   
   public function requireAuth() {
     $permissions = func_get_args();

@@ -370,7 +370,8 @@ class Controller implements IHelpable {
   }
 
   /**
-   * Controller initialisation, called by constructor
+   * Controller initialisation, called by constructor. Modules, helpers and
+   * models are NOT available when this function is called.
    */
   protected function init() {
   }

@@ -1,11 +1,13 @@
 <?php
 
 class BackendController extends AppController {
+  
+  protected $modules = array('Theme');
 
   protected $helpers = array('Html', 'Form', 'Backend');
 
   public function preRender() {
-    $this->Backend->setTheme();
+    $this->m->Theme->loadThemeFor('backend');
   }
   
   public function index() {
