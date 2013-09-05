@@ -177,7 +177,7 @@ abstract class ActiveRecord implements IRecord {
    */
   public function __get($field) {
     if (isset($this->virtuals[$field])
-    AND isset($this->virtuals[$field]['get'])) {
+      AND isset($this->virtuals[$field]['get'])) {
       return call_user_func(array($this, $this->virtuals[$field]['get']));
     }
     else if (array_key_exists($field, $this->data)) {
@@ -197,12 +197,11 @@ abstract class ActiveRecord implements IRecord {
    */
   public function __set($field, $value) {
     if (isset($this->virtuals[$field])
-    AND isset($this->virtuals[$field]['set'])) {
+      AND isset($this->virtuals[$field]['set'])) {
       call_user_func(array($this, $this->virtuals[$field]['set']), $value);
       $this->saved = false;
     }
-    if (array_key_exists($field, $this->data)
-    AND $field != $this->model->primaryKey) {
+    if (array_key_exists($field, $this->data)) {
       $this->data[$field] = $value;
       $this->saved = false;
     }
@@ -304,8 +303,10 @@ abstract class ActiveRecord implements IRecord {
     if ($this->new) {
       $query = $this->model->dataSource->insert();
       $data = array_intersect_key($this->data, array_flip($this->model->columns));
-      $this->data[$this->model->primaryKey] = $query->addPairs($data)
-      ->execute();
+      $insertId = $query->addPairs($data)->execute();
+      if ($this->model->aiPrimaryKey AND empty($this->data[$this->model->primaryKey])) {
+        $this->data[$this->model->primaryKey] = $insertId;
+      }
     }
     else {
       $query = $this->model->dataSource->update();

@@ -31,6 +31,21 @@ class Shadow extends ModuleBase {
       }
     }
   }
+  
+  /**
+   * Generate a random UID
+   * @param int $length Length of UID
+   * @return string UID
+   */
+  public function genUid($length = 32) {
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./';
+    $max = strlen($chars) - 1;
+    $uid = '';
+    for ($i = 0; $i < $length; $i++) {
+      $uid .= $chars[mt_rand(0, $max)];
+    }
+    return $uid;
+  }
 
   /**
    * Generate a random salt for a specific hash
@@ -51,9 +66,6 @@ class Shadow extends ModuleBase {
         }
       }
     }
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./';
-    $max = strlen($chars) - 1;
-    $salt = '';
     switch (strtolower($hashType)) {
       case 'sha512':
         $saltLength = 16;
@@ -85,10 +97,7 @@ class Shadow extends ModuleBase {
         $prefix = '';
         break;
     }
-    for ($i = 0; $i < $saltLength; $i++) {
-      $salt .= $chars[mt_rand(0, $max)];
-    }
-    return $prefix . $salt;
+    return $prefix . $this->genUid($saltLength);
   }
 
   /**

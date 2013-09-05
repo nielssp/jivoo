@@ -9,8 +9,6 @@ class usersSchema extends Schema {
     $this->addString('username', 255, Schema::NOT_NULL);
     $this->addString('password', 255, Schema::NOT_NULL);
     $this->addString('email', 255, Schema::NOT_NULL);
-    $this->addString('session', 255, Schema::NOT_NULL);
-    $this->addString('cookie', 255, Schema::NOT_NULL);
     $this->addString('ip', 255, Schema::NOT_NULL);
     $this->addInteger('group_id', Schema::NOT_NULL | Schema::UNSIGNED);
     $this->setPrimaryKey('id');

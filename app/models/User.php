@@ -1,11 +1,15 @@
 <?php
 class User extends ActiveRecord implements ILinkable {
 
-  protected $hasMany = array('Post' => array('thisKey' => 'user_id'),
-    'Comment' => array('thisKey' => 'user_id'),
+  protected $hasMany = array(
+    'Post',
+    'Comment',
+    'UserSession',
   );
 
-  protected $belongsTo = array('Group' => array('otherKey' => 'group_id'),);
+  protected $belongsTo = array(
+    'Group',
+  );
 
   protected $validate = array(
     'username' => array('presence' => true,),
@@ -18,16 +22,22 @@ class User extends ActiveRecord implements ILinkable {
     ),
   );
 
-  protected $fields = array('username' => 'Username', 'email' => 'Email',
-    'password' => 'Password', 'confirm_password' => 'Confirm password',
+  protected $fields = array(
+    'username' => 'Username',
+    'email' => 'Email',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm password',
   );
 
-  protected $defaults = array('cookie' => '', 'session' => '', 'ip' => '',
+  protected $defaults = array(
+    'ip' => '',
     'group_id' => 0,
   );
 
   public function getRoute() {
-    return array('controller' => 'Users', 'action' => 'view',
+    return array(
+      'controller' => 'Users',
+      'action' => 'view',
       'parameters' => array($this->username)
     );
   }

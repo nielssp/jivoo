@@ -17,6 +17,11 @@ class Authentication extends ModuleBase {
    * @var User Current user if logged in
    */
   private $user = null;
+  
+  /**
+   * @var UserSession Current user session if logged in
+   */
+  private $userSession = null;
 
   /**
    * @var Group The group associated with unregisterd visitors (guests)
@@ -143,19 +148,20 @@ class Authentication extends ModuleBase {
    * @return boolean True if logged in, false otherwise
    */
   protected function checkSession() {
-    if (isset($this->session['auth_username'])
-      AND isset($this->session['auth_token'])) {
+    if (isset($this->session['auth_session'])) {
       $ip = $this->request->ip;
-      $user = $this->m->Models->User->first(
-        SelectQuery::create()
-          ->where('username = ?', $this->session['auth_username'])
-          ->and('session = ?', $this->session['auth_token'])
-//           ->and('ip = ?', $ip)
-      );
-      if ($user) {
-        $this->user = $user;
-        return true;
+      $session = $this->m->Models->UserSession->find($this->session['auth_session']);
+      if ($session) {
+        if ($session->hasExpired()) {
+          $session->delete();
+        }
+        else {
+          $this->userSession = $session;
+          $this->user = $session->getUser();
+          return true;
+        }
       }
+      unset($this->session['auth_session']);
     }
     return false;
   }
@@ -165,19 +171,19 @@ class Authentication extends ModuleBase {
    * @return boolean True if logged in, false otherwise
    */
   protected function checkCookie() {
-    if (isset($this->request->cookies['login'])) {
-      list($userId, $cookie) = explode(':', $this->request->cookies['login']);
-      $user = $this->m->Models->User->first(
-        SelectQuery::create()->where('id = ?', $userId)
-          ->and('cookie = ?', $cookie)
-      );
-      if ($user) {
-        $this->user = $user;
-        return true;
+    if (isset($this->request->cookies['auth_session'])) {
+      $session = $this->m->Models->UserSession->find($this->request->cookies['auth_session']);
+      if ($session) {
+        if ($session->hasExpired()) {
+          $session->delete();
+        }
+        else {
+          $this->userSession = $session;
+          $this->user = $session->getUser();
+          return true;
+        }
       }
-      else {
-        unset($this->request->cookies['login']);
-      }
+      unset($this->request->cookies['auth_session']);
     }
     return false;
   }
@@ -187,31 +193,24 @@ class Authentication extends ModuleBase {
    * @param bool $remember Whether or not to remember log in (set cookie)
    * @throws Exception if unable to save user session data
    */
-  protected function setSession($remember = false) {
-    /** @TODO rethink sessions */
-//     $this->session->regenerate();
-    if (empty($this->user->session)) {
-      $this->user->session = md5($sid . time() . mt_rand());
-    }
-    $sid = $this->session->id;
+  protected function createSession($remember = false) {
     $ip = $this->request->ip;
-    $username = $this->user->username;
-    $cookie = $this->user->cookie;
-    $this->session['auth_token'] = $this->user->session;
-    $this->session['auth_username'] = $username;
+    $session = $this->m->Models->UserSession->create();
+    $session->id = $this->m->Shadow->genUid();
+    $session->setUser($this->user);
     if ($remember) {
-      if (empty($cookie)) {
-        $cookie = md5($userId . mt_rand() . time());
-      }
-      $cookieval = implode(':', array($username, $cookie));
-      $this->request->cookies['login'] = $cookieval;
+      $session->valid_until = time() + 60 * 60 * 24 * 14; // 14 days
+      $this->request->cookies['auth_session'] = $session->id;
     }
-    $this->user->cookie = $cookie;
-    $this->user->ip = $ip;
-    if (!$this->user->save(array('validate' => false))) {
-      throw new Exception(tr('Could not save user session data.'));
+    else {
+      $session->valid_until = time() + 60 * 30; // 30 minutes
+      $this->session['auth_session'] = $session->id;
+      // TODO: Auto renew this type of session
     }
-
+    if (!$session->save()) {
+      throw new Exception(tr('Could not create session.'));
+    }
+    $this->userSession = $session;
   }
 
   /**
@@ -231,7 +230,7 @@ class Authentication extends ModuleBase {
       return false;
     }
     $this->user = $user;
-    $this->setSession($remember);
+    $this->createSession($remember);
     return true;
   }
 
@@ -239,18 +238,25 @@ class Authentication extends ModuleBase {
    * Log out of current user and unset sessions and cookies
    */
   public function logOut() {
-    $this->sessionDefaults();
-    if (isset($this->request->cookies['login'])) {
-      unset($this->request->cookies['login']);
+    if (isset($this->userSession)) {
+      $this->userSession->delete();
     }
+    if (isset($this->session['auth_session'])) {
+      unset($this->session['auth_session']);
+    }
+    if (isset($this->request->cookies['auth_session'])) {
+      unset($this->request->cookies['auth_session']);
+    }
+    $this->userSession = null;
     $this->user = null;
   }
-
+  
   /**
-   * Unset sessions
+   * Garbage collect expired sessions
    */
-  protected function sessionDefaults() {
-    unset($this->session['auth_username']);
-    unset($this->session['auth_token']);
+  public function garbageCollect() {
+    return $this->m->Database->usersessions->delete()
+      ->where('valid_until <= ?', time())
+      ->execute();
   }
 }

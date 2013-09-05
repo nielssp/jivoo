@@ -12,6 +12,8 @@
  * with associations
  * @property-read string $primaryKey The primary key of the associated database
  * table
+ * @property-read bool $aiPrimaryKey Whether or not primary key is an auto
+ * incremented integer
  * @property-read Validator $validator Associated validator
  * @property-read string[] $columns List of column names
  */
@@ -65,6 +67,11 @@ class ActiveModel implements IModel {
    * @var string Primary key of table
    */
   private $primaryKey;
+  
+  /**
+   * @var bool Whether or not the primary key is an auto incremented integer
+   */
+  private $aiPrimaryKey = false;
 
   /**
    * @var array An associative array of field names and {@see Editor} objects
@@ -131,9 +138,13 @@ class ActiveModel implements IModel {
     $this->table = $dataSource->getName();
     $this->schema = $dataSource->getSchema();
     $this->columns = $this->schema->getColumns();
-    $this->primaryKey = $this->schema->getPrimaryKey();
+    $pk = $this->schema->getPrimaryKey();
     // TODO: Only one column primary keys supported
-    $this->primaryKey = $this->primaryKey[0];
+    $pk = $pk[0];
+    $this->primaryKey = $pk;
+    if ($this->schema->$pk['autoIncrement']) {
+      $this->aiPrimaryKey = true;
+    }
 
     $recordObj = new $recordClass($this, null);
     $this->settings = $recordObj->getModelSettings();
@@ -399,6 +410,7 @@ class ActiveModel implements IModel {
       case 'primaryKey':
       case 'validator':
       case 'columns':
+      case 'aiPrimaryKey':
         return $this->$property;
     }
   }
@@ -530,7 +542,7 @@ class ActiveModel implements IModel {
    * @return ActiveRecord|false A matching record or false if not found
    */
   public function find($primaryKey) {
-    if ($primaryKey == 0) {
+    if ($this->aiPrimaryKey AND $primaryKey == 0) {
       return false;
     }
     if (isset($this->cache[$primaryKey])) {
@@ -554,7 +566,7 @@ class ActiveModel implements IModel {
    * @return boolean True if a record exists, false if not
    */
   public function exists($primaryKey) {
-    if ($primaryKey == 0) {
+    if ($this->aiPrimaryKey AND $primaryKey == 0) {
       return false;
     }
     if (isset($this->cache[$primaryKey])) {
