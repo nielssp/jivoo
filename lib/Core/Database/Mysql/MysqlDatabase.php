@@ -122,6 +122,9 @@ class MysqlDatabase extends SqlDatabase {
     else {
       $type = 'text';
     }
+    if ($type != 'string') {
+      $length = null;
+    }
     return array($type, $length, $unsigned);
   }
 
@@ -139,17 +142,17 @@ class MysqlDatabase extends SqlDatabase {
       if (isset($type[1])) {
         $info['length'] = $type[1];
       }
-      if (isset($row['Key'])) {
-        if ($row['Key'] == 'PRI') {
-          $info['key'] = 'primary';
-        }
-        else if ($row['Key'] == 'UNI') {
-          $info['key'] = 'unique';
-        }
-        else if ($row['Key'] == 'MUL') {
-          $info['key'] = 'index';
-        }
-      }
+//       if (isset($row['Key'])) {
+//         if ($row['Key'] == 'PRI') {
+//           $info['key'] = 'primary';
+//         }
+//         else if ($row['Key'] == 'UNI') {
+//           $info['key'] = 'unique';
+//         }
+//         else if ($row['Key'] == 'MUL') {
+//           $info['key'] = 'index';
+//         }
+//       }
       if (isset($row['Extra'])) {
         if (strpos($row['Extra'], 'auto_increment') !== false) {
           $info['autoIncrement'] = true;
@@ -168,7 +171,12 @@ class MysqlDatabase extends SqlDatabase {
       $index = $row['Key_name'];
       $column = $row['Column_name'];
       $unique = $row['Non_unique'] == 0 ? true : false;
-      $schema->addIndex($index, $column, $unique);
+      if ($unique) {
+        $schema->addUnique($index, $column);
+      }
+      else {
+        $schema->addIndex($index, $column);
+      }
     }
     return $schema;
   }
@@ -221,11 +229,11 @@ class MysqlDatabase extends SqlDatabase {
       if (isset($options['default'])) {
         $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
       }
-      if (isset($options['autoIncrement'])) {
+      if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
         $sql .= ' AUTO_INCREMENT';
       }
     }
-    foreach ($schema->indexes as $index => $options) {
+    foreach ($schema->getIndexes() as $index => $options) {
       $sql .= ', ';
       if ($index == 'PRIMARY') {
         $sql .= 'PRIMARY KEY (';
@@ -257,7 +265,7 @@ class MysqlDatabase extends SqlDatabase {
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }
-    if (isset($options['autoIncrement'])) {
+    if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
       $sql .= ' AUTO_INCREMENT';
     }
     $this->rawQuery($sql);
@@ -281,7 +289,7 @@ class MysqlDatabase extends SqlDatabase {
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }
-    if (isset($options['autoIncrement'])) {
+    if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
       $sql .= ' AUTO_INCREMENT';
     }
     $this->rawQuery($sql);

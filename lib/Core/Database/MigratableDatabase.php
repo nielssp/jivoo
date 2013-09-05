@@ -12,6 +12,7 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
    * @return boolean
    */
   private function migrationMethod(Schema $schema, $method, $subject = '') {
+    Logger::debug('migration: ' . $method . ' ' . $subject);
     if (!empty($subject)) {
       $method = $method . '_' . $subject;
     }
@@ -24,6 +25,7 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
 
   public function migrate(Schema $schema) {
     $table = $schema->getName();
+    Logger::debug('migration: check ' . $table);
     if ($this->tableExists($table)) {
       $oldSchema = $this->getSchema($table);
       $allColumns = array_unique(
@@ -41,17 +43,13 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
           $status = 'updated';
         }
         else if ($schema->$column != $oldSchema->$column) {
+          Logger::debug(var_export($schema->$column, true));
+          Logger::debug(var_export($oldSchema->$column, true));
           $this->migrationMethod($schema, 'alterColumn', $column)
               OR $this->alterColumn($table, $column, $schema->$column);
           $status = 'updated';
         }
       }
-      $primaryKey = $schema->getPrimaryKey();
-      $oldPrimaryKey = $oldSchema->getPrimaryKey();
-      if ($primaryKey != $oldPrimaryKey) {
-        $this->migrationMethod($schema, 'alterPrimaryKey')
-            OR $this->alterPrimaryKey($table, $primarykey);
-      } 
       $indexes = array_keys($schema->getIndexes());
       $oldIndexes = array_keys($oldSchema->getIndexes());
       $allIndexes = array_unique(array_merge($indexes, $oldIndexes));

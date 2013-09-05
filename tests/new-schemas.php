@@ -4,14 +4,26 @@ include '../lib/Core/bootstrap.php';
 Lib::import('Core');
 Lib::import('Core\Database');
 
+/**
+ * Represents a database table schema
+ * @package Core\Database
+ */
 class Schema2 {
   const UNSIGNED = 0x1;
   const AUTO_INCREMENT = 0x2;
   const NOT_NULL = 0x4;
+  
+  private static $defaults = array(
+    'type' => 'text',
+    'length' => null,
+    'null' => true,
+    'unsigned' => false,
+    'autoIncrement' => false,
+    'default' => null
+  );
 
   private $schema = array();
   private $columns = array();
-  private $primaryKey = null;
   private $readOnly = false;
   private $name = 'undefined';
 
@@ -84,76 +96,105 @@ class Schema2 {
    */
   public function addColumn($column, $info = array()) {
     if (!$this->readOnly) {
+      array_merge(self::$defaults, $info);
       $this->columns[] = $column;
       $this->schema[$column] = $info;
     }
   }
 
   public function addString($name, $length = 255, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'string',
       'length' => $length,
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function addInteger($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'integer',
+      'length' => null,
+      'null' => ($flags & self::NOT_NULL) == 0,
+      'default' => $default,
       'autoIncrement' => ($flags & self::AUTO_INCREMENT) != 0,
       'unsigned' => ($flags & self::UNSIGNED) != 0,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+    );
   }
 
   public function addFloat($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'float',
+      'length' => null,
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function addBoolean($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'boolean',
+      'length' => null,
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function addText($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'text',
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function addBinary($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'binary',
+      'length' => null,
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function addDate($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'date',
+      'length' => null,
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function addDateTime($name, $flags = 0, $default = null) {
-    $this->addColumn($name, array(
+    $this->columns[] = $name;
+    $this->schema[$name] = array(
       'type' => 'dateTime',
+      'length' => null,
       'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default
-    ));
+      'default' => $default,
+      'autoIncrement' => false,
+      'unsigned' => false,
+    );
   }
 
   public function setPrimaryKey($columns) {
@@ -166,15 +207,24 @@ class Schema2 {
         $columns = array($columns);
       }
     }
-    $this->primaryKey = $columns;
+    $this->indexes['PRIMARY'] = array(
+      'columns' => $columns,
+      'unique' => true
+    );
   }
   
   public function getPrimaryKey() {
-    return $this->primarykey;
+    if (!isset($this->indexes['PRIMARY'])) {
+      return array();
+    }
+    return $this->indexes['PRIMARY']['columns'];
   }
   
   public function isPrimaryKey($column) {
-    return in_array($column, $this->primaryKey);
+    if (!isset($this->indexes['PRIMARY'])) {
+      return false;
+    }
+    return in_array($column, $this->indexes['PRIMARY']['columns']);
   }
 
   /**
@@ -193,6 +243,9 @@ class Schema2 {
       else {
         $columns = array($columns);
       }
+    }
+    if (isset($this->indexes[$name])) {
+      $columns = array_merge($this->indexes[$name]['columns'], $columns);
     }
     $this->indexes[$name] = array(
       'columns' => $columns,
@@ -217,6 +270,9 @@ class Schema2 {
         $columns = array($columns);
       }
     }
+    if (isset($this->indexes[$name])) {
+      $columns = array_merge($this->indexes[$name]['columns'], $columns);
+    }
     $this->indexes[$name] = array(
       'columns' => $columns,
       'unique' => false
@@ -229,6 +285,18 @@ class Schema2 {
    */
   public function getColumns() {
     return $this->columns;
+  }
+  
+  public function getIndexes() {
+    return $this->indexes;
+  }
+  
+  public function indexExists($name) {
+    return isset($this->indexes[$name]);
+  }
+  
+  public function getIndex($name) {
+    return $this->indexes[$name];
   }
   
   /**
@@ -275,13 +343,18 @@ class Schema2 {
       $source .= ');' . PHP_EOL;
     }
   
-    $primaryKeyColumns = array();
-    foreach ($this->primaryKey as $column) {
-      $primaryKeyColumns[] = var_export($column, true);
+    if (isset($this->indexes['PRIMARY'])) {
+      $primaryKeyColumns = array();
+      foreach ($this->indexes['PRIMARY']['columns'] as $column) {
+        $primaryKeyColumns[] = var_export($column, true);
+      }
+      $source .= '    $this->setPrimaryKey(' . implode(', ', $primaryKeyColumns);
+      $source .= ');' . PHP_EOL;
     }
-    $source .= '    $this->setPrimaryKey(' . implode(', ', $primaryKeyColumns);
-    $source .= ');' . PHP_EOL;
     foreach ($this->indexes as $index => $info) {
+      if ($index == 'PRIMARY') {
+        continue;
+      }
       if ($info['unique']) {
         $source .= '    $this->addUnique(' . var_export($index, true);
       }
@@ -348,6 +421,21 @@ function something(DataType $type) {
   }
 }
 
+class usersSchema extends Schema {
+  protected function createSchema() {
+    $this->addInteger('id', Schema::UNSIGNED | Schema::AUTO_INCREMENT | Schema::NOT_NULL);
+    $this->addString('username', 255, Schema::NOT_NULL);
+    $this->addString('password', 255, Schema::NOT_NULL);
+    $this->addString('session', 255, Schema::NOT_NULL);
+    $this->addInteger('hue', Schema::UNSIGNED | Schema::NOT_NULL);
+    $this->addDateTime('created_at');
+    $this->addDateTime('updated_at');
+    $this->setPrimaryKey('id');
+    $this->addUnique('username', 'username');
+    $this->addIndex('session', 'session');
+  }
+}
+
 class users2Schema extends Schema2 {
   protected function createSchema() {
     $this->addInteger('id', Schema::UNSIGNED | Schema::AUTO_INCREMENT | Schema::NOT_NULL);
@@ -382,7 +470,6 @@ header('Content-Type: text/plain');
 // }
 
 include '../../LAB/LabTest.php';
-require '../config/schemas/usersSchema.php';
 
 
 $test = new LabTest();
@@ -402,7 +489,10 @@ $test->testFunction($rounds, 'create_schema_1');
 
 $test->testFunction($rounds, 'create_schema_2');
 
-$test->dump(create_schema_1()->export());
-
+$schema = new Schema();
+$schema->setPrimaryKey('test', 'as');
+$schema->addIndex('test', 'test', '2', '3');
+$test->dump($schema->getPrimaryKey());
+$test->dump($schema->getIndex('test'));
 $test->report();
 

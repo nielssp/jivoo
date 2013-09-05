@@ -108,12 +108,4 @@ interface IMigratable {
    * @param array $options Options
    */
   public function alterIndex($table, $index, $options = array());
-
-  /**
-   * Alter the primary key
-   * 
-   * @param string $table Table name
-   * @param string[] $columns List of column names
-   */
-  public function alterPrimaryKey($table, $columns);
 }

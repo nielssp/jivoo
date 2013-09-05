@@ -111,6 +111,9 @@ class PdoMysqlDatabase extends PdoDatabase {
     else {
       $type = 'text';
     }
+    if ($type != 'string') {
+      $length = null;
+    }
     return array($type, $length, $unsigned);
   }
 
@@ -128,17 +131,17 @@ class PdoMysqlDatabase extends PdoDatabase {
       if (isset($type[1])) {
         $info['length'] = $type[1];
       }
-      if (isset($row['Key'])) {
-        if ($row['Key'] == 'PRI') {
-          $info['key'] = 'primary';
-        }
-        else if ($row['Key'] == 'UNI') {
-          $info['key'] = 'unique';
-        }
-        else if ($row['Key'] == 'MUL') {
-          $info['key'] = 'index';
-        }
-      }
+//       if (isset($row['Key'])) {
+//         if ($row['Key'] == 'PRI') {
+//           $info['key'] = 'primary';
+//         }
+//         else if ($row['Key'] == 'UNI') {
+//           $info['key'] = 'unique';
+//         }
+//         else if ($row['Key'] == 'MUL') {
+//           $info['key'] = 'index';
+//         }
+//       }
       if (isset($row['Extra'])) {
         if (strpos($row['Extra'], 'auto_increment') !== false) {
           $info['autoIncrement'] = true;
@@ -157,7 +160,12 @@ class PdoMysqlDatabase extends PdoDatabase {
       $index = $row['Key_name'];
       $column = $row['Column_name'];
       $unique = $row['Non_unique'] == 0 ? true : false;
-      $schema->addIndex($index, $column, $unique);
+      if ($unique) {
+        $schema->addUnique($index, $column);
+      }
+      else {
+        $schema->addIndex($index, $column);
+      }
     }
     return $schema;
   }
@@ -193,10 +201,12 @@ class PdoMysqlDatabase extends PdoDatabase {
         $sql .= ' AUTO_INCREMENT';
       }
     }
-    $sql .= ', PRIMARY KEY (' . implode(', ', $schema->getPrimaryKey()) . ')';
     foreach ($schema->getIndexes() as $index => $options) {
       $sql .= ', ';
-      if ($options['unique']) {
+      if ($index == 'PRIMARY') {
+        $sql .= 'PRIMARY KEY (';
+      }
+      else if ($options['unique']) {
         $sql .= 'UNIQUE (';
       }
       else {
@@ -223,7 +233,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }
-    if (isset($options['autoIncrement'])) {
+    if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
       $sql .= ' AUTO_INCREMENT';
     }
     $this->rawQuery($sql);
@@ -247,7 +257,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     if (isset($options['default'])) {
       $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
     }
-    if (isset($options['autoIncrement'])) {
+    if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
       $sql .= ' AUTO_INCREMENT';
     }
     $this->rawQuery($sql);
@@ -304,9 +314,5 @@ class PdoMysqlDatabase extends PdoDatabase {
     $sql .= implode(', ', $options['columns']);
     $sql .= ')';
     $this->rawQuery($sql);
-  }
-  
-  public function alterPrimaryKey($table, $columns) {
-    $this->alterIndex($table, 'PRIMARY', array('columns' => $columns));
   }
 }

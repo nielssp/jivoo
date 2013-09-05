@@ -113,6 +113,9 @@ class Sqlite3Database extends SqlDatabase {
     else {
       $type = 'text';
     }
+    if ($type != 'string') {
+      $length = null;
+    }
     return array($type, $length);
   }
 
@@ -120,6 +123,7 @@ class Sqlite3Database extends SqlDatabase {
     $schema = new Schema($table);
     $result = $this->rawQuery(
         'PRAGMA table_info(' . $this->tableName($table) . ')');
+    $primaryKey = array();
     while ($row = $result->fetchAssoc()) {
       $info = array();
       $column = $row['name'];
@@ -130,7 +134,7 @@ class Sqlite3Database extends SqlDatabase {
       }
       if (isset($row['pk'])) {
         if ($row['pk'] == '1') {
-          $info['key'] = 'primary';
+          $primaryKey[] = $column;
         }
       }
       if (isset($row['dflt_value'])) {
@@ -140,6 +144,9 @@ class Sqlite3Database extends SqlDatabase {
         $info['null'] = $row['notnull'] == '0';
       }
       $schema->addColumn($column, $info);
+    }
+    if (!empty($primaryKey)) {
+      $schema->setPrimaryKey($primaryKey);
     }
     $result = $this->rawQuery(
         'PRAGMA index_list(' . $this->tableName($table) . ')');
@@ -151,7 +158,12 @@ class Sqlite3Database extends SqlDatabase {
       while ($row = $columnResult->fetchAssoc()) {
         $columns[] = $row['name'];
       }
-      $schema->addIndex($index, $columns, $unique);
+      if ($unique) {
+        $schema->addUnique($index, $columns);
+      }
+      else {
+        $schema->addIndex($index, $columns);
+      }
     }
     return $schema;
   }
@@ -202,9 +214,7 @@ class Sqlite3Database extends SqlDatabase {
       }
       $sql .= $column;
       $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
-      if (isset($options['key']) AND $options['key'] == 'primary'
-          AND (!isset($schema->indexes['PRIMARY'])
-              OR isset($options['autoIncrement']))) {
+      if ($schema->isPrimaryKey($column)) {
         $sql .= ' PRIMARY KEY';
       }
       if (isset($options['autoIncrement'])) {
@@ -220,7 +230,7 @@ class Sqlite3Database extends SqlDatabase {
     }
     $sql .= ')';
     $this->rawQuery($sql);
-    foreach ($schema->indexes as $index => $options) {
+    foreach ($schema->getIndexes() as $index => $options) {
       if ($index == 'PRIMARY') {
         continue;
       }
