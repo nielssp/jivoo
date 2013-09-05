@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Apakoh Core
-// Version        : 0.4.0
+// Version        : 0.4.1
 // Description    : Dummy module that includes all Apakoh Core modules
 // Author         : apakoh.dk
 // Dependencies   : Core/Routing Core/Assets
