@@ -27,6 +27,21 @@ class Authentication extends ModuleBase {
    * @var Group The group associated with unregisterd visitors (guests)
    */
   private $unregistered = null;
+  
+  /**
+   * @var int Number of seconds a session is valid
+   */
+  private $sessionLifetime = 0;
+  
+  /**
+   * @var int Number of seconds a long session is vaid
+   */
+  private $longSessionLifetime = 0;
+  
+  /**
+   * @var int Number of seconds after which a short session is renewed
+   */
+  private $renewSessionAfter = 0;
 
   protected function init() {
     $this->config->defaults = array(
@@ -35,7 +50,14 @@ class Authentication extends ModuleBase {
         'registered' => 'users',
       ),
       'rootCreated' => false, 
+      'sessionLifetime' => 60 * 30, // 30 minutes
+      'longSessionLifetime' => 60 * 60 * 24 * 14, // 14 days
+      'renewSessionAfter' => 60 * 5, // 5 minutes 
     );
+    
+    $this->sessionLifetime = $this->config['sessionLifetime']; 
+    $this->longSessionLifetime = $this->config['longSessionLifetime'];
+    $this->renewSessionAfter = $this->config['renewSessionAfter'];
 
     $rootGroup = null;
     if ($this->m->Database->isNew('groups')) {
@@ -158,6 +180,15 @@ class Authentication extends ModuleBase {
         else {
           $this->userSession = $session;
           $this->user = $session->getUser();
+          if (isset($this->session['auth_renew_at'])) {
+            if ($this->session['auth_renew_at'] <= time()) {
+              $this->session['auth_renew_at'] = time() + $this->renewSessionAfter;
+              $session->valid_until = time() + $this->sessionLifetime;
+              if (!$session->save()) {
+                // Unable to renew session
+              }
+            }
+          }
           return true;
         }
       }
@@ -199,13 +230,13 @@ class Authentication extends ModuleBase {
     $session->id = $this->m->Shadow->genUid();
     $session->setUser($this->user);
     if ($remember) {
-      $session->valid_until = time() + 60 * 60 * 24 * 14; // 14 days
+      $session->valid_until = time() + $this->longSessionLifetime;
       $this->request->cookies['auth_session'] = $session->id;
     }
     else {
-      $session->valid_until = time() + 60 * 30; // 30 minutes
+      $session->valid_until = time() + $this->sessionLifetime;
       $this->session['auth_session'] = $session->id;
-      // TODO: Auto renew this type of session
+      $this->session['auth_renew_at'] = time() + $this->renewSessionAfter;
     }
     if (!$session->save()) {
       throw new Exception(tr('Could not create session.'));
