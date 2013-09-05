@@ -9,6 +9,7 @@ class CommentsBackendController extends BackendController {
   protected $models = array('Comment');
 
   public function preRender() {
+    parent::preRender();
     $this->Filtering->addSearchColumn('content');
     $this->Filtering->addFilterColumn('status');
     $this->Filtering->addFilterColumn('author');

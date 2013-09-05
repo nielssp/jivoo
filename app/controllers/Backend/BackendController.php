@@ -4,6 +4,10 @@ class BackendController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Backend');
 
+  public function preRender() {
+    $this->Backend->setTheme();
+  }
+  
   public function index() {
     if ($this->Auth->isLoggedIn()) {
       $this->redirect('dashboard');
