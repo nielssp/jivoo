@@ -1,6 +1,5 @@
 <?php
-// Render the header
-$this->render('setup/header.html');
+$this->extend('setup/layout.html');
 ?>
 
 <?php echo $Form->begin($user); ?>
@@ -79,7 +78,4 @@ else : ?>
       </div>
 <?php echo $Form->end(); ?>
 
-<?php
-$this->render('setup/footer.html');
-?>
 

@@ -1,6 +1,5 @@
 <?php
-// Render the header
-$this->render('setup/header.html');
+$this->extend('setup/layout.html');
 ?>
 
 <?php echo $Form->begin($setupForm); ?>
@@ -57,7 +56,4 @@ $this->render('setup/header.html');
       </div>
 <?php echo $Form->end(); ?>
 
-<?php
-$this->render('setup/footer.html');
-?>
 
