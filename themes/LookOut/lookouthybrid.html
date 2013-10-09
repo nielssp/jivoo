@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Alternate backend theme</title>
+
+
+<script type="text/javascript" src="/PeanutCMS/extensions/Jquery/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/PeanutCMS/extensions/JqueryUi/js/jquery-ui-1.8.17.custom.min.js"></script>
+<script type="text/javascript" src="/PeanutCMS/extensions/Tinymce/jquery.tinymce.js"></script>
+<script type="text/javascript" src="/PeanutCMS/index.php/tinymce/init.js"></script>
+
+
+    <style type="text/css">
+
+      @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic);
+
+      * {
+        padding:0;
+        margin:0;
+      }
+
+      body {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight:300;
+      }
+
+      input, textarea {
+        font-family: 'Source Sans Pro', sans-serif;
+      }
+
+      ::selection {
+        background-color:#30333b;
+        color:#fff;
+      }
+
+      #header {
+        background:#22262e url(/acrum/app/assets/img/header.png) repeat-x;
+        color:#fff;
+        line-height:48px;
+        height:48px;
+        font-size:24px;
+        padding-left:24px;
+        font-weight:300;
+      }
+
+      #main {
+        background:#eee url(/acrum/app/assets/img/content.png) repeat-x;
+        position:absolute;
+        top:48px;
+        bottom:0;
+        left:0;
+        right:0;
+      }
+
+      #menu {
+        width:196px;
+        background:#B2B2B6 url(/acrum/app/assets/img/frame.png) repeat-x bottom;
+        color:#334;
+        padding-top:8px;
+        position:absolute;
+        top:0;
+        left:0;
+        bottom:0;
+        overflow:auto;
+      }
+
+      .submenu-title {
+        padding:8px 8px 8px 24px;
+        font-size:26px;
+        font-weight:300;
+      }
+
+      #menu ul {
+        list-style-type:none;
+      }
+
+      #menu ul a {
+        display:block;
+        padding:8px 8px 8px 24px;
+        color:#334;
+        text-decoration:none;
+      }
+
+      #menu ul a.selected {
+        background-color:#ccc;
+      }
+
+      #menu ul a:hover {
+        background-color:#ddd;
+      }
+
+      #content {
+        position:absolute;
+        top:0;
+        left:196px;
+        right:0;
+        bottom:0;
+      }
+
+      .record-list {
+        position:absolute;
+        top:0;
+        bottom:24px;
+        width:400px;
+        overflow-y:scroll;
+        padding-top:32px;
+        font-weight:normal;
+      }
+
+      .record {
+        list-style-type:none;
+        padding:4px 16px;
+        font-size:16px;
+        line-height:20px;
+        cursor:hand;
+        cursor:pointer;
+      }
+
+      .record:hover {
+        background-color:#ddd;
+      }
+
+      .record .select {
+        float:left;
+        width:24px;
+        padding-top:1px;
+      }
+
+      .record .title {
+        float:left;
+        color:#337;
+      }
+
+      .record .date {
+        float:right;
+        font-size:14px;
+      }
+
+      .record .description {
+        clear:both;
+        margin-left:24px;
+        font-size:14px;
+      }
+
+      .content-right {
+        position:absolute;
+        left:400px;
+        right:0;
+        top:0;
+        bottom:24px;
+      }
+
+      .content-right .edit-form {
+        margin:8px 24px;
+      }
+
+      .content-right input.title {
+        border:0;
+        border-bottom:1px solid #ccc;
+        display:block;
+        width:100%;
+        font-size:28px;
+        padding:8px 4px;
+        margin:8px -4px;
+        font-weight:300;
+        background:transparent;
+      }
+
+      input.title:focus {
+        outline:0;
+      }
+
+      .content-right .tinymce {
+        border:0;
+        width:100%;
+        height:100%;
+      }
+
+      #footer {
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        height:24px;
+        line-height:24px;
+        font-size:14px;
+        padding-left:24px;
+        border-top:1px solid #eee;
+        font-weight:normal;
+      }
+
+    </style>
+
+  </head>
+  <body>
+
+    <div id="header">
+      PeanutCMS
+    </div>
+    <div id="main">
+      <div id="menu">
+        <div class="submenu">
+          <div class="submenu-title">
+            Content
+          </div>
+          <ul>
+            <li><a href="#" class="selected">Posts</a></li>
+            <li><a href="#">Pages</a></li>
+            <li><a href="#">Comments</a></li>
+            <li><a href="#">Tags</a></li>
+            <li><a href="#">Media</a></li>
+          </ul>
+        </div>
+        <div class="submenu">
+          <div class="submenu-title">
+            Appearance
+          </div>
+          <ul>
+            <li><a href="#">Customize</a></li>
+            <li><a href="#">Themes</a></li>
+            <li><a href="#">Widgets</a></li>
+            <li><a href="#">Menus</a></li>
+          </ul>
+        </div>
+        <div class="submenu">
+          <div class="submenu-title">
+            Settings
+          </div>
+          <ul>
+            <li><a href="#">Modules</a></li>
+            <li><a href="#">Extensions</a></li>
+            <li><a href="#">Configuration</a></li>
+          </ul>
+        </div>
+      </div>
+      <div id="content">
+        <div class="record-list">
+          <ul>
+            <li class="record">
+              <div class="select"><input type="checkbox" /></div>
+              <div class="title">Lorem ipsum</div>
+              <div class="date">2013-08-30</div>
+              <div class="description">Finally I can use TinyMCE</div>
+            </li>
+            <li class="record">
+              <div class="select"><input type="checkbox" /></div>
+              <div class="title">Lorem ipsum</div>
+              <div class="date">2013-08-30</div>
+              <div class="description">Finally I can use TinyMCE</div>
+            </li>
+            <li class="record">
+              <div class="select"><input type="checkbox" /></div>
+              <div class="title">Lorem ipsum</div>
+              <div class="date">2013-08-30</div>
+              <div class="description">Finally I can use TinyMCE</div>
+            </li>
+            <li class="record">
+              <div class="select"><input type="checkbox" /></div>
+              <div class="title">Lorem ipsum</div>
+              <div class="date">2013-08-30</div>
+              <div class="description">Finally I can use TinyMCE</div>
+            </li>
+          </ul>
+        </div>
+        <div class="content-right">
+          <div class="edit-form">
+            <input class="title" type="text" value="Lorem ipsum" />
+
+            <textarea name="post[content]" id="post_content" class="tinymce">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent auctor tempor rutrum. Ut nec fermentum nunc. Donec non aliquam ante. Pellentesque pellentesque aliquam metus nec gravida. Pellentesque quis odio magna, sit amet fringilla mi. Maur
+            </textarea>
+          </div>
+        </div>
+        <div id="footer">
+          Powered by PeanutCMS 0.4.3
+          <a href="#">About</a>
+          <a href="#">Help</a>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
