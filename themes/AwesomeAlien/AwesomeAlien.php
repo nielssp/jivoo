@@ -1,6 +1,6 @@
 <?php
 // Theme
 // Name         : Awesome Alien
-// Dependencies : ext;jquery
+// Zones        : frontend
 
 class AwesomeAlien extends ThemeBase {}

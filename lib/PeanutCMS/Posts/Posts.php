@@ -111,6 +111,9 @@ class Posts extends ModuleBase {
     $this->m->Routing->autoRoute('CommentsBackend');
     $this->m->Routing->autoRoute('TagsBackend');
 
+    $this->m->Backend['add']->setup(tr('Add'), 2)
+      ->item(tr('Post'), 'Backend::Posts::add', 2, 'backend.posts.add');
+    
     $this->m->Backend['content']->setup(tr('Content'), 2)
       ->item(tr('New post'), 'Backend::Posts::add', 2, 'backend.posts.add')
       ->item(tr('Manage posts'), 'Backend::Posts', 4, 'backend.posts.index')
