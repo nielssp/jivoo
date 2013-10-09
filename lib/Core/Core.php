@@ -9,6 +9,7 @@
 //                  Core/Setup Core/Models 
 //                  Core/Editors Core/Shadow 
 //                  Core/Database Core/Authentication
+//                  Core/Helpers Core/Toolkit
 
 /**
  * Dummy module
