@@ -70,6 +70,11 @@ class Controller implements IHelpable {
   protected $view = null;
   
   /**
+   * @var HTTP status code
+   */
+  private $status = 200;
+  
+  /**
    * Constructor
    * @param Routing $routing Routing module
    * @param Templates $templates Templates module
@@ -331,6 +336,14 @@ class Controller implements IHelpable {
   }
 
   /**
+   * Set HTTP status code, e.g. 200 for OK or 404 for file not found.
+   * @param integer $httpStatus HTTP status code
+   */
+  protected function setStatus($httpStatus) {
+    $this->status = $httpStatus;
+  }
+  
+  /**
    * Render a template
    * 
    * If $templateName is not set, the path of the template will be computed
@@ -366,6 +379,7 @@ class Controller implements IHelpable {
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';
     }
+    Http::setStatus($this->status);
     $this->view->display($templateName);
   }
 

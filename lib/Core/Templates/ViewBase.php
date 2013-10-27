@@ -464,6 +464,8 @@ abstract class ViewBase {
    * @param string $template Template
    */
   public function display($template) {
+    $contentType = Utilities::getContentType($template);
+    Http::setContentType($contentType);
     echo $this->fetch($template);
   }
 }

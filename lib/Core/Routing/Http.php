@@ -27,6 +27,14 @@ class Http {
   }
   
   /**
+   * Set HTTP content type (and encoding)
+   * @param string Content type, e.g. 'text/html'
+   */
+  public static function setContentType($type, $encoding = 'UTF-8') {
+    header('Content-Type: ' . $type . '; charset=' . $encoding);
+  }
+  
+  /**
    * Set HTTP status code
    * @param int $status Status code
    * @return boolean False if invalid/unknown/unimplemented code, true otherwise
