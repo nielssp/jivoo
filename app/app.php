@@ -2,7 +2,7 @@
 return array(
   'path' => str_replace('\\', '/', dirname(__FILE__)),
   'name' => 'PeanutCMS',
-  'version' => '0.13.10',
+  'version' => '0.13.11',
   'website' => 'http://peanutcms.apakoh.dk',
   'defaultLanguage' => 'en',
   'minPhpVersion' => '5.2.0',
