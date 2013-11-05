@@ -22,8 +22,24 @@ class PostsController extends AppController {
     $this->Pagination->paginate($select);
 
     $this->posts = $this->Post->all($select);
+    
+    $this->view->appendTo(
+      'meta',
+      '<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="'
+        . $this->m->Routing->getLink('feed') . '" />'
+    );
 
     $this->render();
+  }
+  
+  public function feed() {
+    $select = SelectQuery::create()
+      ->where('status = "published"')
+      ->orderByDescending('date')
+      ->limit(30);
+    $this->posts = $this->Post->all($select);
+    
+    $this->render('feed/posts.rss');
   }
 
   public function view($post) {

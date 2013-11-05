@@ -89,6 +89,7 @@ class Posts extends ModuleBase {
 
     $this->m->Routing->addRoute('tags', 'Posts::tagIndex');
     $this->m->Routing->addRoute('tags/*', 'Posts::viewTag');
+    
 
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
@@ -104,6 +105,10 @@ class Posts extends ModuleBase {
       $this->m->Routing->addRoute('posts/*/comments', 'Posts::index');
       $this->m->Routing->addRoute('posts/*/comments/*', 'Posts::view');
     }
+    
+    // Feeds
+    
+    $this->m->Routing->addRoute('feed/posts', 'Posts::feed');
 
     // Backend setup
     

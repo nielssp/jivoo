@@ -129,21 +129,23 @@ class Utilities {
       case 'css':
       case 'js':
       case 'html':
-        return "text/" . $fileExt;
+        return 'text/' . $fileExt;
       case 'json':
-        return "application/json";
+        return 'application/json';
       case 'rss':
-        return "application/rss+xml";
+        return 'application/rss+xml';
+      case 'atom':
+        return 'application/atom+xml';
       case 'xml':
-        return "application/xml";
+        return 'application/xml';
       case 'jpg':
         $fileExt = 'jpeg';
       case 'gif':
       case 'jpeg':
       case 'png':
-        return "image/" . $fileExt;
+        return 'image/' . $fileExt;
       default:
-        return "text/plain";
+        return 'text/plain';
     }
   }
 
