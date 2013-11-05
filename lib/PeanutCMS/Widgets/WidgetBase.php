@@ -54,9 +54,10 @@ abstract class WidgetBase implements IHelpable {
    * @param Routing $routing Routing module
    * @param string $defaultTemplate Absolute path to default widget template
    */
-  public function __construct(Routing $routing, $defaultTemplate) {
+  public function __construct(Templates $templates, Routing $routing, $defaultTemplate) {
     $this->template = $defaultTemplate;
     $this->m = new Dictionary();
+    $this->m->Templates = $templates;
     $this->m->Routing = $routing;
     $this->request = $routing->getRequest(); 
     $this->session = $this->request->session;
@@ -107,6 +108,15 @@ abstract class WidgetBase implements IHelpable {
   public function isDefaultTemplate() {
     return $this->default;
   }
+
+  /**
+   * Convert a route to a URL
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @return string URl
+   */
+  protected function url($route = null) {
+    return $this->m->Routing->getUrl($route);
+  }
   
   /**
    * Convert a route to a URL
@@ -115,6 +125,15 @@ abstract class WidgetBase implements IHelpable {
    */
   public function link($route = null) {
     return $this->m->Routing->getLink($route);
+  }
+
+  /**
+   * Get a link to an asset
+   * @param string $file Asset
+   * @return string Absolute path to asset
+   */
+  protected function file($file) {
+    return $this->m->Templates->getAsset($file);
   }
   
   /**

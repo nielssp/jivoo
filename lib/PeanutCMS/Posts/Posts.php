@@ -26,6 +26,7 @@ class Posts extends ModuleBase {
     );
 
     $this->m->Widgets->register(new RecentPostsWidget(
+      $this->m->Templates,
       $this->m->Routing,
       $this->p('templates/recent-posts-widget.html.php')
     ));
