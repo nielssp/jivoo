@@ -55,6 +55,11 @@ class Request {
    * @var bool Whether or not request is from mobile browser
    */
   private $mobile = null;
+  
+  /**
+   * @var string Domain name, protocol and port
+   */
+  private $domainName = '';
 
   /**
    * Constructor
@@ -65,6 +70,17 @@ class Request {
     $url = $_SERVER['REQUEST_URI'];
        
     $request = parse_url($url);
+    
+    if (isset($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] != 'off') {
+      $this->domainName = 'https://';
+    }
+    else {
+      $this->domainName = 'http://';
+    }
+    $this->domainName .= $_SERVER['SERVER_NAME'];
+    if ($_SERVER['SERVER_PORT'] != 80) {
+      $this->domainName .= ':' . $_SERVER['SERVER_PORT']; 
+    }
     if (isset($request['fragment'])) {
       $this->fragment = $request['fragment'];
     }
@@ -109,6 +125,7 @@ class Request {
       case 'cookies':
       case 'session':
       case 'fragment':
+      case 'domainName':
         return $this->$name;
       case 'ip':
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;

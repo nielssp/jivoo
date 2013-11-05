@@ -501,10 +501,37 @@ class Routing extends ModuleBase {
   }
   
   /**
-   * Get a URL for a route
+   * Get a URL for a route (including http://domain.name)
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException if incomplete route
    * @return string A URL
+   */
+  public function getUrl($route = null) {
+    $route = $this->validateRoute($route);
+    if (isset($route['url'])) {
+      return $route['url'];
+    }
+    if (isset($route['path'])) {
+      $link = $this->getLinkFromPath($route['path'], $route['query'], $route['fragment']);
+    }
+    else if (isset($route['controller']) AND isset($route['action'])) {
+      $link = $this->getLinkFromPath(
+        $this->getPath($route['controller'], $route['action'], $route['parameters']),
+        $route['query'],
+        $route['fragment']
+      );
+    }
+    else {
+      throw new InvalidRouteException(tr('Incomplete route'));
+    }
+    return $this->request->domainName . $link;
+  }
+  
+  /**
+   * Get a link for a route (absolute path)
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @throws InvalidRouteException if incomplete route
+   * @return string A link
    */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);

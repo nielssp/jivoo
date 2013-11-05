@@ -108,7 +108,7 @@ class Posts extends ModuleBase {
     
     // Feeds
     
-    $this->m->Routing->addRoute('feed/posts', 'Posts::feed');
+    $this->m->Routing->addRoute('feed/posts.rss', 'Posts::feed');
 
     // Backend setup
     

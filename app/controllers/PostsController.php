@@ -23,10 +23,9 @@ class PostsController extends AppController {
 
     $this->posts = $this->Post->all($select);
     
-    $this->view->appendTo(
-      'meta',
-      '<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="'
-        . $this->m->Routing->getLink('feed') . '" />'
+    $this->view->resource(
+      'alternate', 'application/rss+xml',
+      $this->m->Routing->getUrl('feed')
     );
 
     $this->render();

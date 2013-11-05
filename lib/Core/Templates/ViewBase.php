@@ -169,12 +169,21 @@ abstract class ViewBase {
   }
 
   /**
-   * Convert a route to a URL
+   * Convert a route to a local URL
    * @param array|ILinkable|string|null $route A route, see {@see Routing}
    * @return string URl
    */
   protected function link($route = null) {
     return $this->m->Routing->getLink($route);
+  }
+
+  /**
+   * Convert a route to a URL
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @return string URl
+   */
+  protected function url($route = null) {
+    return $this->m->Routing->getUrl($route);
   }
 
   /**
@@ -289,8 +298,22 @@ abstract class ViewBase {
       $this->blocks['meta'] = '';
     }
     $this->blocks['meta'] .=
-    '<meta name="' . h($name) . '" content="' . h($content) . '" />'
-      . PHP_EOL;
+      '<meta name="' . h($name) . '" content="' . h($content) . '" />'
+        . PHP_EOL;
+  }
+  
+  /**
+   * Insert resource link into view
+   * @param string $rel Relationship, e.g. 'stylesheet' or 'alternate'
+   * @param string $type Resource type
+   * @param string $href Resource URL
+   */
+  public function resource($rel, $type, $href) {
+    if (!isset($this->blocks['meta'])) {
+      $this->blocks['meta'] = '';
+    }
+    $this->blocks['meta'] .= '<link rel="' . h($rel) . '" type="' . h($type)
+      . '" href="' . $href . '" />' . PHP_EOL;
   }
   
   /**
