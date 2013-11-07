@@ -1,4 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+
+
+
 <style type="text/css">
+* {
+  padding:0;
+  margin:0;
+}
+
+body {
+  font-family:'Trebuchet MS', sans-serif;
+}
+
+.tk-container {
+  padding:10px;
+}
+
+.tk-field-set {
+  background-color:#fff;
+  border:1px solid #ccc;
+  border-radius:5px;
+  margin:5px;
+  padding:10px;
+}
+
+.tk-form {
+  background-color:#eee;
+  border:1px solid #ccc;
+  border-top-right-radius:10px;
+  border-top-left-radius:10px;
+  padding:10px;
+}
+
+.tk-form-buttons {
+  background-color:#ccc;
+  border:1px solid #ccc;
+  border-bottom-right-radius:10px;
+  border-bottom-left-radius:10px;
+  padding:10px;
+}
+  
+.tk-form-buttons .tk-button-set{
+  text-align:right;
+}
+
+.tk-button {
+  padding:5px 20px;
+}
+
+.tk-text {
+  width:100%;
+  display:block;
+  border:1px solid #ccc;
+  border-radius:5px;
+  font-size:16px;
+}
+
 .tk-col-1, .tk-col-2, .tk-col-3, .tk-col-4, .tk-col-5, .tk-col-6, .tk-col-7, .tk-col-8, 
 .tk-col-9, .tk-col-10, .tk-col-11, .tk-col-12, .tk-col-13, .tk-col-14, .tk-col-15, .tk-col-16 {
   float:left;
@@ -20,6 +81,8 @@
 .tk-col-15 {width:93.75%;}
 .tk-col-16 {width:100%;}
 </style>
+</head>
+<body>
 
 <?php
 
@@ -37,7 +100,7 @@ class TkContainer extends TkWidget {
   }
   
   public function render() {
-    $output = '<div>';
+    $output = '<div class="tk-container">';
     foreach ($this->widgets as $widget) {
       $output .= $widget->render();
     }
@@ -53,7 +116,7 @@ class TkColumnContainer extends TkContainer {
   }
   
   public function render() {
-    $output = '<div style="width:100%">';
+    $output = '<div class="tk-row">';
     $colCounter = 0;
     $colCount = count($this->distribution);
     foreach ($this->widgets as $widget) {
@@ -72,7 +135,7 @@ class TkButton extends TkWidget {
   }
   
   public function render() {
-    return '<input type="button" value="' . $this->label . '" />';
+    return '<input type="button" class="tk-button" value="' . $this->label . '" />';
   }
   
 }
@@ -85,7 +148,7 @@ class TkButtonSet extends TkWidget {
   }
   
   public function render() {
-    $output = '<div style="text-align:right;">';
+    $output = '<div class="tk-button-set">';
     foreach ($this->buttons as $button) {
       $output .= $button->render();
     }
@@ -115,12 +178,12 @@ class TkForm extends TkWidget {
   }
   
   public function render() {
-    $output = '<form><div>';
+    $output = '<form><div class="tk-form">';
     foreach ($this->fields as $field) {
       $output .= $field->render();
     }
     $output .= '</div>';
-    $output .= '<div>' . $this->buttonSet->render();
+    $output .= '<div class="tk-form-buttons">' . $this->buttonSet->render();
     return $output . '</div></form>';
   }
 }
@@ -142,7 +205,7 @@ class TkField extends TkWidget {
   }
   
   public function render() {
-    $output = '<div><label for="">' . $this->label . ':</label><br/>';
+    $output = '<div class="tk-field"><label class="tk-field-label" for="">' . $this->label . ':</label>';
     $output .= $this->widget->render();
     return $output . '</div>';
   }
@@ -161,7 +224,7 @@ class TkFieldSet extends TkField {
   }
   
   public function render() {
-    $output = '<fieldset><legend>' . $this->label . ':</legend>';
+    $output = '<fieldset class="tk-field-set"><legend class="tk-field-legend">' . $this->label . ':</legend>';
     foreach ($this->fields as $field) {
       $output .= $field->render();
     }
@@ -172,21 +235,27 @@ class TkFieldSet extends TkField {
 class TkMultiField extends TkField {
 
   private $label;
+  private $distribution = array();
   private $fields = array();
   
-  public function __construct($label) {
+  public function __construct($label, $distribution) {
     $this->label = $label;
+    $this->distribution = $distribution;
   }
   public function append(TkField $field) {
     $this->fields[] = $field;
   }
   
   public function render() {
-    $output = '<div><label for="">' . $this->label . ':</label><br/>';
+    $output = '<div class="tk-multi-field"><label class="tk-multi-field-label" for="">' . $this->label . ':</label><br/>';
+    $colCounter = 0;
+    $colCount = count($this->distribution);
     foreach ($this->fields as $field) {
-      $output .= '<div style="float:left">' . $field->render() . '</div>';
+      $width = $this->distribution[$colCounter];
+      $output .= '<div class="tk-col-' . $width . '">' . $field->render() . '</div>';
+      $colCounter = ($colCounter + 1) % $colCount;
     }
-    return $output . '</div><div style="clear:both;"></div>';
+    return $output . '</div>';
   }
 }
 
@@ -197,20 +266,8 @@ class TkTextField extends TkField {
 }
 
 class TkText extends TkWidget {
-  private $size = null;
-  
-  public function __set($property, $value) {
-    switch ($property) {
-      case 'size':
-        $this->$property = $value;
-        break;
-    }
-  }
   public function render() {
-    if (isset($this->size))
-      return '<input type="text" size="' . $this->size . '"/>';
-    else
-      return '<input type="text" />';
+    return '<input type="text" class="tk-text" />';
   }
 }
 
@@ -220,7 +277,7 @@ class TkLabel extends TkWidget {
     $this->text = $text;
   }
   public function render() {
-    return '<label>' . $this->text . '</label>';
+    return '<label class="tk-label">' . $this->text . '</label>';
   }
 }
 
@@ -231,10 +288,9 @@ $form = new TkForm();
 
 $fieldset = new TkFieldSet('Identity');
 
-$multiField = new TkMultiField('Name');
+$multiField = new TkMultiField('Name', array(6, 4, 6));
 $multiField->append(new TkTextField('First'));
 $field = new TkTextField('Middle');
-$field->widget->size = 2;
 $multiField->append($field);
 $multiField->append(new TkTextField('Last'));
 $fieldset->append($multiField);
@@ -251,3 +307,6 @@ $columns->append($form);
 $root->append($columns);
 
 echo $root->render();
+?>
+
+</body>
