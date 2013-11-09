@@ -32,6 +32,11 @@ class App {
    * @var string Web base path
    */
   private $basePath = '/';
+  
+  /**
+   * @var string Entry script name
+   */
+  private $entryScript = 'index.php';
 
   /**
    * @var string Application name
@@ -101,9 +106,10 @@ class App {
   /**
    * Create application
    * @param array $appConfig Associative array containing at least the 'path'-key
+   * @param string $entryScript Name of entry script, e.g. 'index.php'
    * @throws Exception if $appconfig['path'] is not set
    */
-  public function __construct($appConfig) {
+  public function __construct($appConfig, $entryScript = 'index.php') {
     if (!isset($appConfig['path'])) {
       throw new Exception('Application path not set.');
     }
@@ -118,15 +124,15 @@ class App {
     $this->paths->lib = LIB_PATH;
     $this->paths->core = CORE_LIB_PATH;
 //     $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
+    $this->entryScript = $entryScript;
     
     // Temporary work-around for weird SCRIPT_NAME.
     // When url contains a trailing dot such as
     // /app/index.php/admin./something
     // SCRIPT_NAME returns /PeanutCMS/index.php/admin./something instead of expected
     // /app/index.php
-    $name = basename(__FILE__);
     $script = explode('/', $_SERVER['SCRIPT_NAME']);
-    while ($script[count($script) - 1] != $name) {
+    while ($script[count($script) - 1] != $entryScript) {
       array_pop($script);
     }
     $this->basePath = dirname(implode('/', $script));
@@ -168,6 +174,7 @@ class App {
       case 'appConfig':
       case 'sessionPrefix':
       case 'basePath':
+      case 'entryScript':
         return $this->$property;
     }
   }

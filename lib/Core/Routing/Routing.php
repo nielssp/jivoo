@@ -139,7 +139,7 @@ class Routing extends ModuleBase {
 
     // Determine if the current URL is correct
     if ($this->config['rewrite']) {
-      if (isset($this->request->path[0]) AND $this->request->path[0] == 'index.php') {;
+      if (isset($this->request->path[0]) AND $this->request->path[0] == $this->app->entryScript) {;
         if (count($this->request->path) <= 1) {
           $this->redirectPath(array(), $this->request->query);
         }
@@ -150,7 +150,7 @@ class Routing extends ModuleBase {
       }
     }
     else {
-      if (!isset($this->request->path[0]) OR $this->request->path[0] != 'index.php') {
+      if (!isset($this->request->path[0]) OR $this->request->path[0] != $this->app->entryScript) {
         $this->redirectPath($this->request->path, $this->request->query);
       }
       $path = $this->request->path;
@@ -411,7 +411,7 @@ class Routing extends ModuleBase {
         return $this->w($combined);
       }
       else {
-        return $this->w('index.php/' . $combined);
+        return $this->w($this->app->entryScript . '/' . $combined);
       }
     }
     else {
@@ -419,7 +419,7 @@ class Routing extends ModuleBase {
         return $this->w(implode('/', $path) . $fragment);
       }
       else {
-        return $this->w('index.php/' . implode('/', $path) . $fragment);
+        return $this->w($this->app->entryScript . '/' . implode('/', $path) . $fragment);
       }
     }
   }
