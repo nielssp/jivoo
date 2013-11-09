@@ -27,8 +27,7 @@ class DatabaseSetupController extends SetupController {
             $this->redirect(null);
           }
           else {
-            /** @todo goto Setup::saveConfig or something */
-            $this->title = '!!! CONFIG ERROR !!!';
+            return $this->saveConfig();
           }
         }
       }
@@ -73,8 +72,7 @@ class DatabaseSetupController extends SetupController {
           $this->redirect(null);
         }
         else {
-          /** @todo goto Setup::saveConfig or something */
-          $this->title = '!!! CONFIG ERROR !!!';
+            return $this->saveConfig();
         }
       }
       else if ($this->setupForm->isValid()) {
@@ -99,8 +97,7 @@ class DatabaseSetupController extends SetupController {
             $this->redirect(null);
           }
           else {
-            /** @todo goto Setup::saveConfig or something */
-            $this->title = '!!! CONFIG ERROR !!!';
+            return $this->saveConfig();
           }
         }
         catch (DatabaseConnectionFailedException $exception) {

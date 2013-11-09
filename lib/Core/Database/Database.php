@@ -33,6 +33,11 @@ class Database extends ModuleBase implements IDatabase {
   private $schemas = array();
   
   /**
+   * @var Dictionary Dictionary of data sources
+   */
+  private $sources;
+  
+  /**
    * @var array Associative array of table names and migration status
    */
   private $migrations = array();
@@ -131,7 +136,7 @@ class Database extends ModuleBase implements IDatabase {
       }
     }
 
-    $sources = new Dictionary();
+    $this->sources = new Dictionary();
 
     Lib::addIncludePath($this->p('schemas', ''));
     $dir = opendir($this->p('schemas', ''));
@@ -139,39 +144,103 @@ class Database extends ModuleBase implements IDatabase {
       $split = explode('.', $file);
       if (isset($split[1]) AND $split[1] == 'php') {
         $class = $split[0];
-        $name = str_replace('Schema', '', $class);
-        $this->schemas[$name] = new $class();
-        $this->migrations[$name] = $this->migrate($this->schemas[$name]);
-        if (!isset($this->$name) AND $this->migrations[$name] == 'unchanged') {
-          $this->migrations[$name] = $this->migrate($this->schemas[$name], true);
-        }
-        $this->$name->setSchema($this->schemas[$name]);
-        $sources->$name = $this->$name;
+        $this->addSchema(new $class());
       }
     }
     closedir($dir);
 
     $classes = $this->m->Models->getRecordClasses();
     foreach ($classes as $class) {
-      if (is_subclass_of($class, 'ActiveRecord')) {
-        $table = Utilities::getPlural(strtolower($class));
-        if (!isset($this->$table)) {
-          $table2 = ActiveModel::getTable($class);
-          if (isset($table2)) {
-            if (!isset($this->$table2)) {
-              throw new Exception(tr('Table not found: "%1"', $table2));
-            }
-            $table = $table2;
-          }
-          else {
-            throw new Exception(tr('Table not found: "%1"', $table));
-          }
-        }
-        $model = new ActiveModel($class, $this->$table, $this->m->Models,
-          $sources);
-        $this->m->Models->setModel($class, $model);
-      }
+      $this->addActiveModel($class);
     }
+  }
+  
+  /**
+   * Add a Schema if it has not already been added
+   * @param string $name Schema name
+   * @param string $file Path to schema file
+   * @return boolean True if missing and added, false otherwise
+   */
+  public function addSchemaIfMissing($name, $file) {
+    if ($this->hasSchema($name)) {
+      return false;
+    }
+    include $file;
+    $class = $name . 'Schema';
+    $this->addSchema(new $class());
+    return true;
+  }
+  
+  /**
+   * Add an active model if it has not already been added
+   * @param string $class Class name of active record
+   * @param string $file Path to record class file
+   * @return True if missing and added successfully, false otherwise
+   */
+  public function addActiveModelIfMissing($name, $file) {
+    if (isset($this->m->Models->$name)) {
+      return false;
+    }
+    if (!Lib::classExists($name, false)) {
+      include $file;
+    }
+    return $this->addActiveModel($name);
+  }
+  
+  /**
+   * Whether or not a schema has been added
+   * @param string $name Schema (table) name
+   * @return True if schema exists, false otherwise
+   */
+  public function hasSchema($name) {
+    return isset($this->schemas[$name]);
+  }
+  
+  /**
+   * Add Schema and run migration if necessary
+   * @param Schema $schema Schema
+   * @return True if added
+   */
+  public function addSchema(Schema $schema) {
+    $name = $schema->getName();
+    $this->schemas[$name] = $schema;
+    $this->migrations[$name] = $this->migrate($this->schemas[$name]);
+    if (!isset($this->$name) AND $this->migrations[$name] == 'unchanged') {
+      $this->migrations[$name] = $this->migrate($this->schemas[$name], true);
+    }
+    $this->$name->setSchema($this->schemas[$name]);
+    $this->sources->$name = $this->$name;
+    return true;
+  }
+  
+  /**
+   * Add an active model
+   * @param string $class Class name of active record
+   * @return True if successfull, false if table not found
+   */
+  public function addActiveModel($class) {
+    if (is_subclass_of($class, 'ActiveRecord')) {
+      $table = Utilities::getPlural(strtolower($class));
+      if (!isset($this->$table)) {
+        $table2 = ActiveModel::getTable($class);
+        if (isset($table2)) {
+          if (!isset($this->$table2)) {
+            return false;
+//             throw new Exception(tr('Table not found: "%1"', $table2));
+          }
+          $table = $table2;
+        }
+        else {
+          return false;
+//           throw new Exception(tr('Table not found: "%1"', $table));
+        }
+      }
+      $model = new ActiveModel($class, $this->$table, $this->m->Models,
+        $this->sources);
+      $this->m->Models->setModel($class, $model);
+      return true;
+    }
+    return false;
   }
 
   /**

@@ -101,6 +101,8 @@ class AppConfig implements arrayaccess {
    */
   public function __get($property) {
     switch ($property) {
+      case 'file':
+        return $this->root->file;
       case 'parent':
         return $this->$property;
     }
@@ -286,6 +288,18 @@ class AppConfig implements arrayaccess {
       return false;
     fclose($filePointer);
     return true;
+  }
+  
+  
+  /**
+   * Create configuration file content
+   * @return string PHP source
+   */
+  public function prettyPrint() {
+    if ($this->root !== $this) {
+      return $this->root->prettyPrint();
+    }
+    return AppConfig::phpPrettyPrint($this->data);
   }
 
   /**

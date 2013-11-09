@@ -9,6 +9,7 @@ return array(
   'sessionPrefix' => 'peanut_',
   'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce'),
   'modules' => array(
-    'Core', 'PeanutCMS'
+    'Core',
+    'PeanutCMS',
   ),
 );

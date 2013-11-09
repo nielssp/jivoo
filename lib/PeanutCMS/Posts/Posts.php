@@ -31,6 +31,12 @@ class Posts extends ModuleBase {
       $this->p('templates/recent-posts-widget.html.php')
     ));
 
+    $this->m->Widgets->register(new RecentCommentsWidget(
+      $this->m->Templates,
+      $this->m->Routing,
+      $this->p('templates/recent-comments-widget.html.php')
+    ));
+
     if ($this->m->Database->isNew('posts')) {
       $post = $this->m->Models->Post->create();
       $post->title = tr('Welcome to PeanutCMS');
@@ -95,16 +101,16 @@ class Posts extends ModuleBase {
     if ($this->config['fancyPermalinks']) {
       // Detect fancy post permalinks
       $this->detectFancyPath();
-      $this->m->Routing->addPath('Posts', 'view', array($this, 'getFancyPath'));
+      $this->m->Routing->addPath('Posts', 'view', array($this, 'getFancyPath'), 'post');
       $this->m->Routing
-        ->addPath('Comments', 'index', array($this, 'getFancyPath'));
+        ->addPath('Comments', 'index', array($this, 'getFancyPath'), 'comments');
       $this->m->Routing
-        ->addPath('Comments', 'view', array($this, 'getFancyPath'));
+        ->addPath('Comments', 'view', array($this, 'getFancyPath'), 'comment');
     }
     else {
       $this->m->Routing->addRoute('posts/*', 'Posts::view');
-      $this->m->Routing->addRoute('posts/*/comments', 'Posts::index');
-      $this->m->Routing->addRoute('posts/*/comments/*', 'Posts::view');
+      $this->m->Routing->addRoute('posts/*/comments', 'Comments::index');
+      $this->m->Routing->addRoute('posts/*/comments/*', 'Comments::view');
     }
     
     // Feeds
@@ -134,7 +140,14 @@ class Posts extends ModuleBase {
     if (!is_array($path) OR !is_array($permalink)) {
       return;
     }
-    if (count($path) != count($permalink)) {
+    $diff = count($path) - count($permalink);
+    if ($diff < 0 OR $diff > 2) {
+      return;
+    }
+    if ($diff > 0 AND $path[count($permalink)] != 'comments') {
+      return;
+    }
+    if ($diff == 2 AND preg_match('/^[0-9]+$/', $path[count($path) - 1]) !== 1) {
       return;
     }
     $name = '';
@@ -177,30 +190,47 @@ class Posts extends ModuleBase {
     }
     if ($id > 0) {
       $post = $this->m->Models->Post->find($id);
-      if ($post !== false) {
-        $post->addToCache();
-        $this->posts->setRoute('view', 6, array($post->id));
-        return;
-      }
     }
     else if (!empty($name)) {
       $post = $this->m->Models->Post->first(
         SelectQuery::create()->where('name = ?')->addVar($name)
       );
-      if ($post !== false) {
-        $post->addToCache();
-        $this->m->Routing->setRoute(array(
-          'controller' => 'Posts',
-          'action' => 'view',
-          'parameters' => array($post->id)
-          ), 6
-        );
-        return;
-      }
+    }
+    else {
+      return;
+    }
+    if ($post === false) {
+      return;
+    }
+    $post->addToCache();
+    if ($diff == 2) {
+      $commentId = $path[count($path) - 1];
+      $this->m->Routing->setRoute(array(
+        'controller' => 'Comments',
+        'action' => 'view',
+        'parameters' => array($post->id, $commentId)
+        ), 6
+      );
+    }
+    else if ($diff == 1) {
+      $this->m->Routing->setRoute(array(
+        'controller' => 'Comments',
+        'action' => 'index',
+        'parameters' => array($post->id)
+        ), 6
+      );
+    }
+    else {
+      $this->m->Routing->setRoute(array(
+        'controller' => 'Posts',
+        'action' => 'view',
+        'parameters' => array($post->id)
+        ), 6
+      );
     }
   }
 
-  public function getFancyPath($parameters) {
+  public function getFancyPath($parameters, $type = 'post') {
     $permalink = explode('/', $this->config['permalink']);
     if (is_array($permalink)) {
       if (is_object($parameters) AND is_a($parameters, 'Post')) {
@@ -227,6 +257,13 @@ class Posts extends ModuleBase {
       $path = array();
       foreach ($permalink as $dir) {
         $path[] = str_replace($search, $replace, $dir);
+      }
+      if ($type == 'comments') {
+        $path[] = 'comments';
+      }
+      if ($type == 'comment') {
+        $path[] = 'comments';
+        $path[] = $parameters[1];
       }
       return $path;
     }

@@ -2,9 +2,7 @@
 
 class PostsController extends AppController {
 
-  protected $helpers = array('Html', 'Pagination', 'Form', 'Filtering',
-    'Backend', 'Json', 'Bulk'
-  );
+  protected $helpers = array('Html', 'Pagination', 'Form');
 
   protected $modules = array('Editors');
   
@@ -46,8 +44,7 @@ class PostsController extends AppController {
 
     $this->post = $this->Post->find($post);
 
-    if (!$this->post
-      OR ($this->post->status != 'published'
+    if (!$this->post OR ($this->post->status != 'published'
         AND !$this->Auth->hasPermission('backend.posts.viewDraft'))) {
       return $this->render('404.html');
     }

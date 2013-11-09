@@ -30,14 +30,7 @@ class Models extends ModuleBase implements IDictionary {
     while ($file = readdir($dir)) {
       $split = explode('.', $file);
       if (isset($split[1]) AND $split[1] == 'php') {
-        $class = $split[0];
-        if (strpos($class, 'Model')) {
-          $name = str_replace('Model', '', $class);
-          $this->modelClasses[$name] = $class;
-        }
-        else {
-          $this->recordClasses[$class] = $class;
-        }
+        $this->addClass($split[0]);
       }
     }
     closedir($dir);
@@ -57,6 +50,20 @@ class Models extends ModuleBase implements IDictionary {
    */
   public function getModelClasses() {
     return $this->modelClasses;
+  }
+  
+  /**
+   * Add either a IModel or a IRecord class
+   * @param string $class Class name
+   */
+  public function addClass($class) {
+    if (strpos($class, 'Model')) {
+      $name = str_replace('Model', '', $class);
+      $this->modelClasses[$name] = $class;
+    }
+    else {
+      $this->recordClasses[$class] = $class;
+    }
   }
   
   /** 

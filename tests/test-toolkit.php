@@ -60,9 +60,19 @@ body {
   font-size:16px;
 }
 
+.tk-row {
+  margin-left:-15px;
+  margin-right:-15px;
+}
+
 .tk-col-1, .tk-col-2, .tk-col-3, .tk-col-4, .tk-col-5, .tk-col-6, .tk-col-7, .tk-col-8, 
 .tk-col-9, .tk-col-10, .tk-col-11, .tk-col-12, .tk-col-13, .tk-col-14, .tk-col-15, .tk-col-16 {
+  box-sizing:border-box;
+  -moz-box-sizing:border-box; /* Firefox */
+  position:relative;
   float:left;
+  padding-left:15px;
+  padding-right:15px;
 }
 .tk-col-1  {width:6.25%;}
 .tk-col-2  {width:12.5%;}

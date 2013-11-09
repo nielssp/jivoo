@@ -55,6 +55,15 @@ class Authentication extends ModuleBase {
       'renewSessionAfter' => 60 * 5, // 5 minutes 
     );
     
+    $this->m->Database->addSchemaIfMissing('users', $this->p('default/schemas/usersSchema.php'));
+    $this->m->Database->addSchemaIfMissing('usersessions', $this->p('default/schemas/usersessionsSchema.php'));
+    $this->m->Database->addSchemaIfMissing('groups', $this->p('default/schemas/groupsSchema.php'));
+    $this->m->Database->addSchemaIfMissing('groups_permissions', $this->p('default/schemas/groups_permissionsSchema.php'));
+    
+    $this->m->Database->addActiveModelIfMissing('User', $this->p('default/models/User.php'));
+    $this->m->Database->addActiveModelIfMissing('UserSession', $this->p('default/models/UserSession.php'));
+    $this->m->Database->addActiveModelIfMissing('Group', $this->p('default/models/Group.php'));
+    
     $this->sessionLifetime = $this->config['sessionLifetime']; 
     $this->longSessionLifetime = $this->config['longSessionLifetime'];
     $this->renewSessionAfter = $this->config['renewSessionAfter'];

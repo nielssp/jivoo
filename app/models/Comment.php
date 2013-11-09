@@ -33,7 +33,9 @@ class Comment extends ActiveRecord implements ILinkable {
   );
 
   public function getRoute() {
-    return array('controller' => 'Posts', 'action' => 'viewComment',
+    return array(
+      'controller' => 'Comments',
+      'action' => 'view',
       'parameters' => array($this->post_id, $this->id)
     );
   }
