@@ -54,8 +54,7 @@ class FormHelper extends Helper {
     $route['fragment'] = $fragment;
     $html = '<form action="' . $this->getLink($route)
       . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
-    $html .= '<input type="hidden" name="access_token" value="'
-      . $this->request->getToken() . '" />' . PHP_EOL;
+    $html .= $this->request->createHiddenToken() . PHP_EOL;
     foreach ($this->model->getFields() as $field) {
       if ($this->model->getFieldType($field) == 'hidden') {
         $html .= $this->hidden($field);

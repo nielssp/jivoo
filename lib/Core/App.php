@@ -117,7 +117,21 @@ class App {
     $this->paths->app = $appConfig['path'];
     $this->paths->lib = LIB_PATH;
     $this->paths->core = CORE_LIB_PATH;
-    $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
+//     $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
+    
+    // Temporary work-around for weird SCRIPT_NAME.
+    // When url contains a trailing dot such as
+    // /app/index.php/admin./something
+    // SCRIPT_NAME returns /PeanutCMS/index.php/admin./something instead of expected
+    // /app/index.php
+    $name = basename(__FILE__);
+    $script = explode('/', $_SERVER['SCRIPT_NAME']);
+    while ($script[count($script) - 1] != $name) {
+      array_pop($script);
+    }
+    $this->basePath = dirname(implode('/', $script));
+    // END work-around
+    
     if (isset($appConfig['name'])) {
       $this->name = $appConfig['name'];
     }

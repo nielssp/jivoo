@@ -15,19 +15,6 @@ Lib::import('Core');
 
 $app = new App(include 'app/app.php');
 
-// Temporary work-around for weird SCRIPT_NAME.
-// When url contains a trailing dot such as
-// /PeanutCMS/index.php/admin./something
-// SCRIPT_NAME returns /PeanutCMS/index.php/admin./something instead of expected
-// /PeanutCMS/index.php
-$name = basename(__FILE__);
-$script = explode('/', $_SERVER['SCRIPT_NAME']);
-while ($script[count($script) - 1] != $name) {
-  array_pop($script);
-}
-$app->basePath = dirname(implode('/', $script));
-// END work-around
-
 // Paths are relative to the current directory (dirname($_SERVER['SCRIPT_FILENAME']))
 // unless they begin with '/' or 'x:' where x is any drive letter.
 $app->paths->config = 'config';

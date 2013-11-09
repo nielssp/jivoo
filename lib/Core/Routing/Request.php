@@ -165,6 +165,29 @@ class Request {
       unset($this->query[$key]);
     }
   }
+  
+  /**
+   * Whether or not the current request is POST and has a valid access token
+   * @param string $key Optional key to test for existence in POST-data
+   * @return boolean True if valid, false otherwise
+   */
+  public function hasValidData($key = null) {
+    if (!$this->isPost()) {
+      return false;
+    }
+    if (isset($key) AND !isset($this->data[$key])) {
+      return false;
+    }
+    return $this->checkToken();
+  }
+  
+  /**
+   * Create HTML for a hidden form input containing the access token
+   * @return string HTML for hidden input
+   */
+  public function createHiddenToken() {
+    return '<input type="hidden" name="access_token" value="' . $this->getToken() . '" />';
+  }
 
   /**
    * Get the current access token or generate a new one

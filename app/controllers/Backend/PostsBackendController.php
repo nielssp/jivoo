@@ -97,8 +97,7 @@ class PostsBackendController extends BackendController {
       $this->m->Editors->getEditor($this->config['editor'])
     );
   
-    if ($this->request->isPost()
-    AND $this->request->checkToken('post')) {
+    if ($this->request->hasValidData()) {
       $this->post = $this->Post->create($this->request->data['post']);
       if (isset($this->request->data['publish'])) {
         $this->post->status = 'published';
