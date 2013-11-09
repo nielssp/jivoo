@@ -8,8 +8,8 @@ class PostsBackendController extends BackendController {
   
   protected $models = array('Post', 'Comment', 'Tag');
   
-  public function preRender() {
-    parent::preRender();
+  public function before() {
+    parent::before();
     $this->config = $this->config['Posts'];
     $this->Filtering->addSearchColumn('title');
     $this->Filtering->addSearchColumn('content');

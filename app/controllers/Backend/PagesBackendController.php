@@ -8,8 +8,8 @@ class PagesBackendController extends BackendController {
 
   protected $models = array('Page');
 
-  public function preRender() {
-    parent::preRender();
+  public function before() {
+    parent::before();
     $this->config = $this->config['Pages'];
     $this->Filtering->addSearchColumn('title');
     $this->Filtering->addSearchColumn('content');

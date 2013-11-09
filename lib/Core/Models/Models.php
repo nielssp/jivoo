@@ -25,15 +25,20 @@ class Models extends ModuleBase implements IDictionary {
   private $modelObjects = array();
   
   protected function init() {
-    Lib::addIncludePath($this->p('models', ''));
-    $dir = opendir($this->p('models', ''));
-    while ($file = readdir($dir)) {
-      $split = explode('.', $file);
-      if (isset($split[1]) AND $split[1] == 'php') {
-        $this->addClass($split[0]);
+    $modelsDir = $this->p('models', '');
+    if (is_dir($modelsDir)) {
+      Lib::addIncludePath($modelsDir);
+      $dir = opendir($modelsDir);
+      if ($dir) {
+        while ($file = readdir($dir)) {
+          $split = explode('.', $file);
+          if (isset($split[1]) AND $split[1] == 'php') {
+            $this->addClass($split[0]);
+          }
+        }
+        closedir($dir);
       }
     }
-    closedir($dir);
   }
   
   /**

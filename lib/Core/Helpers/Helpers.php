@@ -30,17 +30,22 @@ class Helpers extends ModuleBase {
   );
   
   protected function init() {
-    Lib::addIncludePath($this->p('helpers', ''));
-    $dir = opendir($this->p('helpers', ''));
-    while ($file = readdir($dir)) {
-      $split = explode('.', $file);
-      if (isset($split[1]) AND $split[1] == 'php') {
-        $class = $split[0];
-        $name = str_replace('Helper', '', $class);
-        $this->helpers[$name] = $class;
+    $helpersDir = $this->p('helpers', '');
+    if (is_dir($helpersDir)) {
+      Lib::addIncludePath($helpersDir);
+      $dir = opendir($helpersDir);
+      if ($dir) {
+        while ($file = readdir($dir)) {
+          $split = explode('.', $file);
+          if (isset($split[1]) AND $split[1] == 'php') {
+            $class = $split[0];
+            $name = str_replace('Helper', '', $class);
+            $this->helpers[$name] = $class;
+          }
+        }
+        closedir($dir);
       }
     }
-    closedir($dir);
   }
   
   /**

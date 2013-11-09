@@ -8,7 +8,7 @@ class PostsController extends AppController {
   
   protected $models = array('Post', 'Comment', 'Tag');
 
-  public function preRender() {
+  public function before() {
     $this->config = $this->config['Posts'];
   }
 

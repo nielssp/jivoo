@@ -868,8 +868,9 @@ class Routing extends ModuleBase {
       }
       $this->rendered = true;
       $this->request->route = $route;
-      $controller->preRender();
+      $controller->before();
       call_user_func_array(array($controller, $action), $route['parameters']);
+      $controller->after();
     }
     else {
       throw new InvalidRouteException(tr('No controller selected'));

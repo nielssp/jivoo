@@ -391,10 +391,16 @@ class Controller implements IHelpable {
   }
   
   /**
-   * Called just before the selected action is called, useful for doing stuff
-   * for all actions.
+   * Called just before the selected action is called, useful for doing common
+   * tasks for all actions
    */
-  public function preRender() {
+  public function before() {
+  }
+  
+  /**
+   * Called right after the selected action is called
+   */
+  public function after() {
   }
 
 }

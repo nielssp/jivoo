@@ -6,7 +6,7 @@ class BackendController extends AppController {
 
   protected $helpers = array('Html', 'Form', 'Backend');
 
-  public function preRender() {
+  public function before() {
     $this->m->Theme->loadThemeFor('backend');
   }
   
