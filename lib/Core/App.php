@@ -293,12 +293,14 @@ class App {
    */
   public function handleError(Exception $exception) {
     /** @todo attempt to create error report */
-    $hash = substr(md5($exception->__toString()), 0, 10);
-    if (!file_exists($this->p('log', 'crash-' . $hash . '.log'))) {
-      Logger::attachFile(
-        $this->p('log', 'crash-' . $hash . '.log'),
-        Logger::ALL
-      );
+    if ($this->config['core']['createCrashReports']) {
+      $hash = substr(md5($exception->__toString()), 0, 10);
+      if (!file_exists($this->p('log', 'crash-' . $hash . '.log'))) {
+        Logger::attachFile(
+          $this->p('log', 'crash-' . $hash . '.log'),
+          Logger::ALL
+        );
+      }
     }
     // Clean the view
     ob_end_clean();
@@ -352,6 +354,7 @@ class App {
         'timeZone' => @date_default_timezone_get(), /** @todo Reevaluate use of @ */
         'showExceptions' => false,
         'logLevel' => Logger::ALL,
+        'createCrashReports' => true
       ),
     );
 
