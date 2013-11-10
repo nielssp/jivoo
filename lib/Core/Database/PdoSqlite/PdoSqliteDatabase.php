@@ -168,6 +168,8 @@ class PdoSqliteDatabase extends PdoDatabase {
     $sql = 'CREATE TABLE ' . $this->tableName($schema->getName()) . '(';
     $columns = $schema->getColumns();
     $first = true;
+    $primaryKey = $schema->getPrimaryKey();
+    $singlePrimary = count($primaryKey) ==  1;
     foreach ($columns as $column) {
       $options = $schema->$column;
       if (!$first) {
@@ -178,14 +180,11 @@ class PdoSqliteDatabase extends PdoDatabase {
       }
       $sql .= $column;
       $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
-//       if (isset($options['key']) AND $options['key'] == 'primary'
-//         AND (!isset($schema->indexes['PRIMARY'])
-//           OR isset($options['autoIncrement']))) {
-      if ($schema->isPrimaryKey($column)) {
+      if ($singlePrimary AND $primaryKey[0] == $column) {
         $sql .= ' PRIMARY KEY';
-      }
-      if (isset($options['autoIncrement']) AND $options['autoIncrement']) {
-        $sql .= ' AUTOINCREMENT';
+        if ($options['autoIncrement']) {
+          $sql .= ' AUTOINCREMENT';
+        }
       }
       if (!$options['null']) {
         $sql .= ' NOT';
@@ -194,6 +193,9 @@ class PdoSqliteDatabase extends PdoDatabase {
       if (isset($options['default'])) {
         $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
       }
+    }
+    if (!$singlePrimary) {
+      $sql .= ', PRIMARY KEY (' . implode(', ', $schema->getPrimaryKey()) . ')';
     }
     $sql .= ')';
     $this->rawQuery($sql);

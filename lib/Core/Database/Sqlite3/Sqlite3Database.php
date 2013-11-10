@@ -204,6 +204,8 @@ class Sqlite3Database extends SqlDatabase {
     $sql = 'CREATE TABLE ' . $this->tableName($schema->getName()) . '(';
     $columns = $schema->getColumns();
     $first = true;
+    $primaryKey = $schema->getPrimaryKey();
+    $singlePrimary = count($primaryKey) ==  1;
     foreach ($columns as $column) {
       $options = $schema->$column;
       if (!$first) {
@@ -214,11 +216,11 @@ class Sqlite3Database extends SqlDatabase {
       }
       $sql .= $column;
       $sql .= ' ' . $this->fromSchemaType($options['type'], $options['length']);
-      if ($schema->isPrimaryKey($column)) {
+      if ($singlePrimary AND $primaryKey[0] == $column) {
         $sql .= ' PRIMARY KEY';
-      }
-      if (isset($options['autoIncrement'])) {
-        $sql .= ' AUTOINCREMENT';
+        if ($options['autoIncrement']) {
+          $sql .= ' AUTOINCREMENT';
+        }
       }
       if (!$options['null']) {
         $sql .= ' NOT';
@@ -227,6 +229,9 @@ class Sqlite3Database extends SqlDatabase {
       if (isset($options['default'])) {
         $sql .= $this->escapeQuery(' DEFAULT ?', $options['default']);
       }
+    }
+    if (!$singlePrimary) {
+      $sql .= ', PRIMARY KEY (' . implode(', ', $schema->getPrimaryKey()) . ')';
     }
     $sql .= ')';
     $this->rawQuery($sql);
