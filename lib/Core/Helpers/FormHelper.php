@@ -38,9 +38,11 @@ class FormHelper extends Helper {
    * to append '#create-comment' to form action
    * @param array|ILinkable|string|null $route Route to submit form to, default is current page. See
    * {@see Routing}.
+   * @param array $options An associative array of options, the only supported
+   * option is 'class', which sets the class-attribute of the form-tag
    * @return string HTML code
    */
-  public function begin(IRecord $record = null, $fragment = null, $route = array()) {
+  public function begin(IRecord $record = null, $fragment = null, $route = array(), $options = array()) {
     if (!isset($record)) {
       $record = new Form('form');
     }
@@ -53,7 +55,11 @@ class FormHelper extends Helper {
     $this->currentForm = $this->model->getName();
     $route['fragment'] = $fragment;
     $html = '<form action="' . $this->getLink($route)
-      . '" id="' . $this->currentForm . '" method="post">' . PHP_EOL;
+      . '" id="' . $this->currentForm . '" method="post"';
+    if (isset($options['class'])) {
+      $html .= ' class="' . $options['class'] . '"';
+    }
+    $html .= '>' . PHP_EOL;
     $html .= $this->request->createHiddenToken() . PHP_EOL;
     foreach ($this->model->getFields() as $field) {
       if ($this->model->getFieldType($field) == 'hidden') {
