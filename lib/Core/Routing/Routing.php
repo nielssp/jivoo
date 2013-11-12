@@ -693,13 +693,25 @@ class Routing extends ModuleBase {
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
 
+    $pattern = explode(' ', $pattern);
+    $method = 'ANY';
+    if (count($pattern) > 1) {
+      $method = strtoupper($pattern[0]);
+      $pattern = $pattern[1];
+    }
+    else {
+      $pattern = $pattern[0];
+    }
 //     Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;
     $isMatch = true;
     $patternc = count($pattern);
-    if ($patternc < count($path) AND $pattern[$patternc - 1] != '**'
+    if ($method != 'ANY' && $method != $this->request->method) {
+      $isMatch = false;
+    }
+    else if ($patternc < count($path) AND $pattern[$patternc - 1] != '**'
       AND $pattern[$patternc - 1] != ':*') {
       $isMatch = false;
     }
