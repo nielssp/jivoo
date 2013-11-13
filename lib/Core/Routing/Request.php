@@ -13,6 +13,8 @@
  * @property-read string|null $url The request uri or null if not set
  * @property-read string|null $referer HTTP referer or null if not set
  * @property-read string|null $userAgent HTTP user agent or null if not set
+ * @property-read string|null $domain Domain name protocol and port
+ * @property-read string|null $method Request method, e.g. 'GET', 'POST' etc.
  */
 class Request {
 
@@ -60,6 +62,11 @@ class Request {
    * @var string Domain name, protocol and port
    */
   private $domainName = '';
+  
+  /**
+   * @var string Request method, e.g. 'GET', 'POST' etc.
+   */
+  private $method = 'GET';
 
   /**
    * Constructor
@@ -105,6 +112,8 @@ class Request {
 
     $this->query = $_GET;
     $this->data = $_POST;
+    
+    $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
 
     $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
     $this->session = new Session($sessionPrefix, $this->ip);
@@ -126,6 +135,7 @@ class Request {
       case 'session':
       case 'fragment':
       case 'domainName':
+      case 'method':
         return $this->$name;
       case 'ip':
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
@@ -217,7 +227,7 @@ class Request {
    * @return bool True if GET, false if not
    */
   public function isGet() {
-    return $_SERVER['REQUEST_METHOD'] == 'GET';
+    return $this->method == 'GET';
   }
 
   /**
@@ -225,7 +235,31 @@ class Request {
    * @return bool True if POST, false if not
    */
   public function isPost() {
-    return $_SERVER['REQUEST_METHOD'] == 'POST';
+    return $this->method == 'POST';
+  }
+
+  /**
+   * Whether or not the current request method is PATCH
+   * @return bool True if PATCH, false if not
+   */
+  public function isPatch() {
+    return $this->method == 'PATCH';
+  }
+
+  /**
+   * Whether or not the current request method is DELETE
+   * @return bool True if DELETE, false if not
+   */
+  public function isDelete() {
+    return $this->method == 'DELETE';
+  }
+
+  /**
+   * Whether or not the current request method is PUT
+   * @return bool True if PUT, false if not
+   */
+  public function isPut() {
+    return $this->method == 'PUT';
   }
 
   /**
