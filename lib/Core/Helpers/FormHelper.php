@@ -512,15 +512,18 @@ class FormHelper extends Helper {
 
   /**
    * A submit button. The default class-attribute is 'button'.
-   * @param string $value Value
+   * @param string $value Value, default is 'Submit'
    * @param string $field Field name, default is 'submit'
    * @param array $options An associative array of additional attributes to add
    * to field
    * @return string HTML code
    */
-  public function submit($value, $field = 'submit', $options = array()) {
+  public function submit($value = null, $field = 'submit', $options = array()) {
     if (!isset($this->record)) {
       return;
+    }
+    if (!isset($value)) {
+      $value = tr('Submit');
     }
     $html = '<input type="submit" name="' . $field . '"';
     $html .= ' id="' . $this->fieldId($field) . '"';

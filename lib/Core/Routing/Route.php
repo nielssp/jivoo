@@ -28,6 +28,11 @@ class Route {
   const TYPE_MATCH = 4;
   
   /**
+   * @var int Resource routes
+   */
+  const TYPE_RESOURCE = 5;
+  
+  /**
    * @var mixed A route
    */
   private $route;
@@ -99,6 +104,19 @@ class Route {
           $routing->autoRoute($this->route['controller']);
         }
         break;
+      case self::TYPE_RESOURCE:
+        if (!isset($this->route['controller'])) {
+          throw new Exception(tr('Resource routing requires controller'));
+        }
+        $controller = $this->route['controller'];
+        $split = explode('-', Utilities::camelCaseToDashes($controller));
+        $patternBase = implode('/', array_reverse($split));
+        $routing->addroute($patternBase, $controller . '::index');
+        $routing->addroute($patternBase . '/add', $controller . '::add'); //C
+        $routing->addroute($patternBase . '/:0', $controller . '::view'); //R
+        $routing->addroute($patternBase . '/:0/edit', $controller . '::edit'); //U
+        $routing->addroute($patternBase . '/:0/delete', $controller . '::delete'); //D
+        break;
       case self::TYPE_ROOT:
         $routing->setRoot($this->route);
         break;
@@ -151,7 +169,7 @@ class Route {
 
 
   /**
-   * Create route for root, i.e. the frontpage
+   * Create route for requests matching a pattern
    * @param string $pattern A path to match, see {@see Routing::addRoute}
    * @param array|ILinkable|string|null $route A route, {@see Routing}
    * @param int $priority Priority of route
@@ -161,6 +179,17 @@ class Route {
     $object = new Route($route, self::TYPE_MATCH);
     $object->pattern = $pattern;
     $object->priority = $priority;
+    return $object;
+  }
+  
+  /**
+   * Automatically create routes for a resource. Expects controller to be set in
+   * the route.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}
+   * @return Route Route object
+   */
+  public static function resource($route) {
+    $object = new Route($route, self::TYPE_RESOURCE);
     return $object;
   }
 }
