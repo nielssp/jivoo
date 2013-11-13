@@ -114,6 +114,15 @@ class Request {
     $this->data = $_POST;
     
     $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
+    if ($this->method == 'POST' AND isset($this->data['method'])) {
+      $method = strtoupper($this->data['method']);
+      switch ($method) {
+        case 'PUT':
+        case 'PATCH':
+        case 'DELETE':
+          $this->method = $method;
+      }
+    }
 
     $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
     $this->session = new Session($sessionPrefix, $this->ip);
