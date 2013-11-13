@@ -116,6 +116,11 @@ class Route {
         $routing->addroute($patternBase . '/:0', $controller . '::view'); //R
         $routing->addroute($patternBase . '/:0/edit', $controller . '::edit'); //U
         $routing->addroute($patternBase . '/:0/delete', $controller . '::delete'); //D
+
+        $routing->addroute('DELETE ' . $patternBase . '/:0', $controller . '::delete');
+        $routing->addroute('PATCH ' . $patternBase . '/:0', $controller . '::edit');
+        $routing->addroute('PUT ' . $patternBase . '/:0', $controller . '::edit');
+        $routing->addroute('POST ' . $patternBase, $controller . '::add');
         break;
       case self::TYPE_ROOT:
         $routing->setRoot($this->route);

@@ -1,11 +1,11 @@
 <?php
 return array(
   'core' => array(
-    'showExceptions' => true,
-    'logLevel' => 31,
+    'showExceptions' => false,
+    'logLevel' => 16,
     'language' => 'en',
     'timeZone' => 'UTC',
-    'createCrashReports' => false,
+    'createCrashReports' => true,
   ),
   'Routing' => array(
     'rewrite' => false,

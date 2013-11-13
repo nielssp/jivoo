@@ -37,3 +37,171 @@ Routing::init()
 2013-11-12T08:09:35+00:00 ERROR: Unable to save config file: /home/www/GOTUN/acblog/app/config/config.php
 2013-11-12T08:09:39+00:00 ERROR: Unable to save config file: /home/www/GOTUN/acblog/app/config/config.php
 2013-11-12T08:09:39+00:00 ERROR: Unable to save config file: /home/www/GOTUN/acblog/app/config/config.php
+2013-11-13T17:41:23+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:24:33+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:27:11+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:27:19+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:27:23+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:27:35+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:27:40+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:27:55+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:28:52+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:28:55+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:29:07+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:29:12+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:29:15+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
+2013-11-13T18:29:22+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\Database\Database.php
+Line: 132
+Stack trace:
+Database::init()
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\ModuleBase.php:62 call_user_func_array(array, array)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:281 ModuleBase::__construct(array, object)
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:270 App::loadModule('Core/Database')
+E:\Zend\Apache2\htdocs\PeanutCMS\lib\Core\App.php:373 App::loadModule('Core')
+E:\Zend\Apache2\htdocs\PeanutCMS\tutorial\acblog\index.php:19 App::run('production')
+
