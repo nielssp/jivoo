@@ -37,3 +37,30 @@ Routing::init()
 2013-11-12T08:09:35+00:00 ERROR: Unable to save config file: /home/www/GOTUN/acblog/app/config/config.php
 2013-11-12T08:09:39+00:00 ERROR: Unable to save config file: /home/www/GOTUN/acblog/app/config/config.php
 2013-11-12T08:09:39+00:00 ERROR: Unable to save config file: /home/www/GOTUN/acblog/app/config/config.php
+2013-11-23T09:17:14+00:00 ERROR: Unable to save config file: /home/www/GOTUN/PeanutCMS/tutorial/acblog/app/config/config.php
+2013-11-23T09:17:14+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: /home/www/GOTUN/PeanutCMS/lib/Core/Database/Database.php
+Line: 132
+Stack trace:
+Database::init()
+/home/www/GOTUN/PeanutCMS/lib/Core/ModuleBase.php:62 call_user_func_array(array, array)
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:281 ModuleBase::__construct(array, object)
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:270 App::loadModule('Core/Database')
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:373 App::loadModule('Core')
+/home/www/GOTUN/PeanutCMS/tutorial/acblog/index.php:19 App::run('production')
+
+2013-11-23T09:17:14+00:00 ERROR: Unable to save config file: /home/www/GOTUN/PeanutCMS/tutorial/acblog/app/config/config.php
+2013-11-23T09:19:17+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: /home/www/GOTUN/PeanutCMS/lib/Core/Database/Database.php
+Line: 132
+Stack trace:
+Database::init()
+/home/www/GOTUN/PeanutCMS/lib/Core/ModuleBase.php:62 call_user_func_array(array, array)
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:281 ModuleBase::__construct(array, object)
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:270 App::loadModule('Core/Database')
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:373 App::loadModule('Core')
+/home/www/GOTUN/PeanutCMS/tutorial/acblog/index.php:19 App::run('production')
+
+2013-11-23T09:19:17+00:00 ERROR: Unable to save config file: /home/www/GOTUN/PeanutCMS/tutorial/acblog/app/config/config.php

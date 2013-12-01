@@ -38,7 +38,7 @@ return array(
   'Database' => array(
     'server' => 'localhost',
     'database' => 'acblog',
-    'filename' => '/home/www/GOTUN/acblog/app/config/db.sqlite3',
+    'filename' => '/home/www/GOTUN/PeanutCMS/tutorial/acblog/app/config/db.sqlite3',
     'driver' => 'Sqlite3',
     'configured' => true,
     'tablePrefix' => '',

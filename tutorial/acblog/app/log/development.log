@@ -4207,3 +4207,94 @@ Routing::findRoute(object, NULL)
 2013-11-13T08:22:35+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
 2013-11-13T08:22:35+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
 2013-11-13T08:22:35+00:00 DEBUG: Select action: App::test
+2013-11-23T09:20:49+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:20:49+00:00 DEBUG: Request for /index.php/ [/index.php/] from 127.0.0.1
+2013-11-23T09:20:49+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:20:49+00:00 ERROR: An uncaught Exception was thrown in file Database.php on line 132 and caused execution to be terminated.
+Message: Database connection failedCould not connect to the database.<p>SQLite database does not exist and could not be created: /home/www/GOTUN/acblog/app/config/db.sqlite3</p>
+File: /home/www/GOTUN/PeanutCMS/lib/Core/Database/Database.php
+Line: 132
+Stack trace:
+Database::init()
+/home/www/GOTUN/PeanutCMS/lib/Core/ModuleBase.php:62 call_user_func_array(array, array)
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:281 ModuleBase::__construct(array, object)
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:270 App::loadModule('Core/Database')
+/home/www/GOTUN/PeanutCMS/lib/Core/App.php:373 App::loadModule('Core')
+/home/www/GOTUN/PeanutCMS/tutorial/acblog/index.php:19 App::run('development')
+
+2013-11-23T09:21:21+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:21+00:00 DEBUG: Request for /index.php/ [/index.php/] from 127.0.0.1
+2013-11-23T09:21:21+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:21+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:22+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:22+00:00 DEBUG: Select action: Posts::index
+2013-11-23T09:21:22+00:00 QUERY: SELECT * FROM posts ORDER BY created_at DESC
+2013-11-23T09:21:25+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:25+00:00 DEBUG: Request for /index.php/posts/10 [/index.php/posts/10] from 127.0.0.1
+2013-11-23T09:21:25+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:25+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:25+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:25+00:00 DEBUG: Select action: Posts::view
+2013-11-23T09:21:25+00:00 QUERY: SELECT * FROM posts WHERE id = "10" LIMIT 0, 1
+2013-11-23T09:21:27+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:27+00:00 DEBUG: Request for /index.php/posts/add [/index.php/posts/add] from 127.0.0.1
+2013-11-23T09:21:27+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:27+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:27+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:27+00:00 DEBUG: Select action: Posts::add
+2013-11-23T09:21:37+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:37+00:00 DEBUG: Request for /index.php/ [/index.php/] from 127.0.0.1
+2013-11-23T09:21:37+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:37+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:37+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:37+00:00 DEBUG: Select action: Posts::index
+2013-11-23T09:21:37+00:00 QUERY: SELECT * FROM posts ORDER BY created_at DESC
+2013-11-23T09:21:41+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:41+00:00 DEBUG: Request for /index.php/posts/6 [/index.php/posts/6] from 127.0.0.1
+2013-11-23T09:21:41+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:41+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:41+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:41+00:00 DEBUG: Select action: Posts::view
+2013-11-23T09:21:41+00:00 QUERY: SELECT * FROM posts WHERE id = "6" LIMIT 0, 1
+2013-11-23T09:21:42+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:42+00:00 DEBUG: Request for /index.php/ [/index.php/] from 127.0.0.1
+2013-11-23T09:21:42+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:42+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:42+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:42+00:00 DEBUG: Select action: Posts::index
+2013-11-23T09:21:42+00:00 QUERY: SELECT * FROM posts ORDER BY created_at DESC
+2013-11-23T09:21:43+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:43+00:00 DEBUG: Request for /index.php/posts/8 [/index.php/posts/8] from 127.0.0.1
+2013-11-23T09:21:43+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:43+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:43+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:43+00:00 DEBUG: Select action: Posts::view
+2013-11-23T09:21:43+00:00 QUERY: SELECT * FROM posts WHERE id = "8" LIMIT 0, 1
+2013-11-23T09:21:45+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:45+00:00 DEBUG: Request for /index.php/ [/index.php/] from 127.0.0.1
+2013-11-23T09:21:45+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:45+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:45+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:45+00:00 DEBUG: Select action: Posts::index
+2013-11-23T09:21:45+00:00 QUERY: SELECT * FROM posts ORDER BY created_at DESC
+2013-11-23T09:21:46+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:46+00:00 DEBUG: Request for /index.php/posts/9 [/index.php/posts/9] from 127.0.0.1
+2013-11-23T09:21:46+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:46+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:46+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:46+00:00 DEBUG: Select action: Posts::view
+2013-11-23T09:21:46+00:00 QUERY: SELECT * FROM posts WHERE id = "9" LIMIT 0, 1
+2013-11-23T09:21:55+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:55+00:00 DEBUG: Request for /index.php/ [/index.php/] from 127.0.0.1
+2013-11-23T09:21:55+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:55+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:55+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:55+00:00 DEBUG: Select action: Posts::index
+2013-11-23T09:21:55+00:00 QUERY: SELECT * FROM posts ORDER BY created_at DESC
+2013-11-23T09:21:57+00:00 WARNING: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /home/www/GOTUN/PeanutCMS/lib/Core/App.php on line 354
+2013-11-23T09:21:57+00:00 DEBUG: Request for /index.php/posts/1 [/index.php/posts/1] from 127.0.0.1
+2013-11-23T09:21:57+00:00 DEBUG: Check driver: Sqlite3
+2013-11-23T09:21:57+00:00 QUERY: SELECT name FROM sqlite_master WHERE type = "table"
+2013-11-23T09:21:57+00:00 QUERY: SELECT * FROM groups WHERE name = "guests" LIMIT 0, 1
+2013-11-23T09:21:57+00:00 DEBUG: Select action: Posts::view
+2013-11-23T09:21:57+00:00 QUERY: SELECT * FROM posts WHERE id = "1" LIMIT 0, 1
