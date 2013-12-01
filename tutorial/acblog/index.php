@@ -7,7 +7,7 @@
  */
 
 /** Locatin of the Aakoh Core bootstrap script */
-require_once '/usr/lib/apakoh/Core/bootstrap.php';
+require_once '../../lib/Core/bootstrap.php';
 
 Lib::import('Core');
 

@@ -10,18 +10,24 @@
   padding:0;
   margin:0;
 }
-body {
-  margin-top:100px;
-  color:#f00;
-  text-align:center;
+#message {
+  font-size:16px;
+  font-family:sans-serif;
   background-color:#fff;
+  position:absolute;
+  color:#f00;
+  top:50%;
+  width:100%;
+  text-align:center;
+  height:30px;
+  margin-top:-15px;
 }
 </style>
 
 </head>
 <body>
 
-<p><?php echo tr('An error occured while loading this page...'); ?></p>
+<p id="message"><?php echo tr('An error occured while loading this page...'); ?></p>
 
 </body>
 </html>
