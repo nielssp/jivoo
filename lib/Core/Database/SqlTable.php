@@ -66,16 +66,20 @@ class SqlTable implements ITable {
           ->tableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
-    while (($value = current($values)) !== false) {
+    $first = true;
+    foreach ($values as $value) {
+      if ($first) {
+        $first = false;
+      }
+      else {
+        $sqlString .= ', ';
+      }
+      // TODO use TypeAdapter to encode...?
       if (isset($value)) {
-        $sqlString .= $this->owner
-          ->escapeQuery('?', $value);
+        $sqlString .= $this->owner->escapeQuery('?', $value);
       }
       else {
         $sqlString .= 'NULL';
-      }
-      if (next($values) !== false) {
-        $sqlString .= ', ';
       }
     }
     $sqlString .= ')';
@@ -278,24 +282,27 @@ class SqlTable implements ITable {
           ->tableName($this->name);
     $sets = $query->sets;
     if (!empty($sets)) {
-      $sqlString .= ' SET';
+      $sqlString .= ' SET ';
       reset($sets);
-      while (($value = current($sets)) !== false) {
+      $first = true;
+      foreach ($sets as $key => $value) {
+        if ($first) {
+          $first = false;
+        }
+        else {
+          $sqlString .= ',';
+        }
         if (isset($value)) {
           if ($value instanceof NoEscape) {
-            $sqlString .= ' ' . key($sets) . ' = ' . $value;
+            $sqlString .= ' ' . $key . ' = ' . $value;
           }
           else {
             $sqlString .= ' '
-              . $this->owner
-              ->escapeQuery(key($sets) . ' = ?', array($value));
+              . $this->owner->escapeQuery($key . ' = ?', array($value));
           }
         }
         else {
-          $sqlString .= ' ' . key($sets) . ' = NULL';
-        }
-        if (next($sets) !== false) {
-          $sqlString .= ',';
+          $sqlString .= ' ' . $key . ' = NULL';
         }
       }
     }
