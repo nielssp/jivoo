@@ -65,6 +65,7 @@ class HtmlHelper extends Helper {
       }
     }
     catch (InvalidRouteException $e) {
+      Logger::logException($e);
       return false;
     }
     return '<a href="' . h($url) . '"' . $this->addAttributes($attributes)

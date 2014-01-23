@@ -8,13 +8,13 @@ class AuthHelper extends Helper {
   protected $modules = array('Authentication', 'Shadow');
 
   /**
-   * @var array Route to login page
+   * @var array|ILinkable|string|null $route A route, see {@see Routing}.
    */
-  private $loginRoute = array('action' => 'login');
+  private $loginRoute = 'App::login';
   
   /**
    * Set route to login page
-   * @param array $route Route, see {@see Routing}
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function setLoginRoute($route = null) {
     $this->loginRoute = $route;

@@ -221,7 +221,7 @@ class Routing extends ModuleBase {
         if (isset($route['controller'])) {
           $this->addPath(
             $route['controller'],
-            $route['action'],
+            $route['action'], 0,
             array($this, 'insertParameters'), array(array()), $priority
           );
         }
@@ -329,13 +329,21 @@ class Routing extends ModuleBase {
     if (!isset($controller)) {
       return null;
     }
+    $arity = count($parameters);
     $controller = $this->controllerName($controller);
-    if (isset($this->paths[$controller][$action])) {
-      $function = $this->paths[$controller][$action]['function'];
-      $additional = $this->paths[$controller][$action]['additional'];
-      return call_user_func($function, $parameters, $additional);
+    $function = null;
+    $additional = null;
+    if (isset($this->paths[$controller][$action][$arity])) {
+      $function = $this->paths[$controller][$action][$arity]['function'];
+      $additional = $this->paths[$controller][$action][$arity]['additional'];
     }
-    throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action));
+    else if (isset($this->paths[$controller][$action]['variadic'])) {
+      $function = $this->paths[$controller][$action]['variadic']['function'];
+      $additional = $this->paths[$controller][$action]['variadic']['additional'];
+    }
+    if (!isset($function))
+      throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action . '[' . $arity . ']'));
+    return call_user_func($function, $parameters, $additional);
   }
 
   /**
@@ -702,10 +710,25 @@ class Routing extends ModuleBase {
     else {
       $pattern = $pattern[0];
     }
-//     Logger::debug('Add route: ' . $pattern . ' -> ' . $route['controller'] . '::' . $route['action']);
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;
+    $arity = 0;
+    foreach ($pattern as $part) {
+      if ($part == '**' || $part == ':*') {
+        $arity = 'variadic';
+        break;
+      }
+      else if ($part == '*') {
+        $arity++;
+      }
+      else if ($part[0] == ':') {
+        $var = substr($part, 1);
+        if (is_numeric($var)) {
+          $arity++;
+        }
+      }
+    }
     $isMatch = true;
     $patternc = count($pattern);
     if ($method != 'ANY' && $method != $this->request->method) {
@@ -722,6 +745,7 @@ class Routing extends ModuleBase {
             $route['parameters'],
             array_slice($path, $j)
           );
+          $arity = 'variadic';
           break;
         }
         else if (!isset($path[$j])) {
@@ -755,6 +779,7 @@ class Routing extends ModuleBase {
         break;
       }
     }
+    Logger::debug('Add route: ' . implode('/', $pattern) . ' -> ' . $route['controller'] . '::' . $route['action'] . '[' . $arity . ']');
     if ($isMatch) {
       if ($priority > $this->selection['priority']) { // or >= ??
         $this->selection['priority'] = $priority;
@@ -763,7 +788,7 @@ class Routing extends ModuleBase {
     }
     if (isset($route['controller']) AND isset($route['action'])) {
       $this->addPath(
-        $route['controller'], $route['action'],
+        $route['controller'], $route['action'], $arity,
         array($this, 'insertParameters'), array($pattern), $priority
       );
     }
@@ -777,25 +802,29 @@ class Routing extends ModuleBase {
    * example of a path function see {@see Routing::insertParameters()}.
    * @param string|Controller $controller Controller name or object
    * @param string $action Action name
+   * @param int|"Variadic" $arity Number of parameters or 'variadic' for arbitrary number
    * @param callback $pathFunction Path function used to compute path
    * @param mixed[] $additional Additional parameters, the second parameter for
    * the path function
-   * @param number $priority Priority of path
+   * @param int $priority Priority of path
    * @return boolean True if path function added, false if a path function with
    * a higher priority already exists for that controller and action
    */
-  public function addPath($controller, $action, $pathFunction,
+  public function addPath($controller, $action, $arity, $pathFunction,
                           $additional = array(), $priority = 5) {
     $controller = $this->controllerName($controller);
     if (!isset($this->paths[$controller])) {
       $this->paths[$controller] = array();
     }
-    if (isset($this->paths[$controller][$action])) {
-      if ($priority <= $this->paths[$controller][$action]['priority']) {
+    if (!isset($this->paths[$controller][$action])) {
+      $this->paths[$controller][$action] = array();
+    }
+    if (isset($this->paths[$controller][$action][$arity])) {
+      if ($priority <= $this->paths[$controller][$action][$arity]['priority']) {
         return false;
       }
     }
-    $this->paths[$controller][$action] = array(
+    $this->paths[$controller][$action][$arity] = array(
       'function' => $pathFunction,
       'additional' => $additional,
       'priority' => $priority
