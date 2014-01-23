@@ -9,6 +9,11 @@ class HtmlHelper extends Helper {
    * @var array Associative array of begin and end tags.
    */
   private $endTags = array('<ul>' => '</ul>', '<li>' => '</li>');
+  
+  /**
+   * @var string Class to put on current links
+   */
+  private $classIfCurrent = 'current';
 
   /**
    * Get end tag for a begin tag
@@ -55,6 +60,9 @@ class HtmlHelper extends Helper {
   public function link($label, $route = null, $attributes = array()) {
     try {
       $url = $this->m->Routing->getLink($route);
+      if (!isset($attributes['class']) AND $this->m->Routing->isCurrent($route)) {
+        $attributes['class'] = 'current';
+      }
     }
     catch (InvalidRouteException $e) {
       return false;
