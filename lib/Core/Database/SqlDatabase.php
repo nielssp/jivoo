@@ -92,6 +92,12 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
         else if (is_float($vars[$key])) {
           $sqlString .= (float) $vars[$key];
         }
+        else if ($vars[$key] === true) {
+          $sqlString .= '1';
+        }
+        else if ($vars[$key] === false) {
+          $sqlString .= '0';
+        }
         else {
           $sqlString .= $this->quoteString($vars[$key]);
         }
