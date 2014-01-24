@@ -2,6 +2,8 @@
 
 class PaginationHelper extends Helper {
 
+  protected $modules = array('Templates', 'Routing');
+
   private $limit = 5;
 
   private $count = 0;
@@ -43,6 +45,11 @@ class PaginationHelper extends Helper {
     }
     $select->limit($this->limit);
     $select->offset($this->offset);
+
+    if (!$this->isLast())
+      $this->m->Templates->view->resource('next', null, $this->getLink($this->nextLink()));
+    if (!$this->isFirst())
+      $this->m->Templates->view->resource('prev', null, $this->getLink($this->prevLink()));
   }
 
   public function getCount() {

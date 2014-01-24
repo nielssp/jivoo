@@ -305,15 +305,19 @@ abstract class ViewBase {
   /**
    * Insert resource link into view
    * @param string $rel Relationship, e.g. 'stylesheet' or 'alternate'
-   * @param string $type Resource type
+   * @param string $type Resource type or null for no type
    * @param string $href Resource URL
    */
   public function resource($rel, $type, $href) {
     if (!isset($this->blocks['meta'])) {
       $this->blocks['meta'] = '';
     }
-    $this->blocks['meta'] .= '<link rel="' . h($rel) . '" type="' . h($type)
-      . '" href="' . $href . '" />' . PHP_EOL;
+    if (isset($type))
+      $this->blocks['meta'] .= '<link rel="' . h($rel) . '" type="' . h($type)
+        . '" href="' . $href . '" />' . PHP_EOL;
+    else
+      $this->blocks['meta'] .= '<link rel="' . h($rel)
+        . '" href="' . $href . '" />' . PHP_EOL;
   }
   
   /**
