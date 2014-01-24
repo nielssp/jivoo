@@ -53,7 +53,8 @@ class FormHelper extends Helper {
       $this->errors = $record->getErrors();
     }
     $this->currentForm = $this->model->getName();
-    $route['fragment'] = $fragment;
+    if (is_array($route))
+      $route['fragment'] = $fragment;
     $html = '<form action="' . $this->getLink($route)
       . '" id="' . $this->currentForm . '" method="post"';
     if (isset($options['class'])) {
