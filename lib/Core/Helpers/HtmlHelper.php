@@ -34,7 +34,7 @@ class HtmlHelper extends Helper {
    * @param array $options Associative array of attributes.
    * @return string Attributes
    */
-  private function addAttributes($options) {
+  public function addAttributes($options) {
     $html = '';
     if (isset($options['data'])) {
       $data = $options['data'];
