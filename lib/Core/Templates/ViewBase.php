@@ -491,7 +491,7 @@ abstract class ViewBase {
    * @param string $template Template
    * @return string Output of template
    */
-  public function fetchJust($template) {
+  public function fetchOnly($template) {
     $prev = $this->ignoreExtend;
     $this->ignoreExtend = true;
     $output = fetch($template);
