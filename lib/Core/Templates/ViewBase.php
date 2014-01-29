@@ -494,7 +494,7 @@ abstract class ViewBase {
   public function fetchOnly($template) {
     $prev = $this->ignoreExtend;
     $this->ignoreExtend = true;
-    $output = fetch($template);
+    $output = $this->fetch($template);
     $this->ignoreExtend = $prev;
     return $output;
   }
