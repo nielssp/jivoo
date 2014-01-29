@@ -38,6 +38,11 @@ abstract class ViewBase {
    * @var string Name of parent template
    */
   private $extend = null;
+  
+  /**
+   * @var bool Whether or not to ignore extends
+   */
+  private $ignoreExtend = false;
 
   /**
    * @var array Associative array of file names an provider arrays
@@ -459,17 +464,12 @@ abstract class ViewBase {
     if (isset($this->extend)) {
       $template = $this->extend;
       $this->extend = null;
-      $this->content .= ob_get_clean();
-      $this->assign('content', $this->content);
-      return $this->render($template);
+      if (!$this->ignoreExtend) {
+        $this->content .= ob_get_clean();
+        $this->assign('content', $this->content);
+        return $this->render($template);
+      }
     }
-//     else if (isset($this->layout)) {
-//       $template = $this->layout;
-//       $this->layout = null;
-//       $this->content .= ob_get_clean();
-//       $this->assign('content', $this->content);
-//       return $this->render($template);
-//     }
     return ob_get_clean();
   }
 
@@ -484,6 +484,19 @@ abstract class ViewBase {
     $this->data['alerts'] = $this->request->session->alerts;
     $this->data['notices'] = $this->request->session->notices;
     return $this->render($template);
+  }
+  
+  /**
+   * Get template output without extending layouts etc.
+   * @param string $template Template
+   * @return string Output of template
+   */
+  public function fetchJust($template) {
+    $prev = $this->ignoreExtend;
+    $this->ignoreExtend = true;
+    $output = fetch($template);
+    $this->ignoreExtend = $prev;
+    return $output;
   }
 
   /**
