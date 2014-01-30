@@ -266,8 +266,10 @@ class Authentication extends ModuleBase {
     if (!$user) {
       return false;
     }
-    if (!$this->m->Shadow->compare($password, $user->password)) {
-      return false;
+    if (!(!isset($password) AND $user->password == '')) { 
+      if (!$this->m->Shadow->compare($password, $user->password)) {
+        return false;
+      }
     }
     $this->user = $user;
     $this->createSession($remember);
