@@ -152,7 +152,7 @@ class Session implements arrayaccess {
    * @param string $name Key
    * @return mixed Value
    */
-  public function offsetGet($name) {
+  public function &offsetGet($name) {
     return $_SESSION[$this->prefix . $name];
   }
 
