@@ -146,14 +146,23 @@ class Session implements arrayaccess {
   public function offsetExists($name) {
     return isset($_SESSION[$this->prefix . $name]);
   }
+  
+  /**
+   * Get value, return as reference
+   * @param string $name Key
+   * @return mixed Value
+   */
+  private function &get($name) {
+    return $_SESSION[$this->prefix . $name];
+  }
 
   /**
    * Get a value
    * @param string $name Key
    * @return mixed Value
    */
-  public function &offsetGet($name) {
-    return $_SESSION[$this->prefix . $name];
+  public function offsetGet($name) {
+    return $this->get($name);
   }
 
   /**

@@ -120,7 +120,7 @@ class SqlTable implements ITable {
    */
   public function replaceColumns($query) {
     return preg_replace_callback(
-      '/(\A|[^\\\\])%([a-z][a-z0-9_]*([.][a-z][a-z0-9_]*)?)/i',
+      '/(\A|[^\\\\])%([a-z][a-z0-9_]*([.][a-z][a-z0-9_]*|[.][*])?)/i',
       array($this, 'replaceColumn'), $query);
   }
 
