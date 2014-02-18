@@ -111,6 +111,9 @@ $post->categoryId = $category->id;
 $post->category == $category;
 // is just as fast as
 $post->categoryId == $category->id;
+// not actually possible though. An alternative:
+$post->category->equals($category);
+// ActiveRecords should implement some sort of lazy evaluation
 
 // Define aliases so that the following is possible:
 $posts->where('id > 5')->and(where('name = foo')->or('name = bar'));
