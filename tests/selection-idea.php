@@ -85,13 +85,26 @@ class Users extends ActiveModel {
   
 }
 
+class Posts extends ActiveModel {
+  protected $belongsTo = array(
+    'category' => 'Categories',
+    'category' => array('model' => 'Categories'),
+  );
+  protected $hasMany = array(
+    'Comments',
+  );
+  protected $hasAndBelongsToMany = array(
+    'Tags', // Expectes Posts_Tags table or something for linking
+  );
+}
+
 header('Content-Type: text/plain');
 
 // DataSources should also be selections
 
-$db->posts->where('id = 5')->set('title', 'Hello, World')->update();
+$db->posts->where('id = ?', 5)->set('title', 'Hello, World')->update();
 // or:
-$db->posts->where('id = 5')[0]->set('title', 'Hello, World')->save();
+$db->posts->where('id = ?', 5)[0]->set('title', 'Hello, World')->save();
 // or:
 $post = $db->posts->where('id = 5')[0];
 $post->title = 'Hello, World';
