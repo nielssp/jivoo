@@ -470,7 +470,7 @@ abstract class ViewBase {
         return $this->render($template);
       }
     }
-    return ob_get_clean();
+    return $this->content . ob_get_clean();
   }
 
   /**
