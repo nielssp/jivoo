@@ -176,7 +176,7 @@ $db = new PdoMysqlDatabase(array(
   'database' => 'peanutcms',
 ));
 
-$posts= $db->posts;
+$posts = $db->posts;
 
 foreach ($posts as $post) {
   echo $post->title . PHP_EOL;
