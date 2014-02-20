@@ -22,22 +22,117 @@ interface IActiveCollection extends ISelection {
 }
 
 interface ITypeAdapter {
-  public function encode($type, $value);
+  public function encode(FieldType $type, $value);
 
-  public function decode($type, $value);
+  public function decode(FieldType $type, $value);
+}
+
+class FieldType {
+  const INTEGER = 1;
+  const STRING = 2;
+  const TEXT = 3;
+  const BOOLEAN = 4;
+  const FLOAT = 5;
+  const DATE = 6;
+  const DATETIME = 7;
+  const BINARY = 8;
+  
+  private $type;
+  private $null;
+  private $length;
+  private $unsigned;
+  
+  private function __construct($type, $null = true, $length = null, $unsigned = false) {
+    
+  }
+  
+  public function __get($property) {
+    switch ($property) {
+      case 'type':
+      case 'null':
+      case 'length':
+      case 'unsigned':
+        return $this->$property;
+    }
+  }
+  
+  public static function integer($null = true, $unsigned = false) {
+    return new self(self::INTEGER, $null, null, $unsigned);
+  }
 }
 
 
 
-
-
 abstract class ActiveModel extends Model {
+  /**
+   * @var Model
+   */
+  private $source;
+  /**
+   * @var IDatabase
+   */
+  private $database;
   
-  public final function __construct(IModel $source, IDatabase $db) {
-    
+  private $name;
+  
+  private $schema;
+  
+  public final function __construct(Model $source, IDatabase $database) {
+    $this->source = $source;
+    $this->database = $database;
+    $this->name = get_class($this);
+    $this->schema = $this->source->getSchema();
   }
   
+  public function getName() {
+    return $this->name;
+  }
   
+  public function getSchema() {
+    return $this->schema;
+  }
+  
+  public function update(UpdateSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new UpdateSelection($this);
+    return $this->source->update($selection);
+  }
+  
+  public function delete(DeleteSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new DeleteSelection($this);
+    return $this->source->delete($selection);
+  }
+  
+  public function count(ReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new ReadSelection($this);
+    return $this->source->count($selection);
+  }
+  
+  public function first(ReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new ReadSelection($this);
+    return $this->source->first($selection);
+  }
+  
+  public function last(ReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new ReadSelection($this);
+    return $this->source->last($selection);
+  }
+  
+  public function read(ReadSelection $selection) {
+    return $this->source->read($selection);
+  }
+
+  public function readCustom(ReadSelection $selection) {
+    return $this->source->readCustom($selection);
+  }
+  
+  public function insert($data) {
+    $this->source->insert($data);
+  }
 }
 
 class ActiveRecord implements IRecord {
@@ -148,7 +243,7 @@ class ActiveRecord implements IRecord {
   }
 }
 
-abstract class Posts extends ActiveModel {
+class Posts extends ActiveModel {
   protected $belongsTo = array(
     'category' => 'Categories',
     'category' => array('model' => 'Categories'),
@@ -177,7 +272,7 @@ $db = new PdoMysqlDatabase(array(
   'database' => 'peanutcms',
 ));
 
-$posts = $db->posts;
+$posts = new Posts($db->posts, $db);
 
 echo $posts->innerJoin($db->posts_tags, 'id = post_id')->where('tag_id = 1')->count() . PHP_EOL;
 
@@ -190,4 +285,4 @@ foreach ($posts->innerJoin($db->posts_tags, 'id = post_id')->innerJoin($db->tags
 
 // e($post, 'title');
 
-var_dump(Logger::getLog());
+// var_dump(Logger::getLog());

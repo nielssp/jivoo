@@ -4,13 +4,13 @@ abstract class Table extends Model {
   public function update(UpdateSelection $selection = null) {
     if (!isset($selection))
       $selection = new UpdateSelection($this);
-    return updateSelection($selection);
+    return $this->updateSelection($selection);
   }
 
   public function delete(DeleteSelection $selection = null) {
     if (!isset($selection))
       $selection = new DeleteSelection($this);
-    return updateSelection($selection);
+    return $this->deleteSelection($selection);
   }
   
   public function count(ReadSelection $selection = null) {
