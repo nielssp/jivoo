@@ -68,7 +68,7 @@ class ActiveRecord implements IRecord {
   }
   
   public static function createExisting(IModel $model, $data = array()) {
-    $record = new ActiveRecord($model, $data, $allowedFields);
+    $record = new ActiveRecord($model, $data);
     return $record;
   }
   
@@ -171,6 +171,7 @@ class_exists('Table');
 class_exists('SqlTable');
 
 $db = new PdoMysqlDatabase(array(
+  'server' => 'localhost',
   'username' => 'peanutcms',
   'password' => 'peanutcms',
   'database' => 'peanutcms',
@@ -178,11 +179,15 @@ $db = new PdoMysqlDatabase(array(
 
 $posts = $db->posts;
 
-foreach ($posts as $post) {
+echo $posts->innerJoin($db->posts_tags, 'id = post_id')->where('tag_id = 1')->count() . PHP_EOL;
+
+foreach ($posts->innerJoin($db->posts_tags, 'id = post_id')->innerJoin($db->tags, '%tags.id = tag_id')->where('%tags.name = ?', 'test') as $post) {
   echo $post->title . PHP_EOL;
 }
+
 
 // $post->e('title');
 
 // e($post, 'title');
 
+var_dump(Logger::getLog());

@@ -1,16 +1,16 @@
 <?php
 interface IBasicSelection extends ICondition {
   /**
-   * @param unknown $column
+   * @param string $expression Expression/column
    * @return IBasicSelection
    */
-  public function orderBy($column);
+  public function orderBy($expression);
 
   /**
-   * @param unknown $column
+   * @param string $expression Expression/column
    * @return IBasicSelection
   */
-  public function orderByDescending($column);
+  public function orderByDescending($expression);
   
   /**
    * @return IBasicSelection

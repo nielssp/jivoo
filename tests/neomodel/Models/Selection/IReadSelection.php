@@ -1,17 +1,19 @@
 <?php
 interface IReadSelection extends IBasicSelection, Iterator {
   /**
-   * @param string $column
+   * @param string|string[]|array $expression Expression, list of expressions or array of expressions and aliases
+   * @param string|alias $alias Alias 
+   * @return array[] List of associative arrays
+   */
+  public function select($expression, $alias = null);
+  
+  /**
+   * Group by one or more columns
+   * @param string|string[] $columns A single column name or a list of column
+   * names
+   * @param Condition|string $condition Grouping condition
    * @return IReadSelection
    */
-  public function select($column, $alias = null);
-  
-  public function selectAll();
-  /**
-   * @param string|string[] $columns
-   * @param string $condition
-   * @return IReadSelection
-  */
   public function groupBy($columns, $condition = null);
 
   // joins

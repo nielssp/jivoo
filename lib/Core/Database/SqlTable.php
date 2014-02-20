@@ -193,10 +193,9 @@ class SqlTable implements ITable {
       $sqlString .= implode(', ', $columns);
     }
     else {
-      $sqlString .= '*';
+      $sqlString .= $this->owner->tableName($this->name) . '.*';
     }
-    $sqlString .= ' FROM ' . $this->owner
-          ->tableName($this->name);
+    $sqlString .= ' FROM ' . $this->owner->tableName($this->name);
     if (!empty($query->sources)) {
       foreach ($query->sources as $source) {
         if (is_string($source['source'])) {

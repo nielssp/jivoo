@@ -124,28 +124,24 @@ class SqlTable extends Table {
    * @param mixed $key Key (not used)
    */
   protected function getColumnList(&$value, $key) {
-    $columnName = $this->replaceColumns($value['column']);
-    if (isset($value['function'])) {
-      $columnName = str_replace('()', '(' . $columnName . ')',
-        $value['function']);
-    }
+    $expression = $this->replaceColumns($value['expression']);
     if (isset($value['alias'])) {
-      $value = $columnName . ' AS ' . $value['alias'];
+      $value = $expression . ' AS ' . $value['alias'];
     }
     else {
-      $value = $columnName;
+      $value = $expression;
     }
   }
 
   public function readSelection(ReadSelection $selection) {
     $sqlString = 'SELECT ';
-    if (!empty($selection->columns)) {
-      $columns = $selection->columns;
-      array_walk($columns, array($this, 'getColumnList'));
-      $sqlString .= implode(', ', $columns);
+    if (!empty($selection->fields)) {
+      $fields = $selection->fields;
+      array_walk($fields, array($this, 'getColumnList'));
+      $sqlString .= implode(', ', $fields);
     }
     else {
-      $sqlString .= '*';
+      $sqlString .= $this->owner->tableName($this->name) . '.*';
     }
     $sqlString .= ' FROM ' . $this->owner->tableName($this->name);
     if (!empty($selection->sources)) {
@@ -168,7 +164,7 @@ class SqlTable extends Table {
     if (!empty($selection->joins)) {
       foreach ($selection->joins as $join) {
         if ($join['source'] instanceof SqlTable) {
-          if ($join['source']->getOwner() !== $this->owner) {
+          if ($join['source']->owner !== $this->owner) {
             throw new Exception(tr(
               'Unable to join SqlTable with table of different database'
             ));

@@ -16,9 +16,8 @@ abstract class Table extends Model {
   public function count(ReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new ReadSelection($this);
-    $resultSet = $this->readSelection($selection->selectAll()->select('COUNT(*)'));
-    $row = $resultSet->fetchRow();
-    return $row[0];
+    $result = $selection->select('COUNT(*)');
+    return $result[0]['COUNT(*)'];
   }
   
   public function first(ReadSelection $selection = null) {
@@ -38,6 +37,15 @@ abstract class Table extends Model {
   public function read(ReadSelection $selection) {
     $resultSet = $this->readSelection($selection);
     return new ResultSetIterator($this, $resultSet);
+  }
+  
+  public function readCustom(ReadSelection $selection) {
+    $resultSet = $this->readSelection($selection);
+    $result = array();
+    while ($resultSet->hasRows()) {
+      $result[] = $resultSet->fetchAssoc();
+    }
+    return $result;
   }
 
   /**

@@ -28,19 +28,13 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * Each array is of the following format:
    * <code>
    * array(
-   *   'column' => ..., // Column name (string)
-   *   'function' => ...,  // Function (string|null)
+   *   'expression' => ..., // Expression (string)
    *   'alias' => ... // Alias (string|null)
    * )
    * </code>
    * @var array[]
   */
-  protected $columns = array();
-
-  /**
-   * @var array An associative array of column names and aliases
-  */
-  protected $aliases = array();
+  protected $fields = array();
 
   /**
    * List of arrays describing other data sources.
@@ -56,26 +50,33 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   */
   protected $sources = array();
 
-  /**
-   * @param string $column
-   * @return IReadSelection
-  */
-  public function select($column, $alias = null) {
-    $this->columns[] = array(
-      'column' => $column,
-      'function' => $function,
-      'alias' => $alias
-    );
-    if (!empty($alias)) {
-      $this->aliases[$column] = $alias;
+  public function select($expression, $alias = null) {
+    $this->fields = array();
+    if (is_array($expression)) {
+      foreach ($expression as $exp => $alias) {
+        if (is_int($exp)) {
+          $this->fields[] = array(
+            'expression' => $alias,
+            'alias' => null
+          );
+        }
+        else {
+          $this->fields[] = array(
+            'expression' => $exp,
+            'alias' => $alias
+          );
+        }
+      }
     }
-    return $this;
-  }
-  
-  public function selectAll() {
-    $this->columns = array();
-    $this->aliases = array();
-    return $this;
+    else {
+      $this->fields[] = array(
+        'expression' => $expression,
+        'alias' => $alias
+      );
+    }
+    $result = $this->model->readCustom($this);
+    $this->fields = array();
+    return $result;
   }
   /**
    * @param string|string[] $columns
@@ -145,21 +146,21 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * @return IRecord
    */
   public function first() {
-    $this->model->first($this);
+    return $this->model->first($this);
   }
 
   /**
    * @return IRecord
    */
   public function last() {
-    $this->model->last($this);
+    return $this->model->last($this);
   }
 
   /**
    * @return int
    */
   public function count() {
-    $this->model->count($this);
+    return $this->model->count($this);
   }
   /**
    * Set offset

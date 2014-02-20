@@ -20,6 +20,14 @@ abstract class Model implements IModel {
   public abstract function count(ReadSelection $selection = null);
   public abstract function first(ReadSelection $selection = null);
   public abstract function last(ReadSelection $selection = null);
+  
+  /**
+   * Read custom schema
+   * @param ReadSelection $selection
+   * @return array[]
+   */
+  public abstract function readCustom(ReadSelection $selection); 
+
   /**
    * @param ReadSelection $selection
    * @return Iterator
@@ -113,13 +121,9 @@ abstract class Model implements IModel {
 
   // IReadSelection implementation
   
-  public function select($column, $alias = null) {
+  public function select($expression, $alias = null) {
     $select = new ReadSelection($this);
-    return $select->select($column, $alias);
-  }
-  
-  public function selectAll() {
-    return new ReadSelection($this);
+    return $select->select($expression, $alias);
   }
   
   public function groupBy($columns, $condition = null) {
