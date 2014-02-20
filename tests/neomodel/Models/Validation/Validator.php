@@ -76,5 +76,9 @@ class Validator {
   public function getFields() {
     return $this->fields;
   }
+  
+  public function validate(IRecord $record) {
+    return array();
+  }
 }
 

@@ -4,11 +4,13 @@ require '../../lib/Core/bootstrap.php';
 Lib::import('Core');
 Lib::import('Core/Database');
 Lib::import('Core/Database/PdoMysql');
+Lib::import('../tests/neomodel/Models/Validation');
 Lib::import('../tests/neomodel/Models/Condition');
 Lib::import('../tests/neomodel/Models/Selection');
 Lib::import('../tests/neomodel/Models');
 Lib::import('../tests/neomodel/Database');
 
+require 'Models/Validation/Validator.php';
 require 'Models/Condition/ICondition.php';
 
 function where($condition) {
@@ -65,7 +67,7 @@ class FieldType {
 
 abstract class ActiveModel extends Model {
   /**
-   * @var Model
+   * @var Table
    */
   private $source;
   /**
@@ -75,13 +77,20 @@ abstract class ActiveModel extends Model {
   
   private $name;
   
+  /**
+   * @var Schema
+   */
   private $schema;
   
-  public final function __construct(Model $source, IDatabase $database) {
-    $this->source = $source;
+  private $validator;
+  
+  public final function __construct(IDatabase $database) {
     $this->database = $database;
-    $this->name = get_class($this);
+    $name = lcfirst(get_class($this));
+    $this->name = $name;
+    $this->source = $this->database->$name;
     $this->schema = $this->source->getSchema();
+    $this->validator = new Validator();
   }
   
   public function getName() {
@@ -90,6 +99,10 @@ abstract class ActiveModel extends Model {
   
   public function getSchema() {
     return $this->schema;
+  }
+  
+  public function getValidator() {
+    return $this->validator;
   }
   
   public function update(UpdateSelection $selection = null) {
@@ -113,17 +126,20 @@ abstract class ActiveModel extends Model {
   public function first(ReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new ReadSelection($this);
-    return $this->source->first($selection);
+    $resultSet = $this->source->readSelection($selection->limit(1));
+    return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
   }
   
   public function last(ReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new ReadSelection($this);
-    return $this->source->last($selection);
+    $resultSet = $this->source->readSelection($selection->reverseOrder()->limit(1));
+    return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
   }
-  
+
   public function read(ReadSelection $selection) {
-    return $this->source->read($selection);
+    $resultSet = $this->source->readSelection($selection);
+    return new ResultSetIterator($this, $resultSet);
   }
 
   public function readCustom(ReadSelection $selection) {
@@ -164,6 +180,7 @@ class ActiveRecord implements IRecord {
   
   public static function createExisting(IModel $model, $data = array()) {
     $record = new ActiveRecord($model, $data);
+    $record->updatedData = array();
     return $record;
   }
   
@@ -272,7 +289,7 @@ $db = new PdoMysqlDatabase(array(
   'database' => 'peanutcms',
 ));
 
-$posts = new Posts($db->posts, $db);
+$posts = new Posts($db);
 
 echo $posts->innerJoin($db->posts_tags, 'id = post_id')->where('tag_id = 1')->count() . PHP_EOL;
 

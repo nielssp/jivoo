@@ -220,14 +220,70 @@ class SqlTable extends Table {
    * @return int Number of affected records
   */
   public function updateSelection(UpdateSelection $selection) {
-    
+    $sqlString = 'UPDATE ' . $this->owner->tableName($this->name);
+    $sets = $selection->sets;
+    if (!empty($sets)) {
+      $sqlString .= ' SET ';
+      reset($sets);
+      $first = true;
+      foreach ($sets as $key => $value) {
+        if ($first) {
+          $first = false;
+        }
+        else {
+          $sqlString .= ',';
+        }
+        if (isset($value)) {
+          if ($value instanceof NoEscape) {
+            $sqlString .= ' ' . $key . ' = ' . $value;
+          }
+          else {
+            $sqlString .= ' '
+              . $this->owner->escapeQuery($key . ' = ?', array($value));
+          }
+        }
+        else {
+          $sqlString .= ' ' . $key . ' = NULL';
+        }
+      }
+    }
+    if ($selection->where->hasClauses()) {
+      $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
+    }
+    if (!empty($selection->orderBy)) {
+      $columns = array();
+      foreach ($selection->orderBy as $orderBy) {
+        $columns[] = $this->replaceColumns($orderBy['column'])
+          . ($orderBy['descending'] ? ' DESC' : ' ASC');
+      }
+      $sqlString .= ' ORDER BY ' . implode(', ', $columns);
+    }
+    if (isset($selection->limit)) {
+      $sqlString .= ' LIMIT ' . $selection->limit;
+    }
+    return $this->owner->rawQuery($sqlString);
   }
   /**
    * @param DeleteSelection $selection
    * @return int Number of affected records
   */
   public function deleteSelection(DeleteSelection $selection) {
-    
+    $sqlString = 'DELETE FROM ' . $this->owner->tableName($this->name);
+    if ($selection->where->hasClauses()) {
+      $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
+    }
+    if (!empty($selection->orderBy)) {
+      $columns = array();
+      foreach ($selection->orderBy as $orderBy) {
+        $columns[] = $this->replaceColumns($orderBy['column'])
+          . ($orderBy['descending'] ? ' DESC' : ' ASC');
+      }
+      $sqlString .= ' ORDER BY ' . implode(', ', $columns);
+    }
+    if (isset($selection->limit)) {
+      $sqlString .= ' LIMIT ' . $selection->limit;
+    }
+    return $this->owner->rawQuery($sqlString);
   }
   
   public function insert($data) {
