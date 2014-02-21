@@ -18,6 +18,14 @@ interface IModel extends ISelection {
   public function selectRecord(IRecord $record);
 
   /**
+   * Find a record by it's primary key
+   * @param mixed $primaryKey Value of primary key
+   * @param mixed ...$primaryKeys
+   * @return IRecord
+   */
+  public function find($primaryKey);
+  
+  /**
    * @param array $data
    * @param string[]|null $allowedFields
    * @return IRecord
