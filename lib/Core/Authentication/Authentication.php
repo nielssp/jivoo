@@ -108,6 +108,7 @@ class Authentication extends ModuleBase {
     $authHelper = new AuthHelper($this->m->Routing);
     $authHelper->addModule($this);
     $authHelper->addModule($this->m->Shadow);
+    $authHelper->addHelper($this->m->Helpers->Json);
     $this->m->Helpers->addHelper($authHelper);
 
     if (!$this->isLoggedIn()) {

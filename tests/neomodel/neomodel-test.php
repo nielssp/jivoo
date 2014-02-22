@@ -297,6 +297,9 @@ foreach ($posts->innerJoin($db->posts_tags, 'id = post_id')->innerJoin($db->tags
   echo $post->title . PHP_EOL;
 }
 
+foreach ($posts->orderBy('title') as $post) {
+  echo $post->title . PHP_EOL;
+}
 
 // $post->e('title');
 

@@ -5,6 +5,7 @@
  */
 class AuthHelper extends Helper {
 
+  protected $helpers = array('Json');
   protected $modules = array('Authentication', 'Shadow');
 
   /**
@@ -99,6 +100,13 @@ class AuthHelper extends Helper {
       'path' => $this->request->path,
       'query' => $this->request->query
     );
+    if ($this->request->isAjax()) {
+      $this->Json->respond(array(
+        'status' => 'unauthorized',
+        'link' => $this->m->Routing->getLink($this->loginRoute)
+      ));
+      exit;
+    }
     $this->m->Routing->redirect($this->loginRoute);
   }
   
