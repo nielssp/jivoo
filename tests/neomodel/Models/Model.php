@@ -15,6 +15,24 @@ abstract class Model implements IModel {
     return $selection;
   }
 
+  public function find($primary) {
+    $args = func_get_args();
+    $primaryKey = $this->getSchema()->getPrimaryKey();
+    sort($primaryKey);
+    $selection = $this;
+    if (count($args) != count($primaryKey)) {
+      throw new InvalidPrimaryKeyException(trn(
+        'find() must be called with %n parameter',
+        'find() must be called with %n parameters',
+        count($primaryKey)
+      ));
+    }
+    for ($i = 0; $i < count($args); $i++) {
+      $selection = $selection->where($primaryKey[$i] . ' = ?', $args[$i]);
+    }
+    return $selection->first();
+  }
+
   public abstract function update(UpdateSelection $selection = null);
   public abstract function delete(DeleteSelection $selection = null);
   public abstract function count(ReadSelection $selection = null);
@@ -186,3 +204,5 @@ abstract class Model implements IModel {
     return $this->iterator->valid();
   }
 }
+
+class InvalidPrimaryKeyException extends Exception { }

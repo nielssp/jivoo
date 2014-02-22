@@ -127,6 +127,8 @@ abstract class ActiveModel extends Model {
     if (!isset($selection))
       $selection = new ReadSelection($this);
     $resultSet = $this->source->readSelection($selection->limit(1));
+    if (!$resultSet->hasRows())
+      return null;
     return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
   }
   
@@ -134,6 +136,8 @@ abstract class ActiveModel extends Model {
     if (!isset($selection))
       $selection = new ReadSelection($this);
     $resultSet = $this->source->readSelection($selection->reverseOrder()->limit(1));
+    if (!$resultSet->hasRows())
+      return null;
     return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
   }
 
@@ -244,7 +248,7 @@ class ActiveRecord implements IRecord {
     if ($options['validate'] AND !$this->isValid())
       return false;
     if ($this->isNew()) {
-      $this->model->insert($this);
+      $this->model->insert($this->data);
       $this->new = false;
     }
     else if (count($this->updatedData) > 0) {
@@ -291,18 +295,14 @@ $db = new PdoMysqlDatabase(array(
 
 $posts = new Posts($db);
 
-echo $posts->innerJoin($db->posts_tags, 'id = post_id')->where('tag_id = 1')->count() . PHP_EOL;
-
-foreach ($posts->innerJoin($db->posts_tags, 'id = post_id')->innerJoin($db->tags, '%tags.id = tag_id')->where('%tags.name = ?', 'test') as $post) {
-  echo $post->title . PHP_EOL;
-}
+echo $posts->count() . PHP_EOL;
 
 foreach ($posts->orderBy('title') as $post) {
-  echo $post->title . PHP_EOL;
+  echo $post->id . ': ' . $post->title . PHP_EOL;
 }
 
 // $post->e('title');
 
 // e($post, 'title');
 
-// var_dump(Logger::getLog());
+//var_dump(Logger::getLog());

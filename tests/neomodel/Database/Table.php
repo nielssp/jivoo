@@ -24,6 +24,8 @@ abstract class Table extends Model {
     if (!isset($selection))
       $selection = new ReadSelection($this);
     $resultSet = $this->readSelection($selection->limit(1));
+    if (!$resultSet->hasRows())
+      return null;
     return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
   }
   
@@ -31,6 +33,8 @@ abstract class Table extends Model {
     if (!isset($selection))
       $selection = new ReadSelection($this);
     $resultSet = $this->readSelection($selection->reverseOrder()->limit(1));
+    if (!$resultSet->hasRows())
+      return null;
     return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
   }
 

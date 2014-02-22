@@ -22,11 +22,11 @@ interface IReadSelection extends IBasicSelection, Iterator {
   public function rightJoin(IModel $other, $condition, $alias = null);
 
   /**
-   * @return IRecord
+   * @return IRecord|null
   */
   public function first();
   /**
-   * @return IRecord
+   * @return IRecord|null
   */
   public function last();
 
