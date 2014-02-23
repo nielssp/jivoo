@@ -29,41 +29,9 @@ interface ITypeAdapter {
   public function decode(FieldType $type, $value);
 }
 
-class FieldType {
-  const INTEGER = 1;
-  const STRING = 2;
-  const TEXT = 3;
-  const BOOLEAN = 4;
-  const FLOAT = 5;
-  const DATE = 6;
-  const DATETIME = 7;
-  const BINARY = 8;
-  
-  private $type;
-  private $null;
-  private $length;
-  private $unsigned;
-  
-  private function __construct($type, $null = true, $length = null, $unsigned = false) {
-    
-  }
-  
-  public function __get($property) {
-    switch ($property) {
-      case 'type':
-      case 'null':
-      case 'length':
-      case 'unsigned':
-        return $this->$property;
-    }
-  }
-  
-  public static function integer($null = true, $unsigned = false) {
-    return new self(self::INTEGER, $null, null, $unsigned);
-  }
-}
 
 
+class InvalidDataTypeException extends Exception { }
 
 abstract class ActiveModel extends Model {
   /**

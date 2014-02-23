@@ -10,12 +10,7 @@
  */
 class Models extends ModuleBase implements IDictionary {
   /**
-   * @var array Associative array of record class names
-   */
-  private $recordClasses = array();
-  
-  /**
-   * @var array Associative array of model names and class names
+   * @var string[] List of model class names
    */
   private $modelClasses = array();
   
@@ -42,33 +37,19 @@ class Models extends ModuleBase implements IDictionary {
   }
   
   /**
-   * Get list of record classes
-   * @return string[] Record class names
-   */
-  public function getRecordClasses() {
-    return $this->recordClasses;
-  }
-  
-  /**
    * Get list of model classes
-   * @return array Associative array of model names and class names
+   * @return string[] List of models
    */
   public function getModelClasses() {
     return $this->modelClasses;
   }
   
   /**
-   * Add either a IModel or a IRecord class
+   * Add an IModel class
    * @param string $class Class name
    */
   public function addClass($class) {
-    if (strpos($class, 'Model')) {
-      $name = str_replace('Model', '', $class);
-      $this->modelClasses[$name] = $class;
-    }
-    else {
-      $this->recordClasses[$class] = $class;
-    }
+    $this->modelClasses[$class] = $class;
   }
   
   /** 
@@ -91,14 +72,11 @@ class Models extends ModuleBase implements IDictionary {
   /**
    * Add/set model
    * @param string $name Model name
-   * @param IModel $model Model objects
+   * @param IModel $model Model object
    */
   public function setModel($name, IModel $model) {
     if (isset($this->modelClasses[$name])) {
       unset($this->modelClasses[$name]);
-    }
-    if (isset($this->recordClasses[$name])) {
-      unset($this->recordClasses[$name]);
     }
     $this->modelObjects[$name] = $model;
   }

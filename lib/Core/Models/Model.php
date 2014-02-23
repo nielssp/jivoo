@@ -15,15 +15,24 @@ abstract class Model implements IModel {
     return $selection;
   }
 
+  public function selectNotRecord(IRecord $record) {
+    $primaryKey = $this->getSchema()->getPrimaryKey();
+    $selection = $this;
+    foreach ($primaryKey as $field) {
+      $selection = $selection->where($field . ' != ?', $record->$field);
+    }
+    return $selection;
+  }
+
   public function find($primary) {
     $args = func_get_args();
     $primaryKey = $this->getSchema()->getPrimaryKey();
     sort($primaryKey);
     $selection = $this;
     if (count($args) != count($primaryKey)) {
-      throw new InvalidPrimaryKeyException(trn(
-        'find() must be called with %n parameter',
+      throw new InvalidPrimaryKeyException(tn(
         'find() must be called with %n parameters',
+        'find() must be called with %n parameter',
         count($primaryKey)
       ));
     }

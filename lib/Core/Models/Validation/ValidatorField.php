@@ -109,4 +109,19 @@ class ValidatorField {
   public function getRules() {
     return $this->rules;
   }
+
+  public function validateRule($value, $ruleName, $rule) {
+
+  }
+
+  /**
+   * Validate a value. Return value must be compared using ===.
+   * @param mixed $value Value to validate
+   * @return true|string True if valid or an error message if invalid
+   */
+  public function validate(IRecord $record, $field) {
+    foreach ($this->rules as $name => $rule) {
+      $result = Validator::
+    }
+  }
 }

@@ -2,19 +2,12 @@
 /**
  * Internationalization and localization
  * @package Core
- * @TODO Rethink some of this. E.g. multiple language files, for extensions etc.
  */
 class I18n {
-  
-  /**
-   * @var AppConfig Configuration used to pull language, timeZone, dateFormat
-   * and timeFormat
-   */
+  /** @var AppConfig Configuration */
   private static $config = null;
 
-  /**
-   * @var array Contains the translation strings of the current language
-   */
+  /** @var Localization Current localization */
   private static $language = null;
   
   /**
@@ -31,124 +24,43 @@ class I18n {
       $languageFile = $location . '/' . self::$config['language'] . '.lng.php';
       if (file_exists($languageFile)) {
         self::$language = include $languageFile;
+        if (!(self::$language instanceof Localization)) {
+          self::$language = null;
+          throw new I18nException(tr('Language file must return an instance of Localization.'));
+        }
       }
     }
   }
 
   /**
-   * Translate function
-   *
-   * %n where n is a number is used as placeholder for the additional arguments
-   *
-   * @param string $text Text to translate
-   * @param string $args,... Additional OPTIONAL parameters
-   * @return string Translated text
+   * Translate a string
+   * @param string $message Message in english
+   * @param mixed $vars,... Values for placeholders starting from %1
+   * @return string Translated string
    */
-  public static function translate($text) {
-    if (isset(self::$language) AND !empty(self::$language['tr'][$text]))
-      $translated = self::$language['tr'][$text];
-    else
-      $translated = $text;
-
-    $numArgs = func_num_args();
-    if ($numArgs > 1) {
-      $args = func_get_args();
-      for ($i = 1; $i < $numArgs; $i++) {
-        $translated = str_replace('%' . $i, $args[$i], $translated);
-      }
+  public static function get($message) {
+    if (!isset(self::$language)) {
+      self::$language = new Localization();
     }
-    return $translated;
+    $args = func_get_args();
+    return call_user_func_array(array(self::$language, 'get'), $args);
   }
 
   /**
-   * Translate function to create listings
-   *
-   * Works somewhat like implode, but with more options.
-   * E.g. the sentence "The classes 'errors', 'i18n', and 'configuration' are missing from PeanutCMS" would be translated with:
-   *
-   * <code>
-   * trl("The class '%l' is missing from %1.", "The classes '%l' are missing from %1.", "', '", "', and '", array('errors', 'i18n', 'configuration'), 'PeanutCMS');
-   * </code>
-   *
-   * @param string $single Text to translate if there are only one piece in array
-   * @param string $plural Text to translate if there are 0 or more than one pieces in array
-   * @param string $glue String to put between pieces in array
-   * @param string $gluell String to put between the last two pieces in the array
-   * @param array $pieces The array with pieces
-   * @param string $args,... Additional OPTIONAL arguments
-   * @return string Translated text
+   * Translate a string containing a numeric value, e.g.
+   * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
+   * @param string $message Message in english (plural)
+   * @param string $singular Singular version of message in english
+   * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
+   * numeral to test
+   * @return Translated string
    */
-  public static function translateList($single, $plural, $glue, $gluel, $pieces) {
-    $translate = $single;
-    if (!empty(self::$language['trl'][$translate][0]))
-      $single = self::$language['trl'][$translate][0];
-    if (!empty(self::$language['trl'][$translate][1]))
-      $plural = self::$language['trl'][$translate][1];
-    if (!empty(self::$language['trl'][$translate][2]))
-      $glue = self::$language['trl'][$translate][2];
-    if (!empty(self::$language['trl'][$translate][3]))
-      $gluel = self::$language['trl'][$translate][3];
-
-    if (count($pieces) == 1)
-      $translated = $single;
-    else
-      $translated = $plural;
-
-    $list = '';
-    for ($i = 0; $i < count($pieces); $i++) {
-      $list .= $pieces[$i];
-      if ($i != (count($pieces) - 1)) {
-        if ($i == (count($pieces) - 2))
-          $list .= $gluel;
-        else
-          $list .= $glue;
-      }
+  public static function getNumeric($message, $singular, $number) {
+    if (!isset(self::$language)) {
+      self::$language = new Localization();
     }
-    $translated = str_replace('%l', $list, $translated);
-
-    $numArgs = func_num_args();
-    if ($numArgs > 1) {
-      $args = func_get_args();
-      for ($i = 5; $i < $numArgs; $i++) {
-        $n = $i - 4;
-        $translated = str_replace('%' . $n, $args[$i], $translated);
-      }
-    }
-    return $translated;
-  }
-
-  /**
-   * Translate function for numbers
-   *
-   * Used like tr() the placeholder for the number is %1 the optional arguments starts with number %2
-   *
-   * @param string $single Text to translate if %1 is 1
-   * @param string $plural Text to translate if %1 is 0 or greater than 1
-   * @param int $number The number to insert with the placeholder %1
-   * @param string $args,... Additional OPTIONAL arguments starting with %2
-   * @return string Translated text
-   */
-  public static function translateNumeral($single, $plural, $number) {
-    $translate = $single;
-    if (!empty(self::$language['trn'][$translate][0]))
-      $single = self::$language['trn'][$translate][0];
-    if (!empty(self::$language['trn'][$translate][1]))
-      $plural = self::$language['trn'][$translate][1];
-
-    if ((int) $number == 1)
-      $translated = $single;
-    else
-      $translated = $plural;
-
-    $numArgs = func_num_args();
-    if ($numArgs > 1) {
-      $args = func_get_args();
-      for ($i = 2; $i < $numArgs; $i++) {
-        $n = $i - 1;
-        $translated = str_replace('%' . $n, $args[$i], $translated);
-      }
-    }
-    return $translated;
+    $args = func_get_args();
+    return call_user_func_array(array(self::$language, 'getNumeric'), $args);
   }
 
   /**
@@ -159,8 +71,8 @@ class I18n {
   public static function dateFormat() {
     if (isset(self::$config['dateFormat']))
       return self::$config['dateFormat'];
-    else if (!empty(self::$language['defaultDateFormat']))
-      return self::$language['defaultDateFormat'];
+    else if (isset(self::$language) and isset(self::$language->dateFormat))
+      return self::$language->dateFormat;
     else
       return 'Y-m-d';
   }
@@ -173,10 +85,10 @@ class I18n {
   public static function timeFormat() {
     if (isset(self::$config['timeFormat']))
       return self::$config['timeFormat'];
-    else if (!empty(self::$language['defaultTimeFormat']))
-      return self::$language['defaultTimeFormat'];
+    else if (isset(self::$language) and isset(self::$language->timeFormat))
+      return self::$language->timeFormat;
     else
-      return 'H:i:s';
+      return 'H:i';
   }
 
   /**
@@ -260,3 +172,5 @@ class I18n {
     return $date;
   }
 }
+
+class I18nException extends Exception { }

@@ -68,29 +68,20 @@ if (!function_exists('lcfirst')) {
 
 /**
  * Translate function alias
- * @see I18n::translate()
+ * @see I18n::get()
  */
-function tr($text) {
+function tr($message) {
   $args = func_get_args();
-  return call_user_func_array(array('I18n', 'translate'), $args);
+  return call_user_func_array(array('I18n', 'get'), $args);
 }
 
 /**
- * Translate function to create listings
- * @see I18n::translateList()
+ * Translate function alias
+ * @see I18n::getNumeric()
  */
-function trl($single, $plural, $glue, $gluel, $pieces) {
+function tn($message, $singular, $number) {
   $args = func_get_args();
-  return call_user_func_array(array('I18n', 'translateList'), $args);
-}
-
-/**
- * Translate function for numbers
- * @see I18n::translateNumeral
- */
-function trn($single, $plural, $number) {
-  $args = func_get_args();
-  return call_user_func_array(array('I18n', 'translateNumeral'), $args);
+  return call_user_func_array(array('I18n', 'getNumeric'), $args);
 }
 
 /**
@@ -109,6 +100,15 @@ function h($string) {
 function fdate($timestamp = null) {
   $args = func_get_args();
   return call_user_func_array(array('I18n', 'formatDate'), $args);
+}
+
+/**
+ * Alias for Condition constructor
+ * @param ICondition|string Condition
+ * @return Condition Condition object
+ */
+function where($condition) {
+  return new Condition($condition);
 }
 
 /**

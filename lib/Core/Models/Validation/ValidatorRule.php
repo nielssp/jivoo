@@ -123,4 +123,7 @@ class ValidatorRule {
   public function getRules() {
     return $this->rules;
   }
+
+  public function validate(IRecord $record, $field) {
+  }
 }

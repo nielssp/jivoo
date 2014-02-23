@@ -1,105 +1,47 @@
 <?php
-/**
- * Represents a data model containing
- * labeled fields.
- * @package Core\Models
- */
-interface IModel {
-  /**
-   * @var Model field types
-   */
-  const TYPE_TEXT = 1,
-        TYPE_STRING = 2,
-        TYPE_INTEGER = 3,
-        TYPE_BOOLEAN = 4,
-        TYPE_FLOAT = 5,
-        TYPE_BINARY = 6,
-        TYPE_DATE = 7,
-        TYPE_DATETIME = 8;
-  
-  /**
-   * Create a new record of model
-   * @param array $data Data for record
-   * @param string[] $allowedFields If set, only allow setting these fields
-   * @return IRecord New record
-   */
-  public function create($data = array(), $allowedFields = null);
-  
-  /**
-   * Get name of model if applicable
-   * @return string Name
-   */
+interface IModel extends ISelection {
   public function getName();
-  
   /**
-   * Get a list of fields in model
-   * @return string[] An array containing field names
+   * @return ISchema
   */
-  public function getFields();
-  
-  /**
-   * Get the type of a field
-   * @param string $field Field name
-   * @return string Field type
-   */
-  public function getFieldType($field);
+  public function getSchema();
 
   /**
-   * Get the label of a field
-   * @param string $field Field name
-   * @return string Field label
-   */
-  public function getFieldLabel($field);
+   * @return IValidator
+  */
+  public function getValidator();
 
   /**
-   * Get an editor associated with a field
-   * @param string $field Field name
-   * @return IEditor|null Editor if it exists, null otherwise
-   */
-  public function getFieldEditor($field);
+   * @param IRecord $record
+   * @return ISelection
+  */
+  public function selectRecord(IRecord $record);
 
   /**
-   * Whether a field is required
-   * @param string $field Field name
-   * @return bool True if required, false otherwise
+   * @param IRecord $record
+   * @return ISelection
+  */
+  public function selectNotRecord(IRecord $record);
+
+  /**
+   * Find a record by its primary key. If the primary key
+   * consists of multiple fields, this function expects a
+   * parameter for each field (in alphabetical order).
+   * @param mixed $primary Value of primary key
+   * @param mixed ...$primary
+   * @return IRecord|null A single matching record or null if it doesn't exist
    */
-  public function isFieldRequired($field);
+  public function find($primary);
   
   /**
-   * Whether a field exists
-   * @param string $field Field name
-   * @return bool True if it does, false otherwise
-   */
-  public function isField($field);
-  
+   * @param array $data
+   * @param string[]|null $allowedFields
+   * @return IRecord
+  */
+  public function create($data = array(), $allowedFields = null);
   /**
-   * Get all records associated with model matching an optional
-   * query
-   * @param SelectQuery $query Optional query to match.
-   * @return IRecord[] Array of records
-   */
-  public function all(SelectQuery $query = null);
-  
-  /**
-   * Get first record associated with model matching an optional
-   * query
-   * @param SelectQuery $query Optional query to match.
-   * @return IRecord A single record
-   */
-  public function first(SelectQuery $query = null);
-  
-  /**
-   * Get last record associated with model matching an optional
-   * query
-   * @param SelectQuery $query Optional query to match.
-   * @return IRecord A single record
-   */
-  public function last(SelectQuery $query = null);
-  
-  /**
-   * Get number of records associated with model
-   * @param SelectQuery $query Optional query to match.
-   * @return int Number of records
-   */
-  public function count(SelectQuery $query = null);
+   * @param array $data
+   * @return IModel
+  */
+  public function insert($data);
 }

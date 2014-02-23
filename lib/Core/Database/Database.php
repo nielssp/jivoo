@@ -33,11 +33,6 @@ class Database extends ModuleBase implements IDatabase {
   private $schemas = array();
   
   /**
-   * @var Dictionary Dictionary of data sources
-   */
-  private $sources;
-  
-  /**
    * @var array Associative array of table names and migration status
    */
   private $migrations = array();
@@ -136,8 +131,6 @@ class Database extends ModuleBase implements IDatabase {
       }
     }
 
-    $this->sources = new Dictionary();
-
     $schemasDir = $this->p('schemas', '');
     if (is_dir($schemasDir)) {
       Lib::addIncludePath($schemasDir);
@@ -154,7 +147,7 @@ class Database extends ModuleBase implements IDatabase {
     }
     closedir($dir);
 
-    $classes = $this->m->Models->getRecordClasses();
+    $classes = $this->m->Models->getModelClasses();
     foreach ($classes as $class) {
       $this->addActiveModel($class);
     }
@@ -178,8 +171,8 @@ class Database extends ModuleBase implements IDatabase {
   
   /**
    * Add an active model if it has not already been added
-   * @param string $class Class name of active record
-   * @param string $file Path to record class file
+   * @param string $class Class name of active model
+   * @param string $file Path to model class file
    * @return True if missing and added successfully, false otherwise
    */
   public function addActiveModelIfMissing($name, $file) {
@@ -220,28 +213,16 @@ class Database extends ModuleBase implements IDatabase {
   
   /**
    * Add an active model
-   * @param string $class Class name of active record
+   * @param string $class Class name of active model
    * @return True if successfull, false if table not found
    */
   public function addActiveModel($class) {
-    if (is_subclass_of($class, 'ActiveRecord')) {
-      $table = Utilities::getPlural(strtolower($class));
-      if (!isset($this->$table)) {
-        $table2 = ActiveModel::getTable($class);
-        if (isset($table2)) {
-          if (!isset($this->$table2)) {
-            return false;
-//             throw new Exception(tr('Table not found: "%1"', $table2));
-          }
-          $table = $table2;
-        }
-        else {
-          return false;
-//           throw new Exception(tr('Table not found: "%1"', $table));
-        }
+    if (is_subclass_of($class, 'ActiveModel')) {
+      if (!isset($this->$class)) {
+        // TODO set custom table in model
+        return false;
       }
-      $model = new ActiveModel($class, $this->$table, $this->m->Models,
-        $this->sources);
+      $model = new $class($this);
       $this->m->Models->setModel($class, $model);
       return true;
     }

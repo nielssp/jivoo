@@ -1,7 +1,50 @@
 <?php
-ini_set('display_errors', true);
 class Localization {
   private $messages = array();
+
+  private $dateFormat = 'Y-m-d';
+  private $timeFormat = 'H:i';
+
+  public function __construct() { }
+
+  public function __get($property) {
+    switch ($property) {
+      case 'dateFormat':
+      case 'timeFormat':
+        return $this->$property;
+    }
+  }
+
+  public function __set($property, $value) {
+    switch ($property) {
+      case 'dateFormat':
+      case 'timeFormat':
+        $this->$property = $value;
+    }
+  }
+
+  public function __isset($property) {
+    switch ($property) {
+      case 'dateFormat':
+      case 'timeFormat':
+        return isset($this->$property);
+    }
+  }
+  /**
+   * Extend this localization with additional messages from another one
+   * @param Localization $l Other localization object
+   */
+  public function extend(Localization $l) {
+    $this->messages = array_merge($this->messages, $l->messages);
+  }
+
+  /**
+   * Set translation string
+   * @param string $message Message in english
+   * @param string $translation Translation string
+   * @param string $patterns,... Regular expression patterns to match message variables
+   * against
+   */
   public function set($message, $translation) {
     $args = func_get_args();
     array_shift($args);
@@ -10,8 +53,15 @@ class Localization {
     $this->messages[$message][] = $args;
   }
 
+  /**
+   * Translate a string
+   * @param string $message Message in english
+   * @param mixed $vars,... Values for placeholders starting from %1
+   * @return string Translated string
+   */
   public function get($message) {
-    $args = array_slice(func_get_args(), 1);
+    $args = func_get_args();
+    $args = array_slice($args, 1);
     if (isset($this->messages[$message])) {
       $patterns = $this->messages[$message];
       foreach ($patterns as $pattern) {
@@ -37,12 +87,17 @@ class Localization {
   }
 
   /**
-   * @param string $message Message in english
+   * Translate a string containing a numeric value, e.g.
+   * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
+   * @param string $message Message in english (plural)
    * @param string $singular Singular version of message in english
-   * @param mixed ... Values
+   * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
+   * numeral to test
+   * @return Translated string
    */
-  public function getN($message, $singular) {
-    $args = array_slice(func_get_args(), 2);
+  public function getNumeric($message, $singular) {
+    $args = func_get_args();
+    $args = array_slice($args, 2);
     if (isset($this->messages[$message]))
       return call_user_func_array(array($this, 'get'), array_merge(array($message), $args));
     $num = $args[0];
@@ -90,50 +145,3 @@ class Localization {
   }
 }
 
-$lang = new Localization();
-$lang->set('Hello, World!', 'Hej, verden!');
-
-//$lang->set('%1 pages', '%1 side', '/1/'); 
-//$lang->set('%1 pages', '%1 sider'); 
-
-// for russian
-$lang->set('%1 pages', '%1 страниц', '/([05-9]|^1[0-9])$/');
-$lang->set('%1 pages', '%1 страницы', '/[2-4]$/');
-$lang->set('%1 pages', '%1 страница', '/1$/');
-
-$lang->set('%1 comments', 'en kommentar', '/^1$/');
-$lang->set('%1 comments', 'to kommentarer', '/^2$/');
-$lang->set('%1 comments', '%1 kommentarer');
-
-function s() {
-  global $lang;
-  $args = func_get_args();
-  return call_user_func_array(array($lang, 'get'), $args);
-}
-
-function sn() {
-  global $lang;
-  $args = func_get_args();
-  return call_user_func_array(array($lang, 'getN'), $args);
-}
-
-header('Content-Type: text/plain');
-
-echo s('Hello, World!') . PHP_EOL;
-for ($i = 0; $i < 30; $i++)
-  echo s('%1 pages', $i) . PHP_EOL;
-
-echo s('%1 comments', 2) . PHP_EOL;
-
-echo _n('%1 categories', '%1 category', 0) . PHP_EOL;
-
-echo _t('Hello, world!');
-
-echo sn('%1 categories', '%1 category', 0) . PHP_EOL;
-
-$lang->set('Missing the "%1{", "}{" and "}" extensions', 'Mangler udvidelsen: "%1{}{}"', '/^1$/');
-$lang->set('Missing the "%1{", "}{" and "}" extensions', 'Mangler udvideserne: "%1{", "}{" og "}"');
-
-echo s('Missing the "%1{", "}{" and "}" extensions', array('mysql', 'pdo-mysql', 'sqlite')) . PHP_EOL;
-
-echo sn('Missing the "%1{", "}{" and "}" extensions', 'Missing the "%1{", "}{" and "}" extension', array('sqlite')) . PHP_EOL;
