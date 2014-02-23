@@ -14,10 +14,10 @@ class Validator {
 
   /**
    * Constructor
-   * @param IModel $model Associated model
+   * @param IBasicModel $model Associated model
    * @param array $fields Associative array of field-names and rules
    */
-  public function __construct(IModel $model, $fields = array()) {
+  public function __construct(IBasicModel $model, $fields = array()) {
     $this->model = $model;
     foreach ($fields as $field => $rules) {
       $this->fields[$field] = new ValidatorField($rules);

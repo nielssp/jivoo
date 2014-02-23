@@ -80,22 +80,7 @@ class Form implements IBasicRecord, IBasicModel {
    * @return FormModel Form model
    */
   public function getModel() {
-    return $this->model;
-  }
-  
-  public function save($options = array()) {
-    return false;
-  }
-  
-  public function delete() {
-  }
-  
-  public function isNew() {
-    return false;
-  }
-  
-  public function isSaved() {
-    return true;
+    return $this;
   }
 
   public function isValid() {
@@ -185,29 +170,29 @@ class Form implements IBasicRecord, IBasicModel {
     return array_keys($this->fields);
   }
 
-  public function getFieldType($field) {
+  public function getType($field) {
     if (isset($this->fields[$field])) {
       return $this->fields[$field]['type'];
     }
   }
 
-  public function getFieldLabel($field) {
+  public function getLabel($field) {
     if (isset($this->fields[$field])) {
       return $this->fields[$field]['label'];
     }
   }
 
-  public function getFieldEditor($field) {
+  public function getEditor($field) {
     return null;
   }
 
-  public function isFieldRequired($field) {
+  public function isRequired($field) {
     if (isset($this->fields[$field])) {
       return $this->fields[$field]['required'];
     }
   }
 
-  public function isField($field) {
+  public function hasField($field) {
     return isset($this->fields[$field]);
   }
 }

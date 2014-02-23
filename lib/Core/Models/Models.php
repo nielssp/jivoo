@@ -4,6 +4,10 @@
 // Description    : Apakoh Core model system
 // Author         : apakoh.dk
 
+Lib::import('Core/Models/Validation');
+Lib::import('Core/Models/Selection');
+Lib::import('Core/Models/Condition');
+
 /**
  * Models module, finds all models in application
  * @package Core\Models
