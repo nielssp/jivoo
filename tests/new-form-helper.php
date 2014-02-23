@@ -21,7 +21,7 @@ class FormHelper extends Helper {
     return $html . PHP_EOL;
   }
 
-  public function formFor($record, $route = array(), $options = array()) {
+  public function formFor(IBasicRecord $record, $route = array(), $options = array()) {
   }
 
   public function end() {
