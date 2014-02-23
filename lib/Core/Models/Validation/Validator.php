@@ -83,7 +83,7 @@ class Validator {
   
   public function validate(IRecord $record) {
     $result = array();
-    for ($this->fields as $field => $validator) {
+    foreach ($this->fields as $field => $validator) {
       $fieldResult = $validator->validate($record, $field);
       if ($fieldResult !== true)
         $result[$field] = $fieldResult;
@@ -108,8 +108,8 @@ class Validator {
       case 'type':
         return $rule->isValid($value);
       case 'presence':
-        if (!empty($value) OR is_numeric($value)) == $rule)
-          return true
+        if ((!empty($value) or is_numeric($value)) == $rule)
+          return true;
         else
           return $rule ? tr('Must not be empty.') : tr('Must be empty.');
       case 'null':

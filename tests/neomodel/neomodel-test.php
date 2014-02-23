@@ -1,21 +1,15 @@
 <?php
 
+ini_set('display_errors', true);
 require '../../lib/Core/bootstrap.php';
 Lib::import('Core');
 Lib::import('Core/Database');
 Lib::import('Core/Database/PdoMysql');
-Lib::import('../tests/neomodel/Models/Validation');
-Lib::import('../tests/neomodel/Models/Condition');
-Lib::import('../tests/neomodel/Models/Selection');
-Lib::import('../tests/neomodel/Models');
-Lib::import('../tests/neomodel/Database');
-
-require 'Models/Validation/Validator.php';
-require 'Models/Condition/ICondition.php';
-
-function where($condition) {
-  return new Condition($condition);
-}
+Lib::import('Core/Models');
+Lib::import('Core/Models/Validation');
+Lib::import('Core/Models/Condition');
+Lib::import('Core/Models/Selection');
+Lib::import('Core/Helpers');
 
 interface IActiveCollection extends ISelection {
   public function add(IActiveRecord $record);
@@ -58,7 +52,7 @@ abstract class ActiveModel extends Model {
     $this->name = $name;
     $this->source = $this->database->$name;
     $this->schema = $this->source->getSchema();
-    $this->validator = new Validator();
+    $this->validator = new Validator($this);
   }
   
   public function getName() {
@@ -268,6 +262,7 @@ echo $posts->count() . PHP_EOL;
 foreach ($posts->orderBy('title') as $post) {
   echo $post->id . ': ' . $post->title . PHP_EOL;
 }
+
 
 // $post->e('title');
 

@@ -1,23 +1,19 @@
 <?php
-/**
- * Table implementation for {@see SqlDatabase} classes
- * @package Core\Database
- */
-class SqlTable implements ITable {
+class SqlTable extends Table {
   /**
    * @var SqlDatabase Owner database
    */
-  protected $owner = null;
-  
+  private $owner = null;
+
   /**
    * @var string Table name (without prefix)
    */
-  protected $name = '';
-  
+  private $name = '';
+
   /**
    * @var Schema|null Table schema if set
    */
-  protected $schema = null;
+  private $schema = null;
 
   /**
    * Constructor.
@@ -32,15 +28,10 @@ class SqlTable implements ITable {
   public function getName() {
     return $this->name;
   }
-  
-  public function getPrimaryKey() {
-    return $this->getSchema()->getPrimaryKey();
-  }
 
   public function getSchema() {
     if (!isset($this->schema)) {
-      $this->schema = $this->owner
-        ->getSchema($this->name);
+      $this->schema = $this->owner->getSchema($this->name);
     }
     return $this->schema;
   }
@@ -48,44 +39,8 @@ class SqlTable implements ITable {
   public function setSchema(Schema $schema = null) {
     $this->schema = $schema;
   }
-
-  /**
-   * @return SqlDatabase Owner database
-   */
-  public function getOwner() {
-    return $this->owner;
-  }
-
-  public function insert(InsertQuery $query = null) {
-    if (!isset($query)) {
-      return InsertQuery::create()->setDataSource($this);
-    }
-    $columns = $query->columns;
-    $values = $query->values;
-    $sqlString = 'INSERT INTO ' . $this->owner
-          ->tableName($this->name) . ' (';
-    $sqlString .= implode(', ', $columns);
-    $sqlString .= ') VALUES (';
-    $first = true;
-    foreach ($values as $value) {
-      if ($first) {
-        $first = false;
-      }
-      else {
-        $sqlString .= ', ';
-      }
-      // TODO use TypeAdapter to encode...?
-      if (isset($value)) {
-        $sqlString .= $this->owner->escapeQuery('?', $value);
-      }
-      else {
-        $sqlString .= 'NULL';
-      }
-    }
-    $sqlString .= ')';
-    return $this->owner
-      ->rawQuery($sqlString);
-  }
+  
+  
 
   /**
    * Convert a condition to SQL
@@ -105,13 +60,13 @@ class SqlTable implements ITable {
       }
       else {
         $sqlString .= $this->owner
-          ->escapeQuery($this->replaceColumns($clause['clause']),
-            $clause['vars']);
+        ->escapeQuery($this->replaceColumns($clause['clause']),
+          $clause['vars']);
       }
     }
     return $sqlString;
   }
-
+  
   /**
    * Replace all column names of style '%table.column' or '%column' with real
    * column names
@@ -123,7 +78,7 @@ class SqlTable implements ITable {
       '/(\A|[^\\\\])%([a-z][a-z0-9_]*([.][a-z][a-z0-9_]*|[.][*])?)/i',
       array($this, 'replaceColumn'), $query);
   }
-
+  
   /**
    * Replace a single column match
    * @param string[] $matches Matched from preg_replace_callback()
@@ -132,7 +87,7 @@ class SqlTable implements ITable {
   protected function replaceColumn($matches) {
     return $matches[1] . $this->columnName($matches[2]);
   }
-
+  
   /**
    * Get real column name. If $column includes a dot, whatever is in front of
    * the dot is prefixed and used as table name. If not and $table is set, that
@@ -150,16 +105,16 @@ class SqlTable implements ITable {
     $dot = strpos($column, '.');
     if ($dot === false) {
       return $this->owner
-        ->tableName($table) . '.' . $column;
+      ->tableName($table) . '.' . $column;
     }
     else {
       $table = substr($column, 0, $dot);
       $column = substr($column, $dot + 1);
       return $this->owner
-        ->tableName($table) . '.' . $column;
+      ->tableName($table) . '.' . $column;
     }
   }
-
+  
   /**
    * For use with array_walk(), will run {@see SqlTable::replaceColumns()} on
    * each column in an array. The input $value should be an associative array
@@ -169,35 +124,28 @@ class SqlTable implements ITable {
    * @param mixed $key Key (not used)
    */
   protected function getColumnList(&$value, $key) {
-    $columnName = $this->replaceColumns($value['column']);
-    if (isset($value['function'])) {
-      $columnName = str_replace('()', '(' . $columnName . ')',
-        $value['function']);
-    }
+    $expression = $this->replaceColumns($value['expression']);
     if (isset($value['alias'])) {
-      $value = $columnName . ' AS ' . $value['alias'];
+      $value = $expression . ' AS ' . $value['alias'];
     }
     else {
-      $value = $columnName;
+      $value = $expression;
     }
   }
 
-  public function select(SelectQuery $query = null) {
-    if (!isset($query)) {
-      return SelectQuery::create()->setDataSource($this);
-    }
+  public function readSelection(ReadSelection $selection) {
     $sqlString = 'SELECT ';
-    if (!empty($query->columns)) {
-      $columns = $query->columns;
-      array_walk($columns, array($this, 'getColumnList'));
-      $sqlString .= implode(', ', $columns);
+    if (!empty($selection->fields)) {
+      $fields = $selection->fields;
+      array_walk($fields, array($this, 'getColumnList'));
+      $sqlString .= implode(', ', $fields);
     }
     else {
       $sqlString .= $this->owner->tableName($this->name) . '.*';
     }
     $sqlString .= ' FROM ' . $this->owner->tableName($this->name);
-    if (!empty($query->sources)) {
-      foreach ($query->sources as $source) {
+    if (!empty($selection->sources)) {
+      foreach ($selection->sources as $source) {
         if (is_string($source['source'])) {
           $table = $source['source'];
         }
@@ -207,17 +155,16 @@ class SqlTable implements ITable {
         else {
           continue;
         }
-        $sqlString .= ', ' . $this->owner
-              ->tableName($table);
+        $sqlString .= ', ' . $this->owner->tableName($table);
         if (isset($source['alias'])) {
           $sqlString .= ' AS ' . $source['alias'];
         }
       }
     }
-    if (!empty($query->joins)) {
-      foreach ($query->joins as $join) {
+    if (!empty($selection->joins)) {
+      foreach ($selection->joins as $join) {
         if ($join['source'] instanceof SqlTable) {
-          if ($join['source']->getOwner() !== $this->owner) {
+          if ($join['source']->owner !== $this->owner) {
             throw new Exception(tr(
               'Unable to join SqlTable with table of different database'
             ));
@@ -231,8 +178,7 @@ class SqlTable implements ITable {
           ));
           continue;
         }
-        $sqlString .= ' ' . $join['type'] . ' JOIN '
-          . $this->owner->tableName($table);
+        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->tableName($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];
         }
@@ -241,45 +187,41 @@ class SqlTable implements ITable {
         }
       }
     }
-    if ($query->where
-      ->hasClauses()) {
-      $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
+    if ($selection->where->hasClauses()) {
+      $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
     }
-    if (isset($query->groupBy)) {
+    if (isset($selection->groupBy)) {
       $columns = array();
-      foreach ($query->groupBy['columns'] as $column) {
+      foreach ($selection->groupBy['columns'] as $column) {
         $columns[] = $this->replaceColumns($column);
       }
       $sqlString .= ' GROUP BY ' . implode(', ', $columns);
-      if (isset($query->groupBy['condition'])
-          AND $query->groupBy['condition']
-            ->hasClauses()) {
+      if (isset($selection->groupBy['condition'])
+          AND $selection->groupBy['condition']->hasClauses()) {
         $sqlString .= ' HAVING '
-            . $this->conditionToSql($query->groupBy['condition']);
+          . $this->conditionToSql($selection->groupBy['condition']);
       }
     }
-    if (!empty($query->orderBy)) {
+    if (!empty($selection->orderBy)) {
       $columns = array();
-      foreach ($query->orderBy as $orderBy) {
+      foreach ($selection->orderBy as $orderBy) {
         $columns[] = $this->replaceColumns($orderBy['column'])
-            . ($orderBy['descending'] ? ' DESC' : ' ASC');
+        . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($query->limit)) {
-      $sqlString .= ' LIMIT ' . $query->offset . ', ' . $query->limit;
+    if (isset($selection->limit)) {
+      $sqlString .= ' LIMIT ' . $selection->offset . ', ' . $selection->limit;
     }
-    return $this->owner
-      ->rawQuery($sqlString);
+    return $this->owner->rawQuery($sqlString);
   }
-
-  public function update(UpdateQuery $query = null) {
-    if (!isset($query)) {
-      return UpdateQuery::create()->setDataSource($this);
-    }
-    $sqlString = 'UPDATE ' . $this->owner
-          ->tableName($this->name);
-    $sets = $query->sets;
+  /**
+   * @param UpdateSelection $selection
+   * @return int Number of affected records
+  */
+  public function updateSelection(UpdateSelection $selection) {
+    $sqlString = 'UPDATE ' . $this->owner->tableName($this->name);
+    $sets = $selection->sets;
     if (!empty($sets)) {
       $sqlString .= ' SET ';
       reset($sets);
@@ -305,63 +247,70 @@ class SqlTable implements ITable {
         }
       }
     }
-    if ($query->where
-      ->hasClauses()) {
-      $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
+    if ($selection->where->hasClauses()) {
+      $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
     }
-    if (!empty($query->orderBy)) {
+    if (!empty($selection->orderBy)) {
       $columns = array();
-      foreach ($query->orderBy as $orderBy) {
+      foreach ($selection->orderBy as $orderBy) {
         $columns[] = $this->replaceColumns($orderBy['column'])
-            . ($orderBy['descending'] ? ' DESC' : ' ASC');
+          . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($query->limit)) {
-      $sqlString .= ' LIMIT ' . $query->limit;
+    if (isset($selection->limit)) {
+      $sqlString .= ' LIMIT ' . $selection->limit;
     }
-    return $this->owner
-      ->rawQuery($sqlString);
+    return $this->owner->rawQuery($sqlString);
   }
-
-  public function delete(DeleteQuery $query = null) {
-    if (!isset($query)) {
-      return DeleteQuery::create()->setDataSource($this);
+  /**
+   * @param DeleteSelection $selection
+   * @return int Number of affected records
+  */
+  public function deleteSelection(DeleteSelection $selection) {
+    $sqlString = 'DELETE FROM ' . $this->owner->tableName($this->name);
+    if ($selection->where->hasClauses()) {
+      $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
     }
-    $sqlString = 'DELETE FROM ' . $this->owner
-          ->tableName($this->name);
-    if ($query->where
-      ->hasClauses()) {
-      $sqlString .= ' WHERE ' . $this->conditionToSql($query->where);
-    }
-    if (!empty($query->orderBy)) {
+    if (!empty($selection->orderBy)) {
       $columns = array();
-      foreach ($query->orderBy as $orderBy) {
+      foreach ($selection->orderBy as $orderBy) {
         $columns[] = $this->replaceColumns($orderBy['column'])
-            . ($orderBy['descending'] ? ' DESC' : ' ASC');
+          . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($query->limit)) {
-      $sqlString .= ' LIMIT ' . $query->limit;
+    if (isset($selection->limit)) {
+      $sqlString .= ' LIMIT ' . $selection->limit;
     }
-    return $this->owner
-      ->rawQuery($sqlString);
+    return $this->owner->rawQuery($sqlString);
   }
-
-  public function count(SelectQuery $query = null) {
-    if (!isset($query)) {
-      $query = new SelectQuery();
+  
+  public function insert($data) {
+    $columns = array_keys($data);
+    $values = array_values($data);
+    $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
+    $sqlString .= implode(', ', $columns);
+    $sqlString .= ') VALUES (';
+    $first = true;
+    foreach ($values as $value) {
+      if ($first) {
+        $first = false;
+      }
+      else {
+        $sqlString .= ', ';
+      }
+      // TODO use TypeAdapter to encode...?
+      if (isset($value)) {
+        $sqlString .= $this->owner->escapeQuery('?', $value);
+      }
+      else {
+        $sqlString .= 'NULL';
+      }
     }
-    else {
-      $query = clone $query;
-    }
-    $result = $this->select($query->count());
-    if (!$result->hasRows()) {
-      return false;
-    }
-    $row = $result->fetchRow();
-    return $row[0];
+    $sqlString .= ')';
+    return $this->owner->rawQuery($sqlString);
   }
+  
+  
 }
-

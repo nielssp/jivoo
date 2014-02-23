@@ -156,6 +156,8 @@ class App {
     if (isset($appConfig['sessionPrefix'])) {
       $this->sessionPrefix = $appConfig['sessionPrefix'];
     }
+
+    $this->config = new AppConfig();
   }
 
   /**
