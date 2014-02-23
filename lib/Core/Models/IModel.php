@@ -1,15 +1,9 @@
 <?php
-interface IModel extends ISelection {
-  public function getName();
+interface IModel extends ISelection, IBasicModel {
   /**
    * @return ISchema
   */
   public function getSchema();
-
-  /**
-   * @return IValidator
-  */
-  public function getValidator();
 
   /**
    * @param IRecord $record
