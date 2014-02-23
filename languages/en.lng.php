@@ -1,150 +1,731 @@
 <?php
-// Language
-// Name           : English
-// Local name     : English
-// Translator     : apakoh.dk
-// Version        : 0.1.0
+// [INFO] invalid tr() at offset 1725 in ../lib/Core/bootstrap.php
+// [INFO] invalid tn() at offset 1902 in ../lib/Core/bootstrap.php
+// [INFO] invalid tr() at offset 1286 in ../lib/Core/Models/old/FormModel.php
+// [INFO] invalid tr() at offset 1331 in ../lib/Core/Database/DatabaseSetupController.php
+// [INFO] invalid tr() at offset 16109 in ../lib/Core/Database/ActiveModel.php
+// [INFO] invalid tr() at offset 14156 in ../lib/Core/Database/ActiveRecord.php
+$l = new Localization();
 
-return array('defaultDateFormat' => 'F j, Y', 'defaultTimeFormat' => 'g:i a',
-  'tr' => array('Redirect error' => 'Redirect error',
-    'An invalid status code was provided: %1.' => 'An invalid status code was provided: %1.',
-    'Debugging is <strong>on</strong>' => 'Debugging is <strong>on</strong>',
-    'Error' => 'Error', 'Warning' => 'Warning', 'Notice' => 'Notice',
-    '%1 in <code>%2</code> on line <strong>%3</strong>' => '%1 in <code>%2</code> on line <strong>%3</strong>',
-    'Module produced output too early:' => 'Module produced output too early:',
-    'Failed to include module \'%1\'. Please check your configuration.' => 'Failed to include module \'%1\'. Please check your configuration.',
-    '%1 has been installed without a theme module.
-This is the only thing you will see without one.' => '%1 has been installed without a theme module.
-This is the only thing you will see without one.',
-    'To use a theme module add its name to the MODULES list in <code>config.php</code>.' => 'To use a theme module add its name to the MODULES list in <code>config.php</code>.',
-    'You can also delete/clear the configuration file to use the installer to select which modules you want.' => 'You can also delete/clear the configuration file to use the installer to select which modules you want.',
-    'You can only install one %1 module at a time.' => 'You can only install one %1 module at a time.',
-    'The module \'%1\' depends on \'%2\'.' => 'The module \'%1\' depends on \'%2\'.',
-    'The module \'%1\' requires a %2 module.' => 'The module \'%1\' requires a %2 module.',
-    'Please provide at least a username, a host and a database.' => 'Please provide at least a username, a host and a database.',
-    'Please check your file permissions.' => 'Please check your file permissions.',
-    '<code>config.php</code> exists but is not writable.' => '<code>config.php</code> exists but is not writable.',
-    '<code>config.php</code> does not exist and could not be created.' => '<code>config.php</code> does not exist and could not be created.',
-    '<code>config.php</code> could not be opened.' => '<code>config.php</code> could not be opened.',
-    'The configuration could not be created.' => 'The configuration could not be created.',
-    'Do not worry! You can either try to fix the problem or just create/edit the file yourself and copy the content below into it.' => 'Do not worry! You can either try to fix the problem or just create/edit the file yourself and copy the content below into it.',
-    'The files name should be <code>config.php</code> and should be located in the same directory as <code>index.php</code>.' => 'The files name should be <code>config.php</code> and should be located in the same directory as <code>index.php</code>.',
-    'Retry' => 'Retry',
-    'Before continuing you should choose a language for your website from the list below:' => 'Before continuing you should choose a language for your website from the list below:',
-    'You have chosen to install the %1 database module,
-as a result you are required to provide the information below.
-If you are unsure about this information, please contact your web host.' => 'You have chosen to install the %1 database module,
-as a result you are required to provide the information below.
-If you are unsure about this information, please contact your web host.',
-    '%1 username' => '%1 username', 'Your username.' => 'Your username.',
-    '%1 password' => '%1 password', 'Your password.' => 'Your password.',
-    '%1 host' => '%1 host',
-    'Usually <code>localhost</code>, ask your web host.' => 'Usually <code>localhost</code>, ask your web host.',
-    '%1 database' => '%1 database',
-    'Database to install to.' => 'Database to install to.',
-    '%1 table prefix' => '%1 table prefix',
-    'Required if you want multiple installations on the same database.' => 'Required if you want multiple installations on the same database.',
-    'You have not chosen to install a database module. Instead %1 will need access
-to the following files and folders:' => 'You have not chosen to install a database module. Instead %1 will need access
-to the following files and folders:',
-    'Please create the necessary files and folders.' => 'Please create the necessary files and folders.',
-    'is a directory.' => 'is a directory.',
-    'is NOT a directory.' => 'is NOT a directory.',
-    'Please give %1 write-access to the specified files and folders.
-It is usually done by CHMODding the files and folders to 664 or 666 depending on the server configuration.' => 'Please give %1 write-access to the specified files and folders.
-It is usually done by CHMODding the files and folders to 664 or 666 depending on the server configuration.',
-    'is NOT writable.' => 'is NOT writable.',
-    'does NOT exist.' => 'does NOT exist.', 'Cancel' => 'Cancel',
-    'Please press the button to install.' => 'Please press the button to install.',
-    'Install' => 'Install',
-    'Please choose modules from the list below.' => 'Please choose modules from the list below.',
-    'Not available.' => 'Not available.', 'Depends on:' => 'Depends on:',
-    'Requires:' => 'Requires:', 'Continue' => 'Continue',
-    'Welcome to %1. Before you can start using %1 a configuration file has to be created.' => 'Welcome to %1. Before you can start using %1 a configuration file has to be created.',
-    'To install %1 you will have to select some modules.' => 'To install %1 you will have to select some modules.',
-    'You can either do this by selecting a quick-install option or selecting individual modules.' => 'You can either do this by selecting a quick-install option or selecting individual modules.',
-    'After installing you can customize your installation and install/uninstall modules.' => 'After installing you can customize your installation and install/uninstall modules.',
-    'Minimal' => 'Minimal',
-    'Gives you basic blog-functionality and does not require a database.' => 'Gives you basic blog-functionality and does not require a database.',
-    'Complete' => 'Complete',
-    'Installs everything. Requires MySQL. This is the recommended way to install Awesome Alien.' => 'Installs everything. Requires MySQL. This is the recommended way to install Awesome Alien.',
-    'Advanced' => 'Advanced',
-    'Select individual modules to install.' => 'Select individual modules to install.',
-    '%1 installation' => '%1 installation',
-    'Generate a default English language file.' => 'Generate a default English language file.',
-    'Directories' => 'Directories',
-    'Where to look for php source files.' => 'Where to look for php source files.',
-    'Language directory' => 'Language directory',
-    'Where to place the generated language-file.' => 'Where to place the generated language-file.',
-    'Generate' => 'Generate',
-    'Language file has been generated.' => 'Language file has been generated.',
-    'Fatal error' => 'Fatal error',
-    '%1 in %2 on line %3.' => '%1 in %2 on line %3.',
-    'Unknown error of type %1' => 'Unknown error of type %1',
-    'Post a comment' => 'Post a comment',
-    'Have something to say? Say it! (Required fields are marked with a %1)' => 'Have something to say? Say it! (Required fields are marked with a %1)',
-    'Name' => 'Name', 'Email' => 'Email',
-    'Your e-mail is not shown, but is used for identification and retrieving your %1.' => 'Your e-mail is not shown, but is used for identification and retrieving your %1.',
-    'Module error' => 'Module error',
-    'The module \'%1\' could not be installed properly.' => 'The module \'%1\' could not be installed properly.',
-    'Files missing from \'%1\' module.' => 'Files missing from \'%1\' module.',
-    'Theme produced output too early:' => 'Theme produced output too early:',
-    '%1 in <code>%2</code> on line <strong>%3</strong> after %4 microseconds' => '%1 in <code>%2</code> on line <strong>%3</strong> after %4 microseconds',
-    'Theme error' => 'Theme error',
-    'No themes has been installed in the %1 directory.' => 'No themes has been installed in the %1 directory.',
-    '%1 error' => '%1 error',
-    '%1 extension not found in PHP installation. Please remove mysql module from configuration.' => '%1 extension not found in PHP installation. Please remove mysql module from configuration.',
-    '%1 module has not been set up correctly.' => '%1 module has not been set up correctly.',
-    'Please check your configuration in <code>config.php</code>. If necessary delete/clear the current
-configuration in <code>config.php</code> and use the installer to create a new configuration.' => 'Please check your configuration in <code>config.php</code>. If necessary delete/clear the current
-configuration in <code>config.php</code> and use the installer to create a new configuration.',
-    'Could not connect to %1 database.' => 'Could not connect to %1 database.',
-    'MySQL error' => 'MySQL error',
-    '%2<br/>%3<br/>In query:<br/><code>%4</code>' => '%2<br/>%3<br/>In query:<br/><code>%4</code>'
-  ),
-  'trl' => array(
-    'The module \'%l\' is missing from %1.' => array(
-      'The module \'%l\' is missing from %1.',
-      'The modules \'%l\' are missing from %1.', '\', \'', '\', and \''
-    ),
-    'The following module will be installed: <b>%l</b>.' => array(
-      'The following module will be installed: <b>%l</b>.',
-      'The following modules will be installed: <b>%l</b>.', '</b>, <b>',
-      '</b> and <b>'
-    ),
-    '\'%l\' is missing.' => array('\'%l\' is missing.', '\'%l\' are missing.',
-      '\', \'', '\' and \''
-    ),
-    '\'%l\' is too new.' => array('\'%l\' is too new.', '\'%l\' are too new.',
-      '\', \'', '\' and \''
-    ),
-    '\'%l\' is too old.' => array('\'%l\' is too old.', '\'%l\' are too old.',
-      '\', \'', '\' and \''
-    ),
-    '\'%l\' is not the correct version.' => array(
-      '\'%l\' is not the correct version.',
-      '\'%l\' are not the correct version.', '\', \'', '\' and \''
-    ),
-    'Minimal install is not available because the module \'%l\' is missing.' => array(
-      'Minimal install is not available because the module \'%l\' is missing.',
-      'Minimal install is not available because the modules \'%l\' are missing.',
-      '\', \'', '\' and \''
-    ),
-    'Complete install is not available because the module \'%l\' is missing.' => array(
-      'Complete install is not available because the module \'%l\' is missing.',
-      'Complete install is not available because the modules \'%l\' are missing.',
-      '\', \'', '\' and \''
-    ),
-    'Posted by %1 on %2 in %3 and tagged %l.' => array(
-      'Posted by %1 on %2 in %3 and tagged %l.',
-      'Posted by %1 on %2 in %3 and tagged %l.', ', ', ' and '
-    )
-  ),
-  'trn' => array(
-    '%1 comment' => array('%1 comment', '%1 comments'),
-    'There is %1 comment' => array('There is %1 comment',
-      'There are %1 comments'
-    )
-  )
+$l->set(
+  'Model "%1" not found for %2',
+  'Model "%1" not found for %2'
 );
-?>
+$l->set(
+  'Model %1 not found',
+  'Model %1 not found'
+);
+$l->set(
+  'Must be a scalar.',
+  'Must be a scalar.'
+);
+$l->set(
+  'Must not be empty.',
+  'Must not be empty.'
+);
+$l->set(
+  'Must be empty.',
+  'Must be empty.'
+);
+$l->set(
+  'Must be null.',
+  'Must be null.'
+);
+$l->set(
+  'Must not be null.',
+  'Must not be null.'
+);
+$l->set(
+  'Not a valid email address.',
+  'Not a valid email address.'
+);
+$l->set(
+  'Must not be an email address.',
+  'Must not be an email address.'
+);
+$l->set(
+  'Not a valid URL.',
+  'Not a valid URL.'
+);
+$l->set(
+  'Must not be a URL.',
+  'Must not be a URL.'
+);
+$l->set(
+  'Not a valid date.',
+  'Not a valid date.'
+);
+$l->set(
+  'Must not be a date.',
+  'Must not be a date.'
+);
+$l->set(
+  'Must be numeric.',
+  'Must be numeric.'
+);
+$l->set(
+  'Must not be numeric.',
+  'Must not be numeric.'
+);
+$l->set(
+  'Must be an integer.',
+  'Must be an integer.'
+);
+$l->set(
+  'Must not be an integer.',
+  'Must not be an integer.'
+);
+$l->set(
+  'Must be a decimal number.',
+  'Must be a decimal number.'
+);
+$l->set(
+  'Must be boolean (true or false).',
+  'Must be boolean (true or false).'
+);
+$l->set(
+  'Must not be boolean.',
+  'Must not be boolean.'
+);
+$l->set(
+  'Must be greater than or equal to %1.',
+  'Must be greater than or equal to %1.'
+);
+$l->set(
+  'Must be less than or equal to %1.',
+  'Must be less than or equal to %1.'
+);
+$l->set(
+  'Invalid value.',
+  'Invalid value.'
+);
+$l->set(
+  'Must be unique.',
+  'Must be unique.'
+);
+$l->set(
+  'Must not be unique.',
+  'Must not be unique.'
+);
+$l->set(
+  '%1 is not a valid type',
+  '%1 is not a valid type'
+);
+$l->set(
+  'Using integer flags for non-integer type',
+  'Using integer flags for non-integer type'
+);
+$l->set(
+  'An error occured while loading this page...',
+  'An error occured while loading this page...'
+);
+$l->set(
+  'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
+  'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.'
+);
+$l->set(
+  'Where it happened',
+  'Where it happened'
+);
+$l->set(
+  'Stack Trace',
+  'Stack Trace'
+);
+$l->set(
+  'File',
+  'File'
+);
+$l->set(
+  'Line',
+  'Line'
+);
+$l->set(
+  'Class',
+  'Class'
+);
+$l->set(
+  'Function',
+  'Function'
+);
+$l->set(
+  'Arguments',
+  'Arguments'
+);
+$l->set(
+  'An invalid status code was provided: %1.',
+  'An invalid status code was provided: %1.'
+);
+$l->set(
+  'Headers already sent in file %1 on line %2',
+  'Headers already sent in file %1 on line %2'
+);
+$l->set(
+  'Auto routing requires controller',
+  'Auto routing requires controller'
+);
+$l->set(
+  'Resource routing requires controller',
+  'Resource routing requires controller'
+);
+$l->set(
+  'Alert',
+  'Alert'
+);
+$l->set(
+  'Notice',
+  'Notice'
+);
+$l->set(
+  'Unknown pattern "%1" in route configuration',
+  'Unknown pattern "%1" in route configuration'
+);
+$l->set(
+  'Could not find path for ',
+  'Could not find path for '
+);
+$l->set(
+  'Incomplete route',
+  'Incomplete route'
+);
+$l->set(
+  'Not a valid route, must be array or string',
+  'Not a valid route, must be array or string'
+);
+$l->set(
+  'Missing controllers module',
+  'Missing controllers module'
+);
+$l->set(
+  'Invalid controller: %1',
+  'Invalid controller: %1'
+);
+$l->set(
+  'No route selected',
+  'No route selected'
+);
+$l->set(
+  'Invalid action: %1::%2',
+  'Invalid action: %1::%2'
+);
+$l->set(
+  'No controller selected',
+  'No controller selected'
+);
+$l->set(
+  'Unable to save configuration',
+  'Unable to save configuration'
+);
+$l->set(
+  '%1 could not save the configuration to the following file:',
+  '%1 could not save the configuration to the following file:'
+);
+$l->set(
+  'The file exists, but %1 does not have permission to write to it.',
+  'The file exists, but %1 does not have permission to write to it.'
+);
+$l->set(
+  'You should change the access permission or ownership of the file to allow %1 to write to it. ',
+  'You should change the access permission or ownership of the file to allow %1 to write to it. '
+);
+$l->set(
+  'Click here to get more help.',
+  'Click here to get more help.'
+);
+$l->set(
+  'Alternatively, you can manually edit the file.',
+  'Alternatively, you can manually edit the file.'
+);
+$l->set(
+  'The file does not exists, and %1 does not have permission to create it.',
+  'The file does not exists, and %1 does not have permission to create it.'
+);
+$l->set(
+  'Please create the file with the permissions necessary for %1 to write to it, then refresh this page.',
+  'Please create the file with the permissions necessary for %1 to write to it, then refresh this page.'
+);
+$l->set(
+  'Unsaved data',
+  'Unsaved data'
+);
+$l->set(
+  'Cancel',
+  'Cancel'
+);
+$l->set(
+  'Class not found: %1',
+  'Class not found: %1'
+);
+$l->set(
+  'The "%1" module could not be found',
+  'The "%1" module could not be found'
+);
+$l->set(
+  'The "%1" module does not have a main class',
+  'The "%1" module does not have a main class'
+);
+$l->set(
+  'The "%1" module is invalid',
+  'The "%1" module is invalid'
+);
+$l->set(
+  'The "%1" module depends on the "%2" module, which could not be found',
+  'The "%1" module depends on the "%2" module, which could not be found'
+);
+$l->set(
+  'Uncaught exception',
+  'Uncaught exception'
+);
+$l->set(
+  'Module "%1" not found for controller %2',
+  'Module "%1" not found for controller %2'
+);
+$l->set(
+  'Invalid action "%1"',
+  'Invalid action "%1"'
+);
+$l->set(
+  'Invalid dictionary key: %1',
+  'Invalid dictionary key: %1'
+);
+$l->set(
+  'Dictionary is read-only.',
+  'Dictionary is read-only.'
+);
+$l->set(
+  'Submit',
+  'Submit'
+);
+$l->set(
+  'Module "%1" not found for helper %2',
+  'Module "%1" not found for helper %2'
+);
+$l->set(
+  'Helper "%1" not found for %2',
+  'Helper "%1" not found for %2'
+);
+$l->set(
+  'An uncaught %1 was thrown in file %2 on line %3 and caused execution to be terminated.',
+  'An uncaught %1 was thrown in file %2 on line %3 and caused execution to be terminated.'
+);
+$l->set(
+  'Welcome to %1',
+  'Welcome to %1'
+);
+$l->set(
+  'Admin',
+  'Admin'
+);
+$l->set(
+  'Please select a username and a password.',
+  'Please select a username and a password.'
+);
+$l->set(
+  'Optional.',
+  'Optional.'
+);
+$l->set(
+  'Skip',
+  'Skip'
+);
+$l->set(
+  'Save',
+  'Save'
+);
+$l->set(
+  'User',
+  'User'
+);
+$l->set(
+  'Guest',
+  'Guest'
+);
+$l->set(
+  'Could not create session.',
+  'Could not create session.'
+);
+$l->set(
+  'Language file must return an instance of Localization.',
+  'Language file must return an instance of Localization.'
+);
+$l->set(
+  'January',
+  'January'
+);
+$l->set(
+  'February',
+  'February'
+);
+$l->set(
+  'March',
+  'March'
+);
+$l->set(
+  'April',
+  'April'
+);
+$l->set(
+  'May',
+  'May'
+);
+$l->set(
+  'June',
+  'June'
+);
+$l->set(
+  'July',
+  'July'
+);
+$l->set(
+  'August',
+  'August'
+);
+$l->set(
+  'September',
+  'September'
+);
+$l->set(
+  'October',
+  'October'
+);
+$l->set(
+  'November',
+  'November'
+);
+$l->set(
+  'December ',
+  'December '
+);
+$l->set(
+  'Sunday',
+  'Sunday'
+);
+$l->set(
+  'Monday',
+  'Monday'
+);
+$l->set(
+  'Tuesday',
+  'Tuesday'
+);
+$l->set(
+  'Wednesday',
+  'Wednesday'
+);
+$l->set(
+  'Thursday',
+  'Thursday'
+);
+$l->set(
+  'Friday',
+  'Friday'
+);
+$l->set(
+  'Saturday',
+  'Saturday'
+);
+$l->set(
+  'Template not found: %1',
+  'Template not found: %1'
+);
+$l->set(
+  'Unknown type of file: %1',
+  'Unknown type of file: %1'
+);
+$l->set(
+  'Unsupported file format: "%1"',
+  'Unsupported file format: "%1"'
+);
+$l->set(
+  'Unable to save config file: %1',
+  'Unable to save config file: %1'
+);
+$l->set(
+  'SQLite database does not exist and could not be created: %1',
+  'SQLite database does not exist and could not be created: %1'
+);
+$l->set(
+  'Database connection failed',
+  'Database connection failed'
+);
+$l->set(
+  'Could not connect to the database.',
+  'Could not connect to the database.'
+);
+$l->set(
+  'Table prefix',
+  'Table prefix'
+);
+$l->set(
+  'Unable to join SqlTable with table of different database',
+  'Unable to join SqlTable with table of different database'
+);
+$l->set(
+  'Unable to join SqlTable with data source of type "%1"',
+  'Unable to join SqlTable with data source of type "%1"'
+);
+$l->set(
+  'You have selected the %1 database driver.',
+  'You have selected the %1 database driver.'
+);
+$l->set(
+  'The following information is required.',
+  'The following information is required.'
+);
+$l->set(
+  'An error occured:',
+  'An error occured:'
+);
+$l->set(
+  'The location of the database.',
+  'The location of the database.'
+);
+$l->set(
+  'Can be used to prevent conflict with other tables in the database.',
+  'Can be used to prevent conflict with other tables in the database.'
+);
+$l->set(
+  'Please select your desired database driver.',
+  'Please select your desired database driver.'
+);
+$l->set(
+  'Available',
+  'Available'
+);
+$l->set(
+  'Select %1',
+  'Select %1'
+);
+$l->set(
+  'Invalid record class "%1", must extend ActiveRecord',
+  'Invalid record class "%1", must extend ActiveRecord'
+);
+$l->set(
+  'Model for %1 not found in model for %2',
+  'Model for %1 not found in model for %2'
+);
+$l->set(
+  'Model for %1 invalid for joining with model for %2, must extend ActivRecord',
+  'Model for %1 invalid for joining with model for %2, must extend ActivRecord'
+);
+$l->set(
+  'Association data source "%1" not found',
+  'Association data source "%1" not found'
+);
+$l->set(
+  'Method "%1" was not found in model "%2".',
+  'Method "%1" was not found in model "%2".'
+);
+$l->set(
+  'Field "%1" was not found in active record "%2".',
+  'Field "%1" was not found in active record "%2".'
+);
+$l->set(
+  'Method "%1" was not found in active record "%2".',
+  'Method "%1" was not found in active record "%2".'
+);
+$l->set(
+  'Must be a valid date.',
+  'Must be a valid date.'
+);
+$l->set(
+  'Must not be a decimal number.',
+  'Must not be a decimal number.'
+);
+$l->set(
+  'Must be boolean (1 or 0).',
+  'Must be boolean (1 or 0).'
+);
+$l->set(
+  'Minimum value of %1.',
+  'Minimum value of %1.'
+);
+$l->set(
+  'Maximum value of %1.',
+  'Maximum value of %1.'
+);
+$l->set(
+  'Value not a scalar.',
+  'Value not a scalar.'
+);
+$l->set(
+  'Appearance',
+  'Appearance'
+);
+$l->set(
+  'Themes',
+  'Themes'
+);
+$l->set(
+  'Customize',
+  'Customize'
+);
+$l->set(
+  'Extensions',
+  'Extensions'
+);
+$l->set(
+  'Circular dependency detected when attempting to load the "%1" extension.',
+  'Circular dependency detected when attempting to load the "%1" extension.'
+);
+$l->set(
+  'The "%1" extension could not be found',
+  'The "%1" extension could not be found'
+);
+$l->set(
+  'The "%1" extension does not have a main class',
+  'The "%1" extension does not have a main class'
+);
+$l->set(
+  'The "%1" extension is invalid',
+  'The "%1" extension is invalid'
+);
+$l->set(
+  'The "%1" extension depends on itself',
+  'The "%1" extension depends on itself'
+);
+$l->set(
+  'Extension "%1" uninstalled. Missing extension dependency: "%2".',
+  'Extension "%1" uninstalled. Missing extension dependency: "%2".'
+);
+$l->set(
+  'Extension "%1" uninstalled. Missing module dependency: "%2".',
+  'Extension "%1" uninstalled. Missing module dependency: "%2".'
+);
+$l->set(
+  'Welcome to PeanutCMS. This is a static page. You can use it to display important information.',
+  'Welcome to PeanutCMS. This is a static page. You can use it to display important information.'
+);
+$l->set(
+  'Content',
+  'Content'
+);
+$l->set(
+  'New page',
+  'New page'
+);
+$l->set(
+  'Manage pages',
+  'Manage pages'
+);
+$l->set(
+  'Home',
+  'Home'
+);
+$l->set(
+  'Dashboard',
+  'Dashboard'
+);
+$l->set(
+  'About',
+  'About'
+);
+$l->set(
+  'Log out',
+  'Log out'
+);
+$l->set(
+  'Settings',
+  'Settings'
+);
+$l->set(
+  'Modules',
+  'Modules'
+);
+$l->set(
+  'Configuration',
+  'Configuration'
+);
+$l->set(
+  'Welcome to PeanutCMS',
+  'Welcome to PeanutCMS'
+);
+$l->set(
+  'Welcome to PeanutCMS. This is a widget for displaying basic information in the sidebar.',
+  'Welcome to PeanutCMS. This is a widget for displaying basic information in the sidebar.'
+);
+$l->set(
+  'Recent posts',
+  'Recent posts'
+);
+$l->set(
+  'Widgets',
+  'Widgets'
+);
+$l->set(
+  'This post indicates that PeanutCMS has been installed correctly, and is ready to be used.',
+  'This post indicates that PeanutCMS has been installed correctly, and is ready to be used.'
+);
+$l->set(
+  'Recent comments',
+  'Recent comments'
+);
+$l->set(
+  'Add',
+  'Add'
+);
+$l->set(
+  'Post',
+  'Post'
+);
+$l->set(
+  'New post',
+  'New post'
+);
+$l->set(
+  'Manage posts',
+  'Manage posts'
+);
+$l->set(
+  'Comments',
+  'Comments'
+);
+$l->set(
+  'Tags',
+  'Tags'
+);
+$l->set(
+  'Get help',
+  'Get help'
+);
+$l->set(
+  'Menus',
+  'Menus'
+);
+$l->set(
+  'Must be at least %1 characters long.',
+  'Must be at least %1 character long.',
+  '/^-?1$'
+);
+$l->set(
+  'Must be at least %1 characters long.',
+  'Must be at least %1 characters long.'
+);
+$l->set(
+  'Must be at most %1 characters long.',
+  'Must be at most %1 character long.',
+  '/^-?1$'
+);
+$l->set(
+  'Must be at most %1 characters long.',
+  'Must be at most %1 characters long.'
+);
+$l->set(
+  'find() must be called with %1 parameters',
+  'find() must be called with %1 parameter',
+  '/^-?1$'
+);
+$l->set(
+  'find() must be called with %1 parameters',
+  'find() must be called with %1 parameters'
+);
+$l->set(
+  'Unavailable. Missing the "%1{", "}{" and "}" PHP extensions',
+  'Unavailable. Missing the "%1{", "}{" and "}" PHP extension',
+  '/^-?1$'
+);
+$l->set(
+  'Unavailable. Missing the "%1{", "}{" and "}" PHP extensions',
+  'Unavailable. Missing the "%1{", "}{" and "}" PHP extensions'
+);
+
+return $l;

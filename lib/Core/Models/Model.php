@@ -31,8 +31,8 @@ abstract class Model implements IModel {
     $selection = $this;
     if (count($args) != count($primaryKey)) {
       throw new InvalidPrimaryKeyException(tn(
-        'find() must be called with %n parameters',
-        'find() must be called with %n parameter',
+        'find() must be called with %1 parameters',
+        'find() must be called with %1 parameter',
         count($primaryKey)
       ));
     }

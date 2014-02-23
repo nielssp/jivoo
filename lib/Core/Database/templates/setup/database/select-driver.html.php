@@ -37,9 +37,11 @@ foreach ($drivers as $driver) :
               <?php 
   else : ?>
 <?php
-    echo trl('Unavailable. Missing the "%l" PHP extension.',
-      'Unavailable. Missing the "%l" PHP extensions.', '", "', '" and "',
-      $driver['missingExtensions'])
+    echo tn(
+      'Unavailable. Missing the "%1{", "}{" and "}" PHP extensions',
+      'Unavailable. Missing the "%1{", "}{" and "}" PHP extension',
+      $driver['missingExtensions']
+    );
 ?>
             </p>
             <?php endif; ?>
