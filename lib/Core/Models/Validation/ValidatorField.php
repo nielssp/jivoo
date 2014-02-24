@@ -121,7 +121,10 @@ class ValidatorField {
    */
   public function validate(IRecord $record, $field) {
     foreach ($this->rules as $name => $rule) {
-      $result = Validator::
+      $result = Validator::validateRule($record, $field, $name, $rule);
+      if ($result !== true)
+        return $result;
     }
+    return true;
   }
 }
