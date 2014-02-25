@@ -18,9 +18,9 @@ interface IActiveCollection extends ISelection {
 }
 
 interface ITypeAdapter {
-  public function encode(FieldType $type, $value);
+  public function encode(DataType $type, $value);
 
-  public function decode(FieldType $type, $value);
+  public function decode(DataType $type, $value);
 }
 
 
@@ -181,6 +181,12 @@ class ActiveRecord implements IRecord {
     return isset($this->data[$field]);
   }
   
+  public function __unset($field) {
+    $this->data[$field] = null;
+    $this->updatedData[$field] = null;
+    $this->saved = false;
+  }
+  
   public function set($field, $value) {
     $this->$field = $value;
     return $this;
@@ -244,9 +250,6 @@ class Posts extends ActiveModel {
 }
 
 header('Content-Type: text/plain');
-
-class_exists('Table');
-class_exists('SqlTable');
 
 $db = new PdoMysqlDatabase(array(
   'server' => 'localhost',

@@ -1,9 +1,18 @@
 <?php
 abstract class Model implements IModel {
   private $iterator = null;
+  private $validator = null;
+  
+  public function __construct() {
+    $this->validator = new Validator($this);
+  }
 
   public function create($data = array(), $allowedFields = null) {
     return ActiveRecord::createNew($this, $data, $allowedFields);
+  }
+  
+  public function createExisting($data = array()) {
+    return ActiveRecord::createExisting($this, $data);
   }
 
   public function selectRecord(IRecord $record) {
@@ -17,11 +26,11 @@ abstract class Model implements IModel {
 
   public function selectNotRecord(IRecord $record) {
     $primaryKey = $this->getSchema()->getPrimaryKey();
-    $selection = $this;
+    $condition = new Condition();
     foreach ($primaryKey as $field) {
-      $selection = $selection->where($field . ' != ?', $record->$field);
+      $condition = $condition->or($field . ' != ?', $record->$field);
     }
-    return $selection;
+    return $this->where($condition);
   }
 
   public function find($primary) {
@@ -67,6 +76,32 @@ abstract class Model implements IModel {
   
   public function getValidator() {
     return null;
+  }
+  
+  // IBasicModel implementation
+  
+  public function getFields() {
+    return $this->getSchema()->getFields();
+  }
+  
+  public function getType($field) {
+    return $this->getSchema()->$field;
+  }
+  
+  public function getEditor($field) {
+    return null;
+  }
+  
+  public function getLabel($field) {
+    return $field;
+  }
+  
+  public function hasField($field) {
+    return isset($this->getSchema()->$field);
+  }
+  
+  public function isRequired($field) {
+    return false;
   }
   
   // ICondition implementation

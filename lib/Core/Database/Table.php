@@ -26,7 +26,7 @@ abstract class Table extends Model {
     $resultSet = $this->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc());
   }
   
   public function last(ReadSelection $selection = null) {
@@ -35,7 +35,7 @@ abstract class Table extends Model {
     $resultSet = $this->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc());
   }
 
   public function read(ReadSelection $selection) {

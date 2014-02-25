@@ -1,5 +1,5 @@
 <?php
-class ResultSetIterator implements Iterator {
+class ResultSetIterator implements IRecordIterator {
   /**
    * @var IResultSet
    */
@@ -10,11 +10,11 @@ class ResultSetIterator implements Iterator {
   private $position = 0;
   private $array = array();
 
-  public function __construct(IModel $model, IResultSet $resultSet) {
+  public function __construct(Model $model, IResultSet $resultSet) {
     $this->model = $model;
     $this->resultSet = $resultSet;
     if ($this->resultSet->hasRows())
-      $this->array[] = ActiveRecord::createExisting($this->model, $this->resultSet->fetchAssoc());
+      $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc());
   }
 
   function rewind() {
@@ -31,7 +31,7 @@ class ResultSetIterator implements Iterator {
 
   function next() {
     if ($this->resultSet->hasRows())
-      $this->array[] = ActiveRecord::createExisting($this->model, $this->resultSet->fetchAssoc());
+      $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc());
     $this->position++;
   }
 

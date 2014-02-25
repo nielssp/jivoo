@@ -5,30 +5,31 @@
  */
 interface ISchema {
   /**
-   * Get type of column
-   * @param string $column Column name
-   * @return DataType Type of column
+   * Get type of field
+   * @param string $field Field name
+   * @return DataType Type of field
    */
-  public function __get($column);
+  public function __get($field);
 
   /**
-   * Whether or not a column exists in schema
-   * @param string $column Column name
+   * Whether or not a field exists in schema
+   * @param string $field Field name
    * @return bool True if it does, false otherwise
    */
-  public function __isset($column);
+  public function __isset($field);
 
   /**
    * Get name of schema
    * @return string Name
    */
-  public function getName() {
-    return $this->name;
-  }
+  public function getName();
+  
+  /** @return string[] List of field name */
+  public function getFields();
 
   /**
-   * Get columns of primary key
-   * @return string[] List of column names or empty array if no primary key
+   * Get fields of primary key
+   * @return string[] List of field names or empty array if no primary key
    */
   public function getPrimaryKey();
 
@@ -39,7 +40,7 @@ interface ISchema {
    * <code>
    * array(
    *   'indexname' => array(
-   *     'columns' => array('columnname1', 'columnname2'),
+   *     'fields' => array('fieldname1', 'fieldname'),
    *     'unique' => true
    *   )
    * )
@@ -57,8 +58,8 @@ interface ISchema {
   /**
    * Get information about an index.
    * @param string $name Index name
-   * @return array Associative array with two keys: 'columns' is a list of
-   * column names and 'unique' is a boolean.
+   * @return array Associative array with two keys: 'fields' is a list of
+   * field names and 'unique' is a boolean.
    */
   public function getIndex($name);
   

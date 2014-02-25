@@ -1,9 +1,14 @@
 <?php
 interface IModel extends ISelection, IBasicModel {
   /**
-   * @return ISchema
+   * @return ISchema Schema for model
   */
   public function getSchema();
+
+  /**
+   * @return IValidator Validator for model
+  */
+  public function getValidator();
 
   /**
    * @param IRecord $record
@@ -22,7 +27,7 @@ interface IModel extends ISelection, IBasicModel {
    * consists of multiple fields, this function expects a
    * parameter for each field (in alphabetical order).
    * @param mixed $primary Value of primary key
-   * @param mixed ...$primary
+   * @param mixed ...$primary For multifield primary key
    * @return IRecord|null A single matching record or null if it doesn't exist
    */
   public function find($primary);
