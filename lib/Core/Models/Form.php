@@ -55,7 +55,7 @@ class Form implements IBasicRecord, IBasicModel {
   }
 
   public function __set($field, $value) {
-    if (isset($this->model->fields[$field])) {
+    if (isset($this->fields[$field])) {
       $this->data[$field] = $value;
     }
   }
@@ -70,21 +70,21 @@ class Form implements IBasicRecord, IBasicModel {
       $data = array_intersect_key($data, $allowedFields);
     }
     foreach ($data as $field => $value) {
-      if (isset($this->model->fields[$field])) {
+      if (isset($this->fields[$field])) {
         $this->data[$field] = $value;
       }
     }
   }
   
   /**
-   * @return FormModel Form model
+   * @return Form Model
    */
   public function getModel() {
     return $this;
   }
 
   public function isValid() {
-    foreach ($this->model->fields as $field => $options) {
+    foreach ($this->fields as $field => $options) {
       if ($options['required'] AND empty($this->data[$field])
           AND !is_numeric($this->data[$field])) {
         $this->addError($field, tr('Must not be empty.'));

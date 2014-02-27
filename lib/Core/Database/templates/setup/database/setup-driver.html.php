@@ -24,7 +24,7 @@ $this->extend('setup/layout.html');
             <?php echo $Form->text($field, array('class' => 'text')); ?>
               <?php if ($Form->isValid($field)) : ?>
             <span class="description">
-              <?php echo $Form->isOptional($field, tr('Optional.')); ?> 
+              <?php echo $Form->ifOptional($field, tr('Optional.')); ?> 
 <?php
     switch ($field) {
       case 'filename':

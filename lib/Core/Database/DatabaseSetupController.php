@@ -18,7 +18,7 @@ class DatabaseSetupController extends SetupController {
     }
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
     $this->drivers = $this->m->Database->listDrivers();
-    if ($this->request->isPost() AND $this->request->checkToken()) {
+    if ($this->request->hasValidData()) {
       foreach ($this->drivers as $driver) {
         if ($driver['isAvailable']
           AND isset($this->request->data[$driver['driver']])) {
@@ -54,17 +54,15 @@ class DatabaseSetupController extends SetupController {
    */
   public function setupDriver() {
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
-    $this->backendMenu = false;
     $this->setupForm = new Form('setup');
     $this->exception = null;
     foreach ($this->driver['requiredOptions'] as $option) {
-      $this->setupForm->getModel()->addString($option, $this->getOptionLabel($option));
+      $this->setupForm->addString($option, $this->getOptionLabel($option));
     }
     foreach ($this->driver['optionalOptions'] as $option) {
-      $this->setupForm->getModel()
-        ->addString($option, $this->getOptionLabel($option), false);
+      $this->setupForm->addString($option, $this->getOptionLabel($option), false);
     }
-    if ($this->request->isPost() AND $this->request->checkToken()) {
+    if ($this->request->hasValidData()) {
       $this->setupForm->addData($this->request->data['setup']);
       if (isset($this->request->data['cancel'])) {
         $this->config->delete('driver');
@@ -72,7 +70,7 @@ class DatabaseSetupController extends SetupController {
           $this->redirect(null);
         }
         else {
-            return $this->saveConfig();
+          return $this->saveConfig();
         }
       }
       else if ($this->setupForm->isValid()) {
