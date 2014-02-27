@@ -2,7 +2,7 @@
 $this->extend('setup/layout.html');
 ?>
 
-<?php echo $Form->begin($setupForm); ?>
+<?php echo $Form->formFor($setupForm); ?>
 
       <div class="section">
         <div class="container">
@@ -21,7 +21,7 @@ $this->extend('setup/layout.html');
           <?php foreach ($setupForm->getModel()->getFields() as $field) : ?>
           <p>
             <?php echo $Form->label($field, null, array('class' => 'small')); ?>
-            <?php echo $Form->field($field); ?>
+            <?php echo $Form->text($field, array('class' => 'text')); ?>
               <?php if ($Form->isValid($field)) : ?>
             <span class="description">
               <?php echo $Form->isOptional($field, tr('Optional.')); ?> 
@@ -36,8 +36,7 @@ $this->extend('setup/layout.html');
         break;
     }
 ?>
-              <?php 
-  else : ?>
+              <?php else : ?>
             <span class="description error">
               <?php echo $Form->getError($field); ?>
               <?php endif; ?>
@@ -48,9 +47,8 @@ $this->extend('setup/layout.html');
       <div class="section">
         <div class="container">
           <div class="aright">
-            <?php echo $Form->submit(tr('Cancel'), 'cancel'); ?>
-            <?php echo $Form->submit(tr('Save'), 'save',
-    array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Cancel'), array('name' => 'cancel', 'class' => 'button')); ?>
+            <?php echo $Form->submit(tr('Save'), array('name' => 'save', 'class' => 'button publish')); ?>
           </div>
         </div>
       </div>

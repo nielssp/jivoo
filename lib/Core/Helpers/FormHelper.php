@@ -4,312 +4,355 @@
  * @package Core\Helpers
  */
 class FormHelper extends Helper {
+  
+  /**
+   * @var string[]
+   */
+  private $stack = array();
 
   /**
-   * @var IRecord Associated record
+   * @var IBasicRecord Associated record
    */
   private $record = null;
   
   /**
-   * @var IModel Associated model
+   * @var IBasicModel Associated model
    */
   private $model = null;
   
   /**
    * @var string Name of current form
    */
-  private $currentForm = '';
+  private $name = null;
   
   /**
-   * @var bool Whether or not current request is post, i.e. data was submitted
+   * @var string Id of current form
    */
-  private $post = false;
+  private $id = null;
   
   /**
    * @var array Associative array of field names and error messages
    */
   private $errors = array();
-
+  
   /**
-   * Begin a new form, returned HTML must be outputted to page. Remember to
-   * end the form with {@see FormHelper::end()}.
-   * @param IRecord $record Record to base form on
-   * @param string $fragment Fragment of page to return to i.e. 'create-comment'
-   * to append '#create-comment' to form action
-   * @param array|ILinkable|string|null $route Route to submit form to, default is current page. See
-   * {@see Routing}.
-   * @param array $options An associative array of options, the only supported
-   * option is 'class', which sets the class-attribute of the form-tag
-   * @return string HTML code
+   * @var unknown
    */
-  public function begin(IRecord $record = null, $fragment = null, $route = array(), $options = array()) {
-    if (!isset($record)) {
-      $record = new Form('form');
+  private $selectValue = null;
+
+  public function form($route = array(), $attributes = array()) {
+    if (!empty($this->stack))
+      throw new FormHelperException(tr('A form is already open.'));
+    array_push($this->stack, 'form');
+    $attributes = array_merge(array(
+      'method' => 'post',
+    ), $attributes);
+    $specialMethod = null;
+    if ($attributes['method'] != 'post' and
+        $attributes['method'] != 'get') {
+      $specialMethod = $attributes['method'];
+      $attributes['method'] = 'post';
     }
-    $this->post = $this->request->isPost();
+    if (isset($attributes['id']))
+      $this->id = $attributes['id'];
+    if (isset($attributes['name']))
+      $this->name = $attributes['name'];
+    $html = '<form action="' . $this->getLink($route) . '"';
+    $html .= $this->addAttributes($attributes) . '>' . PHP_EOL;
+    $html .= $this->request->createHiddenToken() . PHP_EOL;
+    if (isset($specialMethod)) {
+      $html .= $this->element('input', array(
+        'type' => 'hidden',
+        'name' => 'method',
+        'value' => $specialMethod
+      ));
+    }
+    return $html;
+  }
+
+  public function formFor(IBasicRecord $record, $route = array(), $attributes = array()) {
     $this->record = $record;
     $this->model = $record->getModel();
-    if ($this->post) {
-      $this->errors = $record->getErrors();
-    }
-    $this->currentForm = $this->model->getName();
-    if (is_array($route))
-      $route['fragment'] = $fragment;
-    $html = '<form action="' . $this->getLink($route)
-      . '" id="' . $this->currentForm . '" method="post"';
-    if (isset($options['class'])) {
-      $html .= ' class="' . $options['class'] . '"';
-    }
-    $html .= '>' . PHP_EOL;
-    $html .= $this->request->createHiddenToken() . PHP_EOL;
-    foreach ($this->model->getFields() as $field) {
-      if ($this->model->getFieldType($field) == 'hidden') {
-        $html .= $this->hidden($field);
-      }
-    }
-    return $html;
+    $attributes = array_merge(array(
+      'id' => $this->model->getName(),
+      'name' => $this->model->getName(),
+    ), $attributes);
+    return $this->form($route, $attributes);
   }
 
-  /**
-   * Get full name of form field, will be FORM[FIELD] where FORM is the name of
-   * the form.
-   * @param string $field Field name in model
-   * @return string Name of form field
-   */
-  public function fieldName($field) {
-    if (!isset($this->record)) {
-      return;
+  public function end() {
+    if (empty($this->stack))
+      throw new FormHelperException(tr('No form or form element is open.'));
+    $element = array_pop($this->stack);
+    switch ($element) {
+      case 'form':
+        $this->errors = array();
+        $this->record = null;
+        $this->model = null;
+        $this->name = null;
+        $this->id = null;
+        return '</form>' . PHP_EOL;
+      case 'select':
+        $this->selectValue = null;
+        return '</select>' . PHP_EOL;
+      case 'optgroup':
+        return '</optgroup>' . PHP_EOL;
     }
-    return $this->currentForm . '[' . $field . ']';
   }
-
-  /**
-   * Get id of form field, will be FORM_FIELD or FORM_FIELD_VALUE for
-   * checkboxes and radios, where FORM is the name of the form.
-   * @param string $field Field name in model
-   * @param string $value Optional value for field (for checkboxes and radios)
-   * @return string Id of form field
-   */
-  public function fieldId($field, $value = null) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $id = $this->currentForm . '_' . $field;
-    if (isset($value)) {
-      $id .= '_' . $value;
-    }
-    return $id;
+  
+  public function id($field, $value = null) {
+    if (isset($this->id))
+      $field = $this->id . '_' . $field;
+    if (isset($value))
+      $field .= '_' . $value;
+    return $field;
   }
-
-  /**
-   * Check whether or not a field is required, i.e. must have a non-empty value 
-   * @param string $field Field name
-   * @param string|null $output If set, instead of returning a boolean, the
-   * value of $output will be returned if the field is required, and an empty
-   * string will be returned if the field is not required.
-   * @return string|boolean If $output is not set, then true will be
-   * returned if the field is required, and false otherwise. If $output is set,
-   * the value of $output is returned if field is required, and '' otherwise.
-   */
-  public function isRequired($field, $output = null) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $required = $this->model->isFieldRequired($field);
-    if (isset($output)) {
-      return $required ? $output : '';
+  
+  public function name($field) {
+    if (isset($this->name))
+      return $this->name . '[' . $field . ']';
+    return $field;
+  }
+  
+  public function value($field) {
+    if (isset($this->record)) {
+      return $this->record->$field;
     }
     else {
-      return $required;
+      $name = $this->name($field);
+      if (isset($this->request->query[$name]))
+        return $this->request->query[$name];
     }
+    return null;
   }
-
-  /**
-   * Check whether or not a field is optional.
-   * @see FormHelper::isRequired();
-   * @param unknown $field Field name
-   * @param string $output Optional output to return instead of boolean.
-   * @return string|boolean If $output is not set, then true will be
-   * returned if the field is optional, and false otherwise. If $output is set,
-   * the value of $output is returned if field is optional, and '' otherwise.
-   */
-  public function isOptional($field, $output = null) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $required = $this->model->isFieldRequired($field);
-    if (isset($output)) {
-      return $required ? '' : $output;
-    }
-    else {
-      return !$required;
-    }
+  
+  public function isRequired($field) {
+    if (isset($this->model))
+      return $this->model->isRequired($field);
+    return false;
   }
-
-  /**
-   * Check whether or not a field, or the entire form, is valid
-   * @param string $field Name of field to check. If not set, the entire form
-   * is checked.
-   * @return boolean True if field/form is valid, false otherwise
-   */
+  
+  public function isOptional($field) {
+    return !$this->isRequired($field);
+  }
+  
   public function isValid($field = null) {
-    if (!isset($this->record)) {
-      return;
-    }
-    if (!$this->post) {
-      return true;
-    }
-    if (isset($field)) {
+    if (isset($field))
       return !isset($this->errors[$field]);
-    }
-    else {
-      return count($this->errors) < 1;
-    }
+    return count($this->errors) == 0;
   }
-
-  /**
-   * Get all errors
-   * @return array An associative array of field names and error messages
-   */
+  
+  public function isInvalid($field = null) {
+    return !$this->isValid($field);
+  }
+  
   public function getErrors() {
-    if (!isset($this->record)) {
-      return;
-    }
     return $this->errors;
   }
-
-  /**
-   * Get the error message for a specific field
-   * @param string $field Field name
-   * @return string An error message if it exists, or an empty string
-   * otherwise
-   */
-  public function getError($field) {
-    if (!isset($this->record)) {
-      return;
-    }
-    return isset($this->errors[$field]) ? $this->errors[$field] : '';
+  
+  public function error($field, $default = '') {
+    if (isset($this->errors[$field]))
+      return $this->errors[$field];
+    else
+      return $default;
+  }
+  
+  public function ifValid($field, $output) {
+    if ($this->isValid($field))
+      return $output;
+    return '';
+  }
+  
+  public function ifInvalid($field, $output) {
+    if ($this->isInvalid($field))
+      return $output;
+    return '';
+  }
+  
+  public function ifRequired($field, $output) {
+    if ($this->isRequired($field))
+      return $output;
+    return '';
+  }
+  
+  public function ifOptional($field, $output) {
+    if ($this->isOptional($field))
+      return $output;
+    return '';
   }
 
-  /**
-   * Create a label for a field
-   * @param string $field Field name
-   * @param string $label Custom label content, if not set it will be
-   * retrieved from the model.
-   * @param array $options An associative array of options, the only supported
-   * option is 'class', which sets the class-attribute of the label-tag
-   * @return string HTML code
-   */
-  public function label($field, $label = null, $options = array()) {
-    return $this->radioLabel($field, null, $label, $options);
+  public function label($field, $label = null, $attributes = array()) {
+    if (!isset($label) ) {
+      if (isset($this->model))
+        $label = $this->model->getLabel($field);
+    }
+    $attributes = array_merge(array(
+      'for' => $this->id($field)
+    ), $attributes);
+    return $this->element('label', $attributes, $label);
   }
 
-  /**
-   * Create a label for a radio field
-   * @param string $field Field name
-   * @param string $value Field value
-   * @param string $label Custom label content, if not set it will be
-   * retrieved from the model.
-   * @param array $options An associative array of options, the only supported
-   * option is 'class', which sets the class-attribute of the label-tag
-   * @return string HTML code
-   */
-  public function radioLabel($field, $value, $label = null, $options = array()) {
-    if (!isset($this->record)) {
-      return;
+  public function radioLabel($field, $value, $label, $attributes = array()) {
+    $attributes = array_merge(array(
+      'for' => $this->id($field, $value)
+    ), $attributes);
+    return $this->element('label', $attributes, $label);
+  }
+   
+  public function checkboxLabel($field, $value, $label, $attributes = array()) {
+    $this->radioLabel($field, $value, $label, $attributes);
+  }
+
+  public function text($field, $attributes = array()) {
+    return $this->inputElement('text', $field, $attributes);
+  }
+
+  public function date($field, $attributes = array()) {
+    $attributes = array_merge(array(
+      'name' => $this->name($field) . '[date]',
+    ), $attributes);
+    return $this->inputElement('date', $field, $attributes);
+  }
+
+  public function time($field, $attributes = array()) {
+    $attributes = array_merge(array(
+      'name' => $this->name($field) . '[time]',
+    ), $attributes);
+    return $this->inputElement('time', $field, $attributes);
+  }
+
+  public function datetime($field, $attributes = array()) {
+    $attributes = array_merge(array(
+      'name' => $this->name($field) . '[datetime]',
+    ), $attributes);
+    return $this->inputElement('datetime', $field, $attributes);
+  }
+
+  public function password($field, $attributes = array()) {
+    return $this->inputElement('password', $field, $attributes);
+  }
+
+  public function hidden($field, $attributes = array()) {
+    return $this->inputElement('hidden', $field, $attributes);
+  }
+  
+  public function radio($field, $value, $attributes = array()) {
+    $attributes = array_merge(array(
+      'type' => 'radio'
+    ), $attributes);
+    return $this->checkbox($field, $value, $attributes);
+  }
+  
+  public function checkbox($field, $value, $attributes = array()) {
+    $attributes = array_merge(array(
+      'type' => 'checkbox',
+      'name' => $this->name($field),
+      'id' => $this->id($field, $value)
+    ), $attributes);
+    $attributes['value'] = $value;
+    $currentValue = $this->value($field);
+    if ($currentValue == $value) {
+      $attributes['checked'] = 'checked';
     }
-    $html = '<label for="' . $this->fieldId($field, $value) . '"';
-    if (isset($options['class'])) {
-      $html .= ' class="' . $options['class'] . '"';
-    }
-    if (!isset($label)) {
-      $label = $this->model->getFieldLabel($field);
-    }
-    $html .= '>' . $label . '</label>' . PHP_EOL;
+    return $this->element('input', $attributes);
+  }
+  
+  public function select($field, $values = array(), $attributes = array()) {
+    if (end($this->stack) != 'form')
+      throw new FormHelperException('Must be in a form before using optgroup.');
+    $attributes = array_merge(array(
+      'name' => $this->name($field),
+      'id' => $this->id($field),
+      'value' => $this->value($field),
+      'size' => 1
+    ), $attributes);
+    $value = $attributes['value'];
+    unset($attributes['value']);
+    $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    array_push($this->stack, 'select');
+    $this->selectValue = $value;
     return $html;
   }
-
-  /**
-   * Create a label for a checkbox field
-   * @param string $field Field name
-   * @param string $label Custom label content, if not set it will be
-   * retrieved from the model.
-   * @param array $options An associative array of options, the only supported
-   * option is 'class', which sets the class-attribute of the label-tag
-   * @return string HTML code
-   */
-  public function checkboxLabel($field, $value, $label = null, $options = array()) {
-    return $this->radioLabel($field, $value, $label, $options);
+  
+  public function optgroup($label, $attributes = array()) {
+    if (end($this->stack) != 'select')
+      throw new FormHelperException('Must be in a select-field before using optgroup.');
+    $attributes['label'] = $label;
+    array_push($this->stack, 'optgroup');
+    return '<optgroup' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+  }
+  
+  public function selectOf($field, $options = array(), $attributes = array()) {
+    $attributes = array_merge(array(
+      'name' => $this->name($field),
+      'id' => $this->id($field),
+      'value' => $this->value($field),
+      'size' => 1
+    ), $attributes);
+    $currentValue = $attributes['value'];
+    unset($attributes['value']);
+    $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    foreach ($options as $value => $text) {
+      $html .= '<option value="' . h($value) . '"';
+      if ($currentValue == $value)
+        $html .= ' selected="selected"';
+      $html .= '>' . h($text) . '</option>' . PHP_EOL;
+    }
+    $html .= '</selec>';
+    return $html;
+  }
+  
+  public function option($value, $text, $attributes = array()) {
+    $attributes['value'] = $value;
+    if ($value == $this->selectValue)
+      $attributes['selected'] = 'selected';
+    return $this->element('option', $attributes, $text);
   }
 
-  /**
-   * Create a field automatically. If an editor is set for that field, the
-   * editor will be returned. If the field type is 'text', a textarea will be
-   * returned. If the field name has 'pass' in it, a password field will be
-   * returned. If the field name has 'date' in it, a date field will be
-   * returned. Otherwise a regular text field is returned.
-   * @param string $field Field name
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return vois|string HTML code
-   */
-  public function field($field, $options = array()) {
-    if (!isset($this->record)) {
-      return;
+  public function textarea($field, $attributes = array()) {
+    $attributes = array_merge(array(
+      'name' => $this->name($field),
+      'id' => $this->id($field),
+      'value' => $this->value($field)
+    ), $attributes);
+    $content = '';
+    if (isset($attributes['value'])) {
+      $content = $attributes['value'];
+      unset($attributes['value']);
     }
-    $editor = $this->model->getFieldEditor($field);
-    if (isset($editor)) {
-      return $editor->field($this, $field, $options);
+    if (isset($attributes['size'])) {
+      $size = explode('x', $attributes['size']);
+      unset($attributes['size']);
+      if (count($size) == 2) {
+        $attributes['cols'] = $size[0]; 
+        $attributes['rows'] = $size[1];
+      }
     }
-    $type = $this->model->getFieldType($field);
-    switch ($type) {
-      case 'text':
-        return $this->textarea($field, $options);
-      case 'hidden':
-        return $this->hidden($field, $options);
-      default:
-        if (strpos($field, 'pass') !== false) {
-          return $this->password($field, $options);
-        }
-        if (strpos($field, 'date') !== false) {
-          return $this->date($field, $options);
-        }
-        return $this->text($field, $options);
-    }
+    return $this->element('textarea', $attributes, $content);
   }
 
-  /**
-   * Get the HTML encoded value of a field
-   * @param string $field Field name
-   * @param bool $encode Whether or not to encode, default is true
-   * @return string Field value
-   */
-  public function fieldValue($field, $encode = true) {
-    if (!isset($this->record)) {
-      return;
-    }
-    if ($this->model->getFieldType($field) == 'date') {
-      return fdate($this->record->$field);
-    }
-    $editor = $this->model->getFieldEditor($field);
-    if (isset($editor)) {
-      $format = $editor->getFormat();
-      if ($encode) {
-        return h($format->fromHtml($this->record->$field));
-      }
-      else {
-        return $format->fromHtml($this->record->$field);
-      }
-    }
-    if ($this->model->isField($field)) {
-      if ($encode) {
-        return h($this->record->$field);
-      }
-      else {
-        return $this->record->$field;
-      }
-    }
-    return '';
+  public function submit($label, $attributes = array()) {
+    $attributes = array_merge(array(
+      'type' => 'submit',
+      'value' => $label
+    ), $attributes);
+    return $this->element('input', $attributes);
+  }
+  
+  private function inputElement($type, $field, $attributes) {
+    $attributes = array_merge(array(
+      'type' => $type,
+      'name' => $this->name($field),
+      'id' => $this->id($field),
+      'value' => $this->value($field)
+    ), $attributes);
+    return $this->element('input', $attributes);
+  }
+  
+  private function element($tag, $attributes, $content = null) {
+    if (isset($content))
+      return '<' . $tag . $this->addAttributes($attributes) . '>' . $content . '</' . $tag . '>' . PHP_EOL;
+    return '<' . $tag . $this->addAttributes($attributes) . ' />' . PHP_EOL;
   }
 
   /**
@@ -318,233 +361,14 @@ class FormHelper extends Helper {
    * to field
    * @return string HTML code
    */
-  private function addAttributes($options) {
+  private function addAttributes($attributes) {
     $html = '';
-    foreach ($options as $attribute => $value) {
-      $html .= ' ' . $attribute . '="' . h($value) . '"';
+    foreach ($attributes as $attribute => $value) {
+      if (is_scalar($value))
+        $html .= ' ' . $attribute . '="' . h($value) . '"';
     }
     return $html;
-  }
-
-  /**
-   * Create a hidden field
-   * @param string $field Field name
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function hidden($field, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<input type="hidden" name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field) . '"';
-    $html .= $this->addAttributes($options);
-    if ($this->fieldValue($field) != '') {
-      $html .= ' value="' . $this->fieldValue($field) . '"';
-    }
-    $html .= ' />' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * A text field. The default class-attribute is 'text'.
-   * @param string $field Field name
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function text($field, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<input type="text" name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field) . '"';
-    if (!isset($options['class'])) {
-      $options['class'] = 'text';
-    }
-    $html .= $this->addAttributes($options);
-    $value = $this->fieldValue($field); 
-    if ($value != '') {
-      $html .= ' value="' . $value . '"';
-    }
-    $html .= ' />' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * A date field. The default class-attribute is 'text date'.
-   * @param string $field Field name
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function date($field, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<input type="date" name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field) . '"';
-    if (!isset($options['class'])) {
-      $options['class'] = 'text date';
-    }
-    $html .= $this->addAttributes($options);
-    $value = $this->fieldValue($field); 
-    if ($value != '') {
-      $html .= ' value="' . fdate($value) . '"';
-    }
-    $html .= ' />' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * A radio field.
-   * @param string $field Field name
-   * @param mixed $value Field value 
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function radio($field, $value, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<input type="radio" name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field, $value) . '"';
-    $html .= ' value="' . $value . '"';
-    $html .= $this->addAttributes($options);
-    if ('' . $this->fieldValue($field) == "$value") {
-      $html .= ' checked="checked"';
-    }
-    $html .= ' /> ' . PHP_EOL;
-    return $html;
-  }
-  
-  /**
-   * A select field.
-   * @param string $field Field name
-   * @param array $values An associative array of values and labels
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function select($field, $values = array(), $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<select name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field, $value) . '"';
-    $html .= $this->addAttributes($options);
-    $html .= '>' . PHP_EOL;
-    foreach ($values as $value => $label) {
-      $html .= '<option value="' . h($value) . '"';
-      if ('' . $this->fieldValue($field) == "$value") {
-        $html .= ' selected="selected"';
-      }
-      $html .= '>' . h($label) . '</option>' . PHP_EOL;
-    }
-    $html .= '</select>' . PHP_EOL;
-    return $html;
-  }
-  
-  /**
-   * A checkbox.
-   * @param string $field Field name
-   * @param mixed $value Field value
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function checkbox($field, $value, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<input type="checkbox" name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field, $value) . '"';
-    $html .= ' value="' . $value . '"';
-    $html .= $this->addAttributes($options);
-    if ($this->fieldValue($field) == $value) {
-      $html .= ' checked="checked"';
-    }
-    $html .= ' /> ' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * A password field. The default class-attribute is 'text'.
-   * @param string $field Field name
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function password($field, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<input type="password" name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field) . '"';
-    if (!isset($options['class'])) {
-      $options['class'] = 'text';
-    }
-    $html .= $this->addAttributes($options);
-    $html .= ' />' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * A textarea.
-   * @param string $field Field name
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function textarea($field, $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    $html = '<textarea name="' . $this->fieldName($field) . '"';
-    $html .= ' id="' . $this->fieldId($field) . '"';
-    $html .= $this->addAttributes($options);
-    $html .= '>';
-    $html .= $this->fieldValue($field);
-    $html .= '</textarea>' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * A submit button. The default class-attribute is 'button'.
-   * @param string $value Value, default is 'Submit'
-   * @param string $field Field name, default is 'submit'
-   * @param array $options An associative array of additional attributes to add
-   * to field
-   * @return string HTML code
-   */
-  public function submit($value = null, $field = 'submit', $options = array()) {
-    if (!isset($this->record)) {
-      return;
-    }
-    if (!isset($value)) {
-      $value = tr('Submit');
-    }
-    $html = '<input type="submit" name="' . $field . '"';
-    $html .= ' id="' . $this->fieldId($field) . '"';
-    $html .= ' value="' . $value . '"';
-    if (!isset($options['class'])) {
-      $options['class'] = 'button';
-    }
-    $html .= $this->addAttributes($options);
-    $html .= ' /> ' . PHP_EOL;
-    return $html;
-  }
-
-  /**
-   * End the form.
-   * @return string HTML code
-   */
-  public function end() {
-    $this->record = null;
-    $this->model = null;
-    $this->errors = array();
-    return '</form>';
   }
 }
+
+class FormHelperException extends Exception { }

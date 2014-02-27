@@ -2,7 +2,7 @@
 $this->extend('setup/layout.html');
 ?>
 
-      <?php echo $Form->begin(); ?>
+      <?php echo $Form->form(); ?>
 
       <div class="section">
         <div class="container">
@@ -31,8 +31,10 @@ foreach ($drivers as $driver) :
               <?php echo tr('Available'); ?>
             </p>
             <div class="button_container">
-              <?php echo $Form->submit(tr('Select %1', $driver['name']),
-        $driver['driver']); ?>
+              <?php echo $Form->submit(
+                  tr('Select %1', $driver['name']),
+                  array('name' => $driver['driver'], 'class' => 'button')
+                ); ?>
             </div>
               <?php 
   else : ?>
