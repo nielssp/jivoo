@@ -271,6 +271,11 @@ class Request {
     return $this->method == 'PUT';
   }
 
+  public function accepts($type) {
+    // TODO 
+    return true;
+  }
+
   /**
    * Whether or not the current request was made with AJAX
    * @return bool True if it is, false otherwise
