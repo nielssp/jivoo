@@ -153,13 +153,14 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     $result = $this->db->rawQuery('PRAGMA index_list(' . $this->db->tableName($table) . ')');
     $actualIndexes = array();
     $actualIndexes['PRIMARY'] = array(
-      'columns' => $columns,
+      'columns' => $primaryKey,
       'unique' => true
     );
     while ($row = $result->fetchAssoc()) {
       $index = $row['name'];
       $unique = $row['unique'] == 1;
       $columnResult = $this->db->rawQuery('PRAGMA index_info(' . $index . ')');
+      $index = str_replace($this->db->tableName($table) . '_', '', $index);
       $columns = array();
       while ($row = $columnResult->fetchAssoc()) {
         $columns[] = $row['name'];
