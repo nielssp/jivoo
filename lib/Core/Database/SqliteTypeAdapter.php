@@ -257,14 +257,26 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function createIndex($table, $index, $options = array()) {
-    throw new Exception(tr('Not implemented'));
+    $sql = 'CREATE';
+    if ($options['unique']) {
+      $sql .= ' UNIQUE';
+    }
+    $sql .= ' INDEX ';
+    $sql .= $this->db->tableName($table) . '_' . $index;
+    $sql .= ' ON ' . $this->db->tableName($table);
+    $sql .= ' (';
+    $sql .= implode(', ', $options['columns']) . ')';
+    $this->db->rawQuery($sql);
   }
 
   public function deleteIndex($table, $index) {
-    throw new Exception(tr('Not implemented'));
+    $sql = 'CREATE INDEX ';
+    $sql .= $this->db->tableName($table) . '_' . $index;
+    $this->db->rawQuery($sql);
   }
 
   public function alterIndex($table, $index, $options = array()) {
-    throw new Exception(tr('Not implemented'));
+    $this->deleteIndex($table, $index);
+    $this->createIndex($table, $index, $options);
   }
 }
