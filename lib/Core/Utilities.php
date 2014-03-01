@@ -127,15 +127,18 @@ class Utilities {
       case 'htm':
         $fileExt = 'html';
       case 'css':
-      case 'js':
       case 'html':
         return 'text/' . $fileExt;
+      case 'js':
+        return 'application/javascript';
       case 'json':
         return 'application/json';
       case 'rss':
         return 'application/rss+xml';
       case 'atom':
         return 'application/atom+xml';
+      case 'xhtml':
+        return 'application/xhtml+xml';
       case 'xml':
         return 'application/xml';
       case 'jpg':
@@ -147,6 +150,37 @@ class Utilities {
       default:
         return 'text/plain';
     }
+  }
+
+  public static function getExtension($mimeType) {
+    switch ($mimeType) {
+      case 'text/html':
+        return 'html';
+      case 'text/plain':
+        return 'text';
+      case 'text/css':
+        return 'css';
+      case 'text/javascript':
+      case 'application/javascript':
+        return 'js';
+      case 'application/json':
+        return 'json';
+      case 'application/rss+xml':
+        return 'rss';
+      case 'application/atom+xml':
+        return 'atom';
+      case 'application/xhtml+xml':
+        return 'xhtml';
+      case 'application/xml':
+        return 'xml';
+      case 'image/jpeg':
+        return 'jpeg';
+      case 'image/png':
+        return 'png';
+      case 'image/gif':
+        return 'gif';
+    }
+    return null;
   }
 
   /**

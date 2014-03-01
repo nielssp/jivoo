@@ -69,6 +69,12 @@ class Request {
   private $method = 'GET';
 
   /**
+   * @var string[] List of types accepted by the client (assumes that the client
+   * wants HTML if no accept header is set)
+   */
+  private $accepts = array('html');
+
+  /**
    * Constructor
    * @param string $sessionPrefix Session prefix to use for session variables
    * @param string $basePath Base path of application
@@ -121,6 +127,18 @@ class Request {
         case 'PATCH':
         case 'DELETE':
           $this->method = $method;
+      }
+    }
+
+    if (isset($_SERVER['HTTP_ACCEPT'])) {
+      $contentTypes = explode(',', $_SERVER['HTTP_ACCEPT']);
+      $this->accepts = array();
+      foreach ($contentTypes as $contentType) {
+        $contentType = explode(';', $contentType);
+        $type = Utilities::getExtension(trim(strtolower($contentType[0])));
+        if (isset($type)) {
+          $this->accepts[] = $type;
+        }
       }
     }
 
@@ -272,8 +290,7 @@ class Request {
   }
 
   public function accepts($type) {
-    // TODO 
-    return true;
+    return in_array($type, $this->accepts);
   }
 
   /**
