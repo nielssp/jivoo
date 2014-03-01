@@ -27,47 +27,43 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
     $table = $schema->getName();
     Logger::debug('migration: check ' . $table);
     if ($this->tableExists($table)) {
-      $oldSchema = $this->getSchema($table);
-      $allColumns = array_unique(
-        array_merge($schema->getColumns(), $oldSchema->getColumns()));
-      $status = 'unchanged';
-      foreach ($allColumns as $column) {
-        if (!isset($oldSchema->$column)) {
-          $this->migrationMethod($schema, 'addColumn', $column)
-              OR $this->addColumn($table, $column, $schema->$column);
-          $status = 'updated';
-        }
-        else if (!isset($schema->$column)) {
-          $this->migrationMethod($schema, 'deleteColumn', $column)
-              OR $this->deleteColumn($table, $column);
-          $status = 'updated';
-        }
-        else if ($schema->$column != $oldSchema->$column) {
-          Logger::debug(var_export($schema->$column, true));
-          Logger::debug(var_export($oldSchema->$column, true));
-          $this->migrationMethod($schema, 'alterColumn', $column)
-              OR $this->alterColumn($table, $column, $schema->$column);
-          $status = 'updated';
+      $result = $this->checkSchema($table, $schema);
+      foreach ($result['columns'] as $column => $action) {
+        switch ($action) {
+          case 'add':
+            $this->migrationMethod($schema, 'addColumn', $column)
+                OR $this->addColumn($table, $column, $schema->$column);
+            $status = 'updated';
+            break;
+          case 'delete':
+            $this->migrationMethod($schema, 'deleteColumn', $column)
+                OR $this->deleteColumn($table, $column);
+            $status = 'updated';
+            break;
+          case 'alter':
+            $this->migrationMethod($schema, 'alterColumn', $column)
+                OR $this->alterColumn($table, $column, $schema->$column);
+            $status = 'updated';
+            break;
         }
       }
-      $indexes = array_keys($schema->getIndexes());
-      $oldIndexes = array_keys($oldSchema->getIndexes());
-      $allIndexes = array_unique(array_merge($indexes, $oldIndexes));
-      foreach ($allIndexes as $index) {
-        if (!$oldSchema->indexExists($index)) {
-          $this->migrationMethod($schema, 'createIndex', $index)
-              OR $this->createIndex($table, $index, $schema->getIndex($index));
-          $status = 'updated';
-        }
-        else if (!$schema->indexExists($index)) {
-          $this->migrationMethod($schema, 'deleteIndex', $index)
-              OR $this->deleteIndex($table, $index);
-          $status = 'updated';
-        }
-        else if ($schema->getIndex($index) != $oldSchema->getIndex($index)) {
-          $this->migrationMethod($schema, 'alterIndex', $index)
-              OR $this->alterIndex($table, $index, $schema->getIndex($index));
-          $status = 'updated';
+      foreach ($result['indexes'] as $index => $action) {
+        switch ($action) {
+          case 'add':
+            $this->migrationMethod($schema, 'createIndex', $index)
+                OR $this->createIndex($table, $index, $schema->getIndex($index));
+            $status = 'updated';
+            break;
+          case 'delete':
+            $this->migrationMethod($schema, 'deleteIndex', $index)
+                OR $this->deleteIndex($table, $index);
+            $status = 'updated';
+            break;
+          case 'alter':
+            $this->migrationMethod($schema, 'alterIndex', $index)
+                OR $this->alterIndex($table, $index, $schema->getIndex($index));
+            $status = 'updated';
+            break;
         }
       }
       return $status;

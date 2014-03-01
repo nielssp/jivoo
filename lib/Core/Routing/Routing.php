@@ -956,7 +956,7 @@ class Routing extends ModuleBase {
       header('Cache-Control: must-revalidate');
       header('Pragma: must-revalidate');
       if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-        $tags = explode(',', stripslashes($_SERVER['HTTP_IF_NONE_MATCH']));
+        $tags = explode(',', $_SERVER['HTTP_IF_NONE_MATCH']);
         foreach ($tags as $match) {
           if (trim($match) == $tag) {
             Http::setStatus(Http::NOT_MODIFIED);

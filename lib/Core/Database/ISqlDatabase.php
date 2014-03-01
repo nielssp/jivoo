@@ -13,4 +13,7 @@ interface ISqlDatabase extends IDatabase {
    * @throws DatabaseQueryFailedException if query failed
    */
   public function rawQuery($sql);
+
+  /** @return ITypeAdapter Type adapter for datase */
+  public function getTypeAdapter();
 }

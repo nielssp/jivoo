@@ -112,6 +112,10 @@ class DataType {
     }
   }
 
+  public function __isset($property) {
+    return $this->$property != null;
+  }
+
   public function __toString() {
     switch ($this->type) {
     }
@@ -274,7 +278,7 @@ class DataType {
   
   /**
    * Create integer type
-   * @param int $flags Combination of: NOT_NULL, UNSIGNED, AUTO_INCREMENT, BIG, SMALL, TINY
+   * @param int $flags Combination of: UNSIGNED, AUTO_INCREMENT, BIG, SMALL, TINY
    * @param boolean $null Whether or not type is nullable
    * @param int|null $default Default value
    * @return DataType Type object

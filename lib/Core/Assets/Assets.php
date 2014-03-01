@@ -57,6 +57,44 @@ class Assets extends ModuleBase {
     }
   }
 
+  private function minifyJs($js) {
+    // TODO add javascript minification
+    return $js;
+  }
+
+  private function minifyCss($css) {
+    // TODO add CSS minification
+    return $css;
+  }
+
+  private function returnAppJs() {
+    $text = '';
+    $dir = opendir($this->p('assets', 'js'));
+    while ($file = readdir($dir)) {
+      $path = $this->p('assets', 'js/' . $file);
+      if (is_file($path)) {
+        $text .= $this->minifyJs(file_get_contents($path)) . PHP_EOL;
+      }
+    }
+    $response = new TextResponse(Http::OK, 'application/javascript', $text);
+    $response->cache();
+    $this->m->Routing->respond($response);
+  }
+
+  private function returnAppCss() {
+    $text = '';
+    $dir = opendir($this->p('assets', 'css'));
+    while ($file = readdir($dir)) {
+      $path = $this->p('assets', 'css/' . $file);
+      if (is_file($path)) {
+        $text .= $this->minifyCss(file_get_contents($path)) . PHP_EOL;
+      }
+    }
+    $response = new TextResponse(Http::OK, 'text/css', $text);
+    $response->cache();
+    $this->m->Routing->respond($response);
+  }
+
   /**
    * Find an asset an return it to the client
    * @param string $path Path to asset

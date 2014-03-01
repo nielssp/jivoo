@@ -45,7 +45,7 @@ abstract class Response {
     if (!is_int($expires))
       $expires = strtotime($expires);
     $this->maxAge = $expires - time();
-    $this->cache = 'public';
+    $this->cache = $public ? 'public' : 'private';
   }
 }
 

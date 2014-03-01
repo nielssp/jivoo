@@ -3,43 +3,13 @@
  * Represents a database table schema
  * @package Core\Database
  */
-class Schema {
-  /**
-   * @var int Column flag: Unsigned integer
-   */
-  const UNSIGNED = 0x1;
-  
-  /**
-   * @var int Column flag: Auto increment integer
-   */
-  const AUTO_INCREMENT = 0x2;
-  
-  /**
-   * @var int Column flag: Not null
-   */
-  const NOT_NULL = 0x4;
-  
-  /**
-   * @var array Associative array of default column info
-   */
-  private static $defaults = array(
-    'type' => 'text',
-    'length' => null,
-    'null' => true,
-    'unsigned' => false,
-    'autoIncrement' => false,
-    'default' => null
-  );
-
-  /**
-   * @var array Associative array of column names and info
-   */
-  private $schema = array();
-  
+class Schema implements ISchema {
   /**
    * @var string[] List of column names
    */
   private $columns = array();
+
+  private $fields = array();
   
   /**
    * @var bool Whether or not schema is read only
@@ -77,12 +47,11 @@ class Schema {
   /**
    * Get information about column
    * @param string $column Column name
-   * @return array Associative array with the following keys:
-   * 'type', 'length', 'null', 'default', 'autoIncrement', 'unsigned'
+   * @return DataType Type of field
    */
-  public function __get($column) {
-    if (isset($this->schema[$column])) {
-      return $this->schema[$column];
+  public function __get($field) {
+    if (isset($this->fields[$field])) {
+      return $this->fields[$field];
     }
   }
 
@@ -91,8 +60,18 @@ class Schema {
    * @param string $column Column name
    * @return bool True if it does, false otherwise
    */
-  public function __isset($column) {
-    return isset($this->schema[$column]);
+  public function __isset($field) {
+    return isset($this->fields[$field]);
+  }
+
+  public function __set($field, DataType $type) {
+    if (!$this->readOnly) {
+      $this->fields[$field] = $type;
+    }
+  }
+
+  public function getFields() {
+    return $this->columns;
   }
 
   /**
@@ -109,162 +88,14 @@ class Schema {
   protected function createSchema() { }
 
   /**
-   * Add a column to schema
+   * Add a field to schema
    * @param string $column Column name
    * @param array $info Column information
    */
-  public function addColumn($column, $info = array()) {
+  public function addField($name, DataType $type) {
     if (!$this->readOnly) {
-      $info = array_merge(self::$defaults, $info);
-      $this->columns[] = $column;
-      $this->schema[$column] = $info;
+      $this->fields[$name] = $type;
     }
-  }
-
-  /**
-   * Add string column
-   * @param string $name Column name
-   * @param int $length Column length
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param string $default Default value
-   */
-  public function addString($name, $length = 255, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'string',
-      'length' => $length,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
-  }
-
-  /**
-   * Add integer column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL, Schema::UNSIGNED or
-   * Schema::AUTO_INCREMENT)
-   * @param int $default Default value
-   */
-  public function addInteger($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'integer',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => ($flags & self::AUTO_INCREMENT) != 0,
-      'unsigned' => ($flags & self::UNSIGNED) != 0,
-    );
-  }
-
-  /**
-   * Add floating point column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param number $default Default value
-   */
-  public function addFloat($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'float',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
-  }
-
-  /**
-   * Add boolean column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param bool $default Default value
-   */
-  public function addBoolean($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'boolean',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
-  }
-
-  /**
-   * Add text column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param string $default Default value
-   */
-  public function addText($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'text',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
-  }
-
-  /**
-   * Add binary column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param string $default Default value
-   */
-  public function addBinary($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'binary',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
-  }
-
-  /**
-   * Add date column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param string $default Default value
-   */
-  public function addDate($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'date',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
-  }
-
-  /**
-   * Add dateTime column
-   * @param string $name Column name
-   * @param int $flags Column flags (Schema::NOT_NULL)
-   * @param string $default Default value
-   */
-  public function addDateTime($name, $flags = 0, $default = null) {
-    $this->columns[] = $name;
-    $this->schema[$name] = array(
-      'type' => 'dateTime',
-      'length' => null,
-      'null' => ($flags & self::NOT_NULL) == 0,
-      'default' => $default,
-      'autoIncrement' => false,
-      'unsigned' => false,
-    );
   }
 
   /**
@@ -374,14 +205,6 @@ class Schema {
         'unique' => false
       );
     }
-  }
-
-  /**
-   * Get column names
-   * @return string[] Column names
-   */
-  public function getColumns() {
-    return $this->columns;
   }
   
   /**

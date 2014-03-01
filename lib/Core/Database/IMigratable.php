@@ -5,11 +5,14 @@
  */
 interface IMigratable {
   /**
-   * Get schema for table
+   * Check schema for table
    * @param string $table Table name
-   * @return Schema Table schema
+   * @param ISchema $schema Schema
+   * @return array An associative array consisting of two keys, 'indexes' and 'columns',
+   * each containing an associative array of
+   * names mapped to actions (one of 'add', 'delete', 'alter' and 'ok').
    */
-  public function getSchema($table);
+  public function checkSchema($table, ISchema $schema);
 
   /**
    * Create a table based on a schema
@@ -25,23 +28,11 @@ interface IMigratable {
 
   /**
    * Add a column to a table
-   * 
-   * Format of options array:
-   * <code>
-   * array(
-   *   'type' => ...,
-   *   'length' => ...,
-   *   'unsigned' => ...,
-   *   'null' => ...,
-   *   'default' => ...,
-   *   'autoIncrement' => ...
-   * )
-   * </code>
    * @param string $table Table name
    * @param string $column Column name
-   * @param array $options Options
+   * @param DataType $type Type
    */
-  public function addColumn($table, $column, $options = array());
+  public function addColumn($table, $column, DataType $type);
 
   /**
    * Delete a column from a table
@@ -52,23 +43,11 @@ interface IMigratable {
 
   /**
    * Alter a column in a table
-   * 
-   * Format of options array:
-   * <code>
-   * array(
-   *   'type' => ...,
-   *   'length' => ...,
-   *   'unsigned' => ...,
-   *   'null' => ...,
-   *   'default' => ...,
-   *   'autoIncrement' => ...
-   * )
-   * </code>
    * @param string $table Table name
    * @param string $column Column name
-   * @param array $options Options
+   * @param DataType $type Type
    */
-  public function alterColumn($table, $column, $options = array());
+  public function alterColumn($table, $column, DataType $type);
 
   /**
    * Create an index

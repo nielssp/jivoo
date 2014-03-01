@@ -8,6 +8,8 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
    * @var string Table prefix
    */
   protected $tablePrefix = '';
+
+  private $typeAdapter = null;
   
   /**
    * @var array Associative array of table names and {@see SqlTable} objects
@@ -28,6 +30,10 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   public function __isset($name) {
     return isset($this->tables[$name]);
 //     return $this->tableExists($name);
+  }
+
+  protected function setTypeAdapter(IMigrationTypeAdapter $typeAdapter) {
+    $this->typeAdapter = $typeAdapter;
   }
 
   public function getTable($name) {
@@ -109,6 +115,50 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
       }
     }
     return $sqlString;
+  }
+
+  public function getTypeAdapter() {
+    return $this->typeAdapter;
+  }
+
+  public function checkSchema($table, ISchema $schema) {
+    return $this->typeAdapter->checkSchema($table, $schema);
+  }
+
+  public function tableExists($table) {
+    return $this->typeAdapter->tableExists($table);
+  }
+
+  public function createTable(Schema $schema) {
+    $this->typeAdapter->createTable($schema);
+  }
+
+  public function dropTable($table) {
+    $this->typeAdapter->dropTable($table);
+  }
+
+  public function addColumn($table, $column, DataType $type) {
+    $this->typeAdapter->addColumn($table, $column, $type);
+  }
+
+  public function deleteColumn($table, $column) {
+    $this->typeAdapter->deleteColumn($table, $column);
+  }
+
+  public function alterColumn($table, $column, DataType $type) {
+    $this->typeAdapter->alterColumn($table, $column, $type);
+  }
+
+  public function createIndex($table, $index, $options = array()) {
+    $this->typeAdapter->createIndex($table, $index, $options);
+  }
+
+  public function deleteIndex($table, $index) {
+    $this->typeAdapter->deleteIndex($table, $index);
+  }
+
+  public function alterIndex($table, $index, $options = array()) {
+    $this->typeAdapter->alterIndex($table, $index, $options);
   }
 }
 
