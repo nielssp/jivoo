@@ -8,6 +8,8 @@ return array(
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'acblog_',
   'modules' => array(
-    'Core',
+    'Core/Routing',
+    'Core/Controllers',
+    'Core/Templates',
   ),
 );

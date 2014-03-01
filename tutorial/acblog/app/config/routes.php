@@ -1,8 +1,7 @@
 <?php
 // app/config/routes.php
 return array(
-  Route::root('Posts'),
+  Route::root('App'),
   Route::error('App::notFound'),
-  Route::resource('Posts'),
   Route::auto('App::test'),
 );

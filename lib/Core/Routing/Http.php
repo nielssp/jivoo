@@ -4,6 +4,22 @@
  * @package Core\Routing
  */
 class Http {
+
+  const OK = 200;
+  const MULTIPLE_CHOICES = 300;
+  const MOVED_PERMANENTLY = 301;
+  const FOUND = 302;
+  const SEE_OTHER = 303;
+  const NOT_MODIFIED = 304;
+  const USE_PROXY = 305;
+  const SWITCH_PROXY = 306;
+  const TEMPORARY_REDIRECT = 307;
+  const BAD_REQUEST = 400;
+  const UNAUTHORIZED = 401;
+  const PAYMENT_REQUIRED = 402;
+  const FORBIDDEN = 403;
+  const NOT_FOUND = 404;
+
   private function __construct() { }
   
   /**
@@ -73,6 +89,14 @@ class Http {
         return 'Switch Proxy';
       case 307:
         return 'Temporary Redirect';
+      case 400:
+        return 'Bad Request';
+      case 401:
+        return 'Unauthorized';
+      case 402:
+        return 'Payment Required';
+      case 403:
+        return 'Forbidden';
       case 404:
         return 'Not Found';
     }

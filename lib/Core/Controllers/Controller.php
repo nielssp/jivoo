@@ -379,8 +379,7 @@ class Controller implements IHelpable {
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';
     }
-    Http::setStatus($this->status);
-    $this->view->display($templateName);
+    return new ViewResponse($this->status, $this->view, $templateName);
   }
 
   /**

@@ -569,10 +569,7 @@ class Routing extends ModuleBase {
    */
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
-    /**
-     * @TODO Either 307 or 303... 
-     */
-    $status = $moved ? 301 : 303;
+    $status = $moved ? Http::MOVED_PERMANENTLY : Http::SEE_OTHER;
     Http::redirect($status, $this->getLinkFromPath($path, $query, $fragment));
   }
 
@@ -581,10 +578,7 @@ class Routing extends ModuleBase {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function redirect($route = null) {
-    /**
-     * @TODO Either 307 or 303... 
-     */
-    Http::redirect(303, $this->getLink($route));
+    Http::redirect(Http::SEE_OTHER, $this->getLink($route));
   }
 
   /**
@@ -592,7 +586,7 @@ class Routing extends ModuleBase {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function moved($route = null) {
-    Http::redirect(301, $this->getLink($route));
+    Http::redirect(Http::MOVED_PERMANENTLY, $this->getLink($route));
   }
 
   /**
@@ -910,7 +904,26 @@ class Routing extends ModuleBase {
       $this->rendered = true;
       $this->request->route = $route;
       $controller->before();
-      call_user_func_array(array($controller, $action), $route['parameters']);
+      try {
+        $response = call_user_func_array(array($controller, $action), $route['parameters']);
+      }
+      catch (ResponseOverrideException $e) {
+        $response = $e->getResponse();
+      }
+      if (is_string($response)) {
+        $response = new TextResponse(Http::OK, 'text', $response);
+      }
+      if ($response instanceof Response) {
+        Http::setStatus($response->status);
+        Http::setContentType($response->type);
+        $response->render();
+      }
+      else {
+        throw new InvalidResponseException(tr(
+          'An invalid response was returned from the action %1',
+          $route['controller'] . '::' . $route['action']
+        ));
+      }
       $controller->after();
     }
     else {
@@ -941,3 +954,22 @@ class Routing extends ModuleBase {
  * @package Core\Routing
  */
 class InvalidRouteException extends Exception { }
+
+/**
+ * Invalid response
+ * @package Core\Routing
+ */
+class InvalidResponseException extends Exception { }
+
+
+class ResponseOverrideException extends Exception {
+  private $response;
+
+  function __construct(Response $response) {
+    $this->response = $response;
+  }
+
+  function getResponse() {
+    return $this->response;
+  }
+}

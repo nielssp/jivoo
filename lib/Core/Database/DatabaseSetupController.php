@@ -24,7 +24,7 @@ class DatabaseSetupController extends SetupController {
           AND isset($this->request->data[$driver['driver']])) {
           $this->config->set('driver', $driver['driver']);
           if ($this->config->save()) {
-            $this->redirect(null);
+            return $this->redirect(null);
           }
           else {
             return $this->saveConfig();
@@ -32,7 +32,7 @@ class DatabaseSetupController extends SetupController {
         }
       }
     }
-    $this->render();
+    return $this->render();
   }
 
   /**
@@ -92,7 +92,7 @@ class DatabaseSetupController extends SetupController {
           $this->config->set('configured', true);
           $this->config->delete('migration');
           if ($this->config->save()) {
-            $this->redirect(null);
+            return $this->redirect(null);
           }
           else {
             return $this->saveConfig();
@@ -109,6 +109,6 @@ class DatabaseSetupController extends SetupController {
     else {
       $this->setupForm->addData($this->config->getArray());
     }
-    $this->render();
+    return $this->render();
   }
 }

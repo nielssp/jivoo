@@ -14,6 +14,6 @@ Lib::import('Core');
 $app = new App(include 'app/app.php');
 
 $environment = getenv('ACBLOG_ENVIRONMENT');
-$environment || $environment = 'production';
+$environment || $environment = 'development';
 
 $app->run($environment);

@@ -2,13 +2,13 @@
 // app/controllers/AppController.php
 class AppController extends Controller {
   public function index() {
-    $this->render();
+    return 'Hello, World';
   }
   public function test() {
     $this->method = $this->request->method;
-    $this->render();
+    return $this->render();
   }
   public function notFound() {
-    $this->render();
+    return $this->render();
   }
 }
