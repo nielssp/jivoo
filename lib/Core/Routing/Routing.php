@@ -104,6 +104,8 @@ class Routing extends ModuleBase {
    * @var Events Event handling object
    */
   private $events;
+
+  private $etags = false;
   
   /**
    * Event, triggered when ready to render page
@@ -914,9 +916,8 @@ class Routing extends ModuleBase {
         $response = new TextResponse(Http::OK, 'text', $response);
       }
       if ($response instanceof Response) {
-        Http::setStatus($response->status);
-        Http::setContentType($response->type);
-        $response->render();
+        $controller->after($response);
+        $this->respond($response);
       }
       else {
         throw new InvalidResponseException(tr(
@@ -924,13 +925,59 @@ class Routing extends ModuleBase {
           $route['controller'] . '::' . $route['action']
         ));
       }
-      $controller->after();
     }
     else {
       throw new InvalidRouteException(tr('No controller selected'));
     }
-    
+  }
+
+  /**
+   * Sends a response to the client and stops execution of the applicaton
+   * @param Response $response Response object
+   */
+  public function respond(Response $response) {
+    Http::setStatus($response->status);
+    Http::setContentType($response->type);
+    if (isset($response->modified)) {
+      header('Modified: ' . Http::date($response->modified));
+    }
+    if (isset($response->cache)) {
+      $cache = $response->cache;
+      if (isset($response->maxAge)) {
+        $cache .= ', max-age=' . $response->maxAge;
+        header('Expires: ' . Http::date(time() + $response->maxAge));
+      }
+      header('Pragma: ' . $response->cache);
+      header('Cache-Control: ' . $cache);
+    }
+    else if ($this->etags) {
+      $tag = md5($response->body);
+      header('ETag: ' . $tag);
+      header('Cache-Control: must-revalidate');
+      header('Pragma: must-revalidate');
+      if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+        $tags = explode(',', stripslashes($_SERVER['HTTP_IF_NONE_MATCH']));
+        foreach ($tags as $match) {
+          if (trim($match) == $tag) {
+            Http::setStatus(Http::NOT_MODIFIED);
+            $this->app->stop();
+          }
+        }
+      }
+    }
+    if (function_exists('bzcompress') and $this->request->acceptsEncoding('bzip2')) {
+      header('Content-Encoding: bzip2');
+      echo bzcompress($response->body);
+    }
+    else if (function_exists('gzencode') and $this->request->acceptsEncoding('gzip')) {
+      header('Content-Encoding: gzip');
+      echo gzencode($response->body);
+    }
+    else {
+      echo $response->body;
+    }
     $this->events->trigger('onRendered');
+    $this->app->stop();
   }
 
   /**

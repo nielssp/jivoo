@@ -398,8 +398,9 @@ class Controller implements IHelpable {
   
   /**
    * Called right after the selected action is called
+   * @param Response $response Respone object, as created by action
    */
-  public function after() {
+  public function after(Response $response) {
   }
 
 }

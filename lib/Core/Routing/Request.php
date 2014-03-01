@@ -75,6 +75,11 @@ class Request {
   private $accepts = array('html');
 
   /**
+   * @var string[] List of encodings accepted by the client
+   */
+  private $encodings = array();
+
+  /**
    * Constructor
    * @param string $sessionPrefix Session prefix to use for session variables
    * @param string $basePath Base path of application
@@ -139,6 +144,13 @@ class Request {
         if (isset($type)) {
           $this->accepts[] = $type;
         }
+      }
+    }
+
+    if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+      $encodings = explode(',', $_SERVER['HTTP_ACCEPT_ENCODING']);
+      foreach ($encodings as $encoding) {
+        $this->encodings[] = trim(strtolower($encoding));
       }
     }
 
@@ -289,8 +301,16 @@ class Request {
     return $this->method == 'PUT';
   }
 
-  public function accepts($type) {
+  public function accepts($type = null) {
+    if (!isset($type))
+      return $this->accepts;
     return in_array($type, $this->accepts);
+  }
+
+  public function acceptsEncoding($encoding = null) {
+    if (!isset($encoding))
+      return $this->encodings;
+    return in_array($encoding, $this->encodings);
   }
 
   /**

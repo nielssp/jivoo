@@ -47,15 +47,10 @@ class Assets extends ModuleBase {
       if (count($filename) > 1 AND !empty($filename[0])) {
         $extension = strtolower(array_pop($filename));
         if (!in_array($extension, $this->extensionBlacklist)) {
-          if ($this->returnAsset($this->p('assets', implode('/', $path)))) {
-            exit;
-          }
-          else {
+          if (!$this->returnAsset($this->p('assets', implode('/', $path)))) {
             $key = array_shift($path);
             $file = $this->p($key, implode('/', $path));
-            if ($this->returnAsset($file)) {
-              exit;
-            }
+            $this->returnAsset($file);
           }
         }
       }
@@ -65,17 +60,13 @@ class Assets extends ModuleBase {
   /**
    * Find an asset an return it to the client
    * @param string $path Path to asset
-   * @return boolean True if file exists, false otherwise
+   * @return boolean False if file does not exist
    */
   private function returnAsset($path) {
     if (file_exists($path)) {
-      header('Content-Type: ' . Utilities::getContentType($path));
-      $expires = 60*60;
-      header("Pragma: public");
-      header("Cache-Control: maxage=".$expires);
-      header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
-      echo file_get_contents($path);
-      return true;
+      $response = new AssetResponse($path);
+      $response->cache();
+      $this->m->Routing->respond($response);
     }
     return false;
   }

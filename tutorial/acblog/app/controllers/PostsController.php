@@ -10,9 +10,7 @@ class PostsController extends AppController {
 
   // Index action: View all posts
   public function index() {
-    $select = SelectQuery::create()
-      ->orderByDescending('created_at');
-    $this->posts = $this->Post->all($select);
+    $this->posts = $this->Post->orderByDescending('createdAt');
     $this->render();
   }
 
@@ -29,7 +27,7 @@ class PostsController extends AppController {
   public function add() {
     if ($this->request->hasValidData()) {
       $this->post = $this->Post->create($this->request->data['post']);
-      $this->post->created_at = time();
+      $this->post->createdAt = time();
       if ($this->post->save()) {
         $this->session->notice('Post saved');
         $this->refresh();

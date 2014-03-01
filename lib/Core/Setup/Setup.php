@@ -28,7 +28,6 @@ class Setup extends ModuleBase {
     $controller->autoRoute($action);
     $this->m->Routing->reroute($controller, $action);
     $this->m->Routing->findRoute();
-    $this->app->stop();
   }
 
 }

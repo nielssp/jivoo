@@ -102,6 +102,10 @@ class Http {
     }
     return false;
   }
+
+  public static function date($timestamp) {
+    return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
+  }
   
   /**
    * Throw an exception if headers have already been sent and can't be changed

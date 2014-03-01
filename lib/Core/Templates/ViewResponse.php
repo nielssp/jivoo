@@ -10,7 +10,7 @@ class ViewResponse extends Response {
     $this->template = $template;
   }
 
-  public function render() {
-    echo $this->view->fetch($this->template);
+  public function getBody() {
+    return $this->view->fetch($this->template);
   }
 }

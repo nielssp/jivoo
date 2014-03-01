@@ -7,7 +7,7 @@ class TextResponse extends Response {
     $this->text = $text;
   }
 
-  public function render() {
-    echo $this->text;
+  public function getBody() {
+    return $this->text;
   }
 }
