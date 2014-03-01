@@ -207,7 +207,6 @@ class Database extends ModuleBase implements IDatabase {
       $this->migrations[$name] = $this->migrate($this->schemas[$name], true);
     }
     $this->$name->setSchema($this->schemas[$name]);
-    $this->sources->$name = $this->$name;
     return true;
   }
   

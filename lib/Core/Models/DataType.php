@@ -63,7 +63,7 @@ class DataType {
    * @param int|null $length String length
    * @param mixed Default value
    */
-  private function __construct($type, $null = false, $default = null, $flags, $length = null) {
+  private function __construct($type, $null = false, $default = null, $flags = 0, $length = null) {
     if ($type < 0 or $type > 8)
       throw new InvalidDataTypeException(tr('%1 is not a valid type'), $type);
     $this->type = $type;
@@ -259,7 +259,6 @@ class DataType {
               return $value <= 4294967295;
           }
         }
-        return $this->signed or $value >= 0;
       case self::STRING:
         return is_string($value) and strlen($value) <= $this->length;
       case self::BOOLEAN:

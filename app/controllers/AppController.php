@@ -6,6 +6,6 @@ class AppController extends Controller {
   
   public function notFound() {
     $this->setStatus(404);
-    $this->render('404.html');
+    return $this->render('404.html');
   }
 }

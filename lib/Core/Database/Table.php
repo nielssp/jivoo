@@ -1,6 +1,8 @@
 <?php
 abstract class Table extends Model {
 
+  public abstract function setSchema();
+
   public function update(UpdateSelection $selection = null) {
     if (!isset($selection))
       $selection = new UpdateSelection($this);

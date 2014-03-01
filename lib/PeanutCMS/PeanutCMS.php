@@ -7,7 +7,7 @@
 // Dependencies   : Core PeanutCMS/Backend PeanutCMS/Widgets
 //                  PeanutCMS/Extensions
 //                  PeanutCMS/Links PeanutCMS/Pages
-//                  PeanutCMS/Posts PeanutCMS/Theme
+//                  PeanutCMS/Blog PeanutCMS/Theme
 
 /**
  * PeanutCMS dummy module

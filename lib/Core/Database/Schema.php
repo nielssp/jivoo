@@ -7,8 +7,6 @@ class Schema implements ISchema {
   /**
    * @var string[] List of column names
    */
-  private $columns = array();
-
   private $fields = array();
   
   /**
@@ -71,7 +69,7 @@ class Schema implements ISchema {
   }
 
   public function getFields() {
-    return $this->columns;
+    return array_keys($this->fields);
   }
 
   /**

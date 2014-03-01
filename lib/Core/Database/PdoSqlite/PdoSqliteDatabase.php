@@ -34,4 +34,8 @@ class PdoSqliteDatabase extends PdoDatabase {
           $options['filename']));
     }
   }
+
+  public function tableName($name) {
+    return strtolower($this->tablePrefix . $name);
+  }
 }

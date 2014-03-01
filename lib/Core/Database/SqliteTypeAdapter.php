@@ -33,7 +33,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
           $column = 'INTEGER(1)';
         else
           $column = 'INTEGER';
-        if ($isPrimaryKey and $type->autoIncrements)
+        if ($isPrimaryKey and $type->autoIncrement)
           $primaryKey .= ' AUTOINCREMENT';
         break;
       case DataType::FLOAT:
@@ -150,7 +150,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       if (!isset($columns[$field]))
         $columns[$field] = 'add';
     }
-    $result = $this->db->rawQuery('PRAGMA index_list(' . $this->tableName($table) . ')');
+    $result = $this->db->rawQuery('PRAGMA index_list(' . $this->db->tableName($table) . ')');
     $actualIndexes = array();
     $actualIndexes['PRIMARY'] = array(
       'columns' => $columns,
@@ -159,7 +159,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     while ($row = $result->fetchAssoc()) {
       $index = $row['name'];
       $unique = $row['unique'] == 1;
-      $columnResult = $this->rawQuery('PRAGMA index_info(' . $index . ')');
+      $columnResult = $this->db->rawQuery('PRAGMA index_info(' . $index . ')');
       $columns = array();
       while ($row = $columnResult->fetchAssoc()) {
         $columns[] = $row['name'];
@@ -191,14 +191,14 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function tableExists($table) {
-    $result = $this->rawQuery(
-        'PRAGMA table_info(' . $this->tableName($table) . ')');
+    $result = $this->db->rawQuery(
+      'PRAGMA table_info(' . $this->db->tableName($table) . ')');
     return $result->hasRows();
   }
 
   public function createTable(Schema $schema) {
-    $sql = 'CREATE TABLE ' . $this->db->tableName($schema->getName()) . '(';
-    $columns = $schema->getColumns();
+    $sql = 'CREATE TABLE ' . $this->db->tableName($schema->getName()) . ' (';
+    $columns = $schema->getFields();
     $first = true;
     $primaryKey = $schema->getPrimaryKey();
     $singlePrimary = count($primaryKey) ==  1;

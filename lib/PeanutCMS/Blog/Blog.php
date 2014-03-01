@@ -1,6 +1,6 @@
 <?php
 // Module
-// Name           : Posts
+// Name           : Blog
 // Description    : The PeanutCMS blogging system
 // Author         : apakoh.dk
 // Dependencies   : Core/Database Core/Routing Core/Templates
@@ -9,9 +9,9 @@
 
 /**
  * Class for working with blog posts
- * @package PeanutCMS\Posts
+ * @package PeanutCMS\Blog
  */
-class Posts extends ModuleBase {
+class Blog extends ModuleBase {
 
   protected function init() {
 

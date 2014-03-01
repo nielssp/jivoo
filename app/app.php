@@ -19,7 +19,7 @@ return array(
     'Core/Editors',
     'Core/Shadow',
     'Core/Database',
-    'Core/Authentication',
+//    'Core/Authentication',
     'Core/Helpers',
     'Core/Toolkit',
 //    'PeanutCMS',

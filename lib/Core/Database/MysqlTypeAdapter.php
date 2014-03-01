@@ -192,7 +192,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
 
   public function createTable(Schema $schema) {
     $sql = 'CREATE TABLE ' . $this->db->tableName($schema->getName()) . '(';
-    $columns = $schema->getColumns();
+    $columns = $schema->getFields();
     $first = true;
     foreach ($columns as $column) {
       $type = $schema->$column;

@@ -24,12 +24,14 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
   
   public function __get($name) {
-    return $this->tables[$name];
+    $table = $this->tableName($name);
+    if (isset($this->tables[$table]) and $this->tables[$table] === true)
+      $this->tables[$table] = new SqlTable($this, $name);
+    return $this->tables[$table];
   }
 
   public function __isset($name) {
-    return isset($this->tables[$name]);
-//     return $this->tableExists($name);
+    return isset($this->tables[$this->tableName($name)]);
   }
 
   protected function setTypeAdapter(IMigrationTypeAdapter $typeAdapter) {
@@ -37,10 +39,11 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   public function getTable($name) {
-    if (!isset($this->tables[$name])) {
-      $this->tables[$name] = new SqlTable($this, $name);
+    $table = $this->tableName($name);
+    if (!isset($this->tables[$table])) {
+      $this->tables[$table] = new SqlTable($this, $name);
     }
-    return $this->tables[$name];
+    return $this->tables[$table];
   }
 
   public function tableName($name) {
@@ -48,7 +51,8 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   protected function tableCreated($name) {
-    $this->tables[$name] = new SqlTable($this, $name);
+    $table = $this->tableName($name);
+    $this->tables[$table] = new SqlTable($this, $name);
   }
   
   /**
@@ -60,8 +64,8 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     while ($row = $result->fetchRow()) {
       $name = $row[0];
       if (substr($name, 0, $prefixLength) == $this->tablePrefix) {
-        $name = substr($name, $prefixLength);
-        $this->tables[$name] = new SqlTable($this, $name);
+//        $name = substr($name, $prefixLength);
+        $this->tables[$name] = true;
       }
     }
   }
