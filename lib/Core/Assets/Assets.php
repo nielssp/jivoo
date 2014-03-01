@@ -72,7 +72,7 @@ class Assets extends ModuleBase {
       header('Content-Type: ' . Utilities::getContentType($path));
       $expires = 60 * 60 * 24 * 30; // 30 days
       header("Pragma: public");
-      header("Cache-Control: public maxage=".$expires);
+      header("Cache-Control: public, maxage=".$expires);
       header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
       echo file_get_contents($path);
       return true;
