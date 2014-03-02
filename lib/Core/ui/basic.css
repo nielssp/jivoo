@@ -174,17 +174,19 @@ input {
 input.text, textarea {
   font-size: 12px;
   width: 750px;
-  padding: 4px 8px;
-  border: 1px solid #999;
-  border-radius: 4px;
-  color: #333;
+  padding: 4px 12px;
+  border: 1px solid #BBB;
+  border-radius: 5px;
+  color: #888;
   font-family: "Segoe UI", Tahoma, Arial, sans-serif;
   background-color: #fff;
 }
 
 input.text:focus,textarea:focus {
-  outline: none;
-  box-shadow: 0 0 16px 0px #444;
+  color:#252830;
+  border-color:#79B;
+  box-shadow:0 0 3px #79B;
+  outline:0;
 }
 
 .button {
@@ -198,11 +200,6 @@ input.text:focus,textarea:focus {
 
 input.bigtext {
   font-size: 20px;
-}
-
-input.text:focus,textarea:focus {
-  outline: none;
-  box-shadow: 0 0 16px 0px #444;
 }
 
 

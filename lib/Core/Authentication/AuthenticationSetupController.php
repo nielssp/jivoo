@@ -41,7 +41,7 @@ class AuthenticationSetupController extends SetupController {
         }
       }
       else {
-        $this->user = $this->Users->create($this->request->data['user']);  
+        $this->user = $this->Users->create($this->request->data['Users']);  
         if ($this->user->isValid()) {
           $this->user->password = $this->m->Shadow->hash($this->user->password);
           $this->user->group = $this->rootGroup;

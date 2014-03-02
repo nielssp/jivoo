@@ -40,11 +40,12 @@ abstract class ActiveModel extends Model {
   
   public final function __construct(IDatabase $database) {
     $this->database = $database;
-    $this->name = get_class($this);
+    $this->name = preg_replace('/Model$/', '', get_class($this));
     if (!isset($this->table))
       $this->table = $this->name;
     $table = $this->table;
     $this->source = $this->database->$table;
+
     $this->schema = $this->source->getSchema();
     $this->validator = new Validator($this, $this->validate);
     if (isset($this->record)) {
