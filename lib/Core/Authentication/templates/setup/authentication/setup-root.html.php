@@ -2,7 +2,7 @@
 $this->extend('setup/layout.html');
 ?>
 
-<?php echo $Form->begin($user); ?>
+<?php echo $Form->formFor($user); ?>
 
       <div class="section">
         <div class="container">
@@ -12,10 +12,10 @@ $this->extend('setup/layout.html');
           </p>
           <p>
             <?php echo $Form->label('username', null, array('class' => 'small')); ?>
-            <?php echo $Form->field('username'); ?>
+            <?php echo $Form->text('username', array('class' => 'text')); ?>
               <?php if ($Form->isValid('username')) : ?>
             <span class="description">
-              <?php echo $Form->isOptional('username', tr('Optional.')); ?> 
+              <?php echo $Form->ifOptional('username', tr('Optional.')); ?> 
               <?php 
 else : ?>
             <span class="description error">
@@ -26,10 +26,10 @@ else : ?>
 
           <p>
             <?php echo $Form->label('password', null, array('class' => 'small')); ?>
-            <?php echo $Form->field('password'); ?>
+            <?php echo $Form->password('password', array('class' => 'text')); ?>
               <?php if ($Form->isValid('password')) : ?>
             <span class="description">
-              <?php echo $Form->isOptional('password', tr('Optional.')); ?> 
+              <?php echo $Form->ifOptional('password', tr('Optional.')); ?> 
               <?php 
 else : ?>
             <span class="description error">
@@ -41,10 +41,10 @@ else : ?>
           <p>
             <?php echo $Form->label('confirm_password', null,
     array('class' => 'small')); ?>
-            <?php echo $Form->field('confirm_password'); ?>
+    <?php echo $Form->password('confirm_password', array('class' => 'text')); ?>
               <?php if ($Form->isValid('confirm_password')) : ?>
             <span class="description">
-              <?php echo $Form->isOptional('confirm_password', tr('Optional.')); ?> 
+              <?php echo $Form->ifOptional('confirm_password', tr('Optional.')); ?> 
               <?php 
 else : ?>
             <span class="description error">
@@ -55,10 +55,10 @@ else : ?>
 
           <p>
             <?php echo $Form->label('email', null, array('class' => 'small')); ?>
-            <?php echo $Form->field('email'); ?>
+            <?php echo $Form->text('email', array('type' => 'email', 'class' => 'text')); ?>
               <?php if ($Form->isValid('email')) : ?>
             <span class="description">
-              <?php echo $Form->isOptional('email', tr('Optional.')); ?> 
+              <?php echo $Form->ifOptional('email', tr('Optional.')); ?> 
               <?php 
 else : ?>
             <span class="description error">
@@ -70,9 +70,8 @@ else : ?>
       <div class="section">
         <div class="container">
           <div class="aright">
-            <?php echo $Form->submit(tr('Skip'), 'skip'); ?>
-            <?php echo $Form->submit(tr('Save'), 'save',
-    array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Skip'), array('class' => 'button')); ?>
+            <?php echo $Form->submit(tr('Save'), array('class' => 'button publish')); ?>
           </div>
         </div>
       </div>

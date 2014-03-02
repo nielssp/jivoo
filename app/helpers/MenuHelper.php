@@ -2,13 +2,12 @@
 
 class MenuHelper extends Helper {
   
-  protected $models = array('Link');
+  protected $models = array('Links');
   
   public function getMenu($menu = 'main') {
     $menu = strtolower($menu);
-    $select = SelectQuery::create()
+    return $this->Links
       ->where('menu = ?', $menu)
       ->orderBy('position');
-    return $this->Link->all($select);
   }
 }

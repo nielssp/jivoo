@@ -6,27 +6,28 @@ class PostsController extends AppController {
 
   protected $modules = array('Editors');
   
-  protected $models = array('Post', 'Comment', 'Tag');
+  protected $models = array('Posts', 'Comment', 'Tag');
 
   public function before() {
     $this->config = $this->config['Posts'];
   }
 
   public function index() {
-    $select = SelectQuery::create()->where('status = "published"')
-      ->orderByDescending('date');
-    $this->Pagination->setCount($this->Post->count(clone $select));
+  //  $select = SelectQuery::create()->where('status = "published"')
+  //    ->orderByDescending('date');
+  //  $this->Pagination->setCount($this->Post->count(clone $select));
 
-    $this->Pagination->paginate($select);
+//    $this->Pagination->paginate($select);
 
-    $this->posts = $this->Post->all($select);
+    $this->posts = $this->Posts->where('status = "published"')
+      ->orderByDescending('createdAt');
     
-    $this->view->resource(
-      'alternate', 'application/rss+xml',
-      $this->m->Routing->getUrl('feed')
-    );
+//    $this->view->resource(
+//      'alternate', 'application/rss+xml',
+//      $this->m->Routing->getUrl('feed')
+//    );
 
-    $this->render();
+    return $this->render();
   }
   
   public function feed() {

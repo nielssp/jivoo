@@ -152,7 +152,7 @@ class Controllers extends ModuleBase {
             $controller->addModule($module);
           }
           else {
-            Logger::error(
+            throw new ModuleNotFoundException(
               tr('Module "%1" not found for controller %2', $moduleName, $name)
             );
           }

@@ -68,6 +68,19 @@ class Schema implements ISchema {
     }
   }
 
+  public function addAutoIncrementId($id = 'id') {
+    if (!$this->readOnly) {
+      $this->$id = DataType::integer(DataType::AUTO_INCREMENT | DataType::UNSIGNED);
+    }
+  }
+
+  public function addTimestamps($createdAt = 'createdAt', $updatedAt = 'updatedAt') {
+    if (!$this->readOnly) {
+      $this->$createdAt = DataType::dateTime();
+      $this->$updatedAt = DataType::dateTime();
+    }
+  }
+
   public function getFields() {
     return array_keys($this->fields);
   }

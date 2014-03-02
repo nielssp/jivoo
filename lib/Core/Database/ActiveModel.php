@@ -1,6 +1,25 @@
 <?php
 
 abstract class ActiveModel extends Model {
+
+  protected $table = null;
+
+  protected $record = null;
+
+  protected $hasMany = array();
+
+  protected $hasAndBelongsToMany = array();
+
+  protected $belongsTo = array();
+
+  protected $hasOne = array();
+
+  protected $validate = array();
+
+  protected $labels = array();
+
+  protected $mixins = array();
+
   /**
    * @var Table
    */
@@ -21,12 +40,27 @@ abstract class ActiveModel extends Model {
   
   public final function __construct(IDatabase $database) {
     $this->database = $database;
-    $name = get_class($this);
-//    $name = lcfirst(get_class($this));
-    $this->name = $name;
-    $this->source = $this->database->$name;
+    $this->name = get_class($this);
+    if (!isset($this->table))
+      $this->table = $this->name;
+    $table = $this->table;
+    $this->source = $this->database->$table;
     $this->schema = $this->source->getSchema();
-    $this->validator = new Validator($this);
+    $this->validator = new Validator($this, $this->validate);
+    if (isset($this->record)) {
+      if (!class_exists($this->record) or !is_subclass_of($this->record, 'ActiveRecord'))
+        throw new InvalidRecordClassException(tr(
+          'Record class %1 must exist and extend %2', $this->record, 'ActiveRecord'
+        ));
+    }
+  }
+
+  public function create($data = array(), $allowedFields = null) {
+    return ActiveRecord::createNew($this, $data, $allowedFields, $this->record);
+  }
+  
+  public function createExisting($data = array()) {
+    return ActiveRecord::createExisting($this, $data, $this->record);
   }
   
   public function getName() {
@@ -39,6 +73,12 @@ abstract class ActiveModel extends Model {
   
   public function getValidator() {
     return $this->validator;
+  }
+
+  public function getLabel($field) {
+    if (isset($this->labels[$field]))
+      return $this->labels[$field];
+    return ucfirst($field);
   }
   
   public function update(UpdateSelection $selection = null) {
@@ -65,7 +105,7 @@ abstract class ActiveModel extends Model {
     $resultSet = $this->source->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc());
   }
   
   public function last(ReadSelection $selection = null) {
@@ -74,7 +114,7 @@ abstract class ActiveModel extends Model {
     $resultSet = $this->source->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return ActiveRecord::createExisting($this, $resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc());
   }
 
   public function read(ReadSelection $selection) {
@@ -91,117 +131,4 @@ abstract class ActiveModel extends Model {
   }
 }
 
-class ActiveRecord implements IRecord {
-  
-  private $data = array();
-  
-  private $updatedData = array();
-  /**
-   * @var IModel
-   */
-  private $model;
-  
-  private $errors = array();
-  
-  private $new = false;
-  private $saved = true;
-  
-  private function __construct(IModel $model, $data = array(), $allowedFields = null) {
-    $this->model = $model;
-    $this->addData($data, $allowedFields);
-  }
-  
-  public static function createNew(IModel $model, $data = array(), $allowedFields = null) {
-    $record = new ActiveRecord($model, $data, $allowedFields);
-    $record->new = true;
-    $record->saved = false;
-    return $record;
-  }
-  
-  public static function createExisting(IModel $model, $data = array()) {
-    $record = new ActiveRecord($model, $data);
-    $record->updatedData = array();
-    return $record;
-  }
-  
-  public function getModel() {
-    return $this->model;
-  }
-  
-  public function addData($data, $allowedFields = null) {
-    if (!is_array($data)) {
-      return;
-    }
-    if (is_array($allowedFields)) {
-      $allowedFields = array_flip($allowedFields);
-      $data = array_intersect_key($data, $allowedFields);
-    }
-    foreach ($data as $field => $value) {
-      $this->$field = $data[$field];
-    }
-  }
-  
-  public function __get($field) {
-    return $this->data[$field];
-  }
-  
-  public function __set($field, $value) {
-    $this->data[$field] = $value;
-    $this->updatedData[$field] = $value;
-    $this->saved = false;
-  }
-  
-  public function __isset($field) {
-    return isset($this->data[$field]);
-  }
-  
-  public function __unset($field) {
-    $this->data[$field] = null;
-    $this->updatedData[$field] = null;
-    $this->saved = false;
-  }
-  
-  public function set($field, $value) {
-    $this->$field = $value;
-    return $this;
-  }
-  
-  public function isSaved() {
-    return $this->saved;
-  }
-  
-  public function isNew() {
-    return $this->new;
-  }
-  
-  public function getErrors() {
-    return $this->errors;
-  }
-  
-  public function isValid() {
-    $validator = $this->model->getValidator();
-    $this->errors = $validator->validate($this);
-    return count($this->errors) == 0;
-  }
-  
-  public function save($options = array()) {
-    $defaultOptions = array('validate' => true);
-    $options = array_merge($defaultOptions, $options);
-    if ($options['validate'] AND !$this->isValid())
-      return false;
-    if ($this->isNew()) {
-      $this->model->insert($this->data);
-      $this->new = false;
-    }
-    else if (count($this->updatedData) > 0) {
-      $this->model->selectRecord($this)->set($this->updatedData)->update();
-    }
-    $this->updatedData = array();
-    $this->saved = true;
-    return true;
-  }
-  
-  public function delete() {
-    $this->model->selectRecord($this)->delete();
-  }
-}
+class InvalidRecordClassException extends Exception { } 

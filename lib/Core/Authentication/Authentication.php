@@ -55,14 +55,14 @@ class Authentication extends ModuleBase {
       'renewSessionAfter' => 60 * 5, // 5 minutes 
     );
     
-    $this->m->Database->addSchemaIfMissing('users', $this->p('default/schemas/usersSchema.php'));
-    $this->m->Database->addSchemaIfMissing('usersessions', $this->p('default/schemas/usersessionsSchema.php'));
-    $this->m->Database->addSchemaIfMissing('groups', $this->p('default/schemas/groupsSchema.php'));
-    $this->m->Database->addSchemaIfMissing('groups_permissions', $this->p('default/schemas/groups_permissionsSchema.php'));
+    $this->m->Database->addSchemaIfMissing('Users', $this->p('default/schemas/UsersSchema.php'));
+    $this->m->Database->addSchemaIfMissing('Sessions', $this->p('default/schemas/SessionsSchema.php'));
+    $this->m->Database->addSchemaIfMissing('Groups', $this->p('default/schemas/GroupsSchema.php'));
+    $this->m->Database->addSchemaIfMissing('GroupsPermissions', $this->p('default/schemas/GroupsPermissionsSchema.php'));
     
-    $this->m->Database->addActiveModelIfMissing('User', $this->p('default/models/User.php'));
-    $this->m->Database->addActiveModelIfMissing('UserSession', $this->p('default/models/UserSession.php'));
-    $this->m->Database->addActiveModelIfMissing('Group', $this->p('default/models/Group.php'));
+    $this->m->Database->addActiveModelIfMissing('Users', $this->p('default/models/Users.php'));
+    $this->m->Database->addActiveModelIfMissing('Sessions', $this->p('default/models/Sessions.php'));
+    $this->m->Database->addActiveModelIfMissing('Groups', $this->p('default/models/Groups.php'));
     
     $this->sessionLifetime = $this->config['sessionLifetime']; 
     $this->longSessionLifetime = $this->config['longSessionLifetime'];

@@ -936,6 +936,8 @@ class Routing extends ModuleBase {
    * @param Response $response Response object
    */
   public function respond(Response $response) {
+    if (headers_sent())
+      throw new Exception(tr('Headers already sent'));
     Http::setStatus($response->status);
     Http::setContentType($response->type);
     if (isset($response->modified)) {
@@ -965,16 +967,17 @@ class Routing extends ModuleBase {
         }
       }
     }
+    $body = $response->body;
     if (function_exists('bzcompress') and $this->request->acceptsEncoding('bzip2')) {
       header('Content-Encoding: bzip2');
-      echo bzcompress($response->body);
+      echo bzcompress($body);
     }
     else if (function_exists('gzencode') and $this->request->acceptsEncoding('gzip')) {
       header('Content-Encoding: gzip');
-      echo gzencode($response->body);
+      echo gzencode($body);
     }
     else {
-      echo $response->body;
+      echo $body;
     }
     $this->events->trigger('onRendered');
     $this->app->stop();

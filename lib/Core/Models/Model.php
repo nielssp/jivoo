@@ -8,11 +8,11 @@ abstract class Model implements IModel {
   }
 
   public function create($data = array(), $allowedFields = null) {
-    return ActiveRecord::createNew($this, $data, $allowedFields);
+    return Record::createNew($this, $data, $allowedFields);
   }
   
   public function createExisting($data = array()) {
-    return ActiveRecord::createExisting($this, $data);
+    return Record::createExisting($this, $data);
   }
 
   public function selectRecord(IRecord $record) {

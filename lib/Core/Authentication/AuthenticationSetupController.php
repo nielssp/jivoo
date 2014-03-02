@@ -11,7 +11,7 @@ class AuthenticationSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 
-  protected $models = array('User', 'Group');
+  protected $models = array('Users', 'Groups');
 
   /**
    * Action for setting up root user
@@ -20,10 +20,9 @@ class AuthenticationSetupController extends SetupController {
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
 
     if (!isset($this->rootGroup)) {
-      $this->rootGroup = $this->Group
-        ->first(SelectQuery::create()->where('name = "root"'));
+      $this->rootGroup = $this->Groups->where('name = "root"')->first();
       if (!$this->rootGroup) {
-        $this->rootGroup = $this->Group->create();
+        $this->rootGroup = $this->Groups->create();
         $this->rootGroup->name = 'root';
         $this->rootGroup->title = tr('Admin');
         $this->rootGroup->save();
@@ -31,7 +30,7 @@ class AuthenticationSetupController extends SetupController {
       }
     }
 
-    if ($this->request->isPost() AND $this->request->checkToken()) {
+    if ($this->request->hasValidData()) {
       if (isset($this->request->data['skip'])) {
         $this->config->set('rootCreated', true);
         if ($this->config->save()) {
@@ -42,10 +41,10 @@ class AuthenticationSetupController extends SetupController {
         }
       }
       else {
-        $this->user = $this->User->create($this->request->data['user']);  
+        $this->user = $this->Users->create($this->request->data['user']);  
         if ($this->user->isValid()) {
           $this->user->password = $this->m->Shadow->hash($this->user->password);
-          $this->user->setGroup($this->rootGroup);
+          $this->user->group = $this->rootGroup;
           $this->user->save(array('validate' => false));
           $this->config->set('rootCreated', true);
           if ($this->config->save()) {
@@ -58,11 +57,11 @@ class AuthenticationSetupController extends SetupController {
       }
     }
     else {
-      $this->user = $this->User->create();
+      $this->user = $this->Users->create();
       $this->user->username = 'root';
     }
 
-    $this->render();
+    return $this->render();
   }
 
 }

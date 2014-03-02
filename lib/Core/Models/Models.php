@@ -68,7 +68,9 @@ class Models extends ModuleBase implements IDictionary {
         $controller->addModel($name, $model);
       }
       else {
-        Logger::error(tr('Model "%1" not found for %2', $name, get_class($controller)));
+        throw new ModelNotFoundException(tr(
+          'Model "%1" not found for %2', $name, get_class($controller)
+        ));
       }
     }
   }
@@ -88,7 +90,7 @@ class Models extends ModuleBase implements IDictionary {
   /**
    * Get a model
    * @param string $name Model name
-   * @return IModel||null Model object or null if not found
+   * @return IModel|null Model object or null if not found
    */
   public function getModel($name) {
     if (isset($this->modelObjects[$name])) {
@@ -103,7 +105,7 @@ class Models extends ModuleBase implements IDictionary {
       if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
-    throw new Exception(tr('Model %1 not found', $name));
+    throw new ModelNotfoundException(tr('Model "%1" not found', $name));
   }
   
   public function __set($name, $model) {
@@ -122,3 +124,5 @@ class Models extends ModuleBase implements IDictionary {
     return false;
   }
 }
+
+class ModelNotFoundException extends Exception { }
