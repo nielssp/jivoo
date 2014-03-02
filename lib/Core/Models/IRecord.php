@@ -18,6 +18,15 @@ interface IRecord extends IBasicRecord {
    */
   public function __unset($field);
 
+  /**
+   * Set value of a field
+   * @param string $field Field name
+   * @param mixed $value Value
+   * @return self Self
+   * @throws InvalidRecordFieldException if the field does not exist
+   */
+  public function set($field, $value);
+
   /** @return IModel Associated model */
   public function getModel();
   
@@ -29,7 +38,6 @@ interface IRecord extends IBasicRecord {
    * ignored
    */
   public function addData($data, $allowedFields = null);
-  public function set($field, $value);
   
   /** Save record */
   public function save();

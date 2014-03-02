@@ -20,6 +20,8 @@ class Database extends ModuleBase implements IDatabase {
    * @var array Associative array of driver info
    */
   private $driverInfo;
+
+  private $activeModels = array();
   
   /**
    * @var IDatabase Database connection
@@ -39,15 +41,18 @@ class Database extends ModuleBase implements IDatabase {
 
   /* Begin IDatabase implementation */
   public function __get($table) {
-    if ($this->connection) {
+    if (isset($this->activeModels[$table]))
+      return $this->activeModels[$table];
+    if ($this->connection)
       return $this->connection->__get($table);
-    }
   }
 
   public function __isset($table) {
-    if ($this->connection) {
+    if (isset($this->activeModels[$table]))
+      return true;
+    if ($this->connection)
       return $this->connection->__isset($table);
-    }
+    return false;
   }
 
   public function close() {
@@ -223,6 +228,7 @@ class Database extends ModuleBase implements IDatabase {
       }
       $model = new $class($this);
       $this->m->Models->setModel($class, $model);
+      $this->activeModels[$class] = $model;
       return true;
     }
     return false;

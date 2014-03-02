@@ -37,6 +37,8 @@ abstract class ActiveModel extends Model {
   private $schema;
   
   private $validator;
+
+  private $associations = array();
   
   public final function __construct(IDatabase $database) {
     $this->database = $database;
@@ -54,6 +56,8 @@ abstract class ActiveModel extends Model {
           'Record class %1 must exist and extend %2', $this->record, 'ActiveRecord'
         ));
     }
+
+    $this->createAssociations();
   }
 
   public function create($data = array(), $allowedFields = null) {
@@ -62,6 +66,71 @@ abstract class ActiveModel extends Model {
   
   public function createExisting($data = array()) {
     return ActiveRecord::createExisting($this, $data, $this->record);
+  }
+
+  private function createAssociations() {
+    foreach (array('hasOne', 'belongsTo', 'hasMany', 'hasAndBelongsToMany') as $type) {
+      foreach ($this->$type as $name => $options) {
+        if (!is_string($name)) {
+          if (!is_string($options) or !($type == 'belongsTo' or $type == 'hasOne'))
+            throw new InvalidAssociationException(tr(
+              'Invalid "%1"-association in %2', $type, $this->name
+            ));
+          $name = lcfirst($options);
+          $options = array(
+            'model' => $options
+          );
+        }
+        if (is_string($options)) {
+          $options = array(
+            'model' => $options
+          );
+        }
+        $this->createAssociation($associationType, $name, $options);
+      }
+    }
+  }
+
+  private function createAssociation($type, $name, $options) {
+    $otherModel = $options['model'];
+    if (!isset($this->database->$otherModel)) {
+      throw new ModelNotFoundException(tr(
+        'Model %1 not found in  %2', $otherModel, $this->name
+      ));
+    }
+    $options['model'] = $this->database->$otherModel;
+    if (!isset($options['thisKey'])) {
+      $options['thisKey'] = lcfirst($this->name) . 'Id';
+    }
+    if (!isset($options['otherKey'])) {
+      $options['otherKey'] = lcfirst($otherClass) . 'Id';
+    }
+    if ($type == 'hasAndBelongsToMany' AND !isset($options['join'])) {
+      if ($options['model'] instanceof ActiveModel) { 
+        $otherTable = $options['model']->table;
+        if (strcmp($this->table, $otherTable) < 0) {
+          $options['join'] = $this->table .  $otherTable;
+        }
+        else {
+          $options['join'] = $otherTable . $this->table;
+        }
+      }
+      else {
+        throw new InvalidModelException(tr(
+          '%1 invalid for joining with %2, must extend ActivRecord',
+          $otherModel, $this->name
+        ));
+      }
+    }
+    if (isset($options['join'])) {
+      if (!isset($this->database->$options['join'])) {
+        throw new DataSourceNotFoundException(tr(
+          'Association data source "%1" not found', $options['join']
+        ));
+      }
+      $options['join'] = $this->database->$options['join'];
+    }
+    $this->associations[$name] = $options;
   }
   
   public function getName() {
@@ -74,6 +143,10 @@ abstract class ActiveModel extends Model {
   
   public function getValidator() {
     return $this->validator;
+  }
+
+  public function getFields() {
+    return $this->schema->getFields();
   }
 
   public function getLabel($field) {
@@ -130,6 +203,25 @@ abstract class ActiveModel extends Model {
   public function insert($data) {
     $this->source->insert($data);
   }
+
+  public function getAssociation(ActiveRecord $record, $association) {
+  }
+
+  public function hasAssociation(ActiveRecord $record, $association) {
+  }
+
+  public function unsetAssociation(ActiveRecord $record, $association) {
+  }
+
+  public function setAssociation(ActiveRecord $record, $association, $value) {
+  }
 }
 
 class InvalidRecordClassException extends Exception { } 
+
+/**
+ * A data source was not found
+ * @package Core\Database
+ */
+class DataSourceNotFoundException extends Exception { }
+class InvalidAssociationException extends Exception { }

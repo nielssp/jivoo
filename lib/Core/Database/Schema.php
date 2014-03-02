@@ -32,7 +32,7 @@ class Schema implements ISchema {
     $className = get_class($this);
     if ($className != __CLASS__) {
       if (!isset($name)) {
-        $name = substr($className, 0, -6);
+        $name = preg_replace('/Schema$/', '', $className);
       }
       $this->createSchema();
       $this->readOnly = true;

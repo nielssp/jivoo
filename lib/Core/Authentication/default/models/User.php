@@ -1,5 +1,5 @@
 <?php
-class UserModel extends ActiveModel {
+class User extends ActiveModel {
 
   protected $hasMany = array(
     'sessions' => 'Session'

@@ -1,5 +1,5 @@
 <?php
-class Posts extends ActiveModel {
+class Post extends ActiveModel {
 
   protected $hasAndBelongsToMany = array(
     'tags' => array(

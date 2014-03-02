@@ -1,5 +1,5 @@
 <?php
-class GroupModel extends ActiveModel {
+class Group extends ActiveModel {
 
   protected $hasMany = array(
     'users' => 'User'

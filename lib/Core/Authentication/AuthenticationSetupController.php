@@ -11,7 +11,7 @@ class AuthenticationSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 
-  protected $models = array('Users', 'Groups');
+  protected $models = array('User', 'Group');
 
   /**
    * Action for setting up root user
@@ -20,9 +20,9 @@ class AuthenticationSetupController extends SetupController {
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
 
     if (!isset($this->rootGroup)) {
-      $this->rootGroup = $this->Groups->where('name = "root"')->first();
+      $this->rootGroup = $this->Group->where('name = "root"')->first();
       if (!$this->rootGroup) {
-        $this->rootGroup = $this->Groups->create();
+        $this->rootGroup = $this->Group->create();
         $this->rootGroup->name = 'root';
         $this->rootGroup->title = tr('Admin');
         $this->rootGroup->save();
@@ -41,7 +41,7 @@ class AuthenticationSetupController extends SetupController {
         }
       }
       else {
-        $this->user = $this->Users->create($this->request->data['Users']);  
+        $this->user = $this->User->create($this->request->data['Users']);  
         if ($this->user->isValid()) {
           $this->user->password = $this->m->Shadow->hash($this->user->password);
           $this->user->group = $this->rootGroup;
@@ -57,7 +57,7 @@ class AuthenticationSetupController extends SetupController {
       }
     }
     else {
-      $this->user = $this->Users->create();
+      $this->user = $this->User->create();
       $this->user->username = 'root';
     }
 

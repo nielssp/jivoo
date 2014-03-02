@@ -55,21 +55,21 @@ class Authentication extends ModuleBase {
       'renewSessionAfter' => 60 * 5, // 5 minutes 
     );
     
-    $this->m->Database->addSchemaIfMissing('Users', $this->p('default/schemas/UsersSchema.php'));
-    $this->m->Database->addSchemaIfMissing('Sessions', $this->p('default/schemas/SessionsSchema.php'));
-    $this->m->Database->addSchemaIfMissing('Groups', $this->p('default/schemas/GroupsSchema.php'));
-    $this->m->Database->addSchemaIfMissing('GroupsPermissions', $this->p('default/schemas/GroupsPermissionsSchema.php'));
+    $this->m->Database->addSchemaIfMissing('User', $this->p('default/schemas/UserSchema.php'));
+    $this->m->Database->addSchemaIfMissing('Session', $this->p('default/schemas/SessionSchema.php'));
+    $this->m->Database->addSchemaIfMissing('Group', $this->p('default/schemas/GroupSchema.php'));
+    $this->m->Database->addSchemaIfMissing('GroupPermission', $this->p('default/schemas/GroupPermissionSchema.php'));
     
-    $this->m->Database->addActiveModelIfMissing('Users', $this->p('default/models/Users.php'));
-    $this->m->Database->addActiveModelIfMissing('Sessions', $this->p('default/models/Sessions.php'));
-    $this->m->Database->addActiveModelIfMissing('Groups', $this->p('default/models/Groups.php'));
+    $this->m->Database->addActiveModelIfMissing('User', $this->p('default/models/User.php'));
+    $this->m->Database->addActiveModelIfMissing('Session', $this->p('default/models/Session.php'));
+    $this->m->Database->addActiveModelIfMissing('Group', $this->p('default/models/Group.php'));
     
     $this->sessionLifetime = $this->config['sessionLifetime']; 
     $this->longSessionLifetime = $this->config['longSessionLifetime'];
     $this->renewSessionAfter = $this->config['renewSessionAfter'];
 
     $rootGroup = null;
-    if ($this->m->Database->isNew('groups')) {
+    if ($this->m->Database->isNew('Group')) {
       $group = $this->m->Models->Group->create();
       $group->name = 'root';
       $group->title = tr('Admin');
@@ -91,7 +91,7 @@ class Authentication extends ModuleBase {
 
     }
 
-    if ($this->m->Database->isNew('users') OR $this->config['rootCreated'] !== true) {
+    if ($this->m->Database->isNew('User') OR $this->config['rootCreated'] !== true) {
       $this->config['rootCreated'] = false;
       Logger::debug('Authentication: No root user created');
       $controller = new AuthenticationSetupController(

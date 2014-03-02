@@ -1,5 +1,5 @@
 <?php
-class SessionModel extends ActiveModel {
+class Session extends ActiveModel {
   protected $belongsTo = array(
     'user' => 'Users'
   );

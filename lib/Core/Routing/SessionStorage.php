@@ -12,7 +12,7 @@
  * @property-read Flash[] $alerts Alerts only
  * @property-read Flash[] $notices Notices only
  */
-class Session implements arrayaccess {
+class SessionStorage implements arrayaccess {
   /**
    * @var string Session prefix
    */

@@ -7,15 +7,14 @@ class Record implements IRecord {
   /**
    * @var IModel
    */
-  protected $model;
-  
+  private $model;
   private $errors = array();
-  
   private $new = false;
   private $saved = true;
   
   private function __construct(IModel $model, $data = array(), $allowedFields = null) {
     $this->model = $model;
+    $this->data = array_fill_keys($model->getFields(), null);
     $this->addData($data, $allowedFields);
   }
   
@@ -40,37 +39,47 @@ class Record implements IRecord {
     if (!is_array($data)) {
       return;
     }
+    if (!isset($allowedFields))
+      $allowedFields = $this->data;
     if (is_array($allowedFields)) {
       $allowedFields = array_flip($allowedFields);
       $data = array_intersect_key($data, $allowedFields);
     }
     foreach ($data as $field => $value) {
-      $this->$field = $data[$field];
+      $this->__set($field, $data[$field]);
     }
   }
   
   public function __get($field) {
+    if (!array_key_exists($field, $this->data))
+      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
     return $this->data[$field];
   }
   
   public function __set($field, $value) {
+    if (!array_key_exists($field, $this->data))
+      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
     $this->data[$field] = $value;
     $this->updatedData[$field] = $value;
     $this->saved = false;
   }
   
   public function __isset($field) {
+    if (!array_key_exists($field, $this->data))
+      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
     return isset($this->data[$field]);
   }
   
   public function __unset($field) {
+    if (!array_key_exists($field, $this->data))
+      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
     $this->data[$field] = null;
     $this->updatedData[$field] = null;
     $this->saved = false;
   }
   
   public function set($field, $value) {
-    $this->$field = $value;
+    $this->__set($field, $value);
     return $this;
   }
   
