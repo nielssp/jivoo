@@ -2,9 +2,17 @@
 abstract class Model implements IModel {
   private $iterator = null;
   private $validator = null;
+  private $aiPrmaryKey = null;
   
   public function __construct() {
     $this->validator = new Validator($this);
+    $pk = $this->getSchema()->getPrimaryKey();
+    if (count($pk) == 1) {
+      $pk = $pk[0];
+      $type = $this->getSchema()->$pk;
+      if ($type->isInteger() and $type->autoIncrement)
+        $this->aiPrimaryKey = $pk;
+    }
   }
 
   public function create($data = array(), $allowedFields = null) {
@@ -13,6 +21,10 @@ abstract class Model implements IModel {
   
   public function createExisting($data = array()) {
     return Record::createExisting($this, $data);
+  }
+
+  public function getAiPrimaryKey() {
+    return $this->aiPrimaryKey;
   }
 
   public function selectRecord(IRecord $record) {

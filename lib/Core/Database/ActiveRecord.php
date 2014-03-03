@@ -104,6 +104,7 @@ class ActiveRecord implements IRecord {
   public function __call($method, $parameters) {
     $method = 'record' . ucfirst($method);
     $function = array($this->model, $method);
+    array_unshift($parameters, $this);
     if (function_exists($function))
       return call_user_func_array($function, $parameters);
     throw new InvalidMethodException(tr('"%1" is not a valid method', $method));
@@ -138,7 +139,10 @@ class ActiveRecord implements IRecord {
     if ($options['validate'] AND !$this->isValid())
       return false;
     if ($this->isNew()) {
-      $this->model->insert($this->data);
+      $insertId = $this->model->insert($this->data);
+      $pk = $this->model->getAiPrimaryKey();
+      if (isset($pk))
+        $this->data[$pk] = $insertId;
       $this->new = false;
     }
     else if (count($this->updatedData) > 0) {

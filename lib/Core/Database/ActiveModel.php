@@ -49,6 +49,14 @@ abstract class ActiveModel extends Model {
     $this->source = $this->database->$table;
 
     $this->schema = $this->source->getSchema();
+    $pk = $this->schema->getPrimaryKey();
+    if (count($pk) == 1) {
+      $pk = $pk[0];
+      $type = $this->schema->$pk;
+      if ($type->isInteger() and $type->autoIncrement)
+        $this->aiPrimaryKey = $pk;
+    }
+
     $this->validator = new Validator($this, $this->validate);
     if (isset($this->record)) {
       if (!class_exists($this->record) or !is_subclass_of($this->record, 'ActiveRecord'))
@@ -66,6 +74,10 @@ abstract class ActiveModel extends Model {
   
   public function createExisting($data = array()) {
     return ActiveRecord::createExisting($this, $data, $this->record);
+  }
+
+  public function getDatabase() {
+    return $this->database;
   }
 
   private function createAssociations() {

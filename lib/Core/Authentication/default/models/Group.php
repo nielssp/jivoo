@@ -1,6 +1,8 @@
 <?php
 class Group extends ActiveModel {
 
+  protected $record = 'GroupRecord';
+
   protected $hasMany = array(
     'users' => 'User'
   );
@@ -11,15 +13,14 @@ class GroupRecord extends ActiveRecord {
   private $permissions;
 
   private function fetchPermissions() {
-    $dataSource = $this->getModel()->otherSources->groups_permissions;
-    $result = $dataSource->select()
-      ->where('group_id = ?')
-      ->addVar($this->id)
-      ->execute();
+    $permissions = $this->getModel()
+      ->getDatabase()
+      ->GroupPermission
+      ->where('groupId = ?', $this->id)
+      ->select('permission');
     $this->permissions = array();
-    while ($row = $result->fetchAssoc()) {
-      $this->permissions[$row['permission']] = true;
-    }
+    foreach ($permissions as $record)
+      $this->permissions[$record['permission']] = true;
   }
 
   public function hasPermission($key = null) {
@@ -54,21 +55,19 @@ class GroupRecord extends ActiveRecord {
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
     }
-    $dataSource = $this->getModel()->otherSources->groups_permissions;
+    $source = $this->getModel()->getDatabase()->GroupPermission;
     if ($value == true AND !$this->hasPermission($key)) {
       $this->permissions[$key] = true;
-      $dataSource->insert()
-        ->addPair('group_id', $this->id)
-        ->addPair('permission', $key)
-        ->execute();
+      $source->create()
+        ->set('groupId', $this->id)
+        ->set('permission', $key)
+        ->save();
     }
     else if ($value == false AND $this->hasPermission($key)) {
       unset($this->permissions[$key]);
-      $dataSource->delete()
-        ->where('group_id = ? AND permission = ?')
-        ->addVar($this->id)
-        ->addVar($key)
-        ->execute();
+      $source->where('groupId = ?', $this->id)
+        ->and('permission = ?', $key)
+        ->delete();
     }
   }
 }

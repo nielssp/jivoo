@@ -6,6 +6,14 @@ interface IModel extends ISelection, IBasicModel {
   public function getSchema();
 
   /**
+   * Retrieve primary key if it is an auto incrementing integer
+   * @return string|null Name of primary key if there is
+   * only a single primary key and it is auto incrementing,
+   * otherwise null
+   */
+  public function getAiPrimaryKey();
+
+  /**
    * @return IValidator Validator for model
   */
   public function getValidator();
@@ -40,7 +48,7 @@ interface IModel extends ISelection, IBasicModel {
   public function create($data = array(), $allowedFields = null);
   /**
    * @param array $data
-   * @return IModel
+   * @return int Last insert id
   */
   public function insert($data);
 }

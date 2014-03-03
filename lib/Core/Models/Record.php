@@ -97,6 +97,8 @@ class Record implements IRecord {
   
   public function isValid() {
     $validator = $this->model->getValidator();
+    if (!isset($validator))
+      return true;
     $this->errors = $validator->validate($this);
     return count($this->errors) == 0;
   }
@@ -107,7 +109,10 @@ class Record implements IRecord {
     if ($options['validate'] AND !$this->isValid())
       return false;
     if ($this->isNew()) {
-      $this->model->insert($this->data);
+      $insertId = $this->model->insert($this->data);
+      $pk = $this->model->getAiPrimaryKey();
+      if (isset($pk))
+        $this->data[$pk] = $insertId;
       $this->new = false;
     }
     else if (count($this->updatedData) > 0) {

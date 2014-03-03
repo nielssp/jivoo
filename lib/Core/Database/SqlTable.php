@@ -23,6 +23,7 @@ class SqlTable extends Table {
   public function __construct(SqlDatabase $database, $table) {
     $this->owner = $database;
     $this->name = $table;
+    parent::__construct();
   }
 
   public function getName() {
