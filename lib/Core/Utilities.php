@@ -20,6 +20,11 @@ class Utilities {
     return strtolower($dashes);
   }
 
+  public static function camelCaseToUnderscores($camelCase) {
+    $underscores = preg_replace('/([A-Z])/', '_$1', lcfirst($camelCase));
+    return strtolower($underscores);
+  }
+
   /**
    * Convert a lowercase dash-separated name to a camel case class-name. E.g.
    * from "camel-case" to "CamelCase".
@@ -29,9 +34,16 @@ class Utilities {
   public static function dashesToCamelCase($dashes) {
     $words = explode('-', $dashes);
     $camelCase = '';
-    foreach ($words as $word) {
+    foreach ($words as $word)
       $camelCase .= ucfirst($word);
-    }
+    return $camelCase;
+  }
+
+  public static function underscoresToCamelCase($underscores) {
+    $words = explode('_', $underscores);
+    $camleCase = '';
+    foreach ($words as $word)
+      $camelCase .= ucfirst($word);
     return $camelCase;
   }
   

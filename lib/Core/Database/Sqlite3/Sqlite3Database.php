@@ -44,10 +44,6 @@ class Sqlite3Database extends SqlDatabase {
     $this->handle->close();
   }
 
-  public function tableName($name) {
-    return strtolower($this->tablePrefix . $name);
-  }
-
   public function quoteString($string) {
     return '"' . $this->handle->escapeString($string) . '"';
   }

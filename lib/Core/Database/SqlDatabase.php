@@ -47,7 +47,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   public function tableName($name) {
-    return $this->tablePrefix . $name;
+    return $this->tablePrefix . Utilities::camelCaseToUnderscores($name);
   }
 
   protected function tableCreated($name) {

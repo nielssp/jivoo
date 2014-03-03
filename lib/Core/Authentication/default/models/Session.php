@@ -1,7 +1,7 @@
 <?php
 class Session extends ActiveModel {
   protected $belongsTo = array(
-    'user' => 'Users'
+    'user' => 'User'
   );
   
   public function recordHasExpired(ActiveRecord $session) {
