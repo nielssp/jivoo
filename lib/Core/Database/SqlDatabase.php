@@ -25,6 +25,10 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   
   public function __get($name) {
     $table = $this->tableName($name);
+    if (!isset($this->tables[$table]))
+      throw new TableNotFoundException(tr(
+        'Table "%1" does not exist.', $name
+      ));
     if (isset($this->tables[$table]) and $this->tables[$table] === true)
       $this->tables[$table] = new SqlTable($this, $name);
     return $this->tables[$table];

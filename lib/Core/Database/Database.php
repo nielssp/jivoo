@@ -140,7 +140,7 @@ class Database extends ModuleBase implements IDatabase {
     if (is_dir($schemasDir)) {
       Lib::addIncludePath($schemasDir);
       $dir = opendir($schemasDir);
-        if ($dir) {
+      if ($dir) {
         while ($file = readdir($dir)) {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {

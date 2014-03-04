@@ -63,3 +63,5 @@ class DatabaseSelectFailedException extends Exception {}
  */
 class DatabaseQueryFailedException extends Exception {}
 
+
+class TableNotFoundException extends Exception { }
