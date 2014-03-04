@@ -45,7 +45,7 @@ class User extends ActiveModel {
     return isset($group) and $group->hasPermission($key);
   }
 
-  protected function confirmPassword($value) {
+  public function confirmPassword($value) {
     return $value == $this->password;
   }
 }

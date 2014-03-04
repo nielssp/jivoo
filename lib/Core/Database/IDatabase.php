@@ -7,7 +7,7 @@ interface IDatabase {
   /**
    * Get a loaded table from database
    * @param string $table Table name
-   * @return ITable|null Table or null if undefined
+   * @return IModel|null Table or null if undefined
    */
   public function __get($table);
   
@@ -24,11 +24,11 @@ interface IDatabase {
   public function close();
   
   /**
-   * Get a table object, or create it if it doesn't exist 
+   * Get a table object, or create it (with the given schema) if it doesn't exist 
    * @param string $name Table name
-   * @return ITable Table
+   * @return IModel Table
    */
-  public function getTable($name);
+  public function getTable($name, ISchema $schema);
   
   /**
    * Check a table exists in database

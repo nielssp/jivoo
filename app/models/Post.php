@@ -3,24 +3,21 @@ class Post extends ActiveModel {
 
   protected $hasAndBelongsToMany = array(
     'tags' => array(
-      'model' => 'Tags',
-      'join' => 'PostsTags',
+      'model' => 'Tag',
+      'join' => 'PostTag',
       'thisKey' => 'postId',
       'otherKey' => 'tagId'
     ),
   );
 
   protected $hasMany = array(
-    'Comments',
+    'Comment',
   );
 
   protected $belongsTo = array(
-    'user' => 'Users',
+    'user' => 'User',
   );
 
-  protected $hasOne = array(
-    'category' => array('model' => 'Tags')
-  );
 
   protected $validate = array(
     'title' => array(

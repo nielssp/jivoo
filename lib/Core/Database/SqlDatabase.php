@@ -29,8 +29,6 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
       throw new TableNotFoundException(tr(
         'Table "%1" does not exist.', $name
       ));
-    if (isset($this->tables[$table]) and $this->tables[$table] === true)
-      $this->tables[$table] = new SqlTable($this, $name);
     return $this->tables[$table];
   }
 
@@ -42,10 +40,10 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     $this->typeAdapter = $typeAdapter;
   }
 
-  public function getTable($name) {
+  public function getTable($name, ISchema $schema) {
     $table = $this->tableName($name);
     if (!isset($this->tables[$table])) {
-      $this->tables[$table] = new SqlTable($this, $name);
+      $this->tables[$table] = new SqlTable($this, $name, $schema);
     }
     return $this->tables[$table];
   }
@@ -54,10 +52,10 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     return $this->tablePrefix . Utilities::camelCaseToUnderscores($name);
   }
 
-  protected function tableCreated($name) {
-    $table = $this->tableName($name);
-    $this->tables[$table] = new SqlTable($this, $name);
-  }
+//   protected function tableCreated($name) {
+//     $table = $this->tableName($name);
+//     $this->tables[$table] = new SqlTable($this, $name);
+//   }
   
   /**
    * Initialise table objects based on a result set
@@ -69,7 +67,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
       $name = $row[0];
       if (substr($name, 0, $prefixLength) == $this->tablePrefix) {
 //        $name = substr($name, $prefixLength);
-        $this->tables[$name] = true;
+//         $this->tables[$name] = true;
       }
     }
   }

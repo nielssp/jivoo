@@ -27,6 +27,11 @@ class Database extends ModuleBase implements IDatabase {
    * @var IDatabase Database connection
    */
   private $connection;
+  
+  /**
+   * @var IModel[]
+   */
+  private $tables = array();
 
   /**
    * 
@@ -41,10 +46,9 @@ class Database extends ModuleBase implements IDatabase {
 
   /* Begin IDatabase implementation */
   public function __get($table) {
-    if (isset($this->activeModels[$table]))
-      return $this->activeModels[$table];
-    if ($this->connection)
-      return $this->connection->__get($table);
+    if (isset($this->tables[$table]))
+      return $this->tables[$table];
+    throw new TableNotFoundException(tr('Table "%1" not found'), $table);
   }
 
   public function __isset($table) {
@@ -56,21 +60,18 @@ class Database extends ModuleBase implements IDatabase {
   }
 
   public function close() {
-    if ($this->connection) {
+    if ($this->connection)
       $this->connection->close();
-    }
   }
 
-  public function getTable($table) {
-    if ($this->connection) {
-      return $this->connection->getTable($table);
-    }
+  public function getTable($table, ISchema $schema) {
+    if (!isset($this->tables[$table]))
+      $this->tables[$table] = $this->connection->getTable($table, $schema);
+    return $this->tables[$table];
   }
 
   public function tableExists($table) {
-    if ($this->connection) {
-      return $this->connection->tableExists($table);
-    }
+    return isset($this->tables[$table]);
   }
 
   public function migrate(Schema $schema, $force = false) {
@@ -211,7 +212,7 @@ class Database extends ModuleBase implements IDatabase {
     if (!isset($this->$name) AND $this->migrations[$name] == 'unchanged') {
       $this->migrations[$name] = $this->migrate($this->schemas[$name], true);
     }
-    $this->$name->setSchema($this->schemas[$name]);
+    $this->tables[$name] = $this->connection->getTable($name, $this->schemas[$name]);
     return true;
   }
   
@@ -222,13 +223,9 @@ class Database extends ModuleBase implements IDatabase {
    */
   public function addActiveModel($class) {
     if (is_subclass_of($class, 'ActiveModel')) {
-      if (!isset($this->$class)) {
-        // TODO set custom table in model
-        return false;
-      }
       $model = new $class($this);
       $this->m->Models->setModel($class, $model);
-      $this->activeModels[$class] = $model;
+      $this->tables[$class] = $model;
       return true;
     }
     return false;

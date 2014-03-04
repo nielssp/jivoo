@@ -19,6 +19,8 @@ abstract class ActiveModel extends Model {
   protected $labels = array();
 
   protected $mixins = array();
+  
+  protected $virtual = array();
 
   /**
    * @var Table
@@ -38,7 +40,8 @@ abstract class ActiveModel extends Model {
   
   private $validator;
 
-  private $associations = array();
+  private $associations = null;
+  private $aiPrmaryKey = null;
   
   public final function __construct(IDatabase $database) {
     $this->database = $database;
@@ -46,6 +49,10 @@ abstract class ActiveModel extends Model {
     if (!isset($this->table))
       $this->table = $this->name;
     $table = $this->table;
+    if (!$this->database->tableExists($table))
+      throw new TableNotFoundException(tr(
+        'Table "%1" not found in model %2', $table, $this->name
+      ));
     $this->source = $this->database->$table;
 
     $this->schema = $this->source->getSchema();
@@ -64,8 +71,6 @@ abstract class ActiveModel extends Model {
           'Record class %1 must exist and extend %2', $this->record, 'ActiveRecord'
         ));
     }
-
-    $this->createAssociations();
   }
 
   public function create($data = array(), $allowedFields = null) {
@@ -78,6 +83,16 @@ abstract class ActiveModel extends Model {
 
   public function getDatabase() {
     return $this->database;
+  }
+
+  public function getAiPrimaryKey() {
+    return $this->aiPrimaryKey;
+  }
+  
+  public function getAssociations() {
+    if (!isset($this->associations))
+      $this->createAssociations();
+    return $this->associations;
   }
 
   private function createAssociations() {
@@ -213,7 +228,7 @@ abstract class ActiveModel extends Model {
   }
   
   public function insert($data) {
-    $this->source->insert($data);
+    return $this->source->insert($data);
   }
 
   public function getAssociation(ActiveRecord $record, $association) {
