@@ -20,9 +20,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::FLOAT:
         return $value;
       case DataType::DATE:
-        return date('Y-m-d', $value);
+        return gmdate('Y-m-d', $value);
       case DataType::DATETIME:
-        return date('Y-m-d H:i:s', $value);
+        return gmdate('Y-m-d H:i:s', $value);
       case DataType::TEXT:
       case DataType::BINARY:
         return $value;
