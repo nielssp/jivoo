@@ -112,10 +112,9 @@ class Authentication extends ModuleBase {
     $this->m->Helpers->addHelper($authHelper);
 
     if (!$this->isLoggedIn()) {
-      $unregistered = $this->m->Models->Group->first(
-        SelectQuery::create()
-          ->where('name = ?', $this->config['defaultGroups']['unregistered'])
-      );
+      $unregistered = $this->m->Models->Group
+        ->where('name = ?', $this->config['defaultGroups']['unregistered'])
+        ->first();
       if ($unregistered) {
         $this->unregistered = $unregistered;
       }

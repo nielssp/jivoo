@@ -55,7 +55,7 @@ class User extends ActiveModel {
     return isset($group) and $group->hasPermission($key);
   }
 
-  public function confirmPassword(ActiveRecord $record, $value) {
-    return $value == $this->password;
+  public function confirmPassword(ActiveRecord $record, $field) {
+    return $record->password == $record->confirmPassword;
   }
 }
