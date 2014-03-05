@@ -6,6 +6,8 @@
 // Dependencies   : Core/Routing Core/Templates Core/Models Core/Helpers
 //                  Core/Controllers Core/Setup
 
+Lib::import('Core/Database/Mixins');
+
 /**
  * Database module
  * @package Core\Database

@@ -3,6 +3,8 @@ class ActiveRecord implements IRecord {
   
   private $data = array();
   
+  private $virtualData = array();
+  
   private $updatedData = array();
   /**
    * @var ActiveModel
@@ -16,7 +18,8 @@ class ActiveRecord implements IRecord {
 
   private final function __construct(ActiveModel $model, $data = array(), $allowedFields = null) {
     $this->model = $model;
-    $this->data = array_fill_keys($model->getFields(), null);
+    $this->data = array_fill_keys($model->getNonVirtualFields(), null);
+    $this->virtualData = array_fill_keys($model->getVirtualFields(), null);
     $this->addData($data, $allowedFields);
     $this->associations = $this->model->getAssociations();
   }
@@ -28,6 +31,7 @@ class ActiveRecord implements IRecord {
       $record = new ActiveRecord($model, $data, $allowedFields);
     $record->new = true;
     $record->saved = false;
+    $model->afterCreate($record);
     return $record;
   }
   
@@ -45,11 +49,9 @@ class ActiveRecord implements IRecord {
   }
   
   public function addData($data, $allowedFields = null) {
-    if (!is_array($data)) {
-      return;
-    }
+    assume(is_array($data));
     if (!isset($allowedFields))
-      $allowedFields = $this->data;
+      $allowedFields = $this->model->getFields();
     if (is_array($allowedFields)) {
       $allowedFields = array_flip($allowedFields);
       $data = array_intersect_key($data, $allowedFields);
@@ -65,40 +67,51 @@ class ActiveRecord implements IRecord {
         $this->associations[$field] = $this->model->getAssociation($this, $this->associations[$field]);
       return $this->associations[$field];
     }
-    if (!array_key_exists($field, $this->data))
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
-    return $this->data[$field];
+    if (array_key_exists($field, $this->data))
+      return $this->data[$field];
+    if (array_key_exists($field, $this->virtualData))
+      return $this->virtualData[$field];
+    throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
   }
 
   public function __set($field, $value) {
     if (isset($this->associations[$field])) {
-      return $this->model->setAssociation($this, $this->associations[$field], $value);
+      $this->model->setAssociation($this, $this->associations[$field], $value);
     }
-    else {
-      if (!array_key_exists($field, $this->data))
-        throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+    else if (array_key_exists($field, $this->data)) {
       $this->data[$field] = $value;
       $this->updatedData[$field] = $value;
       $this->saved = false;
     }
+    else if (array_key_exists($field, $this->virtualData))
+      $this->virtualData[$field] = $value;
+    else
+      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
   }
 
   public function __isset($field) {
     if (isset($this->associations[$field]))
       return $this->model->hasAssociation($this, $this->associations[$field]);
-    if (!array_key_exists($field, $this->data))
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
-    return isset($this->data[$field]);
+    if (array_key_exists($field, $this->data))
+      return isset($this->data[$field]);
+    if (array_key_exists($field, $this->virtualData))
+      return isset($this->virtualData[$field]);
+    throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
   }
 
   public function __unset($field) {
     if (isset($this->associations[$field]))
-      return $this->model->unsetAssociation($this, $this->associations[$field]);
-    if (!array_key_exists($field, $this->data))
+      $this->model->unsetAssociation($this, $this->associations[$field]);
+    else if (array_key_exists($field, $this->data)) {
+      $this->data[$field] = null;
+      $this->updatedData[$field] = null;
+      $this->saved = false;
+    }
+    else if (array_key_exists($field, $this->virtualData)) {
+      $this->virtualData[$field] = null;
+    }
+    else
       throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
-    $this->data[$field] = null;
-    $this->updatedData[$field] = null;
-    $this->saved = false;
   }
 
   public function __call($method, $parameters) {
@@ -128,15 +141,16 @@ class ActiveRecord implements IRecord {
   }
   
   public function isValid() {
+    $this->model->beforeValidate($this);
     $validator = $this->model->getValidator();
     $this->errors = $validator->validate($this);
+    $this->model->afterValidate($this);
     return count($this->errors) == 0;
   }
   
-  public function save($options = array()) {
-    $defaultOptions = array('validate' => true);
-    $options = array_merge($defaultOptions, $options);
-    if ($options['validate'] AND !$this->isValid())
+  public function save() {
+    $this->model->beforeSave($this);
+    if (!$this->isValid())
       return false;
     if ($this->isNew()) {
       $insertId = $this->model->insert($this->data);
@@ -150,10 +164,12 @@ class ActiveRecord implements IRecord {
     }
     $this->updatedData = array();
     $this->saved = true;
+    $this->model->afterSave($this);
     return true;
   }
   
   public function delete() {
+    $this->model->beforeDelete($this);
     $this->model->selectRecord($this)->delete();
   }
 

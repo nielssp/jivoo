@@ -33,10 +33,16 @@ abstract class ActiveModel extends Model {
   
   private $name;
   
+  private $mixinObjects = array();
+  
   /**
    * @var Schema
    */
   private $schema;
+  
+  private $fields = array();
+  private $nonVirtualFields = array();
+  private $virtualFields = array();
   
   private $validator;
 
@@ -63,6 +69,13 @@ abstract class ActiveModel extends Model {
       if ($type->isInteger() and $type->autoIncrement)
         $this->aiPrimaryKey = $pk;
     }
+    
+    $this->nonVirtualFields = $this->schema->getFields();
+    $this->fields = $this->nonVirtualFields;
+    foreach ($this->virtuals as $field => $options) {
+      $this->fields[] = $field;
+      $this->virtualFields[] = $field;
+    }
 
     $this->validator = new Validator($this, $this->validate);
     if (isset($this->record)) {
@@ -70,6 +83,19 @@ abstract class ActiveModel extends Model {
         throw new InvalidRecordClassException(tr(
           'Record class %1 must exist and extend %2', $this->record, 'ActiveRecord'
         ));
+    }
+    
+    foreach ($this->mixins as $mixin => $options) {
+      if (!is_string($mixin)) {
+        $mixin = $options;
+        $options = null;
+      }
+      $mixin .= 'Mixin';
+      if (!Lib::classExists($mixin))
+        throw new ClassNotFoundException(tr('Mixin class not found: %1', $mixin));
+      if (!is_subclass_of($mixin, 'ActiveModelMixin'))
+        throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
+      $this->mixinObjects[] = new $mixin($this, $options);
     }
   }
 
@@ -160,6 +186,16 @@ abstract class ActiveModel extends Model {
     $this->associations[$name] = $options;
   }
   
+  public function beforeSave(ActiveRecord $record) { }
+  public function afterSave(ActiveRecord $record) { }
+  
+  public function beforeValidate(ActiveRecord $record) { }
+  public function afterValidate(ActiveRecord $record) { }
+  
+  public function afterCreate(ActiveRecord $record) { }
+  
+  public function beforeDelete(ActiveRecord $record) { }
+  
   public function getName() {
     return $this->name;
   }
@@ -173,7 +209,15 @@ abstract class ActiveModel extends Model {
   }
 
   public function getFields() {
-    return $this->schema->getFields();
+    return $this->fields;
+  }
+
+  public function getVirtualFields() {
+    return $this->virtualFields;
+  }
+
+  public function getNonVirtualFields() {
+    return $this->nonVirtualFields;
   }
 
   public function getLabel($field) {
@@ -252,3 +296,4 @@ class InvalidRecordClassException extends Exception { }
  */
 class DataSourceNotFoundException extends Exception { }
 class InvalidAssociationException extends Exception { }
+class InvalidMixinException extends Exception { }

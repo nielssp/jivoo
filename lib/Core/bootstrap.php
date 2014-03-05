@@ -127,6 +127,24 @@ function tdate($format, $timestamp = null) {
   return call_user_func_array(array('I18n', 'date'), $args);
 }
 
+function assume($condition, $message = null) {
+  if ($condition === true) {
+    return;
+  }
+  if (isset($message))
+    throw new InvalidArgumentException($message);
+  $bt = debug_backtrace();
+  $call = $bt[0];
+  $lines = file($call['file']);
+  preg_match(
+    '/' . $call['function'] . '\((.+)\)/',
+    $lines[$call['line'] - 1],
+    $matches
+  );
+  throw new InvalidArgumentException(tr('Assumption failed: %1', $matches[1]));
+}
+
+
 require CORE_LIB_PATH . '/Lib.php';
 require CORE_LIB_PATH . '/ErrorReporting.php';
 

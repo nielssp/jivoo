@@ -19,7 +19,7 @@ $this->extend('setup/layout.html');
               <?php 
 else : ?>
             <span class="description error">
-              <?php echo $Form->getError('username'); ?>
+              <?php echo $Form->error('username'); ?>
               <?php endif; ?>
             </span>
           </p>
@@ -33,22 +33,22 @@ else : ?>
               <?php 
 else : ?>
             <span class="description error">
-              <?php echo $Form->getError('password'); ?>
+              <?php echo $Form->error('password'); ?>
               <?php endif; ?>
             </span>
           </p>
 
           <p>
-            <?php echo $Form->label('confirm_password', null,
+            <?php echo $Form->label('confirmPassword', null,
     array('class' => 'small')); ?>
-    <?php echo $Form->password('confirm_password', array('class' => 'text')); ?>
-              <?php if ($Form->isValid('confirm_password')) : ?>
+    <?php echo $Form->password('confirmPassword', array('class' => 'text')); ?>
+              <?php if ($Form->isValid('confirmPassword')) : ?>
             <span class="description">
-              <?php echo $Form->ifOptional('confirm_password', tr('Optional.')); ?> 
+              <?php echo $Form->ifOptional('confirmPassword', tr('Optional.')); ?> 
               <?php 
 else : ?>
             <span class="description error">
-              <?php echo $Form->getError('confirm_password'); ?>
+              <?php echo $Form->error('confirmPassword'); ?>
               <?php endif; ?>
             </span>
           </p>
@@ -62,7 +62,7 @@ else : ?>
               <?php 
 else : ?>
             <span class="description error">
-              <?php echo $Form->getError('email'); ?>
+              <?php echo $Form->error('email'); ?>
               <?php endif; ?>
             </span>
           </p>

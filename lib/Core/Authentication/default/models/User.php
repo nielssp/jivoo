@@ -28,6 +28,8 @@ class User extends ActiveModel {
       ),
     ),
   );
+  
+  protected $mixins = array('Timestamps');
 
   protected $labels = array(
     'username' => 'Username',
@@ -35,9 +37,17 @@ class User extends ActiveModel {
     'password' => 'Password',
     'confirmPassword' => 'Confirm password',
   );
+  
+  protected $virtuals = array(
+    'confirmPassword' => array(
+      'beforeGet' => '',
+      'beforeSave' => '',
+      'beforeValidate' => '',
+      'afterSet' => '',
+    ),
+  );
 
   protected $defaults = array(
-    'groupId' => 0,
   );
 
   public function recordHasPermission(ActiveRecord $record, $key) {
@@ -45,7 +55,7 @@ class User extends ActiveModel {
     return isset($group) and $group->hasPermission($key);
   }
 
-  public function confirmPassword($value) {
+  public function confirmPassword(ActiveRecord $record, $value) {
     return $value == $this->password;
   }
 }

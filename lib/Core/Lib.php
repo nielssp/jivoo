@@ -98,7 +98,7 @@ class Lib {
   /**
    * Check if a class exists anywhere
    * @param string $className Name of class
-   * @param string $autoload Whether or not to autoload it if it does
+   * @param boolean $autoload Whether or not to autoload it if it does
    * @return boolean True if it exists, false otherwise
    */
   public static function classExists($className, $autoload = true) {

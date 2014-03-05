@@ -77,6 +77,7 @@ class FormHelper extends Helper {
       'id' => $this->model->getName(),
       'name' => $this->model->getName(),
     ), $attributes);
+    $this->errors = $this->record->getErrors();
     return $this->form($route, $attributes);
   }
 

@@ -103,10 +103,8 @@ class Record implements IRecord {
     return count($this->errors) == 0;
   }
   
-  public function save($options = array()) {
-    $defaultOptions = array('validate' => true);
-    $options = array_merge($defaultOptions, $options);
-    if ($options['validate'] AND !$this->isValid())
+  public function save() {
+    if (!$this->isValid())
       return false;
     if ($this->isNew()) {
       $insertId = $this->model->insert($this->data);
