@@ -280,48 +280,23 @@ class DataType {
       return null;
     switch ($this->type) {
       case self::INTEGER:
-        if (!is_int($value))
-          return false;
-        if ($this->signed) {
-          switch ($this->size) {
-            case self::BIG:
-              return true;
-            case self::SMALL:
-              return $value >= -32768 and $value <= 32767;
-            case self::TINY:
-              return $value >= -128 and $value <= 127;
-            default:
-              return $value >= -2147483648 and $value <= 2147483647;
-          }
-        }
-        else {
-          if ($value < 0)
-            return false;
-          switch ($this->size) {
-            case self::BIG:
-              return true;
-            case self::SMALL:
-              return $value <= 65535;
-            case self::TINY:
-              return $value <= 255;
-            default:
-              return $value <= 4294967295;
-          }
-        }
+        return intval($value);
       case self::STRING:
-        return is_string($value) and strlen($value) <= $this->length;
+        return strval($value);
       case self::BOOLEAN:
-        return is_bool($value);
+        return boolval($value);
       case self::FLOAT:
-        return is_float($value);
+        return floatval($value);
       case self::DATE:
       case self::DATETIME:
-        return is_int($value);
+        if (is_int($value))
+          return $value;
+        return strtotime($value);
       case self::TEXT:
       case self::BINARY:
-        return is_string($value);
+        return strval($value);
     }
-    return false;
+    return null;
   }
   
   /**
@@ -404,5 +379,39 @@ class DataType {
    */
   public static function binary($null = false, $default = null) {
     return new self(self::BINARY, $null, $default);
+  }
+  
+  public static function fromPlaceholder($placeholder) {
+    $placeholder = strtolower($placeholder);
+    switch ($placeholder) {
+      case 'i':
+      case 'int':
+      case 'integer':
+        return self::integer(self::BIG, true);
+      case 'f':
+      case 'float':
+        return self::float(true);
+      case 's':
+      case 'str':
+      case 'string':
+        return self::string(255, true);
+      case 't':
+      case 'text':
+        return self::text(true);
+      case 'b':
+      case 'bool':
+      case 'boolean':
+        return self::boolean(true);
+      case 'd':
+      case 'date':
+        return self::date(true);
+      case 'dt':
+      case 'datetime':
+        return self::dateTime(true);
+      case 'n':
+      case 'bin':
+      case 'binary':
+        return self::binary(true);
+    }
   }
 }

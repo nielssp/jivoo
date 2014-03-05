@@ -9,11 +9,12 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function encode(DataType $type, $value) {
-    switch ($this->type) {
+    $value = $type->convert($value);
+    switch ($type->type) {
       case DataType::INTEGER:
         return $value;
       case DataType::STRING:
-        return $db->escapeString($value);
+        return $value;
       case DataType::BOOLEAN:
         return $value ? 1 : 0;
       case DataType::FLOAT:

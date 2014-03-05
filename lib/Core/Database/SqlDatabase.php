@@ -77,7 +77,20 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
    * @param string $string String
    */
   public abstract function quoteString($string);
+  
+  private $vars;
+  private $varCount;
 
+  private function replaceVar($matches) {
+    $value = $this->vars[$this->varCount];
+    $this->varCount++;
+    if (isset($matches[3])) {
+      $type = DataType::fromPlaceholder($matches[3]);
+      $value = $this->typeAdapter->encode($type, $value);
+    }
+    return $this->quoteString($value);
+  }
+  
   /**
    * Escape a query
    * @param string $format Query format, use question marks '?' instead of values
@@ -92,6 +105,9 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
       $vars = func_get_args();
       array_shift($vars);
     }
+    $this->vars = $vars;
+    $this->varCount = 0;
+    return preg_replace_callback('/((\?)|%([istbfdan]))/', array($this, 'replaceVar'), $format);
     foreach ($chars as $offset => $char) {
       if ($char == '?'
           AND (!isset($chars[$offset - 1]) OR $chars[$offset - 1] != '\\')) {
