@@ -275,6 +275,55 @@ class DataType {
     return false;
   }
   
+  public function convert($value) {
+    if ($this->null and $value == null)
+      return null;
+    switch ($this->type) {
+      case self::INTEGER:
+        if (!is_int($value))
+          return false;
+        if ($this->signed) {
+          switch ($this->size) {
+            case self::BIG:
+              return true;
+            case self::SMALL:
+              return $value >= -32768 and $value <= 32767;
+            case self::TINY:
+              return $value >= -128 and $value <= 127;
+            default:
+              return $value >= -2147483648 and $value <= 2147483647;
+          }
+        }
+        else {
+          if ($value < 0)
+            return false;
+          switch ($this->size) {
+            case self::BIG:
+              return true;
+            case self::SMALL:
+              return $value <= 65535;
+            case self::TINY:
+              return $value <= 255;
+            default:
+              return $value <= 4294967295;
+          }
+        }
+      case self::STRING:
+        return is_string($value) and strlen($value) <= $this->length;
+      case self::BOOLEAN:
+        return is_bool($value);
+      case self::FLOAT:
+        return is_float($value);
+      case self::DATE:
+      case self::DATETIME:
+        return is_int($value);
+      case self::TEXT:
+      case self::BINARY:
+        return is_string($value);
+    }
+    return false;
+  }
+  
   /**
    * Create integer type
    * @param int $flags Combination of: UNSIGNED, AUTO_INCREMENT, BIG, SMALL, TINY

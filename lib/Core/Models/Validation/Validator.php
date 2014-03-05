@@ -209,6 +209,7 @@ class Validator {
         else
           return $rule ? tr('Must be unique.') : tr('Must not be unique.');
       case 'callback':
+        $rule = array($record->getModel(), $rule);
         if (!is_callable($rule))
           return true;
         else

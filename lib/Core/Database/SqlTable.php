@@ -58,9 +58,7 @@ class SqlTable extends Table {
         }
       }
       else {
-        $sqlString .= $this->owner
-        ->escapeQuery($this->replaceColumns($clause['clause']),
-          $clause['vars']);
+        $sqlString .= $this->owner->escapeQuery($this->replaceColumns($clause['clause']), $clause['vars']);
       }
     }
     return $sqlString;

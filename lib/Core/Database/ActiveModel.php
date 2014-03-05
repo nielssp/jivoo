@@ -194,6 +194,8 @@ abstract class ActiveModel extends Model {
   
   public function afterCreate(ActiveRecord $record) { }
   
+  public function afterLoad(ActiveRecord $record) { }
+  
   public function beforeDelete(ActiveRecord $record) { }
   
   public function getName() {

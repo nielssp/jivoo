@@ -41,6 +41,7 @@ class ActiveRecord implements IRecord {
     else
       $record = new ActiveRecord($model, $data);
     $record->updatedData = array();
+    $model->afterLoad($record);
     return $record;
   }
 
@@ -126,6 +127,10 @@ class ActiveRecord implements IRecord {
   public function set($field, $value) {
     $this->__set($field, $value);
     return $this;
+  }
+  
+  public function isChanged($field) {
+    return array_key_exists($field, $this->updatedData);
   }
   
   public function isSaved() {

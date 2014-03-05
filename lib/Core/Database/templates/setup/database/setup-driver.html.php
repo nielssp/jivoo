@@ -38,7 +38,7 @@ $this->extend('setup/layout.html');
 ?>
               <?php else : ?>
             <span class="description error">
-              <?php echo $Form->getError($field); ?>
+              <?php echo $Form->error($field); ?>
               <?php endif; ?>
             </span>
           </p>
