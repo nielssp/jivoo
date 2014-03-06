@@ -110,8 +110,10 @@ class ValidatorField {
     return $this->rules;
   }
 
-  public function validateRule($value, $ruleName, $rule) {
-
+  public function isRequired() {
+    if (isset($this->rules['presence']) and $this->rules['presence'])
+      return true;
+    return false;
   }
 
   /**

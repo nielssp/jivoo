@@ -210,6 +210,10 @@ abstract class ActiveModel extends Model {
     return $this->validator;
   }
 
+  public function isRequired($field) {
+    return $this->validator->isRequired($field);
+  }
+
   public function getFields() {
     return $this->fields;
   }

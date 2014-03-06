@@ -80,6 +80,12 @@ class Validator {
   public function getFields() {
     return $this->fields;
   }
+
+  public function isRequired($field) {
+    if (!isset($this->fields[$field]))
+      return false;
+    return $this->fields[$field]->isRequired();
+  }
   
   public function validate(IRecord $record) {
     $result = array();
