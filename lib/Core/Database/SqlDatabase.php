@@ -80,15 +80,30 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   
   private $vars;
   private $varCount;
+  
+  private function encodeValue(DataType $type = null, $value) {
+    if (!isset($type))
+      return $this->quoteString($value);
+    return $this->typeAdapter->encode($type, $value);
+  }
 
   private function replaceVar($matches) {
     $value = $this->vars[$this->varCount];
     $this->varCount++;
-    if (isset($matches[3])) {
+    $type = null;
+    if (isset($matches[3]) and $matches[3] != '()')
       $type = DataType::fromPlaceholder($matches[3]);
-      $value = $this->typeAdapter->encode($type, $value);
+    if (isset($matches[4]) or (isset($matches[3]) and $matches[3] == '()')) {
+      assume(is_array($value));
+      foreach ($value as $key => $v)
+        $value[$key] = $this->encodeValue($type, $v);
+      return '(' . implode(', ', $value) . ')';
     }
-    return $this->quoteString($value);
+    return $this->encodeValue($type, $value);
+  }
+  
+  private function replaceTable($matches) {
+    return $this->tableName($matches[1]);
   }
   
   /**
@@ -107,36 +122,8 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     }
     $this->vars = $vars;
     $this->varCount = 0;
-    return preg_replace_callback('/((\?)|%([istbfdan]))/', array($this, 'replaceVar'), $format);
-    foreach ($chars as $offset => $char) {
-      if ($char == '?'
-          AND (!isset($chars[$offset - 1]) OR $chars[$offset - 1] != '\\')) {
-        if (is_array($vars[$key]) AND isset($vars[$key]['table'])) {
-          $sqlString .= $this->tableName($vars[$key]['table']);
-        }
-        else if (is_int($vars[$key])) {
-          $sqlString .= (int) $vars[$key];
-        }
-        else if (is_float($vars[$key])) {
-          $sqlString .= (float) $vars[$key];
-        }
-        else if ($vars[$key] === true) {
-          $sqlString .= '1';
-        }
-        else if ($vars[$key] === false) {
-          $sqlString .= '0';
-        }
-        else {
-          $sqlString .= $this->quoteString($vars[$key]);
-        }
-        $key++;
-      }
-      else if ($char != '\\' OR !isset($chars[$offset + 1])
-          OR $chars[$offset + 1] != '?') {
-        $sqlString .= $char;
-      }
-    }
-    return $sqlString;
+    $format = preg_replace_callback('/\{(.+?)\}/', array($this, 'replaceTable'), $format);
+    return preg_replace_callback('/((\?)|%(datetime|date|integer|int|float|string|str|text|boolean|bool|binary|bin|[istbfdn]))(\(\))?/i', array($this, 'replaceVar'), $format);
   }
 
   public function getTypeAdapter() {

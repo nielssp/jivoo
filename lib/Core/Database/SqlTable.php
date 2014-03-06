@@ -39,7 +39,14 @@ class SqlTable extends Table {
     $this->schema = $schema;
   }
   
-  
+
+  public function createExisting($data = array()) {
+    $typeAdapter = $this->owner->getTypeAdapter();
+    foreach ($data as $field => $value) {
+      $data[$field] = $typeAdapter->decode($this->getType($field), $value);
+    }
+    return Record::createExisting($this, $data);
+  }
 
   /**
    * Convert a condition to SQL
@@ -58,58 +65,10 @@ class SqlTable extends Table {
         }
       }
       else {
-        $sqlString .= $this->owner->escapeQuery($this->replaceColumns($clause['clause']), $clause['vars']);
+        $sqlString .= $this->owner->escapeQuery($clause['clause'], $clause['vars']);
       }
     }
     return $sqlString;
-  }
-  
-  /**
-   * Replace all column names of style '%table.column' or '%column' with real
-   * column names
-   * @param string $query Input query
-   * @return string Output query
-   */
-  public function replaceColumns($query) {
-    return preg_replace_callback(
-      '/(\A|[^\\\\])%([a-z][a-z0-9_]*([.][a-z][a-z0-9_]*|[.][*])?)/i',
-      array($this, 'replaceColumn'), $query);
-  }
-  
-  /**
-   * Replace a single column match
-   * @param string[] $matches Matched from preg_replace_callback()
-   * @return string Output column
-   */
-  protected function replaceColumn($matches) {
-    return $matches[1] . $this->columnName($matches[2]);
-  }
-  
-  /**
-   * Get real column name. If $column includes a dot, whatever is in front of
-   * the dot is prefixed and used as table name. If not and $table is set, that
-   * name is prefixed and put in front of the column name, if no dot, and $table
-   * is not set, the current table name is used.
-   * @param string $column Column name
-   * @param string $table Optional table name (unprefixed)
-   * @return string A column name with prefixed table name in front, e.g.
-   * 'pfrx_table.column'
-   */
-  public function columnName($column, $table = null) {
-    if (!isset($table)) {
-      $table = $this->name;
-    }
-    $dot = strpos($column, '.');
-    if ($dot === false) {
-      return $this->owner
-      ->tableName($table) . '.' . $column;
-    }
-    else {
-      $table = substr($column, 0, $dot);
-      $column = substr($column, $dot + 1);
-      return $this->owner
-      ->tableName($table) . '.' . $column;
-    }
   }
   
   /**
@@ -217,10 +176,11 @@ class SqlTable extends Table {
    * @return int Number of affected records
   */
   public function updateSelection(UpdateSelection $selection) {
+    $typeAdapter = $this->owner->getTypeAdapter();
     $sqlString = 'UPDATE ' . $this->owner->tableName($this->name);
     $sets = $selection->sets;
     if (!empty($sets)) {
-      $sqlString .= ' SET ';
+      $sqlString .= ' SET';
       reset($sets);
       $first = true;
       foreach ($sets as $key => $value) {
@@ -230,17 +190,17 @@ class SqlTable extends Table {
         else {
           $sqlString .= ',';
         }
+        $sqlString .= ' ' . $key . ' = ';
         if (isset($value)) {
           if ($value instanceof NoEscape) {
-            $sqlString .= ' ' . $key . ' = ' . $value;
+            $sqlString .= $value;
           }
           else {
-            $sqlString .= ' '
-              . $this->owner->escapeQuery($key . ' = ?', array($value));
+            $sqlString .= $typeAdapter->encode($this->getType($key), $value);
           }
         }
         else {
-          $sqlString .= ' ' . $key . ' = NULL';
+          $sqlString .= 'NULL';
         }
       }
     }
@@ -284,22 +244,23 @@ class SqlTable extends Table {
   }
   
   public function insert($data) {
+    $typeAdapter = $this->owner->getTypeAdapter();
     $columns = array_keys($data);
     $values = array_values($data);
     $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
     $first = true;
-    foreach ($values as $value) {
+    foreach ($data as $column => $value) {
       if ($first) {
         $first = false;
       }
       else {
         $sqlString .= ', ';
       }
-      // TODO use TypeAdapter to encode...?
       if (isset($value)) {
-        $sqlString .= $this->owner->escapeQuery('?', $value);
+        $value = $typeAdapter->encode($this->getType($column), $value);
+        $sqlString .= $this->owner->quoteString($value);
       }
       else {
         $sqlString .= 'NULL';

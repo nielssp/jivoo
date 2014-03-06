@@ -387,31 +387,30 @@ class DataType {
       case 'i':
       case 'int':
       case 'integer':
-        return self::integer(self::BIG, true);
+        return self::integer(self::BIG);
       case 'f':
       case 'float':
-        return self::float(true);
+        return self::float();
       case 's':
       case 'str':
       case 'string':
-        return self::string(255, true);
+        return self::string(255);
       case 't':
       case 'text':
-        return self::text(true);
+        return self::text();
       case 'b':
       case 'bool':
       case 'boolean':
-        return self::boolean(true);
-      case 'd':
+        return self::boolean();
       case 'date':
-        return self::date(true);
-      case 'dt':
+        return self::date();
+      case 'd':
       case 'datetime':
-        return self::dateTime(true);
+        return self::dateTime();
       case 'n':
       case 'bin':
       case 'binary':
-        return self::binary(true);
+        return self::binary();
     }
   }
 }

@@ -2,7 +2,7 @@
 
 class MenuHelper extends Helper {
   
-  protected $models = array('Links');
+  protected $models = array('Link');
   
   public function getMenu($menu = 'main') {
     $menu = strtolower($menu);

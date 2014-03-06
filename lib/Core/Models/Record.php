@@ -40,7 +40,7 @@ class Record implements IRecord {
       return;
     }
     if (!isset($allowedFields))
-      $allowedFields = $this->data;
+      $allowedFields = $this->model->getFields();
     if (is_array($allowedFields)) {
       $allowedFields = array_flip($allowedFields);
       $data = array_intersect_key($data, $allowedFields);
