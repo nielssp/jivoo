@@ -80,7 +80,7 @@ class SqlTable extends Table {
    * @param mixed $key Key (not used)
    */
   protected function getColumnList(&$value, $key) {
-    $expression = $this->replaceColumns($value['expression']);
+    $expression = $this->owner->escapeQuery($value['expression'], array());
     if (isset($value['alias'])) {
       $value = $expression . ' AS ' . $value['alias'];
     }
@@ -258,8 +258,7 @@ class SqlTable extends Table {
         $sqlString .= ', ';
       }
       if (isset($value)) {
-        $value = $typeAdapter->encode($this->getType($column), $value);
-        $sqlString .= $this->owner->quoteString($value);
+        $sqlString .= $typeAdapter->encode($this->getType($column), $value);
       }
       else {
         $sqlString .= 'NULL';

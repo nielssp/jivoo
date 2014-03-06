@@ -67,7 +67,9 @@ class Helpers extends ModuleBase {
             $helper->addModule($module);
           }
           else {
-            Logger::error(tr('Module "%1" not found for helper %2', $moduleName, $name));
+            throw new ModuleNotFoundException(tr(
+              'Module "%1" not found for helper %2', $moduleName, $name
+            ));
           }
         }
         $this->addHelpers($helper);

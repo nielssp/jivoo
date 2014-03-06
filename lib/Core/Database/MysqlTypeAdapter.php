@@ -12,17 +12,15 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $value = $type->convert($value);
     switch ($type->type) {
       case DataType::INTEGER:
-        return $value;
-      case DataType::STRING:
-        return $this->db->quoteString($value);
-      case DataType::BOOLEAN:
-        return $value ? 1 : 0;
       case DataType::FLOAT:
         return $value;
+      case DataType::BOOLEAN:
+        return $value ? 1 : 0;
       case DataType::DATE:
         return $this->db->quoteString(gmdate('Y-m-d', $value));
       case DataType::DATETIME:
         return $this->db->quoteString(gmdate('Y-m-d H:i:s', $value));
+      case DataType::STRING:
       case DataType::TEXT:
       case DataType::BINARY:
         return $this->db->quoteString($value);
@@ -33,17 +31,14 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     if (!isset($value))
       return null;
     switch ($type->type) {
-      case DataType::INTEGER:
-        return $value;
-      case DataType::STRING:
-        return $value;
       case DataType::BOOLEAN:
         return $value != 0;
-      case DataType::FLOAT:
-        return $value;
       case DataType::DATE:
       case DataType::DATETIME:
         return strtotime($value . ' UTC');
+      case DataType::INTEGER:
+      case DataType::STRING:
+      case DataType::FLOAT:
       case DataType::TEXT:
       case DataType::BINARY:
         return $value;

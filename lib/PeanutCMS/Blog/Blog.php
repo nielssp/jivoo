@@ -42,16 +42,13 @@ class Blog extends ModuleBase {
       $post->title = tr('Welcome to PeanutCMS');
       $post->name = 'welcome-to-peanutcms';
       $post->content = include $this->p('welcomePost.php');
-      $post->date = time();
-      $post->comments = 0;
       $post->status = 'published';
       $post->commenting = 'yes';
       $post->save();
       $comment = $this->m->Models->Comment->create();
       $comment->author = 'PeanutCMS';
       $comment->content = 'Welcome to PeanutCMS.';
-      $comment->date = time();
-      $comment->setPost($post);
+      $comment->post = $post;
       $comment->save();
     }
 

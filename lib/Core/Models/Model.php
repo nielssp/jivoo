@@ -2,7 +2,7 @@
 abstract class Model implements IModel {
   private $iterator = null;
   private $validator = null;
-  private $aiPrmaryKey = null;
+  private $aiPrimaryKey = null;
   
   public function __construct() {
     $this->validator = new Validator($this);

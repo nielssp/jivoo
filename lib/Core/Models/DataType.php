@@ -284,7 +284,7 @@ class DataType {
       case self::STRING:
         return strval($value);
       case self::BOOLEAN:
-        return boolval($value);
+        return (bool) $value;
       case self::FLOAT:
         return floatval($value);
       case self::DATE:

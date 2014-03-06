@@ -54,7 +54,7 @@ class Database extends ModuleBase implements IDatabase {
   }
 
   public function __isset($table) {
-    if (isset($this->activeModels[$table]))
+    if (isset($this->tables[$table]))
       return true;
     if ($this->connection)
       return $this->connection->__isset($table);

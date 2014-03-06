@@ -15,6 +15,8 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
    * @var array Associative array of table names and {@see SqlTable} objects
    */
   protected $tables = array();
+  
+  private $tableNames = array();
 
   /**
    * Destructor
@@ -33,7 +35,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
 
   public function __isset($name) {
-    return isset($this->tables[$this->tableName($name)]);
+    return isset($this->tableNames[$this->tableName($name)]);
   }
 
   protected function setTypeAdapter(IMigrationTypeAdapter $typeAdapter) {
@@ -66,6 +68,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     while ($row = $result->fetchRow()) {
       $name = $row[0];
       if (substr($name, 0, $prefixLength) == $this->tablePrefix) {
+        $this->tableNames[$name] = true;
 //        $name = substr($name, $prefixLength);
 //         $this->tables[$name] = true;
       }

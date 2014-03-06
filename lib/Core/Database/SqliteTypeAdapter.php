@@ -9,9 +9,37 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function encode(DataType $type, $value) {
+    $value = $type->convert($value);
+    switch ($type->type) {
+      case DataType::BOOLEAN:
+        return $value ? 1 : 0;
+      case DataType::INTEGER:
+      case DataType::DATETIME:
+      case DataType::DATE:
+      case DataType::FLOAT:
+        return $value;
+      case DataType::STRING:
+      case DataType::TEXT:
+      case DataType::BINARY:
+        return $this->db->quoteString($value);
+    }
   }
 
   public function decode(DataType $type, $value) {
+    if (!isset($value))
+      return null;
+    switch ($type->type) {
+      case DataType::BOOLEAN:
+        return $value != 0;
+      case DataType::INTEGER:
+      case DataType::STRING:
+      case DataType::FLOAT:
+      case DataType::DATE:
+      case DataType::DATETIME:
+      case DataType::TEXT:
+      case DataType::BINARY:
+        return $value;
+    }
   }
 
   /**
@@ -77,7 +105,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     preg_match('/ *([^ (]+) *(\(([0-9]+)\))? */i', $row['type'], $matches);
     $actualType = strtolower($matches[1]);
     $length = isset($matches[3]) ? $matches[3] : 0;
-    $null = isset($row['notnull']) and $row['notnull'] != '0';
+    $null = (isset($row['notnull']) and $row['notnull'] != '1');
     if ($null != $type->null)
       return false;
     $default = null;
@@ -89,14 +117,14 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case DataType::INTEGER:
         if ($actualType != 'integer')
           return false;
-        if ($type->size == DataType::BIG and $length != '8')
-          return false;
-        else if ($type->size == DataType::SMALL and $length != '2')
-          return false;
-        else if ($type->size == DataType::TINY and $length != '1')
-          return false;
-        else if ($length != '4')
-          return false;
+//         if ($type->size == DataType::BIG and $length != '8')
+//           return false;
+//         else if ($type->size == DataType::SMALL and $length != '2')
+//           return false;
+//         else if ($type->size == DataType::TINY and $length != '1')
+//           return false;
+//         else if ($length != '4')
+//           return false;
         break;
       case DataType::FLOAT:
         if ($actualType != 'real')
@@ -109,7 +137,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
           return false;
         break;
       case DataType::BOOLEAN:
-        if ($actualType != 'integer' or $length != '1')
+        if ($actualType != 'integer')
           return false;
         break;
       case DataType::BINARY:
@@ -117,11 +145,11 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
           return false;
         break;
       case DataType::DATE:
-        if ($actualType != 'integer' or $length != '4')
+        if ($actualType != 'integer')
           return false;
         break;
       case DataType::DATETIME:
-        if ($actualType != 'integer' or $length != '4')
+        if ($actualType != 'integer')
           return false;
         break;
       case DataType::TEXT:
@@ -159,13 +187,18 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     while ($row = $result->fetchAssoc()) {
       $index = $row['name'];
       $unique = $row['unique'] == 1;
+      $name = preg_replace(
+        '/^' . preg_quote($this->db->tableName($table) . '_', '/') . '/',
+        '', $index, 1, $count
+      );
+      if ($count == 0)
+        continue;
       $columnResult = $this->db->rawQuery('PRAGMA index_info(' . $index . ')');
-      $index = str_replace($this->db->tableName($table) . '_', '', $index);
       $columns = array();
       while ($row = $columnResult->fetchAssoc()) {
         $columns[] = $row['name'];
       }
-      $actualIndexes[$index] = array(
+      $actualIndexes[$name] = array(
         'columns' => $columns,
         'unique' => $unique
       );
@@ -270,7 +303,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function deleteIndex($table, $index) {
-    $sql = 'CREATE INDEX ';
+    $sql = 'DROP INDEX ';
     $sql .= $this->db->tableName($table) . '_' . $index;
     $this->db->rawQuery($sql);
   }
