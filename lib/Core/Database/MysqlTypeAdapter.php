@@ -30,6 +30,8 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function decode(DataType $type, $value) {
+    if (!isset($value))
+      return null;
     switch ($type->type) {
       case DataType::INTEGER:
         return $value;
@@ -97,26 +99,21 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       $column .= ' NOT';
     $column .= ' NULL';
     if (isset($type->default))
-      $column .= $this->db->escapeQuery(' DEFAULT ?', $type->default);
+      $column .= ' DEFAULT ' . $this->encode($type, $type->default);
     return $column . $autoIncrement;
   }
 
-  /**
-   * Convert a MySQL type to a DataType
-   * @param string $type MySQL type
-   * @return array A 3-tuple of type name, length and unsigned
-   */
   public function checkType($row, DataType $type) {
-    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? *(unsigned) *?/i', $row['Type'], $matches);
+    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? *(unsigned)? *?/i', $row['Type'], $matches);
     $actualType = strtolower($matches[1]);
     $unsigned = isset($matches[4]);
     $length = isset($matches[3]) ? $matches[3] : 0;
-    $null = isset($row['Null']) and $row['Null'] != 'NO';
+    $null = (isset($row['Null']) and $row['Null'] != 'NO');
     if ($null != $type->null)
       return false;
     $default = null;
     if (isset($row['Default']))
-      $default = $row['Default'];
+      $default = $this->decode($type, $row['Default']);
     if ($default != $type->default)
       return false;
     switch ($type->type) {
@@ -131,7 +128,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
           return false;
         if ($type->unsigned != $unsigned)
           return false;
-        if ($type->autoIncrement != $autoIncrement)
+        if ($type->autoIncrement and strpos($row['Extra'], 'auto_increment') === false)
           return false;
         break;
       case DataType::FLOAT:

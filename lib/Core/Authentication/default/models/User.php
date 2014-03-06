@@ -38,7 +38,7 @@ class User extends ActiveModel {
     'confirmPassword' => 'Confirm password',
   );
   
-  protected $virtuals = array(
+  protected $virtual = array(
     'confirmPassword' => array(
       'beforeGet' => '',
       'beforeSave' => '',

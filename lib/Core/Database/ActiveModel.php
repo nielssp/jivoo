@@ -72,7 +72,7 @@ abstract class ActiveModel extends Model {
     
     $this->nonVirtualFields = $this->schema->getFields();
     $this->fields = $this->nonVirtualFields;
-    foreach ($this->virtuals as $field => $options) {
+    foreach ($this->virtual as $field => $options) {
       $this->fields[] = $field;
       $this->virtualFields[] = $field;
     }
@@ -88,7 +88,7 @@ abstract class ActiveModel extends Model {
     foreach ($this->mixins as $mixin => $options) {
       if (!is_string($mixin)) {
         $mixin = $options;
-        $options = null;
+        $options = array();
       }
       $mixin .= 'Mixin';
       if (!Lib::classExists($mixin))
@@ -139,7 +139,7 @@ abstract class ActiveModel extends Model {
             'model' => $options
           );
         }
-        $this->createAssociation($associationType, $name, $options);
+        $this->createAssociation($type, $name, $options);
       }
     }
   }
@@ -156,7 +156,7 @@ abstract class ActiveModel extends Model {
       $options['thisKey'] = lcfirst($this->name) . 'Id';
     }
     if (!isset($options['otherKey'])) {
-      $options['otherKey'] = lcfirst($otherClass) . 'Id';
+      $options['otherKey'] = lcfirst($otherModel) . 'Id';
     }
     if ($type == 'hasAndBelongsToMany' AND !isset($options['join'])) {
       if ($options['model'] instanceof ActiveModel) { 

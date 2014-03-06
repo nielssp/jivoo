@@ -28,6 +28,7 @@ abstract class MigratableDatabase implements IDatabase, IMigratable {
     Logger::debug('migration: check ' . $table);
     if ($this->tableExists($table)) {
       $result = $this->checkSchema($table, $schema);
+      $status = 'unchanged';
       foreach ($result['columns'] as $column => $action) {
         switch ($action) {
           case 'add':

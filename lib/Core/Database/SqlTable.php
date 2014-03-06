@@ -132,7 +132,6 @@ class SqlTable extends Table {
             'Unable to join SqlTable with data source of type "%1"',
             get_class($join['source'])
           ));
-          continue;
         }
         $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->tableName($table);
         if (isset($join['alias'])) {
