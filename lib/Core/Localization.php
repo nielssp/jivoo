@@ -5,6 +5,11 @@ class Localization {
   private $dateFormat = 'Y-m-d';
   private $timeFormat = 'H:i';
 
+  private $longFormat = '%DATE %TIME';
+  private $monthYear = 'F Y';
+  private $monthDay = 'F j';
+  private $weekDay = 'l %TIME';
+
   public function __construct() { }
 
   public function __get($property) {
@@ -12,6 +17,15 @@ class Localization {
       case 'dateFormat':
       case 'timeFormat':
         return $this->$property;
+      case 'longFormat':
+      case 'monthYear':
+      case 'monthDay':
+      case 'weekDay':
+        return str_replace(
+          array('%DATE', '%TIME'),
+          array($this->dateFormat, $this->timeFormat),
+          $this->$property
+        );
     }
   }
 
@@ -19,6 +33,10 @@ class Localization {
     switch ($property) {
       case 'dateFormat':
       case 'timeFormat':
+      case 'longFormat':
+      case 'monthYear':
+      case 'monthDay':
+      case 'weekDay':
         $this->$property = $value;
     }
   }
@@ -27,6 +45,10 @@ class Localization {
     switch ($property) {
       case 'dateFormat':
       case 'timeFormat':
+      case 'longFormat':
+      case 'monthYear':
+      case 'monthDay':
+      case 'weekDay':
         return isset($this->$property);
     }
   }

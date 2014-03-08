@@ -7,6 +7,8 @@
 // [INFO] invalid tr() at offset 14156 in ../lib/Core/Database/ActiveRecord.php
 $l = new Localization();
 
+$l->timeFormat = 'g:i a';
+
 $l->set(
   'Model "%1" not found for %2',
   'Model "%1" not found for %2'

@@ -95,14 +95,6 @@ function h($string) {
 }
 
 /**
- * @see I18n::formatDate()
- */
-function fdate($timestamp = null) {
-  $args = func_get_args();
-  return call_user_func_array(array('I18n', 'formatDate'), $args);
-}
-
-/**
  * Alias for Condition constructor
  * @param ICondition|string Condition
  * @return Condition Condition object
@@ -112,19 +104,38 @@ function where($condition) {
 }
 
 /**
+ * @see I18n::formatDate()
+ */
+function fdate($timestamp = null) {
+  return I18n::formatDate($timestamp);
+}
+
+/**
  * @see I18n::formatTime()
  */
 function ftime($timestamp = null) {
-  $args = func_get_args();
-  return call_user_func_array(array('I18n', 'formatTime'), $args);
+  return I18n::formatTime($timestamp);
+}
+
+/**
+ * @see I18n::longDate()
+ */
+function ldate($timestamp = null) {
+  return I18n::longDate($timestamp);
+}
+
+/**
+ * @see I18n::shortDate()
+ */
+function sdate($timestamp = null) {
+  return I18n::shortDate($timestamp);
 }
 
 /**
  * @see I18n::date()
  */
 function tdate($format, $timestamp = null) {
-  $args = func_get_args();
-  return call_user_func_array(array('I18n', 'date'), $args);
+  return I18n::date($format, $timestmap);
 }
 
 function assume($condition, $message = null) {

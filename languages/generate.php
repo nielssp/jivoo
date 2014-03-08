@@ -127,7 +127,7 @@ foreach ($pluralLiterals as $array) {
     echo ' array(' . PHP_EOL
       . '    ' . $plural . ',' . PHP_EOL
       . '    ' . $singular . ',' . PHP_EOL
-      . "    '/^-?1$'," . PHP_EOL
+      . "    '/^-?1$/'," . PHP_EOL
       . '  ),';
     echo ' array(' . PHP_EOL
       . '    ' . $plural . ',' . PHP_EOL
@@ -138,7 +138,7 @@ foreach ($pluralLiterals as $array) {
     echo '$l->set(' . PHP_EOL
       . '  ' . $plural . ',' . PHP_EOL
       . '  ' . $singular . ',' . PHP_EOL
-      . "  '/^-?1$'" . PHP_EOL
+      . "  '/^-?1$/'" . PHP_EOL
       . ');' . PHP_EOL;
     echo '$l->set(' . PHP_EOL
       . '  ' . $plural . ',' . PHP_EOL

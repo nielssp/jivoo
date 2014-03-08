@@ -6,8 +6,7 @@
 </h2>
 
 <p>
-  Published <?php echo fdate($post->createdAt); ?>
- @ <?php echo ftime($post->createdAt); ?>
+  Published <?php echo I18n::longDate($post->createdAt); ?>
 </p>
 <?php echo $post->content; ?>
 

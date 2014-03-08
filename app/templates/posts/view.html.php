@@ -2,8 +2,7 @@
 
 <h2><?php echo h($post->title); ?></h2>
 
-<p>Published <?php echo fdate($post->createdAt); ?>
-- <?php echo ftime($post->createdAt); ?>
+<p>Published <?php echo ldate($post->createdAt); ?>
   <?php if ($author = $post->user) : ?>
   by <?php echo $author->username; ?>
   <?php endif; ?>

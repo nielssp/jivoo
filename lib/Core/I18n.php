@@ -28,8 +28,14 @@ class I18n {
           self::$language = null;
           throw new I18nException(tr('Language file must return an instance of Localization.'));
         }
+        if (isset(self::$config['dateFormat']))
+          self::$language->dateFormat = self::$config['dateFormat'];
+        if (isset(self::$config['timeFormat']))
+          self::$language->timeFormat = self::$config['timeFormat'];
       }
     }
+    if (!isset(self::$language))
+      self::$language = new Localization();
   }
 
   /**
@@ -69,12 +75,7 @@ class I18n {
    * @return string Format string used with date()
    */
   public static function dateFormat() {
-    if (isset(self::$config['dateFormat']))
-      return self::$config['dateFormat'];
-    else if (isset(self::$language) and isset(self::$language->dateFormat))
-      return self::$language->dateFormat;
-    else
-      return 'Y-m-d';
+    return self::$language->dateFormat;
   }
 
   /**
@@ -83,12 +84,39 @@ class I18n {
    * @return string Format string used with date()
    */
   public static function timeFormat() {
-    if (isset(self::$config['timeFormat']))
-      return self::$config['timeFormat'];
-    else if (isset(self::$language) and isset(self::$language->timeFormat))
-      return self::$language->timeFormat;
-    else
-      return 'H:i';
+    return self::$language->timeFormat;
+  }
+
+  public static function longFormat() {
+    return self::$language->longFormat;
+  }
+
+  public static function longDate($timestamp = null) {
+    return self::date(self::longFormat(), $timestamp);
+  }
+
+  public static function shortDate($timestamp = null) {
+    $l = self::$language;
+    $distance = abs(floor(($timestamp - time()) / (60 * 60 * 24)));
+    $cDay = date('d');
+    if ($distance >= 60) {
+      return self::date($l->monthYear, $timestamp);
+    }
+    else if ($cDay == date('d', $timestamp)) {
+      return tr('Today %1', self::date($l->timeFormat, $timestamp));
+    } 
+    else if ($cDay == date('d', $timestamp) - 1) {
+      return tr('Tomorrow %1', self::date($l->timeFormat, $timestamp));
+    } 
+    else if ($cDay == date('d', $timestamp) + 1) {
+      return tr('Yesterday %1', self::date($l->timeFormat, $timestamp));
+    } 
+    else if ($distance <= 6 AND $timestamp > time()) {
+      return self::date($l->monthDay, $timestamp);
+    }
+    else {
+      return self::date($l->monthYear, $timestamp);
+    }
   }
 
   /**
