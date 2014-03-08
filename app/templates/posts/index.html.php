@@ -1,21 +1,19 @@
 <?php $this->extend('layout.html'); ?>
 
 <?php foreach ($posts as $post) : ?>
-
 <h2>
   <?php echo $Html->link(h($post->title), $post); ?>
 </h2>
 
-<?php if (!isset($post->tags)) echo ' no tags'; ?>
-<?php foreach ($post->tags as $tag): ?>
-<?php echo $tag->name; ?>
-<?php endforeach; ?>
-
 <p>
   Published <?php echo fdate($post->createdAt); ?>
-@ <?php echo ftime($post->createdAt); ?>
+ @ <?php echo ftime($post->createdAt); ?>
 </p>
 <?php echo $post->content; ?>
+
+<?php if ($post->createdAt != $post->updatedAt): ?>
+<p>Last edited <?php echo ftime($post->updatedAt); ?></p>
+<?php endif; ?>
 
 <?php endforeach; ?>
 

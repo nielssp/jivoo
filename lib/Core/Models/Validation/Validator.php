@@ -208,7 +208,7 @@ class Validator {
       case 'unique':
         $selection = $record->getModel();
         if (!$record->isNew()) {
-          $slection = $selection->selectNotRecord($record);
+          $selection = $selection->selectNotRecord($record);
         }
         if (($selection->where($field . ' = ?', $value)->count() == 0) == $rule)
           return true;

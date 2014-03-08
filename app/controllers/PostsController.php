@@ -13,16 +13,10 @@ class PostsController extends AppController {
   }
 
   public function index() {
-  //  $select = SelectQuery::create()->where('status = "published"')
-  //    ->orderByDescending('date');
-  //  $this->Pagination->setCount($this->Post->count(clone $select));
-
-//    $this->Pagination->paginate($select);
-    $this->users = $this->User;
-    $this->groups = $this->Group;
-
     $this->posts = $this->Post->where('status = "published"')
       ->orderByDescending('createdAt');
+    $this->Pagination->setCount($this->posts->count());
+    $this->Pagination->paginate($this->posts);
     
 //    $this->view->resource(
 //      'alternate', 'application/rss+xml',

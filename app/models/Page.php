@@ -1,19 +1,11 @@
 <?php
 
 class Page extends ActiveModel {
-
-  //   protected $hasMany = array(
-  //   	'Comment' => array('thisKey' => 'post_id',
-  //                        'count' => 'comments'),
-  //   );
+  protected $mixins = array('Timestamps');
 
   protected $belongsTo = array(
     'User'
   );
-
-  //   protected $hasOne = array(
-  //     'Category' => array('class' => 'Tag')
-  //   );
 
   protected $validate = array(
     'title' => array('presence' => true, 'minLength' => 4, 'maxLength' => 25,),

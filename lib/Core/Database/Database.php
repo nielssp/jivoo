@@ -228,6 +228,8 @@ class Database extends ModuleBase implements IDatabase {
       $model = new $class($this);
       $this->m->Models->setModel($class, $model);
       $this->tables[$class] = $model;
+      if ($this->isNew($class))
+        $model->install();
       return true;
     }
     return false;

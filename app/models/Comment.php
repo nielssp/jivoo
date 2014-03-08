@@ -1,6 +1,7 @@
 <?php
 
 class Comment extends ActiveModel {
+  protected $mixins = array('Timestamps');
 
   protected $hasMany = array(
     'replies' => 'Comment'

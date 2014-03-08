@@ -29,7 +29,7 @@ class PaginationHelper extends Helper {
     return $this;
   }
 
-  public function paginate(ILimitable $select) {
+  public function paginate(IReadSelection $select) {
     if (isset($this->request->query['page'])) {
       $this->page = (int) $this->request->query['page'];
       $this->page = min($this->page, $this->pages);

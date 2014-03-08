@@ -1,6 +1,6 @@
 <?php
 
-abstract class ActiveModel extends Model {
+abstract class ActiveModel extends Model implements IActiveModelEvents {
 
   protected $table = null;
 
@@ -54,6 +54,8 @@ abstract class ActiveModel extends Model {
 
   private $primaryKey = null;
   private $aiPrmaryKey = null;
+
+  private $cache = array();
   
   public final function __construct(IDatabase $database) {
     $this->database = $database;
@@ -117,6 +119,11 @@ abstract class ActiveModel extends Model {
   
   public function createExisting($data = array()) {
     return ActiveRecord::createExisting($this, $data, $this->record);
+  }
+
+  public function addToCache(ActiveRecord $record) {
+    $pk = $this->primaryKey;
+    $this->cache[$record->$pk] = $record;
   }
 
   public function getDatabase() {
@@ -204,18 +211,41 @@ abstract class ActiveModel extends Model {
     }
     $this->associations[$name] = $options;
   }
+
+  private function mixinCall($method, $record = null) {
+    foreach ($this->mixinObjects as $mixin)
+      $mixin->$method($record);
+  }
   
-  public function beforeSave(ActiveRecord $record) { }
-  public function afterSave(ActiveRecord $record) { }
+  public function beforeSave(ActiveRecord $record) {
+    $this->mixinCall('beforeSave', $record);
+  }
+  public function afterSave(ActiveRecord $record) {
+    $this->mixinCall('afterSave', $record);
+  }
   
-  public function beforeValidate(ActiveRecord $record) { }
-  public function afterValidate(ActiveRecord $record) { }
+  public function beforeValidate(ActiveRecord $record) {
+    $this->mixinCall('beforeValidate', $record);
+  }
+  public function afterValidate(ActiveRecord $record) {
+    $this->mixinCall('afterValidate', $record);
+  }
   
-  public function afterCreate(ActiveRecord $record) { }
+  public function afterCreate(ActiveRecord $record) {
+    $this->mixinCall('afterCreate', $record);
+  }
   
-  public function afterLoad(ActiveRecord $record) { }
+  public function afterLoad(ActiveRecord $record) {
+    $this->mixinCall('afterLoad', $record);
+  }
   
-  public function beforeDelete(ActiveRecord $record) { }
+  public function beforeDelete(ActiveRecord $record) {
+    $this->mixinCall('beforeDelete', $record);
+  }
+
+  public function install() {
+    $this->mixinCall('install');
+  }
 
   public function getGetters() {
     return $this->getters;
@@ -251,6 +281,12 @@ abstract class ActiveModel extends Model {
 
   public function getNonVirtualFields() {
     return $this->nonVirtualFields;
+  }
+
+  public function find($id) {
+    if (isset($this->cache[$id]))
+      return $this->cache[$id];
+    return $this->where($this->primaryKey . ' = ?', $id)->first();
   }
 
   public function getLabel($field) {

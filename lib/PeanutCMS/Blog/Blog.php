@@ -37,7 +37,7 @@ class Blog extends ModuleBase {
       $this->p('templates/recent-comments-widget.html.php')
     ));
 
-    if ($this->m->Database->isNew('posts')) {
+    if ($this->m->Database->isNew('Post')) {
       $post = $this->m->Models->Post->create();
       $post->title = tr('Welcome to PeanutCMS');
       $post->name = 'welcome-to-peanutcms';
@@ -52,7 +52,7 @@ class Blog extends ModuleBase {
       $comment->save();
     }
 
-    $commentValidator = $this->m->Models->Comment->validator;
+    $commentValidator = $this->m->Models->Comment->getValidator();
     if ($this->config['anonymousCommenting']) {
       unset($commentValidator->author->presence);
       unset($commentValidator->email->presence);

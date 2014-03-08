@@ -1,5 +1,6 @@
 <?php
 class Post extends ActiveModel {
+  protected $mixins = array('Timestamps');
 
   protected $hasAndBelongsToMany = array(
     'tags' => array(
@@ -17,7 +18,6 @@ class Post extends ActiveModel {
   protected $belongsTo = array(
     'User',
   );
-
 
   protected $validate = array(
     'title' => array(

@@ -48,6 +48,7 @@ class ActiveRecord implements IRecord, ILinkable {
     else
       $record = new ActiveRecord($model, $data);
     $record->updatedData = array();
+    $model->addToCache($record);
     $model->afterLoad($record);
     return $record;
   }
@@ -189,6 +190,7 @@ class ActiveRecord implements IRecord, ILinkable {
       $pk = $this->model->getAiPrimaryKey();
       if (isset($pk))
         $this->data[$pk] = $insertId;
+      $this->model->addToCache($this);
       $this->new = false;
     }
     else if (count($this->updatedData) > 0) {
