@@ -195,4 +195,21 @@ class Form implements IBasicRecord, IBasicModel {
   public function hasField($field) {
     return isset($this->fields[$field]);
   }
+
+  public function offsetExists($field) {
+    return $this->__isset($field);
+  }
+
+  public function offsetGet($field) {
+    return $this->__get($field);
+  }
+
+  public function offsetSet($field, $value) {
+    $this->__set($field, $value);
+  }
+
+  public function offsetUnset($field) {
+    $this->__unset($field);
+  }
+
 }

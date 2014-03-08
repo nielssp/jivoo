@@ -19,6 +19,7 @@ class ActiveRecord implements IRecord, ILinkable {
   private $saved = true;
 
   private $associations = array();
+  private $associationObjects = array();
 
   private final function __construct(ActiveModel $model, $data = array(), $allowedFields = null) {
     $this->model = $model;
@@ -72,9 +73,10 @@ class ActiveRecord implements IRecord, ILinkable {
     if (isset($this->getters[$field]))
       return call_user_func(array($this->model, $this->getters[$field]), $this);
     if (isset($this->associations[$field])) {
-      if (!is_array($this->associations[$field]))
-        $this->associations[$field] = $this->model->getAssociation($this, $this->associations[$field]);
-      return $this->associations[$field];
+      if (!array_key_exists($this->associationObjects[$field]))
+        $this->associationObjects[$field] = $this->model
+          ->getAssociation($this, $this->associations[$field]);
+      return $this->associationObjects[$field];
     }
     if (array_key_exists($field, $this->data))
       return $this->data[$field];
@@ -146,7 +148,7 @@ class ActiveRecord implements IRecord, ILinkable {
     return $this;
   }
   
-  public function isChanged($field) {
+  public function hasChanged($field) {
     return array_key_exists($field, $this->updatedData);
   }
   
@@ -171,7 +173,7 @@ class ActiveRecord implements IRecord, ILinkable {
   }
 
   public function getRoute() {
-    $this->model->getRoute($this);
+    return $this->model->getRoute($this);
   }
 
   public function action($action) {
@@ -203,6 +205,21 @@ class ActiveRecord implements IRecord, ILinkable {
     $this->model->selectRecord($this)->delete();
   }
 
+  public function offsetExists($field) {
+    return $this->__isset($field);
+  }
+
+  public function offsetGet($field) {
+    return $this->__get($field);
+  }
+
+  public function offsetSet($field, $value) {
+    $this->__set($field, $value);
+  }
+
+  public function offsetUnset($field) {
+    $this->__unset($field);
+  }
 }
 
 class InvalidMethodException extends Exception { }

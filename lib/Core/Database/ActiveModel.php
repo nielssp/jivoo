@@ -51,6 +51,8 @@ abstract class ActiveModel extends Model {
   private $validator;
 
   private $associations = null;
+
+  private $primaryKey = null;
   private $aiPrmaryKey = null;
   
   public final function __construct(IDatabase $database) {
@@ -69,14 +71,20 @@ abstract class ActiveModel extends Model {
     $pk = $this->schema->getPrimaryKey();
     if (count($pk) == 1) {
       $pk = $pk[0];
+      $this->primaryKey = $pk;
       $type = $this->schema->$pk;
       if ($type->isInteger() and $type->autoIncrement)
         $this->aiPrimaryKey = $pk;
     }
+    else {
+      throw new InvalidPrimaryKeyException(tr(
+        'ActiveModel does not support multi-field primary keys'
+      ));
+    }
     
     $this->nonVirtualFields = $this->schema->getFields();
     $this->fields = $this->nonVirtualFields;
-    foreach ($this->virtual as $field => $options) {
+    foreach ($this->virtual as $field) {
       $this->fields[] = $field;
       $this->virtualFields[] = $field;
     }
@@ -159,6 +167,7 @@ abstract class ActiveModel extends Model {
   }
 
   private function createAssociation($type, $name, $options) {
+    $options['type'] = $type;
     $otherModel = $options['model'];
     if (!isset($this->database->$otherModel)) {
       throw new ModelNotFoundException(tr(
@@ -172,24 +181,20 @@ abstract class ActiveModel extends Model {
     if (!isset($options['otherKey'])) {
       $options['otherKey'] = lcfirst($otherModel) . 'Id';
     }
-    if ($type == 'hasAndBelongsToMany' AND !isset($options['join'])) {
-      if ($options['model'] instanceof ActiveModel) { 
-        $otherTable = $options['model']->table;
-        if (strcmp($this->table, $otherTable) < 0) {
-          $options['join'] = $this->table .  $otherTable;
-        }
-        else {
-          $options['join'] = $otherTable . $this->table;
-        }
-      }
-      else {
+    if ($type == 'hasAndBelongsToMany') {
+      if (!($options['model'] instanceof ActiveModel)) { 
         throw new InvalidModelException(tr(
-          '%1 invalid for joining with %2, must extend ActivRecord',
+          '%1 invalid for joining with %2, must extend ActivModel',
           $otherModel, $this->name
         ));
       }
-    }
-    if (isset($options['join'])) {
+      $options['otherPrimary'] = $options['model']->primaryKey;
+      if (!isset($options['join'])) {
+        $otherTable = $options['model']->table;
+        $options['join'] = $otherTable . $this->table;
+        if (strcmp($this->table, $otherTable) < 0)
+          $options['join'] = $this->table .  $otherTable;
+      }
       if (!isset($this->database->$options['join'])) {
         throw new DataSourceNotFoundException(tr(
           'Association data source "%1" not found', $options['join']
@@ -304,15 +309,105 @@ abstract class ActiveModel extends Model {
   }
 
   public function getAssociation(ActiveRecord $record, $association) {
+    switch ($association['type']) {
+      case 'belongsTo':
+        $key = $association['otherKey'];
+        if (!isset($record->$key))
+          return null;
+        // TODO fetch lazy record instead
+        return $association['model']->find($record->$key);
+      case 'hasOne':
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        return $association['model']->where($key . ' = ?', $record->$id)->first();
+      case 'hasMany':
+      case 'hasAndBelongsToMany':
+        $id = $this->primaryKey;
+        return new ActiveCollection($this, $record->$id, $association);
+    }
+    throw new Exception('todo');
   }
 
   public function hasAssociation(ActiveRecord $record, $association) {
+    switch ($association['type']) {
+      case 'belongsTo':
+        $key = $association['otherKey'];
+        return isset($record->$key);
+      case 'hasOne':
+      case 'hasMany':
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        return $association['model']->where($key . ' = ?', $record->$id)->count() != 0;
+      case 'hasAndBelongsToMany':
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        return $association['join']->where($key . ' = ?', $record->$id)->count() != 0;
+    }
+    throw new Exception('todo');
   }
 
   public function unsetAssociation(ActiveRecord $record, $association) {
+    switch ($association['type']) {
+      case 'belongsTo':
+        $key = $association['otherKey'];
+        $record->$key = null;
+        return;
+      case 'hasOne':
+      case 'hasMany':
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        $association['model']->where($key . ' = ?', $record->$id)->set($key, null)->update();
+        return;
+      case 'hasAndBelongsToMany':
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        $association['join']->where($key . ' = ?', $record->$id)->delete();
+        return;
+    }
+    throw new Exception('todo');
   }
 
   public function setAssociation(ActiveRecord $record, $association, $value) {
+    switch ($association['type']) {
+      case 'belongsTo':
+        assume($value instanceof ActiveRecord);
+        assume($value->getModel() == $association['model']);
+        $key = $association['otherKey'];
+        $otherId = $association['model']->primaryKey;
+        $record->$key = $value->$otherId;
+        return;
+      case 'hasOne':
+        assume($value instanceof ActiveRecord);
+        assume($value->getModel() == $association['model']);
+        $this->unsetAssociation($record, $association);
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        $value->$key = $record->$id;
+        $value->save();
+        return;
+      case 'hasMany':
+        $key = $association['thisKey'];
+        $id = $this->primaryKey;
+        $idValue = $record->$id;
+        if ($value instanceof ISelection) {
+          $value->set($key, $idValue)->update();
+          return;
+        }
+        if (!is_array($value))
+          $value = array($value);
+        $this->unsetAssociation($record, $association);
+        foreach ($value as $item) {
+          assume($item instanceof ActiveRecord);
+          assume($item->getModel() == $association['model']);
+          $item->$key = $idValue;
+          if (!$item->isNew())
+            $item->save();
+        }
+        return;
+      case 'hasAndBelongsToMany':
+        return;
+    }
+    throw new Exception('todo');
   }
 }
 

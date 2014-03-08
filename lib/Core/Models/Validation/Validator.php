@@ -107,9 +107,9 @@ class Validator {
         or $value == '')) {
       return true;
     }
-    if (!is_scalar($value)) {
-      return tr('Must be a scalar.');
-    }
+//    if (!is_scalar($value)) {
+//      return tr('Must be a scalar.');
+//    }
     switch ($ruleName) {
       case 'type':
         return $rule->isValid($value);

@@ -124,4 +124,21 @@ class Record implements IRecord {
   public function delete() {
     $this->model->selectRecord($this)->delete();
   }
+
+  public function offsetExists($field) {
+    return $this->__isset($field);
+  }
+
+  public function offsetGet($field) {
+    return $this->__get($field);
+  }
+
+  public function offsetSet($field, $value) {
+    $this->__set($field, $value);
+  }
+
+  public function offsetUnset($field) {
+    $this->__unset($field);
+  }
+
 }

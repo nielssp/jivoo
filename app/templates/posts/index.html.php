@@ -6,6 +6,11 @@
   <?php echo $Html->link(h($post->title), $post); ?>
 </h2>
 
+<?php if (!isset($post->tags)) echo ' no tags'; ?>
+<?php foreach ($post->tags as $tag): ?>
+<?php echo $tag->name; ?>
+<?php endforeach; ?>
+
 <p>
   Published <?php echo fdate($post->createdAt); ?>
 @ <?php echo ftime($post->createdAt); ?>

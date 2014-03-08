@@ -237,13 +237,13 @@ class Blog extends ModuleBase {
         if ($parameters[0] == 0) {
           $record = $this->m->Models->Post->create();
           $record->name = '%name%';
-          $record->date = time();
+          $record->createdAt = time();
         }
         else {
           $record = $this->m->Models->Post->find($parameters[0]);
         }
       }
-      $time = $record->date;
+      $time = $record->createdAt;
       $replace = array('%name%' => $record->name,
         '%id%' => (isset($record->id)) ? $record->id : 0,
         '%year%' => tdate('Y', $time), '%month%' => tdate('m', $time),

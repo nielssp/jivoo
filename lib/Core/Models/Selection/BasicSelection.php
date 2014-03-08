@@ -132,4 +132,17 @@ abstract class BasicSelection implements IBasicSelection {
     }
     return $this;
   }
+
+  /**
+   * Convert a basic selection to a full selection. Removes
+   * all information specific to read/update/delete.
+   * @return Selection Selection
+   */
+  public function toSelection() {
+    $selection = new Selection($this->model);
+    $selection->where = $this->where;
+    $selection->limit = $this->limit;
+    $selection->orderBy = $this->orderBy;
+    return $selection;
+  }
 }

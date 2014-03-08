@@ -21,7 +21,6 @@ class User extends ActiveModel {
       'email' => true
     ),
     'confirmPassword' => array(
-      'presence' => true,
       'ruleConfirm' => array(
         'callback' => 'confirmPassword',
         'message' => 'The two passwords are not identical'
@@ -39,12 +38,7 @@ class User extends ActiveModel {
   );
   
   protected $virtual = array(
-    'confirmPassword' => array(
-      'beforeGet' => '',
-      'beforeSave' => '',
-      'beforeValidate' => '',
-      'afterSet' => '',
-    ),
+    'confirmPassword'
   );
 
   protected $defaults = array(
@@ -56,6 +50,8 @@ class User extends ActiveModel {
   }
 
   public function confirmPassword(ActiveRecord $record, $field) {
-    return $record->password == $record->confirmPassword;
+    if ($record->hasChanged('password'))
+      return $record->password == $record->confirmPassword;
+    return true;
   }
 }

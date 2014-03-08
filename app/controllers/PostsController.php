@@ -6,7 +6,7 @@ class PostsController extends AppController {
 
   protected $modules = array('Editors');
   
-  protected $models = array('Post', 'Comment', 'Tag');
+  protected $models = array('User', 'Group', 'Post', 'Comment', 'Tag');
 
   public function before() {
     $this->config = $this->config['Posts'];
@@ -18,6 +18,8 @@ class PostsController extends AppController {
   //  $this->Pagination->setCount($this->Post->count(clone $select));
 
 //    $this->Pagination->paginate($select);
+    $this->users = $this->User;
+    $this->groups = $this->Group;
 
     $this->posts = $this->Post->where('status = "published"')
       ->orderByDescending('createdAt');

@@ -1,26 +1,24 @@
 <?php
 class UpdateSelection extends BasicSelection implements IUpdateSelection {
   /**
-   * @var array Associative array of column names and values
+   * @var array Associative array of field names and values
    */
   protected $sets = array();
 
-  /**
-   * Assign value to column, or if $value is null and $column is an array, then
-   * assign multiple values to multiple columns.
-   * @param string|array $column Column name or associative array of column
-   * names and values
-   * @param string $value Value
-   * @return self Self
-  */
-  public function set($column, $value = null) {
-    if (is_array($column)) {
-      foreach ($column as $col => $val) {
-        $this->set($col, $val);
+  public function set($field, $value = null) {
+    if (is_array($field)) {
+      foreach ($field as $f => $val) {
+        $this->set($f, $val);
       }
     }
     else {
-      $this->sets[$column] = $value;
+      if (strpos($field, '=') !== false) {
+        if (!is_array($value)) {
+          $value = func_get_args();
+          $value = array_slice($value, 1);
+        }
+      }
+      $this->sets[$field] = $value;
     }
     return $this;
   }

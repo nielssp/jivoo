@@ -189,17 +189,17 @@ class SqlTable extends Table {
         else {
           $sqlString .= ',';
         }
-        $sqlString .= ' ' . $key . ' = ';
-        if (isset($value)) {
-          if ($value instanceof NoEscape) {
-            $sqlString .= $value;
-          }
-          else {
-            $sqlString .= $typeAdapter->encode($this->getType($key), $value);
-          }
+        if (strpos($key, '=') !== false) {
+          $sqlString .= ' ' . $this->owner->escapeQuery($key, $value);
         }
         else {
-          $sqlString .= 'NULL';
+          $sqlString .= ' ' . $key . ' = ';
+          if (isset($value)) {
+            $sqlString .= $typeAdapter->encode($this->getType($key), $value);
+          }
+          else {
+            $sqlString .= 'NULL';
+          }
         }
       }
     }

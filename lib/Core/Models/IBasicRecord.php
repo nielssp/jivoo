@@ -3,7 +3,7 @@
  * Contains data for a single record belonging to a model
  * @package Core\Models
  */
-interface IBasicRecord {
+interface IBasicRecord extends arrayaccess {
   /**
    * Get value of a field
    * @param string $field Field name
