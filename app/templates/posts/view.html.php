@@ -2,9 +2,9 @@
 
 <h2><?php echo h($post->title); ?></h2>
 
-<p>Published <?php echo $post->formatDate(); ?>
-  - <?php echo $post->formatTime(); ?>
-  <?php if ($author = $post->getUser()) : ?>
+<p>Published <?php echo fdate($post->createdAt); ?>
+- <?php echo ftime($post->createdAt); ?>
+  <?php if ($author = $post->user) : ?>
   by <?php echo $author->username; ?>
   <?php endif; ?>
   <a href="#comment">
@@ -13,12 +13,10 @@
 </p>
 <?php echo $post->content; ?>
 
-<?php $tags = $post->getTags(); ?>
-
-<?php if (count($tags) > 0) : ?>
+<?php if (isset($post->tags)) : ?>
 <h3>Tags</h3>
 <?php
-  foreach ($tags as $tag) {
+  foreach ($post->tags as $tag) {
     echo $Html->link(h($tag->tag), $tag) . ' ';
   }
 endif;
@@ -26,7 +24,7 @@ endif;
 
 <h3>Comments</h3>
 <?php
-foreach ($post->getComments() as $comment) :
+foreach ($post->comments as $comment) :
 ?>
 
 <div style="border-left:1px solid #000; padding-left:10px; margin-left: 20px">

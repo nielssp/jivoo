@@ -55,13 +55,10 @@ class Pages extends ModuleBase {
       return;
     }
     $name = implode('/', $path);
-    $page = $this->m->Models->Page->first(
-      SelectQuery::create()->where('name = ?', $name)
-    );
-    if ($page === false) {
+    $page = $this->m->Models->Page->where('name = ?', $name)->first();
+    if (!isset($page)) {
       return;
     }
-    $page->addToCache();
     $this->m->Routing->setRoute(array(
       'controller' => 'Pages',
       'action' => 'view',

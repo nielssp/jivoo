@@ -8,7 +8,7 @@ class ValidatorRule {
   /**
    * @var string Error message for rule
    */
-  private $message = 'Invalid value.';
+  private $message = null;
   
   /**
    * @var array Associative array of rule names and values
@@ -22,7 +22,7 @@ class ValidatorRule {
   public function __construct($rules = array()) {
     $this->rules = $rules;
     if (isset($this->rules['message'])) {
-      $this->message = $this->rules['message'];
+      $this->message = tr($this->rules['message']);
       unset($this->rules['message']);
     }
   }
@@ -127,8 +127,11 @@ class ValidatorRule {
   public function validate(IRecord $record, $field) {
     foreach ($this->rules as $name => $rule) {
       $result = Validator::validateRule($record, $field, $name, $rule);
-      if ($result !== true)
-        return $this->message;
+      if ($result !== true) {
+        if (isset($this->message))
+          return $this->message;
+        return $result;
+      }
     }
     return true;
   }

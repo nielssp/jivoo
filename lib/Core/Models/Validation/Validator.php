@@ -122,7 +122,7 @@ class Validator {
         if (is_null($value) == $rule)
           return true;
         else
-          return $rule ? tr('Must be null.') : tr('Must not be null.');
+          return $rule ? tr('Must be set.') : tr('Must not be set.');
       case 'email':
         if ((preg_match(
           "/^[a-z0-9.!#$%&*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i",

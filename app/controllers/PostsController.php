@@ -46,13 +46,14 @@ class PostsController extends AppController {
       return $this->render('404.html');
     }
 
-    $select = SelectQuery::create()->orderBy('date')
-      ->where('status = "approved"');
+    $comments = $this->post->comments
+      ->where('status = "approved"')
+      ->orderBy('createdAt');
 
     $this->Pagination->setLimit(10);
 
-    $this->Pagination->setCount($this->post->countComments(clone $select));
-    $this->Pagination->paginate($select);
+    $this->Pagination->setCount($comments->count());
+    $this->Pagination->paginate($comments);
 
     $this->user = $this->Auth->getUser();
 
@@ -122,10 +123,8 @@ class PostsController extends AppController {
       }
     }
 
-    $this->comments = $this->post->getComments($select);
-
     $this->title = $this->post->title;
-    $this->render();
+    return $this->render();
   }
 
   public function tagIndex() {

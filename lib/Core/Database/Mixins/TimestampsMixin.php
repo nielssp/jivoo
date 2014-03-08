@@ -1,6 +1,6 @@
 <?php
 class TimestampsMixin extends ActiveModelMixin {
-  public function beforeValidate(ActiveRecord $record) {
+  public function beforeSave(ActiveRecord $record) {
     $record->updatedAt = time();
   }
   

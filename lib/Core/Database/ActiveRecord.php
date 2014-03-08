@@ -148,11 +148,11 @@ class ActiveRecord implements IRecord, ILinkable {
     $this->__set($field, $value);
     return $this;
   }
-  
+
   public function hasChanged($field) {
     return array_key_exists($field, $this->updatedData);
   }
-  
+
   public function isSaved() {
     return $this->saved;
   }

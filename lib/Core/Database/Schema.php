@@ -81,6 +81,12 @@ class Schema implements ISchema {
     }
   }
 
+  public function createValidationRules(Validator $validator) {
+    foreach ($this->fields as $field => $type) {
+      $type->createValidationRules($validator->$field);
+    }
+  }
+
   public function getFields() {
     return array_keys($this->fields);
   }

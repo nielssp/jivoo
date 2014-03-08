@@ -162,8 +162,9 @@ class DataType {
   }
 
   public function createValidationRules(ValidatorField $validator) {
+    $validator = $validator->ruleDataType;
     if (!$this->null)
-      $valudator->null = false;
+      $validator->null = false;
     switch ($this->type) {
       case self::INTEGER:
         $validator->integer = true;
@@ -276,7 +277,8 @@ class DataType {
   }
   
   public function convert($value) {
-    if ($this->null and $value == null)
+    //if ($this->null and $value == null)
+    if ($value == null)
       return null;
     switch ($this->type) {
       case self::INTEGER:

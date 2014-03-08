@@ -92,6 +92,8 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
     }
 
     $this->validator = new Validator($this, $this->validate);
+    $this->schema->createValidationRules($this->validator);
+
     if (isset($this->record)) {
       if (!class_exists($this->record) or !is_subclass_of($this->record, 'ActiveRecord'))
         throw new InvalidRecordClassException(tr(

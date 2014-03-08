@@ -189,9 +189,7 @@ class Blog extends ModuleBase {
       $post = $this->m->Models->Post->find($id);
     }
     else if (!empty($name)) {
-      $post = $this->m->Models->Post->first(
-        SelectQuery::create()->where('name = ?')->addVar($name)
-      );
+      $post = $this->m->Models->Post->where('name = ?', $name)->first();
     }
     else {
       return;
@@ -199,7 +197,6 @@ class Blog extends ModuleBase {
     if ($post === false) {
       return;
     }
-    $post->addToCache();
     if ($diff == 2) {
       $commentId = $path[count($path) - 1];
       $this->m->Routing->setRoute(array(
