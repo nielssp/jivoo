@@ -73,7 +73,7 @@ class ActiveRecord implements IRecord, ILinkable {
     if (isset($this->getters[$field]))
       return call_user_func(array($this->model, $this->getters[$field]), $this);
     if (isset($this->associations[$field])) {
-      if (!array_key_exists($this->associationObjects[$field]))
+      if (!array_key_exists($field, $this->associationObjects))
         $this->associationObjects[$field] = $this->model
           ->getAssociation($this, $this->associations[$field]);
       return $this->associationObjects[$field];
@@ -222,4 +222,3 @@ class ActiveRecord implements IRecord, ILinkable {
   }
 }
 
-class InvalidMethodException extends Exception { }

@@ -23,13 +23,15 @@ class ActiveCollection extends Model {
     $this->source = $this->prepareSelection($this->other);
   }
 
-  private function prepareSelection(IReadSelection $selection = null) {
+  private function prepareSelection(IBasicSelection $selection = null) {
     if (!isset($selection))
       return $this->source;
-    if (isset($this->join))
+    if (isset($this->join)) {
+      assume($selection instanceof IReadSelection);
       return $selection
         ->leftJoin($this->join, $this->otherPrimary . '= J.' . $this->otherKey, 'J')
         ->where('J.' . $this->thisKey . ' = ?', $this->recordId);
+    }
     else
       return $selection->where($this->thisKey . ' = ?', $this->recordId);
   }
@@ -101,7 +103,7 @@ class ActiveCollection extends Model {
       }
     }
     else {
-      $selection->set($this->thisKey, null)->update();
+      $this->prepareSelection($selection)->set($this->thisKey, null)->update();
     }
   }
 
@@ -127,7 +129,9 @@ class ActiveCollection extends Model {
     if (!isset($selection))
       return 0;
     if (!isset($this->join))
-      return $this->source->update($selection);
+      return $this->other->update(
+        $selection->where($this->thisKey . ' = ?', $this->recordId)
+      );
     $sets = $selection->sets;
     $read = $this->prepareSelection($selection->toSelection());
     $num = 0;
@@ -141,19 +145,15 @@ class ActiveCollection extends Model {
   }
   
   public function delete(DeleteSelection $selection = null) {
-    if (!isset($selection)) {
-      if (isset($this->join))
-        return $this->join
-          ->where($this->thisKey . ' = ?', $this->recordId)
-          ->delete();
-      else
-        return $this->source->delete();
-    }
     if (!isset($this->join))
-      return $this->source->delete($selection);
+      return $this->other->delete($this->prepareSelection($selection));
     $pk = $this->otherPrimary;
     $num = 0;
-    foreach ($selection->toSelection() as $record) {
+    if (isset($selection))
+      $selection = $this->prepareSelection($selection->toSelection());
+    else
+      $selection = $this->source;
+    foreach ($selection as $record) {
       $num++;
       $this->join->where($this->thisKey . ' = ?', $this->recordId)
         ->and($this->otherKey . ' = ?', $record->$pk)

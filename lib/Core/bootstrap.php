@@ -144,6 +144,12 @@ function assume($condition, $message = null) {
   throw new InvalidArgumentException(tr('Assumption failed: %1', $matches[1]));
 }
 
+if (!class_exists('InvalidArgumentException')) {
+  class InvalidArgumentException extends Exception { }
+}
+
+class InvalidMethodException extends Exception { }
+class InvalidPropertyException extends Exception { }
 
 require CORE_LIB_PATH . '/Lib.php';
 require CORE_LIB_PATH . '/ErrorReporting.php';

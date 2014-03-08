@@ -46,6 +46,7 @@ abstract class BasicSelection implements IBasicSelection {
     if (isset($this->$property)) {
       return $this->$property;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -66,6 +67,10 @@ abstract class BasicSelection implements IBasicSelection {
         call_user_func_array(array($this->where, 'orWhere'), $args);
         return $this;
     }
+    if (is_callable(array($this->model, $method))) {
+      return call_user_func(array($this->model, $method), $this);
+    }
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
 
