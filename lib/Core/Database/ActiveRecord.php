@@ -1,11 +1,15 @@
 <?php
-class ActiveRecord implements IRecord {
+class ActiveRecord implements IRecord, ILinkable {
   
   private $data = array();
   
   private $virtualData = array();
   
   private $updatedData = array();
+
+  private $getters = array();
+  private $setters = array();
+
   /**
    * @var ActiveModel
    */
@@ -22,6 +26,8 @@ class ActiveRecord implements IRecord {
     $this->virtualData = array_fill_keys($model->getVirtualFields(), null);
     $this->addData($data, $allowedFields);
     $this->associations = $this->model->getAssociations();
+    $this->getters = $this->model->getGetters();
+    $this->setters = $this->model->getSetters();
   }
 
   public static function createNew(ActiveModel $model, $data = array(), $allowedFields = null, $class = null) {
@@ -63,6 +69,8 @@ class ActiveRecord implements IRecord {
   }
 
   public function __get($field) {
+    if (isset($this->getters[$field]))
+      return call_user_func(array($this->model, $this->getters[$field]), $this);
     if (isset($this->associations[$field])) {
       if (!is_array($this->associations[$field]))
         $this->associations[$field] = $this->model->getAssociation($this, $this->associations[$field]);
@@ -76,7 +84,9 @@ class ActiveRecord implements IRecord {
   }
 
   public function __set($field, $value) {
-    if (isset($this->associations[$field])) {
+    if (isset($this->setters[$field]))
+      call_user_func(array($this->model, $this->setters[$field]), $this, $value);
+    else if (isset($this->associations[$field])) {
       $this->model->setAssociation($this, $this->associations[$field], $value);
     }
     else if (array_key_exists($field, $this->data)) {
@@ -92,6 +102,10 @@ class ActiveRecord implements IRecord {
   }
 
   public function __isset($field) {
+    if (isset($this->getters[$field])) {
+      $value = call_user_func(array($this->model, $this->getters[$field]), $this);
+      return isset($value);
+    }
     if (isset($this->associations[$field]))
       return $this->model->hasAssociation($this, $this->associations[$field]);
     if (array_key_exists($field, $this->data))
@@ -102,7 +116,9 @@ class ActiveRecord implements IRecord {
   }
 
   public function __unset($field) {
-    if (isset($this->associations[$field]))
+    if (isset($this->setters[$field]))
+      call_user_func(array($this->model, $this->setters[$field]), $this, null);
+    else if (isset($this->associations[$field]))
       $this->model->unsetAssociation($this, $this->associations[$field]);
     else if (array_key_exists($field, $this->data)) {
       $this->data[$field] = null;
@@ -152,6 +168,14 @@ class ActiveRecord implements IRecord {
     $this->errors = $validator->validate($this);
     $this->model->afterValidate($this);
     return count($this->errors) == 0;
+  }
+
+  public function getRoute() {
+    $this->model->getRoute($this);
+  }
+
+  public function action($action) {
+    $this->model->getAction($this, $action);
   }
   
   public function save() {

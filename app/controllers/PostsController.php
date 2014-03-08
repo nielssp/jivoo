@@ -6,7 +6,7 @@ class PostsController extends AppController {
 
   protected $modules = array('Editors');
   
-  protected $models = array('Posts', 'Comment', 'Tag');
+  protected $models = array('Post', 'Comment', 'Tag');
 
   public function before() {
     $this->config = $this->config['Posts'];
@@ -19,7 +19,7 @@ class PostsController extends AppController {
 
 //    $this->Pagination->paginate($select);
 
-    $this->posts = $this->Posts->where('status = "published"')
+    $this->posts = $this->Post->where('status = "published"')
       ->orderByDescending('createdAt');
     
 //    $this->view->resource(

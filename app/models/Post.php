@@ -11,11 +11,11 @@ class Post extends ActiveModel {
   );
 
   protected $hasMany = array(
-    'Comment',
+    'comments' => 'Comment',
   );
 
   protected $belongsTo = array(
-    'user' => 'User',
+    'User',
   );
 
 
@@ -37,4 +37,12 @@ class Post extends ActiveModel {
       'presence' => true,
     ),
   );
+
+  public function getRoute(ActiveRecord $record) {
+    return array(
+      'controller' => 'Posts',
+      'action' => 'view',
+      'parameters' => array($record->id)
+    );
+  }
 }

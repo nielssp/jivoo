@@ -72,7 +72,7 @@ class SqlTable extends Table {
   }
   
   /**
-   * For use with array_walk(), will run {@see SqlTable::replaceColumns()} on
+   * For use with array_walk(), will run {@see SqlTable::owner->escapeQuery()} on
    * each column in an array. The input $value should be an associative array
    * as described in the documentation for {@see SelectQuery::$columns}.
    * The resulting $value vil be a string.
@@ -148,7 +148,7 @@ class SqlTable extends Table {
     if (isset($selection->groupBy)) {
       $columns = array();
       foreach ($selection->groupBy['columns'] as $column) {
-        $columns[] = $this->replaceColumns($column);
+        $columns[] = $this->owner->escapeQuery($column);
       }
       $sqlString .= ' GROUP BY ' . implode(', ', $columns);
       if (isset($selection->groupBy['condition'])
@@ -160,7 +160,7 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->replaceColumns($orderBy['column'])
+        $columns[] = $this->owner->escapeQuery($orderBy['column'])
         . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
@@ -209,7 +209,7 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->replaceColumns($orderBy['column'])
+        $columns[] = $this->owner->escapeQuery($orderBy['column'])
           . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
@@ -231,7 +231,7 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->replaceColumns($orderBy['column'])
+        $columns[] = $this->owner->escapeQuery($orderBy['column'])
           . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);

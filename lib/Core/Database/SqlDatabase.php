@@ -115,7 +115,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
    * @param mixed[] $vars List of values to replace question marks with
    * @return string The escaped query
    */
-  public function escapeQuery($format, $vars) {
+  public function escapeQuery($format, $vars = array()) {
     $sqlString = '';
     $key = 0;
     $chars = str_split($format);

@@ -10,17 +10,29 @@ class Link extends ActiveModel {
     'path' => 'Path'
   );
 
+  protected $virtual = array(
+    'route'
+  );
+
+  protected $getters = array(
+    'route' => 'getRoute'
+  );
+
+  protected $setters = array(
+    'route' => 'setRoute'
+  );
+
   protected $defaults = array('menu' => 'main', 'position' => 0);
 
-  public function getRoute() {
+  public function getRoute(ActiveRecord $record) {
     switch ($this->type) {
       case 'remote':
-        return $this->path;
+        return $record->path;
       case 'home':
         return null;
       default:
-        $path = explode('/', $this->path);
-        if ($this->type == 'action') {
+        $path = explode('/', $record->path);
+        if ($record->type == 'action') {
           $controller = array_shift($path);
           $action = array_shift($path);
           return array('controller' => $controller, 'action' => $action,
@@ -31,90 +43,86 @@ class Link extends ActiveModel {
     }
   }
 
-  public function setRoute($route = null) {
+  public function setRoute(ActiveRecord $record, $route = null) {
     if (!isset($route)) {
-      $this->path = '';
-      $this->type = 'home';
+      $record->path = '';
+      $record->type = 'home';
     }
     else if (is_object($route) AND is_a($route, 'ILinkable')) {
-      $this->setRoute($route->getRoute());
+      $record->setRoute($route->getRoute());
     }
     else if (is_array($route)) {
       if (isset($route['path'])) {
-        $this->path = implode('/', $route['path']);
-        $this->type = 'path';
+        $record->path = implode('/', $route['path']);
+        $record->type = 'path';
       }
       else if (isset($route['controller'])) {
-        $this->type = 'action';
-        $this->path = $route['controller'];
+        $record->type = 'action';
+        $record->path = $route['controller'];
         if (isset($route['action'])) {
-          $this->path .= '/' . $route['action'];
+          $record->path .= '/' . $route['action'];
           if (isset($route['parameters'])) {
-            $this->path .= '/' . implode('/', $route['parameters']);
+            $record->path .= '/' . implode('/', $route['parameters']);
           }
         }
       }
     }
     else if (is_string($route)) {
-      $this->path = $route;
-      $this->type = 'remote';
+      $record->path = $route;
+      $record->type = 'remote';
     }
     else {
       throw new InvalidArgumentException(tr('Invalid route.'));
     }
   }
 
-  public function moveToTop() {
-    $link = $this->getModel()->first(SelectQuery::create()
-      ->where('menu = ?', $this->menu)
-      ->and('id != ?', $this->id)
+  public function recordMoveToTop(ActiveRecord $record) {
+    $link = $this->where('menu = %s', $record->menu)
+      ->and('id != %i', $record->id)
       ->orderBy('position')
-    );
+      ->first();
     if ($link) {
-      $this->position = $link->position - 1;
-      $this->save();
+      $record->position = $link->position - 1;
+      $record->save();
     }
   }
 
-  public function moveToBottom() {
-    $link = $this->getModel()->last(SelectQuery::create()
-      ->where('menu = ?', $this->menu)
-      ->and('id != ?', $this->id)
+  public function recordMoveToBottom(ActiveRecord $record) {
+    $link = $this->where('menu = %s', $record->menu)
+      ->and('id != %i', $record->id)
       ->orderBy('position')
-    );
+      ->last();
     if ($link) {
-      $this->position = $link->position + 1;
-      $this->save();
+      $record->position = $link->position + 1;
+      $record->save();
     }
   }
 
-  public function moveUp() {
-    $link = $this->getModel()->last(SelectQuery::create()
-      ->where('menu = ?', $this->menu)
-      ->and('id != ?', $this->id)
-      ->and('position <= ?', $this->position)
+  public function recordMoveUp(ActiveRecord $record) {
+    $link = $this->where('menu = ?', $record->menu)
+      ->and('id != %i', $record->id)
+      ->and('position <= %i', $record->position)
       ->orderBy('position')
-    );
+      ->last();
     if ($link) {
-      $link->position = $this->position;
-      $this->position--;
+      $link->position = $record->position;
+      $record->position--;
       $link->save();
-      $this->save();
+      $record->save();
     }
   }
 
-  public function moveDown() {
-    $link = $this->getModel()->first(SelectQuery::create()
-      ->where('menu = ?', $this->menu)
-      ->and('id != ?', $this->id)
-      ->and('position >= ?', $this->position)
+  public function recordMoveDown(ActiveRecord $record) {
+    $link = $this->where('menu = ?', $record->menu)
+      ->and('id != %i', $record->id)
+      ->and('position >= %i', $record->position)
       ->orderBy('position')
-    );
+      ->first();
     if ($link) {
-      $link->position = $this->position;
-      $this->position++;
+      $link->position = $record->position;
+      $record->position++;
       $link->save();
-      $this->save();
+      $record->save();
     }
   }
 }

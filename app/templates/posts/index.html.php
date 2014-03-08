@@ -7,8 +7,8 @@
 </h2>
 
 <p>
-  Published <?php echo $post->formatDate(); ?>
-  @ <?php echo $post->formatTime(); ?>
+  Published <?php echo fdate($post->createdAt); ?>
+@ <?php echo ftime($post->createdAt); ?>
 </p>
 <?php echo $post->content; ?>
 

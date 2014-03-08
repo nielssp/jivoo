@@ -22,6 +22,10 @@ abstract class ActiveModel extends Model {
   
   protected $virtual = array();
 
+  protected $getters = array();
+
+  protected $setters = array();
+
   /**
    * @var Table
    */
@@ -121,6 +125,16 @@ abstract class ActiveModel extends Model {
     return $this->associations;
   }
 
+  public function getRoute(ActiveRecord $record) {
+    // TODO implement
+    return null;
+  }
+
+  public function getAction(ActiveRecord $record, $action) {
+    // TODO implement
+    return null;
+  }
+
   private function createAssociations() {
     foreach (array('hasOne', 'belongsTo', 'hasMany', 'hasAndBelongsToMany') as $type) {
       foreach ($this->$type as $name => $options) {
@@ -197,6 +211,14 @@ abstract class ActiveModel extends Model {
   public function afterLoad(ActiveRecord $record) { }
   
   public function beforeDelete(ActiveRecord $record) { }
+
+  public function getGetters() {
+    return $this->getters;
+  }
+
+  public function getSetters() {
+    return $this->setters;
+  }
   
   public function getName() {
     return $this->name;

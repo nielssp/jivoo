@@ -17,11 +17,10 @@ class RecentPostsWidget extends WidgetBase {
     if (isset($config['limit'])) {
       $limit = $config['limit'];
     }
-    $this->posts = $this->Post->all(SelectQuery::create()
+    $this->posts = $this->Post
       ->where('status = "published"')
-      ->orderByDescending('date')
-      ->limit($limit)
-    );
+      ->orderByDescending('createdAt')
+      ->limit($limit);
     return $this->fetch();
   }
 }
