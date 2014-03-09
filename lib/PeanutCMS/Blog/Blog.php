@@ -194,7 +194,7 @@ class Blog extends ModuleBase {
     else {
       return;
     }
-    if ($post === false) {
+    if (!isset($post)) {
       return;
     }
     if ($diff == 2) {

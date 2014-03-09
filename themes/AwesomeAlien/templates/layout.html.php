@@ -19,12 +19,6 @@ else {
 <?php echo $this->block('meta'); ?>
 <?php echo $this->block('style'); ?>
 <?php echo $this->block('script'); ?>
-
-    <script type="text/javascript">
-      $(document).ready(function() {
-        // jQuery
-      });
-    </script>
   </head>
   <body>
 <?php echo $this->block('body-top'); ?>
