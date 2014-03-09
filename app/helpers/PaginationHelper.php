@@ -43,13 +43,14 @@ class PaginationHelper extends Helper {
       $this->to = min(max($this->request->query['to'], 1), $this->count);
       $this->limit = $this->to - $this->from + 1;
     }
-    $select->limit($this->limit);
-    $select->offset($this->offset);
+    $select = $select->limit($this->limit);
+    $select = $select->offset($this->offset);
 
     if (!$this->isLast())
       $this->m->Templates->view->resource('next', null, $this->getLink($this->nextLink()));
     if (!$this->isFirst())
       $this->m->Templates->view->resource('prev', null, $this->getLink($this->prevLink()));
+    return $select;
   }
 
   public function getCount() {

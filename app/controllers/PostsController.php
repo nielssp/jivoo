@@ -16,7 +16,7 @@ class PostsController extends AppController {
     $this->posts = $this->Post->where('status = "published"')
       ->orderByDescending('createdAt');
     $this->Pagination->setCount($this->posts->count());
-    $this->Pagination->paginate($this->posts);
+    $this->posts = $this->Pagination->paginate($this->posts);
     
 //    $this->view->resource(
 //      'alternate', 'application/rss+xml',
@@ -53,7 +53,7 @@ class PostsController extends AppController {
     $this->Pagination->setLimit(10);
 
     $this->Pagination->setCount($this->comments->count());
-    $this->Pagination->paginate($this->comments);
+    $this->comments = $this->Pagination->paginate($this->comments);
 
     $this->user = $this->Auth->getUser();
 
