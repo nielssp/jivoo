@@ -44,8 +44,9 @@ class AuthenticationSetupController extends SetupController {
         $this->user = $this->User->create($this->request->data['User']);  
         if ($this->user->isValid()) {
           $this->user->password = $this->m->Shadow->hash($this->user->password);
+          $this->user->confirmPassword = $this->user->password;
           $this->user->group = $this->rootGroup;
-          $this->user->save(array('validate' => false));
+          $this->user->save();
           $this->config->set('rootCreated', true);
           if ($this->config->save()) {
             $this->redirect(null);

@@ -54,6 +54,10 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     return $this->tablePrefix . Utilities::camelCaseToUnderscores($name);
   }
 
+  public function quoteTableName($name) {
+    return '`' . $this->tableName($name) . '`';
+  }
+
 //   protected function tableCreated($name) {
 //     $table = $this->tableName($name);
 //     $this->tables[$table] = new SqlTable($this, $name);
@@ -106,7 +110,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   }
   
   private function replaceTable($matches) {
-    return $this->tableName($matches[1]);
+    return $this->quoteTableName($matches[1]);
   }
   
   /**

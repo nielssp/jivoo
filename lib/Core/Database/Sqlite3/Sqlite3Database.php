@@ -23,10 +23,8 @@ class Sqlite3Database extends SqlDatabase {
    */
   public function __construct($options = array()) {
     $this->setTypeAdapter(new  SqliteTypeAdapter($this));
-    $this->tablePrefix = 'tbl_';
-    if (isset($options['tablePrefix']) and $options['tablePrefix'] != '') {
+    if (isset($options['tablePrefix']))
       $this->tablePrefix = $options['tablePrefix'];
-    }
     try {
       $this->handle = new SQLite3($options['filename']);
       $this->initTables($this->rawQuery('SELECT name FROM sqlite_master WHERE type = "table"'));

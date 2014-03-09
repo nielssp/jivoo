@@ -162,7 +162,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function checkSchema($table, ISchema $schema) {
-    $result = $this->db->rawQuery('PRAGMA table_info(' . $this->db->tableName($table) . ')');
+    $result = $this->db->rawQuery('PRAGMA table_info("' . $this->db->tableName($table) . '")');
     $columns = array();
     $primaryKey = array();
     while ($row = $result->fetchAssoc()) {
@@ -178,7 +178,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       if (!isset($columns[$field]))
         $columns[$field] = 'add';
     }
-    $result = $this->db->rawQuery('PRAGMA index_list(' . $this->db->tableName($table) . ')');
+    $result = $this->db->rawQuery('PRAGMA index_list("' . $this->db->tableName($table) . '")');
     $actualIndexes = array();
     $actualIndexes['PRIMARY'] = array(
       'columns' => $primaryKey,
@@ -193,7 +193,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       );
       if ($count == 0)
         continue;
-      $columnResult = $this->db->rawQuery('PRAGMA index_info(' . $index . ')');
+      $columnResult = $this->db->rawQuery('PRAGMA index_info("' . $index . '")');
       $columns = array();
       while ($row = $columnResult->fetchAssoc()) {
         $columns[] = $row['name'];
@@ -226,12 +226,12 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
 
   public function tableExists($table) {
     $result = $this->db->rawQuery(
-      'PRAGMA table_info(' . $this->db->tableName($table) . ')');
+      'PRAGMA table_info("' . $this->db->tableName($table) . '")');
     return $result->hasRows();
   }
 
   public function createTable(Schema $schema) {
-    $sql = 'CREATE TABLE ' . $this->db->tableName($schema->getName()) . ' (';
+    $sql = 'CREATE TABLE "' . $this->db->tableName($schema->getName()) . '" (';
     $columns = $schema->getFields();
     $first = true;
     $primaryKey = $schema->getPrimaryKey();
@@ -260,28 +260,28 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       if ($options['unique']) {
         $sql .= ' UNIQUE';
       }
-      $sql .= ' INDEX ';
+      $sql .= ' INDEX "';
       $sql .= $this->db->tableName($schema->getName()) . '_' . $index;
-      $sql .= ' ON ' . $this->db->tableName($schema->getName());
-      $sql .= ' (';
+      $sql .= '" ON "' . $this->db->tableName($schema->getName());
+      $sql .= '" (';
       $sql .= implode(', ', $options['columns']) . ')';
       $this->db->rawQuery($sql);
     }
   }
 
   public function dropTable($table) {
-    $sql = 'DROP TABLE ' . $this->db->tableName($table);
+    $sql = 'DROP TABLE "' . $this->db->tableName($table) . '"';
     $this->db->rawQuery($sql);
   }
 
   public function addColumn($table, $column, DataType $type) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table) . ' ADD ' . $column;
+    $sql = 'ALTER TABLE "' . $this->db->tableName($table) . '" ADD ' . $column;
     $sql .= ' ' . $this->convertType($type);
     $this->db->rawQuery($sql);
   }
 
   public function deleteColumn($table, $column) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table) . ' DROP ' . $column;
+    $sql = 'ALTER TABLE "' . $this->db->tableName($table) . '" DROP ' . $column;
     $this->db->rawQuery($sql);
   }
 
@@ -294,17 +294,17 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     if ($options['unique']) {
       $sql .= ' UNIQUE';
     }
-    $sql .= ' INDEX ';
+    $sql .= ' INDEX "';
     $sql .= $this->db->tableName($table) . '_' . $index;
-    $sql .= ' ON ' . $this->db->tableName($table);
-    $sql .= ' (';
+    $sql .= '" ON "' . $this->db->tableName($table);
+    $sql .= '" (';
     $sql .= implode(', ', $options['columns']) . ')';
     $this->db->rawQuery($sql);
   }
 
   public function deleteIndex($table, $index) {
-    $sql = 'DROP INDEX ';
-    $sql .= $this->db->tableName($table) . '_' . $index;
+    $sql = 'DROP INDEX "';
+    $sql .= $this->db->tableName($table) . '_' . $index . '"';
     $this->db->rawQuery($sql);
   }
 

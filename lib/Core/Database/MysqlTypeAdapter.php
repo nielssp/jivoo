@@ -162,7 +162,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function checkSchema($table, ISchema $schema) {
-    $result = $this->db->rawQuery('SHOW COLUMNS FROM ' . $this->db->tableName($table));
+    $result = $this->db->rawQuery('SHOW COLUMNS FROM `' . $this->db->tableName($table) . '`');
     $columns = array();
     while ($row = $result->fetchAssoc()) {
       $column = $row['Field'];
@@ -175,7 +175,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       if (!isset($columns[$field]))
         $columns[$field] = 'add';
     }
-    $result = $this->db->rawQuery('SHOW INDEX FROM ' . $this->db->tableName($table));
+    $result = $this->db->rawQuery('SHOW INDEX FROM `' . $this->db->tableName($table) . '`');
     $actualIndexes = array();
     while ($row = $result->fetchAssoc()) {
       $index = $row['Key_name'];
@@ -217,7 +217,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function createTable(Schema $schema) {
-    $sql = 'CREATE TABLE ' . $this->db->tableName($schema->getName()) . '(';
+    $sql = 'CREATE TABLE `' . $this->db->tableName($schema->getName()) . '` (';
     $columns = $schema->getFields();
     $first = true;
     foreach ($columns as $column) {
@@ -249,30 +249,30 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function dropTable($table) {
-    $sql = 'DROP TABLE ' . $this->db->tableName($table);
+    $sql = 'DROP TABLE `' . $this->db->tableName($table) . '`';
     $this->db->rawQuery($sql);
   }
 
   public function addColumn($table, $column, DataType $type) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table) . ' ADD ' . $column;
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` ADD ' . $column;
     $sql .= ' ' . $this->convertType($type);
     $this->db->rawQuery($sql);
   }
 
   public function deleteColumn($table, $column) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table) . ' DROP ' . $column;
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` DROP ' . $column;
     $this->db->rawQuery($sql);
   }
 
   public function alterColumn($table, $column, DataType $type) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table) . ' CHANGE ' . $column
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
         . ' ' . $column;
     $sql .= ' ' . $this->convertType($type);
     $this->db->rawQuery($sql);
   }
 
   public function createIndex($table, $index, $options = array()) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table);
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {
       $sql .= ' ADD PRIMARY KEY';
     }
@@ -289,7 +289,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function deleteIndex($table, $index) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table);
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {
       $sql .= ' DROP PRIMARY KEY';
     }
@@ -300,7 +300,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function alterIndex($table, $index, $options = array()) {
-    $sql = 'ALTER TABLE ' . $this->db->tableName($table);
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {
       $sql .= ' DROP PRIMARY KEY';
     }

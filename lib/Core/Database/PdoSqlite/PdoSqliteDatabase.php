@@ -18,10 +18,8 @@ class PdoSqliteDatabase extends PdoDatabase {
    */
   public function __construct($options = array()) {
     $this->setTypeAdapter(new  SqliteTypeAdapter($this));
-    $this->tablePrefix = 'tbl_';
-    if (isset($options['tablePrefix']) and $options['tablePrefix'] != '') {
+    if (isset($options['tablePrefix']))
       $this->tablePrefix = $options['tablePrefix'];
-    }
     try {
       $this->pdo = new PDO('sqlite:' . $options['filename']);
       $this->initTables($this->rawQuery('SELECT name FROM sqlite_master WHERE type = "table"'));

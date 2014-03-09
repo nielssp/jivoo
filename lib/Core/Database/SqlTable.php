@@ -97,9 +97,9 @@ class SqlTable extends Table {
       $sqlString .= implode(', ', $fields);
     }
     else {
-      $sqlString .= $this->owner->tableName($this->name) . '.*';
+      $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
     }
-    $sqlString .= ' FROM ' . $this->owner->tableName($this->name);
+    $sqlString .= ' FROM ' . $this->owner->quoteTableName($this->name);
     if (!empty($selection->sources)) {
       foreach ($selection->sources as $source) {
         if (is_string($source['source'])) {
@@ -111,7 +111,7 @@ class SqlTable extends Table {
         else {
           continue;
         }
-        $sqlString .= ', ' . $this->owner->tableName($table);
+        $sqlString .= ', ' . $this->owner->quoteTableName($table);
         if (isset($source['alias'])) {
           $sqlString .= ' AS ' . $source['alias'];
         }
@@ -133,7 +133,7 @@ class SqlTable extends Table {
             get_class($join['source'])
           ));
         }
-        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->tableName($table);
+        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->quoteTableName($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];
         }
@@ -176,7 +176,7 @@ class SqlTable extends Table {
   */
   public function updateSelection(UpdateSelection $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
-    $sqlString = 'UPDATE ' . $this->owner->tableName($this->name);
+    $sqlString = 'UPDATE ' . $this->owner->quoteTableName($this->name);
     $sets = $selection->sets;
     if (!empty($sets)) {
       $sqlString .= ' SET';
@@ -224,7 +224,7 @@ class SqlTable extends Table {
    * @return int Number of affected records
   */
   public function deleteSelection(DeleteSelection $selection) {
-    $sqlString = 'DELETE FROM ' . $this->owner->tableName($this->name);
+    $sqlString = 'DELETE FROM ' . $this->owner->quoteTableName($this->name);
     if ($selection->where->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
     }
@@ -246,7 +246,7 @@ class SqlTable extends Table {
     $typeAdapter = $this->owner->getTypeAdapter();
     $columns = array_keys($data);
     $values = array_values($data);
-    $sqlString = 'INSERT INTO ' . $this->owner->tableName($this->name) . ' (';
+    $sqlString = 'INSERT INTO ' . $this->owner->quoteTableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES (';
     $first = true;

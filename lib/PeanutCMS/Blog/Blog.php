@@ -43,7 +43,7 @@ class Blog extends ModuleBase {
       $post->name = 'welcome-to-peanutcms';
       $post->content = include $this->p('welcomePost.php');
       $post->status = 'published';
-      $post->commenting = 'yes';
+      $post->commenting = true;
       $post->save();
       $comment = $this->m->Models->Comment->create();
       $comment->author = 'PeanutCMS';
