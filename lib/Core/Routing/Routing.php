@@ -489,6 +489,13 @@ class Routing extends ModuleBase {
     if (isset($route['path'])) {
       return $route;
     }
+    $parameters = array();
+    foreach ($route as $key => $value) {
+      if (is_int($key))
+        $parameters[] = $value;
+    }
+    if (!empty($parameters))
+      $route['parameters'] = $parameters;
     if (isset($route['controller'])) {
       $route['controller'] = $this->controllerName($route['controller']);
       if (!isset($route['action'])) {
@@ -507,6 +514,8 @@ class Routing extends ModuleBase {
         $route['parameters'] = $this->selection['route']['parameters'];
       }
     }
+    if (isset($route['parameters']))
+      $route['parameters'] = array_values($route['parameters']);
     return $route;
   }
   
