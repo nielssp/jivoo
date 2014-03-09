@@ -9,7 +9,6 @@ class PostSchema extends Schema {
     $this->name = DataType::string(255);
     $this->title = DataType::string(255);
     $this->content = DataType::text();
-    $this->state = DataType::string(50);
     $this->status = DataType::string(50);
     $this->commenting = DataType::boolean(false, true);
     $this->userId = DataType::integer(DataType::UNSIGNED);

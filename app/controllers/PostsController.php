@@ -46,14 +46,14 @@ class PostsController extends AppController {
       return $this->render('404.html');
     }
 
-    $comments = $this->post->comments
+    $this->comments = $this->post->comments
       ->where('status = "approved"')
       ->orderBy('createdAt');
 
     $this->Pagination->setLimit(10);
 
-    $this->Pagination->setCount($comments->count());
-    $this->Pagination->paginate($comments);
+    $this->Pagination->setCount($this->comments->count());
+    $this->Pagination->paginate($this->comments);
 
     $this->user = $this->Auth->getUser();
 
@@ -62,8 +62,9 @@ class PostsController extends AppController {
     );
 
     if ($this->Auth->hasPermission('frontend.posts.comments.add')) {
-      if ($this->request->isPost() AND $this->request->checkToken()) {
-        $this->newComment = $this->Comment->create($this->request->data['comment'],
+      if ($this->request->hasValidData()) {
+        $this->newComment = $this->Comment->create(
+          $this->request->data['Comment'],
           array('author', 'email', 'website', 'content')
         );
         if (!empty($this->newComment->website)
@@ -71,41 +72,35 @@ class PostsController extends AppController {
           $this->newComment->website = 'http://' . $this->newComment->website;
         }
         if ($this->user) {
-          $this->newComment->setUser($this->user);
+          $this->newComment->user = $this->user;
           $this->newComment->author = $this->user->username;
           $this->newComment->email = $this->user->email;
         }
-        $this->newComment->setPost($this->post);
+        $this->newComment->post = $this->post;
         $this->newComment->ip = $this->request->ip;
-        if ($this->config['commentApproval'] == 'on'
+        if ($this->config['commentApproval']
           AND !$this->Auth->hasPermission('backend.posts.comments.approve')) {
           $this->newComment->status = 'pending';
         }
         else {
           $this->newComment->status = 'approved';
         }
-        if ($this->newComment->isValid()) {
-          $this->newComment->save();
-          $this->post->comments += 1;
-          $this->post->save();
-          $this->Pagination->setCount($this->post->comments);
-
+        if ($this->newComment->save()) {
+          $this->Pagination->setCount($this->comments->count());
           if (!empty($this->newComment->author)) {
-            $this->request->cookies['comment_author'] = $this->newComment
-              ->author;
+            $this->request->cookies['comment_author'] = $this->newComment->author;
           }
           if (!empty($this->newComment->email)) {
             $this->request->cookies['comment_email'] = $this->newComment->email;
           }
           if (!empty($this->newComment->website)) {
-            $this->request->cookies['comment_website'] = $this->newComment
-              ->website;
+            $this->request->cookies['comment_website'] = $this->newComment->website;
           }
 
-          $this
-            ->refresh(array('page' => $this->Pagination->getPages()),
-              'comment' . $this->newComment->id
-            );
+          $this->refresh(
+            array('page' => $this->Pagination->getPages()),
+            'comment' . $this->newComment->id
+          );
         }
       }
       else {
@@ -117,8 +112,7 @@ class PostsController extends AppController {
           $this->newComment->email = $this->request->cookies['comment_email'];
         }
         if (isset($this->request->cookies['comment_website'])) {
-          $this->newComment->website = $this->request
-            ->cookies['comment_website'];
+          $this->newComment->website = $this->request->cookies['comment_website'];
         }
       }
     }

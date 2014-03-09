@@ -135,7 +135,7 @@ function sdate($timestamp = null) {
  * @see I18n::date()
  */
 function tdate($format, $timestamp = null) {
-  return I18n::date($format, $timestmap);
+  return I18n::date($format, $timestamp);
 }
 
 function assume($condition, $message = null) {

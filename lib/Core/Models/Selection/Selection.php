@@ -7,6 +7,10 @@ class Selection extends BasicSelection implements ISelection {
     return $copy;
   }
 
+  public function toReadSelection() {
+    return $this->copyBasicAttr(new ReadSelection($this->model));
+  }
+
   public function set($column, $value = null) {
     return $this->copyBasicAttr(new UpdateSelection($this->model))->set($column, $value);
   }

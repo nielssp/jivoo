@@ -25,7 +25,7 @@ class Link extends ActiveModel {
   protected $defaults = array('menu' => 'main', 'position' => 0);
 
   public function getRoute(ActiveRecord $record) {
-    switch ($this->type) {
+    switch ($record->type) {
       case 'remote':
         return $record->path;
       case 'home':

@@ -18,12 +18,12 @@
   </h1>
 <?php echo $post->content; ?>
 
-<div class="byline"><?php echo tr('Posted on %1', $post->formatDate()) ?>
+<div class="byline"><?php echo tr('Posted on %1', fdate($post->createdAt)) ?>
  | <a href="<?php echo $this->link($post);
-  if ($post->comments == 0)
+  if (!isset($post->comments))
     echo '#comment">' . tr('Leave a comment');
   else
-    echo '#comments">' . trn('%1 comment', '%1 comments', $post->comments);
+    echo '#comments">' . tn('%1 comments', '%1 comment', $post->comments->where('status = "approved"')->count());
 ?></a></div>
 </div>
 <?php endforeach; ?>

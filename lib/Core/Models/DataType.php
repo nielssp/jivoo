@@ -163,7 +163,7 @@ class DataType {
 
   public function createValidationRules(ValidatorField $validator) {
     $validator = $validator->ruleDataType;
-    if (!$this->null)
+    if (!$this->null && $this->type != self::INTEGER && !$this->autoIncrement)
       $validator->null = false;
     switch ($this->type) {
       case self::INTEGER:

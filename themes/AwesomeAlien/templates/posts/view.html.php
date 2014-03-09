@@ -10,19 +10,18 @@
 
 <?php
 $tags = array();
-foreach ($post->getTags() as $tag) {
+foreach ($post->tags as $tag) {
   $tags[] = $Html->link(h($tag->tag), $tag);
 }
 ?>
 <div class="byline">
 <?php
 if (count($tags) > 0) {
-  echo trl('Posted on %1 and tagged with %l',
-    'Posted on %1 and tagged with %l', ', ', ' and ', $tags,
-    $post->formatDate());
+  echo tr('Posted on %2 and tagged with %1{, }{ and }',
+    $tags, fdate($post->createdAt));
 }
 else {
-  echo tr('Posted on %1', $post->formatDate());
+  echo tr('Posted on %1', fdate($post->createdAt));
 }
 ?>
  | <a href="<?php echo $this->link($post); ?>#comment"><?php echo tr(
@@ -32,14 +31,14 @@ else {
 <?php
 if ($Pagination->getCount() > 0) :
 ?>
-<h1 id="comments"><?php echo trn('%1 comment', '%1 comments',
+<h1 id="comments"><?php echo tn('%1 comments', '%1 comment',
     $Pagination->getCount()); ?></h1>
 
 <ul class="comments">
 <?php
   $level = 0;
   foreach ($comments as $comment) :
-    if (isset($comment->level)) {
+    if (false && isset($comment->level)) {
       if ($level == $comment->level) {
         echo '</li>';
       }
@@ -76,17 +75,17 @@ if ($Pagination->getCount() > 0) :
         echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
     }
     ?></h2>
-<p><?php echo $comment->encode('content'); ?></p>
+  <p><?php echo $comment->content; ?></p>
 <div class="byline">
 <?php
-    echo tr('%1 at %2', $comment->formatDate(), $comment->formatTime());
+    echo sdate($comment->createdAt);
     echo ' | <a href="#">' . tr('Reply') . '</a>';
 ?>
 </div>
 </div>
 <div class="clear"></div>
 <?php
-    if (isset($comment->level))
+    if (false && isset($comment->level))
       $level = $comment->level;
     else
       echo '</li>';
@@ -107,7 +106,7 @@ if ($Pagination->getCount() > 0) :
 endif;
 ?>
 
-<?php if ($post->commenting == 'yes') : ?>
+<?php if ($post->commenting) : ?>
 
 <h1 id="comment"><?php echo tr('Leave a comment'); ?></h1>
 <?php if (!isset($newComment)) : ?></li>
@@ -116,7 +115,7 @@ endif;
 <?php 
   else : ?>
 
-<?php echo $Form->begin($newComment, 'comment'); ?>
+  <?php echo $Form->formFor($newComment, array('fragment' => 'comment')); ?>
 
 <p><?php echo tr('Have something to say? Say it!'); ?></p>
 <?php if ($user) : ?>
@@ -132,31 +131,31 @@ endif;
 
 <p class="input">
 <?php echo $Form->label('author'); ?>
-<?php echo $Form->isRequired('author', '<span class="star">*</span>'); ?>
-<?php echo $Form->field('author'); ?>
-<?php echo $Form->getError('author'); ?>
+<?php echo $Form->ifRequired('author', '<span class="star">*</span>'); ?>
+<?php echo $Form->text('author'); ?>
+<?php echo $Form->error('author'); ?>
 </p>
 
 <p class="input">
 <?php echo $Form->label('email'); ?>
-<?php echo $Form->isRequired('email', '<span class="star">*</span>'); ?>
-<?php echo $Form->field('email'); ?>
-<?php echo $Form->getError('email'); ?>
+<?php echo $Form->ifRequired('email', '<span class="star">*</span>'); ?>
+<?php echo $Form->text('email'); ?>
+<?php echo $Form->error('email'); ?>
 </p>
 
 <p class="input">
 <?php echo $Form->label('website'); ?>
-<?php echo $Form->isRequired('website', '<span class="star">*</span>'); ?>
-<?php echo $Form->field('website'); ?>
-<?php echo $Form->getError('website'); ?>
+<?php echo $Form->ifRequired('website', '<span class="star">*</span>'); ?>
+<?php echo $Form->text('website'); ?>
+<?php echo $Form->error('website'); ?>
 </p>
 <?php endif; ?>
 
 <p class="input">
 <?php echo $Form->label('content'); ?>
-<?php echo $Form->isRequired('content', '<span class="star">*</span>'); ?>
-<?php echo $Form->field('content'); ?>
-<?php echo $Form->getError('content'); ?>
+<?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
+<?php echo $Form->textarea('content'); ?>
+<?php echo $Form->error('content'); ?>
 </p>
 
 <p><?php echo $Form->submit(tr('Post comment')); ?></p>

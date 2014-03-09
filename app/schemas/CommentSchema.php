@@ -6,7 +6,7 @@ class CommentSchema extends Schema {
   protected function createSchema() {
     $this->addAutoIncrementId();
     $this->postId = DataType::integer(DataType::UNSIGNED);
-    $this->userId = DataType::integer(DataType::UNSIGNED);
+    $this->userId = DataType::integer(DataType::UNSIGNED, true);
     $this->parentId = DataType::integer(DataType::UNSIGNED, true);
     $this->author = DataType::string(255);
     $this->email = DataType::string(255);

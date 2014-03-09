@@ -32,8 +32,12 @@ class ActiveCollection extends Model {
         ->leftJoin($this->join, $this->otherPrimary . '= J.' . $this->otherKey, 'J')
         ->where('J.' . $this->thisKey . ' = ?', $this->recordId);
     }
-    else
-      return $selection->where($this->thisKey . ' = ?', $this->recordId);
+    else {
+      $selection = $selection->where($this->thisKey . ' = ?', $this->recordId);
+      if ($selection instanceof Selection)
+        $selection = $selection->toReadSelection();
+      return $selection;
+    }
   }
 
   public function add(ActiveRecord $record) {
