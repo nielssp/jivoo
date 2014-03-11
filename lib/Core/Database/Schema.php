@@ -71,6 +71,7 @@ class Schema implements ISchema {
   public function addAutoIncrementId($id = 'id') {
     if (!$this->readOnly) {
       $this->$id = DataType::integer(DataType::AUTO_INCREMENT | DataType::UNSIGNED);
+      $this->setPrimaryKey($id);
     }
   }
 

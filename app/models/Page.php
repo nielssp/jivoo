@@ -29,4 +29,16 @@ class Page extends ActiveModel {
       'parameters' => array($record->id)
     );
   }
+  
+  public function install() {
+    $page = $this->create();
+    $page->title = 'About';
+    $page->name = 'about';
+    $page->content = '<p>'
+      . tr(
+        'Welcome to PeanutCMS. This is a static page. You can use it to display important information.'
+      ) . '</p>';
+    $page->status = 'published';
+    $page->save();
+  }
 }

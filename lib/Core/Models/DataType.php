@@ -113,7 +113,7 @@ class DataType {
   }
 
   public function __isset($property) {
-    return $this->$property != null;
+    return $this->$property !== null;
   }
 
   public function __toString() {
@@ -381,6 +381,16 @@ class DataType {
    */
   public static function binary($null = false, $default = null) {
     return new self(self::BINARY, $null, $default);
+  }
+  
+  public static function detectType($value) {
+    if (is_bool($value))
+      return self::boolean();
+    if (is_int($value))
+      return self::integer();
+    if (is_float($value))
+      return self::float();
+    return self::text();
   }
   
   public static function fromPlaceholder($placeholder) {

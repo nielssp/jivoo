@@ -14,9 +14,9 @@ class CommentSchema extends Schema {
     $this->content = DataType::text();
     $this->contentText = DataType::text();
     $this->ip = DataType::string(255);
-    $this->status = DataType::string(50);
+    $this->approved = DataType::boolean(false, false);
+    $this->spam = DataType::boolean(false, false);
     $this->addTimeStamps();
-    $this->setPrimaryKey('id');
     $this->addIndex('postId', 'postId');
   }
 }

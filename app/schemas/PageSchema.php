@@ -8,9 +8,8 @@ class PageSchema extends Schema {
     $this->name = DataType::string(255);
     $this->title = DataType::string(255);
     $this->content = DataType::text();
-    $this->statue = DataType::string(10);
+    $this->published = DataType::boolean(false, true);
     $this->addTimeStamps();
-    $this->setPrimaryKey('id');
     $this->addUnique('name', 'name');
     $this->addIndex('createdAt', 'createdAt');
   }

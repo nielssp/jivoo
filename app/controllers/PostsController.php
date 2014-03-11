@@ -13,7 +13,7 @@ class PostsController extends AppController {
   }
 
   public function index() {
-    $this->posts = $this->Post->where('status = "published"')
+    $this->posts = $this->Post->where('published = %b', true)
       ->orderByDescending('createdAt');
     $this->Pagination->setCount($this->posts->count());
     $this->posts = $this->Pagination->paginate($this->posts);
@@ -28,7 +28,7 @@ class PostsController extends AppController {
   
   public function feed() {
     $select = SelectQuery::create()
-      ->where('status = "published"')
+      ->where('published = %b', true)
       ->orderByDescending('date')
       ->limit(30);
     $this->posts = $this->Post->all($select);
@@ -41,13 +41,13 @@ class PostsController extends AppController {
 
     $this->post = $this->Post->find($post);
 
-    if (!$this->post OR ($this->post->status != 'published'
+    if (!$this->post OR (!$this->post->published
         AND !$this->Auth->hasPermission('backend.posts.viewDraft'))) {
       return $this->render('404.html');
     }
 
     $this->comments = $this->post->comments
-      ->where('status = "approved"')
+      ->where('approved = %b', true)
       ->orderBy('createdAt');
 
     $this->Pagination->setLimit(10);
@@ -80,10 +80,10 @@ class PostsController extends AppController {
         $this->newComment->ip = $this->request->ip;
         if ($this->config['commentApproval']
           AND !$this->Auth->hasPermission('backend.posts.comments.approve')) {
-          $this->newComment->status = 'pending';
+          $this->newComment->approved = false;
         }
         else {
-          $this->newComment->status = 'approved';
+          $this->newComment->approved = true;
         }
         if ($this->newComment->save()) {
           $this->Pagination->setCount($this->comments->count());

@@ -10,7 +10,6 @@ class LinkSchema extends Schema {
     $this->title = DataType::string(255);
     $this->path = DataType::text();
     $this->position = DataType::integer(0, false, 0);
-    $this->setPrimaryKey('id');
     $this->addIndex('menu', 'menu');
   }
 }

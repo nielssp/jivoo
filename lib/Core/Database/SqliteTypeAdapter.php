@@ -110,7 +110,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       return false;
     $default = null;
     if (isset($row['dflt_value']))
-      $default = $row['dflt_value'];
+      $default = stripslashes(preg_replace('/^\'|\'$/', '', $row['dflt_value']));
     if ($default != $type->default)
       return false;
     switch ($type->type) {
@@ -194,12 +194,12 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       if ($count == 0)
         continue;
       $columnResult = $this->db->rawQuery('PRAGMA index_info("' . $index . '")');
-      $columns = array();
+      $indexFields = array();
       while ($row = $columnResult->fetchAssoc()) {
-        $columns[] = $row['name'];
+        $indexFields[] = $row['name'];
       }
       $actualIndexes[$name] = array(
-        'columns' => $columns,
+        'columns' => $indexFields,
         'unique' => $unique
       );
     }
@@ -281,8 +281,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function deleteColumn($table, $column) {
-    $sql = 'ALTER TABLE "' . $this->db->tableName($table) . '" DROP ' . $column;
-    $this->db->rawQuery($sql);
+    // Not implemented
   }
 
   public function alterColumn($table, $column, DataType $type) {

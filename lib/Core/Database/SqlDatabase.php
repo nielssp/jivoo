@@ -90,7 +90,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   
   private function encodeValue(DataType $type = null, $value) {
     if (!isset($type))
-      return $this->quoteString($value);
+      return $this->typeAdapter->encode(DataType::detectType($value), $value);
     return $this->typeAdapter->encode($type, $value);
   }
 
