@@ -139,7 +139,7 @@ class ActiveRecord implements IRecord, ILinkable {
     $method = 'record' . ucfirst($method);
     $function = array($this->model, $method);
     array_unshift($parameters, $this);
-    if (function_exists($function))
+    if (is_callable($function))
       return call_user_func_array($function, $parameters);
     throw new InvalidMethodException(tr('"%1" is not a valid method', $method));
   }

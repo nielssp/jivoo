@@ -6,7 +6,7 @@
  */
 class Encoder {
   /**
-   * HTML5 tags that should not be closedbn bn mmb.
+   * HTML5 tags that should not be closed.
    * 
    * Source: http://xahlee.info/js/html5_non-closing_tag.html
    * @var array Associative array of lowercase tag-names and true-values.
