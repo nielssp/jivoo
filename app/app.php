@@ -21,7 +21,7 @@ return array(
     'Core/Database',
     'Core/Authentication',
     'Core/Helpers',
-    'Core/Toolkit',
+    'Core/Administration',
     'PeanutCMS',
     'PeanutCMS/Backend',
     'PeanutCMS/Widgets',
