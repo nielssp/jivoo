@@ -7,7 +7,7 @@ return array(
   'defaultLanguage' => 'en',
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'peanut_',
-  'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce'),
+  'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce', 'BasicWidgets'),
   'modules' => array(
 //    'Core',
     'Core/Routing',

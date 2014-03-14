@@ -17,11 +17,10 @@ class RecentCommentsWidget extends WidgetBase {
     if (isset($config['limit'])) {
       $limit = $config['limit'];
     }
-    $this->comments = $this->Comment->all(SelectQuery::create()
-      ->where('status = "approved"')
+    $this->comments = $this->Comment
+      ->where('approved = %b', true)
       ->orderByDescending('date')
-      ->limit($limit)
-    );
+      ->limit($limit);
     return $this->fetch();
   }
 }

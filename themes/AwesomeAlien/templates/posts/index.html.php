@@ -23,7 +23,7 @@
   if (!isset($post->comments))
     echo '#comment">' . tr('Leave a comment');
   else
-    echo '#comments">' . tn('%1 comments', '%1 comment', $post->comments->where('status = "approved"')->count());
+    echo '#comments">' . tn('%1 comments', '%1 comment', $post->comments->where('approved = %b', true)->count());
 ?></a></div>
 </div>
 <?php endforeach; ?>

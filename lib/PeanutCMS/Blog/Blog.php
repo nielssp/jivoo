@@ -25,18 +25,6 @@ class Blog extends ModuleBase {
       'commentApproval' => false, 'editor' => array('name' => 'TinymceEditor'),
     );
 
-    $this->m->Widgets->register(new RecentPostsWidget(
-      $this->m->Templates,
-      $this->m->Routing,
-      $this->p('templates/recent-posts-widget.html.php')
-    ));
-
-    $this->m->Widgets->register(new RecentCommentsWidget(
-      $this->m->Templates,
-      $this->m->Routing,
-      $this->p('templates/recent-comments-widget.html.php')
-    ));
-
     if ($this->m->Database->isNew('Post')) {
       $post = $this->m->Models->Post->create();
       $post->title = tr('Welcome to PeanutCMS');
