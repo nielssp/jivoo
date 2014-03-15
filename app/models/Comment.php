@@ -50,7 +50,7 @@ class Comment extends ActiveModel {
 
   public function beforeValidate(ActiveRecord $record) {
     parent::beforeValidate($record);
-    $encoder = new Encoder();
+    $encoder = new HtmlEncoder();
     $record->contentText = $encoder->encode($record->content);
   }
 }

@@ -27,7 +27,7 @@ class Pages extends ModuleBase {
       $page->save();
     }
 
-    $pagesEncoder = new Encoder();
+    $pagesEncoder = new HtmlEncoder();
     $pagesEncoder->setAllowAll(true);
     $this->m->Models->Page->setEncoder('content', $pagesEncoder);
 

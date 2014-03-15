@@ -120,6 +120,11 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
   }
   
   public function createExisting($data = array()) {
+    if (isset($data[$this->primaryKey])) {
+      $id = $data[$this->primaryKey];
+      if (isset($this->cache[$id]))
+        return $this->cache[$id];
+    }
     return ActiveRecord::createExisting($this, $data, $this->record);
   }
 

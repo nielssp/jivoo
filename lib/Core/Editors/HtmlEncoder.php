@@ -2,9 +2,9 @@
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
  * and automatically closing tags and stripping invalid HTML.
- * @package Core\Editors
+ * @package Core\Models\Encoding
  */
-class Encoder {
+class HtmlEncoder {
   /**
    * HTML5 tags that should not be closed.
    * 

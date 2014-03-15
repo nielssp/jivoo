@@ -18,13 +18,6 @@ interface IBasicModel {
   public function getType($field);
 
   /**
-   * Get editor
-   * @param string $field Field name
-   * @return IEditor|null An editor if it exists
-   */
-  public function getEditor($field);
-
-  /**
    * Get field label
    * @param string $field Field label
    * @return string A translated name for the field

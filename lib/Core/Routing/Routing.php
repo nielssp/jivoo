@@ -889,8 +889,8 @@ class Routing extends ModuleBase {
     }
     
     if ($this->request->path != array() AND $this->isCurrent($this->root['route'])) {
-      if (!isset($this->root['route']) OR !isset($this->root['route']['path']) OR
-        $this->request->path != $this->root['route']['path']) {
+      if (!isset($this->root['route']) OR !isset($this->root['route']['path'])
+          OR $this->request->path != $this->root['route']['path']) {
         $this->redirectPath(array(), $this->request->query);
       }
     }
@@ -920,6 +920,8 @@ class Routing extends ModuleBase {
       }
       catch (ResponseOverrideException $e) {
         $response = $e->getResponse();
+      }
+      catch (NotFoundException $e) {
       }
       if (is_string($response)) {
         $response = new TextResponse(Http::OK, 'text', $response);
@@ -1020,6 +1022,7 @@ class InvalidRouteException extends Exception { }
  */
 class InvalidResponseException extends Exception { }
 
+class NotFoundException extends Exception { }
 
 class ResponseOverrideException extends Exception {
   private $response;

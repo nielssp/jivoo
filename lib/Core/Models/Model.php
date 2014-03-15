@@ -100,10 +100,6 @@ abstract class Model implements IModel {
     return $this->getSchema()->$field;
   }
   
-  public function getEditor($field) {
-    return null;
-  }
-  
   public function getLabel($field) {
     return $field;
   }

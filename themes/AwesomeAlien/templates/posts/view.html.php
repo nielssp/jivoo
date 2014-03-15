@@ -2,7 +2,7 @@
 <div class="post">
 
 <h1><?php echo h($post->title); ?></h1>
-<?php if ($post->status == 'draft') : ?>
+<?php if (!$post->published) : ?>
 <p><strong>This post is a draft and is not visible to the pulic.</strong></p>
 <?php endif; ?>
 
@@ -55,12 +55,12 @@ if ($Pagination->getCount() > 0) :
 <li>
 <div class="comment-avatar">
 <img src="http://1.gravatar.com/avatar/<?php
-    if (!empty($comment->email))
-      echo md5($comment->email);
-    else
+  if (!empty($comment->email))
+    echo md5($comment->email);
+  else
       echo md5($comment->ip);
-                                       ?>?s=40&amp;d=monsterid&amp;r=G"
-     alt="<?php echo h($comment->author); ?>"/>
+?>?s=40&amp;d=monsterid&amp;r=G"
+   alt="<?php echo h($comment->author); ?>"/>
 </div>
 <div class="comment" id="comment<?php echo $comment->id; ?>">
 <h2><?php

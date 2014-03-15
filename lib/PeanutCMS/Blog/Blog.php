@@ -51,7 +51,7 @@ class Blog extends ModuleBase {
     }
     
     // Encoder
-    $commentEncoder = new Encoder();
+    $commentEncoder = new HtmlEncoder();
     $commentEncoder->allowTag('strong');
     $commentEncoder->allowTag('br');
     $commentEncoder->allowTag('p');
@@ -64,7 +64,7 @@ class Blog extends ModuleBase {
     $commentEncoder->validateAttribute('img', 'src', 'url', true);
     $this->m->Models->Comment->setEncoder('content', $commentEncoder);
 
-    $postsEncoder = new Encoder();
+    $postsEncoder = new HtmlEncoder();
     $postsEncoder->setAllowAll(true);
     $this->m->Models->Post->setEncoder('content', $postsEncoder);
 

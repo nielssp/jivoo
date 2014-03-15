@@ -7,6 +7,7 @@
 Lib::import('Core/Models/Validation');
 Lib::import('Core/Models/Selection');
 Lib::import('Core/Models/Condition');
+Lib::import('Core/Models/Encoding');
 
 /**
  * Models module, finds all models in application
