@@ -901,45 +901,49 @@ class Routing extends ModuleBase {
 
     if (isset($route['controller'])) {
       Logger::debug('Select action: ' . $route['controller'] . '::' . $route['action']);
-      $controller = $this->controllers->getController($route['controller']);
-      if (!$controller) {
-        throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
-      }
-      $action = $route['action'];
-      if (!is_callable(array($controller, $action))) {
-        throw new InvalidRouteException(
-          tr('Invalid action: %1::%2',
-          $route['controller'], $route['action']
-        ));
-      }
       $this->rendered = true;
       $this->request->route = $route;
-      $controller->before();
       try {
-        $response = call_user_func_array(array($controller, $action), $route['parameters']);
+        $response = $this->callAction(
+          $route['controller'], $route['action'], $route['parameters']
+        );
       }
       catch (ResponseOverrideException $e) {
         $response = $e->getResponse();
       }
       catch (NotFoundException $e) {
       }
-      if (is_string($response)) {
-        $response = new TextResponse(Http::OK, 'text', $response);
-      }
-      if ($response instanceof Response) {
-        $controller->after($response);
-        $this->respond($response);
-      }
-      else {
-        throw new InvalidResponseException(tr(
-          'An invalid response was returned from the action %1',
-          $route['controller'] . '::' . $route['action']
-        ));
-      }
+      $this->respond($response);
     }
     else {
       throw new InvalidRouteException(tr('No controller selected'));
     }
+  }
+
+  public function callAction($controller, $action, $parameters = array()) {
+    if (!isset($this->controllers))
+      throw new ModuleNotLoadedException(tr('Missing controllers module'));
+    $controller = $this->controllers->getController($controller);
+    if (!isset($controller))
+      throw new InvalidRouteException(tr('Invalid controller: %1', $controller));
+    if (!is_callable(array($controller, $action))) {
+      throw new InvalidRouteException(tr(
+        'Invalid action: %1',
+        $route['controller'] . '::' . $route['action']
+      ));
+    }
+    $controller->before();
+    $response = call_user_func_array(array($controller, $action), $parameters);
+    if (is_string($response))
+      $response = new TextResponse(Http::OK, 'text', $response);
+    if (!($response instanceof Response)) {
+      throw new InvalidResponseException(tr(
+        'An invalid response was returned from the action %1',
+        $route['controller'] . '::' . $route['action']
+      ));
+    }
+    $controller->after($response);
+    return $response;
   }
 
   /**

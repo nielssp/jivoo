@@ -318,6 +318,10 @@ class Controller implements IHelpable {
     $this->redirect($this->session['returnTo']);
   }
 
+  protected function embed($controller, $action, $parameters = array()) {
+    return $this->m->Routing->callAction($controller, $action, $parameters);
+  }
+
   /**
    * Redirect to a route
    * @param array|ILinkable|string|null $route Route, see {@see Routing}
