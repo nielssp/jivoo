@@ -28,7 +28,7 @@ class CommentsController extends AppController {
         }
         $this->newComment->post = $this->post;
         $this->newComment->ip = $this->request->ip;
-        if ($this->config['commentApproval']
+        if ($this->config['Blog']['commentApproval']
           AND !$this->Auth->hasPermission('backend.posts.comments.approve')) {
           $this->newComment->approved = false;
         }

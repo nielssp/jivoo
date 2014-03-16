@@ -25,6 +25,7 @@ class ActiveRecord implements IRecord, ILinkable {
     $this->model = $model;
     $this->data = array_fill_keys($model->getNonVirtualFields(), null);
     $this->virtualData = array_fill_keys($model->getVirtualFields(), null);
+    $this->addData($model->getDefaults());
     $this->addData($data, $allowedFields);
     $this->associations = $this->model->getAssociations();
     $this->getters = $this->model->getGetters();

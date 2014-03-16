@@ -18,22 +18,20 @@ class PostsController extends AppController {
     $this->Pagination->setCount($this->posts->count());
     $this->posts = $this->Pagination->paginate($this->posts);
     
-//    $this->view->resource(
-//      'alternate', 'application/rss+xml',
-//      $this->m->Routing->getUrl('feed')
-//    );
+    $this->view->resource(
+      'alternate', 'application/rss+xml',
+      $this->m->Routing->getUrl('feed')
+    );
 
     return $this->render();
   }
   
   public function feed() {
-    $select = SelectQuery::create()
+    $this->posts = $this->Post
       ->where('published = %b', true)
       ->orderByDescending('date')
       ->limit(30);
-    $this->posts = $this->Post->all($select);
-    
-    $this->render('feed/posts.rss');
+    return $this->render('feed/posts.rss');
   }
 
   public function view($post) {

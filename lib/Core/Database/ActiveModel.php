@@ -55,6 +55,8 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
   private $primaryKey = null;
   private $aiPrmaryKey = null;
 
+  private $defaults = array();
+
   private $cache = array();
   
   public final function __construct(IDatabase $database) {
@@ -94,6 +96,12 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
     $this->validator = new Validator($this, $this->validate);
     $this->schema->createValidationRules($this->validator);
 
+    foreach ($this->nonVirtualFields as $field) {
+      $type = $this->schema->$field;
+      if (isset($type->default))
+        $this->defaults[$field] = $type->default;
+    }
+
     if (isset($this->record)) {
       if (!class_exists($this->record) or !is_subclass_of($this->record, 'ActiveRecord'))
         throw new InvalidRecordClassException(tr(
@@ -113,6 +121,10 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
       $this->mixinObjects[] = new $mixin($this, $options);
     }
+  }
+
+  public function getDefaults() {
+    return $this->defaults;
   }
 
   public function create($data = array(), $allowedFields = null) {

@@ -278,7 +278,7 @@ class DataType {
   
   public function convert($value) {
     //if ($this->null and $value == null)
-    if ($value == null)
+    if ($value === null)
       return null;
     switch ($this->type) {
       case self::INTEGER:
