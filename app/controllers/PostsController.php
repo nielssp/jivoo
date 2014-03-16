@@ -13,7 +13,8 @@ class PostsController extends AppController {
   }
 
   public function index() {
-    $this->posts = $this->Post->where('published = %b', true)
+    $this->posts = $this->Post
+      ->where('published = true')
       ->orderByDescending('createdAt');
     $this->Pagination->setCount($this->posts->count());
     $this->posts = $this->Pagination->paginate($this->posts);
@@ -28,7 +29,7 @@ class PostsController extends AppController {
   
   public function feed() {
     $this->posts = $this->Post
-      ->where('published = %b', true)
+      ->where('published = true')
       ->orderByDescending('date')
       ->limit(30);
     return $this->render('feed/posts.rss');
@@ -45,7 +46,7 @@ class PostsController extends AppController {
     }
 
     $this->comments = $this->post->comments
-      ->where('approved = %b', true)
+      ->where('approved = true')
       ->orderBy('createdAt');
 
     $this->Pagination->setLimit(10);
