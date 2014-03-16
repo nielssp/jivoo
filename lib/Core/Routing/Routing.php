@@ -883,7 +883,11 @@ class Routing extends ModuleBase {
     }
     
     $route = $this->selection['route'];
-    
+    $this->followRoute($route); 
+  }
+
+  public function followRoute($route) {
+    $route = $this->validateRoute($route);
     if (isset($route['url']) OR isset($route['path'])) {
       $this->redirect($route);
     }
@@ -912,6 +916,7 @@ class Routing extends ModuleBase {
         $response = $e->getResponse();
       }
       catch (NotFoundException $e) {
+        return $this->followroute($this->errorRoute);
       }
       $this->respond($response);
     }

@@ -41,9 +41,8 @@ class PostsController extends AppController {
     $this->post = $this->Post->find($post);
 
     if (!$this->post OR (!$this->post->published
-        AND !$this->Auth->hasPermission('backend.posts.viewDraft'))) {
-      return $this->render('404.html');
-    }
+        AND !$this->Auth->hasPermission('backend.posts.viewDraft')))
+      throw new NotFoundException();
 
     $this->comments = $this->post->comments
       ->where('approved = true')
@@ -71,15 +70,15 @@ class PostsController extends AppController {
   }
 
   public function viewTag($tag) {
-    $this->tag = $this->Tag->first(SelectQuery::create()->where('name = ?', $tag));
+    $this->tag = $this->Tag->where('name = ?', $tag)->first();
+    if (!isset($this->tag))
+      throw new NotFoundException();
 
-    $select = SelectQuery::create()->where('status = "published"')
-      ->orderByDescending('date');
+    $this->posts = $this->tag->posts->where('published = true');
 
-    $this->Pagination->setCount($this->tag->countPosts(clone $select));
+    $this->Pagination->setCount($this->posts);
 
-    $this->Pagination->paginate($select);
-    $this->posts = $this->tag->getPosts($select);
+    $this->Pagination->paginate($this->posts);
     $this->title = $this->tag->tag;
     $this->render('posts/index.html');
   }
