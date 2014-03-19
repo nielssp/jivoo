@@ -14,7 +14,7 @@
 class Pages extends ModuleBase {
 
   protected function init() {
-    if ($this->m->Database->isNew('pages')) {
+    if ($this->m->Database->isNew('Page')) {
       $page = $this->m->Models->Page->create();
       $page->title = 'About';
       $page->name = 'about';
@@ -22,8 +22,7 @@ class Pages extends ModuleBase {
       $page->content .= tr(
         'Welcome to PeanutCMS. This is a static page. You can use it to display important information.');
       $page->content .= '</p>';
-      $page->date = time();
-      $page->state = 'published';
+      $page->published = true;
       $page->save();
     }
 

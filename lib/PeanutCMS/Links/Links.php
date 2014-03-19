@@ -15,7 +15,7 @@ class Links extends ModuleBase {
 
   protected function init() {
 
-    if ($this->m->Database->isNew('links')) {
+    if ($this->m->Database->isNew('Link')) {
       $link = $this->m->Models->Link->create();
       $link->menu = 'main';
       $link->position = 0;
