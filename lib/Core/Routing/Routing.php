@@ -925,16 +925,16 @@ class Routing extends ModuleBase {
     }
   }
 
-  public function callAction($controller, $action, $parameters = array()) {
+  public function callAction($controllerName, $action, $parameters = array()) {
     if (!isset($this->controllers))
       throw new ModuleNotLoadedException(tr('Missing controllers module'));
-    $controller = $this->controllers->getController($controller);
+    $controller = $this->controllers->getController($controllerName);
     if (!isset($controller))
-      throw new InvalidRouteException(tr('Invalid controller: %1', $controller));
+      throw new InvalidRouteException(tr('Invalid controller: %1', $controllerName));
     if (!is_callable(array($controller, $action))) {
       throw new InvalidRouteException(tr(
         'Invalid action: %1',
-        $route['controller'] . '::' . $route['action']
+        $controllerName . '::' . $action
       ));
     }
     $controller->before();
@@ -944,7 +944,7 @@ class Routing extends ModuleBase {
     if (!($response instanceof Response)) {
       throw new InvalidResponseException(tr(
         'An invalid response was returned from the action %1',
-        $route['controller'] . '::' . $route['action']
+        $controllerName . '::' . $action
       ));
     }
     $controller->after($response);
