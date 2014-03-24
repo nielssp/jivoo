@@ -43,7 +43,7 @@ class Link extends ActiveModel {
     }
   }
 
-  public function setRoute(ActiveRecord $record, $route = null) {
+  public function recordSetRoute(ActiveRecord $record, $route = null) {
     if (!isset($route)) {
       $record->path = '';
       $record->type = 'home';

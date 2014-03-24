@@ -50,7 +50,7 @@ class Database extends ModuleBase implements IDatabase {
   public function __get($table) {
     if (isset($this->tables[$table]))
       return $this->tables[$table];
-    throw new TableNotFoundException(tr('Table "%1" not found'), $table);
+    throw new TableNotFoundException(tr('Table "%1" not found', $table));
   }
 
   public function __isset($table) {
