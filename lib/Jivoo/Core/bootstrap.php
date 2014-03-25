@@ -1,12 +1,12 @@
 <?php
 /**
- * Apakoh Core bootstrap script
- * @package Core
+ * Jivoo bootstrap script
+ * @package Jivoo\Core
  */
 ini_set('magic_quotes_runtime', 0);
 
 if (!defined('LIB_PATH')) {
-  define('LIB_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))));
+  define('LIB_PATH', str_replace('\\', '/', dirname(dirname(dirname(__FILE__)))));
 }
 
 if (!defined('CORE_LIB_PATH')) {
@@ -178,3 +178,4 @@ else {
   }
 }
 
+Lib::import('Jivoo/Core');

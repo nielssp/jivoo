@@ -1,17 +1,15 @@
 <?php
 /**
- * Main entry-script of PeanutCMS
+ * Main entry-script of Jivoo
  *
  * This file can be used to change the locations of files and directories
- * used by PeanutCMS. 
+ * used by Jivoo. 
  *
- * @package PeanutCMS
+ * @package Jivoo
  * @since 0.1.0
  */
 
-require_once 'lib/Core/bootstrap.php';
-
-Lib::import('Core');
+require_once 'lib/Jivoo/Core/bootstrap.php';
 
 $app = new App(include 'app/app.php', basename(__FILE__));
 

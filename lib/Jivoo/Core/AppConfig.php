@@ -4,7 +4,7 @@
  *
  * Implements arrayaccess, so the []-operator can be used
  * to get and set configuration values.
- * @package Core
+ * @package Jivoo\Core
  * @property-read AppConfig $parent Get parent configuration
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 

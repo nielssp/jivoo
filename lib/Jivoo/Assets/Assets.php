@@ -1,14 +1,14 @@
 <?php
 // Module
 // Name           : Assets
-// Description    : The Apakoh Core asset system
+// Description    : The Jivoo asset system
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing
+// Dependencies   : Jivoo/Routing
 
 /**
  * Assets module
  * 
- * @package Core\Assets
+ * @package Jivoo\Assets
  */
 class Assets extends ModuleBase {
   /**

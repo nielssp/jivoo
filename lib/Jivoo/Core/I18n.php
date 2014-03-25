@@ -1,7 +1,7 @@
 <?php
 /**
  * Internationalization and localization
- * @package Core
+ * @package Jivoo\Core
  */
 class I18n {
   /** @var AppConfig Configuration */
