@@ -1,176 +1,99 @@
-/**
- * Extra Terrestrial theme ??
- * 
- */
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400");
+/* line 34, ../sass/base.scss */
 * {
-  margin: 0;
   padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
+/* line 41, ../sass/base.scss */
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* line 15, ../sass/theme.scss */
 html {
-  height: 101%;
+  overflow-y: scroll;
 }
 
+/* line 19, ../sass/theme.scss */
 body {
   background-color: #eee;
+  font-family: "Open Sans", sans-serif;
   text-align: center;
-  font-family: "Bitstream Vera Sans", Verdana, "DejaVu Sans", sans-serif;
-  font-size: 63%;
-  padding-bottom: 20px;
+  color: #111;
+  font-size: 14px;
 }
 
-small {
-  font-size: 0.6em;
-}
-
-h1 {
-  font-size: 1.7em;
-  line-height: 1.2em;
-  font-weight: normal;
-  color: #000;
-  font-family: "Segoe UI", Corbel, "Bitstream Vera Sans", Verdana,
-    "DejaVu Sans", sans-serif;
-  margin-bottom: 10px;
-}
-
-h2 {
-  color: #000;
-  font-size: 1.3em;
-  line-height: 1.2em;
-  font-weight: normal;
-  margin-bottom: 5px;
-  font-family: Corbel, "Segoe UI", "Bitstream Vera Sans", Verdana,
-    "DejaVu Sans", sans-serif;
-}
-
-h3 {
-  font-size: 1.1em;
-  color: #000;
-  line-height: 1.2em;
-  font-weight: normal;
-  margin-bottom: 2px;
-  font-family: Corbel, "Segoe UI", "Bitstream Vera Sans", Verdana,
-    "DejaVu Sans", sans-serif;
-}
-
-p {
-  line-height: 1.7em;
-  margin-bottom: 1.2em;
-  color: #222;
-}
-
-blockquote {
-  font-family: Constantia, Georgia, "Lucida Bright", "DejaVu Serif",
-    "Bitstream Vera Serif", "Liberation Serif", serif;
-  padding: 1.2em 10px 1px;
-  margin-left: -10px;
-  font-size: 0.8em;
-  background-color: #F0F4F9;
-  text-shadow: #C0C0C0 1px 1px 1px;
-  color: #222425;
-  font-style: italic;
-  border-left: 4px solid #88BDF0;
-  margin-bottom: 1.2em;
-}
-
-ul,ol {
-  margin-left: 20px;
-  margin-bottom: 1.2em;
-}
-
-ul li,ol li {
-  line-height: 1.7em;
-  list-style-type: square;
-}
-
-li ul,li ol {
-  margin-bottom: 0px;
-}
-
-li li {
-  font-size: 0.9em;
-  list-style-type: disc;
-}
-
-li li li {
-  font-size: 0.9em;
-  list-style-type: circle;
-}
-
-pre,code,samp {
-  font-family: Consolas, "Lucida Console", Monaco, "Andale Mono",
-    "Bitstream Vera Sans Mono", "Lucida Sans Typewriter",
-    "DejaVu Sans Mono", monospace;
-}
-
-pre {
-  padding: 10px;
-  font-size: 1.0em;
-  background-color: #F9F9F9;
-  color: #202020;
-  border: 1px dashed #D0D0D0;
+/* line 27, ../sass/theme.scss */
+#main {
+  background-color: #fff;
+  border-bottom: 5px solid #000;
   display: block;
-  margin-bottom: 1.2em;
+  margin: 0 auto 25px;
+  padding: 0 15px;
+  text-align: left;
+}
+@media screen and (min-width: 768px) {
+  /* line 27, ../sass/theme.scss */
+  #main {
+    width: 738px;
+  }
+}
+@media screen and (min-width: 980px) {
+  /* line 27, ../sass/theme.scss */
+  #main {
+    width: 950px;
+  }
 }
 
-img {
-  border: 0;
-  margin: 0;
-  font-size: 10px;
-  max-width: 100%;
+/* line 42, ../sass/theme.scss */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
 }
 
-a:link,a:active,a:visited {
-  color: #04388E;
+/* line 47, ../sass/theme.scss */
+a, a:link, a:visited, a:hover, a:active {
+  color: #04388e;
   text-decoration: none;
 }
-
-a:hover {
-  color: #D81413;
+/* line 51, ../sass/theme.scss */
+a:hover, a:active {
+  color: #d81413;
   text-decoration: underline;
 }
 
-h1 a:link,h1 a:active,h1 a:visited {
-  color: #000;
-}
-
-h1 a:hover {
-  color: #D81413;
-}
-
-#main {
-  margin: 0 auto;
-  width: 950px;
-  background-color: #fff;
-  min-height: 100%;
-  text-align: left;
-}
-
-#header {
+/* line 57, ../sass/theme.scss */
+header {
   background-color: #000;
+  color: #fff;
+  margin: 0 -15px;
 }
-
-#header img {
-  margin-bottom: 2px;
+/* line 62, ../sass/theme.scss */
+header img {
+  width: 100%;
 }
-
-#navigation {
+/* line 66, ../sass/theme.scss */
+header nav {
   height: 45px;
-  font-size: 1.3em;
+  font-size: 1em;
 }
-
-#navigation ul {
+/* line 70, ../sass/theme.scss */
+header nav ul {
   margin: 0 0 0 10px;
 }
-
-#navigation li {
+/* line 74, ../sass/theme.scss */
+header nav li {
   float: left;
   color: #fff;
   list-style-type: none;
   position: relative;
 }
-
-#navigation li a:link,#navigation li a:active,#navigation li a:visited {
+/* line 80, ../sass/theme.scss */
+header nav li a:link, header nav li a:active, header nav li a:visited {
   line-height: 40px;
   text-decoration: none;
   color: #999;
@@ -178,290 +101,468 @@ h1 a:hover {
   font-size: 1.0em;
   display: block;
 }
-
-#navigation li.selected a:link,#navigation li.selected a:active,#navigation li.selected a:visited
-  {
+/* line 89, ../sass/theme.scss */
+header nav li a.current {
   color: #fff;
 }
-
-#navigation li a:hover {
-  background-color: #05161e;
+/* line 93, ../sass/theme.scss */
+header nav li a:hover {
+  background-color: #031b33;
   color: #fff;
 }
-
-#title {
+/* line 100, ../sass/theme.scss */
+header .title {
   height: 50px;
-  padding: 0 20px; /*
-  margin-bottom:-50px;
-  z-index:100;
-  position:relative;
-  background-color:#000;
-  opacity:0.8; */
+  padding: 0 20px;
 }
-
-#title h1 {
+/* line 105, ../sass/theme.scss */
+header .title h1 {
   color: #fff;
   text-align: left;
-  font-size: 3.0em;
+  font-size: 2.0em;
   line-height: 50px;
   font-weight: normal;
   float: left;
   padding-right: 20px;
   margin: 0;
 }
-
-#title h1 a {
+/* line 116, ../sass/theme.scss */
+header .title h1 a {
   color: #fff;
   text-decoration: none;
 }
-
-#title h2 {
+/* line 121, ../sass/theme.scss */
+header .title h2 {
   text-align: right;
   font-style: italic;
   color: #ccc;
-  font-size: 1.5em;
+  font-size: 1em;
   font-weight: normal;
   line-height: 50px;
   margin: 0;
 }
 
+/* line 132, ../sass/theme.scss */
 #content {
-  float: left;
-  width: 670px;
-  margin: 20px 0 20px 20px;
-  font-size: 1.3em;
+  margin: 20px 0 20px 0;
+}
+@media screen and (min-width: 768px) {
+  /* line 132, ../sass/theme.scss */
+  #content {
+    float: left;
+    width: 478px;
+  }
+}
+@media screen and (min-width: 980px) {
+  /* line 132, ../sass/theme.scss */
+  #content {
+    width: 690px;
+  }
 }
 
-#sidebar {
-  float: right;
-  width: 200px;
-  margin: 20px 20px 20px 0;
-  font-size: 1.15em;
+/* line 143, ../sass/theme.scss */
+aside {
+  clear: both;
+  margin: 20px 0 20px 0;
 }
-
-#sidebar .widget {
-  margin-bottom:30px;
-  padding-bottom:5px;
-  font-size:14px;
-  color:#444;
+/* line 147, ../sass/theme.scss */
+aside .widget {
+  margin-bottom: 30px;
+  padding-bottom: 5px;
+  font-size: 14px;
+  color: #444;
 }
-
-#sidebar .widget-title {
-  font-size:12px;
-  margin-bottom:10px;
-  color:#777;
+/* line 154, ../sass/theme.scss */
+aside .widget-title {
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #777;
   text-transform: uppercase;
-  font-family: Corbel, "Segoe UI", "Bitstream Vera Sans", Verdana,
-    "DejaVu Sans", sans-serif;
-  margin-left:10px;
+  font-family: Corbel, "Segoe UI", "Bitstream Vera Sans", Verdana, "DejaVu Sans", sans-serif;
+  margin-left: 10px;
+}
+/* line 164, ../sass/theme.scss */
+aside .widget-content {
+  line-height: 20px;
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 5px;
+}
+/* line 170, ../sass/theme.scss */
+aside .widget-content ul {
+  margin-bottom: 0;
+}
+@media screen and (min-width: 768px) {
+  /* line 143, ../sass/theme.scss */
+  aside {
+    clear: none;
+    float: right;
+    width: 200px;
+  }
 }
 
-#sidebar .widget-content {
-  line-height:20px;
-  background-color:#eee;
-  padding:10px;
-  border-radius:5px;
-}
-
-#sidebar .widget-content ul {
-  margin-bottom:0;
-}
-
-#footer {
-  border-bottom: 5px solid #000;
+/* line 182, ../sass/theme.scss */
+footer {
+  clear: both;
   height: 40px;
-  padding: 0 20px;
   line-height: 40px;
-  font-size: 1.3em;
 }
-
-#footer h2 {
+/* line 187, ../sass/theme.scss */
+footer:after {
+  clear: both;
+}
+/* line 191, ../sass/theme.scss */
+footer h1 {
   margin: 0;
-  font-size: 1.3em;
+  font-size: 1.2em;
   line-height: 40px;
   float: left;
 }
-
-#powered-by {
+/* line 197, ../sass/theme.scss */
+footer h1 a:link, footer h1 a:visited, footer h1 a:active {
+  color: #000;
+  text-decoration: none;
+}
+/* line 203, ../sass/theme.scss */
+footer .powered-by {
   float: right;
-  background: transparent url(../jivoo24.png) no-repeat center
-    left;
+  background: transparent url(../img/jivoo24.png) no-repeat center left;
   height: 40px;
   line-height: 40px;
 }
-
-#powered-by a:link,#powered-by a:visited,#powered-by a:active {
+/* line 209, ../sass/theme.scss */
+footer .powered-by a:link, footer .powered-by a:visited, footer .powered-by a:active {
   padding-left: 30px;
   color: #545454;
   font-style: italic;
   text-decoration: none;
 }
-
-#powered-by a:hover {
+/* line 216, ../sass/theme.scss */
+footer .powered-by a:hover {
   text-decoration: underline;
 }
 
-#footer h2 a:link,#footer h2 a:visited,#footer h2 a:active {
-  color: #000;
+/* line 222, ../sass/theme.scss */
+p {
+  margin: 0 0 10px;
+}
+
+/* line 226, ../sass/theme.scss */
+h1, h2, h3 {
+  margin: 0 0 10px;
+}
+
+/* line 230, ../sass/theme.scss */
+h4, h5, h6 {
+  margin: 0 0 6px;
+}
+
+/* line 234, ../sass/theme.scss */
+h1 {
+  font-size: 2.6em;
+}
+
+/* line 238, ../sass/theme.scss */
+h2 {
+  font-size: 2.1em;
+}
+
+/* line 242, ../sass/theme.scss */
+h3 {
+  font-size: 1.8em;
+}
+
+/* line 246, ../sass/theme.scss */
+h4 {
+  font-size: 1.6em;
+}
+
+/* line 250, ../sass/theme.scss */
+h5 {
+  font-size: 1.4em;
+}
+
+/* line 254, ../sass/theme.scss */
+h6 {
+  font-size: 1.2em;
+}
+
+/* line 258, ../sass/theme.scss */
+abbr[title] {
+  border-bottom: 1px dotted #222;
+  cursor: help;
+}
+
+/* line 263, ../sass/theme.scss */
+q {
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+/* line 267, ../sass/theme.scss */
+blockquote {
+  border-left: 4px solid #ccc;
+  padding: 10px 20px;
+  font-size: 1.4em;
+}
+/* line 271, ../sass/theme.scss */
+blockquote cite {
+  margin-top: 5px;
+  font-size: 0.7em;
+  color: #999;
+  font-style: italic;
+  display: block;
+}
+/* line 277, ../sass/theme.scss */
+blockquote cite:before {
+  color: #999;
+  content: "\2014";
+  padding-right: 0.5em;
+}
+
+/* line 285, ../sass/theme.scss */
+a img {
+  border: 0;
+}
+
+/* line 289, ../sass/theme.scss */
+ul, ol {
+  margin-left: 32px;
+}
+
+/* line 293, ../sass/theme.scss */
+ul {
+  list-style-type: disc;
+}
+/* line 295, ../sass/theme.scss */
+ul ul {
+  list-style-type: circle;
+}
+
+/* line 300, ../sass/theme.scss */
+ol {
+  list-style-type: decimal;
+}
+/* line 302, ../sass/theme.scss */
+ol ol {
+  list-style-type: lower-alpha;
+}
+
+/* line 308, ../sass/theme.scss */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/* line 317, ../sass/theme.scss */
+.button, .button:link, .button:visited,
+button,
+button:link,
+button:visited,
+input[type=button],
+input[type=button]:link,
+input[type=button]:visited,
+input[type=submit],
+input[type=submit]:link,
+input[type=submit]:visited {
+  background-color: #f1f1f1;
+  border: none;
+  border-bottom: 2px solid #999;
+  color: #333;
+  line-height: normal;
   text-decoration: none;
+  padding: 6px 12px 4px;
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 14px;
+}
+/* line 330, ../sass/theme.scss */
+.button:hover, .button:active,
+button:hover,
+button:active,
+input[type=button]:hover,
+input[type=button]:active,
+input[type=submit]:hover,
+input[type=submit]:active {
+  background-color: #ddd;
+}
+/* line 333, ../sass/theme.scss */
+.button:active,
+button:active,
+input[type=button]:active,
+input[type=submit]:active {
+  box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+/* line 338, ../sass/theme.scss */
+.button[disabled], .button[disabled]:hover, .button[disabled]:active,
+button[disabled],
+button[disabled]:hover,
+button[disabled]:active,
+input[type=button][disabled],
+input[type=button][disabled]:hover,
+input[type=button][disabled]:active,
+input[type=submit][disabled],
+input[type=submit][disabled]:hover,
+input[type=submit][disabled]:active {
+  background-color: #f1f1f1;
+  border-color: #ccc;
+  color: #999;
+  cursor: default;
+  box-shadow: none;
+  outline: none;
 }
 
-.clear {
-  clear: both;
+/* line 357, ../sass/theme.scss */
+.text,
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=date],
+input[type=time],
+input[type=datetime],
+textarea,
+select {
+  padding: 5px 12px 5px;
+  display: block;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #999;
+  width: 100%;
+}
+/* line 367, ../sass/theme.scss */
+.text.error,
+input[type=text].error,
+input[type=email].error,
+input[type=password].error,
+input[type=date].error,
+input[type=time].error,
+input[type=datetime].error,
+textarea.error,
+select.error {
+  background-color: #fee;
+  border: 1px solid #f55;
+}
+/* line 372, ../sass/theme.scss */
+.text:focus,
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus,
+input[type=date]:focus,
+input[type=time]:focus,
+input[type=datetime]:focus,
+textarea:focus,
+select:focus {
+  color: #222;
+  border: 1px solid #7799bb;
+  box-shadow: 0 0 3px #7799bb;
+  outline: 0;
 }
 
+/* line 380, ../sass/theme.scss */
+form {
+  margin-bottom: 10px;
+}
+/* line 382, ../sass/theme.scss */
+form .field {
+  margin-bottom: 10px;
+}
+/* line 385, ../sass/theme.scss */
+form .field input, form .field textarea, form .field select {
+  margin: 5px 0;
+}
+/* line 389, ../sass/theme.scss */
+form label {
+  font-weight: bold;
+}
+/* line 392, ../sass/theme.scss */
+form .star {
+  color: #D81413;
+}
+/* line 395, ../sass/theme.scss */
+form input[type=checkbox] + label {
+  font-weight: normal;
+  display: inline;
+}
+/* line 399, ../sass/theme.scss */
+form p {
+  color: #444;
+}
+
+/* line 404, ../sass/theme.scss */
 div.pagination {
   margin-bottom: 1.2em;
   font-weight: bold;
 }
 
-div.right {
-  float: right;
-}
-
-.post { /*border-bottom:1px solid silver;*/
+/* line 409, ../sass/theme.scss */
+.post {
   padding-bottom: 20px;
   margin-bottom: 10px;
 }
+/* line 414, ../sass/theme.scss */
+.post h1 a:link, .post h1 a:active, .post h1 a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+/* line 418, ../sass/theme.scss */
+.post h1 a:hover {
+  text-decoration: underline;
+  color: #d81413;
+}
 
+/* line 425, ../sass/theme.scss */
+.byline {
+  color: #777;
+  font-size: 0.8em;
+}
+
+/* line 430, ../sass/theme.scss */
+.byline a:link, .byline a:active, .byline a:visited {
+  color: #777;
+  text-decoration: underline;
+}
+
+/* line 435, ../sass/theme.scss */
+.byline a:hover {
+  color: #D81413;
+}
+
+/* line 439, ../sass/theme.scss */
 .comments {
   margin-left: 0;
 }
-
+/* line 442, ../sass/theme.scss */
 .comments li {
   list-style-type: none;
   border-bottom: 1px solid silver;
   margin-top: 20px;
   padding-bottom: 20px;
 }
-
+/* line 448, ../sass/theme.scss */
 .comments li ul {
   margin-left: 50px;
 }
-
+/* line 452, ../sass/theme.scss */
 .comments li li {
   border: 0;
   padding-bottom: 0;
   font-size: 1em;
 }
-
-.comment-avatar {
+/* line 460, ../sass/theme.scss */
+.comments .comment-avatar {
   float: left;
   width: 50px;
 }
-
-.comment {
-  float: left;
-  width: 620px;
+/* line 465, ../sass/theme.scss */
+.comments .comment {
+  margin-left: 50px;
 }
-
-.comment h2 {
-  
-}
-
-.byline {
-  color: #777;
-  font-size: 0.8em;
-}
-
-.byline a:link,.byline a:active,.byline a:visited {
-  color: #777;
-  text-decoration: underline;
-}
-
-.byline a:hover {
-  color: #D81413;
-}
-
-label {
-  color: #157;
-}
-
-label.disabled {
-  color: #999;
-}
-
-input,textarea,select {
-  font-family: "Bitstream Vera Sans", Verdana, "DejaVu Sans", sans-serif;
-  font-size: 15px;
-  padding: 0 5px;
-}
-
-input.button {
-  font-family: "Segoe UI", Corbel, "Bitstream Vera Sans", Verdana,
-    "DejaVu Sans", sans-serif;
-}
-
-input.text,textarea,select {
-  padding: 5px 5px;
-  background-color: #f6f6f6;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  -khtml-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-}
-
-input.text:hover,textarea:hover,select:hover {
-  background-color: #fefefe;
-}
-
-input.text:focus,textarea:focus,select:hover {
-  background-color: #fefefe;
-  border: 1px solid #666;
-  outline: 0;
-}
-
-p.error {
-  color: #700;
-}
-
-p.input {
-  color: #777;
-  line-height: 1em;
-  font-size: 0.8em;
-}
-
-p.input strong {
-  color: #555;
-}
-
-p.input strong span {
-  color: #154b7a;
-}
-
-p.input label {
-  color: #333;
-  font-weight: bold;
+/* line 468, ../sass/theme.scss */
+.comments .comment .author {
   font-size: 1.1em;
-}
-
-p.input label.radio {
-  font-weight: normal;
-  font-size: 1em;
-}
-
-.star {
-  color: #D81413;
-}
-
-p.input input.text,p.input textarea,p.input select {
-  display: block;
-  width: 75%;
-  margin-top: 5px;
-}
-
-p.input input.password,p.input select {
-  width: 50%;
-}
-
-p.input input.small {
-  display: inline;
-  width: 100px;
-  margin: 0 5px;
-  font-size: 0.9em;
-}
-
-p.input textarea {
-  height: 100px;
+  margin-bottom: 5px;
 }

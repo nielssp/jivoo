@@ -1,0 +1,46 @@
+$xs: 0px !default;
+$sm: 768px !default;
+$md: 992px !default;
+$lg: 1200px !default;
+
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+  & {
+    *zoom: 1;
+  }
+}
+
+@mixin row($min-size: $md) {
+  @media screen and (min-width: $min-size) {
+    margin: 0 -15px;
+  }
+}
+
+@mixin col($num, $den, $min-size: $md) {
+  @media screen and (min-width: $min-size) {
+    float: left;
+    width: ($num / $den) * 100%;
+    padding: 0 15px;
+  }
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+button, input, select, textarea {
+  font-family:inherit;
+  font-size:inherit;
+  line-height:inherit;
+}
+

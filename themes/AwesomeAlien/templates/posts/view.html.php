@@ -31,8 +31,8 @@ else {
 <?php
 if ($Pagination->getCount() > 0) :
 ?>
-<h1 id="comments"><?php echo tn('%1 comments', '%1 comment',
-    $Pagination->getCount()); ?></h1>
+<h2 id="comments"><?php echo tn('%1 comments', '%1 comment',
+    $Pagination->getCount()); ?></h2>
 
 <ul class="comments">
 <?php
@@ -63,7 +63,7 @@ if ($Pagination->getCount() > 0) :
    alt="<?php echo h($comment->author); ?>"/>
 </div>
 <div class="comment" id="comment<?php echo $comment->id; ?>">
-<h2><?php
+<div class="author"><?php
     if (empty($comment->author)) {
       echo tr('Anonymous');
     }
@@ -74,7 +74,7 @@ if ($Pagination->getCount() > 0) :
       else
         echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
     }
-    ?></h2>
+    ?></div>
   <p><?php echo $comment->content; ?></p>
 <div class="byline">
 <?php
@@ -108,7 +108,7 @@ endif;
 
 <?php if ($post->commenting) : ?>
 
-<h1 id="comment"><?php echo tr('Leave a comment'); ?></h1>
+<h2 id="comment"><?php echo tr('Leave a comment'); ?></h2>
 <?php if (!isset($newComment)) : ?></li>
 
 <p><?php echo tr('Please log in to leave a comment.'); ?></p>
@@ -120,43 +120,43 @@ endif;
 <p><?php echo tr('Have something to say? Say it!'); ?></p>
 <?php if ($user) : ?>
 
-<p class="input">
+<div class="field">
 <label>
   <?php echo tr('Logged in as %1.', h($user->username)) ?>
 </label>
 (<?php echo $Html->link(tr('Log out?'), 'Backend::logout') ?>)
-</p>
+</div>
 <?php 
     else : ?>
 
-<p class="input">
-<?php echo $Form->label('author'); ?>
+<div class="field">
+    <?php echo $Form->label('author'); ?>
 <?php echo $Form->ifRequired('author', '<span class="star">*</span>'); ?>
 <?php echo $Form->text('author'); ?>
 <?php echo $Form->error('author'); ?>
-</p>
+</div>
 
-<p class="input">
+<div class="field">
 <?php echo $Form->label('email'); ?>
 <?php echo $Form->ifRequired('email', '<span class="star">*</span>'); ?>
 <?php echo $Form->text('email'); ?>
 <?php echo $Form->error('email'); ?>
-</p>
+</div>
 
-<p class="input">
+<div class="field">
 <?php echo $Form->label('website'); ?>
 <?php echo $Form->ifRequired('website', '<span class="star">*</span>'); ?>
 <?php echo $Form->text('website'); ?>
 <?php echo $Form->error('website'); ?>
-</p>
+</div>
 <?php endif; ?>
 
-<p class="input">
+<div class="field">
 <?php echo $Form->label('content'); ?>
 <?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
 <?php echo $Form->textarea('content'); ?>
 <?php echo $Form->error('content'); ?>
-</p>
+</div>
 
 <p><?php echo $Form->submit(tr('Post comment')); ?></p>
 <?php echo $Form->end(); ?>

@@ -25,54 +25,51 @@ else {
 
     <div id="main">
 
-    <div id="header">
-      <div id="title">
-        <h1><?php echo $Html->link($site['title']); ?></h1>
-        <h2><?php echo $site['subtitle']; ?></h2>
-      </div>
-      <?php
-$rand = floor(time() / 60) % 5 + 1;
-      ?>
-      <img src="<?php echo $this->file('banner' . $rand . '.jpg'); ?>"
-           alt="<?php echo $site['title']; ?>" style="width:950px;height:200px;" />
-      <div id="navigation">
-        <ul>
+      <header>
+        <div class="title">
+          <h1><?php echo $Html->link($site['title']); ?></h1>
+          <h2><?php echo $site['subtitle']; ?></h2>
+        </div>
+        <?php
+  $rand = floor(time() / 60) % 5 + 1;
+        ?>
+        <img src="<?php echo $this->file('img/banner.jpg'); ?>"
+             alt="<?php echo $site['title']; ?>" />
+        <nav>
+          <ul>
 <?php foreach ($Menu->getMenu('main') as $link) : ?>
-          <li<?php if ($this->isCurrent($link)) echo ' class="selected"'; ?>>
-            <?php echo $Html->link(h($link->title), $link); ?>
-          </li>
+            <li>
+              <?php echo $Html->link(h($link->title), $link); ?>
+            </li>
 <?php endforeach; ?>
-        </ul>
+          </ul>
+        </nav>
+      </header>
+
+      <div id="content">
+      
+      <?php echo $this->block('content'); ?>
+  
       </div>
-    </div>
-
-    <div id="content">
-    
-    <?php echo $this->block('content'); ?>
-
-    </div>
-
-<div id="sidebar">
+  
+      <aside>
 <?php foreach ($Widgets->get('sidebar') as $widget): ?>
-<div class="widget">
-<div class="widget-title"><?php echo $widget['title']; ?></div>
-<div class="widget-content"><?php echo $widget['content']; ?></div>
-</div>
+        <div class="widget">
+          <div class="widget-title"><?php echo $widget['title']; ?></div>
+          <div class="widget-content"><?php echo $widget['content']; ?></div>
+        </div>
 <?php endforeach; ?>
-
+      
 <?php echo $this->block('sidebar'); ?>
-</div>
+      </aside>
 
-<div class="clear"></div>
-
-<div id="footer">
-  <h2>
-    <?php echo $Html->link($site['title']); ?></h2>
-  <div id="powered-by">
-    <?php echo $Html->link('Powered by Jivoo.', 'http://apakoh.dk'); ?>
-  </div>
-</div>
-</div>
+      <footer>
+        <h1><?php echo $Html->link($site['title']); ?></h1>
+        <div class="powered-by">
+          <?php echo $Html->link('Powered by Jivoo.', 'http://apakoh.dk'); ?>
+        </div>
+      </footer>
+    </div>
 
     
 <?php echo $this->block('body-bottom'); ?>
