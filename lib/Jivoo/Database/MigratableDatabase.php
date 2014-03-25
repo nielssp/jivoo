@@ -1,7 +1,7 @@
 <?php
 /**
  * A generic migratable database
- * @package Core\Database
+ * @package Jivoo\Database
  */
 abstract class MigratableDatabase implements IDatabase, IMigratable {
   /**

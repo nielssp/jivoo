@@ -3,13 +3,13 @@
 // Name           : Controllers
 // Description    : For contollers
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Templates
-//                  Core/Helpers Core/Models
+// Dependencies   : Jivoo/Routing Jivoo/Templates
+//                  Jivoo/Helpers Jivoo/Models
 
 /**
  * Controller module. Will automatically find controllers in the controllers
  * directory (and subdirectories). 
- * @package Core\Controllers
+ * @package Jivoo\Controllers
  */
 class Controllers extends ModuleBase {
 

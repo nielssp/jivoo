@@ -1,7 +1,7 @@
 <?php
 /**
  * Contains data for a single record belonging to a model
- * @package Core\Models
+ * @package Jivoo\Models
  */
 interface IBasicRecord extends arrayaccess {
   /**

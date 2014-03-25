@@ -3,11 +3,11 @@
 // Name           : Setup
 // Description    : The Apakoh Core installation/setup system.
 // Author         : apakoh.dk
-// Dependencies   : Core/Controllers Core/Routing Core/Templates Core/Assets
+// Dependencies   : Jivoo/Controllers Jivoo/Routing Jivoo/Templates Jivoo/Assets
 
 /**
  * Setup module.
- * @package Core\Setup
+ * @package Jivoo\Setup
  */
 class Setup extends ModuleBase {
   protected function init() {

@@ -7,7 +7,7 @@
 
 /**
  * SQLite3 database driver
- * @package Core\Database\Sqlite3
+ * @package Jivoo\Database\Sqlite3
  */
 class Sqlite3Database extends SqlDatabase {
   /**

@@ -7,7 +7,7 @@
 
 /**
  * PDO SQLite database driver
- * @package Core\Database\PdoSqlite
+ * @package Jivoo\Database\PdoSqlite
  */
 class PdoSqliteDatabase extends PdoDatabase {
   /**

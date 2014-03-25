@@ -1,7 +1,7 @@
 <?php
 /**
  * A validator
- * @package Core\Models
+ * @package Jivoo\Models
  * @TODO Some information about $validator-array and use of validators here
  */
 class Validator {

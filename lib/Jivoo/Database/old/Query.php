@@ -1,7 +1,7 @@
 <?php
 /**
  * A generic database query
- * @package Core\Database
+ * @package Jivoo\Database
  * @property-read IDataSource $dataSource Data source to execute query on
  */
 abstract class Query {

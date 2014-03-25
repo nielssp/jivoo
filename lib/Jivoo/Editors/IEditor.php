@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents an editor
- * @package Core\Editors
+ * @package Jivoo\Editors
  */
 interface IEditor {
   /**

@@ -7,7 +7,7 @@
  */
 
 /** Locatin of the Aakoh Core bootstrap script */
-require_once '../../lib/Core/bootstrap.php';
+require_once '../../lib/Jivoo/bootstrap.php';
 
 Lib::import('Core');
 

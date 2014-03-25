@@ -1,7 +1,7 @@
 <?php
 /**
  * A condition for selecting rows in a database table
- * @package Core\Database
+ * @package Jivoo\Database
  * @property-read array[] A list of clauses in the form of arrays of the format
  * array('glue' => ..., 'clause' => ..., 'vars' => array(...)) where the glue
  * is either 'AND' or 'OR'. 

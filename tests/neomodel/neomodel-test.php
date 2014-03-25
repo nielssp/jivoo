@@ -1,15 +1,15 @@
 <?php
 
 ini_set('display_errors', true);
-require '../../lib/Core/bootstrap.php';
+require '../../lib/Jivoo/bootstrap.php';
 Lib::import('Core');
-Lib::import('Core/Database');
-Lib::import('Core/Database/PdoMysql');
-Lib::import('Core/Models');
-Lib::import('Core/Models/Validation');
-Lib::import('Core/Models/Condition');
-Lib::import('Core/Models/Selection');
-Lib::import('Core/Helpers');
+Lib::import('Jivoo/Database');
+Lib::import('Jivoo/Database/PdoMysql');
+Lib::import('Jivoo/Models');
+Lib::import('Jivoo/Models/Validation');
+Lib::import('Jivoo/Models/Condition');
+Lib::import('Jivoo/Models/Selection');
+Lib::import('Jivoo/Helpers');
 
 interface IActiveCollection extends ISelection {
   public function add(IActiveRecord $record);

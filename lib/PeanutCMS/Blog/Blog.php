@@ -3,9 +3,9 @@
 // Name           : Blog
 // Description    : The PeanutCMS blogging system
 // Author         : apakoh.dk
-// Dependencies   : Core/Database Core/Routing Core/Templates
-//                  Core/Authentication PeanutCMS/Backend
-//                  Core/Controllers Core/Models PeanutCMS/Widgets
+// Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates
+//                  Jivoo/Authentication PeanutCMS/Backend
+//                  Jivoo/Controllers Jivoo/Models PeanutCMS/Widgets
 
 /**
  * Class for working with blog posts

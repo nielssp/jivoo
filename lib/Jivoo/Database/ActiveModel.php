@@ -470,7 +470,7 @@ class InvalidRecordClassException extends Exception { }
 
 /**
  * A data source was not found
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class DataSourceNotFoundException extends Exception { }
 class InvalidAssociationException extends Exception { }

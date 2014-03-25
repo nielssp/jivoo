@@ -1,7 +1,7 @@
 <?php
 /**
  * Describes the format of data in a record
- * @package Core\Models
+ * @package Jivoo\Models
  */
 interface IBasicModel {
   /** @return string Name of model */

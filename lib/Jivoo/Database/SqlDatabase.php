@@ -1,7 +1,7 @@
 <?php
 /**
  * A generic SQL database
- * @package Core\Database
+ * @package Jivoo\Database
  */
 abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   /**

@@ -391,10 +391,10 @@ $input = 'author = root and something (foo | bar | baz)';
 
 $test = new LabTest('Filtering');
 
-include '../lib/Core/bootstrap.php';
+include '../lib/Jivoo/bootstrap.php';
 
 Lib::import('Core');
-Lib::import('Core/Helpers');
+Lib::import('Jivoo/Helpers');
 
 
 $scanner = new FilterScanner();

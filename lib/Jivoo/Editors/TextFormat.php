@@ -2,7 +2,7 @@
 /**
  * Content format used by {@see TextEditor}. Will automatically convert links,
  * line breaks and paragraphs.
- * @package Core\Editors
+ * @package Jivoo\Editors
  */
 class TextFormat implements IContentFormat {
 

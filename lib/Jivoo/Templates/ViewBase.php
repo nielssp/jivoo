@@ -1,7 +1,7 @@
 <?php
 /**
  * Base class for views
- * @package Core\Templates
+ * @package Jivoo\Templates
  */
 abstract class ViewBase {
   /**
@@ -512,6 +512,6 @@ abstract class ViewBase {
 
 /**
  * When a template cannout be found
- * @package Core\Templates
+ * @package Jivoo\Templates
  */
 class TemplateNotFoundException extends Exception { }

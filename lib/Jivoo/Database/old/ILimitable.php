@@ -1,7 +1,7 @@
 <?php
 /**
  * A query that can be limited
- * @package Core\Database
+ * @package Jivoo\Database
  */
 interface ILimitable {
   /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a database table schema
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class Schema implements ISchema {
   /**

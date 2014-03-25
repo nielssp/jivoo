@@ -1,7 +1,7 @@
 <?php
 /**
  * A generic PDO SQL database
- * @package Core\Database
+ * @package Jivoo\Database
  */
 abstract class PdoDatabase extends SqlDatabase {
   /**

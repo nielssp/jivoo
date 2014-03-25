@@ -1,7 +1,7 @@
 <?php
 /**
  * A database consisting of multiple data sources (tables)
- * @package Core\Database
+ * @package Jivoo\Database
  */
 interface IDatabase {
   /**
@@ -47,19 +47,19 @@ interface IDatabase {
 
 /**
  * A database connection has failed
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class DatabaseConnectionFailedException extends Exception {}
 
 /**
  * A database selection has failed
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class DatabaseSelectFailedException extends Exception {}
 
 /**
  * A database query has failed
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class DatabaseQueryFailedException extends Exception {}
 

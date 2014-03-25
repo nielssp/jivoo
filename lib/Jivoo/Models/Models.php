@@ -4,14 +4,14 @@
 // Description    : Apakoh Core model system
 // Author         : apakoh.dk
 
-Lib::import('Core/Models/Validation');
-Lib::import('Core/Models/Selection');
-Lib::import('Core/Models/Condition');
-Lib::import('Core/Models/Encoding');
+Lib::import('Jivoo/Models/Validation');
+Lib::import('Jivoo/Models/Selection');
+Lib::import('Jivoo/Models/Condition');
+Lib::import('Jivoo/Models/Encoding');
 
 /**
  * Models module, finds all models in application
- * @package Core\Models
+ * @package Jivoo\Models
  */
 class Models extends ModuleBase implements IDictionary {
   /**

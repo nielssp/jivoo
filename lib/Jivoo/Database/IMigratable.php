@@ -1,7 +1,7 @@
 <?php
 /**
  * A migratable database
- * @package Core\Database
+ * @package Jivoo\Database
  */
 interface IMigratable {
   /**

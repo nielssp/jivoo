@@ -1,7 +1,7 @@
 <?php
 /**
  * Model for generic forms
- * @package Core\Models
+ * @package Jivoo\Models
  * @property-read array $fields Associative array of field names and
  * information about the field in an associative array structure ('label', 
  * 'type' and 'required')

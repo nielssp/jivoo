@@ -61,7 +61,7 @@
  * which 'Setup' is a namespace, 'Database' is the controller and 'setup' is
  * the action. The resulting controller would be 'DatabaseSetupController'.
  * 
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 class Routing extends ModuleBase {
   /**
@@ -1021,13 +1021,13 @@ class Routing extends ModuleBase {
 
 /**
  * Invalid route
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 class InvalidRouteException extends Exception { }
 
 /**
  * Invalid response
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 class InvalidResponseException extends Exception { }
 

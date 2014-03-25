@@ -6,7 +6,7 @@
 
 /**
  * Editors module. Each editor can be accessed as a property.
- * @package Core\Editors
+ * @package Jivoo\Editors
  * @property HtmlEditor $HtmlEditor A HTML editor
  * @property TextEditor $TextEditor A simpler text editor
  */

@@ -9,7 +9,7 @@
  * 
  * Supported hash types: 'sha512', 'sha256',
  * 'blowfish', 'md5', 'ext_des' and 'std_des'
- * @package Core\Shadow
+ * @package Jivoo\Shadow
  */
 class Shadow extends ModuleBase {
 

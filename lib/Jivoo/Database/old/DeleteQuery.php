@@ -3,7 +3,7 @@
  * Query for deleting rows. All protected attributes in
  * this class are available as public read-only properties thanks to
  * {@see Query::__get()}.
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class DeleteQuery extends Query implements ICondition {
   /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * Provides functions related to redirects and HTTP status codes
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 class Http {
 
@@ -143,6 +143,6 @@ class Http {
 
 /**
  * Headers have already been sent and cannot be changed
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 class HeadersAlreadySentException extends Exception { }

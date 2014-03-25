@@ -1,7 +1,7 @@
 <?php
 /**
  * Active model
- * @package Core\Database
+ * @package Jivoo\Database
  * @property-read array $associations An associative array of association
  * method names and arrays describing the association. 
  * @property-read string $table Name of associated database table
@@ -640,30 +640,30 @@ class ActiveModel implements IModel {
 
 /**
  * A model is invalid
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class InvalidModelException extends Exception {}
 
 /**
  * An ActiveRecord is invalid
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class InvalidActiveRecordException extends Exception { }
 
 /**
  * A model method was not found
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class ModelMethodNotFoundException extends Exception { }
 
 /**
  * A model was not found
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class ModelNotFoundException extends Exception { }
 
 /**
  * A data source was not found
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class DataSourceNotFoundException extends Exception { }

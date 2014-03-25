@@ -1,7 +1,7 @@
 <?php
 /**
  * An editor for editing HTMl
- * @package Core\Editors
+ * @package Jivoo\Editors
  */
 class HtmlEditor implements IEditor {
   /**

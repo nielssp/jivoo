@@ -1,7 +1,7 @@
 <?php
 /**
  * A message to flash to the user
- * @package Core\Routing
+ * @package Jivoo\Routing
  * @property-read string $message Message
  * @property-read string $type Message type, 'alert' or 'notice'
  * @property-read string $uid Message uid

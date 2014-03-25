@@ -1,7 +1,7 @@
 <?php
 /**
  * An object that accepts helpers
- * @package Core\Helpers
+ * @package Jivoo\Helpers
  */
 interface IHelpable {
   /**

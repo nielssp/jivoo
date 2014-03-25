@@ -3,12 +3,12 @@
 // Name           : Helpers
 // Description    : For helpers
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Models
+// Dependencies   : Jivoo/Routing Jivoo/Models
 
 /**
  * Helpers module. All helpers added to the module, can be accessed as
  * read-only properties.
- * @package Core\Helpers
+ * @package Jivoo\Helpers
  * @property-read HtmlHelper $Html HTML helper
  * @property-read JsonHelper $Json JSON helper
  * @property-read FormHelper $Form Form helper

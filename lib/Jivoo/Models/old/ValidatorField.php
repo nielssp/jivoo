@@ -1,7 +1,7 @@
 <?php
 /**
  * Validator field
- * @package Core\Models
+ * @package Jivoo\Models
  */
 class ValidatorField {
   /**

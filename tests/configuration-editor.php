@@ -13,7 +13,7 @@ function printArrayRows($array, $prefix = '') {
   }
 }
 
-require('../lib/Core/bootstrap.php');
+require('../lib/Jivoo/bootstrap.php');
 Lib::import('Core');
 $config = new AppConfig('../config/config.php');
 

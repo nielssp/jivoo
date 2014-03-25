@@ -1,7 +1,7 @@
 <?php
 /**
  * A controller, the C of MVC
- * @package Core\Controllers
+ * @package Jivoo\Controllers
  */
 class Controller implements IHelpable {
   /**

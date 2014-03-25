@@ -1,7 +1,7 @@
 <?php
 /**
  * Controller for setting up root user
- * @package Core\Authentication
+ * @package Jivoo\Authentication
  * @property-read HtmlHelper $Html Html helper
  * @property-read FormHelper $Form Form helper
  * $property-read ActiveModel $User User model

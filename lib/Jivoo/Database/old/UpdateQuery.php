@@ -3,7 +3,7 @@
  * A query for updating rows in a database table. All protected attributes in
  * this class are available as public read-only properties thanks to
  * {@see Query::__get()}.
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class UpdateQuery extends Query implements ICondition {
   /**

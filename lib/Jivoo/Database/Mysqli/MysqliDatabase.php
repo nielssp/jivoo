@@ -7,7 +7,7 @@
 
 /**
  * MySQLi database driver
- * @package Core\Database\Mysqli
+ * @package Jivoo\Database\Mysqli
  */
 class MysqliDatabase extends SqlDatabase {
   /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * Setup controller base 
- * @package Core\Setup
+ * @package Jivoo\Setup
  */
 class SetupController extends Controller {
   public function saveConfig() {

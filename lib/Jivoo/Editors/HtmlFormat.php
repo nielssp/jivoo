@@ -1,7 +1,7 @@
 <?php
 /**
  * Format used by {@see HtmlEditor}
- * @package Core\Editors
+ * @package Jivoo\Editors
  */
 class HtmlFormat implements IContentFormat {
   public function toHtml($text) {

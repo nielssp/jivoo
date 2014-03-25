@@ -1,7 +1,7 @@
 <?php
 /**
  * An object that can be used in place of a route, see {@see Routing}
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 interface ILinkable {
   /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * HTML helper. Adds some useful methods when working with HTML views.
- * @package Core\Helpers
+ * @package Jivoo\Helpers
  */
 class HtmlHelper extends Helper {
 

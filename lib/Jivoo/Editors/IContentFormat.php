@@ -1,7 +1,7 @@
 <?php
 /**
  * A content format used by an editor
- * @package Core\Editors
+ * @package Jivoo\Editors
  */
 interface IContentFormat {
   /**

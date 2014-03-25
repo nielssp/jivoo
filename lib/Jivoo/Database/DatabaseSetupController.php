@@ -1,7 +1,7 @@
 <?php
 /**
  * Controller for setting up database 
- * @package Core\Database
+ * @package Jivoo\Database
  * @property-read HtmlHelper $Html Html helper
  * @property-read FormHelper $Form Form helper
  */
@@ -76,7 +76,7 @@ class DatabaseSetupController extends SetupController {
       else if ($this->setupForm->isValid()) {
         $driver = $this->driver['driver'];
         $class = $driver . 'Database';
-        Lib::import('Core/Database/' . $driver);
+        Lib::import('Jivoo/Database/' . $driver);
         try {
           new $class($this->request->data['setup']);
           $options = array_flip(

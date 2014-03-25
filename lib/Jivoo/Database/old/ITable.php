@@ -1,7 +1,7 @@
 <?php
 /**
  * A single database table
- * @package Core\Database
+ * @package Jivoo\Database
  */
 interface ITable extends IDataSource {
   /**

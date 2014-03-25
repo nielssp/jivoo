@@ -1,7 +1,7 @@
 <?php
 /**
  * View for presenting output to user
- * @package Core\Templates
+ * @package Jivoo\Templates
  */
 class View extends ViewBase {
   protected function embed($_template, $_data = array()) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Result set for MySQL driver
- * @package Core\Database\Mysql
+ * @package Jivoo\Database\Mysql
  */
 class MysqlResultSet implements IResultSet {
   /**

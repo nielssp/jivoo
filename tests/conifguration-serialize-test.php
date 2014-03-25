@@ -58,7 +58,7 @@ function new_appconfig() {
   return $config;
 }
 
-include '../lib/Core/bootstrap.php';
+include '../lib/Jivoo/bootstrap.php';
 include '../../LAB/LabTest.php';
 Lib::import('Core');
 

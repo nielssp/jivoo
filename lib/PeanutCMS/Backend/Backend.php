@@ -3,8 +3,8 @@
 // Name           : Backend
 // Description    : The PeanutCMS administration system
 // Author         : apakoh.dk
-// Dependencies   : Core/Database Core/Authentication
-//                  Core/Routing Core/Templates Core/Controllers
+// Dependencies   : Jivoo/Database Jivoo/Authentication
+//                  Jivoo/Routing Jivoo/Templates Jivoo/Controllers
 
 /**
  * PeanutCMS backend module

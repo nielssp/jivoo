@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a database query result
- * @package Core\Database
+ * @package Jivoo\Database
  */
 interface IResultSet {
 

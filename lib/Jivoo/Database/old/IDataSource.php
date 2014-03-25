@@ -1,7 +1,7 @@
 <?php
 /**
  * A data source that supports CRUD, e.g. a database table
- * @package Core\Database
+ * @package Jivoo\Database
  */
 interface IDataSource {
   /**

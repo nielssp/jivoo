@@ -3,14 +3,14 @@
 // Name           : Database
 // Description    : The Apakoh Core database system
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Templates Core/Models Core/Helpers
-//                  Core/Controllers Core/Setup
+// Dependencies   : Jivoo/Routing Jivoo/Templates Jivoo/Models Jivoo/Helpers
+//                  Jivoo/Controllers Jivoo/Setup
 
-Lib::import('Core/Database/Mixins');
+Lib::import('Jivoo/Database/Mixins');
 
 /**
  * Database module
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class Database extends ModuleBase implements IDatabase {
   /**
@@ -125,7 +125,7 @@ class Database extends ModuleBase implements IDatabase {
           $this->m->Setup->enterSetup($controller, 'setupDriver');
         }
       }
-      Lib::import('Core/Database/' . $this->driver);
+      Lib::import('Jivoo/Database/' . $this->driver);
       try {
         $class = $this->driver . 'Database';
         $this->connection = new $class($this->config);

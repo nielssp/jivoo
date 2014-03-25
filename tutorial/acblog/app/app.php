@@ -9,8 +9,8 @@ return array(
   'sessionPrefix' => 'acblog_',
   'modules' => array(
     'Core',
-    'Core/Routing',
-    'Core/Controllers',
-    'Core/Templates',
+    'Jivoo/Routing',
+    'Jivoo/Controllers',
+    'Jivoo/Templates',
   ),
 );

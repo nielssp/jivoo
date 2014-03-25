@@ -1,10 +1,10 @@
 <?php
-// [INFO] invalid tr() at offset 1725 in ../lib/Core/bootstrap.php
-// [INFO] invalid tn() at offset 1902 in ../lib/Core/bootstrap.php
-// [INFO] invalid tr() at offset 1286 in ../lib/Core/Models/old/FormModel.php
-// [INFO] invalid tr() at offset 1331 in ../lib/Core/Database/DatabaseSetupController.php
-// [INFO] invalid tr() at offset 16109 in ../lib/Core/Database/ActiveModel.php
-// [INFO] invalid tr() at offset 14156 in ../lib/Core/Database/ActiveRecord.php
+// [INFO] invalid tr() at offset 1725 in ../lib/Jivoo/bootstrap.php
+// [INFO] invalid tn() at offset 1902 in ../lib/Jivoo/bootstrap.php
+// [INFO] invalid tr() at offset 1286 in ../lib/Jivoo/Models/old/FormModel.php
+// [INFO] invalid tr() at offset 1331 in ../lib/Jivoo/Database/DatabaseSetupController.php
+// [INFO] invalid tr() at offset 16109 in ../lib/Jivoo/Database/ActiveModel.php
+// [INFO] invalid tr() at offset 14156 in ../lib/Jivoo/Database/ActiveRecord.php
 $l = new Localization();
 
 $l->timeFormat = 'g:i a';

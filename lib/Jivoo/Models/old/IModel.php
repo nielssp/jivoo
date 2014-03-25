@@ -2,7 +2,7 @@
 /**
  * Represents a data model containing
  * labeled fields.
- * @package Core\Models
+ * @package Jivoo\Models
  */
 interface IModel {
   /**

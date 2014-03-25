@@ -1,7 +1,7 @@
 <?php
 /**
  * Helper class for authentication
- * @package Core\Authentication
+ * @package Jivoo\Authentication
  */
 class AuthHelper extends Helper {
 

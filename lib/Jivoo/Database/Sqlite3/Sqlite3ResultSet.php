@@ -1,7 +1,7 @@
 <?php
 /**
  * Result set for SQLite3 database driver
- * @package Core\Database\Sqlite3
+ * @package Jivoo\Database\Sqlite3
  */
 class Sqlite3ResultSet implements IResultSet {
   /**

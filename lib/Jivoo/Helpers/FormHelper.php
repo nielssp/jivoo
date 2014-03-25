@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper for creating HTML forms
- * @package Core\Helpers
+ * @package Jivoo\Helpers
  */
 class FormHelper extends Helper {
   

@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a record
- * @package Core\Models
+ * @package Jivoo\Models
  */
 interface IRecord {
   /**

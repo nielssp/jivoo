@@ -1,7 +1,7 @@
 <?php
 /**
  * JSON Helper
- * @package Core\Helpers
+ * @package Jivoo\Helpers
  */
 class JsonHelper extends Helper {
   

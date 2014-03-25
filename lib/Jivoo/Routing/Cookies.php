@@ -4,7 +4,7 @@
  * 
  * Implements arrayaccess, so the []-operator can be used
  * to get and set cookies.
- * @package Core\Routing
+ * @package Jivoo\Routing
  */
 class Cookies implements arrayaccess {
 

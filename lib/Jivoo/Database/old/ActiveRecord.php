@@ -1,7 +1,7 @@
 <?php
 /**
  * A record of an {@see ActiveModel}
- * @package Core\Database
+ * @package Jivoo\Database
  */
 abstract class ActiveRecord implements IRecord {
 
@@ -817,12 +817,12 @@ abstract class ActiveRecord implements IRecord {
 
 /**
  * A record property could not be found
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class RecordPropertyNotFoundException extends Exception {}
 
 /**
  * A record method could not be found
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class RecordMethodNotFoundException extends Exception {}

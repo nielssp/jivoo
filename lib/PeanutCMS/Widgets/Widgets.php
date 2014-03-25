@@ -2,9 +2,9 @@
 // Module
 // Description    : The PeanutCMS widget system
 // Author         : apakoh.dk
-// Dependencies   : Core/Database Core/Routing Core/Templates Core/Controllers
-//                  Core/Authentication PeanutCMS/Backend Core/Editors
-//                  Core/Models Core/Helpers
+// Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates Jivoo/Controllers
+//                  Jivoo/Authentication PeanutCMS/Backend Jivoo/Editors
+//                  Jivoo/Models Jivoo/Helpers
 
 /**
  * Widget system module

@@ -2,7 +2,7 @@
 /**
  * Like {@see HtmlEditor}, but its content format, {@see TextFormat}, will
  * automatically convert line breaks and links.
- * @package Core\Editors
+ * @package Jivoo\Editors
  */
 class TextEditor extends HtmlEditor {
   /**

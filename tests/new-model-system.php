@@ -1,19 +1,19 @@
 <?php
 
 date_default_timezone_set('Europe/Copenhagen');
-include '../lib/Core/bootstrap.php';
+include '../lib/Jivoo/bootstrap.php';
 
 Lib::import('Core');
-Lib::import('Core/Routing');
-Lib::import('Core/Models');
-Lib::import('Core/Models/Condition');
-Lib::import('Core/Models/Selection');
-Lib::import('Core/Models/Validation');
-Lib::import('Core/Database');
-Lib::import('Core/Database/Mixins');
-Lib::import('Core/Database/PdoMysql');
-Lib::import('Core/Authentication/default/schemas');
-Lib::import('Core/Authentication/default/models');
+Lib::import('Jivoo/Routing');
+Lib::import('Jivoo/Models');
+Lib::import('Jivoo/Models/Condition');
+Lib::import('Jivoo/Models/Selection');
+Lib::import('Jivoo/Models/Validation');
+Lib::import('Jivoo/Database');
+Lib::import('Jivoo/Database/Mixins');
+Lib::import('Jivoo/Database/PdoMysql');
+Lib::import('Jivoo/Authentication/default/schemas');
+Lib::import('Jivoo/Authentication/default/models');
 
 $db = new PdoMysqlDatabase(array(
   'server' => 'localhost',
@@ -37,7 +37,7 @@ $app->config['Database'] = array(
   'tablePrefix' => 'test_',
 );
 
-$app->loadModule('Core/Database');
+$app->loadModule('Jivoo/Database');
 
 var_dump($db->escapeQuery('WHERE {User}.user = ? AND date = %DATE AND listId IN %d()', 5, 'next monday', array(1, 2, 3)));
 

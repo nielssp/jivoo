@@ -1,12 +1,12 @@
 <?php
-include '../lib/Core/bootstrap.php';
+include '../lib/Jivoo/bootstrap.php';
 
 Lib::import('Core');
-Lib::import('Core\Database');
+Lib::import('Jivoo\Database');
 
 /**
  * Represents a database table schema
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class Schema2 {
   const UNSIGNED = 0x1;

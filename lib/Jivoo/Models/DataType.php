@@ -10,7 +10,7 @@
  * @property-read boolean $signed Signed (integers only)
  * @property-read boolean $unsigned Opposite of signed (integers only)
  * @property-read boolean $autoIncrement Auto increment (integers only)
- * @package Core\Models
+ * @package Jivoo\Models
  */
 class DataType {
   /** @var int Type: Integer */

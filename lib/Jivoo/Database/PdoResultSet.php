@@ -1,7 +1,7 @@
 <?php
 /**
  * A PDO database result set
- * @package Core\Database
+ * @package Jivoo\Database
  */
 class PdoResultSet implements IResultSet {
 

@@ -6,7 +6,7 @@
 // Optional          : password tablePrefix
 /**
  * PDO MySQL database driver
- * @package Core\Database\PdoMysql
+ * @package Jivoo\Database\PdoMysql
  */
 class PdoMysqlDatabase extends PdoDatabase {
 

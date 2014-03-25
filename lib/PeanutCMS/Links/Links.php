@@ -3,9 +3,9 @@
 // Name           : Links
 // Description    : The PeanutCMS graphical menu system
 // Author         : apakoh.dk
-// Dependencies   : Core/Database Core/Routing Core/Models
-//                  Core/Templates Core/Controllers
-//                  Core/Authentication PeanutCMS/Backend
+// Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Models
+//                  Jivoo/Templates Jivoo/Controllers
+//                  Jivoo/Authentication PeanutCMS/Backend
 
 /**
  * Menu system

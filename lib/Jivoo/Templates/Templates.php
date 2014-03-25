@@ -3,11 +3,11 @@
 // Name           : Templates
 // Description    : The Apakoh Core template/view system
 // Author         : apakoh.dk
-// Dependencies   : Core/Routing Core/Assets Core/Helpers
+// Dependencies   : Jivoo/Routing Jivoo/Assets Jivoo/Helpers
 
 /**
  * Templats and views module
- * @package Core\Templates
+ * @package Jivoo\Templates
  * @property-read View $view The current view
  */
 class Templates extends ModuleBase {

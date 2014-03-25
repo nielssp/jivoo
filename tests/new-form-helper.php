@@ -1,14 +1,14 @@
 <?php
 ini_set('display_errors', true);
 
-require '../lib/Core/bootstrap.php';
+require '../lib/Jivoo/bootstrap.php';
 
 Lib::import('Core');
 
 $app = new App(require '../app/app.php', basename(__FILE__));
 
-$routing = $app->loadModule('Core/Routing');
-$helpers = $app->loadModule('Core/Helpers');
+$routing = $app->loadModule('Jivoo/Routing');
+$helpers = $app->loadModule('Jivoo/Helpers');
 
 // header('Content-Type: text/plain');
 

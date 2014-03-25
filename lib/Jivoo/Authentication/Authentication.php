@@ -1,16 +1,16 @@
 <?php
 // Module
 // Name           : Authentication
-// Description    : The Apakoh Core authentication system
+// Description    : The Jivoo authentication system
 // Author         : apakoh.dk
-// Dependencies   : Core/Shadow
-//                  Core/Setup Core/Templates Core/Database
-//                  Core/Routing Core/Helpers Core/Models
+// Dependencies   : Jivoo/Shadow
+//                  Jivoo/Setup Jivoo/Templates Jivoo/Database
+//                  Jivoo/Routing Jivoo/Helpers Jivoo/Models
 
 /**
  * Authentication module
  *
- * @package Core\Authentication
+ * @package Jivoo\Authentication
  */
 class Authentication extends ModuleBase {
   /**

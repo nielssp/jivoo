@@ -3,9 +3,9 @@
 // Name           : Pages
 // Description    : The PeanutCMS content page system
 // Author         : apakoh.dk
-// Dependencies   : Core/Database Core/Routing Core/Templates Core/Controllers
-//                  Core/Authentication PeanutCMS/Backend Core/Editors
-//                  Core/Models
+// Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates Jivoo/Controllers
+//                  Jivoo/Authentication PeanutCMS/Backend Jivoo/Editors
+//                  Jivoo/Models
 
 /**
  * Static pages

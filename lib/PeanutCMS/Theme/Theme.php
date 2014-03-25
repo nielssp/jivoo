@@ -3,7 +3,7 @@
 // Name           : Theme
 // Description    : The PeanutCMS theme system
 // Author         : apakoh.dk
-// Dependencies   : Core/Templates Core/Assets PeanutCMS/Backend
+// Dependencies   : Jivoo/Templates Jivoo/Assets PeanutCMS/Backend
 
 /**
  * Class for loading and managing themes

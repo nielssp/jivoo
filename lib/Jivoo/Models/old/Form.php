@@ -1,7 +1,7 @@
 <?php
 /**
  * A generic form
- * @package Core\Models
+ * @package Jivoo\Models
  */
 class Form implements IRecord {
   /**
