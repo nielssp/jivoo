@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Models
-// Description    : Apakoh Core model system
+// Description    : Jivoo model system
 // Author         : apakoh.dk
 
 Lib::import('Jivoo/Models/Validation');

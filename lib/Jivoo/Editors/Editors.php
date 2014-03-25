@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Editors
-// Description    : The PeanutCMS editor system
+// Description    : The Jivoo editor system
 // Author         : apakoh.dk
 
 /**

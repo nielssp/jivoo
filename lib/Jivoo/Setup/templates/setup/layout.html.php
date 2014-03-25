@@ -32,7 +32,7 @@
 </div>
 
 <div class="footer" id="links">
-<a href="http://apakoh.dk">Apakoh Core</a>
+<a href="http://apakoh.dk">Jivoo</a>
 </div>
 
 </body>

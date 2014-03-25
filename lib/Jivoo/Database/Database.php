@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Database
-// Description    : The Apakoh Core database system
+// Description    : The Jivoo database system
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Routing Jivoo/Templates Jivoo/Models Jivoo/Helpers
 //                  Jivoo/Controllers Jivoo/Setup

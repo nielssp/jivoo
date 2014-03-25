@@ -41,7 +41,7 @@ class App {
   /**
    * @var string Application name
    */
-  private $name = 'ApakohPHP Application';
+  private $name = 'Jivoo Application';
 
   /**
    * @var string Application version
@@ -71,7 +71,7 @@ class App {
   /**
    * @var string Application session prefix
    */
-  private $sessionPrefix = 'apakoh_';
+  private $sessionPrefix = 'jivoo_';
 
   /* EVENTS BEGIN */
   /**

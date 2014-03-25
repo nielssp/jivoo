@@ -1,6 +1,6 @@
 <?php
 /**
- * Apakoh Core logger
+ * Jivoo logger
  *
  * @package Core
  */

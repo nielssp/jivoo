@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Setup
-// Description    : The Apakoh Core installation/setup system.
+// Description    : The Jivoo installation/setup system.
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Controllers Jivoo/Routing Jivoo/Templates Jivoo/Assets
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Widget helper
- * @package PeanutCMS\Widgets
+ * @package Jivoo\Widgets
  */
 class WidgetsHelper extends Helper {
   

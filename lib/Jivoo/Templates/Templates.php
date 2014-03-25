@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Templates
-// Description    : The Apakoh Core template/view system
+// Description    : The Jivoo template/view system
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Routing Jivoo/Assets Jivoo/Helpers
 

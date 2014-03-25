@@ -69,7 +69,7 @@ $rand = floor(time() / 60) % 5 + 1;
   <h2>
     <?php echo $Html->link($site['title']); ?></h2>
   <div id="powered-by">
-    <?php echo $Html->link('Powered by Apakoh Core.', 'http://apakoh.dk'); ?>
+    <?php echo $Html->link('Powered by Jivoo.', 'http://apakoh.dk'); ?>
   </div>
 </div>
 </div>

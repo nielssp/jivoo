@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Routing
-// Description    : The Apakoh Core routing system
+// Description    : The Jivoo routing system
 // Author         : apakoh.dk
 
 /**

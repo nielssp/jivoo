@@ -1,7 +1,7 @@
 <?php
 // Module
 // Name           : Shadow
-// Description    : The Apakoh Core hashing and security system
+// Description    : The Jivoo hashing and security system
 // Author         : apakoh.dk
 
 /**
