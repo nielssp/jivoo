@@ -23,8 +23,6 @@ class Database extends ModuleBase implements IDatabase {
    */
   private $driverInfo;
 
-  private $activeModels = array();
-  
   /**
    * @var IDatabase Database connection
    */
@@ -89,6 +87,8 @@ class Database extends ModuleBase implements IDatabase {
     if ($this->connection) {
       $status = $this->connection->migrate($schema);
       $this->config['migration'][$name] = $this->app->version;
+      if ($status == 'new')
+        $this->config['installed'][$name] = false;
       return $status;
     }
   }
@@ -159,6 +159,19 @@ class Database extends ModuleBase implements IDatabase {
     foreach ($classes as $class) {
       $this->addActiveModel($class);
     }
+    
+    $this->m->Routing->onRendering(array($this, 'installModels'));
+  }
+  
+  public function installModels($caller = null, $eventArgs = null) {
+    foreach ($this->tables as $name => $table) {
+      if ($table instanceof ActiveModel
+          and !(isset($this->config['installed'][$name])
+            and $this->config['installed'][$name])) {
+        $table->install();
+        $this->config['installed'][$name] = true;
+      } 
+    }
   }
   
   /**
@@ -228,8 +241,6 @@ class Database extends ModuleBase implements IDatabase {
       $model = new $class($this);
       $this->m->Models->setModel($class, $model);
       $this->tables[$class] = $model;
-      if ($this->isNew($class))
-        $model->install();
       return true;
     }
     return false;

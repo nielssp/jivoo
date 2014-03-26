@@ -86,6 +86,12 @@ class Schema implements ISchema {
     foreach ($this->fields as $field => $type) {
       $type->createValidationRules($validator->$field);
     }
+    foreach ($this->indexes as $index) {
+      if ($index['unique'] and count($index['columns']) == 1) {
+        $field = $index['columns'][0];
+        $validator->$field->unique = true;
+      }
+    }
   }
 
   public function getFields() {

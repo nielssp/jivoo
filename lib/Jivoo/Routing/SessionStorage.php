@@ -11,6 +11,7 @@
  * {@see Flash} objects
  * @property-read Flash[] $alerts Alerts only
  * @property-read Flash[] $notices Notices only
+ * @package Jivoo\Routing
  */
 class SessionStorage implements arrayaccess {
   /**

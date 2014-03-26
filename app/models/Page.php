@@ -31,14 +31,14 @@ class Page extends ActiveModel {
   }
   
   public function install() {
-//     $page = $this->create();
-//     $page->title = 'About';
-//     $page->name = 'about';
-//     $page->content = '<p>'
-//       . tr(
-//         'Welcome to PeanutCMS. This is a static page. You can use it to display important information.'
-//       ) . '</p>';
-//     $page->status = 'published';
-//     $page->save();
+    $page = $this->create();
+    $page->title = 'About';
+    $page->name = 'about';
+    $page->content = '<p>'
+      . tr(
+        'Welcome to Jivoo. This is a static page. You can use it to display important information.'
+      ) . '</p>';
+    $page->published = true;
+    $page->save();
   }
 }
