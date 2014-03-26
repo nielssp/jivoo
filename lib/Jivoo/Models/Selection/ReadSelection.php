@@ -146,21 +146,21 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * @return IRecord
    */
   public function first() {
-    return $this->model->first($this);
+    return $this->model->firstSelection($this);
   }
 
   /**
    * @return IRecord
    */
   public function last() {
-    return $this->model->last($this);
+    return $this->model->lastSelection($this);
   }
 
   /**
    * @return int
    */
   public function count() {
-    return $this->model->count($this);
+    return $this->model->countSelection($this);
   }
   /**
    * Set offset

@@ -24,6 +24,6 @@ class UpdateSelection extends BasicSelection implements IUpdateSelection {
   }
 
   public function update() {
-    $this->model->update($this);
+    $this->model->updateSelection($this);
   }
 }

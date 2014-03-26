@@ -3,37 +3,20 @@ abstract class Table extends Model {
 
   public abstract function setSchema();
 
-  public function update(UpdateSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new UpdateSelection($this);
-    return $this->updateSelection($selection);
-  }
-
-  public function delete(DeleteSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new DeleteSelection($this);
-    return $this->deleteSelection($selection);
-  }
   
-  public function count(ReadSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new ReadSelection($this);
+  public function countSelection(ReadSelection $selection) {
     $result = $selection->select('COUNT(*)');
     return $result[0]['COUNT(*)'];
   }
   
-  public function first(ReadSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new ReadSelection($this);
+  public function firstSelection(ReadSelection $selection) {
     $resultSet = $this->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
     return $this->createExisting($resultSet->fetchAssoc());
   }
   
-  public function last(ReadSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new ReadSelection($this);
+  public function lastSelection(ReadSelection $selection) {
     $resultSet = $this->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
@@ -59,14 +42,4 @@ abstract class Table extends Model {
    * @return IResultSet
    */
   public abstract function readSelection(ReadSelection $selection);
-  /**
-   * @param UpdateSelection $selection
-   * @return int Number of affected records
-  */
-  public abstract function updateSelection(UpdateSelection $selection);
-  /**
-   * @param DeleteSelection $selection
-   * @return int Number of affected records
-  */
-  public abstract function deleteSelection(DeleteSelection $selection);
 }

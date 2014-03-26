@@ -314,36 +314,26 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
     return ucfirst($field);
   }
   
-  public function update(UpdateSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new UpdateSelection($this);
-    return $this->source->update($selection);
+  public function updateSelection(UpdateSelection $selection) {
+    return $this->source->updateSelection($selection);
   }
   
-  public function delete(DeleteSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new DeleteSelection($this);
-    return $this->source->delete($selection);
+  public function deleteSelection(DeleteSelection $selection) {
+    return $this->source->deleteSelection($selection);
   }
   
-  public function count(ReadSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new ReadSelection($this);
+  public function countSelection(ReadSelection $selection) {
     return $this->source->count($selection);
   }
   
-  public function first(ReadSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new ReadSelection($this);
+  public function firstSelection(ReadSelection $selection) {
     $resultSet = $this->source->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
     return $this->createExisting($resultSet->fetchAssoc());
   }
   
-  public function last(ReadSelection $selection = null) {
-    if (!isset($selection))
-      $selection = new ReadSelection($this);
+  public function lastSelection(ReadSelection $selection) {
     $resultSet = $this->source->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;

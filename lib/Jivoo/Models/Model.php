@@ -63,11 +63,40 @@ abstract class Model implements IModel {
     return $selection->first();
   }
 
-  public abstract function update(UpdateSelection $selection = null);
-  public abstract function delete(DeleteSelection $selection = null);
-  public abstract function count(ReadSelection $selection = null);
-  public abstract function first(ReadSelection $selection = null);
-  public abstract function last(ReadSelection $selection = null);
+  public function update() {
+    return $this->updateSelection(new UpdateSelection($this));
+  }
+  
+  public function delete() {
+    return $this->deleteSelection(new DeleteSelection($this));
+  }
+  
+  public function count() {
+    return $this->countSelection(new ReadSelection($this));
+  }
+  
+  public function first() {
+    return $this->firstSelection(new ReadSelection($this));
+  }
+  
+  public function last() {
+    return $this->lastSelection(new ReadSelection($this));
+  }
+
+  /**
+   * @param UpdateSelection $selection
+   * @return int Number of affected records
+   */
+  public abstract function updateSelection(UpdateSelection $selection);
+  /**
+   * @param DeleteSelection $selection
+   * @return int Number of affected records
+  */
+  public abstract function deleteSelection(DeleteSelection $selection);
+  
+  public abstract function countSelection(ReadSelection $selection);
+  public abstract function firstSelection(ReadSelection $selection);
+  public abstract function lastSelection(ReadSelection $selection);
   
   /**
    * Read custom schema

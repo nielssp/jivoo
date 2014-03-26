@@ -129,11 +129,9 @@ class ActiveCollection extends Model {
     return $this->other->createExisting($data, $allowedFields);
   }
 
-  public function update(UpdateSelection $selection = null) {
-    if (!isset($selection))
-      return 0;
+  public function updateSelection(UpdateSelection $selection) {
     if (!isset($this->join))
-      return $this->other->update(
+      return $this->other->updateSelection(
         $selection->where($this->thisKey . ' = ?', $this->recordId)
       );
     $sets = $selection->sets;
@@ -148,9 +146,9 @@ class ActiveCollection extends Model {
     return $num;
   }
   
-  public function delete(DeleteSelection $selection = null) {
+  public function deleteSelection(DeleteSelection $selection) {
     if (!isset($this->join))
-      return $this->other->delete($this->prepareSelection($selection));
+      return $this->other->deleteSelection($this->prepareSelection($selection));
     $pk = $this->otherPrimary;
     $num = 0;
     if (isset($selection))
@@ -167,18 +165,15 @@ class ActiveCollection extends Model {
     return $num;
   }
   
-  public function count(ReadSelection $selection = null) {
-    if (!isset($selection) and isset($this->join)) {
-      return $this->join->count();
-    }
-    return $this->other->count($this->prepareSelection($selection));
+  public function countSelection(ReadSelection $selection) {
+    return $this->other->countSelection($this->prepareSelection($selection));
   }
   
-  public function first(ReadSelection $selection = null) {
+  public function firstSelection(ReadSelection $selection) {
     return $this->other->first($this->prepareSelection($selection));
   }
   
-  public function last(ReadSelection $selection = null) {
+  public function lastSelection(ReadSelection $selection) {
     return $this->other->last($this->prepareSelection($selection));
   }
 
