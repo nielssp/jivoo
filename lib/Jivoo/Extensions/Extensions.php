@@ -1,14 +1,14 @@
 <?php
 // Module
 // Name           : Extensions
-// Description    : The PeanutCMS extension system
+// Description    : The Jivoo extension system
 // Author         : apakoh.dk
-// Dependencies   : ApakohPHP/Database ApakohPHP/Routing ApakohPHP/Templates
-//                  ApakohPHP/Authentication ApakohPHP/Backend
+// Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates
+//                  Jivoo/Authentication
 
 /**
  * Extension system
- * @package PeanutCMS\Extensions
+ * @package Jivoo\Extensions
  */
 class Extensions extends ModuleBase {
   private $info = array();
@@ -35,8 +35,8 @@ class Extensions extends ModuleBase {
 
     $this->installed = explode(' ', $this->config['installed']);
 
-    $this->m->Backend['settings']
-      ->item(tr('Extensions'), null, 2);
+//     $this->m->Backend['settings']
+//       ->item(tr('Extensions'), null, 2);
 
     // Load installed extensions when all modules are loaded and initialized
     $this->app->onModulesLoaded(array($this, 'loadExtensions'));

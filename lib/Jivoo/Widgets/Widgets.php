@@ -1,14 +1,15 @@
 <?php
 // Module
-// Description    : The PeanutCMS widget system
+// Name           : Widgets
+// Description    : The Jivoo widget system
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates Jivoo/Controllers
-//                  Jivoo/Authentication PeanutCMS/Backend Jivoo/Editors
+//                  Jivoo/Authentication Jivoo/Editors
 //                  Jivoo/Models Jivoo/Helpers
 
 /**
  * Widget system module
- * @package PeanutCMS\Widgets
+ * @package Jivoo\Widgets
  */
 class Widgets extends ModuleBase {
   /**
@@ -32,14 +33,14 @@ class Widgets extends ModuleBase {
         'sidebar' => array(
           array(
             'name' => 'TextWidget',
-            'title' => tr('Welcome to PeanutCMS'),
-            'config' => array('text' => tr('Welcome to PeanutCMS. This is a widget for displaying basic information in the sidebar.'))
+            'title' => tr('Welcome to ' . $this->app->name),
+            'config' => array('text' => tr('Welcome to %1. This is a widget for displaying basic information in the sidebar.', $this->app->name))
           ),
-          array(
-            'name' => 'RecentPostsWidget',
-            'title' => tr('Recent posts'),
-            'config' => array()
-          ),
+//           array(
+//             'name' => 'RecentPostsWidget',
+//             'title' => tr('Recent posts'),
+//             'config' => array()
+//           ),
         )
       );
     }
@@ -52,8 +53,8 @@ class Widgets extends ModuleBase {
     
     $this->m->Routing->onRendering(array($this, 'renderWidgets'));
     
-    $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
-      ->item(tr('Widgets'), null, 4);
+//     $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
+//       ->item(tr('Widgets'), null, 4);
   }
   
   /**

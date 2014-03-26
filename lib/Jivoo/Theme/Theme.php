@@ -1,13 +1,13 @@
 <?php
 // Module
 // Name           : Theme
-// Description    : The PeanutCMS theme system
+// Description    : The Jivoo theme system
 // Author         : apakoh.dk
-// Dependencies   : Jivoo/Templates Jivoo/Assets PeanutCMS/Backend
+// Dependencies   : Jivoo/Templates Jivoo/Assets
 
 /**
  * Class for loading and managing themes
- * @package PeanutCMS\Theme
+ * @package Jivoo\Theme
  */
 class Theme extends ModuleBase {
 
@@ -20,7 +20,7 @@ class Theme extends ModuleBase {
 
   protected function init() {
     // Create meta-tags
-    $this->view->meta('generator', 'PeanutCMS');
+    $this->view->meta('generator', 'Jivoo');
     //     if ($this->m
 //       ->Configuration
 //       ->exists('site.description')) {
@@ -51,9 +51,9 @@ class Theme extends ModuleBase {
       }
     }
     
-    $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
-      ->item(tr('Themes'), null, 0)
-      ->item(tr('Customize'), null, 0);
+//     $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
+//       ->item(tr('Themes'), null, 0)
+//       ->item(tr('Customize'), null, 0);
   }
   
   public function setTheme($theme, $priority = 10) {
