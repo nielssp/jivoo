@@ -28,7 +28,7 @@ interface IRecord extends IBasicRecord {
   public function set($field, $value);
 
   /** @return IModel Associated model */
-  public function getModel();
+//   public function getModel();
   
   /**
    * Add data to record
