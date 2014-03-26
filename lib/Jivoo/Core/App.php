@@ -121,8 +121,6 @@ class App {
       $appConfig['path']
     );
     $this->paths->app = $appConfig['path'];
-    $this->paths->lib = LIB_PATH;
-    $this->paths->core = CORE_LIB_PATH;
 //     $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
     $this->entryScript = $entryScript;
     
@@ -335,6 +333,8 @@ class App {
       echo 'You should update PHP or contact your hosting provider. ';
       return;
     }
+    
+    Lib::addIncludePath($this->p('lib', ''));
 
     $this->config = new AppConfig($this->p('config', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
