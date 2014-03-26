@@ -17,6 +17,7 @@ else {
    </title>
 
 <?php echo $this->block('meta'); ?>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <?php echo $this->block('style'); ?>
 <?php echo $this->block('script'); ?>
   </head>
