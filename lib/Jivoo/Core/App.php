@@ -136,24 +136,18 @@ class App {
     $this->basePath = dirname(implode('/', $script));
     // END work-around
     
-    if (isset($appConfig['name'])) {
+    if (isset($appConfig['name']))
       $this->name = $appConfig['name'];
-    }
-    if (isset($appConfig['version'])) {
+    if (isset($appConfig['version']))
       $this->version = $appConfig['version'];
-    }
-    if (isset($appConfig['minPhpVersion'])) {
+    if (isset($appConfig['minPhpVersion']))
       $this->minPhpVersion = $appConfig['minPhpVersion'];
-    }
-    if (isset($appConfig['modules'])) {
+    if (isset($appConfig['modules']))
       $this->modules = $appConfig['modules'];
-    }
-    if (!isset($appConfig['defaultLanguage'])) {
+    if (!isset($appConfig['defaultLanguage']))
       $this->appConfig['defaultLanguage'] = 'en';
-    }
-    if (isset($appConfig['sessionPrefix'])) {
+    if (isset($appConfig['sessionPrefix']))
       $this->sessionPrefix = $appConfig['sessionPrefix'];
-    }
 
     $this->config = new AppConfig();
   }
@@ -308,12 +302,31 @@ class App {
       $app = $this->name;
       $version = $this->version;
       $title = tr('Uncaught exception');
-      include CORE_LIB_PATH . '/ui/layout.php';
+      $custom = null;
+      try {
+        $custom = $this->p('templates', 'error/exception.php');
+        if (!file_exists($custom))
+          $custom = null;
+        else
+          include $custom;
+      }
+      catch (Exception $e) { }
+      if (!isset($custom))
+        include CORE_LIB_PATH . '/ui/exception.php';
       $this->stop();
     }
     else {
-      /** @todo allow custom error page */
-      include CORE_LIB_PATH . '/ui/error.php';
+      $custom = null;
+      try {
+        $custom = $this->p('templates', 'error/error.php');
+        if (!file_exists($custom))
+          $custom = null;
+        else
+          include $custom;
+      }
+      catch (Exception $e) { }
+      if (!isset($custom))
+        include CORE_LIB_PATH . '/ui/error.php';
       $this->stop();
     }
   }
