@@ -312,7 +312,7 @@ class App {
       }
       catch (Exception $e) { }
       if (!isset($custom))
-        include CORE_LIB_PATH . '/ui/exception.php';
+        include CORE_LIB_PATH . '/templates/error/exception.php';
       $this->stop();
     }
     else {
@@ -326,7 +326,7 @@ class App {
       }
       catch (Exception $e) { }
       if (!isset($custom))
-        include CORE_LIB_PATH . '/ui/error.php';
+        include CORE_LIB_PATH . '/templates/error/error.php';
       $this->stop();
     }
   }

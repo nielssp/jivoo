@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style type="text/css">
-<?php include dirname(__FILE__) . '/basic.css'; ?>
+<?php include dirname(__FILE__) . '/../../assets/css/core.css'; ?>
 </style>
 </head>
 <body class="exception">

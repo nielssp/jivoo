@@ -70,8 +70,8 @@ else : ?>
       <div class="section">
         <div class="container">
           <div class="aright">
-            <?php echo $Form->submit(tr('Skip'), array('class' => 'button')); ?>
             <?php echo $Form->submit(tr('Save'), array('class' => 'button publish')); ?>
+            <?php echo $Form->submit(tr('Skip'), array('name' => 'skip', 'class' => 'button button-secondary')); ?>
           </div>
         </div>
       </div>
