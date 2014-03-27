@@ -24,22 +24,6 @@ class Blog extends ModuleBase {
       ), 'commentingDefault' => true, 'anonymousCommenting' => false,
       'commentApproval' => false, 'editor' => array('name' => 'TinymceEditor'),
     );
-
-    if ($this->m->Database->isNew('Post')) {
-      $post = $this->m->Models->Post->create();
-      $post->title = tr('Welcome to PeanutCMS');
-      $post->name = 'welcome-to-peanutcms';
-      $post->content = include $this->p('welcomePost.php');
-      $post->status = 'published';
-      $post->commenting = true;
-      $post->save();
-      $comment = $this->m->Models->Comment->create();
-      $comment->author = 'PeanutCMS';
-      $comment->content = 'Welcome to PeanutCMS.';
-      $comment->post = $post;
-      $comment->save();
-    }
-
     $commentValidator = $this->m->Models->Comment->getValidator();
     if ($this->config['anonymousCommenting']) {
       unset($commentValidator->author->presence);

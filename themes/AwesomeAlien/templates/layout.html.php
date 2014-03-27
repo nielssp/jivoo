@@ -20,6 +20,11 @@ else {
 <?php echo $this->block('meta'); ?>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <?php echo $this->block('style'); ?>
+
+<!--[if (lt IE 9)]>
+<?php echo $this->insertFile('respond.js'); ?>
+<?php echo $this->insertFile('html5shiv.js'); ?>
+<![endif]-->
 <?php echo $this->block('script'); ?>
   </head>
   <body>
@@ -48,10 +53,12 @@ else {
         </nav>
       </header>
 
-      <div id="content">
+      <div id="primary">
+        <div id="content">
       
-      <?php echo $this->block('content'); ?>
+<?php echo $this->block('content'); ?>
   
+        </div>
       </div>
   
       <aside>

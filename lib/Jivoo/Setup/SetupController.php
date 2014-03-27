@@ -12,6 +12,6 @@ class SetupController extends Controller {
       $this->mode = sprintf('%o', $perms & 0777);
     }
     $this->data = '<?php' . PHP_EOL . 'return ' . $this->config->prettyPrint() . ';';
-    $this->render('setup/save-config.html');
+    return $this->render('setup/save-config.html');
   }
 }
