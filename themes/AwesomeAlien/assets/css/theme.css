@@ -43,11 +43,11 @@ body {
     margin: 0 30px 25px;
   }
 }
-@media screen and (min-width: 980px) {
+@media screen and (min-width: 1010px) {
   /* line 27, ../sass/theme.scss */
   #main {
     margin: 0 auto 25px;
-    width: 920px;
+    width: 950px;
   }
 }
 
