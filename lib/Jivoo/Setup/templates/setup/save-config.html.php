@@ -2,7 +2,7 @@
 $this->extend('setup/layout.html');
 ?>
 
-      <?php echo $Form->begin(); ?>
+      <?php echo $Form->form(); ?>
 
       <div class="section">
         <div class="container">
@@ -26,7 +26,7 @@ $this->extend('setup/layout.html');
       <div class="section">
         <div class="container">
           <div class="aright">
-            <?php echo $Form->submit(tr('Cancel'), 'back',
+            <?php echo $Form->submit(tr('Cancel'), 
     array('class' => 'button publish')); ?>
           </div>
         </div>
