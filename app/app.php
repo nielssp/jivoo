@@ -2,12 +2,12 @@
 return array(
   'path' => str_replace('\\', '/', dirname(__FILE__)),
   'name' => 'Jivoo',
-  'version' => '0.15-dev-3',
+  'version' => '0.15-dev-4',
   'website' => 'http://jivoo.org',
   'defaultLanguage' => 'en',
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'jivoo_',
-  'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce', 'BasicWidgets'),
+  'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce', 'BasicWidgets', 'Html5shiv', 'Respond'),
   'modules' => array(
     'Jivoo/Core',
     'Jivoo/Routing',

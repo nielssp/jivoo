@@ -9,5 +9,5 @@
  * @package Jivoo\Core
  */
 class Core extends ModuleBase {
-  protected function init() { }
+  protected function init() {}
 }

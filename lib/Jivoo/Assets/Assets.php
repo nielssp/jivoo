@@ -39,6 +39,8 @@ class Assets extends ModuleBase {
   protected function init() {
     $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
     $this->docRootLength = strlen($this->docRoot);
+    
+    $this->addAssetDir('Core', 'assets');
 
     if (isset($this->request->path[1]) AND $this->request->path[0] == 'assets') {
       $path = $this->request->path;
@@ -139,10 +141,12 @@ class Assets extends ModuleBase {
         uasort($this->assetDirs, array('Utilities', 'prioritySorter'));
         $this->sorted = true;
       }
-      foreach ($this->assetDirs as $dir) {
-        if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
-          $key = $dir['key'];
-          $path = $dir['path'] . '/' . $path;
+      if (!file_exists($this->p($key, $path))) {
+        foreach ($this->assetDirs as $dir) {
+          if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
+            $key = $dir['key'];
+            $path = $dir['path'] . '/' . $path;
+          }
         }
       }
     }

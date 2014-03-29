@@ -11,7 +11,7 @@ class PostSchema extends Schema {
     $this->content = DataType::text();
     $this->published = DataType::boolean(false, true);
     $this->commenting = DataType::boolean(false, true);
-    $this->userId = DataType::integer(DataType::UNSIGNED);
+    $this->userId = DataType::integer(DataType::UNSIGNED, true);
     $this->addTimestamps();
     $this->addUnique('name', 'name');
     $this->addIndex('createdAt', 'createdAt');

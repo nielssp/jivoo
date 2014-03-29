@@ -1,11 +1,17 @@
+<?php
+$this->style('core.css');
+?>
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8" />
 <title><?php echo $title; ?></title>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="<?php echo $basicStyle; ?>" />
-
+<?php echo $this->block('meta'); ?>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="shortcut icon" href="<?php echo $this->file('img/jivoo.ico'); ?>" />
+<?php echo $this->block('style'); ?>
+<?php echo $this->block('script'); ?>
 </head>
 <body>
 

@@ -23,7 +23,7 @@ class Setup extends ModuleBase {
   public function enterSetup(Controller $controller, $action = 'index') {
     $controller->addModule($this);
     $this->view->addTemplateDir($this->p('templates'), 3);
-    $controller->basicStyle = $this->m->Assets->getAsset('core', 'ui/basic.css');
+    $controller->basicStyle = $this->m->Assets->getAsset('css/basic.css');
     $this->m->Controllers->addController($controller);
     $controller->autoRoute($action);
     $this->m->Routing->reroute($controller, $action);

@@ -120,9 +120,12 @@ class ActiveCollection extends Model {
   }
 
   public function create($data = array(), $allowedFields = null) {
-    if (!isset($this->join))
-      $data[$this->thisKey] = $this->recordId;
-    return $this->other->create($data, $allowedFields);
+    $record = $this->other->create($data, $allowedFields);
+    if (!isset($this->join)) {
+      $thisKey = $this->thisKey;
+      $record->$thisKey = $this->recordId;
+    }
+    return $record;
   }
   
   public function createExisting($data = array()) {

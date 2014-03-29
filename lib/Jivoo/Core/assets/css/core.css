@@ -193,6 +193,14 @@ input.text:focus,textarea:focus {
   width: 128px;
 }
 
+.button-primary {
+  
+}
+
+.button-secondary {
+  float: left;
+}
+
 
 .narrow_container input.text,.narrow_container textarea {
   width: 350px;

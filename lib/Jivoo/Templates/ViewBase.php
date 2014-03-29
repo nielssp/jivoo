@@ -223,23 +223,8 @@ abstract class ViewBase {
       'dependencies' => $dependencies,
     );
   }
-
-  /**
-   * Insert script or stylesheet into view
-   * @param string $file File name
-   * @throws Exception If unknown type
-   */
-  private function insert($file) {
-    if (is_array($file)) {
-      foreach ($file as $f) {
-        $this->insert($f);
-      }
-      return;
-    }
-    if (isset($this->inserted[$file])) {
-      return;
-    }
-    $this->inserted[$file] = true;
+  
+  public function insertFile($file) {
     $type = Utilities::getFileExtension($file);
     switch ($type) {
       case 'js':
@@ -260,17 +245,42 @@ abstract class ViewBase {
       }
     }
     if ($block == 'script') {
+      return '<script type="text/javascript" src="' . h($path) . '"></script>'
+          . PHP_EOL;
+    }
+    else {
+      return '<link rel="stylesheet" type="text/css" href="' . h($path) . '" />'
+          . PHP_EOL;
+    }
+  }
+
+  /**
+   * Insert script or stylesheet into view
+   * @param string $file File name
+   * @throws Exception If unknown type
+   */
+  private function insert($file) {
+    if (is_array($file)) {
+      foreach ($file as $f) {
+        $this->insert($f);
+      }
+      return;
+    }
+    if (isset($this->inserted[$file])) {
+      return;
+    }
+    $this->inserted[$file] = true;
+    $html = $this->insertFile($file);
+    if ($html[1] == 's') {
       $this->appendTo(
         'script',
-        '<script type="text/javascript" src="' . h($path) . '"></script>'
-          . PHP_EOL
+        $html
       );
     }
     else {
       $this->appendTo(
         'style',
-        '<link rel="stylesheet" type="text/css" href="' . h($path) . '" />'
-          . PHP_EOL
+        $html
       );
     }
   }

@@ -14,18 +14,6 @@
 class Pages extends ModuleBase {
 
   protected function init() {
-    if ($this->m->Database->isNew('Page')) {
-      $page = $this->m->Models->Page->create();
-      $page->title = 'About';
-      $page->name = 'about';
-      $page->content = '<p>';
-      $page->content .= tr(
-        'Welcome to PeanutCMS. This is a static page. You can use it to display important information.');
-      $page->content .= '</p>';
-      $page->published = true;
-      $page->save();
-    }
-
     $pagesEncoder = new HtmlEncoder();
     $pagesEncoder->setAllowAll(true);
     $this->m->Models->Page->setEncoder('content', $pagesEncoder);

@@ -45,4 +45,24 @@ class Post extends ActiveModel {
       'parameters' => array($record->id)
     );
   }
+  
+  public function install() {
+    $post = $this->create();
+    $post->title = tr('Welcome to Jivoo');
+    $post->name = 'welcome-to-jivoo';
+    $post->content = '<p>' . tr('Welcome to Jivoo') . '<p>
+<p>' . tr('This post indicates that Jivoo has been installed correctly, and is ready to be used.') . '</p>';
+    if ($post->save()) {
+      $comment = $post->comments->create();
+      $comment->ip = '';
+      $comment->author = 'Jivoo';
+      $comment->email = 'jivoo@apakoh.dk';
+      $comment->content = 'Welcome to Jivoo.';
+      $comment->approved = true;
+      $comment->save();
+    }
+    else {
+      // install failed
+    }
+  }
 }
