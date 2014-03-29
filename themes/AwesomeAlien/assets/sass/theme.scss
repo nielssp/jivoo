@@ -27,6 +27,8 @@ body {
 #main {
   background-color: #fff;
   border-bottom: 5px solid #000;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   display: block;
   padding: 0 20px;
   text-align: left;
@@ -69,7 +71,7 @@ header {
     font-size: 1em;
     
     ul {
-      margin: 0 0 0 5px;
+      margin: 0 0 0 10px;
     }
     
     li {

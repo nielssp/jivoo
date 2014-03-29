@@ -23,6 +23,8 @@ body {
 #main {
   background-color: #fff;
   border-bottom: 5px solid #000;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   display: block;
   padding: 0 20px;
   text-align: left;
@@ -55,7 +57,7 @@ header {
     height: 45px;
     font-size: 1em; }
     header nav ul {
-      margin: 0 0 0 5px; }
+      margin: 0 0 0 10px; }
     header nav li {
       float: left;
       color: #fff;
