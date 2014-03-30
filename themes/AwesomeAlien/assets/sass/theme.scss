@@ -64,10 +64,10 @@ header {
   
   img {
     width: 100%;
+    display: block;
   }
   
   nav {
-    height: 45px;
     font-size: 1em;
     
     ul {
@@ -75,17 +75,18 @@ header {
     }
     
     li {
-      float: left;
       color: #fff;
       list-style-type: none;
       position: relative;
+      display: inline-block;
+      height: 50px;
+      padding: 5px 0 ;
       
       a:link, a:active, a:visited {
-        line-height: 40px;
         text-decoration: none;
         color: #999;
+        line-height: 40px;
         padding: 0 10px;
-        font-size: 1.0em;
         display: block;
       }
       
@@ -101,8 +102,8 @@ header {
   }
   
   .title {
-    height: 50px;
     padding: 0 20px;
+    @include clearfix;
   }
   
   .title h1 {
@@ -186,8 +187,8 @@ aside {
 
 footer {
   clear: both;
-  height: 40px;
   line-height: 40px;
+  @include clearfix;
   
   &:after {
     clear: both;

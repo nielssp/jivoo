@@ -52,23 +52,24 @@ header {
   color: #fff;
   margin: 0 -20px; }
   header img {
-    width: 100%; }
+    width: 100%;
+    display: block; }
   header nav {
-    height: 45px;
     font-size: 1em; }
     header nav ul {
       margin: 0 0 0 10px; }
     header nav li {
-      float: left;
       color: #fff;
       list-style-type: none;
-      position: relative; }
+      position: relative;
+      display: inline-block;
+      height: 50px;
+      padding: 5px 0; }
       header nav li a:link, header nav li a:active, header nav li a:visited {
-        line-height: 40px;
         text-decoration: none;
         color: #999;
+        line-height: 40px;
         padding: 0 10px;
-        font-size: 1.0em;
         display: block; }
       header nav li a.current {
         color: #fff; }
@@ -76,8 +77,14 @@ header {
         background-color: #031b33;
         color: #fff; }
   header .title {
-    height: 50px;
     padding: 0 20px; }
+    header .title:before, header .title:after {
+      content: " ";
+      display: table; }
+    header .title:after {
+      clear: both; }
+    header .title {
+      *zoom: 1; }
   header .title h1 {
     color: #fff;
     text-align: left;
@@ -140,8 +147,14 @@ aside {
 
 footer {
   clear: both;
-  height: 40px;
   line-height: 40px; }
+  footer:before, footer:after {
+    content: " ";
+    display: table; }
+  footer:after {
+    clear: both; }
+  footer {
+    *zoom: 1; }
   footer:after {
     clear: both; }
   footer h1 {
