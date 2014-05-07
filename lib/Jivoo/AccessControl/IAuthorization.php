@@ -1,5 +1,5 @@
 <?php
 
 interface IAuthorization {
-  public function authorize(IUser $user);
+  public function authorize(ActiveRecord $user);
 }
