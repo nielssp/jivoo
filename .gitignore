@@ -5,3 +5,6 @@
 /index.php
 doc/
 *~
+.buildpath
+.settings/.jsdtscope
+.settings/

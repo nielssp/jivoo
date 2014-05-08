@@ -14,6 +14,12 @@ interface IUserModel extends IModel {
    * @return ActiveRecord|null A user object or null if invalid Session
    */
   public function openSession($sessionId);
+  
+  /**
+   * @param string $sessionId
+   * @param integer $validUntil
+   */
+  public function renewSession($sessionId, $validUntil);
   /**
    * 
    * @param string $sessionId

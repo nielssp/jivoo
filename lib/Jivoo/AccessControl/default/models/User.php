@@ -72,6 +72,14 @@ class User extends ActiveModel implements IUserModel {
     }
     return null;
   }
+  
+  public function renewSession($sessionId, $validUntil) {
+    $session = $this->getDatabase()->Session->find($sessionId);
+    if ($session) {
+      $session->validUntil = $validUntil;
+      $session->save();
+    }
+  }
 
   
   public function deleteSession($sessionId) {
