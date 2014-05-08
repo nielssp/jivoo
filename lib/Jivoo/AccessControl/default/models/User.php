@@ -1,0 +1,80 @@
+<?php
+class User extends ActiveModel implements IUserModel {
+  
+  protected $mixins = array(
+    'Timestamps'
+  );
+
+  protected $hasMany = array(
+    'sessions' => 'Session'
+  );
+
+  protected $belongsTo = array(
+    'Group',
+  );
+
+  protected $validate = array(
+    'username' => array(
+      'presence' => true,
+    ),
+    'password' => array(
+      'presence' => true,
+    ),
+    'email' => array(
+      'presence' => true,
+      'email' => true
+    ),
+    'confirmPassword' => array(
+      'ruleConfirm' => array(
+        'callback' => 'confirmPassword',
+        'message' => 'The two passwords are not identical'
+      ),
+    ),
+  );
+
+  protected $labels = array(
+    'username' => 'Username',
+    'email' => 'Email',
+    'password' => 'Password',
+    'confirmPassword' => 'Confirm password',
+  );
+  
+  protected $virtual = array(
+    'confirmPassword'
+  );
+
+  public function recordHasPermission(ActiveRecord $record, $key) {
+    $group = $record->group;
+    return isset($group) and $group->hasPermission($key);
+  }
+
+  public function confirmPassword(ActiveRecord $record, $field) {
+    if ($record->hasChanged('password'))
+      return $record->password == $record->confirmPassword;
+    return true;
+  }
+  
+  public function createSession(ActiveRecord $user, $validUntil) {
+    $session = $user->sessions->create();
+    $session->id = AccessControl::genUid();
+    $session->validUntil = $validUntil;
+    $session->save();
+    return $session->id;
+  }
+
+  
+  public function openSession($sessionId) {
+    $session = $this->getDatabase()->Session->find($sessionId);
+    if ($session) {
+      if (!$session->hasExpired())
+        return $session->user;
+      $session->delete();
+    }
+    return null;
+  }
+
+  
+  public function deleteSession($sessionId) {
+    $this->getDatabase()->Session->find($sessionId)->delete();
+  }
+}

@@ -51,9 +51,8 @@ abstract class ModuleBase {
       $this->session = $this->request->session;
     }
     
-    if (isset($this->m->Templates)) {
+    if (isset($this->m->Templates))
       $this->view = $this->m->Templates->view;
-    }
 
     $additionalParameters = func_get_args();
     array_shift($additionalParameters);
@@ -71,14 +70,9 @@ abstract class ModuleBase {
    * @return string Absolute path
    */
   public function p($key, $path = null) {
-    if (isset($path)) {
-      return $this->app
-        ->p($key, $path);
-    }
-    else {
-      return $this->app
-        ->p(get_class($this), $key);
-    }
+    if (isset($path))
+      return $this->app->p($key, $path);
+    return $this->app->p(get_class($this), $key);
   }
 
   /**
@@ -87,8 +81,7 @@ abstract class ModuleBase {
    * @return string Path
    */
   public function w($path = '') {
-    return $this->app
-      ->w($path);
+    return $this->app->w($path);
   }
 
   /**

@@ -4,8 +4,6 @@
  *
  * Implements arrayaccess, so the []-operator can be used
  * to get and set session values.
- * @package Core
- * @subpackage Routing
  * @property-read string $id Session id
  * @property-read array $messages Associative array of uid and
  * {@see Flash} objects
