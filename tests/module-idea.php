@@ -200,8 +200,3 @@ class Event {
 interface IEventListener {
   public function getEvents();
 }
-
-interface IBehavior {
-  public function attach(Module $module);
-  public function detach(Module $module);
-}
