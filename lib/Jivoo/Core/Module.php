@@ -69,7 +69,7 @@ abstract class Module {
 
   public function addEventListener(IEventListener $listener) {
     foreach ($listener->getEvents() as $event => $method) {
-      $this->e->$event[] = array($listener, $method);
+      $this->e->attach($event, array($listener, $method));
     }
   }
 

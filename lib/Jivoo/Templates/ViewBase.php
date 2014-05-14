@@ -80,7 +80,7 @@ abstract class ViewBase {
    * @param Templates $templates Templates module
    */
   public function __construct(Templates $templates, Routing $routing) {
-    $this->m = new Dictionary();
+    $this->m = new Map();
     $this->m->Templates = $templates;
     $this->m->Routing = $routing;
 

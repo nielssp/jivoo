@@ -13,7 +13,7 @@ Lib::import('Jivoo/Models/Encoding');
  * Models module, finds all models in application
  * @package Jivoo\Models
  */
-class Models extends ModuleBase implements IDictionary {
+class Models extends ModuleBase {
   /**
    * @var string[] List of model class names
    */

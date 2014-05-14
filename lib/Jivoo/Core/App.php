@@ -24,7 +24,7 @@ class App {
   private $config = null;
 
   /**
-   * @var PathDictionary Paths
+   * @var PathMap Paths
    */
   private $paths = null;
 
@@ -56,10 +56,10 @@ class App {
   /**
    * @var string[] List of modules to load
    */
-  private $modules = array('Core');
+  private $modules = array('Jivoo/Core');
 
   /**
-   * @var Dictionary Dictionary of modules
+   * @var Map Map of modules
    */
   private $m = null;
 
@@ -115,8 +115,8 @@ class App {
     }
     $this->appConfig = $appConfig;
     $this->events = new Events($this);
-    $this->m = new Dictionary();
-    $this->paths = new PathDictionary(
+    $this->m = new Map();
+    $this->paths = new PathMap(
       dirname($_SERVER['SCRIPT_FILENAME']),
       $appConfig['path']
     );
@@ -200,7 +200,7 @@ class App {
     try {
       return $this->m->$moduleName;
     }
-    catch (DictionaryKeyInvalidException $e) {
+    catch (MapKeyInvalidException $e) {
       return false;
     }
   }

@@ -56,7 +56,7 @@ abstract class WidgetBase implements IHelpable {
    */
   public function __construct(Templates $templates, Routing $routing, $defaultTemplate) {
     $this->template = $defaultTemplate;
-    $this->m = new Dictionary();
+    $this->m = new Map();
     $this->m->Templates = $templates;
     $this->m->Routing = $routing;
     $this->request = $routing->getRequest(); 

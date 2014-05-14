@@ -24,8 +24,8 @@ abstract class ExtensionBase {
   public final function __construct($m, $e, AppConfig $config, Extensions $extensions) {
     $this->config = $config;
     $this->extensions = $extensions;
-    $this->m = new Dictionary($m, true);
-    $this->e = new Dictionary($e, true);
+    $this->m = new Map($m, true);
+    $this->e = new Map($e, true);
     $this->extensionDir = get_class($this);
     
     if (isset($this->m->Routing)) {

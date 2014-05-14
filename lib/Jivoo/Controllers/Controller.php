@@ -3,7 +3,7 @@
  * A controller, the C of MVC
  * @package Jivoo\Controllers
  */
-class Controller implements IHelpable {
+class Controller extends Module implements IHelpable {
   /**
    * @var string Name of controller (without 'Controller'-part)
    */
@@ -87,7 +87,7 @@ class Controller implements IHelpable {
     if ($temp) {
       return;
     }
-    $this->m = new Dictionary();
+    $this->m = new Map();
 
     $this->m->Routing = $routing;
     $this->m->Templates = $templates;

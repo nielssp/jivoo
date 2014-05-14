@@ -5,7 +5,7 @@
  */
 abstract class Helper implements IHelpable {
   /**
-   * @var Dictionary Collection of modules
+   * @var Map Collection of modules
    */
   protected $m = null;
   
@@ -49,7 +49,7 @@ abstract class Helper implements IHelpable {
    * @param Routing $routing Routing module
    */
   public final function __construct(Routing $routing) {
-    $this->m = new Dictionary();
+    $this->m = new Map();
     
     $this->m->Routing = $routing;
 

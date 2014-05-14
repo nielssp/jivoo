@@ -3,7 +3,7 @@
  * A collection of paths
  * @package Core
  */
-class PathDictionary extends Dictionary {
+class PathMap extends Map {
   /**
    * @var string Base path
    */

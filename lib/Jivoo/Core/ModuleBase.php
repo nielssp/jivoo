@@ -42,7 +42,7 @@ abstract class ModuleBase {
    * @param mixed $var,... Additional arguments to relay to init() method
    */
   public final function __construct($modules, App $app) {
-    $this->m = new Dictionary($modules, true);
+    $this->m = new Map($modules, true);
     $this->app = $app;
     $this->config = $app->config[get_class($this)];
 
