@@ -25,7 +25,7 @@ class Controller implements IHelpable {
   protected $request = null;
   
   /**
-   * @var Session Current session
+   * @var SessionStorage Current session
    */
   protected $session = null;
   
