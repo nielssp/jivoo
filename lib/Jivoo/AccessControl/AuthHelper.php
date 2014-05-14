@@ -24,7 +24,7 @@ class AuthHelper extends Helper {
    * Check session for logged in user
    * @return boolean True if logged in, false otherwise
    */
-  protected function checkSession() {
+  private function checkSession() {
     if (isset($this->session['auth_session'])) {
       $sessionId = $this->session['auth_session'];
       $user = $this->userModel->openSession($sessionId);
@@ -47,7 +47,7 @@ class AuthHelper extends Helper {
    * Check cookie for logged in user
    * @return boolean True if logged in, false otherwise
    */
-  protected function checkCookie() {
+  private function checkCookie() {
     if (isset($this->request->cookies['auth_session'])) {
       $sessionId = $this->request->cookies['auth_session'];
       $user = $this->userModel->openSession($sessionId);
