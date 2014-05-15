@@ -26,6 +26,26 @@ return array(
     'Jivoo/Widgets',
   ),
   'listeners' => array(
-    'FancyPermalinkListener'
+    'PageRouting',
+    'PostRouting',
+  ),
+  'defaultConfig' => array(
+    'blog' => array(
+      'fancyPermalinks' => true,
+      'permalink' => '%year%/%month%/%name%',
+      'comments' => array(
+        'sorting' => 'desc',
+        'childSorting' => 'asc',
+        'display' => 'thread',
+        'levelLimit' => 2,
+        'editor' => array(
+          'name' => 'HtmlEditor'
+        ),
+      ),
+      'commentingDefault' => true,
+      'anonymousCommenting' => false,
+      'commentApproval' => false,
+      'editor' => array('name' => 'TinymceEditor'),
+    ),
   ),
 );

@@ -22,6 +22,8 @@ class App implements IEventSubject {
    * @var AppConfig User configuration
    */
   private $config = null;
+  
+  private $defaultConfig = array();
 
   /**
    * @var PathMap Paths
@@ -138,6 +140,8 @@ class App implements IEventSubject {
       $this->sessionPrefix = $appConfig['sessionPrefix'];
     if (isset($appConfig['listeners']))
       $this->listenerNames = $appConfig['listeners'];
+    if (isset($appConfig['defaultConfig']))
+      $this->defaultConfig = $appConfig['defaultConfig'];
 
     $this->config = new AppConfig();
   }
@@ -372,6 +376,8 @@ class App implements IEventSubject {
         'createCrashReports' => true
       ),
     );
+    
+    $this->config->defaults = $this->defaultConfig;
 
     Logger::attachFile(
       $this->p('log', $this->environment . '.log'),

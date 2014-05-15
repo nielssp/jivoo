@@ -12,6 +12,15 @@ class CommentsController extends AppController {
 
   public function add($post) {
     if ($this->Auth->hasPermission('frontend.posts.comments.add')) {
+      $commentValidator = $this->Comment->getValidator();
+      if ($this->config['blog']['anonymousCommenting']) {
+        unset($commentValidator->author->presence);
+        unset($commentValidator->email->presence);
+      }
+      else {
+        $commentValidator->author->presence = true;
+        $commentValidator->email->presence = true;
+      }
       if ($this->request->hasValidData()) {
         $this->newComment = $this->Comment->create(
           $this->request->data['Comment'],
@@ -28,7 +37,7 @@ class CommentsController extends AppController {
         }
         $this->newComment->post = $this->post;
         $this->newComment->ip = $this->request->ip;
-        if ($this->config['Blog']['commentApproval']
+        if ($this->config['blog']['commentApproval']
           AND !$this->Auth->hasPermission('backend.posts.comments.approve')) {
           $this->newComment->approved = false;
         }
