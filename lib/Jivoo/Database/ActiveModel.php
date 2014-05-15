@@ -1,6 +1,6 @@
 <?php
 
-abstract class ActiveModel extends Model implements IActiveModelEvents {
+abstract class ActiveModel extends Model implements IEventListener {
 
   protected $table = null;
 
@@ -25,6 +25,8 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
   protected $getters = array();
 
   protected $setters = array();
+  
+  protected $events = array('beforeSave', 'afterSave', 'beforeValidate', 'afterValidate', 'afterCreate', 'afterLoad', 'beforeDelete', 'install');
 
   /**
    * @var Table
@@ -59,7 +61,8 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
 
   private $cache = array();
   
-  public final function __construct(IDatabase $database) {
+  public final function __construct(App $app, IDatabase $database) {
+    parent::__construct($app);
     $this->database = $database;
     $this->name = preg_replace('/Model$/', '', get_class($this));
     if (!isset($this->table))
@@ -121,6 +124,10 @@ abstract class ActiveModel extends Model implements IActiveModelEvents {
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
       $this->mixinObjects[] = new $mixin($this, $options);
     }
+  }
+  
+  public function getEventHandlers() {
+    return $this->events;
   }
 
   public function getDefaults() {

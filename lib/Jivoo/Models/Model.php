@@ -1,19 +1,7 @@
 <?php
-abstract class Model implements IModel {
+abstract class Model extends Module implements IModel {
   private $iterator = null;
-  private $validator = null;
   private $aiPrimaryKey = null;
-  
-  public function __construct() {
-    $this->validator = new Validator($this);
-    $pk = $this->getSchema()->getPrimaryKey();
-    if (count($pk) == 1) {
-      $pk = $pk[0];
-      $type = $this->getSchema()->$pk;
-      if ($type->isInteger() and $type->autoIncrement)
-        $this->aiPrimaryKey = $pk;
-    }
-  }
 
   public function create($data = array(), $allowedFields = null) {
     return Record::createNew($this, $data, $allowedFields);
@@ -24,6 +12,15 @@ abstract class Model implements IModel {
   }
 
   public function getAiPrimaryKey() {
+    if (!isset($this->aiPrimaryKey)) {
+      $pk = $this->getSchema()->getPrimaryKey();
+      if (count($pk) == 1) {
+        $pk = $pk[0];
+        $type = $this->getSchema()->$pk;
+        if ($type->isInteger() and $type->autoIncrement)
+          $this->aiPrimaryKey = $pk;
+      }
+    }
     return $this->aiPrimaryKey;
   }
 

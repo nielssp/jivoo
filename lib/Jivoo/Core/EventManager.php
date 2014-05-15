@@ -11,34 +11,56 @@ class EventManager {
   private $events = array();
 
   /**
-   * @var object The object that triggers events in this collection
+   * @var IEventSubject The object that triggers events in this collection
   */
-  private $sender = null;
+  private $subject = null;
 
   /**
    * Create a new event collection
-   * @param object $sender The object that triggers events in this collection
+   * @param IEventSubject $subject The object that triggers events in this collection
    */
-  public function __construct($sender) {
-    $this->sender = $sender;
+  public function __construct(IEventSubject $subject) {
+    $this->subject = $subject;
+    foreach ($this->subject->getEvents() as $name) {
+      $this->events[$name] = array();
+    }
   }
-
-  /**
-   * Attach a handler to an event.
-   * @param callback $handler A function of type
-   * `function eventHandler(Event $event)`
-   */
-  public function attach($handler = null) {
-    $backtrace = debug_backtrace();
-    if (isset($backtrace[1]['function'])) {
-      if (!isset($handler)) {
-        $handler = $backtrace[1]['args'][0];
-      }
-      $event = $backtrace[1]['function'];
-      if (!isset($this->events[$event])) {
-        $this->events[$event] = array();
-      }
-      $this->events[$event][] = $handler;
+  
+  public function attachHandler($name, $callback) {
+    if (!isset($this->events[$name]))
+      throw new InvalidEventException(tr(
+        'Subject of class %1 does not have an event called "%2".',
+        get_class($this->subject), $name
+      ));
+    $this->events[$name][] = $callback;
+  }
+  
+  public function attachListener(IEventListener $listener) {
+    foreach ($listener->getEventHandlers() as $name => $method) {
+      if (!is_string($name))
+        $name = $method;
+      $this->attachHandler($name, array($listener, $method));
+    }
+  }
+  
+  public function detachHandler($name, $callback) {
+    if (!isset($this->events[$name]))
+      throw new InvalidEventException(tr(
+        'Subject of class %1 does not have an event called "%2".',
+        get_class($this->subject), $name
+      ));
+    $index = array_search($callback, $this->events[$name], true);
+    if ($index === false)
+      return true;
+    unset($this->events[$name][$index]);
+    return true;
+  }
+  
+  public function detachListener(IEventListener $listener) {
+    foreach ($listener->getEventHandlers() as $name => $method) {
+      if (!is_string($name))
+        $name = $method;
+      $this->detachHandler($name, array($listener, $method));
     }
   }
 
@@ -59,3 +81,5 @@ class EventManager {
     }
   }
 }
+
+class InvalidEventException extends Exception { }

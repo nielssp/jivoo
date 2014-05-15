@@ -24,6 +24,6 @@ class MapIterator implements Iterator {
   }
   
   public function rewind () {
-    reset($this->map)
+    reset($this->map);
   }
 }

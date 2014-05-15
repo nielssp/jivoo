@@ -22,7 +22,7 @@ class MysqlDatabase extends SqlDatabase {
    * @throws DatabaseConnectionFailedException if connection fails
    * @throws DatabaseSelectFailedException if database selection fails
    */
-  public function __construct($options = array()) {
+  protected function init($options = array()) {
     $this->setTypeAdapter(new MysqlTypeAdapter($this));
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];

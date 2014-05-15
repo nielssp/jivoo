@@ -1,5 +1,5 @@
 <?php
-abstract class Module {
+abstract class Module implements IEventSubject {
   // supports events -[and behaviours]
   // no more filemeta on every load?
 
@@ -27,13 +27,18 @@ abstract class Module {
    * @var View|null Current view if available
    */
   protected $view = null;
+  
+  /**
+   * @var string[] List of event names fired by this module
+   */
+  protected $events = array();
 
   private $e;
 
   public function __construct(App $app) {
     $this->app = $app;
     $this->config = $app->config;
-    $this->m = $app->getModules($this->modules);
+    $this->m = array(); //$app->getModules($this->modules);
     if (isset($this->m->Routing)) {
       $this->request = $this->m->Routing->request;
       $this->session = $this->request->session;
@@ -63,17 +68,31 @@ abstract class Module {
     return $this->app->w($path);
   }
 
-  public function addEventHandler($event, $callback) {
-    $this->e->attach($event, $callback);
+  public function attachEventHandler($name, $callback) {
+    $this->e->attachHandler($name, $callback);
   }
 
-  public function addEventListener(IEventListener $listener) {
-    foreach ($listener->getEvents() as $event => $method) {
-      $this->e->attach($event, array($listener, $method));
-    }
+  public function attachEventListener(IEventListener $listener) {
+    $this->e->attachListener($listener);
+  }
+  
+  public function detachEventHandler($name, $callback) {
+    $this->e->detachHandler($name, $callback);
+  }
+  
+  public function detachEventListener(IEventListener $listener) {
+    $this->e->detachListener($listener);
+  }
+  
+  public function getEvents() {
+    return $this->events;
+  }
+  
+  public function hasEvent($name) {
+    return in_array($name, $this->events);
   }
 
-  protected function trigger($event, $eventArgs = null) {
-    $this->e->trigger($event, $eventArgs);
+  public function triggerEvent($name, Event $event = null) {
+    $this->e->trigger($name, $event);
   }
 }

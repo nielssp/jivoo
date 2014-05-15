@@ -1,4 +1,4 @@
 <?php
 interface IEventListener {
-  public function getEvents();
+  public function getEventHandlers();
 }

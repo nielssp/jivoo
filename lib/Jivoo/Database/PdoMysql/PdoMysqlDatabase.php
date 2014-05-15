@@ -16,7 +16,7 @@ class PdoMysqlDatabase extends PdoDatabase {
    * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
    * @throws DatabaseConnectionFailedException if connection fails
    */
-  public function __construct($options = array()) {
+  public function init($options = array()) {
     $this->setTypeAdapter(new MysqlTypeAdapter($this));
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];

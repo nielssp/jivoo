@@ -21,7 +21,7 @@ class Sqlite3Database extends SqlDatabase {
    * 'filename'. 'tablePrefix' is optional.
    * @throws DatabaseConnectionFailedException if connection fails
    */
-  public function __construct($options = array()) {
+  public function init($options = array()) {
     $this->setTypeAdapter(new  SqliteTypeAdapter($this));
     if (isset($options['tablePrefix']))
       $this->tablePrefix = $options['tablePrefix'];

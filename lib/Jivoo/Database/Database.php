@@ -128,7 +128,7 @@ class Database extends ModuleBase implements IDatabase {
       Lib::import('Jivoo/Database/' . $this->driver);
       try {
         $class = $this->driver . 'Database';
-        $this->connection = new $class($this->config);
+        $this->connection = new $class($this->app, $this->config);
       }
       catch (DatabaseConnectionFailedException $exception) {
         /** @todo Do something ... here */
@@ -238,7 +238,7 @@ class Database extends ModuleBase implements IDatabase {
    */
   public function addActiveModel($class) {
     if (is_subclass_of($class, 'ActiveModel')) {
-      $model = new $class($this);
+      $model = new $class($this->app, $this);
       $this->m->Models->setModel($class, $model);
       $this->tables[$class] = $model;
       return true;

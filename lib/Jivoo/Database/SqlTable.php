@@ -20,11 +20,11 @@ class SqlTable extends Table {
    * @param SqlDatabase $database Owner database
    * @param string $table Table name (without prefix)
    */
-  public function __construct(SqlDatabase $database, $table, ISchema $schema) {
+  public function __construct(App $app, SqlDatabase $database, $table, ISchema $schema) {
     $this->owner = $database;
     $this->name = $table;
     $this->schema = $schema;
-    parent::__construct();
+    parent::__construct($app);
   }
 
   public function getName() {

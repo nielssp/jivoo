@@ -3,7 +3,15 @@
  * A generic migratable database
  * @package Jivoo\Database
  */
-abstract class MigratableDatabase implements IDatabase, IMigratable {
+abstract class MigratableDatabase extends Module implements IDatabase, IMigratable {
+  
+  public final function __construct(App $app, $options = array()) {
+    parent::__construct($app);
+    $this->init($options);
+  }
+  
+  protected abstract function init($options = array());
+  
   /**
    * Call migration method
    * @param Schema $schema Table schema
