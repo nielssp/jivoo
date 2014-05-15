@@ -10,7 +10,9 @@
  *
  * @package Jivoo\AccessControl
  */
-class AccessControl extends ModuleBase {
+class AccessControl extends LoadableModule {
+  
+  protected $modules = array('Routing', 'Helpers', 'Models');
   
   /**
    * @var string[] List of supported hash types

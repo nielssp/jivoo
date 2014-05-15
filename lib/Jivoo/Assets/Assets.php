@@ -10,7 +10,10 @@
  * 
  * @package Jivoo\Assets
  */
-class Assets extends ModuleBase {
+class Assets extends LoadableModule {
+  
+  protected $modules = array('Routing');
+  
   /**
    * @var string Document root
    */

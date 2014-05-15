@@ -4,6 +4,7 @@ abstract class LoadableModule extends Module {
 
   public final function __construct(App $app) {
     parent::__construct($app);
+    $this->config = $this->config[get_class($this)];
     $this->init();
   }
 
@@ -21,7 +22,7 @@ abstract class LoadableModule extends Module {
    */
   public function p($key, $path = null) {
     if (isset($path))
-      return $this->p($key, $path);
-    return $this->p(get_class($this), $key);
+      return parent::p($key, $path);
+    return parent::p(get_class($this), $key);
   }
 }

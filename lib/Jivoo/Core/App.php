@@ -12,7 +12,7 @@
  * @property-read array $appConfig Application configuration
  * @property-read string $sessionPrefix Application session prefix
  */
-class App {
+class App implements IEventSubject {
   /**
    * @var array Application configuration
    */
@@ -59,6 +59,15 @@ class App {
   private $modules = array('Jivoo/Core');
 
   /**
+   * @var string[] List of modules to import and load
+   */
+  private $import = array('Jivoo/Core');
+  
+  private $listenerNames = array();
+  
+  private $listeners = array();
+
+  /**
    * @var Map Map of modules
    */
   private $m = null;
@@ -72,36 +81,13 @@ class App {
    * @var string Application session prefix
    */
   private $sessionPrefix = 'jivoo_';
-
-  /* EVENTS BEGIN */
-  /**
-   * @var Events Event handling object
-   */
-  private $events = null;
-
-  /**
-   * Event, triggered each time a module is loaded
-   * @param callback $h Attach an event handler
-   * @uses ModuleLoadedEventArgs
-   */
-  public function onModuleLoaded($h) {
-    $this->events->attach($h);
-  }
-  /**
-   * Event, triggered when all modules are loaded
-   * @param callback $h Attach an event handler
-   */
-  public function onModulesLoaded($h) {
-    $this->events->attach($h);
-  }
-  /**
-   * Event, triggered when ready to render page
-   * @param callback $h Attach an event handler
-   */
-  public function onRender($h) {
-    $this->events->attach($h);
-  }
-  /* EVENTS END */
+  
+  private $events = array(
+    'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
+    'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit'
+  );
+  
+  private $e = null;
 
   /**
    * Create application
@@ -114,7 +100,7 @@ class App {
       throw new Exception('Application path not set.');
     }
     $this->appConfig = $appConfig;
-    $this->events = new Events($this);
+    $this->e = new EventManager($this);
     $this->m = new Map();
     $this->paths = new PathMap(
       dirname($_SERVER['SCRIPT_FILENAME']),
@@ -144,10 +130,14 @@ class App {
       $this->minPhpVersion = $appConfig['minPhpVersion'];
     if (isset($appConfig['modules']))
       $this->modules = $appConfig['modules'];
+    if (isset($appConfig['import']))
+      $this->import = $appConfig['import'];
     if (!isset($appConfig['defaultLanguage']))
       $this->appConfig['defaultLanguage'] = 'en';
     if (isset($appConfig['sessionPrefix']))
       $this->sessionPrefix = $appConfig['sessionPrefix'];
+    if (isset($appConfig['listeners']))
+      $this->listenerNames = $appConfig['listeners'];
 
     $this->config = new AppConfig();
   }
@@ -170,6 +160,8 @@ class App {
       case 'basePath':
       case 'entryScript':
         return $this->$property;
+      case 'eventManager':
+        return $this->e;
     }
   }
 
@@ -184,7 +176,35 @@ class App {
         $this->$property = $value;
     }
   }
+  
+  public function getEvents() {
+    return $this->events;
+  }
 
+  public function attachEventHandler($name, $callback) {
+    $this->e->attachHandler($name, $callback);
+  }
+  
+  public function attachEventListener(IEventListener $listener) {
+    $this->e->attachListener($listener);
+  }
+  
+  public function detachEventHandler($name, $callback) {
+    $this->e->detachHandler($name, $callback);
+  }
+  
+  public function detachEventListener(IEventListener $listener) {
+    $this->e->detachListener($listener);
+  }
+  
+  public function hasEvent($name) {
+    return in_array($name, $this->events);
+  }
+  
+  private function triggerEvent($name, Event $event = null) {
+    $this->e->trigger($name, $event);
+  }
+  
   /**
    * Request a module
    * @param string $module Module name
@@ -226,6 +246,13 @@ class App {
     }
     return $this->basePath . '/' . $path;
   }
+  
+  public function getModules($modules) {
+    foreach ($modules as $name) {
+      $this->loadModule($name);
+    }
+    return $this->m;
+  }
 
   /**
    * Load a module
@@ -235,50 +262,23 @@ class App {
    * @throws ModuleInvalidException if module isn't valid
    * @throws ModuleMissingDependencyException if module is missing dependencies
    */
-  public function loadModule($module) {
-    $segments = explode('/', $module);
-    $moduleName = $segments[count($segments) - 1];
-    if (!isset($this->m->$moduleName)) {
-      if (!Lib::classExists($moduleName, false)) {
-        if (!Lib::import($module)) {
-          throw new ModuleNotFoundException(
-            tr('The "%1" module could not be found', $module)
-          );
-        }
-        if (!Lib::classExists($moduleName)) {
-          throw new ModuleInvalidException(
-            tr('The "%1" module does not have a main class', $module)
-          );
-        }
-      }
-      $info = Lib::getModuleInfo($module);
-      if (!$info) {
-        throw new ModuleInvalidException(
-          tr('The "%1" module is invalid', $module)
+  public function loadModule($name) {
+    if (!isset($this->m->$name)) {
+      $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
+      if (!Lib::classExists($name)) {
+        throw new ModuleNotFoundException(
+          tr('The "%1" module could not be found', $name)
         );
       }
-      $dependencies = $info['dependencies']['modules'];
-      $modules = array();
-      foreach ($dependencies as $dependency => $versionInfo) {
-        try {
-          $dependencyObject = $this->loadModule($dependency);
-          $modules[get_class($dependencyObject)] = $dependencyObject;
-        }
-        catch (ModuleNotFoundException $e) {
-          throw new ModuleMissingDependencyException(tr(
-            'The "%1" module depends on the "%2" module, which could not be found',
-            $module, $dependency
-          ));
-        }
+      if (!is_subclass_of($name, 'LoadableModule')) {
+        throw new ModuleInvalidException(
+          tr('The "%1" module does not extend "%2"', $name, 'LoadableModule')
+        );
       }
-      $this->paths->$moduleName = LIB_PATH . '/' . implode('/', $segments);
-      $this->m->$moduleName = new $moduleName($modules, $this);
-      $this->events->trigger(
-        'onModuleLoaded',
-        new ModuleLoadedEventArgs($moduleName, $this->m->$moduleName)
-      );
+      $this->m->$name = new $name($this);
+      $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
     }
-    return $this->m->$moduleName;
+    return $this->m->$name;
   }
   
   /**
@@ -383,12 +383,34 @@ class App {
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
+    
+    // Import modules
+    $this->triggerEvent('beforeImportModules');
+    $modules = array();
+    foreach ($this->import as $module) {
+      Lib::import($module);
+      $segments = explode('/', $module);
+      $name = $segments[count($segments) - 1];
+      $this->paths->$name = LIB_PATH . '/' . implode('/', $segments);
+      $modules[] = $name;
+    }
+    $this->triggerEvent('afterImportModules');
+    
+    // Load application listeners
+    foreach ($this->listenerNames as $listener) {
+      if (!is_subclass_of($listener, 'AppListener'))
+        throw new Exception(tr('Class "%1" must extend "%1"', $listener, 'AppListener'));
+      $this->attachEventListener(new $listener($this));
+    }
 
-    foreach ($this->modules as $module) {
+    // Load modules
+    $this->triggerEvent('beforeLoadModules');
+    foreach ($modules as $module) {
       $object = $this->loadModule($module);
     }
-    $this->events->trigger('onModulesLoaded');
-    $this->events->trigger('onRender');
+    $this->triggerEvent('afterLoadModules');
+    
+    $this->triggerEvent('afterInit');
   }
   
   /**
@@ -401,12 +423,6 @@ class App {
 }
 
 /**
- * Thrown when a requested module is not loaded
- * @package Core
- */
-class ModuleNotLoadedException extends Exception {
-}
-/**
  * Thrown when a module does not exist
  * @package Core
  */
@@ -418,33 +434,22 @@ class ModuleNotFoundException extends Exception {
  */
 class ModuleInvalidException extends Exception {
 }
-/**
- * Thrown when a module is missing dependencies
- * @package Core
- */
-class ModuleMissingDependencyException extends ModuleNotFoundException {
-}
-/**
- * Thrown when a module is blacklisted
- * @package Core
- */
-class ModuleBlacklistedException extends Exception {
-}
 
 /**
- * EventArgs to be sent with the onModuleLoaded event
- * @property-read string $module Module name
- * @property-read ModuleBase $object Module object
- * @package Core
+ * Event sent before and after a module has been loaded
+ * @property-read string $name Module name
+ * @property-read bool $loaded Whether or not the module has been loaded 
+ * @property-read LoadableModule|null $module Module object if loaded
  */
-class ModuleLoadedEventArgs extends EventArgs {
-  /**
-   * @var string Module name
-   */
+class LoadModuleEvent extends Event {
+  protected $name;
+  protected $loaded = false;
   protected $module;
-
-  /**
-   * @var ModuleBase Module object
-   */
-  protected $object;
+  public function __construct($sender, $name, LoadableModule $module = null) {
+    $this->name = $name;
+    if (isset($module)) {
+      $this->loaded = true;
+      $this->module = $module;
+    }
+  }
 }

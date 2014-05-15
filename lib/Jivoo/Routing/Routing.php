@@ -63,7 +63,7 @@
  * 
  * @package Jivoo\Routing
  */
-class Routing extends ModuleBase {
+class Routing extends LoadableModule {
   /**
    * @var Route[] Routing configuration
    */
@@ -99,34 +99,11 @@ class Routing extends ModuleBase {
    */
   private $errorRoute = null;
 
-  /* EVENTS BEGIN */
-  /**
-   * @var Events Event handling object
-   */
-  private $events;
-
   private $etags = false;
   
-  /**
-   * Event, triggered when ready to render page
-   * @param callback $h Attach an event handler
-   */
-  public function onRendering($h) {
-    $this->events->attach($h);
-  }
-  
-  /**
-   * Event, triggered when page has rendered
-   * @param callback $h Attach an event handler
-   */
-  public function onRendered($h) {
-    $this->events->attach($h);
-  }
-  /* EVENTS END */
+  protected $events = array('beforeRender', 'afterRender');
 
   protected function init() {
-    $this->events = new Events($this);
-    
     // Set default settings
     $this->config->defaults = array(
       'rewrite' => false,
@@ -190,13 +167,12 @@ class Routing extends ModuleBase {
       $this->setRoot($this->config['root'], 10);
     }
 
-    $this->app->onModuleLoaded(array($this, 'addControllersModule'));
-    $this->app->onRender(array($this, 'findRoute'));
+    $this->app->attachEventHandler('afterLoadModule', array($this, 'addControllersModule'));
+    $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
   }
   
-  public function addControllersModule($sender, ModuleLoadedEventArgs $eventArgs) {
-    if ($eventArgs->module == 'Controllers') {
-      $this->controllers = $eventArgs->object;
+  public function addControllersModule(LoadModuleEvent $event) {
+    if ($event->name == 'Controllers') {
       $this->drawRoutes();
     }
   }
@@ -620,11 +596,11 @@ class Routing extends ModuleBase {
    * @param string $prefix Prefix...
    */
   public function autoRoute($controller, $action = null, $prefix = '') {
-    if (!isset($this->controllers)) {
-      throw new ModuleNotLoadedException(tr('Missing controllers module'));
+    if (!isset($this->m->Controllers)) {
+      throw new ModuleNotFoundException(tr('Missing module: "%1"', 'Controllers'));
     }
     if (isset($action)) {
-      $class = $this->controllers->getClass($controller);
+      $class = $this->m->Controllers->getClass($controller);
       if (!$class) {
         throw new Exception(tr('Invalid controller: %1', $controller));
       }
@@ -645,12 +621,12 @@ class Routing extends ModuleBase {
         while ($parent !== false AND $parent != 'Controller'
           AND $parent != 'AppController') {
           $name = str_replace($parent, '', $class);
-          $controller = '/' . $this->controllers->getControllerPath($name) . $controller;
+          $controller = '/' . $this->m->Controllers->getControllerPath($name) . $controller;
           $class = $parent;
           $parent = get_parent_class($class);
         }
         $name = str_replace('Controller', '', $class);
-        $controller = $prefix . $this->controllers->getControllerPath($name) . $controller;
+        $controller = $prefix . $this->m->Controllers->getControllerPath($name) . $controller;
         $paction = '/';
       }
       
@@ -670,7 +646,7 @@ class Routing extends ModuleBase {
       }
     }
     else {
-      $actions = $this->controllers->getActions($controller);
+      $actions = $this->m->Controllers->getActions($controller);
       if ($actions === false) {
         throw new Exception(tr('Invalid controller: %1', $controller));
       }
@@ -872,10 +848,10 @@ class Routing extends ModuleBase {
    * @throws InvalidRouteException if no route selected or no controller selected
    */
   public function findRoute() {
-    $this->events->trigger('onRendering');
+    $this->triggerEvent('beforeRender');
 
-    if (!isset($this->controllers)) {
-      throw new ModuleNotLoadedException(tr('Missing controllers module'));
+    if (!isset($this->m->Controllers)) {
+      throw new ModuleNotFoundException(tr('Missing module: "%1"', 'Controllers'));
     }
     
     if (!isset($this->selection['route'])) {
@@ -926,9 +902,9 @@ class Routing extends ModuleBase {
   }
 
   public function callAction($controllerName, $action, $parameters = array()) {
-    if (!isset($this->controllers))
-      throw new ModuleNotLoadedException(tr('Missing controllers module'));
-    $controller = $this->controllers->getController($controllerName);
+    if (!isset($this->m->Controllers))
+      throw new ModuleNotFoundException(tr('Missing module: "%1"', 'Controllers'));
+    $controller = $this->m->Controllers->getController($controllerName);
     if (!isset($controller))
       throw new InvalidRouteException(tr('Invalid controller: %1', $controllerName));
     if (!is_callable(array($controller, $action))) {
@@ -999,7 +975,7 @@ class Routing extends ModuleBase {
     else {
       echo $body;
     }
-    $this->events->trigger('onRendered');
+    $this->triggerEvent('afterRender');
     $this->app->stop();
   }
 

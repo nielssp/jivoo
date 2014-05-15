@@ -11,8 +11,11 @@
  * Widget system module
  * @package Jivoo\Widgets
  */
-class Widgets extends ModuleBase {
-  /**
+class Widgets extends LoadableModule {
+  
+  protected $modules = array('Templates', 'Routing', 'Helpers', 'Models');
+  
+    /**
    * @var array Associative array of widget names and objects
    */
   private $loaded = array();
@@ -51,7 +54,7 @@ class Widgets extends ModuleBase {
       $this->p('templates/text-widget.html.php')
     ));
     
-    $this->m->Routing->onRendering(array($this, 'renderWidgets'));
+    $this->m->Routing->attachEventHandler('beforeRender', array($this, 'renderWidgets'));
     
 //     $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
 //       ->item(tr('Widgets'), null, 4);

@@ -8,6 +8,5 @@
  * Jivoo Core
  * @package Jivoo\Core
  */
-class Core extends ModuleBase {
-  protected function init() {}
+class Core extends LoadableModule {
 }

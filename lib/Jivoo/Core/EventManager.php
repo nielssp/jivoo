@@ -14,52 +14,59 @@ class EventManager {
    * @var IEventSubject The object that triggers events in this collection
   */
   private $subject = null;
+  
+  private $subjectClass = null;
+  
+  private $parent = null;
 
   /**
    * Create a new event collection
    * @param IEventSubject $subject The object that triggers events in this collection
    */
-  public function __construct(IEventSubject $subject) {
+  public function __construct(IEventSubject $subject, EventManager $parent = null) {
     $this->subject = $subject;
-    foreach ($this->subject->getEvents() as $name) {
-      $this->events[$name] = array();
-    }
+    $this->subjectClass = get_class($subject);
+    $this->parent = $parent;
   }
   
   public function attachHandler($name, $callback) {
     if (!isset($this->events[$name]))
-      throw new InvalidEventException(tr(
-        'Subject of class %1 does not have an event called "%2".',
-        get_class($this->subject), $name
-      ));
+      $this->events[$name] = array();
     $this->events[$name][] = $callback;
   }
   
   public function attachListener(IEventListener $listener) {
     foreach ($listener->getEventHandlers() as $name => $method) {
-      if (!is_string($name))
+      if (!is_string($name)) {
         $name = $method;
+        if (strpos($method, '.') !== false) {
+          $splits = explode('.', $method);
+          $method = $splits[count($splits) - 1];
+        }
+      }
       $this->attachHandler($name, array($listener, $method));
     }
   }
   
   public function detachHandler($name, $callback) {
     if (!isset($this->events[$name]))
-      throw new InvalidEventException(tr(
-        'Subject of class %1 does not have an event called "%2".',
-        get_class($this->subject), $name
-      ));
+      return false;
     $index = array_search($callback, $this->events[$name], true);
     if ($index === false)
-      return true;
+      return false;
     unset($this->events[$name][$index]);
     return true;
   }
   
   public function detachListener(IEventListener $listener) {
     foreach ($listener->getEventHandlers() as $name => $method) {
-      if (!is_string($name))
+      if (!is_string($name)) {
         $name = $method;
+        if (strpos($method, '.') !== false) {
+          $splits = explode('.', $method);
+          $method = $splits[count($splits) - 1];
+        }
+      }
       $this->detachHandler($name, array($listener, $method));
     }
   }
@@ -70,9 +77,11 @@ class EventManager {
    * @param mixed $eventArgs Event arguments
    */
   public function trigger($name, Event $event = null) {
+    if (!isset($event))
+      $event = new Event($this->subject);
+    if (isset($this->parent))
+      $this->parent->trigger($this->subjectClass . '.' . $name, $event);
     if (isset($this->events[$name])) {
-      if (!isset($event))
-        $event = new Event($this->sender);
       foreach ($this->events[$name] as $function) {
         call_user_func($function, $event);
         if ($event->stopped)
@@ -81,5 +90,3 @@ class EventManager {
     }
   }
 }
-
-class InvalidEventException extends Exception { }

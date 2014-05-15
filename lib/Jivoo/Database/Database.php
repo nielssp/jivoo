@@ -12,7 +12,10 @@ Lib::import('Jivoo/Database/Mixins');
  * Database module
  * @package Jivoo\Database
  */
-class Database extends ModuleBase implements IDatabase {
+class Database extends LoadableModule implements IDatabase {
+  
+  protected $modules = array('Routing', 'Templates', 'Models', 'Helpers', 'Controllers', 'Setup');
+  
   /**
    * @var string Driver name
    */
@@ -128,6 +131,16 @@ class Database extends ModuleBase implements IDatabase {
       Lib::import('Jivoo/Database/' . $this->driver);
       try {
         $class = $this->driver . 'Database';
+        if (!Lib::classExists($class))
+          throw new InvalidDatabaseDriverException(tr(
+            'Database driver "%1" could not be loaded because the class "%2" does not exist',
+            $this->driver, $class
+          ));
+        if (!is_subclass_of($class, 'MigratableDatabase'))
+          throw new InvalidDatabaseDriverException(tr(
+            'Class "%1" must extend class "%2"',
+            $class, 'MigratableDatabase'
+          ));
         $this->connection = new $class($this->app, $this->config);
       }
       catch (DatabaseConnectionFailedException $exception) {
@@ -160,7 +173,7 @@ class Database extends ModuleBase implements IDatabase {
       $this->addActiveModel($class);
     }
     
-    $this->m->Routing->onRendering(array($this, 'installModels'));
+    $this->m->Routing->attachEventHandler('beforeRender', array($this, 'installModels'));
   }
   
   public function installModels($caller = null, $eventArgs = null) {
@@ -314,3 +327,5 @@ class Database extends ModuleBase implements IDatabase {
   }
 
 }
+
+class InvalidDatabaseDriverException extends Exception { }

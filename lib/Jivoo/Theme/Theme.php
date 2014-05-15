@@ -9,8 +9,10 @@
  * Class for loading and managing themes
  * @package Jivoo\Theme
  */
-class Theme extends ModuleBase {
-
+class Theme extends LoadableModule {
+  
+  protected $modules = array('Templates', 'Assets');
+  
   /**
    * @var string The current theme
    */

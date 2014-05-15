@@ -4,13 +4,15 @@
 // Description    : The Jivoo extension system
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates
-//                  Jivoo/Authentication
 
 /**
  * Extension system
  * @package Jivoo\Extensions
  */
-class Extensions extends ModuleBase {
+class Extensions extends LoadableModule {
+  
+  protected $modules = array('Database', 'Routing', 'Templates');
+  
   private $info = array();
   private $installed = array();
 
@@ -39,7 +41,7 @@ class Extensions extends ModuleBase {
 //       ->item(tr('Extensions'), null, 2);
 
     // Load installed extensions when all modules are loaded and initialized
-    $this->app->onModulesLoaded(array($this, 'loadExtensions'));
+    $this->app->attachEventHandler('afterLoadModules', array($this, 'loadExtensions'));
   }
 
   public function loadExtensions() {

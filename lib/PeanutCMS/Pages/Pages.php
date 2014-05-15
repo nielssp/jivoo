@@ -11,7 +11,7 @@
  * Static pages
  * @package PeanutCMS\Pages
  */
-class Pages extends ModuleBase {
+class Pages extends LoadableModule {
 
   protected function init() {
     $pagesEncoder = new HtmlEncoder();

@@ -9,9 +9,9 @@
  * Setup module.
  * @package Jivoo\Setup
  */
-class Setup extends ModuleBase {
-  protected function init() {
-  }
+class Setup extends LoadableModule {
+  
+  protected $modules = array('Controllers', 'Routing', 'Templates', 'Assets');
 
   /**
    * Enter a setup controller and execute an action. Will add setup templates

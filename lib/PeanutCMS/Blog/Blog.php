@@ -11,7 +11,7 @@
  * Class for working with blog posts
  * @package PeanutCMS\Blog
  */
-class Blog extends ModuleBase {
+class Blog extends LoadableModule {
 
   protected function init() {
 

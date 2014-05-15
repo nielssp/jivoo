@@ -13,8 +13,9 @@ Lib::import('Jivoo/Models/Encoding');
  * Models module, finds all models in application
  * @package Jivoo\Models
  */
-class Models extends ModuleBase {
-  /**
+class Models extends LoadableModule {
+  
+    /**
    * @var string[] List of model class names
    */
   private $modelClasses = array();

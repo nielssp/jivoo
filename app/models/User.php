@@ -1,5 +1,9 @@
 <?php
-class User extends ActiveModel {
+class User extends ActiveModel implements IUserModel {
+  
+  protected $mixins = array(
+    'Timestamps'
+  );
 
   protected $hasMany = array(
     'sessions' => 'Session'
@@ -27,8 +31,6 @@ class User extends ActiveModel {
       ),
     ),
   );
-  
-  protected $mixins = array('Timestamps');
 
   protected $labels = array(
     'username' => 'Username',
@@ -41,9 +43,6 @@ class User extends ActiveModel {
     'confirmPassword'
   );
 
-  protected $defaults = array(
-  );
-
   public function recordHasPermission(ActiveRecord $record, $key) {
     $group = $record->group;
     return isset($group) and $group->hasPermission($key);
@@ -53,5 +52,37 @@ class User extends ActiveModel {
     if ($record->hasChanged('password'))
       return $record->password == $record->confirmPassword;
     return true;
+  }
+  
+  public function createSession(ActiveRecord $user, $validUntil) {
+    $session = $user->sessions->create();
+    $session->id = AccessControl::genUid();
+    $session->validUntil = $validUntil;
+    $session->save();
+    return $session->id;
+  }
+
+  
+  public function openSession($sessionId) {
+    $session = $this->getDatabase()->Session->find($sessionId);
+    if ($session) {
+      if (!$session->hasExpired())
+        return $session->user;
+      $session->delete();
+    }
+    return null;
+  }
+  
+  public function renewSession($sessionId, $validUntil) {
+    $session = $this->getDatabase()->Session->find($sessionId);
+    if ($session) {
+      $session->validUntil = $validUntil;
+      $session->save();
+    }
+  }
+
+  
+  public function deleteSession($sessionId) {
+    $this->getDatabase()->Session->find($sessionId)->delete();
   }
 }

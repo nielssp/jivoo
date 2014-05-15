@@ -10,7 +10,8 @@
  * @property HtmlEditor $HtmlEditor A HTML editor
  * @property TextEditor $TextEditor A simpler text editor
  */
-class Editors extends ModuleBase {
+class Editors extends LoadableModule {
+  
   /**
    * @var array Associative array of editor names and editor objects
    */

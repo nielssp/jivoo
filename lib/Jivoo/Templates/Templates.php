@@ -10,7 +10,10 @@
  * @package Jivoo\Templates
  * @property-read View $view The current view
  */
-class Templates extends ModuleBase {
+class Templates extends LoadableModule {
+  
+  protected $modules = array('Routing', 'Assets', 'Helpers');
+  
   protected function init() {
     $this->config->defaults = array(
       'title' => $this->app->name,

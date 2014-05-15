@@ -13,9 +13,11 @@
  * @property-read JsonHelper $Json JSON helper
  * @property-read FormHelper $Form Form helper
  */
-class Helpers extends ModuleBase {
+class Helpers extends LoadableModule {
   
-  /**
+  protected $modules = array('Routing', 'Models');
+  
+    /**
    * @var array Associative array of helper names and objects
    */
   private $helperObjects = array();

@@ -38,7 +38,7 @@ abstract class Module implements IEventSubject {
   public function __construct(App $app) {
     $this->app = $app;
     $this->config = $app->config;
-    $this->m = array(); //$app->getModules($this->modules);
+    $this->m = $app->getModules($this->modules);
     if (isset($this->m->Routing)) {
       $this->request = $this->m->Routing->request;
       $this->session = $this->request->session;
@@ -46,7 +46,7 @@ abstract class Module implements IEventSubject {
     if (isset($this->m->Templates))
       $this->view = $this->m->Templates->view;
 
-    $this->e = new EventManager($this);
+    $this->e = new EventManager($this, $this->app->eventManager);
   }
 
   /**

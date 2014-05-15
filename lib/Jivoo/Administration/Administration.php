@@ -9,7 +9,10 @@
  * Administration module
  * @package Jivoo\Administration
  */
-class Administration extends ModuleBase {
+class Administration extends LoadableModule {
+  
+  protected $modules = array('Templates');
+  
   protected function init() {
     
   }

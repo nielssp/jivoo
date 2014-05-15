@@ -11,8 +11,10 @@
  * directory (and subdirectories). 
  * @package Jivoo\Controllers
  */
-class Controllers extends ModuleBase {
-
+class Controllers extends LoadableModule {
+  
+  protected $modules = array('Routing', 'Templates', 'Helpers', 'Models');
+  
   /**
    * @var array An associative array of controller names and associated class
    * names

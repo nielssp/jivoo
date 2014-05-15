@@ -8,7 +8,7 @@ return array(
   'minPhpVersion' => '5.2.0',
   'sessionPrefix' => 'jivoo_',
   'extensions' => array('Jquery', 'JqueryHotkeys', 'JqueryUi', 'Tinymce', 'BasicWidgets', 'Html5shiv', 'Respond'),
-  'modules' => array(
+  'import' => array(
     'Jivoo/Core',
     'Jivoo/Routing',
     'Jivoo/Assets',
@@ -17,16 +17,15 @@ return array(
     'Jivoo/Setup',
     'Jivoo/Models', 
     'Jivoo/Editors',
-    'Jivoo/Shadow',
     'Jivoo/Database',
-    'Jivoo/Authentication',
     'Jivoo/Helpers',
+    'Jivoo/AccessControl',
     'Jivoo/Administration',
     'Jivoo/Theme',
     'Jivoo/Extensions',
     'Jivoo/Widgets',
-    'PeanutCMS/Backend',
-    'PeanutCMS/Pages',
-    'PeanutCMS/Blog',
+  ),
+  'listeners' => array(
+    'FancyPermalinkListener'
   ),
 );
