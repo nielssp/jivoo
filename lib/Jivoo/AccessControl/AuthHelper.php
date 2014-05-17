@@ -20,6 +20,10 @@ class AuthHelper extends Helper {
       or $this->checkCookie();
   }
   
+  public function isAllowed() {
+    return false;
+  }
+  
   /**
    * Check session for logged in user
    * @return boolean True if logged in, false otherwise

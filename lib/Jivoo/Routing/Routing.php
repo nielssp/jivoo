@@ -101,7 +101,7 @@ class Routing extends LoadableModule {
 
   private $etags = false;
   
-  protected $events = array('beforeRender', 'afterRender');
+  protected $events = array('beforeRender', 'afterRender', 'beforeRedirect');
 
   protected function init() {
     // Set default settings
@@ -565,6 +565,7 @@ class Routing extends LoadableModule {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function redirect($route = null) {
+    $this->triggerEvent('beforeRedirect', new RedirectEvent($this, $route, false));
     Http::redirect(Http::SEE_OTHER, $this->getLink($route));
   }
 
@@ -573,6 +574,7 @@ class Routing extends LoadableModule {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function moved($route = null) {
+    $this->triggerEvent('beforeRedirect', new RedirectEvent($this, $route, true));
     Http::redirect(Http::MOVED_PERMANENTLY, $this->getLink($route));
   }
 
@@ -1018,5 +1020,15 @@ class ResponseOverrideException extends Exception {
 
   function getResponse() {
     return $this->response;
+  }
+}
+
+class RedirectEvent extends Event {
+  protected $route;
+  protected $moved;
+  public function __construct($sender, $route, $moved) {
+    parent::__construct($sender);
+    $this->route = $route;
+    $this->moved = $moved;
   }
 }

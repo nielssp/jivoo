@@ -6,14 +6,19 @@ class CommentsController extends AppController {
   
   protected $models = array('Post', 'Comment');
 
+  public function before() {
+    parent::before();
+    $this->config = $this->config['blog'];
+  }
+
   public function index($post) {
-    $this->render('not-implemented.html');
+    return $this->render('not-implemented.html');
   }
 
   public function add($post) {
-    if ($this->Auth->hasPermission('frontend.posts.comments.add')) {
+    if ($this->Auth->isAllowed('frontend.posts.comments.add')) {
       $commentValidator = $this->Comment->getValidator();
-      if ($this->config['blog']['anonymousCommenting']) {
+      if ($this->config['anonymousCommenting']) {
         unset($commentValidator->author->presence);
         unset($commentValidator->email->presence);
       }
@@ -37,8 +42,8 @@ class CommentsController extends AppController {
         }
         $this->newComment->post = $this->post;
         $this->newComment->ip = $this->request->ip;
-        if ($this->config['blog']['commentApproval']
-          AND !$this->Auth->hasPermission('backend.posts.comments.approve')) {
+        if ($this->config['commentApproval']
+          AND !$this->Auth->isAllowed('backend.posts.comments.approve')) {
           $this->newComment->approved = false;
         }
         else {

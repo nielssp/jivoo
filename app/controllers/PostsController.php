@@ -9,6 +9,7 @@ class PostsController extends AppController {
   protected $models = array('User', 'Group', 'Post', 'Comment', 'Tag');
 
   public function before() {
+    parent::before();
     $this->config = $this->config['blog'];
   }
 
