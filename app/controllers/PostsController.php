@@ -9,7 +9,7 @@ class PostsController extends AppController {
   protected $models = array('User', 'Group', 'Post', 'Comment', 'Tag');
 
   public function before() {
-    $this->config = $this->config['Posts'];
+    $this->config = $this->config['blog'];
   }
 
   public function index() {

@@ -4,9 +4,11 @@
  * @package PeanutCMS\Posts
  * @property-read ActiveModel $Post Post model
  */
-class RecentPostsWidget extends WidgetBase {
+class RecentPostsWidget extends Widget {
   
   protected $models = array('Post');
+  
+  protected $helpers = array('Html');
   
   public function getDefaultTitle() {
     return tr('Recent posts');

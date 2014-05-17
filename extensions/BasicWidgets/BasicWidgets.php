@@ -9,14 +9,12 @@
 class BasicWidgets extends ExtensionBase {
   protected function init() {
     $this->m->Widgets->register(new RecentPostsWidget(
-      $this->m->Templates,
-      $this->m->Routing,
+      $this->app,
       $this->p('templates/recent-posts-widget.html.php')
     ));
 
     $this->m->Widgets->register(new RecentCommentsWidget(
-      $this->m->Templates,
-      $this->m->Routing,
+      $this->app,
       $this->p('templates/recent-comments-widget.html.php')
     ));
   }

@@ -3,7 +3,22 @@
  * Widget base class
  * @package PeanutCMS\Widgets
  */
-abstract class WidgetBase implements IHelpable {
+abstract class Widget extends Module {
+  protected $modules = array('Helpers', 'Models');
+  /**
+   * @var string[] A list of other helpers needed by this helper
+   */
+  protected $helpers = array();
+  
+  /**
+   * @var string[] A list of models needed by this helper
+   */
+  protected $models = array();
+
+  /**
+   * @var array An associative array of model names and objects
+   */
+  private $modelObjects = array();
   /**
    * @var array Associative array of widget data
    */
@@ -20,47 +35,20 @@ abstract class WidgetBase implements IHelpable {
   private $default = true;
   
   /**
-   * @var Dictionary Collection of modules
-   */
-  protected $m = null;
-
-  /**
-   * @var string[] List of helpers needed by controller
-   */
-  protected $helpers = array('Html');
-
-  /**
-   * @var string[] List of models needed by controller
-   */
-  protected $models = array();
-  
-  /**
-   * @var array Associative array of model names and {@see Model} objects
-   */
-  private $modelObjects = array();
-  
-  /**
-   * @var Request Current request
-   */
-  protected $request = null;
-  
-  /**
-   * @var Session Current session
-   */
-  protected $session = null;
-  
-  /**
    * Constructor
    * @param Routing $routing Routing module
    * @param string $defaultTemplate Absolute path to default widget template
    */
-  public function __construct(Templates $templates, Routing $routing, $defaultTemplate) {
+  public function __construct(App $app, $defaultTemplate) {
+    $this->inheritElements('modules');
+    $this->inheritElements('helpers');
+    $this->inheritElements('models');
+    parent::__construct($app);
+    $this->modelObjects = $this->m->Models->getModels($this->models);
+    $helperObjects = $this->m->Helpers->getHelpers($this->helpers);
+    foreach ($helperObjects as $name => $helper)
+      $this->$name = $helper;
     $this->template = $defaultTemplate;
-    $this->m = new Map();
-    $this->m->Templates = $templates;
-    $this->m->Routing = $routing;
-    $this->request = $routing->getRequest(); 
-    $this->session = $this->request->session;
   }
   
   /**
@@ -69,9 +57,8 @@ abstract class WidgetBase implements IHelpable {
    * @return mixed Value
   */
   public function __get($name) {
-    if (isset($this->modelObjects[$name])) {
+    if (isset($this->modelObjects[$name]))
       return $this->modelObjects[$name];
-    }
     return $this->data[$name];
   }
 
@@ -143,41 +130,6 @@ abstract class WidgetBase implements IHelpable {
    */
   public function isCurrent($route = null) {
     return $this->m->Routing->isCurrent($route);
-  }
-  
-  public function getHelperList() {
-    return $this->helpers;
-  }
-  
-  /**
-   * Get list of models that controller requires
-   * @return string[] List of model names
-   */
-  public function getModelList() {
-    return $this->models;
-  }
-  
-  /**
-   * Add a module to the {@see Controller::$m} dictionary
-   * @param ModuleBase $object Module
-   */
-  public function addModule($object) {
-    $class = get_class($object);
-    $this->m->$class = $object;
-  }
-  
-  public function addHelper($helper) {
-    $name = str_replace('Helper', '', get_class($helper));
-    $this->$name = $helper;
-  }
-  
-  /**
-   * Add a model to this controller
-   * @param string $name Name of model
-   * @param IModel $model Model object
-   */
-  public function addModel($name, IModel $model) {
-    $this->modelObjects[$name] = $model;
   }
   
   /**

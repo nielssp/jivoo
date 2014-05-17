@@ -13,6 +13,11 @@ class Extensions extends LoadableModule {
   
   protected $modules = array('Database', 'Routing', 'Templates');
   
+  protected $events = array(
+    'beforeLoadExtensions', 'beforeLoadExtension',
+    'afterLoadExtension', 'afterLoadExtensions'
+  );
+  
   private $info = array();
   private $installed = array();
 
@@ -37,19 +42,18 @@ class Extensions extends LoadableModule {
 
     $this->installed = explode(' ', $this->config['installed']);
 
-//     $this->m->Backend['settings']
-//       ->item(tr('Extensions'), null, 2);
-
     // Load installed extensions when all modules are loaded and initialized
     $this->app->attachEventHandler('afterLoadModules', array($this, 'loadExtensions'));
   }
 
   public function loadExtensions() {
+    $this->triggerEvent('beforeLoadExtensions');
     foreach ($this->installed as $extension) {
       if (!empty($extension)) {
-        $this->loadExtension($extension);
+        $this->getExtension($extension);
       }
     }
+    $this->triggerEvent('afterLoadExtensions');
   }
 
   public function request($extension) {
@@ -59,8 +63,9 @@ class Extensions extends LoadableModule {
     return $this->extensions[$extension];
   }
 
-  private function loadExtension($extension) {
+  public function getExtension($extension) {
     if (!isset($this->extensions[$extension])) {
+      $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $extension));
       if (isset($this->loading[$extension])) {
         throw new ExtensionInvalidException(
           tr(
@@ -86,7 +91,6 @@ class Extensions extends LoadableModule {
         throw new ExtensionInvalidException(
           tr('The "%1" extension is invalid', $extension));
       }
-      $modules = array();
       $extensions = array();
       foreach ($info['dependencies']['extensions'] as $dependency => $versionInfo) {
         if ($dependency == $extension) {
@@ -94,7 +98,7 @@ class Extensions extends LoadableModule {
             tr('The "%1" extension depends on itself', $extension));
         }
         try {
-          $extensions[$dependency] = $this->loadExtension($dependency);
+          $extensions[$dependency] = $this->getExtension($dependency);
         }
         catch (ExtensionNotFoundException $ex) {
           trigger_error(
@@ -106,14 +110,7 @@ class Extensions extends LoadableModule {
         }
       }
       foreach ($info['dependencies']['modules'] as $dependency => $versionInfo) {
-        $module = $this->app
-          ->requestModule($dependency);
-        /** @todo Do this when installing.. */
-        // $version = $this->core->getVersion($dependency);
-        if ($module !== false) { // AND compareDependencyVersions($version, $versionInfo)) {
-          $modules[$dependency] = $module;
-        }
-        else {
+        if (!$this->app->hasModule($dependency)) {
           trigger_error(
             tr('Extension "%1" uninstalled. Missing module dependency: "%2".',
               $extension, $dependency), E_USER_WARNING);
@@ -122,10 +119,17 @@ class Extensions extends LoadableModule {
         }
       }
       $config = $this->config['config']->getSubset($extension);
-      //$this->extensions[$extension] = $reflection->newInstanceArgs(array($arguments, $config));
-      $this->extensions[$extension] = new $extension($modules, $extensions, $config, $this);
+      $this->extensions[$extension] = new $extension($this->app, $config, $extensions);
+      $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $extension, $this->extensions[$extension]));
     }
     return $this->extensions[$extension];
+  }
+  
+  public function getExtensions($names) {
+    $extensions = array();
+    foreach ($names as $name)
+      $extensions[$name] = $this->getExtension($name);
+    return $extensions;
   }
 
   private function updateConfig() {
@@ -192,3 +196,8 @@ class ExtensionNotFoundException extends Exception {}
  * @package PeanutCMS\Extensions
  */
 class ExtensionInvalidException extends Exception {}
+
+/**
+ * Event sent before and after an extension has been loaded
+ */
+class LoadExtensionEvent extends LoadEvent { }

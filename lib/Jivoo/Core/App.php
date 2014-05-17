@@ -208,26 +208,6 @@ class App implements IEventSubject {
   private function triggerEvent($name, Event $event = null) {
     $this->e->trigger($name, $event);
   }
-  
-  /**
-   * Request a module
-   * @param string $module Module name
-   * @return ModuleBase|false Module object or false if module is
-   * not loaded
-   */
-  public function requestModule($module) {
-    $moduleName = $module;
-    if (strpos($module, '/') !== false) {
-      $segments = explode('/', $module);
-      $moduleName = $segments[count($segments) - 1];
-    }
-    try {
-      return $this->m->$moduleName;
-    }
-    catch (MapKeyInvalidException $e) {
-      return false;
-    }
-  }
 
   /**
    * Get the absolute path of a file
@@ -251,29 +231,9 @@ class App implements IEventSubject {
     return $this->basePath . '/' . $path;
   }
   
-  public function getModules($modules) {
-    foreach ($modules as $name) {
-      $this->loadModule($name);
-    }
-    return $this->m;
-  }
-
-  /**
-   * Load a module
-   * @param string $module Module name
-   * @return ModuleBase Module
-   * @throws ModuleNotFoundException if module not found
-   * @throws ModuleInvalidException if module isn't valid
-   * @throws ModuleMissingDependencyException if module is missing dependencies
-   */
-  public function loadModule($name) {
+  public function getModule($name) {
     if (!isset($this->m->$name)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
-      if (!Lib::classExists($name)) {
-        throw new ModuleNotFoundException(
-          tr('The "%1" module could not be found', $name)
-        );
-      }
       if (!is_subclass_of($name, 'LoadableModule')) {
         throw new ModuleInvalidException(
           tr('The "%1" module does not extend "%2"', $name, 'LoadableModule')
@@ -284,6 +244,18 @@ class App implements IEventSubject {
     }
     return $this->m->$name;
   }
+  
+  public function getModules($modules) {
+    foreach ($modules as $name) {
+      $this->getModule($name);
+    }
+    return $this->m;
+  }
+  
+  public function hasModule($name) {
+    return isset($this->m->$name);
+  }
+
   
   /**
    * Handler for uncaught exceptions
@@ -412,7 +384,7 @@ class App implements IEventSubject {
     // Load modules
     $this->triggerEvent('beforeLoadModules');
     foreach ($modules as $module) {
-      $object = $this->loadModule($module);
+      $object = $this->getModule($module);
     }
     $this->triggerEvent('afterLoadModules');
     
@@ -429,12 +401,6 @@ class App implements IEventSubject {
 }
 
 /**
- * Thrown when a module does not exist
- * @package Core
- */
-class ModuleNotFoundException extends Exception {
-}
-/**
  * Thrown when a module is invalid
  * @package Core
  */
@@ -443,19 +409,5 @@ class ModuleInvalidException extends Exception {
 
 /**
  * Event sent before and after a module has been loaded
- * @property-read string $name Module name
- * @property-read bool $loaded Whether or not the module has been loaded 
- * @property-read LoadableModule|null $module Module object if loaded
  */
-class LoadModuleEvent extends Event {
-  protected $name;
-  protected $loaded = false;
-  protected $module;
-  public function __construct($sender, $name, LoadableModule $module = null) {
-    $this->name = $name;
-    if (isset($module)) {
-      $this->loaded = true;
-      $this->module = $module;
-    }
-  }
-}
+class LoadModuleEvent extends LoadEvent { }

@@ -102,10 +102,7 @@ class Database extends LoadableModule implements IDatabase {
       'database' => strtolower($this->app->name),
       'filename' => $this->p('config', 'db.sqlite3'),
     );
-    $controller = new DatabaseSetupController($this->m->Routing,
-      $this->m->Templates, $this->config);
-    $controller->addModule($this);
-    $this->m->Helpers->addHelpers($controller);
+    $controller = new DatabaseSetupController($this->app);
     $this->view->addTemplateDir($this->p('templates'), 3);
     if (!isset($this->config['driver'])) {
       $this->m->Setup->enterSetup($controller, 'selectDriver');

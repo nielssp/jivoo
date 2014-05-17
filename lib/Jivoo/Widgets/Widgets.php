@@ -39,32 +39,23 @@ class Widgets extends LoadableModule {
             'title' => tr('Welcome to ' . $this->app->name),
             'config' => array('text' => tr('Welcome to %1. This is a widget for displaying basic information in the sidebar.', $this->app->name))
           ),
-//           array(
-//             'name' => 'RecentPostsWidget',
-//             'title' => tr('Recent posts'),
-//             'config' => array()
-//           ),
         )
       );
     }
     
     $this->register(new TextWidget(
-      $this->m->Templates,
-      $this->m->Routing,
+      $this->app,
       $this->p('templates/text-widget.html.php')
     ));
     
     $this->m->Routing->attachEventHandler('beforeRender', array($this, 'renderWidgets'));
-    
-//     $this->m->Backend['appearance']->setup(tr('Appearance'), 4)
-//       ->item(tr('Widgets'), null, 4);
   }
   
   /**
    * Register a widget
    * @param WidgetBase $widget Widget
    */
-  public function register(WidgetBase $widget) {
+  public function register(Widget $widget) {
     $this->available[get_class($widget)] = $widget;
   }
   
@@ -86,8 +77,6 @@ class Widgets extends LoadableModule {
         else if (isset($this->available[$name])) {
           $object = $this->available[$name];
           $this->loaded[$name] = $object;
-          $this->m->Helpers->addHelpers($object);
-          $this->m->Models->addModels($object);
         }
         else {
           // Widget not available.. Remove and inform user

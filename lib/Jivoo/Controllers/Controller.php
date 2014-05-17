@@ -3,32 +3,35 @@
  * A controller, the C of MVC
  * @package Jivoo\Controllers
  */
-class Controller extends Module implements IHelpable {
+class Controller extends Module {
+  
+  protected $modules = array('Helpers', 'Models');
+  /**
+   * @var string[] A list of other helpers needed by this helper
+  */
+  protected $helpers = array();
+  
+  /**
+   * @var string[] A list of models needed by this helper
+  */
+  protected $models = array();
+  
+  /**
+   * @var array An associative array of helper names and objects
+  */
+  private $helperObjects = array();
+  
+  /**
+   * @var array An associative array of model names and objects
+  */
+  private $modelObjects = array();
+  
+  
   /**
    * @var string Name of controller (without 'Controller'-part)
    */
   private $name;
 
-  /**
-   * @var AppConfig Configuration
-   */
-  protected $config = null;
-  
-  /**
-   * @var Dictionary Collection of modules
-   */
-  protected $m = null;
-  
-  /**
-   * @var Request Current request
-   */
-  protected $request = null;
-  
-  /**
-   * @var SessionStorage Current session
-   */
-  protected $session = null;
-  
   /**
    * @var string[] List of actions
    */
@@ -45,80 +48,31 @@ class Controller extends Module implements IHelpable {
   private $data = array();
 
   /**
-   * @var string[] List of modules needed by controller
-   */
-  protected $modules = array();
-
-  /**
-   * @var string[] List of helpers needed by controller
-   */
-  protected $helpers = array('Html');
-
-  /**
-   * @var string[] List of models needed by controller
-   */
-  protected $models = array();
-  
-  /**
-   * @var array Associative array of model names and {@see Model} objects
-   */
-  private $modelObjects = array();
-
-  /**
-   * @var View Current view
-   */
-  protected $view = null;
-  
-  /**
    * @var HTTP status code
    */
   private $status = 200;
   
   /**
    * Constructor
-   * @param Routing $routing Routing module
-   * @param Templates $templates Templates module
-   * @param AppConfig $config Configuration
-   * @param bool $temp Set to true if temporary (used to get list of helpers,
-   * modules and models without spending time initialising)
    */
-  public final function __construct(Routing $routing, Templates $templates,
-                                    AppConfig $config = null, $temp = false) {
-    if ($temp) {
-      return;
-    }
-    $this->m = new Map();
-
-    $this->m->Routing = $routing;
-    $this->m->Templates = $templates;
-
-    $this->config = $config;
-
-    $this->request = $routing->getRequest(); 
-    $this->session = $this->request->session;
+  public final function __construct(App $app) {
+    $this->inheritElements('modules');
+    $this->inheritElements('helpers');
+    $this->inheritElements('models');
+    parent::__construct($app);
+    $this->modelObjects = $this->m->Models->getModels($this->models);
+    $helperObjects = $this->m->Helpers->getHelpers($this->helpers);
     
-    $this->view = $templates->view;
-
+    foreach ($helperObjects as $name => $helper) {
+      $this->$name = $helper;
+    }
+    
     $this->name = str_replace('Controller', '', get_class($this));
 
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
     $this->actions = array_diff($classMethods, $parentMethods);
     
-    $class = get_parent_class($this);
-    while ($class !== false AND $class != 'Controller') {
-      $temp = new $class($routing, $templates, null, true);
-      $this->helpers = array_unique(
-        array_merge($this->helpers, $temp->helpers)
-      );
-      $this->models = array_unique(
-        array_merge($this->models, $temp->models)
-      );
-      $this->modules = array_unique(
-        array_merge($this->modules, $temp->modules)
-      );
-      $class = get_parent_class($class);
-    }
     $this->init();
   }
 
@@ -143,57 +97,6 @@ class Controller extends Module implements IHelpable {
     $this->view->$name = $value;
   }
   
-  /**
-   * Set configuration
-   * @param AppConfig $config Configuration
-   */
-  public function setConfig(AppConfig $config) {
-    $this->config = $config;
-  }
-  
-  /**
-   * Get list of modules that this controller requires
-   * @return string[] List of module names
-   */
-  public function getModuleList() {
-    return $this->modules;
-  }
-  
-  public function getHelperList() {
-    return $this->helpers;
-  }
-  
-  /**
-   * Get list of models that controller requires
-   * @return string[] List of model names
-   */
-  public function getModelList() {
-    return $this->models;
-  }
-
-  /**
-   * Add a module to the {@see Controller::$m} dictionary
-   * @param ModuleBase $object Module
-   */
-  public function addModule($object) {
-    $class = get_class($object);
-    $this->m->$class = $object;
-  }
-  
-  public function addHelper($helper) {
-    $name = str_replace('Helper', '', get_class($helper));
-    $this->$name = $helper;
-  }
-  
-  /**
-   * Add a model to this controller
-   * @param string $name Name of model
-   * @param IModel $model Model object
-   */
-  public function addModel($name, IModel $model) {
-    $this->modelObjects[$name] = $model;
-  }
-
   /**
    * Create a route to an action for auto routing
    * @param string $action Action name

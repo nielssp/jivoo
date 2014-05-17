@@ -101,10 +101,15 @@ class Models extends LoadableModule {
     return null;
   }
   
-  /* IDictionary implementation */
+  public function getModels($names) {
+    $models = array();
+    foreach ($names as $name)
+      $models[$name] = $this->getModel($name);
+    return $models;
+  }
   
   public function __get($name) {
-      if (isset($this->modelObjects[$name])) {
+    if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
     throw new ModelNotfoundException(tr('Model "%1" not found', $name));

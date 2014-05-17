@@ -9,6 +9,10 @@ class DatabaseSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form');
 
+  public function before() {
+    $this->config = $this->config['Database'];
+  }
+  
   /**
    * Action for selecting database driver
    */

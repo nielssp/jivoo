@@ -141,26 +141,7 @@ class Controllers extends LoadableModule {
     if (isset($this->controllers[$name])) {
       if (!isset($this->controllerObjects[$name])) {
         $class = $this->controllers[$name];
-        $this->controllerObjects[$name] = new $class(
-          $this->m->Routing, $this->m->Templates,
-          $this->app->config
-        );
-        $controller = $this->controllerObjects[$name];
-
-        $modules = $controller->getModuleList();
-        foreach ($modules as $moduleName) {
-          $module = $this->app->requestModule($moduleName);
-          if ($module) {
-            $controller->addModule($module);
-          }
-          else {
-            throw new ModuleNotFoundException(
-              tr('Module "%1" not found for controller %2', $moduleName, $name)
-            );
-          }
-        }
-        $this->m->Helpers->addHelpers($controller);
-        $this->m->Models->addModels($controller);
+        $this->controllerObjects[$name] = new $class($this->app);
       }
       return $this->controllerObjects[$name];
     }

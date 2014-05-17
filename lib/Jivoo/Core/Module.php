@@ -48,6 +48,22 @@ abstract class Module implements IEventSubject {
 
     $this->e = new EventManager($this, $this->app->eventManager);
   }
+  
+  
+  /**
+   * Combine array property default values from parent classes.
+   * @param string Name of property
+   */
+  protected function inheritElements($property) {
+    $value = $this->$property;
+    $parent = new ReflectionClass(get_parent_class($this));
+    while ($parent->name != 'Module') {
+      $defaults = $parent->getDefaultProperties();
+      $value = array_merge($value, $defaults[$property]);
+      $parent = $parent->getParentClass();
+    }
+    $this->$property = array_unique($value);
+  }
 
   /**
    * Get the absolute path of a file.

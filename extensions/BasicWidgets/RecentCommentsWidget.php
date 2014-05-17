@@ -4,7 +4,7 @@
  * @package PeanutCMS\Posts
  * @property-read ActiveModel $Comment Comment model
  */
-class RecentCommentsWidget extends WidgetBase {
+class RecentCommentsWidget extends Widget {
   
   protected $models = array('Comment');
   
