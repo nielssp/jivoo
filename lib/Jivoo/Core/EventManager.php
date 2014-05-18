@@ -74,19 +74,24 @@ class EventManager {
   /**
    * Execute all functions attached to an event
    * @param string $event Event name
-   * @param mixed $eventArgs Event arguments
+   * @param Event $event Event object
+   * @return bool False if event was stopped, true otherwise
    */
   public function trigger($name, Event $event = null) {
     if (!isset($event))
       $event = new Event($this->subject);
-    if (isset($this->parent))
-      $this->parent->trigger($this->subjectClass . '.' . $name, $event);
+    if (isset($this->parent)) {
+      if (!$this->parent->trigger($this->subjectClass . '.' . $name, $event))
+        return false;
+    }
     if (isset($this->events[$name])) {
+      $event->name = $name;
       foreach ($this->events[$name] as $function) {
-        call_user_func($function, $event);
-        if ($event->stopped)
-          return;
+        $continue = call_user_func($function, $event);
+        if ($event->stopped or $continue === false)
+          return false;
       }
     }
+    return true;
   }
 }

@@ -109,6 +109,6 @@ abstract class Module implements IEventSubject {
   }
 
   public function triggerEvent($name, Event $event = null) {
-    $this->e->trigger($name, $event);
+    return $this->e->trigger($name, $event);
   }
 }

@@ -64,7 +64,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   public final function __construct(App $app, IDatabase $database) {
     parent::__construct($app);
     $this->database = $database;
-    $this->name = preg_replace('/Model$/', '', get_class($this));
+    $this->name = get_class($this);
     if (!isset($this->table))
       $this->table = $this->name;
     $table = $this->table;
@@ -112,6 +112,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         ));
     }
     
+    $this->attachEventListener($this);
     foreach ($this->mixins as $mixin => $options) {
       if (!is_string($mixin)) {
         $mixin = $options;
@@ -122,7 +123,9 @@ abstract class ActiveModel extends Model implements IEventListener {
         throw new ClassNotFoundException(tr('Mixin class not found: %1', $mixin));
       if (!is_subclass_of($mixin, 'ActiveModelMixin'))
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
-      $this->mixinObjects[] = new $mixin($this, $options);
+      $mixin = new $mixin($this->app, $this, $options);
+      $this->attachEventListener($mixin);
+      $this->mixinObjects[] = $mixin;
     }
   }
   
@@ -238,40 +241,20 @@ abstract class ActiveModel extends Model implements IEventListener {
     $this->associations[$name] = $options;
   }
 
-  private function mixinCall($method, $record = null) {
-    foreach ($this->mixinObjects as $mixin)
-      $mixin->$method($record);
-  }
   
-  public function beforeSave(ActiveRecord $record) {
-    $this->mixinCall('beforeSave', $record);
-  }
-  public function afterSave(ActiveRecord $record) {
-    $this->mixinCall('afterSave', $record);
-  }
+  public function beforeSave(ActiveModelEvent $event) { }
+  public function afterSave(ActiveModelEvent $event) { }
   
-  public function beforeValidate(ActiveRecord $record) {
-    $this->mixinCall('beforeValidate', $record);
-  }
-  public function afterValidate(ActiveRecord $record) {
-    $this->mixinCall('afterValidate', $record);
-  }
+  public function beforeValidate(ActiveModelEvent $event) { }
+  public function afterValidate(ActiveModelEvent $event) { }
   
-  public function afterCreate(ActiveRecord $record) {
-    $this->mixinCall('afterCreate', $record);
-  }
+  public function afterCreate(ActiveModelEvent $event) { }
   
-  public function afterLoad(ActiveRecord $record) {
-    $this->mixinCall('afterLoad', $record);
-  }
+  public function afterLoad(ActiveModelEvent $event) { }
   
-  public function beforeDelete(ActiveRecord $record) {
-    $this->mixinCall('beforeDelete', $record);
-  }
+  public function beforeDelete(ActiveModelEvent $event) { }
 
-  public function install() {
-    $this->mixinCall('install');
-  }
+  public function install() { }
 
   public function getGetters() {
     return $this->getters;
@@ -377,7 +360,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $id = $this->primaryKey;
         return new ActiveCollection($this, $record->$id, $association);
     }
-    throw new Exception('todo');
+    throw new InvalidAssociationException(tr('Unknown association type: %1', $association['type']));
   }
 
   public function hasAssociation(ActiveRecord $record, $association) {
@@ -395,7 +378,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $id = $this->primaryKey;
         return $association['join']->where($key . ' = ?', $record->$id)->count() != 0;
     }
-    throw new Exception('todo');
+    throw new InvalidAssociationException(tr('Unknown association type: %1', $association['type']));
   }
 
   public function unsetAssociation(ActiveRecord $record, $association) {
@@ -416,7 +399,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $association['join']->where($key . ' = ?', $record->$id)->delete();
         return;
     }
-    throw new Exception('todo');
+    throw new InvalidAssociationException(tr('Unknown association type: %1', $association['type']));
   }
 
   public function setAssociation(ActiveRecord $record, $association, $value) {
@@ -459,7 +442,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       case 'hasAndBelongsToMany':
         return;
     }
-    throw new Exception('todo');
+    throw new InvalidAssociationException(tr('Unknown association type: %1', $association['type']));
   }
 }
 
@@ -472,3 +455,12 @@ class InvalidRecordClassException extends Exception { }
 class DataSourceNotFoundException extends Exception { }
 class InvalidAssociationException extends Exception { }
 class InvalidMixinException extends Exception { }
+
+class ActiveModelEvent extends Event {
+  public $record = null;
+  public function __construct($sender) {
+    parent::__construct($sender);
+    if ($sender instanceof ActiveRecord)
+    $this->record = $sender;
+  }
+}

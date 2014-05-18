@@ -126,10 +126,6 @@ class Models extends LoadableModule {
   public function __unset($name) {
     unset($this->modelObjects[$name]);
   }
-  
-  public function isReadOnly() {
-    return false;
-  }
 }
 
 class ModelNotFoundException extends Exception { }

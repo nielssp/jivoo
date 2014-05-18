@@ -1,10 +1,9 @@
 <?php
-
 class CommentsController extends AppController {
 
-  protected $helpers = array('Html', 'Pagination', 'Form');
-  
-  protected $models = array('Post', 'Comment');
+  protected $helpers = array('Html','Pagination','Form');
+
+  protected $models = array('Post','Comment');
 
   public function before() {
     parent::before();
@@ -28,11 +27,10 @@ class CommentsController extends AppController {
       }
       if ($this->request->hasValidData()) {
         $this->newComment = $this->Comment->create(
-          $this->request->data['Comment'],
-          array('author', 'email', 'website', 'content')
-        );
-        if (!empty($this->newComment->website)
-          AND preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
+          $this->request->data['Comment'], 
+          array('author','email','website','content'));
+        if (!empty($this->newComment->website) and
+             preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
           $this->newComment->website = 'http://' . $this->newComment->website;
         }
         if ($this->user) {
@@ -42,8 +40,8 @@ class CommentsController extends AppController {
         }
         $this->newComment->post = $this->post;
         $this->newComment->ip = $this->request->ip;
-        if ($this->config['commentApproval']
-          AND !$this->Auth->isAllowed('backend.posts.comments.approve')) {
+        if ($this->config['commentApproval'] and
+             !$this->Auth->isAllowed('backend.posts.comments.approve')) {
           $this->newComment->approved = false;
         }
         else {
@@ -60,11 +58,9 @@ class CommentsController extends AppController {
           if (!empty($this->newComment->website)) {
             $this->request->cookies['comment_website'] = $this->newComment->website;
           }
-
-          $this->refresh(
-            array('page' => $this->Pagination->getPages()),
-            'comment' . $this->newComment->id
-          );
+          
+          $this->refresh(array('page' => $this->Pagination->getPages()), 
+            'comment' . $this->newComment->id);
         }
       }
       else {
@@ -81,19 +77,5 @@ class CommentsController extends AppController {
       }
     }
     return $this->render();
-  }
-
-  public function view($post, $comment) {
-    $this->post = $this->Post->find($post);
-    
-    if (!$this->post
-      OR ($this->post->status != 'published'
-        AND !$this->Auth->hasPermission('backend.posts.viewDraft'))) {
-      return $this->render('404.html');
-    }
-    $comments = $this->post->getComments(
-      SelectQuery::create()->orderBy('date')->where('status = "approved"')
-    );
-    $this->render('not-implemented.html');
   }
 }

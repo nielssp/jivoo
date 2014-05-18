@@ -178,7 +178,7 @@ class Database extends LoadableModule implements IDatabase {
       if ($table instanceof ActiveModel
           and !(isset($this->config['installed'][$name])
             and $this->config['installed'][$name])) {
-        $table->install();
+        $table->triggerEvent('install', new ActiveModelEvent($this));
         $this->config['installed'][$name] = true;
       } 
     }

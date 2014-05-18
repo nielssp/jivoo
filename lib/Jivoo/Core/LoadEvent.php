@@ -7,10 +7,11 @@
  * @property-read Module|null $object Object if loaded
  */
 class LoadEvent extends Event {
-  protected $name;
-  protected $loaded = false;
-  protected $object;
+  public $name;
+  public $loaded = false;
+  public $object;
   public function __construct($sender, $name, Module $object = null) {
+    parent::__construct($sender);
     $this->name = $name;
     if (isset($object)) {
       $this->loaded = true;

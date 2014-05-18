@@ -8,22 +8,19 @@ class AuthHelper extends Helper {
   protected $modules = array('AccessControl');
 
   private $user = null;
+
   private $userModel = null;
-  
-  public function allow($permission) {
-    
-  }
-  
+
+  public function allow($permission) {}
+
   public function isLoggedIn() {
-    return isset($this->user)
-      or $this->checkSession()
-      or $this->checkCookie();
+    return isset($this->user) or $this->checkSession() or $this->checkCookie();
   }
-  
+
   public function isAllowed() {
     return false;
   }
-  
+
   /**
    * Check session for logged in user
    * @return boolean True if logged in, false otherwise
@@ -37,7 +34,8 @@ class AuthHelper extends Helper {
         if (isset($this->session['auth_renew_at'])) {
           if ($this->session['auth_renew_at'] <= time()) {
             $this->session['auth_renew_at'] = time() + $this->renewSessionAfter;
-            $this->userModel->renewSession($sessionId, $time() + $this->sessionLifetime);
+            $this->userModel->renewSession($sessionId, 
+              $time() + $this->sessionLifetime);
           }
         }
         return true;
@@ -46,7 +44,7 @@ class AuthHelper extends Helper {
     }
     return false;
   }
-  
+
   /**
    * Check cookie for logged in user
    * @return boolean True if logged in, false otherwise
@@ -63,17 +61,12 @@ class AuthHelper extends Helper {
     }
     return false;
   }
-  
+
   public function getUser() {
     return $this->user;
   }
-  
-  public function logIn() {
-    
-  }
-  
-  public function logOut() {
-    
-  }
-  
+
+  public function logIn() {}
+
+  public function logOut() {}
 }
