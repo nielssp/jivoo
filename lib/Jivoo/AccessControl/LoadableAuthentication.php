@@ -7,9 +7,11 @@ abstract class LoadableAuthentication extends Module implements IAuthentication 
     $this->options = array_merge($this->options, $options);
   }
   
-  public function authenticate($data, IUserModel $userModel) {
+  public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher) {
     return null;
   }
+  
+  public function deauthenticate(ActiveRecord $user, IUserModel $userModel) { }
   
   public function cookie() {
     return false;

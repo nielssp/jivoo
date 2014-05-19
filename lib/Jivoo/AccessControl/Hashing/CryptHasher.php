@@ -23,6 +23,6 @@ abstract class CryptHasher implements IPasswordHasher {
   }
   
   public function compare($password, $hash) {
-    return crypt($password, $hash) == $hash;
+    return crypt($password, $hash) === $hash;
   }
 }

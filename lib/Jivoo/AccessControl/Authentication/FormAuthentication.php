@@ -8,10 +8,16 @@ class FormAuthentication extends LoadableAuthentication {
     'password' => 'password'
   );
   
-  public function authenticate($data, IUserModel $userModel) {
+  public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher) {
     $this->cookie = isset($data['remember']);
-    return $userModel->where($this->options['username'] . ' = %s', $data['username'])
-      ->and($this->options['password'] . ' = %s', $data['password'])->first();
+    $user = $userModel->where($this->options['username'] . ' = %s', $data['username'])
+      ->first();
+    if ($user) {
+      $passwordField = $this->options['password'];
+      if ($hasher->compare($data['password'], $user->$passwordField))
+        return $user;
+    }
+    return null;
   }
   
   public function cookie() {

@@ -21,11 +21,15 @@ class AppController extends Controller {
   public function login() {
     if ($this->request->isPost()) {
       if ($this->Auth->logIn()) {
-        $this->session->alert(tr('Logged in.. maybe?'));
+        return $this->refresh();
       }
       else {
         $this->session->alert(tr('Incorret username and/or password.'));
       }
+    }
+    if (isset($this->request->query['logout'])) {
+      $this->Auth->logOut();
+      return $this->refresh(array());
     }
     return $this->render();
   }

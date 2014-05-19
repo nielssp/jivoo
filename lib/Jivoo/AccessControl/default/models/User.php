@@ -1,8 +1,10 @@
 <?php
 class User extends ActiveModel implements IUserModel {
   
+  protected $modules = array('AccessControl');
+  
   protected $mixins = array(
-    'Timestamps'
+    'Timestamps',
   );
 
   protected $hasMany = array(
@@ -52,6 +54,13 @@ class User extends ActiveModel implements IUserModel {
     if ($record->hasChanged('password'))
       return $record->password == $record->confirmPassword;
     return true;
+  }
+  
+  public function afterValidate(ActiveModelEvent $event) {
+    if ($event->record->hasChanged('password')) {
+      $hasher = $this->m->AccessControl->getPasswordHasher();
+      $event->record->password = $hasher->hash($event->record->password); 
+    }
   }
   
   public function createSession(ActiveRecord $user, $validUntil) {

@@ -8,6 +8,8 @@ class AuthHelper extends Helper {
   protected $modules = array('AccessControl');
 
   private $user = null;
+  
+  private $sessionId = null;
 
   /**
    * @var IUserModel
@@ -33,11 +35,18 @@ class AuthHelper extends Helper {
    * @var IAuthorization[]
    */
   private $authorizationMethods= array();
+  
+  private $passwordHasher = null;
+  
+  protected function init() {
+    $this->passwordHasher = $this->m->AccessControl->getPasswordHasher();
+  }
 
   public function __get($property) {
     switch ($property) {
       case 'userModel':
       case 'user':
+      case 'sessionId':
       case 'createSessions':
       case 'createCookies':
       case 'sessionPrefix':
@@ -46,6 +55,7 @@ class AuthHelper extends Helper {
       case 'cookiePrefix':
       case 'cookieLifeTime':
       case 'cookieRenewAfter':
+      case 'passwordHasher':
         return $this->$property;
     }
   }
@@ -62,6 +72,12 @@ class AuthHelper extends Helper {
       case 'cookieLifeTime':
       case 'cookieRenewAfter':
         $this->$property = $value;
+        break;
+      case 'passwordHasher':
+        if ($value instanceof IPasswordHasher)
+          $this->passwordHasher = $value;
+        else
+          $this->passwordHasher = $this->m->AccessControl->getPasswordHasher($value);
         break;
       case 'authentication':
         if (is_array($value)) {
@@ -119,6 +135,7 @@ class AuthHelper extends Helper {
       $user = $this->userModel->openSession($sessionId);
       if ($user) {
         $this->user = $user;
+        $this->sessionId = $sessionId;
         if (isset($this->session[$this->sessionPrefix . 'renew_at'])) {
           if ($this->session[$this->sessionPrefix . 'renew_at'] <= time()) {
             $this->session[$this->sessionPrefix . 'renew_at'] = time() + $this->sessionRenewAfter;
@@ -143,6 +160,7 @@ class AuthHelper extends Helper {
       $user = $this->userModel->openSession($sessionId);
       if ($user) {
         $this->user = $user;
+        $this->sessionId = $sessionId;
         if (isset($this->request->cookies[$this->cookiePrefix . 'renew_at'])) {
           if ($this->request->cookies[$this->cookiePrefix . 'renew_at'] <= time()) {
             $this->createCookie($sessionId);
@@ -179,7 +197,7 @@ class AuthHelper extends Helper {
       $data = $this->request->data;
     $cookie = false;
     foreach ($this->authenticationMethods as $method) {
-      $user = $method->authenticate($data, $this->userModel);
+      $user = $method->authenticate($data, $this->userModel, $this->passwordHasher);
       if ($user != null) {
         $this->user = $user;
         $cookie = $method->cookie();
@@ -192,19 +210,36 @@ class AuthHelper extends Helper {
       $validUntil = time() + $this->cookieLifeTime;
       $sessionId = $this->userModel->createSession($this->user, $validUntil);
       $this->createCookie($sessionId);
+      $this->sessionId = $sessionId;
     }
     else {
       $validUntil = time() + $this->sessionLifeTime;
       $sessionId = $this->userModel->createSession($this->user, $validUntil);
       $this->session[$this->sessionPrefix . 'session'] = $sessionId;
       $this->session[$this->sessionPrefix . 'renew_at'] = time() + $this->sessionRenewAfter;
+      $this->sessionId = $sessionId;
     }
     return true;
   }
 
   public function logOut() {
   	if ($this->isLoggedIn()) {
-  	  $this->user = null;
+  	  if (isset($this->sessionId)) {
+  	    $this->userModel->deleteSession($this->sessionId);
+  	    unset($this->sessionId);
+  	  }
+  	  if (isset($this->session[$this->sessionPrefix . 'session'])) {
+  	    unset($this->session[$this->sessionPrefix . 'session']);
+  	    unset($this->session[$this->sessionPrefix . 'renew_at']);
+  	  }
+  	  if (isset($this->request->cookies[$this->cookiePrefix . 'session'])) {
+  	    unset($this->request->cookies[$this->cookiePrefix . 'session']);
+  	    unset($this->request->cookies[$this->cookiePrefix . 'renew_at']);
+  	  }
+      foreach ($this->authenticationMethods as $method) {
+        $method->deauthenticate($this->user, $this->userModel);
+      }
+  	  unset($this->user);
   	}
   }
 }
