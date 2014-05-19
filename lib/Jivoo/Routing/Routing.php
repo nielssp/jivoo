@@ -64,11 +64,7 @@
  * @package Jivoo\Routing
  */
 class Routing extends LoadableModule {
-  /**
-   * @var Route[] Routing configuration
-   */
-  private $routes = array();
-  
+
   /**
    * @var Controllers Controllers module
    */
@@ -158,7 +154,7 @@ class Routing extends LoadableModule {
           $this->setError($route->route);
         }
         else {
-          $this->routes[] = $route;
+          $route->draw($this);
         }
       }
     }
@@ -167,14 +163,7 @@ class Routing extends LoadableModule {
       $this->setRoot($this->config['root'], 10);
     }
 
-    $this->app->attachEventHandler('afterLoadModule', array($this, 'addControllersModule'));
     $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
-  }
-  
-  public function addControllersModule(LoadModuleEvent $event) {
-    if ($event->name == 'Controllers') {
-      $this->drawRoutes();
-    }
   }
   
   /**

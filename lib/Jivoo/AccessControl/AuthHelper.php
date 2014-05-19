@@ -9,7 +9,20 @@ class AuthHelper extends Helper {
 
   private $user = null;
 
+  /**
+   * @var IUserModel
+   */
   private $userModel = null;
+  
+  /**
+   * @var IAuthentication[]
+   */
+  private $authenticationMethods = array();
+
+  /**
+   * @var IAuthorization[]
+   */
+  private $authorizationMethods = array();
 
   public function allow($permission) {}
 
@@ -35,7 +48,7 @@ class AuthHelper extends Helper {
           if ($this->session['auth_renew_at'] <= time()) {
             $this->session['auth_renew_at'] = time() + $this->renewSessionAfter;
             $this->userModel->renewSession($sessionId, 
-              $time() + $this->sessionLifetime);
+              time() + $this->sessionLifetime);
           }
         }
         return true;
@@ -66,7 +79,26 @@ class AuthHelper extends Helper {
     return $this->user;
   }
 
-  public function logIn() {}
+  public function logIn($data = null) {
+    foreach ($this->authenticationMethods as $method) {
+      $user = $method->authenticate($this->request, $this->userModel);
+      if ($user != null) {
+        $this->user = $user;
+        break;
+      }
+    }
+    if (!isset($this->user))
+      return false;
+    $validUntil = time() + 60 * 60;
+    $sessionId = $this->userModel->createSession($this->user, $validUntil);
+    $this->session['auth_session_id'] = $sessionId;
+    $this->session['auth_renew_at'] = time() + 60 * 30;
+    return true;
+  }
 
-  public function logOut() {}
+  public function logOut() {
+  	if ($this->isLoggedIn()) {
+  	  $this->user = null;
+  	}
+  }
 }

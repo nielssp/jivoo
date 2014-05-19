@@ -67,7 +67,7 @@ class Controller extends Module {
       $this->$name = $helper;
     }
     
-    $this->name = str_replace('Controller', '', get_class($this));
+    $this->name = preg_replace('/Controller$/', '', get_class($this));
 
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
@@ -267,8 +267,10 @@ class Controller extends Module {
    */
   protected function render($templateName = null) {
     if (!isset($templateName)) {
+      list(, $caller) = debug_backtrace(false);
       $templateName = '';
-      $thisName = $this->name;
+//       $thisName = $this->name;
+      $thisName = preg_replace('/Controller$/', '', $caller['class']);
       if ($thisName != 'App') {
         $class = get_class($this);
         $parent = get_parent_class($class);
@@ -282,7 +284,6 @@ class Controller extends Module {
         $name = str_replace('Controller', '', $class);
         $templateName = Utilities::camelCaseToDashes($name) . '/' . $templateName;
       }
-      list(, $caller) = debug_backtrace(false);
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';
     }

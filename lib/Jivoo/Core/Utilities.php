@@ -82,7 +82,7 @@ class Utilities {
     return mt_rand($min, $max);
   }
 
-  public static function randomString($length, $allowedChars) {
+  public static function randomString($length, $allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
     $max = strlen($allowedChars) - 1;
     $string = '';
     for ($i = 0; $i < $length; $i++) {
