@@ -11,7 +11,7 @@ class AppController extends Controller {
   
   public function notFound() {
     $this->setStatus(404);
-    return $this->render('404.html');
+    return $this->render();
   }
   
   public function login() {
