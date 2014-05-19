@@ -42,7 +42,7 @@ class Flash {
    * tr('Notice') for notices.
    * @param string $uid Message uid, default is md5 sum of $message
    */
-  public function __construct(Session $session, $message, $type, $label = null, $uid = null) {
+  public function __construct(SessionStorage $session, $message, $type, $label = null, $uid = null) {
     $this->session = $session;
     $this->message = $message;
     $this->type = $type;
@@ -59,7 +59,7 @@ class Flash {
    * @param string[] $array 4-tuple of message, type, label and uid
    * @return Flash Flash message object
    */
-  public static function fromArray(Session $session, $array) {
+  public static function fromArray(SessionStorage $session, $array) {
     return new Flash($session, $array[0], $array[1], $array[2], $array[3]);
   }
   

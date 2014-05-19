@@ -39,7 +39,7 @@ class ActiveRecord implements IRecord, ILinkable {
       $record = new ActiveRecord($model, $data, $allowedFields);
     $record->new = true;
     $record->saved = false;
-    $model->triggerEvent('afterCreate', new ActiveModelEvent($this));
+    $model->triggerEvent('afterCreate', new ActiveModelEvent($model));
     return $record;
   }
   
@@ -50,7 +50,7 @@ class ActiveRecord implements IRecord, ILinkable {
       $record = new ActiveRecord($model, $data);
     $record->updatedData = array();
     $model->addToCache($record);
-    $model->triggerEvent('afterLoad', new ActiveModelEvent($this));
+    $model->triggerEvent('afterLoad', new ActiveModelEvent($model));
     return $record;
   }
 
@@ -69,6 +69,10 @@ class ActiveRecord implements IRecord, ILinkable {
     foreach ($data as $field => $value) {
       $this->__set($field, $data[$field]);
     }
+  }
+  
+  public function getData() {
+    return $this->data;
   }
 
   public function __get($field) {
@@ -167,10 +171,10 @@ class ActiveRecord implements IRecord, ILinkable {
   }
   
   public function isValid() {
-    $model->triggerEvent('beforeValidate', new ActiveModelEvent($this));
+    $this->model->triggerEvent('beforeValidate', new ActiveModelEvent($this));
     $validator = $this->model->getValidator();
     $this->errors = $validator->validate($this);
-    $model->triggerEvent('afterValidate', new ActiveModelEvent($this));
+    $this->model->triggerEvent('afterValidate', new ActiveModelEvent($this));
     return count($this->errors) == 0;
   }
 
@@ -183,7 +187,7 @@ class ActiveRecord implements IRecord, ILinkable {
   }
   
   public function save() {
-    $model->triggerEvent('beforeSave', new ActiveModelEvent($this));
+    $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if (!$this->isValid())
       return false;
     if ($this->isNew()) {
@@ -199,12 +203,12 @@ class ActiveRecord implements IRecord, ILinkable {
     }
     $this->updatedData = array();
     $this->saved = true;
-    $model->triggerEvent('afterSave', new ActiveModelEvent($this));
+    $this->model->triggerEvent('afterSave', new ActiveModelEvent($this));
     return true;
   }
   
   public function delete() {
-    $model->triggerEvent('beforeDelete', new ActiveModelEvent($this));
+    $this->model->triggerEvent('beforeDelete', new ActiveModelEvent($this));
     $this->model->selectRecord($this)->delete();
   }
 

@@ -50,6 +50,10 @@ class Record implements IRecord {
     }
   }
   
+  public function getData() {
+    return $this->data;
+  }
+  
   public function __get($field) {
     if (!array_key_exists($field, $this->data))
       throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));

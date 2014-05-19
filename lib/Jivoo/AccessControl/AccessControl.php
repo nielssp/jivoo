@@ -6,6 +6,7 @@
 // Dependencies   : Jivoo/Routing Jivoo/Helpers Jivoo/Models
 
 Lib::import('Jivoo/AccessControl/Hashing');
+Lib::import('Jivoo/AccessControl/Authentication');
 
 /**
  * Access control module

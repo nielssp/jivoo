@@ -48,9 +48,8 @@ class Comment extends ActiveModel {
     );
   }
 
-  public function beforeValidate(ActiveRecord $record) {
-    parent::beforeValidate($record);
+  public function beforeValidate(ActiveModelEvent $event) {
     $encoder = new HtmlEncoder();
-    $record->contentText = $encoder->encode($record->content);
+    $event->record->contentText = $encoder->encode($event->record->content);
   }
 }

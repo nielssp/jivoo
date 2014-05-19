@@ -56,10 +56,11 @@ class User extends ActiveModel implements IUserModel {
   
   public function createSession(ActiveRecord $user, $validUntil) {
     $session = $user->sessions->create();
-    $session->id = AccessControl::genUid();
+    $session->id = Utilities::randomString(32);
     $session->validUntil = $validUntil;
-    $session->save();
-    return $session->id;
+    if ($session->save())
+      return $session->id;
+    return null;
   }
 
   

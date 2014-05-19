@@ -19,6 +19,11 @@ interface IBasicRecord extends arrayaccess {
    * @throws InvalidRecordFieldException if the field does not exist
    */
   public function __isset($field);
+  
+  /**
+   * @return array Get all data as an associative array
+   */
+  public function getData();
 
   /** @return IBasicModel Associated model */
   public function getModel();

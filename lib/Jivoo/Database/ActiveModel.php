@@ -147,6 +147,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       if (isset($this->cache[$id]))
         return $this->cache[$id];
     }
+    $data = $this->source->createExisting($data)->getData();
     return ActiveRecord::createExisting($this, $data, $this->record);
   }
 
@@ -313,7 +314,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   }
   
   public function countSelection(ReadSelection $selection) {
-    return $this->source->count($selection);
+    return $this->source->countSelection($selection);
   }
   
   public function firstSelection(ReadSelection $selection) {
