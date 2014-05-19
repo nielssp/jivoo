@@ -122,7 +122,7 @@ class AuthHelper extends Helper {
   }
 
   public function isAllowed() {
-    return false;
+    return true;
   }
 
   /**

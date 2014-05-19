@@ -39,7 +39,7 @@ class ActiveRecord implements IRecord, ILinkable {
       $record = new ActiveRecord($model, $data, $allowedFields);
     $record->new = true;
     $record->saved = false;
-    $model->triggerEvent('afterCreate', new ActiveModelEvent($model));
+    $model->triggerEvent('afterCreate', new ActiveModelEvent($record));
     return $record;
   }
   
@@ -50,7 +50,7 @@ class ActiveRecord implements IRecord, ILinkable {
       $record = new ActiveRecord($model, $data);
     $record->updatedData = array();
     $model->addToCache($record);
-    $model->triggerEvent('afterLoad', new ActiveModelEvent($model));
+    $model->triggerEvent('afterLoad', new ActiveModelEvent($record));
     return $record;
   }
 
