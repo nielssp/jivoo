@@ -77,7 +77,20 @@ class Utilities {
     $ascii = ord($char);
     return $ascii >= 97 AND $ascii <= 122;
   }
+  
+  public static function randomInt($min, $max) {
+    return mt_rand($min, $max);
+  }
 
+  public static function randomString($length, $allowedChars) {
+    $max = strlen($allowedChars) - 1;
+    $string = '';
+    for ($i = 0; $i < $length; $i++) {
+      $string .= $allowedChars[Utilities::randomInt(0, $max)];
+    }
+    return $string;
+  }
+  
   /**
    * Returns the portion of string specified by the start and length parameters.
    * @param string $string
