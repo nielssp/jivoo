@@ -201,7 +201,7 @@ class FormHelper extends Helper {
   }
    
   public function checkboxLabel($field, $value, $label, $attributes = array()) {
-    $this->radioLabel($field, $value, $label, $attributes);
+    return $this->radioLabel($field, $value, $label, $attributes);
   }
 
   public function text($field, $attributes = array()) {
