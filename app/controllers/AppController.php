@@ -9,10 +9,11 @@ class AppController extends Controller {
   protected function init() {
     $this->Auth->userModel = $this->User;
     $this->Auth->authentication = array('Form');
+    $this->Auth->authorization = array('Action');
+    $this->Auth->loginRoute = 'App::login';
+    $this->Auth->allow();
     if ($this->Auth->isLoggedIn())
       $this->user = $this->Auth->user;
-    $this->Auth->authorization = array('Action');
-    $this->Auth->allow();
   }
   
   public function notFound() {

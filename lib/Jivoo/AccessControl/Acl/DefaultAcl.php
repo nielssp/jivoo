@@ -19,6 +19,9 @@ class DefaultAcl extends LoadableAcl {
     else if (is_array($this->allow)) {
       $this->allow[$permission] = true;
     }
+    else if (isset($this->deny[$permission])) {
+      unset($this->deny[$permission]);
+    }
   }
   
   public function deny($permission = null) {
@@ -28,6 +31,9 @@ class DefaultAcl extends LoadableAcl {
     }
     else if (is_array($this->deny)) {
       $this->deny[$permission] = true;
+    }
+    else if (isset($this->allow[$permission])) {
+      unset($this->allow[$permission]);
     }
   }
 }

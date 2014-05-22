@@ -15,7 +15,7 @@ class CommentsController extends AppController {
   }
 
   public function add($post) {
-    if ($this->Auth->isAllowed('frontend.posts.comments.add')) {
+    if ($this->Auth->hasPermission('Comments.add')) {
       $commentValidator = $this->Comment->getValidator();
       if ($this->config['anonymousCommenting']) {
         unset($commentValidator->author->presence);

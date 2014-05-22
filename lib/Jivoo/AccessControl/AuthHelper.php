@@ -26,6 +26,12 @@ class AuthHelper extends Helper {
   private $cookieLifeTime = 2592000; // 30 days
   private $cookieRenewAfter = 864000; // 10 days
   
+  private $permissionPrefix = '';
+  
+  private $loginRoute = null;
+  private $unauthorizedRoute = null;
+  private $ajaxRoute = null;
+  
   /**
    * @var IAuthentication[]
    */
@@ -55,7 +61,9 @@ class AuthHelper extends Helper {
   public function __get($property) {
     switch ($property) {
       case 'userModel':
-      case 'user':
+      case 'loginRoute':
+      case 'unauthorizedRoute':
+      case 'ajaxRoute':
       case 'sessionId':
       case 'createSessions':
       case 'createCookies':
@@ -66,13 +74,19 @@ class AuthHelper extends Helper {
       case 'cookieLifeTime':
       case 'cookieRenewAfter':
       case 'passwordHasher':
+      case 'permissionPrefix':
         return $this->$property;
+      case 'user':
+        return $this->getUser();
     }
   }
 
   public function __set($property, $value) {
     switch ($property) {
       case 'userModel':
+      case 'loginRoute':
+      case 'unauthorizedRoute':
+      case 'ajaxRoute':
       case 'createSessions':
       case 'createCookies':
       case 'sessionPrefix':
@@ -81,6 +95,7 @@ class AuthHelper extends Helper {
       case 'cookiePrefix':
       case 'cookieLifeTime':
       case 'cookieRenewAfter':
+      case 'permissionPrefix':
         $this->$property = $value;
         break;
       case 'passwordHasher':
@@ -183,7 +198,13 @@ class AuthHelper extends Helper {
       or $this->checkSession() or $this->checkCookie();
   }
   
+  public function check($permission) {
+    if (!$this->hasPermission($permission))
+      $this->authorizationError();
+  }
+  
   public function hasPermission($permission) {
+    $permission = $this->permissionPrefix . $permission;
     foreach ($this->aclMethods as $method) {
       if ($method->hasPermission($this->user, $permission))
         return true;
@@ -192,11 +213,23 @@ class AuthHelper extends Helper {
   }
   
   public function authenticationError() {
-    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', 'Unauthenticated'));
+    if ($this->request->isAjax() and isset($this->ajaxRoute))
+      $this->m->Routing->redirect($this->ajaxRoute);
+    if (isset($this->loginRoute))
+      $this->m->Routing->redirect($this->loginRoute);
+    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', tr('Unauthenticated')));
   }
   
   public function authorizationError() {
-    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', 'Unauthorized'));
+    if (!$this->isLoggedIn())
+      $this->authenticationError();
+    if ($this->request->isAjax() and isset($this->ajaxRoute))
+      $this->m->Routing->redirect($this->ajaxRoute);
+    if (isset($this->unauthorizedRoute))
+      $this->m->Routing->redirect($this->unauthorizedRoute);
+    if (isset($this->loginRoute))
+      $this->m->Routing->redirect($this->loginRoute);
+    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', tr('Unauthorized')));
   }
   
   public function checkAuthorization(CallActionEvent $event) {
