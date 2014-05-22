@@ -218,23 +218,31 @@ class AuthHelper extends Helper {
   }
   
   public function authenticationError() {
-    if ($this->request->isAjax() and isset($this->ajaxRoute))
-      $this->m->Routing->redirect($this->ajaxRoute);
-    if (isset($this->loginRoute))
+    if ($this->request->isAjax()) {
+      if (isset($this->ajaxRoute))
+        $this->m->Routing->redirect($this->ajaxRoute);
+    }
+    else if (isset($this->loginRoute))
       $this->m->Routing->redirect($this->loginRoute);
-    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', tr('Unauthenticated')));
+    throw new ResponseOverrideException(
+      new TextResponse(Http::FORBIDDEN, 'text/plain', tr('Unauthenticated'))
+    );
   }
   
   public function authorizationError() {
     if (!$this->isLoggedIn())
       $this->authenticationError();
-    if ($this->request->isAjax() and isset($this->ajaxRoute))
-      $this->m->Routing->redirect($this->ajaxRoute);
-    if (isset($this->unauthorizedRoute))
+    if ($this->request->isAjax()) {
+      if (isset($this->ajaxRoute))
+        $this->m->Routing->redirect($this->ajaxRoute);
+    }
+    else if (isset($this->unauthorizedRoute))
       $this->m->Routing->redirect($this->unauthorizedRoute);
-    if (isset($this->loginRoute))
+    else if (isset($this->loginRoute))
       $this->m->Routing->redirect($this->loginRoute);
-    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', tr('Unauthorized')));
+    throw new ResponseOverrideException(
+      new TextResponse(Http::FORBIDDEN, 'text/plain', tr('Unauthorized'))
+    );
   }
   
   public function checkAuthorization(CallActionEvent $event) {
