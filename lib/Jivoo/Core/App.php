@@ -234,11 +234,7 @@ class App implements IEventSubject {
   public function getModule($name) {
     if (!isset($this->m->$name)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
-      if (!is_subclass_of($name, 'LoadableModule')) {
-        throw new ModuleInvalidException(
-          tr('The "%1" module does not extend "%2"', $name, 'LoadableModule')
-        );
-      }
+      Lib::assumeSubclassOf($name, 'LoadableModule');
       $this->m->$name = new $name($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
     }
@@ -376,8 +372,7 @@ class App implements IEventSubject {
     
     // Load application listeners
     foreach ($this->listenerNames as $listener) {
-      if (!is_subclass_of($listener, 'AppListener'))
-        throw new Exception(tr('Class "%1" must extend "%1"', $listener, 'AppListener'));
+      Lib::assumeSubclassOf($listener, 'AppListener');
       $this->attachEventListener(new $listener($this));
     }
 
@@ -398,13 +393,6 @@ class App implements IEventSubject {
   public function stop($status = 0) {
     exit($status);
   }
-}
-
-/**
- * Thrown when a module is invalid
- * @package Core
- */
-class ModuleInvalidException extends Exception {
 }
 
 /**

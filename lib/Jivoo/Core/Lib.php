@@ -1,7 +1,7 @@
 <?php
 /**
  * Library system
- * @package Core
+ * @package Jivoo\Core
  */
 class Lib {
 
@@ -115,6 +115,22 @@ class Lib {
   }
   
   /**
+   * Check whether or not $class extends $parent, and throw an exception if
+   * it does not
+   * @param string $class Class name
+   * @param string $parent Expected parent class of $class
+   * @throws ClassInvalidException if $class does not extend $parent
+   * @throws ClassNotFoundException if $class does not exist
+   */
+  public static function assumeSubclassOf($class, $parent) {
+    if (!is_subclass_of($class, $parent)) {
+      throw new ClassInvalidException(tr(
+        'Class "%1" should extend "%2"', $class, $parent
+      ));
+    }
+  } 
+  
+  /**
    * Auto loader
    * @param string $className Name of class
    * @throws ClassNotFoundException if class not found (and Lib::$throwExceptions
@@ -150,7 +166,7 @@ class Lib {
       }
     }
     if (self::$throwExceptions) {
-      throw new ClassNotFoundException(tr('Class not found: %1', $className));
+      throw new ClassNotFoundException(tr('Class not found: "%1"', $className));
     }
     return false;
   }
@@ -158,6 +174,12 @@ class Lib {
 
 /**
  * Thrown when a class could not be found
- * @package Core
+ * @package Jivoo\Core
  */
 class ClassNotFoundException extends Exception { }
+
+/**
+ * Thrown when a class is invalid
+ * @package Jivoo\Core
+ */
+class ClassInvalidException extends Exception { }

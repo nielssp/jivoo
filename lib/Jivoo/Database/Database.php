@@ -128,16 +128,7 @@ class Database extends LoadableModule implements IDatabase {
       Lib::import('Jivoo/Database/' . $this->driver);
       try {
         $class = $this->driver . 'Database';
-        if (!Lib::classExists($class))
-          throw new InvalidDatabaseDriverException(tr(
-            'Database driver "%1" could not be loaded because the class "%2" does not exist',
-            $this->driver, $class
-          ));
-        if (!is_subclass_of($class, 'MigratableDatabase'))
-          throw new InvalidDatabaseDriverException(tr(
-            'Class "%1" must extend class "%2"',
-            $class, 'MigratableDatabase'
-          ));
+        Lib::assumeSubclassOf($class, 'MigratableDatabase');
         $this->connection = new $class($this->app, $this->config);
       }
       catch (DatabaseConnectionFailedException $exception) {
@@ -324,5 +315,3 @@ class Database extends LoadableModule implements IDatabase {
   }
 
 }
-
-class InvalidDatabaseDriverException extends Exception { }

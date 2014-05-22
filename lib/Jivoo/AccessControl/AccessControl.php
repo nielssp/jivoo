@@ -7,6 +7,8 @@
 
 Lib::import('Jivoo/AccessControl/Hashing');
 Lib::import('Jivoo/AccessControl/Authentication');
+Lib::import('Jivoo/AccessControl/Authorization');
+Lib::import('Jivoo/AccessControl/Acl');
 
 /**
  * Access control module

@@ -35,12 +35,7 @@ class Helpers extends LoadableModule {
     if (!isset($this->helpers[$name])) {
       $class = $name . 'Helper';
       $this->triggerEvent('beforeLoadHelper', new LoadHelperEvent($this, $name));
-      if (!is_subclass_of($class, 'Helper')) {
-        throw new HelperInvalidException(tr(
-          'Class "%1" must extend "%2"',
-          $class, 'Helper'
-        ));
-      }
+      Lib::assumeSubclassOf($class, 'Helper');
       $this->helpers[$name] = new $class($this->app);
       $this->triggerEvent('afterLoadHelper', new LoadHelperEvent($this, $name, $this->helpers[$name]));
     }
@@ -71,19 +66,6 @@ class Helpers extends LoadableModule {
   public function __isset($name) {
     return $this->hasHelper($name);
   }
-}
-
-/**
- * Thrown when a helper does not exist
- * @package Core
- */
-class HelperNotFoundException extends Exception {
-}
-/**
- * Thrown when a helper is invalid
- * @package Core
- */
-class HelperInvalidException extends Exception {
 }
 
 /**

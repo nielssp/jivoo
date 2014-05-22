@@ -97,6 +97,10 @@ class Controller extends Module {
     $this->view->$name = $value;
   }
   
+  public function getName() {
+    return $this->name;
+  }
+  
   /**
    * Create a route to an action for auto routing
    * @param string $action Action name

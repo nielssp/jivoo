@@ -9,7 +9,7 @@ interface IAuthentication {
    */
   public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher);
   
-  public function deauthenticate(ActiveRecord $user, IUserModel $userModel);
+  public function deauthenticate(IRecord $user, IUserModel $userModel);
   
   public function cookie();
 }

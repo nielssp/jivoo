@@ -11,7 +11,7 @@ abstract class LoadableAuthentication extends Module implements IAuthentication 
     return null;
   }
   
-  public function deauthenticate(ActiveRecord $user, IUserModel $userModel) { }
+  public function deauthenticate(IRecord $user, IUserModel $userModel) { }
   
   public function cookie() {
     return false;

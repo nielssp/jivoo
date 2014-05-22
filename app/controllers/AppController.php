@@ -11,6 +11,8 @@ class AppController extends Controller {
     $this->Auth->authentication = array('Form');
     if ($this->Auth->isLoggedIn())
       $this->user = $this->Auth->user;
+    $this->Auth->authorization = array('Action');
+    $this->Auth->allow();
   }
   
   public function notFound() {

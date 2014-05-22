@@ -36,10 +36,20 @@ class AuthHelper extends Helper {
    */
   private $authorizationMethods= array();
   
+  /**
+   * @var IAcl[]
+   */
+  private $aclMethods = array();
+  
   private $passwordHasher = null;
+  
+  private $defaultAcl = null;
   
   protected function init() {
     $this->passwordHasher = $this->m->AccessControl->getPasswordHasher();
+    $this->m->Routing->attachEventHandler('beforeCallAction', array($this, 'checkAuthorization'));
+    $this->defaultAcl = new DefaultAcl($this->app);
+    $this->addAcl($this->defaultAcl);
   }
 
   public function __get($property) {
@@ -86,43 +96,118 @@ class AuthHelper extends Helper {
               $name = $options;
               $options = array();
             }
-            if ($name instanceof IAuthentication)
-              $this->addAuthentication($name);
-            else
-              $this->loadAuthentication($name, $options);
+            $this->loadAuthentication($name, $options);
           }
-        }
-        else if ($value instanceof IAuthentication) {
-          $this->addAuthentication($value);
         }
         else {
           $this->loadAuthentication($value);
+        }
+        break;
+      case 'authorization':
+        if (is_array($value)) {
+          foreach ($value as $name => $options) {
+            if (!is_string($name)) {
+              $name = $options;
+              $options = array();
+            }
+            $this->loadAuthorization($name, $options);
+          }
+        }
+        else {
+          $this->loadAuthorization($value);
+        }
+        break;
+      case 'acl':
+        if (is_array($value)) {
+          foreach ($value as $name => $options) {
+            if (!is_string($name)) {
+              $name = $options;
+              $options = array();
+            }
+            $this->loadAcl($name, $options);
+          }
+        }
+        else {
+          $this->loadAcl($value);
         }
         break;
     }
   }
   
   private function loadAuthentication($name, $options = array()) {
+    if ($name instanceof IAuthentication)
+      return $this->addAuthentication($name);
     $name = $name . 'Authentication';
-    if (!is_subclass_of($name, 'LoadableAuthentication')) {
-      throw new Exception();
-    }
+    Lib::assumeSubclassOf($name, 'LoadableAuthentication');
     $this->addAuthentication(new $name($this->app, $options));
+  }
+  
+  private function loadAuthorization($name, $options = array()) {
+    if ($name instanceof IAuthorization)
+      return $this->addAuthorization($name);
+    $name = $name . 'Authorization';
+    Lib::assumeSubclassOf($name, 'LoadableAuthorization');
+    $this->addAuthorization(new $name($this->app, $options, $this));
+  }
+  
+  private function loadAcl($name, $options = array()) {
+    if ($name instanceof IAcl)
+      return $this->addAcl($name);
+    $name = $name . 'Acl';
+    Lib::assumeSubclassOf($name, 'LoadableAcl');
+    $this->addAcl(new $name($this->app, $options));
   }
   
   public function addAuthentication(IAuthentication $authentication) {
     $this->authenticationMethods[] = $authentication;
   }
-
-  public function allow($permission) {}
-
-  public function isLoggedIn() {
-    return isset($this->user) or $this->getUser() != null
-      or $this->checkSession() or $this->checkCookie();
+  
+  public function addAuthorization(IAuthorization $authorization) {
+    $this->authorizationMethods[] = $authorization;
+  }
+  
+  public function addAcl(IAcl $acl) {
+    $this->aclMethods[] = $acl;
+  }
+  
+  public function allow($permission = null) {
+    $this->defaultAcl->allow($permission);
+  }
+  
+  public function deny($permission = null) {
+    $this->defaultAcl->deny($permission);
   }
 
-  public function isAllowed() {
-    return true;
+  public function isLoggedIn() {
+    return isset($this->user)
+      or $this->checkSession() or $this->checkCookie();
+  }
+  
+  public function hasPermission($permission) {
+    foreach ($this->aclMethods as $method) {
+      if ($method->hasPermission($this->user, $permission))
+        return true;
+    }
+    return false;
+  }
+  
+  public function authenticationError() {
+    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', 'Unauthenticated'));
+  }
+  
+  public function authorizationError() {
+    throw new ResponseOverrideException(new TextResponse(403, 'text/plain', 'Unauthorized'));
+  }
+  
+  public function checkAuthorization(CallActionEvent $event) {
+    if (empty($this->authorizationMethods))
+      return;
+    $authRequest = new AuthorizationRequest($event->controller, $event->action, $this->user);
+    foreach ($this->authorizationMethods as $method) {
+      if ($method->authorize($authRequest))
+        return;
+    }
+    $this->authorizationError();
   }
 
   /**
@@ -176,6 +261,8 @@ class AuthHelper extends Helper {
   }
 
   public function getUser() {
+    if (!isset($this->user))
+      $this->isLoggedIn();
     return $this->user;
   }
   

@@ -97,7 +97,7 @@ class Routing extends LoadableModule {
 
   private $etags = false;
   
-  protected $events = array('beforeRender', 'afterRender', 'beforeRedirect');
+  protected $events = array('beforeRender', 'afterRender', 'beforeRedirect', 'beforeCallAction', 'afterCallAction');
 
   protected function init() {
     // Set default settings
@@ -894,7 +894,7 @@ class Routing extends LoadableModule {
 
   public function callAction($controllerName, $action, $parameters = array()) {
     if (!isset($this->m->Controllers))
-      throw new ModuleNotFoundException(tr('Missing module: "%1"', 'Controllers'));
+      throw new ClassNotFoundException(tr('Missing module: "%1"', 'Controllers'));
     $controller = $this->m->Controllers->getController($controllerName);
     if (!isset($controller))
       throw new InvalidRouteException(tr('Invalid controller: %1', $controllerName));
@@ -905,6 +905,8 @@ class Routing extends LoadableModule {
       ));
     }
     $controller->before();
+    
+    $this->triggerEvent('beforeCallAction', new CallActionEvent($this, $controller, $action, $parameters));
     $response = call_user_func_array(array($controller, $action), $parameters);
     if (is_string($response))
       $response = new TextResponse(Http::OK, 'text', $response);
@@ -914,6 +916,7 @@ class Routing extends LoadableModule {
         $controllerName . '::' . $action
       ));
     }
+    $this->triggerEvent('afterCallAction', new CallActionEvent($this, $controller, $action, $parameters, $response));
     $controller->after($response);
     return $response;
   }
@@ -1012,9 +1015,21 @@ class ResponseOverrideException extends Exception {
   }
 }
 
+class CallActionEvent extends Event {
+  public $controller;
+  public $action;
+  public $response;
+  public function __construct($sender, Controller $controller, $action, $parameters, Response $response = null) {
+    parent::__construct($sender, $parameters);
+    $this->controller = $controller;
+    $this->action = $action;
+    $this->response = $response;
+  }
+}
+
 class RedirectEvent extends Event {
-  protected $route;
-  protected $moved;
+  public $route;
+  public $moved;
   public function __construct($sender, $route, $moved) {
     parent::__construct($sender);
     $this->route = $route;
