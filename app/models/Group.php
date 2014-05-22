@@ -23,32 +23,17 @@ class GroupRecord extends ActiveRecord {
       $this->permissions[$record['permission']] = true;
   }
 
-  public function hasPermission($key = null) {
+  public function hasPermission($permission) {
     if ($this->isNew()) {
       return false;
-    }
-    if (!isset($key)) {
-      return true;
     }
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
     }
-    if (isset($this->permissions['*']))
-      return true;
-    if (isset($this->permissions[$key]))
-      return true;
-    $permArr = explode('.', $key);
-    if (count($permArr) <= 1) {
-      return false;
-    }
-    else {
-      array_pop($permArr);
-      $parentKey = implode('.', $permArr);
-      return $this->hasPermission($parentKey);
-    }
+    return isset($this->permissions[$permission]);
   }
 
-  public function setPermission($key, $value) {
+  public function setPermission($permission, $value) {
     if ($this->isNew()) {
       return false;
     }
@@ -56,17 +41,17 @@ class GroupRecord extends ActiveRecord {
       $this->fetchPermissions();
     }
     $source = $this->getModel()->getDatabase()->GroupPermission;
-    if ($value == true AND !$this->hasPermission($key)) {
-      $this->permissions[$key] = true;
+    if ($value == true AND !$this->hasPermission($permission)) {
+      $this->permissions[$permission] = true;
       $source->create()
         ->set('groupId', $this->id)
-        ->set('permission', $key)
+        ->set('permission', $permission)
         ->save();
     }
-    else if ($value == false AND $this->hasPermission($key)) {
-      unset($this->permissions[$key]);
+    else if ($value == false AND $this->hasPermission($permission)) {
+      unset($this->permissions[$permission]);
       $source->where('groupId = ?', $this->id)
-        ->and('permission = ?', $key)
+        ->and('permission = ?', $permission)
         ->delete();
     }
   }
