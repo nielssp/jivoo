@@ -11,7 +11,9 @@ class AppController extends Controller {
     $this->Auth->authentication = array('Form');
     $this->Auth->authorization = array('Action');
     $this->Auth->loginRoute = 'App::login';
-    $this->Auth->allow();
+    $this->Auth->acl = array('Record');
+    $this->Auth->allow('frontend');
+    $this->Auth->permissionPrefix = 'frontend.';
     if ($this->Auth->isLoggedIn())
       $this->user = $this->Auth->user;
   }

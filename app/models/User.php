@@ -45,9 +45,9 @@ class User extends ActiveModel implements IUserModel {
     'confirmPassword'
   );
 
-  public function recordHasPermission(ActiveRecord $record, $key) {
+  public function recordHasPermission(ActiveRecord $record, $permission) {
     $group = $record->group;
-    return isset($group) and $group->hasPermission($key);
+    return isset($group) and $group->hasPermission($permission);
   }
 
   public function confirmPassword(ActiveRecord $record, $field) {
