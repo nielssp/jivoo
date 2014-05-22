@@ -204,11 +204,16 @@ class AuthHelper extends Helper {
   }
   
   public function hasPermission($permission) {
-    $permission = $this->permissionPrefix . $permission;
+    return $this->checkAcl($this->permissionPrefix . $permission);
+  }
+  
+  private function checkAcl($permission) {
     foreach ($this->aclMethods as $method) {
       if ($method->hasPermission($this->user, $permission))
         return true;
     }
+    if (strpos($permission, '.') !== false)
+      return $this->hasPermission(preg_replace('/\\..+?$/', '', $permission));
     return false;
   }
   
