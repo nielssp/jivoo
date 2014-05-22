@@ -213,7 +213,7 @@ class AuthHelper extends Helper {
         return true;
     }
     if (strpos($permission, '.') !== false)
-      return $this->hasPermission(preg_replace('/\\..+?$/', '', $permission));
+      return $this->checkAcl(preg_replace('/\\..+?$/', '', $permission));
     return false;
   }
   
