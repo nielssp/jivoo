@@ -99,16 +99,22 @@ class Database extends LoadableModule implements IDatabase {
 
   protected function init() {
     if (!isset($this->config['driver']))
-      throw new DatabaseConnectionFailedException(tr('Database not configured'));
+      throw new DatabaseConnectionFailedException(
+        tr('Database not configured')
+      );
     $drivers = new DatabaseDriversHelper($this->app);
     $this->driver = $this->config['driver'];
     $this->driverInfo = $drivers->checkDriver($this->driver);
     if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
-      throw new DatabaseConnectionFailedException('Database driver unavailable: "%1"', $this->driver);
+      throw new DatabaseConnectionFailedException(
+        tr('Database driver unavailable: "%1"', $this->driver)
+      );
     }
     foreach ($this->driverInfo['requiredOptions'] as $option) {
       if (!isset($this->config[$option])) {
-        throw new DatabaseConnectionFailedException('Database option missing: "%1"', $option);
+        throw new DatabaseConnectionFailedException(
+          tr('Database option missing: "%1"', $option)
+        );
       }
     }
     Lib::import('Jivoo/Database/' . $this->driver);
@@ -118,11 +124,9 @@ class Database extends LoadableModule implements IDatabase {
       $this->connection = new $class($this->app, $this->config);
     }
     catch (DatabaseConnectionFailedException $exception) {
-      /** @todo Do something ... here */
-      throw new Exception(
-        tr('Database connection failed')
-          . tr('Could not connect to the database.') . '<p>'
-          . $exception->getMessage() . '</p>');
+      throw new DatabaseConnectionFailedException(
+        tr('Database connection failed: ' . $exception->getMessage())
+      );
     }
 
     $schemasDir = $this->p('schemas', '');
@@ -241,7 +245,4 @@ class Database extends LoadableModule implements IDatabase {
     return isset($this->migrations[$table])
       AND $this->migrations[$table] == 'new';
   }
-
-
-
 }
