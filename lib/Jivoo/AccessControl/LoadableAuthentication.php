@@ -16,4 +16,8 @@ abstract class LoadableAuthentication extends Module implements IAuthentication 
   public function cookie() {
     return false;
   }
+  
+  public function isStateLess() {
+    return false;
+  }
 }

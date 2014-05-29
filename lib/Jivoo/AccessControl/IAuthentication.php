@@ -12,4 +12,6 @@ interface IAuthentication {
   public function deauthenticate(IRecord $user, IUserModel $userModel);
   
   public function cookie();
+  
+  public function isStateLess();
 }

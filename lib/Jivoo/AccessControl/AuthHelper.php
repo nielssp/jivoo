@@ -36,6 +36,11 @@ class AuthHelper extends Helper {
    * @var IAuthentication[]
    */
   private $authenticationMethods = array();
+  
+  /**
+   * @var IAuthentication[]
+   */
+  private $stateLessAuthenticationMethods = array();
 
   /**
    * @var IAuthorization[]
@@ -175,6 +180,8 @@ class AuthHelper extends Helper {
   
   public function addAuthentication(IAuthentication $authentication) {
     $this->authenticationMethods[] = $authentication;
+    if ($authentication->isStateLess())
+      $this->stateLessAuthenticationMethods[] = $authentication;
   }
   
   public function addAuthorization(IAuthorization $authorization) {
@@ -195,7 +202,9 @@ class AuthHelper extends Helper {
 
   public function isLoggedIn() {
     return isset($this->user)
-      or $this->checkSession() or $this->checkCookie();
+      or $this->checkSession()
+      or $this->checkCookie()
+      or $this->checkStateLess();
   }
   
   public function check($permission) {
@@ -302,6 +311,18 @@ class AuthHelper extends Helper {
         return true;
       }
       unset($this->request->cookies[$this->cookiePrefix . 'session']);
+    }
+    return false;
+  }
+  
+  public function checkStateLess() {
+    foreach ($this->stateLessAuthenticationMethods as $method) {
+      $user = $method->authenticate($this->request->data, $this->userModel, 
+        $this->passwordHasher);
+      if ($user != null) {
+        $this->user = $user;
+        return true;
+      }
     }
     return false;
   }
