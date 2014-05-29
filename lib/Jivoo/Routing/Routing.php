@@ -398,6 +398,13 @@ class Routing extends LoadableModule {
       }
     }
   }
+  
+  public function validateActionRoute($route) {
+    $route = $this->validateRoute($route);
+    if (!isset($route['controller']) or !isset($route['action']))
+      throw new InvalidRouteException(tr('Not a valid action route, must contain controller and action'));
+    return $route;
+  }
 
   /**
    * Validate route
@@ -416,7 +423,7 @@ class Routing extends LoadableModule {
       $parts = explode('::', $route);
       $route = array();
       $i = 0;
-      while (isset($parts[$i]) AND Utilities::isUpper($parts[$i][0])) {
+      while (isset($parts[$i]) and Utilities::isUpper($parts[$i][0])) {
         if (!isset($route['controller'])) {
           $route['controller'] = '';
         }
@@ -431,7 +438,7 @@ class Routing extends LoadableModule {
         }
       }
     }
-    else if (is_object($route) AND $route instanceof ILinkable) {
+    else if (is_object($route) and $route instanceof ILinkable) {
       return $this->validateRoute($route->getRoute());
     }
     if (!is_array($route)) {

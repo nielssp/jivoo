@@ -7,28 +7,32 @@
  */
 class DatabaseSetupController extends SetupController {
 
-  protected $helpers = array('Html', 'Form');
+  protected $helpers = array('Html', 'Form', 'DatabaseDrivers');
 
   public function before() {
     $this->config = $this->config['Database'];
+    $this->config->defaults = array(
+      'server' => 'localhost',
+      'database' => strtolower($this->app->name),
+      'filename' => $this->p('config', 'db.sqlite3'),
+    );
   }
-  
+
   /**
    * Action for selecting database driver
    */
   public function selectDriver() {
-    if ($this->config->exists('driver')) {
-      $this->refresh();
-    }
+    if (isset($this->config['driver']))
+      return $this->Setup->done();
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
-    $this->drivers = $this->m->Database->listDrivers();
+    $this->drivers = $this->DatabaseDrivers->listDrivers();
     if ($this->request->hasValidData()) {
       foreach ($this->drivers as $driver) {
-        if ($driver['isAvailable']
-          AND isset($this->request->data[$driver['driver']])) {
-          $this->config->set('driver', $driver['driver']);
+        if ($driver['isAvailable'] and
+             isset($this->request->data[$driver['driver']])) {
+          $this->config['driver'] = $driver['driver'];
           if ($this->config->save()) {
-            return $this->redirect(null);
+            return $this->Setup->done();
           }
           else {
             return $this->saveConfig();
@@ -57,6 +61,16 @@ class DatabaseSetupController extends SetupController {
    * Action for configuring database driver
    */
   public function setupDriver() {
+    if (!isset($this->config['driver']))
+      return $this->Setup->setState('DatabaseSetup::selectDriver', false);
+    $this->driver = $this->DatabaseDrivers->checkDriver($this->config['driver']);
+    if (!isset($this->driver) or $this->driver['isAvailable'] !== true) {
+      unset($this->config['driver']);
+      if ($this->config->save())
+        return $this->Setup->setState('DatabaseSetup::selectDriver', false);
+      else
+        return $this->saveConfig();
+    }
     $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
     $this->setupForm = new Form('setup');
     $this->exception = null;
@@ -69,20 +83,18 @@ class DatabaseSetupController extends SetupController {
     if ($this->request->hasValidData()) {
       $this->setupForm->addData($this->request->data['setup']);
       if (isset($this->request->data['cancel'])) {
-        $this->config->delete('driver');
-        if ($this->config->save()) {
-          $this->redirect(null);
-        }
-        else {
+        unset($this->config['driver']);
+        if ($this->config->save())
+          return $this->Setup->setState('DatabaseSetup::selectDriver', false);
+        else
           return $this->saveConfig();
-        }
       }
       else if ($this->setupForm->isValid()) {
         $driver = $this->driver['driver'];
         $class = $driver . 'Database';
         Lib::import('Jivoo/Database/' . $driver);
         try {
-          new $class($this->request->data['setup']);
+          new $class($this->app, $this->request->data['setup']);
           $options = array_flip(
             array_merge($this->driver['requiredOptions'],
               $this->driver['optionalOptions']
@@ -90,17 +102,14 @@ class DatabaseSetupController extends SetupController {
           );
           foreach ($this->request->data['setup'] as $key => $value) {
             if (isset($options[$key])) {
-              $this->config->set($key, $value);
+              $this->config[$key] = $value;
             }
           }
-          $this->config->set('configured', true);
-          $this->config->delete('migration');
-          if ($this->config->save()) {
-            return $this->redirect(null);
-          }
-          else {
+          unset($this->config['migration']);
+          if ($this->config->save())
+            return $this->Setup->done();
+          else
             return $this->saveConfig();
-          }
         }
         catch (DatabaseConnectionFailedException $exception) {
           $this->exception = $exception;

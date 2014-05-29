@@ -113,6 +113,10 @@ abstract class ViewBase {
   public function __isset($name) {
     return isset($this->data[$name]);
   }
+  
+  public function __unset($name) {
+    unset($this->data[$name]);
+  }
 
   /**
    * Begin capturing output for block

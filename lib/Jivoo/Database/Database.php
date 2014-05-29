@@ -98,46 +98,31 @@ class Database extends LoadableModule implements IDatabase {
   /* End IDatabase implementation */
 
   protected function init() {
-    $this->config->defaults = array('server' => 'localhost',
-      'database' => strtolower($this->app->name),
-      'filename' => $this->p('config', 'db.sqlite3'),
-    );
-    $controller = new DatabaseSetupController($this->app);
-    $this->view->addTemplateDir($this->p('templates'), 3);
-    if (!isset($this->config['driver'])) {
-      $this->m->Setup->enterSetup($controller, 'selectDriver');
+    if (!isset($this->config['driver']))
+      throw new DatabaseConnectionFailedException(tr('Database not configured'));
+    $drivers = new DatabaseDriversHelper($this->app);
+    $this->driver = $this->config['driver'];
+    $this->driverInfo = $drivers->checkDriver($this->driver);
+    if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
+      throw new DatabaseConnectionFailedException('Database driver unavailable: "%1"', $this->driver);
     }
-    else {
-      Logger::debug('Check driver: ' . $this->config['driver']);
-      $this->driver = $this->config['driver'];
-      $this->driverInfo = $this->checkDriver($this->driver);
-      if (!$this->driverInfo OR !$this->driverInfo['isAvailable']) {
-        unset($this->config['driver']);
-        $this->m->Routing->refresh();
+    foreach ($this->driverInfo['requiredOptions'] as $option) {
+      if (!isset($this->config[$option])) {
+        throw new DatabaseConnectionFailedException('Database option missing: "%1"', $option);
       }
-      if ($this->config['configured'] !== true) {
-        $controller->driver = $this->driverInfo;
-        $this->m->Setup->enterSetup($controller, 'setupDriver');
-      }
-      foreach ($this->driverInfo['requiredOptions'] as $option) {
-        if (!isset($this->config[$option])) {
-          $controller->driver = $this->driverInfo;
-          $this->m->Setup->enterSetup($controller, 'setupDriver');
-        }
-      }
-      Lib::import('Jivoo/Database/' . $this->driver);
-      try {
-        $class = $this->driver . 'Database';
-        Lib::assumeSubclassOf($class, 'MigratableDatabase');
-        $this->connection = new $class($this->app, $this->config);
-      }
-      catch (DatabaseConnectionFailedException $exception) {
-        /** @todo Do something ... here */
-        throw new Exception(
-          tr('Database connection failed')
-            . tr('Could not connect to the database.') . '<p>'
-            . $exception->getMessage() . '</p>');
-      }
+    }
+    Lib::import('Jivoo/Database/' . $this->driver);
+    try {
+      $class = $this->driver . 'Database';
+      Lib::assumeSubclassOf($class, 'MigratableDatabase');
+      $this->connection = new $class($this->app, $this->config);
+    }
+    catch (DatabaseConnectionFailedException $exception) {
+      /** @todo Do something ... here */
+      throw new Exception(
+        tr('Database connection failed')
+          . tr('Could not connect to the database.') . '<p>'
+          . $exception->getMessage() . '</p>');
     }
 
     $schemasDir = $this->p('schemas', '');
@@ -257,61 +242,6 @@ class Database extends LoadableModule implements IDatabase {
       AND $this->migrations[$table] == 'new';
   }
 
-  /**
-   * Get information about a database driver.
-   * 
-   * The returned information array is of the format:
-   * <code>
-   * array(
-   *   'driver' => ..., // Driver name (string)
-   *   'name' => ..., // Formal name, e.g. 'MySQL' instead of 'MySql' (string)
-   *   'requiredOptions' => array(...), // List of required options (string[])
-   *   'optionalOptions' => array(...), // List of optional options (string[])
-   *   'isAvailable' => ..., // Whether or not driver is available (bool)
-   *   'missingExtensions => array(...) // List of missing extensions (string[])
-   * )
-   * </code>
-   * @param string $driver Driver name
-   * @return array|false Driver information as an associative array or false if
-   * not found
-   */
-  public function checkDriver($driver) {
-    if (!file_exists($this->p($driver . '/' . $driver . 'Database.php'))) {
-      return false;
-    }
-    $meta = FileMeta::read($this->p($driver . '/' . $driver . 'Database.php'));
-    if (!isset($meta['required'])) {
-      $meta['required'] = '';
-    }
-    $missing = array();
-    foreach ($meta['dependencies']['php'] as $dependency => $versionInfo) {
-      if (!extension_loaded($dependency)) {
-        $missing[] = $dependency;
-      }
-    }
-    return array('driver' => $driver, 'name' => $meta['name'],
-      'requiredOptions' => explode(' ', $meta['required']),
-      'optionalOptions' => explode(' ', $meta['optional']),
-      'isAvailable' => count($missing) < 1, 'missingExtensions' => $missing
-    );
-  }
 
-  /**
-   * Get an array of all drivers and their information 
-   * @return array An associative array of driver names and driver information
-   * as returned by {@see Database::checkDriver()}
-   */
-  public function listDrivers() {
-    $drivers = array();
-    $dir = opendir($this->p(''));
-    while ($driver = readdir($dir)) {
-      if (is_dir($this->p($driver))) {
-        if ($driverInfo = $this->checkDriver($driver)) {
-          $drivers[$driver] = $driverInfo;
-        }
-      }
-    }
-    return $drivers;
-  }
 
 }

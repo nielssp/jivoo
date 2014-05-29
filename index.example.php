@@ -21,7 +21,7 @@ $app->paths->tmp = 'tmp';
 $app->paths->extensions = 'extensions';
 $app->paths->themes = 'themes';
 
-$environment = getenv('APP_ENVIRONMENT');
+$environment = getenv('JIVOO_ENVIRONMENT');
 $environment || $environment = 'production';
 
 $app->run($environment);

@@ -76,6 +76,10 @@ class Form implements IBasicRecord, IBasicModel {
     }
   }
   
+  public function getData() {
+    return $this->data;
+  }
+  
   /**
    * @return Form Model
    */

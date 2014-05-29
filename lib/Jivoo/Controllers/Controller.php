@@ -97,6 +97,16 @@ class Controller extends Module {
     $this->view->$name = $value;
   }
   
+  public function __isset($name) {
+    if (isset($this->modelObjects[$name]))
+      return true;
+    return isset($this->view->$name);
+  }
+  
+  public function __unset($name) {
+    unset($this->view->$name);
+  }
+  
   public function getName() {
     return $this->name;
   }

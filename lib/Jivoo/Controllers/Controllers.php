@@ -138,14 +138,17 @@ class Controllers extends LoadableModule {
    * @return Controller|null Controller object or null if not found
    */
   private function getInstance($name) {
-    if (isset($this->controllers[$name])) {
-      if (!isset($this->controllerObjects[$name])) {
-        $class = $this->controllers[$name];
-        $this->controllerObjects[$name] = new $class($this->app);
+    if (!isset($this->controllers[$name])) {
+      if (Lib::classExists($name . 'Controller')) {
+        $this->controllers[$name] = $name . 'Controller';
       }
-      return $this->controllerObjects[$name];
+      else {
+        return null;
+      }
     }
-    return null;
+    $class = $this->controllers[$name];
+    $this->controllerObjects[$name] = new $class($this->app);
+    return $this->controllerObjects[$name];
   }
 
   /**

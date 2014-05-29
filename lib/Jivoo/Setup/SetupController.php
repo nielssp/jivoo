@@ -4,6 +4,10 @@
  * @package Jivoo\Setup
  */
 class SetupController extends Controller {
+  
+  protected $modules = array('Setup');
+  protected $helpers = array('Setup');
+  
   public function saveConfig() {
     $this->file = $this->config->file;
     $this->exists = file_exists($this->file);

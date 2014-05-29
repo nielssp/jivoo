@@ -25,6 +25,10 @@ return array(
     'Jivoo/Extensions',
     'Jivoo/Widgets',
   ),
+  'setup' => array(
+  	'Setup::Database::selectDriver',
+  	'Setup::Database::setupDriver'
+  ),
   'listeners' => array(
     'PageRouting',
     'PostRouting',
