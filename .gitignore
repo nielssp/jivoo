@@ -8,3 +8,4 @@ doc/
 .buildpath
 .settings/.jsdtscope
 .settings/
+config/db.sqlite3

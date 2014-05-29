@@ -15,6 +15,8 @@ class FormHelper extends Helper {
    */
   private $record = null;
   
+  private $data = array();
+  
   /**
    * @var IBasicModel Associated model
    */
@@ -67,6 +69,16 @@ class FormHelper extends Helper {
         'value' => $specialMethod
       ));
     }
+    if ($attributes['method'] == 'post')
+      $this->data = $this->request->data;
+    else
+      $this->data = $this->request->query;
+    if (isset($this->name)) {
+      if (isset($this->data[$this->name]))
+        $this->data = $this->data[$this->name];
+      else
+        $this->data = array();
+    }
     return $html;
   }
 
@@ -116,14 +128,10 @@ class FormHelper extends Helper {
   }
   
   public function value($field) {
-    if (isset($this->record)) {
+    if (isset($this->record))
       return $this->record->$field;
-    }
-    else {
-      $name = $this->name($field);
-      if (isset($this->request->query[$name]))
-        return $this->request->query[$name];
-    }
+    else if (isset($this->data[$field]))
+      return $this->data[$field];
     return null;
   }
   
@@ -345,7 +353,7 @@ class FormHelper extends Helper {
       'type' => $type,
       'name' => $this->name($field),
       'id' => $this->id($field),
-      'value' => $this->value($field)
+      'value' => $type != 'password' ? $this->value($field) : ''
     ), $attributes);
     return $this->element('input', $attributes);
   }

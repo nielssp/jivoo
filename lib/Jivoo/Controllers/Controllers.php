@@ -3,8 +3,6 @@
 // Name           : Controllers
 // Description    : For contollers
 // Author         : apakoh.dk
-// Dependencies   : Jivoo/Routing Jivoo/Templates
-//                  Jivoo/Helpers Jivoo/Models
 
 /**
  * Controller module. Will automatically find controllers in the controllers
@@ -12,8 +10,6 @@
  * @package Jivoo\Controllers
  */
 class Controllers extends LoadableModule {
-  
-  protected $modules = array('Routing', 'Templates', 'Helpers', 'Models');
   
   /**
    * @var array An associative array of controller names and associated class

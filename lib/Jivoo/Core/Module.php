@@ -44,7 +44,7 @@ abstract class Module implements IEventSubject {
       $this->session = $this->request->session;
     }
     if (isset($this->m->Templates))
-      $this->view = $this->m->Templates->view;
+      $this->view = $this->m->Templates->getView();
 
     $this->e = new EventManager($this, $this->app->eventManager);
   }

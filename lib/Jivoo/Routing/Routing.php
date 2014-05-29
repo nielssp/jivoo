@@ -3,6 +3,7 @@
 // Name           : Routing
 // Description    : The Jivoo routing system
 // Author         : apakoh.dk
+// Dependencies   : Jivoo/Controllers
 
 /**
  * Module for handling routes and HTTP requests.
@@ -64,6 +65,8 @@
  * @package Jivoo\Routing
  */
 class Routing extends LoadableModule {
+  
+  protected $modules = array('Controllers');
 
   /**
    * @var Controllers Controllers module
@@ -103,10 +106,6 @@ class Routing extends LoadableModule {
     // Set default settings
     $this->config->defaults = array(
       'rewrite' => false,
-      'index' => array(
-        'path' => 'posts',
-        'query' => array()
-      ),
       'sessionPrefix' => $this->app->sessionPrefix,
     );
 

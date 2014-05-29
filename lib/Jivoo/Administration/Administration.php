@@ -14,6 +14,6 @@ class Administration extends LoadableModule {
   protected $modules = array('Templates');
   
   protected function init() {
-    
+    // read menu-config or something? 
   }
 }

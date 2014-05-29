@@ -7,4 +7,5 @@ return array(
   Route::match('tags/*', 'Posts::viewTag'),
   Route::match('feed/posts.rss', 'Posts::feed'),
   Route::match('login', 'App::login'),
+  Route::auto('Admin'),
 );

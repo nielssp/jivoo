@@ -3,7 +3,6 @@
 // Name           : Helpers
 // Description    : For helpers
 // Author         : apakoh.dk
-// Dependencies   : Jivoo/Routing Jivoo/Models
 
 /**
  * Helpers module. All helpers added to the module, can be accessed as
@@ -11,8 +10,6 @@
  * @package Jivoo\Helpers
  */
 class Helpers extends LoadableModule {
-  
-  protected $modules = array('Routing', 'Models');
   
   protected $events = array('beforeLoadHelper', 'afterLoadHelper');
   
