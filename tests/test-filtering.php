@@ -391,7 +391,7 @@ $input = 'author = root and something (foo | bar | baz)';
 
 $test = new LabTest('Filtering');
 
-include '../lib/Jivoo/bootstrap.php';
+include '../lib/Jivoo/Core/bootstrap.php';
 
 Lib::import('Core');
 Lib::import('Jivoo/Helpers');

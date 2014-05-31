@@ -30,7 +30,8 @@ class GroupRecord extends ActiveRecord {
     if (!isset($this->permissions)) {
       $this->fetchPermissions();
     }
-    return isset($this->permissions[$permission]);
+    return isset($this->permissions[$permission]) or
+           isset($this->permissions['*']);
   }
 
   public function setPermission($permission, $value) {

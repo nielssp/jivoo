@@ -152,7 +152,7 @@ class Link extends ActiveModel {
     $link->menu = 'main';
     $link->position = 3;
     $link->title = tr('Admin');
-    $link->setRoute(array('controller' => 'Backend'));
+    $link->setRoute(array('controller' => 'Admin'));
     $link->save();
   }
 }

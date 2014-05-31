@@ -353,7 +353,7 @@ class FormHelper extends Helper {
       'type' => $type,
       'name' => $this->name($field),
       'id' => $this->id($field),
-      'value' => $type != 'password' ? $this->value($field) : ''
+      'value' => $type != 'password' ? $this->value($field) : null
     ), $attributes);
     return $this->element('input', $attributes);
   }

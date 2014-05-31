@@ -10,7 +10,8 @@ class AppController extends Controller {
     $this->Auth->userModel = $this->User;
     $this->Auth->authentication = array('Form');
     $this->Auth->authorization = array('Action');
-    $this->Auth->loginRoute = 'App::login';
+    $this->Auth->loginRoute = 'Admin::login';
+    $this->Auth->unauthorizedroute = 'Admin::accessDenied';
     $this->Auth->acl = array('Record');
     $this->Auth->allow('frontend');
     $this->Auth->permissionPrefix = 'frontend.';

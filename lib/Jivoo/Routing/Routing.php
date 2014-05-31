@@ -67,11 +67,6 @@
 class Routing extends LoadableModule {
   
   protected $modules = array('Controllers');
-
-  /**
-   * @var Controllers Controllers module
-   */
-  private $controllers;
   
   /**
    * @var array Selected route and priority
@@ -411,7 +406,7 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If invalid route
    * @return array A valid route array
    */
-  public function validateRoute($route) {
+  public function validateRoute($route, $defaultAction = 'index') {
     if (!isset($route)) {
       return array('path' => array(), 'query' => array(), 'fragment' => null);
     }
@@ -469,8 +464,8 @@ class Routing extends LoadableModule {
       $route['parameters'] = $parameters;
     if (isset($route['controller'])) {
       $route['controller'] = $this->controllerName($route['controller']);
-      if (!isset($route['action'])) {
-        $route['action'] = 'index';
+      if (!isset($route['action']) and isset($defaultAction)) {
+        $route['action'] = $defaultAction;
       }
       if (!isset($route['parameters'])) {
         $route['parameters'] = array();
@@ -593,9 +588,6 @@ class Routing extends LoadableModule {
    * @param string $prefix Prefix...
    */
   public function autoRoute($controller, $action = null, $prefix = '') {
-    if (!isset($this->m->Controllers)) {
-      throw new ModuleNotFoundException(tr('Missing module: "%1"', 'Controllers'));
-    }
     if (isset($action)) {
       $class = $this->m->Controllers->getClass($controller);
       if (!$class) {
@@ -899,8 +891,6 @@ class Routing extends LoadableModule {
   }
 
   public function callAction($controllerName, $action, $parameters = array()) {
-    if (!isset($this->m->Controllers))
-      throw new ClassNotFoundException(tr('Missing module: "%1"', 'Controllers'));
     $controller = $this->m->Controllers->getController($controllerName);
     if (!isset($controller))
       throw new InvalidRouteException(tr('Invalid controller: %1', $controllerName));

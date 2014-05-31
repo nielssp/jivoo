@@ -91,9 +91,9 @@ class Route {
    * @throws Exception if type is auto routing and controller is not set
    */
   public function draw(Routing $routing) {
-    $this->route = $routing->validateRoute($this->route);
     switch ($this->type) {
       case self::TYPE_AUTO:
+        $this->route = $routing->validateRoute($this->route, null);
         if (!isset($this->route['controller'])) {
           throw new Exception(tr('Auto routing requires controller'));
         }
@@ -105,6 +105,7 @@ class Route {
         }
         break;
       case self::TYPE_RESOURCE:
+        $this->route = $routing->validateRoute($this->route);
         if (!isset($this->route['controller'])) {
           throw new Exception(tr('Resource routing requires controller'));
         }
