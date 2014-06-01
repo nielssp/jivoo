@@ -52,24 +52,24 @@ class HtmlHelper extends Helper {
   /**
    * Create a link
    * @param string $label Label for link
-   * @param array|ILinkable|string|null $route Route for link, default is frontpage, see
-   * {@see Routing}.
+   * @param array|ILinkable|string|null $route Route for link, default is
+   *        frontpage, see {@see Routing}.
    * @param array $attributes Associative array of attributes to add to link.
-   * @return string|false An HTML link or false if invalid route.
+   * @return string false HTML link or false if invalid route.
    */
   public function link($label, $route = null, $attributes = array()) {
     try {
       $url = $this->m->Routing->getLink($route);
-      if (!isset($attributes['class']) AND $this->m->Routing->isCurrent($route)) {
+      if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route)) {
         $attributes['class'] = 'current';
       }
+      return '<a href="' . h($url) . '"' . $this->addAttributes($attributes) .
+             '>' . $label . '</a>';
     }
     catch (InvalidRouteException $e) {
       Logger::logException($e);
       return '<a href="#invalid-route" class="invalid">' . $label . '</a>';
     }
-    return '<a href="' . h($url) . '"' . $this->addAttributes($attributes)
-        . '>' . $label . '</a>';
   }
 
   /**

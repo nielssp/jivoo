@@ -39,8 +39,6 @@ class AdminController extends AppController {
   }
 
   public function logout() {
-    if (!$this->Auth->isLoggedIn())
-      return $this->redirect(null);
     $this->Auth->logOut();
     $this->goBack();
     return $this->refresh();

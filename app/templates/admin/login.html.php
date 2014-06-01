@@ -5,15 +5,18 @@ $this->style('admin/icomoon/style.css');
 <!DOCTYPE html>
 <html>
 <head>
-<title>Jivoo</title>
+<meta charset="utf-8" />
+<title>Log in | <?php echo $site['title']; ?></title>
 
+<?php echo $this->block('meta'); ?>
 <?php echo $this->block('style'); ?>
+<?php echo $this->block('script'); ?>
 
 </head>
 <body id="login">
 
 <div>
-<h1><a href="#">Jivoo</a></h1>
+<h1><?php echo $Html->link($site['title'], null); ?></h1>
 <?php echo $Form->form(); ?>
 
 <?php foreach ($flash as $message): ?>
@@ -40,7 +43,7 @@ Log in
 </button>
 <?php echo $Form->end(); ?>
 
-<p><a href="#">Reset password</a></p>
+<p><a href="#not-implemented">Reset password</a></p>
 
 </div>
 
