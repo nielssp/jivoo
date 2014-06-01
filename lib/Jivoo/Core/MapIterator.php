@@ -7,23 +7,23 @@ class MapIterator implements Iterator {
     $this->map = $map;
   }
   
-  public function current () {
+  public function current() {
     return current($this->map);
   }
   
-  public function next () {
+  public function next() {
     next($this->map);
   }
   
-  public function key () {
+  public function key() {
     return key($this->map);
   }
   
-  public function valid () {
-    return key($this->map) === null;
+  public function valid() {
+    return key($this->map) !== null;
   }
   
-  public function rewind () {
+  public function rewind() {
     reset($this->map);
   }
 }

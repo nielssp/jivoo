@@ -59,7 +59,7 @@ class AdminController extends AppController {
         return $this->refresh();
       }
       else {
-        $this->session->alert(tr('Incorret username and/or password.'));
+        $this->session->flash['error'][] = tr('Incorret username and/or password.');
       }
     }
     return $this->render();

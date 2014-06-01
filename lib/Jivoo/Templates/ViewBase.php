@@ -494,9 +494,7 @@ abstract class ViewBase {
    */
   public function fetch($template) {
     arsort($this->templateDirs);
-    $this->data['messages'] = $this->request->session->messages;
-    $this->data['alerts'] = $this->request->session->alerts;
-    $this->data['notices'] = $this->request->session->notices;
+    $this->data['flash'] = $this->request->session->flash;
     return $this->render($template);
   }
   

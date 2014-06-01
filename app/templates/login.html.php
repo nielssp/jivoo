@@ -2,9 +2,9 @@
 
 <h1>Login test</h1>
 
-<?php foreach ($this->messages as $message): ?>
+<?php foreach ($this->flash as $message): ?>
 
-<p><?php echo $message->message; $message->delete(); ?></p>
+<p><?php echo $message; ?></p>
 
 <?php endforeach; ?>
 

@@ -5,10 +5,7 @@
  * Implements arrayaccess, so the []-operator can be used
  * to get and set session values.
  * @property-read string $id Session id
- * @property-read array $messages Associative array of uid and
- * {@see Flash} objects
- * @property-read Flash[] $alerts Alerts only
- * @property-read Flash[] $notices Notices only
+ * @property-read FlashMap $flash Flash messages
  * @package Jivoo\Routing
  */
 class SessionStorage implements arrayaccess {
@@ -22,6 +19,7 @@ class SessionStorage implements arrayaccess {
    */
   private $messages = array();
   
+  private $flash;
   
   /**
    * Constructor
@@ -31,30 +29,12 @@ class SessionStorage implements arrayaccess {
   public function __construct($prefix = '', $clientIp = null) {
     session_start();
     $this->prefix = $prefix;
-//     if (isset($clientIp)) {
-//       if (isset($this['ip'])) {
-//         if ($clientIp != $this['ip']) {
-//           // Verification failed, reset session data
-//           $prefixLength = strlen($this->prefix);
-//           foreach ($_SESSION as $key => $value) {
-//             $compare = substr($key, 0, $prefixLength);
-//             if ($compare == $this->prefix) {
-//               unset($_SESSION[$key]);
-//             }
-//           }
-//           $this['ip'] = $clientIp;
-//         }
-//       }
-//       else {
-//         $this['ip'] = $clientIp;
-//       }
-//     }
-    if (!isset($this['messages'])) {
-      $this['messages'] = array();
-    }
-    foreach ($this['messages'] as $uid => $flash) {
-      $this->messages[$uid] = Flash::fromArray($this, $flash);
-    }
+    $this->flash = new FlashMap($this);
+  }
+  
+  public function __destruct() {
+    if ($this->id != '')
+      $this->flash->save();
   }
   
   /**
@@ -66,51 +46,9 @@ class SessionStorage implements arrayaccess {
     switch ($property) {
       case 'id':
         return session_id();
-      case 'messages':
-        return $this->messages;
-      case 'alerts':
-        $result = array();
-        foreach ($this->messages as $flash) {
-          if ($flash->type == 'alert') {
-            $result[] = $flash;
-          }
-        }
-        return $result;
-      case 'notices':
-        $result = array();
-        foreach ($this->messages as $flash) {
-          if ($flash->type == 'notice') {
-            $result[] = $flash;
-          }
-        }
-        return $result;
+      case 'flash':
+        return $this->flash;
     }
-  }
-  
-  /**
-   * Flash a notice to the user
-   * @param string $message Message
-   * @param string $label Message label, i.e. 'Alert'
-   */
-  public function notice($message, $label = null) {
-    $flash = new Flash($this, $message, 'notice', $label);
-    $this->messages[$flash->uid] = $flash;
-    $messages = $this['messages'];
-    $messages[$flash->uid] = $flash->toArray();
-    $this['messages'] = $messages;
-  }
-
-  /**
-   * Flash an alert to the user
-   * @param string $message Message
-   * @param string $label Message label, i.e. 'Alert'
-   */
-  public function alert($message, $label = null) {
-    $flash = new Flash($this, $message, 'alert', $label);
-    $this->messages[$flash->uid] = $flash;
-    $messages = $this['messages'];
-    $messages[$flash->uid] = $flash->toArray();
-    $this['messages'] = $messages;
   }
   
   /**
@@ -126,6 +64,7 @@ class SessionStorage implements arrayaccess {
    * Allows other scripts to use session.
    */
   public function close() {
+    $this->flash->save();
     session_write_close();
   }
   

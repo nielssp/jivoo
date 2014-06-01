@@ -16,8 +16,8 @@ $this->style('admin/icomoon/style.css');
 <h1><a href="#">Jivoo</a></h1>
 <?php echo $Form->form(); ?>
 
-<?php foreach ($messages as $message): ?>
-<div class="flash flash-error"><?php echo $message->message; ?></div>
+<?php foreach ($flash as $message): ?>
+<div class="flash flash-<?php echo $message->type; ?>"><?php echo $message; ?></div>
 <?php endforeach; ?>
 
 <div class="field">
