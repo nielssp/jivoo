@@ -44,9 +44,9 @@ class Controllers extends LoadableModule {
    */
   private function findControllers($dir = '') {
     Lib::addIncludePath($this->p('controllers', $dir));
-    $handle = opendir($this->p('controllers', $dir));
-    if ($handle) {
-      while ($file = readdir($handle)) {
+    $files = scandir($this->p('controllers', $dir));
+    if ($files !== false) {
+      foreach ($files as $file) {
         if ($file[0] == '.') {
           continue;
         }
@@ -69,7 +69,6 @@ class Controllers extends LoadableModule {
           }
         }
       }
-      closedir($handle);
     }
   }
   

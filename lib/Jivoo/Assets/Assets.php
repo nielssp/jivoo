@@ -74,11 +74,13 @@ class Assets extends LoadableModule {
 
   private function returnAppJs() {
     $text = '';
-    $dir = opendir($this->p('assets', 'js'));
-    while ($file = readdir($dir)) {
-      $path = $this->p('assets', 'js/' . $file);
-      if (is_file($path)) {
-        $text .= $this->minifyJs(file_get_contents($path)) . PHP_EOL;
+    $files = scandir($this->p('assets', 'js'));
+    if ($files !== false) {
+      foreach ($files as $file) {
+        $path = $this->p('assets', 'js/' . $file);
+        if (is_file($path)) {
+          $text .= $this->minifyJs(file_get_contents($path)) . PHP_EOL;
+        }
       }
     }
     $response = new TextResponse(Http::OK, 'application/javascript', $text);
@@ -88,11 +90,13 @@ class Assets extends LoadableModule {
 
   private function returnAppCss() {
     $text = '';
-    $dir = opendir($this->p('assets', 'css'));
-    while ($file = readdir($dir)) {
-      $path = $this->p('assets', 'css/' . $file);
-      if (is_file($path)) {
-        $text .= $this->minifyCss(file_get_contents($path)) . PHP_EOL;
+    $files = scandir($this->p('assets', 'css'));
+    if ($files !== false) {
+      foreach ($files as $file) {
+        $path = $this->p('assets', 'css/' . $file);
+        if (is_file($path)) {
+          $text .= $this->minifyCss(file_get_contents($path)) . PHP_EOL;
+        }
       }
     }
     $response = new TextResponse(Http::OK, 'text/css', $text);

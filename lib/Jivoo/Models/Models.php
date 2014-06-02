@@ -29,15 +29,14 @@ class Models extends LoadableModule {
     $modelsDir = $this->p('models', '');
     if (is_dir($modelsDir)) {
       Lib::addIncludePath($modelsDir);
-      $dir = opendir($modelsDir);
-      if ($dir) {
-        while ($file = readdir($dir)) {
+      $files = scandir($modelsDir);
+      if ($files !== false) {
+        foreach ($files as $file) {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
             $this->addClass($split[0]);
           }
         }
-        closedir($dir);
       }
     }
   }

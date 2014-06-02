@@ -27,7 +27,8 @@ return array(
   ),
   'setup' => array(
   	'Setup::Database::selectDriver',
-  	'Setup::Database::setupDriver'
+  	'Setup::Database::setupDriver',
+    'Setup::Auth::createUser',
   ),
   'listeners' => array(
     'PageRouting',

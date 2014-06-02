@@ -46,11 +46,13 @@ class DatabaseDriversHelper extends Helper {
    */
   public function listDrivers() {
     $drivers = array();
-    $dir = opendir($this->p('Database', ''));
-    while ($driver = readdir($dir)) {
-      if (is_dir($this->p('Database', $driver))) {
-        if ($driverInfo = $this->checkDriver($driver)) {
-          $drivers[$driver] = $driverInfo;
+    $files = scandir($this->p('Database', ''));
+    if ($files !== false) {
+      foreach ($files as $driver) {
+        if (is_dir($this->p('Database', $driver))) {
+          if ($driverInfo = $this->checkDriver($driver)) {
+            $drivers[$driver] = $driverInfo;
+          }
         }
       }
     }

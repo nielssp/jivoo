@@ -132,9 +132,9 @@ class Database extends LoadableModule implements IDatabase {
     $schemasDir = $this->p('schemas', '');
     if (is_dir($schemasDir)) {
       Lib::addIncludePath($schemasDir);
-      $dir = opendir($schemasDir);
-      if ($dir) {
-        while ($file = readdir($dir)) {
+      $files = scandir($schemasDir);
+      if ($files !== false) {
+        foreach ($files as $file) {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
             $class = $split[0];
@@ -143,7 +143,6 @@ class Database extends LoadableModule implements IDatabase {
         }
       }
     }
-    closedir($dir);
 
     $classes = $this->m->Models->getModelClasses();
     foreach ($classes as $class) {
