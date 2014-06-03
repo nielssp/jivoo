@@ -10,7 +10,7 @@ $this->script('admin/theme.js');
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Jivoo ftw</title>
+<title><?php echo $title . ' | ' . $app['name']; ?></title>
 
 <?php echo $this->block('meta'); ?>
 <?php echo $this->block('style'); ?>
@@ -28,17 +28,10 @@ $this->script('admin/theme.js');
 </ul>
 
 <ul class="account">
-<li class="notifications"><?php echo $Admin->link('3', '#', 'bell'); ?>
-<ul class="notifications-menu">
-<li class="flash">Notification 1</li>
-<li class="flash">And</li>
-<li class="flash flash-warn">So forth....</li>
-</ul>
-</li>
 <li><?php echo $Admin->link(h($user->username), 'Admin', 'user'); ?></li>
 <li><?php echo $Admin->link('Log out', 'Admin::logout', 'exit'); ?></li>
 <li class="account-menu notifications">
-  <?php echo $Admin->link('3', '#', 'key'); ?>
+  <?php echo $Admin->link('3', array('url' => '#'), 'key'); ?>
 <ul>
 <li><a href="#"><span class="icon icon-bell"></span><span class="label">Notifications</span><span class="count">3</span></a></li>
 <li><?php echo $Admin->link(h($user->username), 'Admin', 'user'); ?></li>
@@ -51,6 +44,8 @@ $this->script('admin/theme.js');
 </header>
 
 <nav>
+
+<?php echo $Admin->mainMenu(); ?>
 
 </nav>
 

@@ -30,6 +30,9 @@ class Widgets extends LoadableModule {
    */
   private $areas = array();
   
+  
+  private $widgets = array();
+  
   protected function init() {
     if (!isset($this->config['areas'])) {
       $this->config['areas'] = array(
@@ -48,7 +51,27 @@ class Widgets extends LoadableModule {
       $this->p('templates/text-widget.html.php')
     ));
     
+    $this->view->addTemplateDir($this->p('templates'), 4);
+    
     $this->m->Routing->attachEventHandler('beforeRender', array($this, 'renderWidgets'));
+  }
+  
+  public function addWidget(Widget $widget) {
+    $name = preg_replace('/Widget$/', '', get_class($widget));
+    $this->widgets[$name] = $widget;
+  }
+  
+  public function getWidget($name) {
+    if (!isset($this->widgets[$name])) {
+      $class = $name . 'Widget';
+      Lib::assumeSubclassOf($class, 'Widget');
+      $this->widgets[$name] = new $class($this->app);
+    }
+    return $this->widgets[$name];
+  }
+  
+  public function hasWidget($name) {
+    return isset($this->widgets[$name]);
   }
   
   /**
@@ -57,6 +80,19 @@ class Widgets extends LoadableModule {
    */
   public function register(Widget $widget) {
     $this->available[get_class($widget)] = $widget;
+  }
+  
+  /**
+   * Get a widget instance
+   * @param string $name Widget name
+   * @return Widget|null A widget object or null on failure
+   */
+  public function __get($name) {
+    return $this->getWidget($name);
+  }
+  
+  public function __isset($name) {
+    return $this->hasWidget($name);
   }
   
   /**

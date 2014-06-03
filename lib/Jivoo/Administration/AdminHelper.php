@@ -3,15 +3,11 @@ class AdminHelper extends Helper {
   
   protected $modules = array('Assets', 'Templates');
   
-  protected $helpers = array('Html');
+  protected $helpers = array('Html', 'Widget');
   
   public function importDefaultTheme() {
     $this->m->Assets->addAssetDir('Administration', 'default/assets');
     $this->view->addTemplateDir($this->p('Administration', 'default/templates'));
-  }
-  
-  public function component($name, $options = array()) {
-    return '<pre>[[comp:' . $name . ']]</pre>';
   }
   
   public function link($label, $route, $icon = null, $count = null, $attributes = array()) {
@@ -38,6 +34,12 @@ class AdminHelper extends Helper {
       return '<a href="#invalid-route" class="invalid"><span class="label">' .
              $label . '</span></a>';
     }
+  }
+  
+  public function mainMenu() {
+    return $this->Widget->widget('Menu', array(
+      
+    ));
   }
   
 }

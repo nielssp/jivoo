@@ -435,6 +435,8 @@ abstract class ViewBase {
    * @return string|false $path Absolute path to template or false if not found
    */
   public function findTemplate($template) {
+    if (file_exists($template))
+      return $template;
     if ($this->mobile) {
       foreach ($this->templateDirs as $dir => $priority) {
         if (substr($dir, -1, 1) != '/') {
@@ -471,17 +473,17 @@ abstract class ViewBase {
    * @param string $template Template
    * @return string Rendered template
    */
-  private function render($template) {
+  private function render($template, $data = array()) {
     ob_start();
     $this->content = '';
-    $this->embed($template);
+    $this->embed($template, $data);
     if (isset($this->extend)) {
       $template = $this->extend;
       $this->extend = null;
       if (!$this->ignoreExtend) {
         $this->content .= ob_get_clean();
         $this->assign('content', $this->content);
-        return $this->render($template);
+        return $this->render($template, $data);
       }
     }
     return $this->content . ob_get_clean();
@@ -492,10 +494,10 @@ abstract class ViewBase {
    * @param string $template Template
    * @return string Output of template
    */
-  public function fetch($template) {
+  public function fetch($template, $data = array()) {
     arsort($this->templateDirs);
     $this->data['flash'] = $this->request->session->flash;
-    return $this->render($template);
+    return $this->render($template, $data);
   }
   
   /**
@@ -503,10 +505,10 @@ abstract class ViewBase {
    * @param string $template Template
    * @return string Output of template
    */
-  public function fetchOnly($template) {
+  public function fetchOnly($template, $data = array()) {
     $prev = $this->ignoreExtend;
     $this->ignoreExtend = true;
-    $output = $this->fetch($template);
+    $output = $this->fetch($template, $data);
     $this->ignoreExtend = $prev;
     return $output;
   }
@@ -515,10 +517,10 @@ abstract class ViewBase {
    * Display a template
    * @param string $template Template
    */
-  public function display($template) {
+  public function display($template, $data = array()) {
     $contentType = Utilities::getContentType($template);
     Http::setContentType($contentType);
-    echo $this->fetch($template);
+    echo $this->fetch($template, $data);
   }
 }
 

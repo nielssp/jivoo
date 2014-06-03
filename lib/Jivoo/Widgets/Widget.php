@@ -6,12 +6,12 @@
 abstract class Widget extends Module {
   protected $modules = array('Helpers', 'Models');
   /**
-   * @var string[] A list of other helpers needed by this helper
+   * @var string[] A list of helpers needed by this widget
    */
   protected $helpers = array();
   
   /**
-   * @var string[] A list of models needed by this helper
+   * @var string[] A list of models needed by this widget
    */
   protected $models = array();
 
@@ -39,7 +39,7 @@ abstract class Widget extends Module {
    * @param Routing $routing Routing module
    * @param string $defaultTemplate Absolute path to default widget template
    */
-  public function __construct(App $app, $defaultTemplate) {
+  public final function __construct(App $app, $defaultTemplate = null) {
     $this->inheritElements('modules');
     $this->inheritElements('helpers');
     $this->inheritElements('models');
@@ -48,8 +48,16 @@ abstract class Widget extends Module {
     $helperObjects = $this->m->Helpers->getHelpers($this->helpers);
     foreach ($helperObjects as $name => $helper)
       $this->$name = $helper;
+    if (!isset($defaultTemplate)) {
+      $defaultTemplate = 'widgets/' . Utilities::camelCaseToDashes(
+        preg_replace('/Widget$/', '', get_class($this))
+      ) . '.html';
+    }
     $this->template = $defaultTemplate;
+    $this->init();
   }
+  
+  protected function init() { }
   
   /**
    * Get value of data variable
@@ -153,10 +161,7 @@ abstract class Widget extends Module {
    * @return string Widget HTML
    */
   public function fetch() {
-    extract($this->data);
-    ob_start();
-    require $this->template;
-    return ob_get_clean();
+    return $this->view->fetch($this->template, $this->data);
   }
   
   /**
