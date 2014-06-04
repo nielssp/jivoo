@@ -1,6 +1,7 @@
 <?php
 
-include('../app/essentials.php');
+include '../lib/Jivoo/Core/bootstrap.php';
+Lib::import('Jivoo/Editors');
 
 function output($text) {
   echo '<div style="font-size:10px;margin:5px;width:500px;padding:4px;border:4px dashed #ccc;">'
@@ -14,9 +15,11 @@ $comment = <<<END
   <br>
   <P>Hello, World</p>
   </div><div>
-  <div style=color:blue>this is green</div>
+  <div style=color:blue>
+  <p>this is green</div>
   <meta name="derp" value="lort"/>
   <a hReF="http://apakoh.dk" style="color:brown;">Hello</a>
+  <a href="http://foo.com" title="5>3"> Oops </a>
 END;
 
 $comment2 = <<<END
@@ -68,7 +71,11 @@ t
   <DIV STYLE="width: expression(alert('XSS'));">
 END;
 
+echo 'Original:';
+
 output($comment);
+
+echo 'Stip_tags:';
 
 output(nl2br(strip_tags($comment)));
 
@@ -77,18 +84,21 @@ $allow = array('div' => array(), 'br' => array(),
   'img' => array('src' => array('url' => true)),
 );
 
-$format = new Encoder();
+$format = new HtmlEncoder();
 
 $format->allowTag('div');
 $format->allowTag('br');
 $format->allowTag('a');
 $format->allowAttribute('a', 'href');
+$format->allowAttribute('a', 'title');
 $format->validateAttribute('a', 'href', 'url', true);
 $format->allowTag('p');
 $format->allowTag('img');
 $format->allowAttribute('img', 'src');
 $format->validateAttribute('img', 'src', 'url', true);
 $format->appendAttributes('a', 'rel="nofollow"');
+
+echo 'Encoded:';
 
 output($format->encode($comment, $allow));
 

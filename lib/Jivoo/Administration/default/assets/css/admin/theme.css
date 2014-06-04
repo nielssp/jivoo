@@ -1,3 +1,14 @@
+/*
+$navBg: #222;
+$navFg: #aaa;
+$navHlBg: #111;
+$navDisBg: #444;
+$navDisFg: #999;
+$subMenuBg: #333;
+$subMenuFg: #aaa;
+
+$mainBg: #ddd;
+//*/
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600");
 * {
   padding: 0;
@@ -42,14 +53,14 @@ body {
         @media screen and (min-width: 768px) {
           body.menu-open nav.ontop {
             top: 32px; } }
-      body.menu-open nav > ul > li > a.current + ul {
+      body.menu-open nav > ul > li > ul > li > a.current + ul {
         display: block;
         position: static;
         width: 100%;
         box-shadow: none; }
-      body.menu-open nav > ul > li > a .label {
+      body.menu-open nav > ul > li > ul > li > a .label {
         display: inline; }
-      body.menu-open nav > ul > li > a .count {
+      body.menu-open nav > ul > li > ul > li > a .count {
         display: inline; }
     body.menu-open #main {
       margin-left: 220px; }
@@ -108,55 +119,6 @@ body {
         float: left;
         padding-top: 6px; }
 
-header ul, nav ul {
-  list-style-type: none;
-  margin: 0; }
-  header ul li, nav ul li {
-    position: relative; }
-    header ul li a, header ul li a:link, header ul li a:active, header ul li a:visited, header ul li a:hover, nav ul li a, nav ul li a:link, nav ul li a:active, nav ul li a:visited, nav ul li a:hover {
-      background-color: inherit;
-      color: inherit;
-      text-decoration: none;
-      padding: 6px 0 6px 12px;
-      display: block; }
-    header ul li a .icon, nav ul li a .icon {
-      width: 32px;
-      margin-left: -12px;
-      text-align: center;
-      display: inline-block; }
-    header ul li a .count, nav ul li a .count {
-      margin-right: 12px;
-      display: none;
-      float: right;
-      color: #999; }
-    header ul li:hover > ul, nav ul li:hover > ul {
-      display: block; }
-    header ul li ul, nav ul li ul {
-      margin: 0;
-      position: absolute;
-      float: none;
-      left: 100%;
-      top: 0px;
-      z-index: 999;
-      list-style-type: none;
-      background-color: #f7f7f7;
-      width: 160px;
-      box-shadow: 0px 2px 4px #ababab;
-      display: none; }
-      header ul li ul li, nav ul li ul li {
-        position: relative;
-        display: block;
-        color: #333333; }
-        header ul li ul li:hover, nav ul li ul li:hover {
-          background-color: #eeeeee;
-          color: #2272cc; }
-        header ul li ul li a, header ul li ul li a:link, header ul li ul li a:active, header ul li ul li a:visited, header ul li ul li a:hover, nav ul li ul li a, nav ul li ul li a:link, nav ul li ul li a:active, nav ul li ul li a:visited, nav ul li ul li a:hover {
-          padding: 6px 0 6px 12px; }
-        header ul li ul li a.current, nav ul li ul li a.current {
-          font-weight: 600; }
-        header ul li ul li a .count, nav ul li ul li a .count {
-          display: inline-block; }
-
 header {
   background-color: #2272cc;
   padding: 0 12px 0 32px;
@@ -202,8 +164,55 @@ header {
     margin: 0 8px;
     display: none; }
   header > ul {
+    list-style-type: none;
+    margin: 0;
     display: block;
     float: left; }
+    header > ul li {
+      position: relative; }
+      header > ul li a, header > ul li a:link, header > ul li a:active, header > ul li a:visited, header > ul li a:hover {
+        background-color: inherit;
+        color: inherit;
+        text-decoration: none;
+        padding: 6px 0 6px 12px;
+        display: block; }
+      header > ul li a .icon {
+        width: 32px;
+        margin-left: -12px;
+        text-align: center;
+        display: inline-block; }
+      header > ul li a .count {
+        margin-right: 12px;
+        display: none;
+        float: right;
+        color: #999; }
+      header > ul li:hover > ul {
+        display: block; }
+      header > ul li ul {
+        margin: 0;
+        position: absolute;
+        float: none;
+        left: 100%;
+        top: 0px;
+        z-index: 999;
+        list-style-type: none;
+        background-color: #f7f7f7;
+        width: 160px;
+        box-shadow: 0px 2px 4px #ababab;
+        display: none; }
+        header > ul li ul li {
+          position: relative;
+          display: block;
+          color: #333333; }
+          header > ul li ul li:hover {
+            background-color: #eeeeee;
+            color: #2272cc; }
+          header > ul li ul li a, header > ul li ul li a:link, header > ul li ul li a:active, header > ul li ul li a:visited, header > ul li ul li a:hover {
+            padding: 6px 0 6px 12px; }
+          header > ul li ul li a.current {
+            font-weight: 600; }
+          header > ul li ul li a .count {
+            display: inline-block; }
     header > ul.account {
       float: right; }
     header > ul > li {
@@ -318,31 +327,85 @@ nav {
     margin: 0;
     display: none; }
   nav > ul {
-    margin-bottom: 20px; }
+    list-style-type: none;
+    margin: 0; }
     nav > ul > li {
-      color: #444444; }
-      nav > ul > li:hover {
-        background-color: #dddddd;
-        color: #2272cc; }
-      nav > ul > li > a.current {
-        background-color: #2272cc;
-        color: white; }
-        @media screen and (min-width: 1010px) {
-          nav > ul > li > a.current + ul {
-            display: block;
-            position: static;
-            width: 100%;
-            box-shadow: none; } }
-      nav > ul > li > a .label {
+      display: block; }
+      nav > ul > li > a {
         display: none; }
-      nav > ul > li > a .icon:before {
-        font-size: 16px;
-        vertical-align: -2px; }
-      @media screen and (min-width: 1010px) {
-        nav > ul > li > a .label {
-          display: inline; }
-        nav > ul > li > a .count {
-          display: inline; } }
+      nav > ul > li > ul {
+        list-style-type: none;
+        margin: 0;
+        margin-bottom: 20px; }
+        nav > ul > li > ul li {
+          position: relative; }
+          nav > ul > li > ul li a, nav > ul > li > ul li a:link, nav > ul > li > ul li a:active, nav > ul > li > ul li a:visited, nav > ul > li > ul li a:hover {
+            background-color: inherit;
+            color: inherit;
+            text-decoration: none;
+            padding: 6px 0 6px 12px;
+            display: block; }
+          nav > ul > li > ul li a .icon {
+            width: 32px;
+            margin-left: -12px;
+            text-align: center;
+            display: inline-block; }
+          nav > ul > li > ul li a .count {
+            margin-right: 12px;
+            display: none;
+            float: right;
+            color: #999; }
+          nav > ul > li > ul li:hover > ul {
+            display: block; }
+          nav > ul > li > ul li ul {
+            margin: 0;
+            position: absolute;
+            float: none;
+            left: 100%;
+            top: 0px;
+            z-index: 999;
+            list-style-type: none;
+            background-color: #f7f7f7;
+            width: 160px;
+            box-shadow: 0px 2px 4px #ababab;
+            display: none; }
+            nav > ul > li > ul li ul li {
+              position: relative;
+              display: block;
+              color: #333333; }
+              nav > ul > li > ul li ul li:hover {
+                background-color: #eeeeee;
+                color: #2272cc; }
+              nav > ul > li > ul li ul li a, nav > ul > li > ul li ul li a:link, nav > ul > li > ul li ul li a:active, nav > ul > li > ul li ul li a:visited, nav > ul > li > ul li ul li a:hover {
+                padding: 6px 0 6px 12px; }
+              nav > ul > li > ul li ul li a.current {
+                font-weight: 600; }
+              nav > ul > li > ul li ul li a .count {
+                display: inline-block; }
+        nav > ul > li > ul > li {
+          color: #444444; }
+          nav > ul > li > ul > li:hover {
+            background-color: #dddddd;
+            color: #2272cc; }
+          nav > ul > li > ul > li > a.current {
+            background-color: #2272cc;
+            color: white; }
+            @media screen and (min-width: 1010px) {
+              nav > ul > li > ul > li > a.current + ul {
+                display: block;
+                position: static;
+                width: 100%;
+                box-shadow: none; } }
+          nav > ul > li > ul > li > a .label {
+            display: none; }
+          nav > ul > li > ul > li > a .icon:before {
+            font-size: 16px;
+            vertical-align: -2px; }
+          @media screen and (min-width: 1010px) {
+            nav > ul > li > ul > li > a .label {
+              display: inline; }
+            nav > ul > li > ul > li > a .count {
+              display: inline; } }
 
 #main {
   background-color: white;

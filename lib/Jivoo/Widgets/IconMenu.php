@@ -11,6 +11,20 @@ class IconMenu extends IconMenuItem implements ArrayAccess, Iterator {
     return parent::__get($property);
   }
   
+  public function fromArray($array) {
+    foreach ($array as $key => $value) {
+      $this->items[$key] = $value;
+    }
+  }
+  
+  public function prepend(IconMenuItem $item) {
+    array_unshift($this->items, $item);
+  }
+  
+  public function append(IconMenuItem $item) {
+    $this->items[] = $item;
+  }
+  
   public function offsetExists($key) {
     return isset($this->items[$key]);    
   }
@@ -28,23 +42,33 @@ class IconMenu extends IconMenuItem implements ArrayAccess, Iterator {
     unset($this->items[$key]);
   }
 
-  function rewind() {
+  public function rewind() {
     reset($this->items);
   }
   
-  function current() {
+  public function current() {
     return current($this->items);
   }
   
-  function key() {
+  public function key() {
     return key($this->items);
   }
   
-  function next() {
+  public function next() {
     next($this->items);
   }
   
-  function valid() {
+  public function valid() {
     return key($this->items) !== null;
+  }
+  
+  public static function menu($label, $route, $icon = null, $items = array()) {
+    $menu = new IconMenu($label, $route, $icon);
+    $menu->items = $items;
+    return $menu;
+  }
+  
+  public static function item($label, $route, $icon = null, $badge = null) {
+    return new IconMenuItem($label, $route, $icon, $badge);
   }
 }

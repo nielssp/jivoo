@@ -75,7 +75,7 @@ body {
       display: block; 
       width: 220px;
       background-color: $navBg;
-      & > ul > li > a {
+      & > ul > li > ul > li > a {
         &.current + ul {
           display: block;
           position: static;
@@ -177,12 +177,6 @@ body {
   }
 }
 
-header, nav {
-  ul {
-    @include dropdown;
-  }
-}
-
 header {
   background-color: $headerBg;
   padding: 0 12px 0 32px;
@@ -243,6 +237,7 @@ header {
   }
 
   & > ul {
+    @include dropdown;
     display: block;
     float: left;
 
@@ -395,46 +390,56 @@ nav {
     margin: 0;
     display: none;
   }
-
   & > ul {
-    margin-bottom: 20px;
+    list-style-type: none;
+    margin: 0;
     & > li {
-      color: $navFg;
-      &:hover {
-        background-color: $navHlBg;
-        color: $navHlFg;
-      }
+      display: block;
       & > a {
-        &.current {
-          background-color: $navCuBg;
-          color: $navCuFg;
+        display: none;
+      }
+      & > ul {
+        @include dropdown;
+        margin-bottom: 20px;
+        & > li {
+          color: $navFg;
+          &:hover {
+            background-color: $navHlBg;
+            color: $navHlFg;
+          }
+          & > a {
+            &.current {
+              background-color: $navCuBg;
+              color: $navCuFg;
 
-          @media screen and (min-width: $md) {
-            & + ul {
-              display: block;
-              position: static;
-              width: 100%;
-              box-shadow: none;
-              & > li:hover {
+              @media screen and (min-width: $md) {
+                & + ul {
+                  display: block;
+                  position: static;
+                  width: 100%;
+                  box-shadow: none;
+                  & > li:hover {
+                  }
+                }
               }
             }
-          }
-        }
 
-        .label {
-          display: none;
-        }
+            .label {
+              display: none;
+            }
 
-        .icon:before {
-          font-size: 16px;
-          vertical-align: -2px;
-        }
-        @media screen and (min-width: $md) {
-          .label {
-            display: inline;
-          }
-          .count {
-            display: inline;
+            .icon:before {
+              font-size: 16px;
+              vertical-align: -2px;
+            }
+            @media screen and (min-width: $md) {
+              .label {
+                display: inline;
+              }
+              .count {
+                display: inline;
+              }
+            }
           }
         }
       }

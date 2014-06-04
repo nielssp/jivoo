@@ -8,4 +8,5 @@ return array(
   Route::match('feed/posts.rss', 'Posts::feed'),
   Route::match('login', 'App::login'),
   Route::auto('Admin'),
+  Route::auto('Admin::Posts'),
 );
