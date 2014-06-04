@@ -33,6 +33,7 @@ return array(
   'listeners' => array(
     'PageRouting',
     'PostRouting',
+    'AdminMenu',
   ),
   'defaultConfig' => array(
     'blog' => array(

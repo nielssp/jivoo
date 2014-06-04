@@ -1,14 +1,7 @@
 <?php
-class AdminHelper extends Helper {
+class IconHelper extends Helper {
   
-  protected $modules = array('Assets', 'Templates', 'Administration');
-  
-  protected $helpers = array('Html', 'Widget');
-  
-  public function importDefaultTheme() {
-    $this->m->Assets->addAssetDir('Administration', 'default/assets');
-    $this->view->addTemplateDir($this->p('Administration', 'default/templates'));
-  }
+  protected $helpers = array('Html');
   
   public function link($label, $route, $icon = null, $count = null, $attributes = array()) {
     try {
@@ -35,11 +28,4 @@ class AdminHelper extends Helper {
              $label . '</span></a>';
     }
   }
-  
-  public function menu($menu = 'main') {
-    return $this->Widget->widget('IconMenu', array(
-      'menu' => $this->m->Administration->menu[$menu],
-    ));
-  }
-  
 }

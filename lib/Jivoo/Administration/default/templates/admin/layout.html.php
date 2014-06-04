@@ -45,7 +45,7 @@ $this->script('admin/theme.js');
 
 <nav>
 
-<?php echo $Admin->mainMenu(); ?>
+<?php echo $Admin->menu(); ?>
 
 </nav>
 

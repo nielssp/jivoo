@@ -11,12 +11,12 @@
  */
 class Administration extends LoadableModule {
   
-  protected $modules = array('Templates');
+  protected $modules = array('Templates', 'Widgets');
   
   private $menu;
   
   protected function init() {
-    // read menu-config or something? 
+    $this->menu = new IconMenu(tr('Administration'));
   }
   
   public function __get($property) {
