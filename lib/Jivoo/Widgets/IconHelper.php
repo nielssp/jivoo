@@ -3,6 +3,21 @@ class IconHelper extends Helper {
   
   protected $helpers = array('Html');
   
+  private $providers = array();
+  
+  public function addProvider(IIconProvider $provider) {
+    $providers[] = $provider;
+  }
+  
+  public function icon($icon, $size = 16) {
+    foreach ($this->providers as $provider) {
+      $html = $provider->getIcon($icon, $size);
+      if (isset($html))
+        return $html;
+    }
+    return '<span class="icon-unavailable"></span>';
+  }
+  
   public function link($label, $route, $icon = null, $count = null, $attributes = array()) {
     try {
       $url = $this->m->Routing->getLink($route);
