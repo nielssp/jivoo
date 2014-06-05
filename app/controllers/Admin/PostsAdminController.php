@@ -21,11 +21,6 @@ class PostsAdminController extends AdminController {
           return $this->refresh();
         return $this->redirect(array('action' => 'edit', $this->post->id));
       }
-      else {
-        foreach ($this->post->getErrors() as $field => $error) {
-          $this->session->flash['error'][] = tr('%1: %2', $this->Post->getLabel($field), $error);
-        }
-      }
     }
     else {
       $this->post = $this->Post->create();
@@ -48,11 +43,6 @@ class PostsAdminController extends AdminController {
         else if (isset($this->request->data['save-new']))
           return $this->redirect('add');
         return $this->refresh();
-      }
-      else {
-        foreach ($this->post->getErrors() as $field => $error) {
-          $this->session->flash['error'][] = tr('%1: %2', $this->Post->getLabel($field), $error);
-        }
       }
     }
     return $this->render('admin/posts/add.html');

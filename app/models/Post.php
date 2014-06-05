@@ -22,7 +22,6 @@ class Post extends ActiveModel {
   protected $validate = array(
     'title' => array(
       'presence' => true,
-      'in' => array('draft', 'published', 'derp')
     ),
     'name' => array(
       'presence' => true,

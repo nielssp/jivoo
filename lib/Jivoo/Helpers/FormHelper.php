@@ -256,6 +256,7 @@ class FormHelper extends Helper {
     $attributes = array_merge(array(
       'type' => 'checkbox',
       'name' => $this->name($field),
+      'value' => $value,
       'id' => $this->id($field, $value)
     ), $attributes);
     $attributes['value'] = $value;
@@ -266,9 +267,9 @@ class FormHelper extends Helper {
     return $this->element('input', $attributes);
   }
   
-  public function select($field, $values = array(), $attributes = array()) {
+  public function select($field, $attributes = array()) {
     if (end($this->stack) != 'form')
-      throw new FormHelperException('Must be in a form before using optgroup.');
+      throw new FormHelperException('Must be in a form before using select.');
     $attributes = array_merge(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
@@ -291,7 +292,7 @@ class FormHelper extends Helper {
     return '<optgroup' . $this->addAttributes($attributes) . '>' . PHP_EOL;
   }
   
-  public function selectOf($field, $options = array(), $attributes = array()) {
+  public function selectOf($field, $options = null, $attributes = array()) {
     $attributes = array_merge(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
@@ -301,13 +302,19 @@ class FormHelper extends Helper {
     $currentValue = $attributes['value'];
     unset($attributes['value']);
     $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    if (!is_array($options)) {
+      $type = $this->model->getType($field);
+      if (!$type->isEnum())
+        throw new FormHelperException('Field must be of type enum.');
+      $options = array_combine($type->values, $type->values);
+    }
     foreach ($options as $value => $text) {
       $html .= '<option value="' . h($value) . '"';
       if ($currentValue == $value)
         $html .= ' selected="selected"';
       $html .= '>' . h($text) . '</option>' . PHP_EOL;
     }
-    $html .= '</selec>';
+    $html .= '</select>';
     return $html;
   }
   
@@ -322,7 +329,8 @@ class FormHelper extends Helper {
     $attributes = array_merge(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
-      'value' => $this->value($field)
+      'value' => $this->value($field),
+      'data-error' => $this->error($field, null),
     ), $attributes);
     $content = '';
     if (isset($attributes['value'])) {
@@ -353,7 +361,8 @@ class FormHelper extends Helper {
       'type' => $type,
       'name' => $this->name($field),
       'id' => $this->id($field),
-      'value' => $type != 'password' ? $this->value($field) : null
+      'value' => $type != 'password' ? $this->value($field) : null,
+      'data-error' => $this->error($field, null),
     ), $attributes);
     return $this->element('input', $attributes);
   }
