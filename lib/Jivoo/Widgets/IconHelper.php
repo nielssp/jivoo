@@ -6,7 +6,7 @@ class IconHelper extends Helper {
   private $providers = array();
   
   public function addProvider(IIconProvider $provider) {
-    $providers[] = $provider;
+    $this->providers[] = $provider;
   }
   
   public function icon($icon, $size = 16) {

@@ -24,6 +24,16 @@ class IconMenuItem implements ILinkable {
     }
   }
   
+  public function __isset($property) {
+    switch ($property) {
+      case 'label':
+      case 'icon':
+      case 'route':
+      case 'badge':
+        return isset($this->$property);
+    }
+  }
+  
   public function getRoute() {
     return $this->route;
   }

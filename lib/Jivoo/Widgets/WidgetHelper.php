@@ -5,6 +5,6 @@ class WidgetHelper extends Helper {
   
   public function widget($name, $options = array()) {
     $widget = $this->m->Widgets->getWidget($name);
-    return $widget->main($options);
+    return $widget->widget($options);
   }
 }

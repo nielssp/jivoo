@@ -34,6 +34,8 @@ abstract class Widget extends Module {
    */
   private $default = true;
   
+  protected $options = array();
+  
   /**
    * Constructor
    * @param Routing $routing Routing module
@@ -164,10 +166,16 @@ abstract class Widget extends Module {
     return $this->view->fetch($this->template, $this->data);
   }
   
+  public function widget($options) {
+    $options = array_merge($this->options, $options);
+    $this->data['options'] = $options;
+    return $this->main($options);
+  }
+  
   /**
    * Main widget logic. Is called before rendering page with widget on.
    * @param array $config Associative array of widget configuration
    * @return string|false Widget HTML or false on error
    */
-  public abstract function main($config);
+  protected abstract function main($config);
 }
