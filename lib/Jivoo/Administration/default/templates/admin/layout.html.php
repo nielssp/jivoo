@@ -57,6 +57,12 @@ $Icon->addProvider(new ClassIconProvider());
 <h1><?php echo $title; ?></h1>
 <?php endif; ?>
 
+<?php foreach ($flash as $message): ?>
+<div class="flash flash-<?php echo $message->type; ?>">
+<?php echo $message; ?>
+</div>
+<?php endforeach; ?>
+
 <?php echo $this->block('content'); ?>
 </div>
 

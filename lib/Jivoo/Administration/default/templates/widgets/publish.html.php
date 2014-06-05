@@ -34,7 +34,7 @@
 
   <div class="field">
     <label>Permalink</label>
-    <input type="text" />
+    <?php echo $Form->text('name'); ?>
   </div>
 
   <div class="field">
