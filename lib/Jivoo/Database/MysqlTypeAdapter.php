@@ -88,7 +88,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
         $column = 'DATETIME';
         break;
       case DataType::ENUM:
-        $column = "ENUM('" . implode("', '", $type->values) . "')";
+        $column = "ENUM('" . implode("','", $type->values) . "')";
         break; 
       case DataType::TEXT:
       default:
@@ -104,10 +104,6 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function checkType($row, DataType $type) {
-    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? *(unsigned)? *?/i', $row['Type'], $matches);
-    $actualType = strtolower($matches[1]);
-    $unsigned = isset($matches[4]);
-    $length = isset($matches[3]) ? $matches[3] : 0;
     $null = (isset($row['Null']) and $row['Null'] != 'NO');
     if ($null != $type->null)
       return false;
@@ -116,6 +112,16 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       $default = $this->decode($type, $row['Default']);
     if ($default != $type->default)
       return false;
+    
+    if ($type->isEnum()) {
+      $expected = "enum('" . implode("','", $type->values) . "')";
+      return strtolower($row['Type']) == $expected;
+    }
+    
+    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? *(unsigned)? *?/i', $row['Type'], $matches);
+    $actualType = strtolower($matches[1]);
+    $unsigned = isset($matches[4]);
+    $length = isset($matches[3]) ? $matches[3] : 0;
     switch ($type->type) {
       case DataType::INTEGER:
         if ($type->size == DataType::BIG and $actualType != 'bigint')
@@ -155,11 +161,6 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
         break;
       case DataType::DATETIME:
         if ($actualType != 'datetime')
-          return false;
-        break;
-      case DataType::ENUM:
-        $expected = "enum('" . implode("','", $type->values) . "')";
-        if ($actualType != $expected)
           return false;
         break;
       case DataType::TEXT:

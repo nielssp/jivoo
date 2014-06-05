@@ -2,7 +2,7 @@
 <div class="post">
 
 <h1><?php echo h($post->title); ?></h1>
-<?php if (!$post->published) : ?>
+<?php if ($post->status != 'published') : ?>
 <p><strong>This post is a draft and is not visible to the pulic.</strong></p>
 <?php endif; ?>
 

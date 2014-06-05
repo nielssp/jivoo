@@ -15,7 +15,7 @@ class PostsController extends AppController {
 
   public function index() {
     $this->posts = $this->Post
-      ->where('published = true')
+      ->where('status = %PostStatusEnum', 'published')
       ->orderByDescending('createdAt');
     $this->Pagination->setCount($this->posts->count());
     $this->posts = $this->Pagination->paginate($this->posts);
@@ -41,12 +41,12 @@ class PostsController extends AppController {
 
     $this->post = $this->Post->find($post);
 
-    if (!$this->post OR (!$this->post->published
-        AND !$this->Auth->hasPermission('backend.posts.viewDraft')))
+    if (!$this->post or ($this->post->status != 'published'
+        and !$this->Auth->hasPermission('backend.posts.viewDraft')))
       throw new NotFoundException();
 
     $this->comments = $this->post->comments
-      ->where('approved = true')
+      ->where('status = %CommentStatusEnum', 'approved')
       ->orderBy('createdAt');
 
     $this->Pagination->setLimit(10);

@@ -135,7 +135,7 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     $format = preg_replace('/\btrue\b/i', $true, $format);
     $format = preg_replace('/\bfalse\b/i', $false, $format);
     $format = preg_replace_callback('/\{(.+?)\}/', array($this, 'replaceTable'), $format);
-    return preg_replace_callback('/((\?)|%(datetime|date|integer|int|float|string|str|text|boolean|bool|binary|bin|[istbfdn]))(\(\))?/i', array($this, 'replaceVar'), $format);
+    return preg_replace_callback('/((\?)|%([a-z]+))(\(\))?/i', array($this, 'replaceVar'), $format);
   }
 
   public function getTypeAdapter() {

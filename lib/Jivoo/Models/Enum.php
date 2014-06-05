@@ -6,8 +6,7 @@ abstract class Enum {
 
   public static function getValues($class) {
     if (!isset(self::$values[$class])) {
-      if (!is_subclass_of($class, 'Enum'))
-        throw new InvalidEnumException(tr('Enum type "%1" must extend class "%2"', $class, 'Enum'));
+      Lib::assumeSubclassOf($class, 'Enum');
       $ref = new ReflectionClass($class);
       self::$values[$class] = array_flip($ref->getConstants());
       if (count(self::$values[$class]) < 1)
@@ -16,3 +15,5 @@ abstract class Enum {
     return self::$values[$class];
   }
 }
+
+class InvalidEnumException extends Exception { }

@@ -42,10 +42,10 @@ class CommentsController extends AppController {
         $this->newComment->ip = $this->request->ip;
         if ($this->config['commentApproval'] and
              !$this->Auth->isAllowed('backend.posts.comments.approve')) {
-          $this->newComment->approved = false;
+          $this->newComment->status = 'approved';
         }
         else {
-          $this->newComment->approved = true;
+          $this->newComment->status = 'pending';
         }
         if ($this->newComment->save()) {
           $this->Pagination->setCount($this->comments->count());

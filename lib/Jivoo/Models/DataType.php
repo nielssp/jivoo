@@ -410,6 +410,8 @@ class DataType {
   }
   
   public static function fromPlaceholder($placeholder) {
+    if (Lib::classExists($placeholder))
+      return self::enum($placeholder);
     $placeholder = strtolower($placeholder);
     switch ($placeholder) {
       case 'i':
@@ -440,7 +442,5 @@ class DataType {
       case 'binary':
         return self::binary();
     }
-    if (class_exists($placeholder))
-      return self::enum($placeholder);
   }
 }

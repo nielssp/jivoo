@@ -2,7 +2,7 @@
 return array(
   'path' => str_replace('\\', '/', dirname(__FILE__)),
   'name' => 'Jivoo',
-  'version' => '0.15-dev-4',
+  'version' => '0.15-dev-5',
   'website' => 'http://jivoo.org',
   'defaultLanguage' => 'en',
   'minPhpVersion' => '5.2.0',
