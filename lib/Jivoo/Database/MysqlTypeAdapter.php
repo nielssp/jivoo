@@ -23,6 +23,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::STRING:
       case DataType::TEXT:
       case DataType::BINARY:
+      case DataType::ENUM:
         return $this->db->quoteString($value);
     }
   }
@@ -41,6 +42,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::FLOAT:
       case DataType::TEXT:
       case DataType::BINARY:
+      case DataType::ENUM:
         return $value;
     }
   }
@@ -85,6 +87,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::DATETIME:
         $column = 'DATETIME';
         break;
+      case DataType::ENUM:
+        $column = "ENUM('" . implode("', '", $type->values) . "')";
+        break; 
       case DataType::TEXT:
       default:
         $column = 'TEXT';
@@ -150,6 +155,11 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
         break;
       case DataType::DATETIME:
         if ($actualType != 'datetime')
+          return false;
+        break;
+      case DataType::ENUM:
+        $expected = "enum('" . implode("','", $type->values) . "')";
+        if ($actualType != $expected)
           return false;
         break;
       case DataType::TEXT:

@@ -29,6 +29,8 @@ class DataType {
   const DATETIME = 7;
   /** @var int Type: Binary object */
   const BINARY = 8;
+  /** @var int Type: Enumerated type */
+  const ENUM = 0;
 
   /** @var int Flag: Unsigned (integers only) */
   const UNSIGNED = 0x02;
@@ -63,7 +65,7 @@ class DataType {
    * @param int|null $length String length
    * @param mixed Default value
    */
-  private function __construct($type, $null = false, $default = null, $flags = 0, $length = null) {
+  protected function __construct($type, $null = false, $default = null, $flags = 0, $length = null, $values = null) {
     if ($type < 0 or $type > 8)
       throw new InvalidDataTypeException(tr('%1 is not a valid type'), $type);
     $this->type = $type;
@@ -74,9 +76,6 @@ class DataType {
       $this->signed = ($flags & self::UNSIGNED) == 0;
       $this->autoIncrement = ($flags & self::AUTO_INCREMENT) != 0;
       $this->size = $flags & 0x30;
-    }
-    else if ($flags != 0) {
-      throw new InvalidDataTypeException(tr('Using integer flags for non-integer type'));
     }
   }
   
@@ -159,6 +158,11 @@ class DataType {
   /** @return Whether or not the type is binary */
   public function isBinary() {
     return $this->type == self::BINARY;
+  }
+
+  /** @return Whether or not the type is enum */
+  public function isEnum() {
+    return $this->type == self::ENUM;
   }
 
   public function createValidationRules(ValidatorField $validator) {
@@ -296,6 +300,7 @@ class DataType {
         return strtotime($value);
       case self::TEXT:
       case self::BINARY:
+      case self::ENUM:
         return strval($value);
     }
     return null;
@@ -383,6 +388,17 @@ class DataType {
     return new self(self::BINARY, $null, $default);
   }
   
+  /**
+   * Create enumerated data type
+   * @param string[] $values Enum values as strings. Keys must be integers.
+   * @param boolean $null whether or not type is nullable
+   * @param int $default default value
+   * @return DataType
+   */
+  public static function enum($enumClass, $null = false, $default = null) {
+    return new EnumDataType($enumClass, $null, $default);
+  }
+  
   public static function detectType($value) {
     if (is_bool($value))
       return self::boolean();
@@ -424,5 +440,7 @@ class DataType {
       case 'binary':
         return self::binary();
     }
+    if (class_exists($placeholder))
+      return self::enum($placeholder);
   }
 }

@@ -21,6 +21,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case DataType::STRING:
       case DataType::TEXT:
       case DataType::BINARY:
+      case DataType::ENUM:
         return $this->db->quoteString($value);
     }
   }
@@ -38,6 +39,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case DataType::DATETIME:
       case DataType::TEXT:
       case DataType::BINARY:
+      case DataType::ENUM:
         return $value;
     }
   }
@@ -83,6 +85,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
         $column = 'INTEGER';
         break;
       case DataType::TEXT:
+      case DataType::ENUM:
       default:
         $column = 'TEXT';
         break;

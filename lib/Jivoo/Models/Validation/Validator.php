@@ -200,6 +200,15 @@ class Validator {
           return true;
         else
           return tr('Must be less than or equal to %1.', $rule);
+      case 'in':
+        if (in_array($value, $rule))
+          return true;
+        else
+          return tn(
+            'Must be either "%1{", "}{" or "}".',
+            'Must be "%1{", "}{" or "}".',
+            $rule
+          );
       case 'match':
         if (preg_match($rule, $value) == 1)
           return true;
