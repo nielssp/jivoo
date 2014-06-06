@@ -8,6 +8,21 @@
 
 <?php echo $Form->formFor($post, array(), array('class' => 'publish')); ?>
 
+<div class="toolbar">
+  <button type="submit" class="primary" name="save">
+    <span class="icon icon-disk"></span>
+    <span class="label">Save</span>
+  </button>
+  <button type="submit" name="save-close">
+    <span class="icon icon-checkmark"></span>
+    <span class="label">Save &amp; close</span>
+  </button>
+  <button type="submit" name="save-new">
+    <span class="icon icon-plus"></span>
+    <span class="label">Save &amp; new</span>
+  </button>
+</div>
+
 <div class="article">
 
 <?php echo $Form->text('title', array(
@@ -51,21 +66,6 @@
   </div>
 </div>
 
-
-<div class="toolbar">
-  <button type="submit" class="primary" name="save">
-    <span class="icon icon-disk"></span>
-    <span class="label">Save</span>
-  </button>
-  <button type="submit" name="save-close">
-    <span class="icon icon-checkmark"></span>
-    <span class="label">Save &amp; close</span>
-  </button>
-  <button type="submit" name="save-new">
-    <span class="icon icon-plus"></span>
-    <span class="label">Save &amp; new</span>
-  </button>
-</div>
 
 <?php echo $Form->end(); ?>
 

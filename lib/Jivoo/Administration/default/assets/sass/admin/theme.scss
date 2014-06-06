@@ -46,15 +46,12 @@ html {
 }
 
 body {
+  height: 100%;
   overflow-y: scroll;
   background-color: $navBg;
   font-family: $font;
   color: $mainFg;
   font-size: 14px;
-  margin-top: 48px;
-  @media screen and (min-width: $sm) {
-    margin-top: 32px;
-  }
   &.menu-open {
     overflow-x: hidden;
     header {
@@ -184,7 +181,6 @@ header {
   color: $headerFg;
   width: 100%;
   z-index: 1000;
-  margin-top: -48px;
   & > * {
     height: 48px;
     vertical-align: top;
@@ -332,7 +328,6 @@ header {
   @media screen and (min-width: $sm) {
     padding-right: 24px;
     height: 32px;
-    margin-top: -32px;
     & > * {
       height: 32px;
     }
@@ -368,13 +363,13 @@ nav {
   float: left;
   display: none;
   color: $navFg;
-  padding-top: 8px;
+  padding-top: 56px;
   font-size: 1em;
   @media screen and (min-width: $xs) {
     display: block;
   }
   @media screen and (min-width: $sm) {
-    padding-top: 16px;
+    padding-top: 48px;
   }
   @media screen and (min-width: $md) {
     width: 220px;
@@ -428,7 +423,7 @@ nav {
               display: none;
             }
 
-            .icon:before {
+            .icon {
               font-size: 16px;
               vertical-align: -2px;
             }
@@ -451,13 +446,13 @@ nav {
   background-color: $mainBg;
   position: relative;
   margin-left: 0;
-  padding: 8px 12px 12px;
+  padding: 56px 12px 12px 8px;
   min-height: 100%;
   @media screen and (min-width: $xs) {
     margin-left: 32px;
   }
   @media screen and (min-width: $sm) {
-    padding: 16px 24px 12px 24px;
+    padding: 48px 24px 12px 24px;
   }
   @media screen and (min-width: $md) {
     margin-left: 220px;
@@ -814,7 +809,7 @@ form {
 
   @media screen and (min-width: $sm) {
     position: absolute;
-    top: 20px;
+    top: 52px;
     right: 24px;
     text-align: right;
     input[type=text],
