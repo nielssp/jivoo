@@ -128,7 +128,8 @@ class PostRouting extends AppListener {
         }
       }
       $time = $record->createdAt;
-      $replace = array('%name%' => $record->name,
+      $replace = array(
+        '%name%' => $record->name,
         '%id%' => (isset($record->id)) ? $record->id : 0,
         '%year%' => tdate('Y', $time), '%month%' => tdate('m', $time),
         '%day%' => tdate('d', $time)

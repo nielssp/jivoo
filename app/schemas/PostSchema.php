@@ -10,7 +10,7 @@ class PostSchema extends Schema {
     $this->title = DataType::string(255);
     $this->content = DataType::text();
     $this->status = DataType::enum('PostStatusEnum', false, 'published');
-    $this->commenting = DataType::boolean(false, true);
+    $this->commenting = DataType::boolean(false, false);
     $this->userId = DataType::integer(DataType::UNSIGNED, true);
     $this->addTimestamps();
     $this->addUnique('name', 'name');

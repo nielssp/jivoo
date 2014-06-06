@@ -18,6 +18,16 @@ class IconHelper extends Helper {
     return '<span class="icon-unavailable"></span>';
   }
   
+  public function button($label, $icon = null, $attributes = array()) {
+    if (isset($icon))
+      $icon = '<span class="icon icon-' . $icon . '"></span>';
+    else
+      $icon = '';
+    return '<button' .
+           $this->Html->addAttributes($attributes) . '>' . $icon .
+           '<span class="label">' . $label . '</span></button>';
+  }
+  
   public function link($label, $route, $icon = null, $count = null, $attributes = array()) {
     try {
       $url = $this->m->Routing->getLink($route);

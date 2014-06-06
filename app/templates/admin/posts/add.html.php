@@ -1,21 +1,12 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<?php echo $Form->formFor($post, array(), array('class' => 'publish')); ?>
+<?php if (!$post): ?>
 
-<div class="toolbar">
-  <button type="submit" class="primary" name="save">
-    <span class="icon icon-disk"></span>
-    <span class="label">Save</span>
-  </button>
-  <button type="submit" name="save-close">
-    <span class="icon icon-checkmark"></span>
-    <span class="label">Save &amp; close</span>
-  </button>
-  <button type="submit" name="save-new">
-    <span class="icon icon-plus"></span>
-    <span class="label">Save &amp; new</span>
-  </button>
-</div>
+<div class="flash flash-warn"><?php echo tr('The post does not exist.'); ?></div>
+
+<?php else: ?>
+
+<?php echo $Form->formFor($post, array(), array('class' => 'publish')); ?>
 
 <div class="article">
 
@@ -34,12 +25,17 @@
 <div class="settings">
 
   <div class="field">
-    <label>Permalink</label>
-    <?php echo $Form->text('name'); ?>
+    <?php echo $Form->label('name', tr('Permalink')); ?>
+    <div class="permalink">
+      <?php echo str_replace(
+        '%name%', $Form->text('name'),
+        $this->link($post->getModel()->create())
+      ); ?>
+    </div>
   </div>
 
   <div class="field">
-    <label>Status</label>
+    <?php echo $Form->label('status'); ?>
     <?php echo $Form->selectOf('status'); ?>
   </div>
 
@@ -50,9 +46,27 @@
 
   <div class="field">
     <label>Comments</label>
-    <?php echo $Form->checkbox('comments', true); ?>
-    <?php echo $Form->checkboxLabel('comments', true, tr('Allow comments')); ?>
+    <?php echo $Form->checkbox('commenting', true); ?>
+    <?php echo $Form->checkboxLabel('commenting', true, tr('Allow comments')); ?>
   </div>
 </div>
 
+
+<div class="toolbar">
+  <button type="submit" class="primary" name="save">
+    <span class="icon icon-disk"></span>
+    <span class="label">Save</span>
+  </button>
+  <button type="submit" name="save-close">
+    <span class="icon icon-checkmark"></span>
+    <span class="label">Save &amp; close</span>
+  </button>
+  <button type="submit" name="save-new">
+    <span class="icon icon-plus"></span>
+    <span class="label">Save &amp; new</span>
+  </button>
+</div>
+
 <?php echo $Form->end(); ?>
+
+<?php endif; ?>

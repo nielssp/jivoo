@@ -608,6 +608,18 @@ select {
   color: #999;
   width: 100%;
   box-shadow: inset 0 1px 2px #e6e6e6; }
+  input[type=text]:focus,
+  input[type=email]:focus,
+  input[type=password]:focus,
+  input[type=date]:focus,
+  input[type=time]:focus,
+  input[type=datetime]:focus,
+  textarea:focus,
+  select:focus {
+    color: #222;
+    border: 1px solid #6da6e7;
+    box-shadow: 0 0 1px #6da6e7;
+    outline: 0; }
   input[type=text][data-error], input[type=text].error,
   input[type=email][data-error],
   input[type=email].error,
@@ -625,18 +637,6 @@ select {
   select.error {
     background-color: #fee;
     border: 1px solid #f55; }
-  input[type=text]:focus,
-  input[type=email]:focus,
-  input[type=password]:focus,
-  input[type=date]:focus,
-  input[type=time]:focus,
-  input[type=datetime]:focus,
-  textarea:focus,
-  select:focus {
-    color: #222;
-    border: 1px solid #6da6e7;
-    box-shadow: 0 0 1px #6da6e7;
-    outline: 0; }
 
 input[type=checkbox] {
   -webkit-appearance: none;
@@ -1159,3 +1159,8 @@ table {
       .publish .settings .field select {
         margin: 0 0 6px 0;
         width: 100%; } }
+.publish .permalink {
+  color: #999;
+  font-size: 0.9em; }
+  .publish .permalink input {
+    padding: 2px; }

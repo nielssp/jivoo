@@ -45,7 +45,7 @@ class Post extends ActiveModel {
       'parameters' => array($record->id)
     );
   }
-  
+
   public function install() {
     $post = $this->create();
     $post->title = tr('Welcome to Jivoo');

@@ -12,7 +12,7 @@ class AdminMenu extends AppListener {
       )),
       'content' => IconMenu::menu(tr('Content'), null, null, array(
         'posts' => IconMenu::menu(tr('Posts'), 'Admin::Posts', 'newspaper', array(
-          IconMenu::item(tr('All posts'), 'Admin::Posts'),
+          IconMenu::item(tr('All posts'), 'Admin::Posts::index'),
           IconMenu::item(tr('Add post'), 'Admin::Posts::add'),
           IconMenu::item(tr('Tags'), null),
         )),

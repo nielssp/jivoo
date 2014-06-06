@@ -1,24 +1,7 @@
-<?php
-$containsCurrent = false; 
-?>
 <ul>
 <?php foreach ($menu as $item): ?>
 <?php
-$submenu = '';
-$current = false;
-if ($item instanceof IconMenu) {
-  $this->submenuIsCurrent = false;
-  $submenu = $Widget->widget('IconMenu', array(
-  	'menu' => $item
-  ));
-  if ($this->submenuIsCurrent === true) {
-    $current = true;
-  }
-}
-if (!$current)
-  $current = $this->isCurrent($item->route);
-if ($current)
-  $containsCurrent = true;
+$current = $this->isCurrent($item->route, $options['defaultAction'], $options['defaultParameters']);
 ?>
 <li>
 <a href="<?php echo h($this->link($item->route)); ?>"<?php
@@ -35,12 +18,12 @@ if ($current) echo ' class="current"'; ?>>
 <span class="count"><?php echo $item->badge; ?></span>
 <?php endif; ?>
 </a>
-<?php echo $submenu; ?>
+<?php if ($item instanceof IconMenu): ?>
+<?php echo $this->embed('widgets/icon-menu.html', array(
+  'menu' => $item,
+  'options' => $options
+)); ?>
+<?php endif; ?>
 </li>
 <?php endforeach; ?>
 </ul>
-
-<?php 
-if ($containsCurrent)
-  $this->submenuIsCurrent = true;
-?>

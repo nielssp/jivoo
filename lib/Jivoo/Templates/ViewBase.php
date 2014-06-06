@@ -200,8 +200,8 @@ abstract class ViewBase {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}
    * @return bool True if current, fals otherwise
    */
-  protected function isCurrent($route = null) {
-    return $this->m->Routing->isCurrent($route);
+  protected function isCurrent($route = null, $defaultAction = 'index', $defaultParameters = array()) {
+    return $this->m->Routing->isCurrent($route, $defaultAction, $defaultParameters);
   }
 
   /**
@@ -475,6 +475,8 @@ abstract class ViewBase {
    */
   private function render($template, $data = array()) {
     ob_start();
+    $extend = $this->extend;
+    $this->extend = null;
     $this->content = '';
     $this->embed($template, $data);
     if (isset($this->extend)) {
@@ -486,6 +488,7 @@ abstract class ViewBase {
         return $this->render($template, $data);
       }
     }
+    $this->extend = $extend;
     return $this->content . ob_get_clean();
   }
 

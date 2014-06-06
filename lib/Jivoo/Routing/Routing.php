@@ -313,8 +313,8 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If route is not valid
    * @return boolean True if current route, false otherwise
    */
-  public function isCurrent($route = null) {
-    $route = $this->validateRoute($route);
+  public function isCurrent($route = null, $defaultAction = 'index', $defaultParameters = array()) {
+    $route = $this->validateRoute($route, $defaultAction, $defaultParameters);
     if (isset($route['url'])) {
       return false;
     }
@@ -406,7 +406,7 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If invalid route
    * @return array A valid route array
    */
-  public function validateRoute($route, $defaultAction = 'index') {
+  public function validateRoute($route, $defaultAction = 'index', $defaultParameters = array()) {
     if (!isset($route)) {
       return array('path' => array(), 'query' => array(), 'fragment' => null);
     }
@@ -467,8 +467,8 @@ class Routing extends LoadableModule {
       if (!isset($route['action']) and isset($defaultAction)) {
         $route['action'] = $defaultAction;
       }
-      if (!isset($route['parameters'])) {
-        $route['parameters'] = array();
+      if (!isset($route['parameters']) and isset($defaultParameters)) {
+        $route['parameters'] = $defaultParameters;
       }
     }
     else if (isset($this->selection['route']['controller'])) {
@@ -480,7 +480,7 @@ class Routing extends LoadableModule {
         $route['parameters'] = $this->selection['route']['parameters'];
       }
     }
-    if (isset($route['parameters']))
+    if (isset($route['parameters']) and is_array($route['parameters']))
       $route['parameters'] = array_values($route['parameters']);
     return $route;
   }
