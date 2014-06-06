@@ -58,7 +58,7 @@ class Post extends ActiveModel {
       $comment->author = 'Jivoo';
       $comment->email = 'jivoo@apakoh.dk';
       $comment->content = 'Welcome to Jivoo.';
-      $comment->approved = true;
+      $comment->status = 'approved';
       $comment->save();
     }
     else {

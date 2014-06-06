@@ -55,7 +55,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   private $associations = null;
 
   private $primaryKey = null;
-  private $aiPrmaryKey = null;
+  private $aiPrimaryKey = null;
 
   private $defaults = array();
 
