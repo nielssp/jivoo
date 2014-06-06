@@ -12,6 +12,7 @@ class PostsAdminController extends AdminController {
     $this->title = tr('Add post');
     if ($this->request->hasValidData('Post')) {
       $this->post = $this->Post->create($this->request->data['Post']);
+      $this->post->user = $this->user;
       if ($this->post->save()) {
         $this->session->flash['success'][] = tr(
           'Post saved. %1',

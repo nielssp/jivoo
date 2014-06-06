@@ -20,10 +20,11 @@
 
 <div class="byline"><?php echo tr('Posted on %1', fdate($post->createdAt)) ?>
  | <a href="<?php echo $this->link($post);
-  if (!isset($post->comments))
+  $comments = $post->comments->where('status = %CommentStatusEnum', 'approved')->count();
+  if ($comments == 0)
     echo '#comment">' . tr('Leave a comment');
   else
-    echo '#comments">' . tn('%1 comments', '%1 comment', $post->comments->where('status = %CommentStatus', 'approved')->count());
+    echo '#comments">' . tn('%1 comments', '%1 comment', $comments);
 ?></a></div>
 </div>
 <?php endforeach; ?>
