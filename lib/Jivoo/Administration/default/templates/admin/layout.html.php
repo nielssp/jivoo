@@ -6,7 +6,6 @@ $this->script('admin/respond.min.js');
 $this->script('admin/html5shiv.js');
 $this->script('admin/jquery.min.js'); 
 $this->script('admin/theme.js');
-$Icon->addProvider(new ClassIconProvider());
 ?>
 <!DOCTYPE html>
 <html>

@@ -11,3 +11,13 @@ button, input, select, textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit; }
+
+.icon {
+  display: inline-block;
+  vertical-align: -2px;
+  font-size: 16px; }
+  .icon * {
+    display: block;
+    margin: 0 auto;
+    height: 16px;
+    width: 16px; }

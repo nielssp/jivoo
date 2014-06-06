@@ -148,12 +148,9 @@ $lg: 1200px !default;
       outline: none;
     }
   }
+  @include iconsize(12px, 0px);
   .icon {
-    display: inline-block;
     margin-right: 6px;
-    &:before {
-      vertical-align: middle;
-    }
   }
 }
 
@@ -174,3 +171,25 @@ button, input, select, textarea {
   line-height:inherit;
 }
 
+.icon {
+  display: inline-block;
+  vertical-align: -2px;
+  font-size: 16px;
+  * {
+    display: block;
+    margin: 0 auto;
+    height: 16px;
+    width: 16px;
+  }
+}
+
+@mixin iconsize($size: 16px, $valign: -2px) {
+  & > .icon {
+    font-size: $size;
+    vertical-align: $valign;
+    * {
+      height: $size;
+      width: $size;
+    }
+  }
+}

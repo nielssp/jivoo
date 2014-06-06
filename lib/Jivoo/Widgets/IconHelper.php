@@ -20,7 +20,7 @@ class IconHelper extends Helper {
   
   public function button($label, $icon = null, $attributes = array()) {
     if (isset($icon))
-      $icon = '<span class="icon icon-' . $icon . '"></span>';
+      $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
     else
       $icon = '';
     return '<button' .
@@ -36,7 +36,7 @@ class IconHelper extends Helper {
       if (!isset($attributes['title']))
         $attributes['title'] = h($label);
       if (isset($icon))
-        $icon = '<span class="icon icon-' . $icon . '"></span>';
+        $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
       else
         $icon = '';
       if (isset($count))

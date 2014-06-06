@@ -24,6 +24,16 @@ button, input, select, textarea {
   font-size: inherit;
   line-height: inherit; }
 
+.icon {
+  display: inline-block;
+  vertical-align: -2px;
+  font-size: 16px; }
+  .icon * {
+    display: block;
+    margin: 0 auto;
+    height: 16px;
+    width: 16px; }
+
 html {
   height: 100%; }
 
@@ -228,13 +238,26 @@ header {
           padding: 0 10px; }
         header > ul > li > a .label {
           display: none; }
+        header > ul > li > a > .icon {
+          font-size: 24px;
+          vertical-align: -2px; }
+          header > ul > li > a > .icon * {
+            height: 24px;
+            width: 24px; }
         header > ul > li > a .icon {
           margin: 0;
           width: auto; }
         @media screen and (min-width: 768px) {
+          header > ul > li > a > .icon {
+            font-size: 16px;
+            vertical-align: -2px; }
+            header > ul > li > a > .icon * {
+              height: 16px;
+              width: 16px; }
           header > ul > li > a .label {
             display: inline; }
           header > ul > li > a .icon {
+            margin-left: 0;
             margin-right: 10px; } }
       header > ul > li:hover {
         background-color: rgba(0, 0, 0, 0.15);
@@ -393,9 +416,6 @@ nav {
                 box-shadow: none; } }
           nav > ul > li > ul > li > a .label {
             display: none; }
-          nav > ul > li > ul > li > a .icon {
-            font-size: 16px;
-            vertical-align: -2px; }
           @media screen and (min-width: 1010px) {
             nav > ul > li > ul > li > a .label {
               display: inline; }
@@ -574,17 +594,23 @@ input[type=submit][disabled]:active {
   cursor: default;
   box-shadow: none;
   outline: none; }
+.button > .icon,
+button > .icon,
+input[type=button] > .icon,
+input[type=submit] > .icon {
+  font-size: 12px;
+  vertical-align: 0px; }
+  .button > .icon *,
+  button > .icon *,
+  input[type=button] > .icon *,
+  input[type=submit] > .icon * {
+    height: 12px;
+    width: 12px; }
 .button .icon,
 button .icon,
 input[type=button] .icon,
 input[type=submit] .icon {
-  display: inline-block;
   margin-right: 6px; }
-  .button .icon:before,
-  button .icon:before,
-  input[type=button] .icon:before,
-  input[type=submit] .icon:before {
-    vertical-align: middle; }
 
 input[type=text],
 input[type=email],
@@ -847,11 +873,14 @@ form {
     cursor: default;
     box-shadow: none;
     outline: none; }
+  .dropdown > a > .icon {
+    font-size: 12px;
+    vertical-align: 0px; }
+    .dropdown > a > .icon * {
+      height: 12px;
+      width: 12px; }
   .dropdown > a .icon {
-    display: inline-block;
     margin-right: 6px; }
-    .dropdown > a .icon:before {
-      vertical-align: middle; }
   .dropdown > a:after {
     font-family: 'icomoon';
     speak: none;
@@ -926,11 +955,15 @@ form {
         padding: 6px 12px 6px 32px;
         text-align: left;
         white-space: nowrap; }
+      .dropdown ul > li a > .icon, .dropdown ul > li button > .icon {
+        font-size: 12px;
+        vertical-align: -1px; }
+        .dropdown ul > li a > .icon *, .dropdown ul > li button > .icon * {
+          height: 12px;
+          width: 12px; }
       .dropdown ul > li a .icon, .dropdown ul > li button .icon {
         margin-left: -32px;
-        width: 32px;
-        text-align: center;
-        float: left; }
+        width: 32px; }
       .dropdown ul > li:hover {
         background-color: #eeeeee;
         color: #2272cc; }
@@ -977,7 +1010,6 @@ form {
       .dropdown-actions > ul > li a, .dropdown-actions > ul > li a:link, .dropdown-actions > ul > li a:active, .dropdown-actions > ul > li a:visited, .dropdown-actions > ul > li a:hover, .dropdown-actions > ul > li button, .dropdown-actions > ul > li button:link, .dropdown-actions > ul > li button:active, .dropdown-actions > ul > li button:visited, .dropdown-actions > ul > li button:hover {
         padding: 6px 12px 4px 24px; }
       .dropdown-actions > ul > li a .icon, .dropdown-actions > ul > li button .icon {
-        font-size: 0.9em;
         margin-left: -24px;
         width: 24px;
         margin-right: 0; } }

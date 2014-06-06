@@ -14,6 +14,8 @@ class AdminController extends AppController {
   
   public function before() {
     $this->Admin->importDefaultTheme();
+    // TODO move to theme or something
+    $this->Icon->addProvider(new ClassIconProvider());
   }
   
   public function index() {

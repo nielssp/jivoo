@@ -262,17 +262,23 @@ header {
           display: none;
         }
 
+        @include iconsize(24px);
+
         .icon {
           margin: 0;
           width: auto;
         }
 
         @media screen and (min-width: $sm) {
+
+          @include iconsize(16px);
+
           .label {
             display: inline;
           }
 
           .icon {
+            margin-left: 0;
             margin-right: 10px;
           }
         }
@@ -423,10 +429,6 @@ nav {
               display: none;
             }
 
-            .icon {
-              font-size: 16px;
-              vertical-align: -2px;
-            }
             @media screen and (min-width: $md) {
               .label {
                 display: inline;
@@ -865,11 +867,11 @@ form {
           white-space: nowrap;
         }
 
+        @include iconsize(12px, -1px);
+
         .icon {
           margin-left: -32px;
           width: 32px;
-          text-align: center;
-          float: left;
         }
 
         .label {
@@ -940,12 +942,9 @@ form {
             padding: 6px 12px 4px 24px;
           }
           .icon {
-            font-size: 0.9em;
             margin-left: -24px;
             width: 24px;
             margin-right: 0;
-            &:before {
-            }
           }
         }
       }
@@ -1216,3 +1215,4 @@ table {
     }
   }
 }
+
