@@ -183,7 +183,7 @@ class ActiveRecord implements IRecord, ILinkable {
   }
 
   public function action($action) {
-    $this->model->getAction($this, $action);
+    return $this->model->getAction($this, $action);
   }
   
   public function save() {

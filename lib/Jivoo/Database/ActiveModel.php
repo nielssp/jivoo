@@ -25,6 +25,8 @@ abstract class ActiveModel extends Model implements IEventListener {
   protected $getters = array();
 
   protected $setters = array();
+
+  protected $actions = array();
   
   protected $events = array('beforeSave', 'afterSave', 'beforeValidate', 'afterValidate', 'afterCreate', 'afterLoad', 'beforeDelete', 'install');
 
@@ -171,12 +173,20 @@ abstract class ActiveModel extends Model implements IEventListener {
   }
 
   public function getRoute(ActiveRecord $record) {
-    // TODO implement
     return null;
   }
 
   public function getAction(ActiveRecord $record, $action) {
-    // TODO implement
+    if (isset($this->actions[$action])) {
+      $route = $this->m->Routing->validateRoute($this->actions[$action]);
+      foreach ($route['parameters'] as $key => $parameter) {
+        if (preg_match('/^%(.+)%$/', $parameter, $matches) === 1) {
+          $field = $matches[1];
+          $route['parameters'][$key] = $record->$field;
+        }
+      }
+      return $route;
+    }
     return null;
   }
 

@@ -38,6 +38,11 @@ class Post extends ActiveModel {
     ),
   );
 
+  protected $actions = array(
+    'view' => 'Posts::view::%id%',
+    'edit' => 'Admin::Posts::edit::%id%',
+  );
+
   public function getRoute(ActiveRecord $record) {
     return array(
       'controller' => 'Posts',

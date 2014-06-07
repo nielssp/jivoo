@@ -8,6 +8,7 @@
 <span class="label">Search</span>
 </button>
 
+
 <div class="dropdown">
   <a href="#">View: All</a>
   <ul>
@@ -81,7 +82,7 @@
         </label>
       </td>
       <td class="primary">
-        <?php echo $Html->link(h($post->title), $post); ?>
+        <?php echo $Html->link(h($post->title), $post->action('edit')); ?>
         <div class="essential">
           <span>Date: <?php echo I18n::longDate($post->createdAt); ?></span>
           <span>Author: 
@@ -89,8 +90,8 @@
           <span>Status: <?php echo $post->status; ?></span>
         </div>
         <div class="action-links">
-          <a href="#">Edit</a>
-          <a href="#">View</a>
+          <?php echo $Html->link(tr('Edit'), $post->action('edit')); ?>
+          <?php echo $Html->link(tr('View'), $post->action('view')); ?>
           <a href="#">Publish</a>
           <a href="#">Delete</a>
         </div>
@@ -103,8 +104,8 @@
         <?php echo I18n::longDate($post->createdAt); ?>
       </td>
       <td class="actions">
-        <?php echo $Html->link('', array('action' => 'edit', $post->id), array('class' => 'icon-pencil')); ?>
-        <a href="#" class="icon-screen"></a>
+        <?php echo $Html->link('', $post->action('edit'), array('class' => 'icon-pencil')); ?>
+        <?php echo $Html->link('', $post->action('view'), array('class' => 'icon-screen')); ?>
         <a href="#" class="icon-eye"></a>
         <a href="#" class="icon-remove2"></a>
       </td>
