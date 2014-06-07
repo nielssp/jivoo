@@ -176,6 +176,7 @@ body {
 
 header {
   background-color: $headerBg;
+  position: absolute;
   padding: 0 12px 0 32px;
   height: 48px;
   color: $headerFg;
@@ -369,8 +370,8 @@ nav {
   float: left;
   display: none;
   color: $navFg;
-  padding-top: 56px;
   font-size: 1em;
+  padding-top: 56px;
   @media screen and (min-width: $xs) {
     display: block;
   }

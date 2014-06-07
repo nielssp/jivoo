@@ -1,14 +1,3 @@
-/*
-$navBg: #222;
-$navFg: #aaa;
-$navHlBg: #111;
-$navDisBg: #444;
-$navDisFg: #999;
-$subMenuBg: #333;
-$subMenuFg: #aaa;
-
-$mainBg: #ddd;
-//*/
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600");
 * {
   padding: 0;
@@ -128,6 +117,7 @@ body {
 
 header {
   background-color: #2272cc;
+  position: absolute;
   padding: 0 12px 0 32px;
   height: 48px;
   color: white;
@@ -324,8 +314,8 @@ nav {
   float: left;
   display: none;
   color: #444444;
-  padding-top: 56px;
-  font-size: 1em; }
+  font-size: 1em;
+  padding-top: 56px; }
   @media screen and (min-width: 480px) {
     nav {
       display: block; } }
