@@ -59,24 +59,7 @@ class Selection extends BasicSelection implements ISelection {
     return $this->copyBasicAttr(new ReadSelection($this->model))->offset($offset);
   }
 
-  function rewind() {
-    $this->model->setSelection($this->copyBasicAttr(new ReadSelection($this->model)));
-    return $this->model->rewind();
-  }
-
-  function current() {
-    return $this->model->current();
-  }
-
-  function key() {
-    return $this->model->key();
-  }
-
-  function next() {
-    return $this->model->next();
-  }
-
-  function valid() {
-    return $this->model->valid();
+  function getIterator() {
+    return $this->model->getIterator($this->copyBasicAttr(new ReadSelection($this->model)));
   }
 }

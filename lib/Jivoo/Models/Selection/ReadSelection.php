@@ -172,25 +172,7 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     return $this;
   }
 
-
-  function rewind() {
-    $this->model->setSelection($this);
-    return $this->model->rewind();
-  }
-
-  function current() {
-    return $this->model->current();
-  }
-
-  function key() {
-    return $this->model->key();
-  }
-
-  function next() {
-    return $this->model->next();
-  }
-
-  function valid() {
-    return $this->model->valid();
+  function getIterator() {
+    return $this->model->getIterator($this);
   }
 }

@@ -1,5 +1,5 @@
 <?php
-interface IReadSelection extends IBasicSelection, IRecordIterator {
+interface IReadSelection extends IBasicSelection, IteratorAggregate {
   /**
    * @param string|string[]|array $expression Expression, list of expressions or array of expressions and aliases
    * @param string|alias $alias Alias 

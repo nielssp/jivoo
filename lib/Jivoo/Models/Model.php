@@ -1,6 +1,5 @@
 <?php
 abstract class Model extends Module implements IModel {
-  private $iterator = null;
   private $aiPrimaryKey = null;
 
   public function create($data = array(), $allowedFields = null) {
@@ -108,10 +107,6 @@ abstract class Model extends Module implements IModel {
   */
   public abstract function read(ReadSelection $selection);
 
-  public function setSelection(ReadSelection $selection) {
-    $this->iterator = $this->read($selection);
-  }
-  
   public function getValidator() {
     return null;
   }
@@ -245,41 +240,12 @@ abstract class Model extends Module implements IModel {
     return $select->offset($offset);
   }
   
-  // Iterator implementation
+  // IteratorAggregate implementation
 
-  public function rewind() {
-    if (!isset($this->iterator)) {
-      $this->setSelection(new ReadSelection($this));
-    }
-    return $this->iterator->rewind();
-  }
-
-  public function current() {
-    if (!isset($this->iterator)) {
-      $this->setSelection(new ReadSelection($this));
-    }
-    return $this->iterator->current();
-  }
-
-  public function key() {
-    if (!isset($this->iterator)) {
-      $this->setSelection(new ReadSelection($this));
-    }
-    return $this->iterator->key();
-  }
-
-  public function next() {
-    if (!isset($this->iterator)) {
-      $this->setSelection(new ReadSelection($this));
-    }
-    return $this->iterator->next();
-  }
-
-  public function valid() {
-    if (!isset($this->iterator)) {
-      $this->setSelection(new ReadSelection($this));
-    }
-    return $this->iterator->valid();
+  public function getIterator(IReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new ReadSelection($this);
+    return $this->read($selection);    
   }
 }
 
