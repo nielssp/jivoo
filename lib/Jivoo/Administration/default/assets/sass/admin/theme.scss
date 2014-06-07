@@ -323,8 +323,10 @@ header {
       }
     }
   }
-  @media screen and (min-width: $xs) {
+  @media screen and (min-height: $xs) {
     position: fixed;
+  }
+  @media screen and (min-width: $xs) {
     .account > li {
       display: block;
     }
