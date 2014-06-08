@@ -162,7 +162,9 @@ abstract class Widget extends Module {
    * Fetch template for widget
    * @return string Widget HTML
    */
-  public function fetch() {
+  public function fetch($options = null) {
+    if (isset($options))
+      $this->data['options'] = $options;
     return $this->view->fetch($this->template, $this->data);
   }
   

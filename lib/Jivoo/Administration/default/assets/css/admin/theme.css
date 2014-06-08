@@ -1016,17 +1016,20 @@ form {
   text-align: center;
   margin-left: 8px;
   margin-bottom: 8px; }
-  .pagination a {
+  .pagination > a.icon {
     vertical-align: middle;
     margin-right: 8px; }
-    .pagination a:hover {
+    .pagination > a.icon:hover {
       text-decoration: none; }
-  .pagination button .icon {
-    margin: 0; }
-  .pagination button {
+  .pagination button,
+  .pagination .button {
     margin-left: 8px; }
-    .pagination button:last-child {
+    .pagination button:last-child,
+    .pagination .button:last-child {
       margin-left: 0; }
+    .pagination button > .icon,
+    .pagination .button > .icon {
+      margin: 0; }
   @media screen and (min-width: 768px) {
     .pagination {
       font-size: 0.9em;

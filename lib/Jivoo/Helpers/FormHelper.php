@@ -59,9 +59,15 @@ class FormHelper extends Helper {
       $this->id = $attributes['id'];
     if (isset($attributes['name']))
       $this->name = $attributes['name'];
+    $hiddenToken = $attributes['method'] != 'get';
+    if (isset($attributes['hiddenToken'])) {
+      $hiddenToken = $attributes['hiddenToken'];
+      unset($attributes['hiddenToken']);
+    }
     $html = '<form action="' . $this->getLink($route) . '"';
     $html .= $this->addAttributes($attributes) . '>' . PHP_EOL;
-    $html .= $this->request->createHiddenToken() . PHP_EOL;
+    if ($hiddenToken)
+      $html .= $this->request->createHiddenToken() . PHP_EOL;
     if (isset($specialMethod)) {
       $html .= $this->element('input', array(
         'type' => 'hidden',
