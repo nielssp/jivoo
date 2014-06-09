@@ -10,6 +10,9 @@ class ErrorReporting {
    */
   private static $handler = null;
 
+  public static $warningBehavior = 'log';
+  public static $noticeBehavior = 'log';
+
   private function __construct() {}
 
   /**
@@ -37,7 +40,10 @@ class ErrorReporting {
         $line = $backtrace[2]['line'];
       case E_WARNING:
       case E_DEPRECATED:
-        Logger::log($message, Logger::WARNING, $file, $line);
+        if (self::$warningBehavior == 'log')
+          Logger::log($message, Logger::WARNING, $file, $line);
+        else if (self::$warningBehavior == 'exception')
+          throw new ErrorException($message, 0, $type, $file, $line);
         break;
       case E_USER_NOTICE:
         $backtrace = debug_backtrace();
@@ -46,7 +52,10 @@ class ErrorReporting {
       case E_PARSE:
       case E_NOTICE:
       case E_STRICT:
-        Logger::log($message, Logger::NOTICE, $file, $line);
+        if (self::$noticeBehavior == 'log')
+          Logger::log($message, Logger::NOTICE, $file, $line);
+        else if (self::$noticeBehavior == 'exception')
+          throw new ErrorException($message, 0, $type, $file, $line);
         break;
       default:
         throw new ErrorException($message, 0, $type, $file, $line);

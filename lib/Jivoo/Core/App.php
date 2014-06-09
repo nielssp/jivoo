@@ -334,11 +334,17 @@ class App implements IEventSubject {
         'Configuration file for environment "' . $environment . '" not found'
       );
     }
+
+    $defaultTimeZone = 'UTC';
+    try {
+      $defaultTimeZone = @date_default_timezone_get();
+    }
+    catch (ErrorException $e) { }
     
     $this->config->defaults = array(
       'core' => array(
         'language' => $this->appConfig['defaultLanguage'],
-        'timeZone' => @date_default_timezone_get(), /** @todo Reevaluate use of @ */
+        'timeZone' => $defaultTimeZone,
         'showExceptions' => false,
         'logLevel' => Logger::ALL,
         'createCrashReports' => true

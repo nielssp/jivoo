@@ -3,7 +3,7 @@ class FlashMapIterator implements Iterator {
   
   private $flash;
   
-  private $list;
+  private $list = array();
   
   public function __construct(FlashMap $flash, $lists) {
     $this->flash = $flash;
