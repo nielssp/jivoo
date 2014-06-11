@@ -18,7 +18,7 @@ class RecentCommentsWidget extends Widget {
       $limit = $config['limit'];
     }
     $this->comments = $this->Comment
-      ->where('status = %CommentStatusEnum', 'approved')
+      ->where('status = %CommentStatus', 'approved')
       ->orderByDescending('date')
       ->limit($limit);
     return $this->fetch();

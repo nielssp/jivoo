@@ -20,7 +20,7 @@ class RecentPostsWidget extends Widget {
       $limit = $config['limit'];
     }
     $this->posts = $this->Post
-      ->where('status = %PostStatusEnum', 'published')
+      ->where('status = %PostStatus', 'published')
       ->orderByDescending('createdAt')
       ->limit($limit);
     return $this->fetch();

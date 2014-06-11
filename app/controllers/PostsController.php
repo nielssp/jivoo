@@ -15,7 +15,7 @@ class PostsController extends AppController {
 
   public function index() {
     $this->posts = $this->Post
-      ->where('status = %PostStatusEnum', 'published')
+      ->where('status = %PostStatus', 'published')
       ->orderByDescending('createdAt');
     $this->Pagination->setCount($this->posts->count());
     $this->posts = $this->Pagination->paginate($this->posts);
@@ -46,7 +46,7 @@ class PostsController extends AppController {
       throw new NotFoundException();
 
     $this->comments = $this->post->comments
-      ->where('status = %CommentStatusEnum', 'approved')
+      ->where('status = %CommentStatus', 'approved')
       ->orderBy('createdAt');
 
     $this->Pagination->setLimit(10);

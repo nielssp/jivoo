@@ -14,7 +14,7 @@ class CommentSchema extends Schema {
     $this->content = DataType::text();
     $this->contentText = DataType::text();
     $this->ip = DataType::string(255);
-    $this->status = DataType::enum('CommentStatusEnum', false, 'pending');
+    $this->status = DataType::enum('CommentStatus', false, 'pending');
     $this->addTimeStamps();
     $this->addIndex('postId', 'postId');
   }
