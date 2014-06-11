@@ -37,6 +37,10 @@ class Post extends ActiveModel {
       'presence' => true,
     ),
   );
+  
+  protected $labels = array(
+  	'createdAt' => 'Date'
+  );
 
   protected $actions = array(
     'view' => 'Posts::view::%id%',

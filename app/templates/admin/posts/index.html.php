@@ -2,13 +2,17 @@
 
 <?php echo $Widget->widget('RecordIndex', array(
   'model' => $posts,
-  'primary' => 'title',
   'filters' => array(
     tr('Published') => array('status' => 'published'),
     tr('Pending review') => array('status' => 'pending'),
     tr('Draft') => array('status' => 'draft')
   ),
-  'columns' => array('title', 'user', 'status', 'createdAt'),
+  'columns' => array(
+    new RecordIndexColumn('title', null, true),
+    new RecordIndexColumn('user', tr('Author')),
+    new RecordIndexColumn('status'),
+    new RecordIndexColumn('createdAt'),
+  ),
   'defaultAction' => 'edit',
   'bulkActions' => array(
     array(
@@ -32,34 +36,31 @@
       'route' => 'Admin::Posts::bulkEdit'
     ),
   ),
-  'record' => array(
-    'template' => 'widget/post-record.html',
-    'actions' => array(
-      array(
-        'label' => tr('Edit'),
-        'icon' => 'pencil',
-        'action' => 'edit'
-      ),
-      array(
-        'label' => tr('View'),
-        'icon' => 'screen',
-        'action' => 'view'
-      ),
-      array(
-        'label' => tr('Publish'),
-        'icon' => 'eye',
-        'action' => 'publish'
-      ),
-      array(
-        'label' => tr('Unpublish'),
-        'icon' => 'eye-blocked',
-        'action' => 'unpublish'
-      ),
-      array(
-        'label' => tr('Delete'),
-        'icon' => 'remove2',
-        'action' => 'delete'
-      ),
+  'recordActions' => array(
+    array(
+      'label' => tr('Edit'),
+      'icon' => 'pencil',
+      'action' => 'edit'
+    ),
+    array(
+      'label' => tr('View'),
+      'icon' => 'screen',
+      'action' => 'view'
+    ),
+    array(
+      'label' => tr('Publish'),
+      'icon' => 'eye',
+      'action' => 'publish'
+    ),
+    array(
+      'label' => tr('Unpublish'),
+      'icon' => 'eye-blocked',
+      'action' => 'unpublish'
+    ),
+    array(
+      'label' => tr('Delete'),
+      'icon' => 'remove2',
+      'action' => 'delete'
     ),
   ),
 )); ?>

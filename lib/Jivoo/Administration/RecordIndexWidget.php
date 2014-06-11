@@ -8,14 +8,11 @@ class RecordIndexWidget extends Widget {
     'id' => '',
     'filters' => array(),
     'columns' => array(),
-    'primary' => null,
     'sortBy' => null,
     'defaultAction' => null,
     'bulkActions' => array(),
-    'record' => array(
-      'template' => null,
-      'actions' => array()
-    ),
+    'recordActions' => array(),
+    'recordTemplate' => 'widgets/record.html',
   );
   
   public function main($options) {
@@ -26,11 +23,17 @@ class RecordIndexWidget extends Widget {
       : $options['model'];
     if (!isset($options['sortBy']))
       $options['sortBy'] = $options['columns'];
-    if (!isset($options['primary']))
-      $options['primary'] = $options['columns'][0];
     $this->Pagination->setCount($this->records->count());
     $this->Pagination->setLimit(2);
     $this->records = $this->Pagination->paginate($this->records);
     return $this->fetch($options);
   }
+}
+
+class RecordIndexAction {
+  
+}
+
+class RecordIndexBulkAction {
+  
 }

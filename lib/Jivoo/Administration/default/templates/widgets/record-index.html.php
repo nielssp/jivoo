@@ -44,8 +44,8 @@
 <div class="dropdown">
 <a href="#"><?php echo tr('Sort by'); ?></a>
 <ul>
-<?php foreach ($options['sortBy'] as $field): ?>
-<li><a href="#"><?php echo $model->getLabel($field); ?></a></li>
+<?php foreach ($options['sortBy'] as $column): ?>
+<li><a href="#"><?php echo $column->getLabel($model); ?></a></li>
 <?php endforeach; ?>
 </ul>
 </div>
@@ -58,12 +58,12 @@
 <thead>
 <tr>
 <th class="selection" scope="col">
-<label><input type="checkbox" />
+<label><input type="checkbox" /></label>
 </th>
 <?php foreach ($options['columns'] as $column): ?>
-<th<?php if ($column == $options['primary']) echo ' class="primary"'; ?>
+<th<?php if ($column->primary) echo ' class="primary"'; ?>
  scope="col">
-<?php echo $model->getLabel($column); ?>
+<?php echo h($column->getLabel($model)); ?>
 </th>
 <?php endforeach; ?>
 <th class="actions" scope="col"><?php echo tr('Actions'); ?></th>
@@ -71,44 +71,28 @@
 </thead>
 <tbody>
 <?php foreach ($records as $record): ?>
-<tr>
-<td class="selection">
-<label>
-<input type="checkbox" />
-</label>
-</td>
-<?php foreach ($options['columns'] as $column): ?>
-<?php if ($column == $options['primary']): ?>
-<td class="primary">
-<?php echo $Html->link(h($record->$column), $record->action($options['defaultAction'])); ?>
-<div class="essential">
-<?php foreach ($options['columns'] as $column): ?>
-<span><?php echo $model->getLabel($column); ?>: <?php echo h($record->$column); ?></span>
-<?php endforeach; ?>
-</div>
-<div class="action-links">
-<?php foreach ($options['record']['actions'] as $action): ?>
-<?php echo $Html->link($action['label'], $record->action($action['action'])); ?>
-<?php endforeach; ?>
-</div>
-</td>
-<?php else: ?>
-<td>
-<?php echo h($record->$column); ?>
-</td>
-<?php endif; ?>
-<?php endforeach; ?>
-<td class="actions">
-<?php foreach ($options['record']['actions'] as $action): ?>
-<?php echo $Html->link(
-  $Icon->icon($action['icon']), $record->action($action['action']),
-  array('title' => $action['label'])
-); ?>
-<?php endforeach; ?>
-</td>
-</tr>
+<?php $this->embed($options['recordTemplate'], array(
+  'record' => $record,
+  'model' => $model,
+  'columns' => $options['columns'],
+  'actions' => $options['recordActions']
+)); ?>
 <?php endforeach; ?>
 </tbody>
+<tfoot>
+<tr>
+<th class="selection" scope="col">
+<label><input type="checkbox" /></label>
+</th>
+<?php foreach ($options['columns'] as $column): ?>
+<th<?php if ($column->primary) echo ' class="primary"'; ?>
+ scope="col">
+<?php echo h($column->getLabel($model)); ?>
+</th>
+<?php endforeach; ?>
+<th class="actions" scope="col"><?php echo tr('Actions'); ?></th>
+</tr>
+</tfoot>
 </table>
 
 <?php echo $this->embed('widgets/record-pagination.html', array('Pagination' => $Pagination)); ?>
