@@ -4,6 +4,9 @@
   'id' => $options['id'] . 'filter',
 )); ?>
 
+<?php echo $Form->hidden('sortBy', array('value' => $sortBy)); ?>
+<?php echo $Form->hidden('order', array('value' => $descending ? 'desc' : 'asc')); ?>
+
 <?php echo $Form->text('filter', array('placeholder' => tr('Filter'))); ?>
 
 <?php echo $Icon->button(tr('Search'), 'search'); ?>
@@ -14,9 +17,15 @@
 <div class="dropdown">
 <a href="#">View</a>
 <ul>
-<li class="selected"><a href="#">All</a></li>
+<li><?php echo $Html->link(tr('All'), array(
+  'query' => array('filter' => null),
+  'mergeQuery' => true
+)); ?></li>
 <?php foreach ($options['filters'] as $label => $filter): ?>
-<li><a href="#"><?php echo $label; ?></a></li>
+<li><?php echo $Html->link(h($label), array(
+  'query' => array('filter' => $filter),
+  'mergeQuery' => true
+)); ?></li>
 <?php endforeach; ?>
 </ul>
 </div>
@@ -45,7 +54,22 @@
 <a href="#"><?php echo tr('Sort by'); ?></a>
 <ul>
 <?php foreach ($options['sortBy'] as $column): ?>
-<li><a href="#"><?php echo $column->getLabel($model); ?></a></li>
+<?php if ($sortBy == $column->field and $descending): ?>
+<li class="selected selected-desc"><?php echo $Html->link(
+  $column->getLabel($model),
+  array('query' => array('order' => 'asc'), 'mergeQuery' => true)
+); ?></li>
+<?php elseif ($sortBy == $column->field and !$descending): ?>
+<li class="selected selected-asc"><?php echo $Html->link(
+  $column->getLabel($model),
+  array('query' => array('order' => 'desc'), 'mergeQuery' => true)
+); ?></li>
+<?php else: ?>
+<li><?php echo $Html->link(
+  $column->getLabel($model),
+  array('query' => array('sortBy' => $column->field, 'order' => 'asc'), 'mergeQuery' => true)
+); ?></li>
+<?php endif; ?>
 <?php endforeach; ?>
 </ul>
 </div>
@@ -63,7 +87,24 @@
 <?php foreach ($options['columns'] as $column): ?>
 <th<?php if ($column->primary) echo ' class="primary"'; ?>
  scope="col">
-<?php echo h($column->getLabel($model)); ?>
+<?php if ($sortBy == $column->field and $descending): ?>
+<?php echo $Html->link(
+  $column->getLabel($model),
+  array('query' => array('order' => 'asc'), 'mergeQuery' => true),
+  array('class' => 'selected-desc')
+); ?>
+<?php elseif ($sortBy == $column->field and !$descending): ?>
+<?php echo $Html->link(
+  $column->getLabel($model),
+  array('query' => array('order' => 'desc'), 'mergeQuery' => true),
+  array('class' => 'selected-asc')
+); ?>
+<?php else: ?>
+<?php echo $Html->link(
+  $column->getLabel($model),
+  array('query' => array('sortBy' => $column->field, 'order' => 'asc'), 'mergeQuery' => true)
+); ?>
+<?php endif; ?>
 </th>
 <?php endforeach; ?>
 <th class="actions" scope="col"><?php echo tr('Actions'); ?></th>

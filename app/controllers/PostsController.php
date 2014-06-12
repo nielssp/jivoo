@@ -17,7 +17,6 @@ class PostsController extends AppController {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
       ->orderByDescending('createdAt');
-    $this->Pagination->setCount($this->posts->count());
     $this->posts = $this->Pagination->paginate($this->posts);
     
     $this->view->resource(
@@ -49,10 +48,7 @@ class PostsController extends AppController {
       ->where('status = %CommentStatus', 'approved')
       ->orderBy('createdAt');
 
-    $this->Pagination->setLimit(10);
-
-    $this->Pagination->setCount($this->comments->count());
-    $this->comments = $this->Pagination->paginate($this->comments);
+    $this->comments = $this->Pagination->paginate($this->comments, 10);
 
     $this->user = $this->Auth->getUser();
 

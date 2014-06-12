@@ -2,10 +2,12 @@
 
 <?php echo $Widget->widget('RecordIndex', array(
   'model' => $posts,
+  'defaultSortBy' => 'createdAt',
+  'defaultDescending' => true,
   'filters' => array(
-    tr('Published') => array('status' => 'published'),
-    tr('Pending review') => array('status' => 'pending'),
-    tr('Draft') => array('status' => 'draft')
+    tr('Published') => 'status=published',
+    tr('Pending review') => 'status=pending',
+    tr('Draft') => 'status=draft'
   ),
   'columns' => array(
     new RecordIndexColumn('title', null, true),

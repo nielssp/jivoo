@@ -16,20 +16,12 @@ class PaginationHelper extends Helper {
 
   private $to = 1;
 
-  public function setCount($count) {
-    $this->count = $count;
+  public function paginate(IReadSelection $select, $itemsPerPage = 5) {
+    Utilities::precondition($itemsPerPage > 0);
+    $this->limit = $itemsPerPage;
+    $this->count = $select->count();
     $this->pages = max(ceil($this->count / $this->limit), 1);
-    return $this;
-  }
-
-  public function setLimit($limit) {
-    Utilities::precondition($limit > 0);
-    $this->limit = $limit;
-    $this->pages = max(ceil($this->count / $this->limit), 1);
-    return $this;
-  }
-
-  public function paginate(IReadSelection $select) {
+    
     if (isset($this->request->query['page'])) {
       $this->page = (int) $this->request->query['page'];
       $this->page = min($this->page, $this->pages);
@@ -47,9 +39,9 @@ class PaginationHelper extends Helper {
     $select = $select->offset($this->offset);
 
     if (!$this->isLast())
-      $this->m->Templates->view->resource('next', null, $this->getLink($this->nextLink()));
+      $this->view->resource('next', null, $this->getLink($this->nextLink()));
     if (!$this->isFirst())
-      $this->m->Templates->view->resource('prev', null, $this->getLink($this->prevLink()));
+      $this->view->resource('prev', null, $this->getLink($this->prevLink()));
     return $select;
   }
 
