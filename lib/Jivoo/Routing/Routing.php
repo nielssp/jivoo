@@ -354,10 +354,6 @@ class Routing extends LoadableModule {
       $path = $this->request
       ->path;
     }
-    $index = explode('/', $this->config['index']['path']);
-    if ($index == $path) {
-      $path = array();
-    }
     if (isset($fragment)) {
       $fragment = '#' . $fragment;
     }
