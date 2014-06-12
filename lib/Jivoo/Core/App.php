@@ -269,7 +269,8 @@ class App implements IEventSubject {
       }
     }
     // Clean the view
-    ob_end_clean();
+    while (ob_get_level() > 0)
+      ob_end_clean(); 
     if ($this->config['core']['showExceptions']) {
       $app = $this->name;
       $version = $this->version;

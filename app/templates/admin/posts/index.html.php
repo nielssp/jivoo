@@ -9,58 +9,22 @@
   ),
   'columns' => array(
     new RecordIndexColumn('title', null, true),
-    new RecordIndexColumn('user', tr('Author')),
+    new RecordIndexRecordColumn('user', tr('Author'), false, 'username', 'view'),
     new RecordIndexColumn('status'),
-    new RecordIndexColumn('createdAt'),
+    new RecordIndexDateColumn('createdAt'),
   ),
   'defaultAction' => 'edit',
   'bulkActions' => array(
-    array(
-      'label' => tr('Edit'),
-      'icon' => 'pencil',
-      'route' => 'Admin::Posts::bulkEdit'
-    ),
-    array(
-      'label' => tr('Publish'),
-      'icon' => 'eye',
-      'route' => 'Admin::Posts::bulkEdit'
-    ),
-    array(
-      'label' => tr('Unpublish'),
-      'icon' => 'eye-blocked',
-      'route' => 'Admin::Posts::bulkEdit'
-    ),
-    array(
-      'label' => tr('Delete'),
-      'icon' => 'remove',
-      'route' => 'Admin::Posts::bulkEdit'
-    ),
+    new RecordIndexBulkAction(tr('Edit'), 'Admin::Posts::bulkEdit', 'pencil'),
+    new RecordIndexBulkAction(tr('Publish'), 'Admin::Posts::bulkEdit', 'eye'),
+    new RecordIndexBulkAction(tr('Unpublish'), 'Admin::Posts::bulkEdit', 'eye-blocked'),
+    new RecordIndexBulkAction(tr('Delete'), 'Admin::Posts::bulkEdit', 'remove'),
   ),
   'recordActions' => array(
-    array(
-      'label' => tr('Edit'),
-      'icon' => 'pencil',
-      'action' => 'edit'
-    ),
-    array(
-      'label' => tr('View'),
-      'icon' => 'screen',
-      'action' => 'view'
-    ),
-    array(
-      'label' => tr('Publish'),
-      'icon' => 'eye',
-      'action' => 'publish'
-    ),
-    array(
-      'label' => tr('Unpublish'),
-      'icon' => 'eye-blocked',
-      'action' => 'unpublish'
-    ),
-    array(
-      'label' => tr('Delete'),
-      'icon' => 'remove2',
-      'action' => 'delete'
-    ),
+    new RecordIndexAction(tr('Edit'), 'edit', 'pencil'),
+    new RecordIndexAction(tr('View'), 'view', 'screen'),
+    new RecordIndexAction(tr('Publish'), 'publish', 'eye'),
+    new RecordIndexAction(tr('Unpublish'), 'unpublish', 'eye-blocked'),
+    new RecordIndexAction(tr('Delete'), 'delete', 'remove'),
   ),
 )); ?>

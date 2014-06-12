@@ -2,7 +2,6 @@
 class RecordIndexColumn {
   public $field;
   public $label;
-  public $callback;
   public $primary;
 
   public function __construct($field, $label = null, $primary = false) {

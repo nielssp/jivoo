@@ -34,7 +34,7 @@
 <a href="#"><?php echo tr('With selection'); ?></a>
 <ul>
 <?php foreach($options['bulkActions'] as $bulkAction): ?>
-<li><?php echo $Icon->button($bulkAction['label'], $bulkAction['icon']); ?></li>
+<li><?php echo $Icon->button(h($bulkAction->label), $bulkAction->icon); ?></li>
 <?php endforeach; ?>
 </ul>
 </div>
@@ -75,7 +75,8 @@
   'record' => $record,
   'model' => $model,
   'columns' => $options['columns'],
-  'actions' => $options['recordActions']
+  'actions' => $options['recordActions'],
+  'defaultAction' => $options['defaultAction']
 )); ?>
 <?php endforeach; ?>
 </tbody>

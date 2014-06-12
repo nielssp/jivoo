@@ -310,9 +310,11 @@ abstract class ActiveModel extends Model implements IEventListener {
   }
 
   public function getLabel($field) {
-    if (isset($this->labels[$field]))
-      return $this->labels[$field];
-    return ucfirst($field);
+    if (!isset($this->labels[$field]))
+      $this->labels[$field] = ucfirst(strtolower(
+        preg_replace('/([A-Z])/', ' $1', lcfirst($field))
+      ));
+    return tr($this->labels[$field]);
   }
   
   public function updateSelection(UpdateSelection $selection) {

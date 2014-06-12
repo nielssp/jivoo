@@ -20,6 +20,11 @@ class AdminMenu extends AppListener {
       'appearance' => IconMenu::menu(tr('Appearance'), null, null, array(
       )),
       'settings' => IconMenu::menu(tr('Settings'), array(), null, array(
+        'users' => IconMenu::menu(tr('Users'), 'Admin::Users', 'users', array(
+          IconMenu::item(tr('All users'), 'Admin::Users::index'),
+          IconMenu::item(tr('Add user'), 'Admin::Users::add'),
+          IconMenu::item(tr('Groups'), null),
+        )),
       )),
       'about' => IconMenu::menu(tr('About'), array(), null, array(
         IconMenu::item(tr('Help & support'), null, 'support'),

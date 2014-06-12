@@ -7,16 +7,16 @@
 <?php foreach ($columns as $column): ?>
 <?php if ($column->primary): ?>
 <td class="primary">
-<?php echo $Html->link(h($column->getValue($record)), $record->action($options['defaultAction'])); ?>
+<?php echo $Html->link(h($column->getValue($record)), $record->action($defaultAction)); ?>
 <div class="essential">
 <?php foreach ($columns as $column): ?>
-<span><?php echo $model->getLabel($column); ?>:
+<span><?php echo $column->getLabel($model); ?>:
 <?php echo $column->getValue($record); ?></span>
 <?php endforeach; ?>
 </div>
 <div class="action-links">
 <?php foreach ($actions as $action): ?>
-<?php echo $Html->link($action['label'], $record->action($action['action'])); ?>
+<?php echo $Html->link(h($action->label), $record->action($action->action)); ?>
 <?php endforeach; ?>
 </div>
 </td>
@@ -29,8 +29,8 @@
 <td class="actions">
 <?php foreach ($actions as $action): ?>
 <?php echo $Html->link(
-  $Icon->icon($action['icon']), $record->action($action['action']),
-  array('title' => $action['label'])
+  $Icon->icon($action->icon), $record->action($action->action),
+  array('title' => $action->label)
 ); ?>
 <?php endforeach; ?>
 </td>

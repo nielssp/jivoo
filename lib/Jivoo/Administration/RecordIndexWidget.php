@@ -9,6 +9,7 @@ class RecordIndexWidget extends Widget {
     'filters' => array(),
     'columns' => array(),
     'sortBy' => null,
+    'itemsPerPage' => 20,
     'defaultAction' => null,
     'bulkActions' => array(),
     'recordActions' => array(),
@@ -24,16 +25,9 @@ class RecordIndexWidget extends Widget {
     if (!isset($options['sortBy']))
       $options['sortBy'] = $options['columns'];
     $this->Pagination->setCount($this->records->count());
-    $this->Pagination->setLimit(2);
+    $this->Pagination->setLimit($options['itemsPerPage']);
     $this->records = $this->Pagination->paginate($this->records);
     return $this->fetch($options);
   }
 }
 
-class RecordIndexAction {
-  
-}
-
-class RecordIndexBulkAction {
-  
-}
