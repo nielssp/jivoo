@@ -100,7 +100,10 @@ function h($string) {
  * @return Condition Condition object
  */
 function where($condition) {
-  return new Condition($condition);
+  $args = func_get_args();
+  $condition = new Condition($condition);
+  call_user_func_array(array($condition, 'andWhere'), $args);
+  return $condition;
 }
 
 /**
