@@ -346,6 +346,23 @@ class AuthHelper extends Helper {
     }
   }
 
+  public function createSession(ActiveRecord $user, $cookie = false) {
+    $this->user = $user;
+    if ($cookie) {
+      $validUntil = time() + $this->cookieLifeTime;
+      $sessionId = $this->userModel->createSession($this->user, $validUntil);
+      $this->createCookie($sessionId);
+      $this->sessionId = $sessionId;
+    }
+    else {
+      $validUntil = time() + $this->sessionLifeTime;
+      $sessionId = $this->userModel->createSession($this->user, $validUntil);
+      $this->session[$this->sessionPrefix . 'session'] = $sessionId;
+      $this->session[$this->sessionPrefix . 'renew_at'] = time() + $this->sessionRenewAfter;
+      $this->sessionId = $sessionId;
+    }
+  }
+
   public function logIn($data = null) {
     if (!isset($data))
       $data = $this->request->data;
@@ -360,19 +377,7 @@ class AuthHelper extends Helper {
     }
     if (!isset($this->user))
       return false;
-    if ($cookie) {
-      $validUntil = time() + $this->cookieLifeTime;
-      $sessionId = $this->userModel->createSession($this->user, $validUntil);
-      $this->createCookie($sessionId);
-      $this->sessionId = $sessionId;
-    }
-    else {
-      $validUntil = time() + $this->sessionLifeTime;
-      $sessionId = $this->userModel->createSession($this->user, $validUntil);
-      $this->session[$this->sessionPrefix . 'session'] = $sessionId;
-      $this->session[$this->sessionPrefix . 'renew_at'] = time() + $this->sessionRenewAfter;
-      $this->sessionId = $sessionId;
-    }
+    $this->createSession($this->user, $cookie);
     return true;
   }
 

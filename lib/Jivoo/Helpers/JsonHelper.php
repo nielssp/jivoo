@@ -12,7 +12,6 @@ class JsonHelper extends Helper {
    * @param mixed Data
    */
   public function respond($response) {
-    Http::setContentType('application/json');
-    echo json_encode($response);
+    return new TextResponse(Http::OK, 'json', json_encode($response));
   }
 }
