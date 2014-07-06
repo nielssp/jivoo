@@ -20,6 +20,7 @@ $app->paths->log = 'user/log';
 $app->paths->tmp = 'user/tmp';
 $app->paths->extensions = 'user/extensions';
 $app->paths->themes = 'user/themes';
+$app->paths->media = 'user/media';
 
 $environment = getenv('JIVOO_ENVIRONMENT');
 $environment || $environment = 'production';

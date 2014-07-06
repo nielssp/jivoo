@@ -14,7 +14,7 @@ class DatabaseSetupController extends SetupController {
     $this->config->defaults = array(
       'server' => 'localhost',
       'database' => strtolower($this->app->name),
-      'filename' => $this->p('config', 'db.sqlite3'),
+      'filename' => $this->p('user', 'db.sqlite3'),
     );
   }
 
