@@ -15,11 +15,11 @@ $app = new App(include 'app/app.php', basename(__FILE__));
 
 // Paths are relative to the current directory (dirname($_SERVER['SCRIPT_FILENAME']))
 // unless they begin with '/' or 'x:' where x is any drive letter.
-$app->paths->config = 'config';
-$app->paths->log = 'log';
-$app->paths->tmp = 'tmp';
-$app->paths->extensions = 'extensions';
-$app->paths->themes = 'themes';
+$app->paths->user = 'user';
+$app->paths->log = 'user/log';
+$app->paths->tmp = 'user/tmp';
+$app->paths->extensions = 'user/extensions';
+$app->paths->themes = 'user/themes';
 
 $environment = getenv('JIVOO_ENVIRONMENT');
 $environment || $environment = 'production';

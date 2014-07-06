@@ -9,3 +9,4 @@ doc/
 .settings/.jsdtscope
 .settings/
 config/db.sqlite3
+.sass-cache/*

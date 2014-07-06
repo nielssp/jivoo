@@ -322,7 +322,7 @@ class App implements IEventSubject {
     
     Lib::addIncludePath($this->p('lib', ''));
 
-    $this->config = new AppConfig($this->p('config', 'config.php'));
+    $this->config = new AppConfig($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
 
     $environmentConfigFile = $this
