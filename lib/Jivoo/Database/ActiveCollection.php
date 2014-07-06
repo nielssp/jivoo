@@ -173,11 +173,11 @@ class ActiveCollection extends Model {
   }
   
   public function firstSelection(ReadSelection $selection) {
-    return $this->other->first($this->prepareSelection($selection));
+    return $this->other->firstSelection($this->prepareSelection($selection));
   }
   
   public function lastSelection(ReadSelection $selection) {
-    return $this->other->last($this->prepareSelection($selection));
+    return $this->other->lastSelection($this->prepareSelection($selection));
   }
 
   public function read(ReadSelection $selection) {

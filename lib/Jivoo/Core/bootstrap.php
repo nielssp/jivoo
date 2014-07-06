@@ -101,7 +101,7 @@ function h($string) {
  */
 function where($condition) {
   $args = func_get_args();
-  $condition = new Condition($condition);
+  $condition = new Condition();
   call_user_func_array(array($condition, 'andWhere'), $args);
   return $condition;
 }
