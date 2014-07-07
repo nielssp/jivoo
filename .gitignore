@@ -10,3 +10,4 @@ doc/
 .settings/
 config/db.sqlite3
 .sass-cache/*
+*.scssc
