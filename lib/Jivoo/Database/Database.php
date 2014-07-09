@@ -129,6 +129,8 @@ class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
   }
   
   private function setRevision($table, $revision) {
+    if (!isset($this->TableRevision))
+      return;
     $record = $this->TableRevision->find($table);
     if (!$record)
       $record = $this->TableRevision->create(array('name' => $table));
@@ -171,7 +173,9 @@ class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
     }
     
     $this->revisions['TableRevision'] = 0;
-    $this->addSchema(new TableRevisionSchema());
+    $schema = new TableRevisionSchema();
+    $this->addSchema($schema);
+    $this->setRevision('TableRevision', $schema->getRevision());
 
     $schemasDir = $this->p('schemas', '');
     if (is_dir($schemasDir)) {
