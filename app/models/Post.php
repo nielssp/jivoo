@@ -55,6 +55,11 @@ class Post extends ActiveModel {
     );
   }
 
+  public function beforeValidate(ActiveModelEvent $event) {
+    $encoder = new HtmlEncoder();
+    $event->record->contentText = $encoder->encode($event->record->content);
+  }
+  
   public function install() {
     $post = $this->create();
     $post->title = tr('Welcome to Jivoo');
