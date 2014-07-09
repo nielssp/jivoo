@@ -33,14 +33,16 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case DataType::BOOLEAN:
         return $value != 0;
       case DataType::INTEGER:
-      case DataType::STRING:
-      case DataType::FLOAT:
       case DataType::DATE:
       case DataType::DATETIME:
+        return intval($value);
+      case DataType::FLOAT:
+        return floatval($value);
       case DataType::TEXT:
       case DataType::BINARY:
+      case DataType::STRING:
       case DataType::ENUM:
-        return $value;
+        return strval($value);
     }
   }
 

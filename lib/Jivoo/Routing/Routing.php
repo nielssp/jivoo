@@ -745,7 +745,7 @@ class Routing extends LoadableModule {
         break;
       }
     }
-    Logger::debug('Add route: ' . implode('/', $pattern) . ' -> ' . $route['controller'] . '::' . $route['action'] . '[' . $arity . ']');
+//     Logger::debug('Add route: ' . implode('/', $pattern) . ' -> ' . $route['controller'] . '::' . $route['action'] . '[' . $arity . ']');
     if ($isMatch) {
       if ($priority > $this->selection['priority']) { // or >= ??
         $this->selection['priority'] = $priority;

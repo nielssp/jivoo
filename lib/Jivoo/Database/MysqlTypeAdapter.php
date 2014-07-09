@@ -38,12 +38,14 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::DATETIME:
         return strtotime($value . ' UTC');
       case DataType::INTEGER:
-      case DataType::STRING:
+        return intval($value);
       case DataType::FLOAT:
+        return floatval($value);
+      case DataType::STRING:
       case DataType::TEXT:
       case DataType::BINARY:
       case DataType::ENUM:
-        return $value;
+        return strval($value);
     }
   }
 
