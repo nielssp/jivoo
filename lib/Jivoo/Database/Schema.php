@@ -276,11 +276,23 @@ class Schema implements ISchema {
   }
   
   public function migrate(MigratableDatabase $db, $fromRevision = 0) {
-    for ($i = $fromRevision + 1; $i <= $this->_revision; $i++) {
-      $method = 'migration' . $i;
-      if (is_callable(array($this, $method))) {
-        $this->$method($db);
+    $i = $fromRevision + 1;
+    try {
+      for (; $i <= $this->_revision; $i++) {
+        $method = 'up' . $i;
+        if (is_callable(array($this, $method))) {
+          $this->$method($db);
+        }
       }
+    }
+    catch (Exception $e) {
+      for (; $i > $fromRevision; $i--) {
+        $method = 'down' . $i;
+        if (is_callable(array($this, $method))) {
+          $this->$method($db);
+        }
+      }
+      throw $e;
     }
   }
   

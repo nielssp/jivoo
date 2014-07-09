@@ -181,5 +181,18 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
   public function alterIndex($table, $index, $options = array()) {
     $this->typeAdapter->alterIndex($table, $index, $options);
   }
+  
+  public function beginTransaction() {
+    $this->rawQuery('BEGIN');
+  }
+  
+  public function commit() {
+    $this->rawQuery('COMMIT');
+    
+  }
+  
+  public function rollback() {
+    $this->rawQuery('ROLLBACK');
+  }
 }
 

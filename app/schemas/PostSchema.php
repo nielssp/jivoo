@@ -22,12 +22,15 @@ class PostSchema extends Schema {
   }
   
   // Add column contentText
-  protected function migration1(MigratableDatabase $db) {
+  protected function up1(MigratableDatabase $db) {
     $db->addColumn('Post', 'contentText', DataType::text(true));
     foreach ($db->getTable('Post', $this) as $post) {
       $post->contentText = strip_tags($post->content);
       $post->save();
     }
     $db->alterColumn('Post', 'contentText', DataType::text());
+  }
+  protected function down1(MigratableDatabase $db) {
+    $db->deleteColumn('Post', 'contentText');
   }
 }

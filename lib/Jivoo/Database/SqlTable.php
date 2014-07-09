@@ -43,6 +43,9 @@ class SqlTable extends Table {
   public function createExisting($data = array()) {
     $typeAdapter = $this->owner->getTypeAdapter();
     foreach ($data as $field => $value) {
+      $type = $this->getType($field);
+      if (!isset($type))
+        throw new Exception(tr('Schema %1 does not contain field %2', $this->getName(), $field));
       $data[$field] = $typeAdapter->decode($this->getType($field), $value);
     }
     return Record::createExisting($this, $data);

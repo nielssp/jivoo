@@ -43,6 +43,12 @@ interface IDatabase {
    * @return string Migration status: 'unchanged', 'updated' or 'new'
    */
   public function migrate(Schema $schema);
+  
+  public function beginTransaction();
+  
+  public function commit();
+  
+  public function rollback();
 }
 
 /**

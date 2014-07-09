@@ -103,6 +103,18 @@ class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
       return $status;
     }
   }
+  
+  public function beginTransaction() {
+    $this->connection->beginTransaction();
+  }
+  
+  public function commit() {
+    $this->connection->commit();
+  }
+  
+  public function rollback() {
+    $this->connection->rollback();
+  }
   /* End IDatabase implementation */
   
   public function getRevision($table) {
