@@ -7,6 +7,8 @@ class FlashMap implements IteratorAggregate, ArrayAccess, Countable {
   
   public function __construct(SessionStorage $session) {
     $this->session = $session;
+    if (!is_array($this->session['flash']))
+      $this->session['flash'] = array();
     foreach ($this->session['flash'] as $type => $list) {
       $this->lists[$type] = new FlashMessageList($type, $list);
     }
