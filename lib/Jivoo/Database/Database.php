@@ -12,7 +12,7 @@ Lib::import('Jivoo/Database/Mixins');
  * Database module
  * @package Jivoo\Database
  */
-class Database extends LoadableModule implements IDatabase {
+class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
   
   protected $modules = array('Routing', 'Templates', 'Models', 'Helpers', 'Controllers', 'Setup');
   
@@ -41,6 +41,8 @@ class Database extends LoadableModule implements IDatabase {
    * @var array Associative array of table names and schemas
    */
   private $schemas = array();
+  
+  private $revisions = array();
   
   /**
    * @var array Associative array of table names and migration status
@@ -82,20 +84,47 @@ class Database extends LoadableModule implements IDatabase {
       return false;
     }
     $name = $schema->getName();
-    if (!$force AND isset($this->config['migration'][$name])) {
-      if ($this->config['migration'][$name] == $this->app->version) {
+    $revision = $schema->getRevision();
+    if (!$force and isset($this->config['migration'][$name])) {
+      if ($this->config['migration'][$name] == $revision) {
         return 'unchanged';
       }
     }
     if ($this->connection) {
+      $actualRevision = $this->getRevision($name);
+      if (!$force and $actualRevision == $revision) {
+        $this->config['migration'][$name] = $revision;
+        return 'unchanged';
+      }
       $status = $this->connection->migrate($schema);
-      $this->config['migration'][$name] = $this->app->version;
+      $this->setRevision($name, $revision);
       if ($status == 'new')
         $this->config['installed'][$name] = false;
       return $status;
     }
   }
   /* End IDatabase implementation */
+  
+  public function getRevision($table) {
+    if (!isset($this->revisions[$table])) {
+      $record = $this->TableRevision->find($table);
+      if (!$record)
+        $this->revisions[$table] = -1;
+      else
+        $this->revisions[$table] = $record->revision;
+    }
+    return $this->revisions[$table];
+  }
+  
+  private function setRevision($table, $revision) {
+    $record = $this->TableRevision->find($table);
+    if (!$record)
+      $record = $this->TableRevision->create(array('name' => $table));
+    $record->revision = $revision;
+    $record->save();
+    $this->config['migration'][$table] = $revision;
+    $this->revisions[$table] = $revision;
+  }
 
   protected function init() {
     if (!isset($this->config['driver']))
@@ -121,13 +150,16 @@ class Database extends LoadableModule implements IDatabase {
     try {
       $class = $this->driver . 'Database';
       Lib::assumeSubclassOf($class, 'MigratableDatabase');
-      $this->connection = new $class($this->app, $this->config);
+      $this->connection = new $class($this->app, $this, $this->config);
     }
     catch (DatabaseConnectionFailedException $exception) {
       throw new DatabaseConnectionFailedException(
         tr('Database connection failed: ' . $exception->getMessage())
       );
     }
+    
+    $this->revisions['TableRevision'] = 0;
+    $this->addSchema(new TableRevisionSchema());
 
     $schemasDir = $this->p('schemas', '');
     if (is_dir($schemasDir)) {
@@ -213,7 +245,7 @@ class Database extends LoadableModule implements IDatabase {
     $name = $schema->getName();
     $this->schemas[$name] = $schema;
     $this->migrations[$name] = $this->migrate($this->schemas[$name]);
-    if (!isset($this->$name) AND $this->migrations[$name] == 'unchanged') {
+    if (!isset($this->$name) and $this->migrations[$name] == 'unchanged') {
       $this->migrations[$name] = $this->migrate($this->schemas[$name], true);
     }
     $this->tables[$name] = $this->connection->getTable($name, $this->schemas[$name]);

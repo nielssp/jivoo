@@ -5,13 +5,16 @@
  */
 abstract class MigratableDatabase extends Module implements IDatabase, IMigratable {
   
-  public final function __construct(App $app, $options = array()) {
+  private $revisionMap;
+  
+  public final function __construct(App $app, ITableRevisionMap $revisionMap, $options = array()) {
     parent::__construct($app);
+    $this->revisionMap = $revisionMap;
     $this->init($options);
   }
   
   protected abstract function init($options = array());
-  
+
   /**
    * Call migration method
    * @param Schema $schema Table schema
@@ -30,28 +33,34 @@ abstract class MigratableDatabase extends Module implements IDatabase, IMigratab
     call_user_func(array($schema, $method), $this);
     return true;
   }
-
+  
   public function migrate(Schema $schema) {
     $table = $schema->getName();
+    $targetRevision = $schema->getRevision();
     Logger::debug('migration: check ' . $table);
     if ($this->tableExists($table)) {
+      $currentRevision = $this->revisionMap->getRevision($table);
+      if ($currentRevision != $targetRevision) {
+        $schema->migrate($this, $currentRevision);
+        return 'updated';
+      }
       $result = $this->checkSchema($table, $schema);
       $status = 'unchanged';
       foreach ($result['columns'] as $column => $action) {
         switch ($action) {
           case 'add':
             $this->migrationMethod($schema, 'addColumn', $column)
-                OR $this->addColumn($table, $column, $schema->$column);
+                or $this->addColumn($table, $column, $schema->$column);
             $status = 'updated';
             break;
           case 'delete':
             $this->migrationMethod($schema, 'deleteColumn', $column)
-                OR $this->deleteColumn($table, $column);
+                or $this->deleteColumn($table, $column);
             $status = 'updated';
             break;
           case 'alter':
             $this->migrationMethod($schema, 'alterColumn', $column)
-                OR $this->alterColumn($table, $column, $schema->$column);
+                or $this->alterColumn($table, $column, $schema->$column);
             $status = 'updated';
             break;
         }
@@ -60,17 +69,17 @@ abstract class MigratableDatabase extends Module implements IDatabase, IMigratab
         switch ($action) {
           case 'add':
             $this->migrationMethod($schema, 'createIndex', $index)
-                OR $this->createIndex($table, $index, $schema->getIndex($index));
+                or $this->createIndex($table, $index, $schema->getIndex($index));
             $status = 'updated';
             break;
           case 'delete':
             $this->migrationMethod($schema, 'deleteIndex', $index)
-                OR $this->deleteIndex($table, $index);
+                or $this->deleteIndex($table, $index);
             $status = 'updated';
             break;
           case 'alter':
             $this->migrationMethod($schema, 'alterIndex', $index)
-                OR $this->alterIndex($table, $index, $schema->getIndex($index));
+                or $this->alterIndex($table, $index, $schema->getIndex($index));
             $status = 'updated';
             break;
         }
@@ -79,7 +88,7 @@ abstract class MigratableDatabase extends Module implements IDatabase, IMigratab
     }
     else {
       $this->migrationMethod($schema, 'createTable')
-          OR $this->createTable($schema);
+        or $this->createTable($schema);
       $this->tableCreated($schema->getName());
       return 'new';
     }

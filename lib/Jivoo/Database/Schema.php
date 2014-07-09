@@ -7,22 +7,24 @@ class Schema implements ISchema {
   /**
    * @var string[] List of column names
    */
-  private $fields = array();
+  private $_fields = array();
   
   /**
    * @var bool Whether or not schema is read only
    */
-  private $readOnly = false;
+  private $_readOnly = false;
   
   /**
    * @var string Name of table
    */
-  private $name = 'undefined';
+  private $_name = 'undefined';
 
   /**
    * @var array List of indexes
    */
-  private $indexes = array();
+  private $_indexes = array();
+  
+  private $_revision = 0;
 
   /**
    * Constructor
@@ -34,11 +36,13 @@ class Schema implements ISchema {
       if (!isset($name)) {
         $name = preg_replace('/Schema$/', '', $className);
       }
+      if (defined($className . '::REVISION'))
+        $this->_revision = constant($className . '::REVISION');
       $this->createSchema();
-      $this->readOnly = true;
+      $this->_readOnly = true;
     }
     if (isset($name)) {
-      $this->name = $name;
+      $this->_name = $name;
     }
   }
 
@@ -48,8 +52,8 @@ class Schema implements ISchema {
    * @return DataType Type of field
    */
   public function __get($field) {
-    if (isset($this->fields[$field])) {
-      return $this->fields[$field];
+    if (isset($this->_fields[$field])) {
+      return $this->_fields[$field];
     }
   }
 
@@ -59,34 +63,38 @@ class Schema implements ISchema {
    * @return bool True if it does, false otherwise
    */
   public function __isset($field) {
-    return isset($this->fields[$field]);
+    return isset($this->_fields[$field]);
   }
 
   public function __set($field, DataType $type) {
-    if (!$this->readOnly) {
-      $this->fields[$field] = $type;
+    if (!$this->_readOnly) {
+      $this->_fields[$field] = $type;
     }
+  }
+  
+  public function getRevision() {
+    return $this->_revision;
   }
 
   public function addAutoIncrementId($id = 'id') {
-    if (!$this->readOnly) {
+    if (!$this->_readOnly) {
       $this->$id = DataType::integer(DataType::AUTO_INCREMENT | DataType::UNSIGNED);
       $this->setPrimaryKey($id);
     }
   }
 
   public function addTimestamps($createdAt = 'createdAt', $updatedAt = 'updatedAt') {
-    if (!$this->readOnly) {
+    if (!$this->_readOnly) {
       $this->$createdAt = DataType::dateTime();
       $this->$updatedAt = DataType::dateTime();
     }
   }
 
   public function createValidationRules(Validator $validator) {
-    foreach ($this->fields as $field => $type) {
+    foreach ($this->_fields as $field => $type) {
       $type->createValidationRules($validator->$field);
     }
-    foreach ($this->indexes as $index) {
+    foreach ($this->_indexes as $index) {
       if ($index['unique'] and count($index['columns']) == 1) {
         $field = $index['columns'][0];
         $validator->$field->unique = true;
@@ -95,7 +103,7 @@ class Schema implements ISchema {
   }
 
   public function getFields() {
-    return array_keys($this->fields);
+    return array_keys($this->_fields);
   }
 
   /**
@@ -103,7 +111,7 @@ class Schema implements ISchema {
    * @return string Name
    */
   public function getName() {
-    return $this->name;
+    return $this->_name;
   }
 
   /**
@@ -117,8 +125,8 @@ class Schema implements ISchema {
    * @param array $info Column information
    */
   public function addField($name, DataType $type) {
-    if (!$this->readOnly) {
-      $this->fields[$name] = $type;
+    if (!$this->_readOnly) {
+      $this->_fields[$name] = $type;
     }
   }
 
@@ -139,7 +147,7 @@ class Schema implements ISchema {
         $columns = array($columns);
       }
     }
-    $this->indexes['PRIMARY'] = array(
+    $this->_indexes['PRIMARY'] = array(
       'columns' => $columns,
       'unique' => true
     );
@@ -150,10 +158,10 @@ class Schema implements ISchema {
    * @return string[] List of column names or empty array if no primary key
    */
   public function getPrimaryKey() {
-    if (!isset($this->indexes['PRIMARY'])) {
+    if (!isset($this->_indexes['PRIMARY'])) {
       return array();
     }
-    return $this->indexes['PRIMARY']['columns'];
+    return $this->_indexes['PRIMARY']['columns'];
   }
   
   /**
@@ -162,10 +170,10 @@ class Schema implements ISchema {
    * @return boolean True if part of primary key, false otherwise
    */
   public function isPrimaryKey($column) {
-    if (!isset($this->indexes['PRIMARY'])) {
+    if (!isset($this->_indexes['PRIMARY'])) {
       return false;
     }
-    return in_array($column, $this->indexes['PRIMARY']['columns']);
+    return in_array($column, $this->_indexes['PRIMARY']['columns']);
   }
 
   /**
@@ -187,11 +195,11 @@ class Schema implements ISchema {
         $columns = array($columns);
       }
     }
-    if (isset($this->indexes[$name])) {
-      $this->indexes[$name]['columns'] = array_merge($this->indexes[$name]['columns'], $columns);
+    if (isset($this->_indexes[$name])) {
+      $this->_indexes[$name]['columns'] = array_merge($this->_indexes[$name]['columns'], $columns);
     }
     else {
-      $this->indexes[$name] = array(
+      $this->_indexes[$name] = array(
         'columns' => $columns,
         'unique' => true
       );
@@ -217,14 +225,14 @@ class Schema implements ISchema {
         $columns = array($columns);
       }
     }
-    if (isset($this->indexes[$name])) {
-      $columns = array_merge($this->indexes[$name]['columns'], $columns);
+    if (isset($this->_indexes[$name])) {
+      $columns = array_merge($this->_indexes[$name]['columns'], $columns);
     }
-    if (isset($this->indexes[$name])) {
-      $this->indexes[$name]['columns'] = array_merge($this->indexes[$name]['columns'], $columns);
+    if (isset($this->_indexes[$name])) {
+      $this->_indexes[$name]['columns'] = array_merge($this->_indexes[$name]['columns'], $columns);
     }
     else {
-      $this->indexes[$name] = array(
+      $this->_indexes[$name] = array(
         'columns' => $columns,
         'unique' => false
       );
@@ -246,7 +254,7 @@ class Schema implements ISchema {
    * @return array Associative array of index names and info
    */
   public function getIndexes() {
-    return $this->indexes;
+    return $this->_indexes;
   }
   
   /**
@@ -254,7 +262,7 @@ class Schema implements ISchema {
    * @param string $name Index name
    */
   public function indexExists($name) {
-    return isset($this->indexes[$name]);
+    return isset($this->_indexes[$name]);
   }
   
   /**
@@ -264,7 +272,16 @@ class Schema implements ISchema {
    * column names and 'unique' is a boolean.
    */
   public function getIndex($name) {
-    return $this->indexes[$name];
+    return $this->_indexes[$name];
+  }
+  
+  public function migrate(MigratableDatabase $db, $fromRevision = 0) {
+    for ($i = $fromRevision + 1; $i <= $this->_revision; $i++) {
+      $method = 'migration' . $i;
+      if (is_callable(array($this, $method))) {
+        $this->$method($db);
+      }
+    }
   }
   
   /**
@@ -275,13 +292,13 @@ class Schema implements ISchema {
   public function export($package = 'Core') {
     $source = '<?php' . PHP_EOL;
     $source .= '/**' . PHP_EOL;
-    $source .= ' * Automatically generated schema for ' . $this->name
+    $source .= ' * Automatically generated schema for ' . $this->_name
     . ' table' . PHP_EOL;
     $source .= ' * @package ' . $package . PHP_EOL;
     $source .= ' */' . PHP_EOL;
-    $source .= 'class ' . $this->name . 'Schema extends Schema {' . PHP_EOL;
+    $source .= 'class ' . $this->_name . 'Schema extends Schema {' . PHP_EOL;
     $source .= '  protected function createSchema() {' . PHP_EOL;
-    foreach ($this->schema as $column => $info) {
+    foreach ($this->_schema as $column => $info) {
       $source .= '    $this->add' . ucfirst($info['type']) . '(';
       $source .= var_export($column, true);
       if ($info['type'] == 'string') {
@@ -311,15 +328,15 @@ class Schema implements ISchema {
       $source .= ');' . PHP_EOL;
     }
   
-    if (isset($this->indexes['PRIMARY'])) {
+    if (isset($this->_indexes['PRIMARY'])) {
       $primaryKeyColumns = array();
-      foreach ($this->indexes['PRIMARY']['columns'] as $column) {
+      foreach ($this->_indexes['PRIMARY']['columns'] as $column) {
         $primaryKeyColumns[] = var_export($column, true);
       }
       $source .= '    $this->setPrimaryKey(' . implode(', ', $primaryKeyColumns);
       $source .= ');' . PHP_EOL;
     }
-    foreach ($this->indexes as $index => $info) {
+    foreach ($this->_indexes as $index => $info) {
       if ($index == 'PRIMARY') {
         continue;
       }
