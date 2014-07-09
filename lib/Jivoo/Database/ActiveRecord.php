@@ -187,9 +187,9 @@ class ActiveRecord implements IRecord, ILinkable {
   }
   
   public function save($validate = true) {
-    $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if ($validate and !$this->isValid())
       return false;
+    $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if ($this->isNew()) {
       $insertId = $this->model->insert($this->data);
       $pk = $this->model->getAiPrimaryKey();

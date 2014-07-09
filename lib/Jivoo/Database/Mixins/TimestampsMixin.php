@@ -1,6 +1,6 @@
 <?php
 class TimestampsMixin extends ActiveModelMixin {
-  public function beforeSave(ActiveModelEvent $event) {
+  public function beforeValidate(ActiveModelEvent $event) {
     if (!$event->record->isNew())
       $event->record->updatedAt = time();
   }

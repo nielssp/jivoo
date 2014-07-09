@@ -56,7 +56,7 @@ class User extends ActiveModel implements IUserModel {
     return true;
   }
   
-  public function afterValidate(ActiveModelEvent $event) {
+  public function beforeSave(ActiveModelEvent $event) {
     if ($event->record->hasChanged('password')) {
       $hasher = $this->m->AccessControl->getPasswordHasher();
       $event->record->password = $hasher->hash($event->record->password); 

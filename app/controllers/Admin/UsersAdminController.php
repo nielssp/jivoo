@@ -11,22 +11,21 @@ class UsersAdminController extends AdminController {
   public function add() {
     $this->title = tr('Add user');
     if ($this->request->hasValidData('User')) {
-      $this->user = $this->User->create($this->request->data['User']);
-      if ($this->post->save()) {
+      $this->newUser = $this->User->create($this->request->data['User']);
+      if ($this->newUser->save()) {
         $this->session->flash['success'][] = tr(
           'Post saved. %1',
-          $this->Html->link(tr('Click here to view.'), $this->post)
+          $this->Html->link(tr('Click here to view.'), $this->newUser)
         );
         if (isset($this->request->data['save-close']))
           return $this->redirect('index');
         else if (isset($this->request->data['save-new']))
           return $this->refresh();
-        return $this->redirect(array('action' => 'edit', $this->post->id));
+        return $this->redirect(array('action' => 'edit', $this->newUser->id));
       }
     }
     else {
-      $this->post = $this->Post->create();
-      $this->post->commenting = $this->config['blog']['commentingDefault'];
+      $this->newUser = $this->User->create();
     }
     return $this->render();
   }
