@@ -84,6 +84,7 @@ class AuthHelper extends Helper {
       case 'user':
         return $this->getUser();
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   public function __set($property, $value) {
@@ -102,13 +103,13 @@ class AuthHelper extends Helper {
       case 'cookieRenewAfter':
       case 'permissionPrefix':
         $this->$property = $value;
-        break;
+        return;
       case 'passwordHasher':
         if ($value instanceof IPasswordHasher)
           $this->passwordHasher = $value;
         else
           $this->passwordHasher = $this->m->AccessControl->getPasswordHasher($value);
-        break;
+        return;
       case 'authentication':
         if (is_array($value)) {
           foreach ($value as $name => $options) {
@@ -122,7 +123,7 @@ class AuthHelper extends Helper {
         else {
           $this->loadAuthentication($value);
         }
-        break;
+        return;
       case 'authorization':
         if (is_array($value)) {
           foreach ($value as $name => $options) {
@@ -136,7 +137,7 @@ class AuthHelper extends Helper {
         else {
           $this->loadAuthorization($value);
         }
-        break;
+        return;
       case 'acl':
         if (is_array($value)) {
           foreach ($value as $name => $options) {
@@ -150,8 +151,9 @@ class AuthHelper extends Helper {
         else {
           $this->loadAcl($value);
         }
-        break;
+        return;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   private function loadAuthentication($name, $options = array()) {
@@ -280,7 +282,7 @@ class AuthHelper extends Helper {
           if ($this->session[$this->sessionPrefix . 'renew_at'] <= time()) {
             $this->session[$this->sessionPrefix . 'renew_at'] = time() + $this->sessionRenewAfter;
             $this->userModel->renewSession($sessionId, 
-              time() + $this->sessionLifetime);
+              time() + $this->sessionLifeTime);
           }
         }
         return true;
