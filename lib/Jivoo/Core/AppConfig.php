@@ -319,6 +319,8 @@ class AppConfig implements arrayaccess {
 //     if (!is_writable($this->file)) {
 //       return false;
 //     }
+    if (!is_dir(dirname($this->file)))
+      return false;
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
       return false;
