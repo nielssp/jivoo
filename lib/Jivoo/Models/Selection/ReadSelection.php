@@ -162,6 +162,14 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   public function count() {
     return $this->model->countSelection($this);
   }
+  
+  public function toArray() {
+    $array = array();
+    foreach ($this as $record)
+      $array[] = $record;
+    return $array;
+  }
+
   /**
    * Set offset
    * @param int $offset Offset

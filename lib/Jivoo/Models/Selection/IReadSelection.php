@@ -34,6 +34,8 @@ interface IReadSelection extends IBasicSelection, IteratorAggregate {
    * @return int
   */
   public function count();
+  
+  public function toArray();
   /**
    * Set offset
    * @param int $offset Offset

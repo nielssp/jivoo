@@ -55,6 +55,11 @@ class Selection extends BasicSelection implements ISelection {
   public function count() {
     return $this->copyBasicAttr(new ReadSelection($this->model))->count();
   }
+  
+  public function toArray() {
+    return $this->copyBasicAttr(new ReadSelection($this->model))->toArray();
+  }
+  
   public function offset($offset) {
     return $this->copyBasicAttr(new ReadSelection($this->model))->offset($offset);
   }

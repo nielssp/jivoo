@@ -78,6 +78,13 @@ abstract class Model extends Module implements IModel {
   public function last() {
     return $this->lastSelection(new ReadSelection($this));
   }
+  
+  public function toArray() {
+    $array = array();
+    foreach ($this as $record)
+      $array[] = $record;
+    return $array;
+  }
 
   /**
    * @param UpdateSelection $selection

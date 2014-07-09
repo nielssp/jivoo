@@ -175,7 +175,6 @@ class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
     $this->revisions['TableRevision'] = 0;
     $schema = new TableRevisionSchema();
     $this->addSchema($schema);
-    $this->setRevision('TableRevision', $schema->getRevision());
 
     $schemasDir = $this->p('schemas', '');
     if (is_dir($schemasDir)) {
