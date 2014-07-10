@@ -160,8 +160,10 @@ body {
         label {
           margin: 0 0 8px 0;
           display: block;
+          float: none;
         }
         input {
+          margin-top: 0;
           display: block;
           width: 100%;
         }

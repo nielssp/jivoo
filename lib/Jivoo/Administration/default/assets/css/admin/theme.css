@@ -1,3 +1,14 @@
+/*
+$navBg: #222;
+$navFg: #aaa;
+$navHlBg: #111;
+$navDisBg: #444;
+$navDisFg: #999;
+$subMenuBg: #333;
+$subMenuFg: #aaa;
+
+$mainBg: #ddd;
+//*/
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600");
 * {
   padding: 0;
@@ -107,8 +118,10 @@ body {
         margin: 0 0 24px 0; }
         #login > div form .field label {
           margin: 0 0 8px 0;
-          display: block; }
+          display: block;
+          float: none; }
         #login > div form .field input {
+          margin-top: 0;
           display: block;
           width: 100%; }
       #login > div form .remember {
