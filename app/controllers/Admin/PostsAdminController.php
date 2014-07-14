@@ -36,7 +36,9 @@ class PostsAdminController extends AdminController {
     $this->title = tr('Edit post');
     $this->post = $this->Post->find($postId);
     if ($this->post and $this->request->hasValidData('Post')) {
-      $this->post->addData($this->request->data['Post']);
+      $data = $this->request->data['Post'];
+      $data['commenting'] = isset($data['commenting']);
+      $this->post->addData($data);
       if ($this->post->save()) {
         $this->session->flash['success'][] = tr(
           'Post saved. %1',
