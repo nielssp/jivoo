@@ -40,6 +40,10 @@ class User extends ActiveModel implements IUserModel {
     'password' => 'Password',
     'confirmPassword' => 'Confirm password',
   );
+
+  protected $actions = array(
+    'edit' => 'Admin::Users::edit::%id%',
+  );
   
   protected $virtual = array(
     'confirmPassword'

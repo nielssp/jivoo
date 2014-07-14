@@ -31,14 +31,14 @@ class UsersAdminController extends AdminController {
   }
   
   public function edit($postId) {
-    $this->title = tr('Edit post');
-    $this->post = $this->Post->find($postId);
-    if ($this->post and $this->request->hasValidData('Post')) {
-      $this->post->addData($this->request->data['Post']);
-      if ($this->post->save()) {
+    $this->title = tr('Edit user');
+    $this->newUser = $this->User->find($postId);
+    if ($this->newUser and $this->request->hasValidData('User')) {
+      $this->newUser->addData($this->request->data['User']);
+      if ($this->newUser->save()) {
         $this->session->flash['success'][] = tr(
-          'Post saved. %1',
-          $this->Html->link(tr('Click here to view.'), $this->post)
+          'User saved. %1',
+          $this->Html->link(tr('Click here to view.'), $this->newUser)
         );
         if (isset($this->request->data['save-close']))
           return $this->redirect('index');
@@ -47,6 +47,6 @@ class UsersAdminController extends AdminController {
         return $this->refresh();
       }
     }
-    return $this->render('admin/posts/add.html');
+    return $this->render('admin/users/add.html');
   }
 }

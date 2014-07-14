@@ -40,6 +40,11 @@ class Comment extends ActiveModel {
     'updatedAt' => 'Updated at',
   );
 
+  protected $actions = array(
+    'view' => 'Comments::view::%id%',
+    'edit' => 'Admin::Comments::edit::%id%',
+  );
+
   public function getRoute(ActiveRecord $record) {
     return array(
       'controller' => 'Comments',
