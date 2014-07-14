@@ -42,13 +42,13 @@ class CommentsController extends AppController {
         $this->newComment->ip = $this->request->ip;
         if ($this->config['commentApproval'] and
              !$this->Auth->isAllowed('backend.posts.comments.approve')) {
-          $this->newComment->status = 'approved';
-        }
-        else {
           $this->newComment->status = 'pending';
         }
+        else {
+          $this->newComment->status = 'approved';
+        }
         if ($this->newComment->save()) {
-          $this->Pagination->setCount($this->comments->count());
+          $this->Pagination->paginate($this->comments, 10);
           if (!empty($this->newComment->author)) {
             $this->request->cookies['comment_author'] = $this->newComment->author;
           }
