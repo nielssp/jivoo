@@ -24,8 +24,12 @@ else {
   echo tr('Posted on %1', fdate($post->createdAt));
 }
 ?>
- | <a href="<?php echo $this->link($post); ?>#comment"><?php echo tr(
-  'Leave a comment'); ?></a></div>
+ | 
+<?php echo $Html->link(
+  tr('Leave a comment'),
+  $this->mergeRoutes($post, array('fragment' => 'comment'))
+); ?>
+</div>
 
 </div>
 <?php
@@ -36,20 +40,20 @@ if ($Pagination->getCount() > 0) :
 
 <ul class="comments">
 <?php
-  $level = 0;
-  foreach ($comments as $comment) :
-    if (false && isset($comment->level)) {
-      if ($level == $comment->level) {
-        echo '</li>';
-      }
-      else if ($level > $comment->level) {
-        for ($i = $comment->level; $level > $i; $i++)
-          echo '</li></ul>';
-        echo '</li>';
-      }
-      if ($level >= 0 AND $level < $comment->level)
-        echo '<ul>';
+$level = 0;
+foreach ($comments as $comment):
+  if (false && isset($comment->level)) {
+    if ($level == $comment->level) {
+      echo '</li>';
     }
+    else if ($level > $comment->level) {
+      for ($i = $comment->level; $level > $i; $i++)
+        echo '</li></ul>';
+      echo '</li>';
+    }
+    if ($level >= 0 AND $level < $comment->level)
+      echo '<ul>';
+  }
 ?>
   
 <li>
@@ -64,17 +68,17 @@ if ($Pagination->getCount() > 0) :
 </div>
 <div class="comment" id="comment<?php echo $comment->id; ?>">
 <div class="author"><?php
-    if (empty($comment->author)) {
-      echo tr('Anonymous');
-    }
-    else {
-      $website = $Html->cleanUrl($comment->website);
-      if (empty($website))
-        echo h($comment->author);
-      else
-        echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
-    }
-    ?></div>
+  if (empty($comment->author)) {
+    echo tr('Anonymous');
+  }
+  else {
+    $website = $Html->cleanUrl($comment->website);
+    if (empty($website))
+      echo h($comment->author);
+    else
+      echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
+  }
+?></div>
   <p><?php echo $comment->content; ?></p>
 <div class="byline">
 <?php
@@ -85,13 +89,13 @@ if ($Pagination->getCount() > 0) :
 </div>
 <div class="clear"></div>
 <?php
-    if (false && isset($comment->level))
-      $level = $comment->level;
-    else
-      echo '</li>';
-  endforeach;
-  for ($i = $level; $i >= 0; $i--)
-    echo '</li></ul>';
+  if (false && isset($comment->level))
+    $level = $comment->level;
+  else
+    echo '</li>';
+endforeach;
+for ($i = $level; $i >= 0; $i--)
+  echo '</li></ul>';
 ?>
 
 <div class="pagination">
@@ -122,7 +126,7 @@ endif;
 
 <div class="field">
 <label>
-  <?php echo tr('Logged in as %1.', h($user->username)) ?>
+<?php echo tr('Logged in as %1.', h($user->username)) ?>
 </label>
 (<?php echo $Html->link(tr('Log out?'), 'Backend::logout') ?>)
 </div>
@@ -130,7 +134,7 @@ endif;
     else : ?>
 
 <div class="field">
-    <?php echo $Form->label('author'); ?>
+<?php echo $Form->label('author'); ?>
 <?php echo $Form->ifRequired('author', '<span class="star">*</span>'); ?>
 <?php echo $Form->text('author'); ?>
 <?php echo $Form->error('author'); ?>

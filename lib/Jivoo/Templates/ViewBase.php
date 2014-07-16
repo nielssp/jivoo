@@ -122,7 +122,7 @@ abstract class ViewBase {
    * Begin capturing output for block
    * @param string $block Block name
    */
-  protected function begin($block) {
+  public function begin($block) {
     $this->blockMode = 'assign';
     $this->content .= ob_get_clean();
     $this->currentBlock = $block;
@@ -133,7 +133,7 @@ abstract class ViewBase {
    * Begin capturing output for block, append mode
    * @param string $block Block name
    */
-  protected function append($block) {
+  public function append($block) {
     $this->blockMode = 'append';
     $this->content .= ob_get_clean();
     $this->currentBlock = $block;
@@ -144,7 +144,7 @@ abstract class ViewBase {
    * Begin capturing output for block, prepend mode
    * @param string $block Block name
    */
-  protected function prepend($block) {
+  public function prepend($block) {
     $this->blockMode = 'prepend';
     $this->content .= ob_get_clean();
     $this->currentBlock = $block;
@@ -154,7 +154,7 @@ abstract class ViewBase {
   /**
    * End a capturing block
    */
-  protected function end() {
+  public function end() {
     if (isset($this->currentBlock)) {
       if (!isset($this->blocks[$this->currentBlock])) {
         $this->blocks[$this->currentBlock] = '';
@@ -211,6 +211,16 @@ abstract class ViewBase {
    */
   protected function file($file) {
     return $this->m->Templates->getAsset($file);
+  }
+  
+  /**
+   * Merge two routes
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}
+   * @param array $mergeWith Route array to merge with
+   * @param array Resulting route (as an array)
+   */
+  protected function mergeRoutes($route = null, $mergeWith = array()) {
+    return $this->m->Routing->mergeRoutes($route, $mergeWith);
   }
 
   /**

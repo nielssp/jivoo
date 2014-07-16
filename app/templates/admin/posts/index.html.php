@@ -1,6 +1,6 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<?php echo $Widget->widget('RecordIndex', array(
+<?php echo $DataTable->begin(array(
   'model' => $posts,
   'defaultSortBy' => 'createdAt',
   'defaultDescending' => true,
@@ -30,3 +30,19 @@
     new RecordIndexAction(tr('Delete'), 'delete', 'remove'),
   ),
 )); ?>
+
+<?php foreach ($DataTable->data as $record): ?>
+
+<?php echo $DataTable->row(array(
+  'id' => $record->id,
+  'cells' => array(
+    $record->title,
+    $Html->link($record->user->username, $record->user),
+    $record->status,
+    fdate($record->createdAt)
+  )
+)); ?>
+
+<?php endforeach; ?>
+
+<?php echo $DataTable->end(); ?>

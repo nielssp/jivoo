@@ -2,7 +2,7 @@
 
 class AdminController extends AppController {
   
-  protected $helpers = array('Html', 'Form', 'Admin', 'Icon', 'Widget');
+  protected $helpers = array('Html', 'Form', 'Admin', 'Icon', 'Widget', 'DataTable');
 
   public function init() {
     parent::init();

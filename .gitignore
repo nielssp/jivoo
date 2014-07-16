@@ -11,3 +11,5 @@ doc/
 config/db.sqlite3
 .sass-cache/*
 *.scssc
+user/config.php
+user/db.sqlite3

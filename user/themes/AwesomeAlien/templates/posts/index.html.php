@@ -18,14 +18,26 @@
   </h1>
 <?php echo $post->content; ?>
 
-<div class="byline"><?php echo tr('Posted on %1', fdate($post->createdAt)) ?>
- | <a href="<?php echo $this->link($post);
-  $comments = $post->comments->where('status = %CommentStatusEnum', 'approved')->count();
-  if ($comments == 0)
-    echo '#comment">' . tr('Leave a comment');
-  else
-    echo '#comments">' . tn('%1 comments', '%1 comment', $comments);
-?></a></div>
+<div class="byline">
+<?php echo tr('Posted on %1', fdate($post->createdAt)) ?>
+ | 
+<?php
+$comments = $post->comments->where('status = %CommentStatus', 'approved')->count();
+if ($comments == 0) {
+  echo $Html->link(
+    tr('Leave a comment'),
+    $this->mergeRoutes($post, array('fragment' => 'comment'))
+  );
+}
+else {
+  echo $Html->link(
+    tn('%1 comments', '%1 comment', $comments),
+    $this->mergeRoutes($post, array('fragment' => 'comments'))
+  );
+}
+?>
+</div>
+
 </div>
 <?php endforeach; ?>
 
