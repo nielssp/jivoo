@@ -18,6 +18,21 @@ class Post extends ActiveModel {
   protected $belongsTo = array(
     'User',
   );
+  
+// PROPOSAL FOR VIRTUAL FIELDS
+//   protected $virtual = array(
+//     'author' => array(
+//       'association' => 'user',
+//       'field' => 'username'
+//     ),
+//     'approvedComments' => array(
+//       'association' => 'comments',
+//       'field' => 'id',
+//       'function' => 'COUNT',
+//       'where' => '{Comment}.status = "approved"', // not good
+//       'group' => 'postId'
+//     )
+//   );
 
   protected $validate = array(
     'title' => array(

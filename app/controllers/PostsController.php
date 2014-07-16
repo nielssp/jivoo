@@ -29,8 +29,8 @@ class PostsController extends AppController {
   
   public function feed() {
     $this->posts = $this->Post
-      ->where('published = true')
-      ->orderByDescending('date')
+      ->where('status = %PostStatus', 'published')
+      ->orderByDescending('createdAt')
       ->limit(30);
     return $this->render('feed/posts.rss');
   }
