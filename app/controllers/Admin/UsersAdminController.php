@@ -14,7 +14,7 @@ class UsersAdminController extends AdminController {
       $this->newUser = $this->User->create($this->request->data['User']);
       if ($this->newUser->save()) {
         $this->session->flash['success'][] = tr(
-          'Post saved. %1',
+          'User saved. %1',
           $this->Html->link(tr('Click here to view.'), $this->newUser)
         );
         if (isset($this->request->data['save-close']))

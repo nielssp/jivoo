@@ -41,7 +41,7 @@ class PagesAdminController extends AdminController {
       $this->page->addData($data);
       if ($this->page->save()) {
         $this->session->flash['success'][] = tr(
-          'Post saved. %1',
+          'Page saved. %1',
           $this->Html->link(tr('Click here to view.'), $this->page)
         );
         if (isset($this->request->data['save-close']))

@@ -5,8 +5,7 @@ $widget = $Widget->begin('DataTable', array(
   'model' => $pages,
   'columns' => array('title', 'name', 'published', 'updatedAt'),
   'sortOptions' => array('title', 'name', 'published', 'updatedAt', 'createdAt'),
-  'defaultSortBy' => 'updatedAt',
-  'defaultDescending' => true,
+  'defaultSortBy' => 'name',
   'primaryAction' => 'edit',
   'filters' => array(
     tr('Published') => 'published=true',
