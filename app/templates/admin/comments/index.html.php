@@ -1,7 +1,13 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<?php echo $Widget->widget('RecordIndex', array(
+<?php
+$widget = $Widget->begin('DataTable', array(
   'model' => $comments,
+  'columns' => array('content', 'post', 'status', 'createdAt'),
+  'labels' => array(
+    'post' => tr('Post'),
+  ),
+  'sortOptions' => array('title', 'status', 'updatedAt', 'createdAt'),
   'defaultSortBy' => 'createdAt',
   'defaultDescending' => true,
   'filters' => array(
@@ -9,26 +15,47 @@
     tr('Pending review') => 'status=pending',
     tr('Spam') => 'status=spam'
   ),
-  'columns' => array(
-    new RecordIndexColumn('content', null, true),
-    new RecordIndexRecordColumn('post', tr('Post'), false, 'title', 'view'),
-    new RecordIndexColumn('status'),
-    new RecordIndexDateColumn('createdAt'),
+  'actions' => array(
+    new RowAction(tr('Edit'), 'edit', 'pencil'),
+    new RowAction(tr('View'), 'view', 'screen'),
+    'approve' => new RowAction(tr('Approve'), 'approve', 'checkmark'),
+    'unapprove' => new RowAction(tr('Unapprove'), 'unapprove', 'close'),
+    'spam' => new RowAction(tr('Spam'), 'spam', 'thumbs-up2'),
+    'notSpam' => new RowAction(tr('Not spam'), 'notSpam', 'thumbs-up'),
+    new RowAction(tr('Delete'), 'delete', 'remove'),
   ),
-  'defaultAction' => 'edit',
   'bulkActions' => array(
-    new RecordIndexBulkAction(tr('Edit'), 'Admin::Comments::bulkEdit', 'pencil'),
-    new RecordIndexBulkAction(tr('Approve'), 'Admin::Comments::bulkEdit', 'checkmark'),
-    new RecordIndexBulkAction(tr('Unapprove'), 'Admin::Comments::bulkEdit', 'close'),
-    new RecordIndexBulkAction(tr('Spam'), 'Admin::Comments::bulkEdit', 'thumbs-up2'),
-    new RecordIndexBulkAction(tr('Not spam'), 'Admin::Comments::bulkEdit', 'thumbs-up'),
-    new RecordIndexBulkAction(tr('Delete'), 'Admin::Comments::bulkEdit', 'remove'),
-  ),
-  'recordActions' => array(
-    new RecordIndexAction(tr('Edit'), 'edit', 'pencil'),
-    new RecordIndexAction(tr('View'), 'view', 'screen'),
-    new RecordIndexAction(tr('Approve'), 'approve', 'checkmark'),
-    new RecordIndexAction(tr('Spam'), 'spam', 'thumbs-up2'),
-    new RecordIndexAction(tr('Delete'), 'delete', 'remove'),
-  ),
-)); ?>
+    new BulkAction(tr('Edit'), 'Admin::Comments::bulkEdit', 'pencil'),
+    new BulkAction(tr('Approve'), 'Admin::Comments::bulkEdit', 'checkmark'),
+    new BulkAction(tr('Unapprove'), 'Admin::Comments::bulkEdit', 'close'),
+    new BulkAction(tr('Spam'), 'Admin::Comments::bulkEdit', 'thumbs-up2'),
+    new BulkAction(tr('Not spam'), 'Admin::Comments::bulkEdit', 'thumbs-up'),
+    new BulkAction(tr('Delete'), 'Admin::Comments::bulkEdit', 'remove'),
+  )
+));
+foreach ($widget as $item) {
+  $removeActions = null;
+  switch ($item->status) {
+    case 'approved':
+      $removeActions = array('notSpam', 'approve');
+      break;
+    case 'spam':
+      $removeActions = array('spam', 'unapprove');
+      break;
+    case 'pending':
+      $removeActions = array('notSpam', 'unapprove');
+      break;
+  }
+  echo $widget->handle($item, array(
+    'id' => $item->id,
+    'cells' => array(
+      $item->content,
+      $Html->link($item->post->title, $item->post),
+      $item->status,
+      ldate($item->createdAt)
+    ),
+    'removeActions' => $removeActions
+  ));
+}
+echo $widget->end();
+?>

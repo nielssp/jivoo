@@ -1,5 +1,5 @@
 <?php
-class RecordIndexAction {
+class RowAction {
   public $label;
   public $action;
   public $icon;

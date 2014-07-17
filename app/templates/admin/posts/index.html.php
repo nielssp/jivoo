@@ -1,48 +1,45 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<?php echo $DataTable->begin(array(
+<?php
+$widget = $Widget->begin('DataTable', array(
   'model' => $posts,
-  'defaultSortBy' => 'createdAt',
+  'columns' => array('title', 'author', 'status', 'updatedAt'),
+  'labels' => array(
+    'author' => tr('Author'),
+  ),
+  'sortOptions' => array('title', 'status', 'updatedAt', 'createdAt'),
+  'defaultSortBy' => 'updatedAt',
   'defaultDescending' => true,
   'filters' => array(
     tr('Published') => 'status=published',
     tr('Pending review') => 'status=pending',
     tr('Draft') => 'status=draft'
   ),
-  'columns' => array(
-    new RecordIndexColumn('title', null, true),
-    new RecordIndexRecordColumn('user', tr('Author'), false, 'username', 'view'),
-    new RecordIndexColumn('status'),
-    new RecordIndexDateColumn('createdAt'),
+  'actions' => array(
+    new RowAction(tr('Edit'), 'edit', 'pencil'),
+    new RowAction(tr('View'), 'view', 'screen'),
+    'publish' => new RowAction(tr('Publish'), 'publish', 'eye'),
+    'unpublish' => new RowAction(tr('Unpublish'), 'unpublish', 'eye-blocked'),
+    new RowAction(tr('Delete'), 'delete', 'remove'),
   ),
-  'defaultAction' => 'edit',
   'bulkActions' => array(
-    new RecordIndexBulkAction(tr('Edit'), 'Admin::Posts::bulkEdit', 'pencil'),
-    new RecordIndexBulkAction(tr('Publish'), 'Admin::Posts::bulkEdit', 'eye'),
-    new RecordIndexBulkAction(tr('Unpublish'), 'Admin::Posts::bulkEdit', 'eye-blocked'),
-    new RecordIndexBulkAction(tr('Delete'), 'Admin::Posts::bulkEdit', 'remove'),
-  ),
-  'recordActions' => array(
-    new RecordIndexAction(tr('Edit'), 'edit', 'pencil'),
-    new RecordIndexAction(tr('View'), 'view', 'screen'),
-    new RecordIndexAction(tr('Publish'), 'publish', 'eye'),
-    new RecordIndexAction(tr('Unpublish'), 'unpublish', 'eye-blocked'),
-    new RecordIndexAction(tr('Delete'), 'delete', 'remove'),
-  ),
-)); ?>
-
-<?php foreach ($DataTable->data as $record): ?>
-
-<?php echo $DataTable->row(array(
-  'id' => $record->id,
-  'cells' => array(
-    $record->title,
-    $Html->link($record->user->username, $record->user),
-    $record->status,
-    fdate($record->createdAt)
+    new BulkAction(tr('Edit'), 'Admin::Posts::bulkEdit', 'pencil'),
+    new BulkAction(tr('Publish'), 'Admin::Posts::bulkEdit', 'eye'),
+    new BulkAction(tr('Unpublish'), 'Admin::Posts::bulkEdit', 'eye-blocked'),
+    new BulkAction(tr('Delete'), 'Admin::Posts::bulkEdit', 'remove'),
   )
-)); ?>
-
-<?php endforeach; ?>
-
-<?php echo $DataTable->end(); ?>
+));
+foreach ($widget as $item) {
+  echo $widget->handle($item, array(
+    'id' => $item->id,
+    'cells' => array(
+      $Html->link($item->title, $item->action('edit')),
+      $Html->link($item->user->username, $item->user),
+      $item->status,
+      ldate($item->updatedAt)
+    ),
+    'removeActions' => array($item->status == 'published' ? 'publish' : 'unpublish')
+  ));
+}
+echo $widget->end();
+?>

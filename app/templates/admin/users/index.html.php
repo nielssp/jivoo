@@ -1,20 +1,34 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<?php echo $Widget->widget('RecordIndex', array(
+<?php
+$widget = $Widget->begin('DataTable', array(
   'model' => $users,
-  'columns' => array(
-    new RecordIndexColumn('username', null, true),
-    new RecordIndexRecordColumn('group', null, false, 'title', 'view'),
-    new RecordIndexColumn('email'),
-    new RecordIndexDateColumn('createdAt'),
+  'columns' => array('username', 'group', 'email', 'createdAt'),
+  'labels' => array(
+    'group' => tr('Group'),
   ),
-  'defaultAction' => 'edit',
+  'sortOptions' => array('username', 'email', 'updatedAt', 'createdAt'),
+  'defaultSortBy' => 'createdAt',
+  'defaultDescending' => true,
+  'actions' => array(
+    new RowAction(tr('Edit'), 'edit', 'pencil'),
+    new RowAction(tr('Delete'), 'delete', 'remove'),
+  ),
   'bulkActions' => array(
-    new RecordIndexBulkAction(tr('Edit'), 'Admin::Posts::bulkEdit', 'pencil'),
-    new RecordIndexBulkAction(tr('Delete'), 'Admin::Posts::bulkEdit', 'remove'),
-  ),
-  'recordActions' => array(
-    new RecordIndexAction(tr('Edit'), 'edit', 'pencil'),
-    new RecordIndexAction(tr('Delete'), 'delete', 'remove'),
-  ),
-)); ?>
+    new BulkAction(tr('Edit'), 'Admin::Users::bulkEdit', 'pencil'),
+    new BulkAction(tr('Delete'), 'Admin::Users::bulkEdit', 'remove'),
+  )
+));
+foreach ($widget as $item) {
+  echo $widget->handle($item, array(
+    'id' => $item->id,
+    'cells' => array(
+      $Html->link($item->username, $item->action('edit')),
+      $Html->link($item->group->name, $item->group),
+      $item->email,
+      ldate($item->createdAt)
+    ),
+  ));
+}
+echo $widget->end();
+?>

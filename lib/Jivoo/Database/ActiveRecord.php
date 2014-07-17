@@ -1,5 +1,5 @@
 <?php
-class ActiveRecord implements IRecord, ILinkable {
+class ActiveRecord implements IRecord, IActionRecord, ILinkable {
   
   private $data = array();
   

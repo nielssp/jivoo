@@ -1,32 +1,58 @@
 <?php
-class DataTableWidget extends Widget {
-  protected $helpers = array('Form', 'Pagination');
+class DataTableWidget extends TraversableWidget {
+  protected $helpers = array('Html', 'Form', 'Pagination', 'Widget');
   
   protected $options = array(
     'model' => null,
     'selection' => null,
     'id' => '',
     'filters' => array(),
-    'columns' => array(),
-    'sortBy' => null,
+    'columns' => null,
+    'labels' => array(),
+    'primaryColumn' => null,
+    'sortOptions' => null,
     'defaultSortBy' => null,
     'defaultDescending' => false, 
     'itemsPerPage' => 20,
-    'defaultAction' => null,
+    'primaryAction' => null,
     'bulkActions' => array(),
-    'recordActions' => array(),
-    'recordTemplate' => 'widgets/record.html',
+    'actions' => array(),
   );
   
-  public function main($options) {
+  protected function getItems($options) {
     assume($options['model'] instanceof IModel);
     $this->model = $options['model'];
-    $this->records = isset($options['selection'])
-      ? $options['selection']
-      : $options['model'];
-    if (!isset($options['sortBy']))
-      $options['sortBy'] = $options['columns'];
+     if (isset($options['selection']))
+      $this->records = $options['selection'];
+    else
+      $this->records = $options['model'];
+    if (isset($options['columns']))
+      $this->columns = $options['columns'];
+    else
+      $this->columns = $this->model->getFields();
+    foreach ($this->columns as $column) {
+      if (!isset($options['labels'][$column]))
+        $options['labels'][$column] = $this->model->getLabel($column);
+    }
+    $this->actions = $options['actions'];
+    $this->primaryColumn = $options['primaryColumn'];
     $this->sortBy = $options['defaultSortBy'];
+    $this->sortOptions = $options['sortOptions'];
+    if (!isset($this->sortOptions)) {
+      $this->sortOptions = $options['columns'];
+    }
+    else {
+      foreach ($this->sortOptions as $column) {
+        if (!isset($options['labels'][$column]))
+          $options['labels'][$column] = $this->model->getLabel($column);
+      }
+    }
+    $this->labels = $options['labels'];
+    if (!isset($this->primaryColumn))
+      $this->primaryColumn = $this->columns[0];
+    if (!isset($this->sortBy))
+      $this->sortBy = $this->sortOptions[0];
+    $this->primaryAction = $options['primaryAction'];
     if (isset($this->request->query['sortBy'])) {
       if ($this->model->hasField($this->request->query['sortBy'])) {
         $this->sortBy = $this->request->query['sortBy'];
@@ -43,6 +69,47 @@ class DataTableWidget extends Widget {
     }
     
     $this->records = $this->Pagination->paginate($this->records, $options['itemsPerPage']);
+    return $this->records;
+  }
+  
+  public function handle($item, $options = array()) {
+    $options = array_merge(array(
+      'record' => $item,
+      'model' => $this->model,
+      'columns' => $this->columns,
+      'labels' => $this->labels,
+      'primaryColumn' => $this->primaryColumn,
+      'actions' => $this->actions
+    ), $options);
+    if (!isset($options['cells'])) {
+      $options['cells'] = array();
+      foreach ($this->columns as $column) {
+        $type = $this->model->getType($column)->type;
+        $cell = null;
+        switch ($type) {
+          case DataType::DATE:
+            $cell = fdate($item->$column);
+            break;
+          case DataType::DATETIME:
+            $cell = ldate($item->$column);
+            break;
+          default:
+            $cell = h($item->$column);
+            break;
+        }
+        if ($column == $this->primaryColumn) {
+          if (isset($this->primaryAction))
+            $cell = $this->Html->link($cell, $item->action($this->primaryAction));
+          else if ($item instanceof ILinkable)
+            $cell = $this->Html->link($cell, $item);
+        }
+        $options['cells'][] = $cell;
+      }
+    }
+    return $this->Widget->widget('DataTableRow', $options);
+  }
+  
+  protected function main($options) {
     return $this->fetch($options);
   }
 }

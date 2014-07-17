@@ -1,5 +1,5 @@
 <?php
-class RecordIndexBulkAction {
+class BulkAction {
   public $label;
   public $route;
   public $icon;

@@ -143,14 +143,6 @@ abstract class Widget extends Module {
   }
   
   /**
-   * Get widget view
-   * @return WidgetView Widget view
-   */
-  public function getView() {
-    return $this->view;
-  }
-  
-  /**
    * Default title for widget
    * @return string Title
    */
@@ -170,14 +162,15 @@ abstract class Widget extends Module {
   
   public function widget($options) {
     $options = array_merge($this->options, $options);
+    $this->data['widget'] = $this;
     $this->data['options'] = $options;
     return $this->main($options);
   }
   
   /**
    * Main widget logic. Is called before rendering page with widget on.
-   * @param array $config Associative array of widget configuration
+   * @param array $options Associative array of widget configuration
    * @return string|false Widget HTML or false on error
    */
-  protected abstract function main($config);
+  protected abstract function main($options);
 }

@@ -49,25 +49,26 @@
 </div>
 <?php endif; ?>
 
-<?php if (count($options['sortBy']) > 0): ?>
+<?php if (count($sortOptions) > 0): ?>
+
 <div class="dropdown">
 <a href="#"><?php echo tr('Sort by'); ?></a>
 <ul>
-<?php foreach ($options['sortBy'] as $column): ?>
-<?php if ($sortBy == $column->field and $descending): ?>
+<?php foreach ($sortOptions as $column): ?>
+<?php if ($sortBy == $column and $descending): ?>
 <li class="selected selected-desc"><?php echo $Html->link(
-  $column->getLabel($model),
+  $labels[$column],
   array('query' => array('order' => 'asc'), 'mergeQuery' => true)
 ); ?></li>
-<?php elseif ($sortBy == $column->field and !$descending): ?>
+<?php elseif ($sortBy == $column and !$descending): ?>
 <li class="selected selected-asc"><?php echo $Html->link(
-  $column->getLabel($model),
+  $labels[$column],
   array('query' => array('order' => 'desc'), 'mergeQuery' => true)
 ); ?></li>
 <?php else: ?>
 <li><?php echo $Html->link(
-  $column->getLabel($model),
-  array('query' => array('sortBy' => $column->field, 'order' => 'asc'), 'mergeQuery' => true)
+  $labels[$column],
+  array('query' => array('sortBy' => $column, 'order' => 'asc'), 'mergeQuery' => true)
 ); ?></li>
 <?php endif; ?>
 <?php endforeach; ?>
@@ -76,7 +77,7 @@
 <?php endif; ?>
 </div>
 
-<?php echo $this->embed('widgets/record-pagination.html', array('Pagination' => $Pagination)); ?>
+<?php echo $this->embed('widgets/data-table-pagination.html', array('Pagination' => $Pagination)); ?>
 
 <table>
 <thead>
@@ -84,25 +85,26 @@
 <th class="selection" scope="col">
 <label><input type="checkbox" /></label>
 </th>
-<?php foreach ($options['columns'] as $column): ?>
-<th<?php if ($column->primary) echo ' class="primary"'; ?>
+<?php foreach ($columns as $column): ?>
+
+<th<?php if ($column == $primaryColumn) echo ' class="primary"'; ?>
  scope="col">
-<?php if ($sortBy == $column->field and $descending): ?>
+<?php if ($sortBy == $column and $descending): ?>
 <?php echo $Html->link(
-  $column->getLabel($model),
+  $labels[$column],
   array('query' => array('order' => 'asc'), 'mergeQuery' => true),
   array('class' => 'selected-desc')
 ); ?>
-<?php elseif ($sortBy == $column->field and !$descending): ?>
+<?php elseif ($sortBy == $column and !$descending): ?>
 <?php echo $Html->link(
-  $column->getLabel($model),
+  $labels[$column],
   array('query' => array('order' => 'desc'), 'mergeQuery' => true),
   array('class' => 'selected-asc')
 ); ?>
 <?php else: ?>
 <?php echo $Html->link(
-  $column->getLabel($model),
-  array('query' => array('sortBy' => $column->field, 'order' => 'asc'), 'mergeQuery' => true)
+  $labels[$column],
+  array('query' => array('sortBy' => $column, 'order' => 'asc'), 'mergeQuery' => true)
 ); ?>
 <?php endif; ?>
 </th>
@@ -112,7 +114,7 @@
 </thead>
 <tbody>
 
-<?php echo $this->block('table-body'); ?>
+<?php echo $this->block('widget-content'); ?>
 
 </tbody>
 <tfoot>
@@ -120,10 +122,10 @@
 <th class="selection" scope="col">
 <label><input type="checkbox" /></label>
 </th>
-<?php foreach ($options['columns'] as $column): ?>
-<th<?php if ($column->primary) echo ' class="primary"'; ?>
+<?php foreach ($columns as $column): ?>
+<th<?php if ($column == $primaryColumn) echo ' class="primary"'; ?>
  scope="col">
-<?php echo h($column->getLabel($model)); ?>
+<?php echo h($labels[$column]); ?>
 </th>
 <?php endforeach; ?>
 <th class="actions" scope="col"><?php echo tr('Actions'); ?></th>
@@ -131,4 +133,4 @@
 </tfoot>
 </table>
 
-<?php echo $this->embed('widgets/record-pagination.html', array('Pagination' => $Pagination)); ?>
+<?php echo $this->embed('widgets/data-table-pagination.html', array('Pagination' => $Pagination)); ?>
