@@ -93,6 +93,9 @@ class DataTableWidget extends TraversableWidget {
           case DataType::DATETIME:
             $cell = ldate($item->$column);
             break;
+          case DataType::BOOLEAN:
+            $cell = $item->$column ? tr('Yes') : tr('No');
+            break;
           default:
             $cell = h($item->$column);
             break;

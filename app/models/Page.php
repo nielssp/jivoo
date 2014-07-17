@@ -22,12 +22,22 @@ class Page extends ActiveModel {
     'content' => 'Content',
   );
 
+  protected $actions = array(
+    'view' => 'Pages::view::%id%',
+    'edit' => 'Admin::Pages::edit::%id%',
+  );
+
   public function getRoute(ActiveRecord $record) {
     return array(
       'controller' => 'Pages',
       'action' => 'view',
       'parameters' => array($record->id)
     );
+  }
+  
+  public function beforeValidate(ActiveModelEvent $event) {
+    $encoder = new HtmlEncoder();
+    $event->record->contentText = $encoder->encode($event->record->content);
   }
   
   public function install() {

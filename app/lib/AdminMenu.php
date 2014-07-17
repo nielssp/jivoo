@@ -16,6 +16,10 @@ class AdminMenu extends AppListener {
           IconMenu::item(tr('Add post'), 'Admin::Posts::add'),
           IconMenu::item(tr('Tags'), null),
         )),
+        'pages' => IconMenu::menu(tr('Pages'), 'Admin::Pages', 'file', array(
+          IconMenu::item(tr('All pages'), 'Admin::Pages::index'),
+          IconMenu::item(tr('Add page'), 'Admin::Pages::add'),
+        )),
         'comments' => IconMenu::menu(tr('Comments'), 'Admin::Comments', 'bubbles', array(
           IconMenu::item(tr('All comments'), 'Admin::Comments::index'),
           IconMenu::item(tr('Add comment'), 'Admin::Comments::add'),

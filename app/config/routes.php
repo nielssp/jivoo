@@ -9,6 +9,7 @@ return array(
   Route::match('login', 'App::login'),
   Route::auto('Admin'),
   Route::auto('Admin::Posts'),
+  Route::auto('Admin::Pages'),
   Route::auto('Admin::Comments'),
   Route::auto('Admin::Users'),
 );
