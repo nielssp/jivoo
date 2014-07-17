@@ -7,7 +7,7 @@ $widget = $Widget->begin('DataTable', array(
   'labels' => array(
     'post' => tr('Post'),
   ),
-  'sortOptions' => array('title', 'status', 'updatedAt', 'createdAt'),
+  'sortOptions' => array('status', 'updatedAt', 'createdAt'),
   'defaultSortBy' => 'createdAt',
   'defaultDescending' => true,
   'filters' => array(

@@ -89,6 +89,7 @@
 
 <th<?php if ($column == $primaryColumn) echo ' class="primary"'; ?>
  scope="col">
+<?php if (in_array($column, $sortOptions)): ?>
 <?php if ($sortBy == $column and $descending): ?>
 <?php echo $Html->link(
   $labels[$column],
@@ -106,6 +107,9 @@
   $labels[$column],
   array('query' => array('sortBy' => $column, 'order' => 'asc'), 'mergeQuery' => true)
 ); ?>
+<?php endif; ?>
+<?php else: ?>
+<?php echo $labels[$column]; ?>
 <?php endif; ?>
 </th>
 <?php endforeach; ?>
