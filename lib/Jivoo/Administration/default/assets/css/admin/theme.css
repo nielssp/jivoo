@@ -1115,18 +1115,20 @@ table {
     display: none;
     vertical-align: top;
     width: 15%; }
-  table .primary {
+    table td.primary, table th.primary {
+      width: auto; }
+  table td.primary {
     width: auto; }
-    table .primary > a:first-child {
+    table td.primary > a:first-child {
       font-weight: 600;
       font-size: 1.1em; }
-    table .primary .essential > span {
+    table td.primary .essential > span {
       white-space: nowrap;
       margin-right: 8px; }
-      table .primary .essential > span:last-child {
+      table td.primary .essential > span:last-child {
         margin-right: 0; }
     @media screen and (min-width: 768px) {
-      table .primary .essential {
+      table td.primary .essential {
         display: none; } }
   table .action-links {
     margin-top: 8px; }
@@ -1139,7 +1141,8 @@ table {
     width: 32px;
     padding: 12px 0 0 4px; }
     table .selection label {
-      padding: 12px 8px;
+      padding: 12px 0 12px 12px;
+      margin-left: -4px;
       cursor: pointer; }
   table .primary {
     display: table-cell; }

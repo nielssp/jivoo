@@ -1100,8 +1100,12 @@ table {
     display: none;
     vertical-align: top;
     width: 15%;
+
+    &.primary {
+      width: auto;
+    }
   }
-  .primary {
+  td.primary {
     width: auto;
     & > a:first-child {
       font-weight: 600;
@@ -1135,7 +1139,8 @@ table {
     width: 32px;
     padding: 12px 0 0 4px;
     label {
-      padding: 12px 8px;
+      padding: 12px 0 12px 12px;
+      margin-left: -4px;
       cursor: pointer;
     }
   }
