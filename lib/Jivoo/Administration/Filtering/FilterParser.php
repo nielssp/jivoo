@@ -29,10 +29,12 @@ class StringNode extends Node {
 
 class ComparisonNode extends Node {
   public $left = '';
+  public $comparison = '';
   public $right = '';
 
-  public function __construct($left, $right) {
+  public function __construct($left, $comparison, $right) {
     $this->left = $left;
+    $this->comparison = $comparison;
     $this->right = $right;
   }
 }
@@ -148,7 +150,7 @@ class FilterParser {
       $this->expect();
       $operator = $this->currentToken[0];
       $this->expect();
-      return new ComparisonNode($value, $this->currentToken[1]);
+      return new ComparisonNode($value, $operator, $this->currentToken[1]);
     }
     return new StringNode($value);
   }

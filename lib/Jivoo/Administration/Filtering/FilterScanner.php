@@ -69,7 +69,7 @@ class FilterScanner {
       case 'not':
         return array('!', $value);
       case 'contains':
-        return array($value, $value);
+        return array('contains', $value);
       case 'before':
         return array('<', $value);
       case 'after':
@@ -107,7 +107,7 @@ class FilterScanner {
         $this->pop();
         if ($this->current == '=') {
           $this->pop();
-          return array($value, $value . '=');
+          return array($value . '=', $value . '=');
         }
         return array($value, $value);
     }

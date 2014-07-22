@@ -23,8 +23,18 @@ class SelectionVisitor extends FilterVisitor {
     return new NotCondition($this->visit($node->child));
   }
   protected function visitComparison(ComparisonNode $node) {
-    /// @TODO check for existence of column
-    return new Condition($node->left . ' = ?', $node->right);
+    /// @TODO check for existence of column. AND TYPE
+    switch ($node->comparison) {
+      case '=':
+      case '!=':
+      case '<=':
+      case '>=':
+      case '>':
+      case '<':
+        return new Condition($node->left . ' ' . $node->comparison . ' ?', $node->right);
+      case 'contains':
+        return new Condition($node->left . ' LIKE %s', '%' . $node->right . '%');
+    }
   }
   protected function visitString(StringNode $node) {
     // Foreach search column add condition
