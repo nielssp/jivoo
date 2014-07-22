@@ -64,6 +64,9 @@ class SqlTable extends Table {
       }
       if ($clause['clause'] instanceof Condition) {
         if ($clause['clause']->hasClauses()) {
+          if ($clause['clause'] instanceof NotCondition) {
+            $sqlString .= 'NOT ';
+          }
           $sqlString .= '(' . $this->conditionToSql($clause['clause']) . ')';
         }
       }

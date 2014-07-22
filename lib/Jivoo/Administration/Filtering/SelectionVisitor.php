@@ -20,8 +20,7 @@ class SelectionVisitor extends FilterVisitor {
     return $condition;
   }
   protected function visitNotTerm(NotTermNode $node) {
-    throw new Exception('implement me');
-    // new NotCondition()...?
+    return new NotCondition($this->visit($node->child));
   }
   protected function visitComparison(ComparisonNode $node) {
     /// @TODO check for existence of column

@@ -396,7 +396,6 @@ include '../lib/Jivoo/Core/bootstrap.php';
 Lib::import('Core');
 Lib::import('Jivoo/Helpers');
 
-
 $scanner = new FilterScanner();
 
 $rounds = 100;
