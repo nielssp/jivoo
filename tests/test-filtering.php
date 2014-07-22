@@ -149,6 +149,121 @@ class FilterScanner {
   }
 }
 
+
+class FastFilterScanner {
+
+  private $input = array();
+  private $current = null;
+
+  private static $reserved = '= ()!<>&|"';
+
+  public function scan($input) {
+    $this->input = str_split($input);
+    $this->pop();
+    $tokens = array();
+    while (($token = $this->scanNext()) != null) {
+      $tokens[] = $token;
+    }
+    return $tokens;
+  }
+
+  public static function getEqualsOperator() {
+    return self::$reserved[0];
+  }
+
+  private function pop() {
+    $this->current = array_shift($this->input);
+    return $this->current;
+  }
+
+  private function isSpace() {
+    return $this->current == ' ';
+  }
+
+  private function scanString() {
+    $value = '';
+    $this->pop();
+    while ($this->current != '"') {
+      if ($this->current == '\\') {
+        $this->pop();
+      }
+      if ($this->current == null) {
+        // Error: Missing " (ignore it)
+        return $value;
+      }
+      $value .= $this->current;
+      $this->pop();
+    }
+    $this->pop();
+    return array('string', $value);
+  }
+
+  private function scanWord() {
+    $value = '';
+    while ($this->current != null AND strpos(self::$reserved, $this->current) === false) {
+      if ($this->current == '\\') {
+        $this->pop();
+      }
+      if ($this->current == null) {
+        break;
+      }
+      $value .= $this->current;
+      $this->pop();
+    }
+    switch (strtolower($value)) {
+      case 'and':
+        return array('&', $value);
+      case 'or':
+        return array('|', $value);
+      case 'not':
+        return array('!', $value);
+      case 'contains':
+        return array($value, $value);
+      case 'before':
+        return array('<', $value);
+      case 'after':
+        return array('>', $value);
+      case 'in':
+      case 'on':
+      case 'at':
+        return array('=', $value);
+    }
+    return array('string', $value);
+  }
+
+  private function scanNext() {
+    while ($this->isSpace()) {
+      $this->pop();
+    }
+    if ($this->current == null) {
+      return null;
+    }
+    if ($this->current == '"') {
+      return $this->scanString();
+    }
+    $value = $this->current;
+    switch ($value) {
+      case '(':
+      case ')':
+      case '=':
+      case '|':
+      case '&':
+        $this->pop();
+        return array($value, $value);
+      case '<':
+      case '>':
+      case '!':
+        $this->pop();
+        if ($this->current == '=') {
+          $this->pop();
+          return array($value, $value . '=');
+        }
+        return array($value, $value);
+    }
+    return $this->scanWord();
+  }
+}
+
 abstract class Node {
   public $operator = '';
 }
@@ -184,6 +299,123 @@ class ComparisonNode extends Node {
   public function __construct($left, $right) {
     $this->left = $left;
     $this->right = $right;
+  }
+}
+
+class FastFilterParser {
+  
+  private $tokens = array();
+  private $currentToken = null;
+  private $nextToken = null;
+  
+  public function parse($tokens) {
+    $this->tokens = $tokens;
+    if (isset($tokens[0])) {
+      $this->nextToken = $tokens[0];
+    }
+    else {
+      $this->nextToken = null;
+    }
+    $this->currentToken = null;
+    return $this->parseFilter();
+  }
+  
+  private function is($type) {
+    return $this->nextToken != null and $this->nextToken[0] == $type;
+  }
+  
+  private function isComparisonOperator() {
+    $type = $this->nextToken[0];
+    return $this->nextToken != null
+      and $type != 'string'
+      and $type != '!'
+      and $type != '&'
+      and $type != '|'
+      and $type != '('
+      and $type != ')';
+  }
+
+  private function accept($type = null) {
+    if ($this->nextToken != null and ($type == null or $this->is($type))) {
+      $this->pop();
+      return true;
+    }
+    return false;
+  }
+
+  private function expect($type = null) {
+    if ($this->accept($type)) {
+      return $this->currentToken;
+    }
+    throw new Exception(
+      'Parse error: Unexpected token "' . $this->currentToken[0]
+      . '" expected "' . $type . '"');
+  }
+
+  private function pop() {
+    $this->currentToken = array_shift($this->tokens);
+    if (isset($this->tokens[0])) {
+      $this->nextToken = $this->tokens[0];
+    }
+    else {
+      $this->nextToken = null;
+    }
+    return $this->currentToken;
+  }
+
+  private function parseFilter() {
+    $node = new FilterNode();
+    if ($this->nextToken != null) {
+      $notTerm = $this->parseNotTerm();
+      if ($notTerm == null) {
+        return $node;
+      }
+      $node->children[] = $notTerm;
+      while ($this->nextToken != null && !$this->is(')')) {
+        // default operator is and
+        $operator = 'and';
+        if ($this->accept('|')) {
+          $operator = 'or';
+        }
+        else {
+          $this->accept('&');
+        }
+        $notTerm = $this->parseNotTerm();
+        if ($notTerm == null) {
+          break;
+        }
+        $notTerm->operator = $operator;
+        $node->children[] = $notTerm;
+      }
+    }
+    if (count($node->children) == 1) {
+      return $node->children[0];
+    }
+    return $node;
+  }
+
+  private function parseNotTerm() {
+    if ($this->accept('!')) {
+      return new NotTermNode($this->parseTerm());
+    }
+    return $this->parseTerm();
+  }
+
+  private function parseTerm() {
+    if ($this->accept('(')) {
+      $node = $this->parseFilter();
+      $this->expect(')');
+      return $node;
+    }
+    $this->expect();
+    $value = $this->currentToken[1];
+    if ($this->isComparisonOperator()) {
+      $this->expect();
+      $operator = $this->currentToken[0];
+      $this->expect();
+      return new ComparisonNode($value, $this->currentToken[1]);
+    }
+    return new StringNode($value);
   }
 }
 
@@ -396,11 +628,17 @@ include '../lib/Jivoo/Core/bootstrap.php';
 Lib::import('Core');
 Lib::import('Jivoo/Helpers');
 
+
 $scanner = new FilterScanner();
+$fastScanner = new FastFilterScanner();
 
 $rounds = 100;
 
 $tokens = $test->testFunction($rounds, array($scanner, 'scan'), $input);
+$test->dumpResult();
+
+
+$fastTokens = $test->testFunction($rounds, array($fastScanner, 'scan'), $input);
 $test->dumpResult();
 
 // $test->puts('Scanner result:' . PHP_EOL);
@@ -411,7 +649,14 @@ $test->dumpResult();
 
 $parser = new FilterParser();
 
+
+$fastParser = new FastFilterParser();
+
 $root = $test->testFunction($rounds, array($parser, 'parse'), $tokens);
+$test->dumpResult();
+
+
+$fastRoot = $test->testFunction($rounds, array($fastParser, 'parse'), $fastTokens);
 $test->dumpResult();
 
 // $visitor = new OutputVisitor();

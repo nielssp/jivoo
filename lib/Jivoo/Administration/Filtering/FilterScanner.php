@@ -1,11 +1,11 @@
 <?php
-
 class FilterScanner {
 
   private $input = array();
+
   private $current = null;
 
-  private static $reserved = '= ()!&|"';
+  private static $reserved = '= ()!<>&|"';
 
   public function scan($input) {
     $this->input = str_split($input);
@@ -39,19 +39,20 @@ class FilterScanner {
       }
       if ($this->current == null) {
         // Error: Missing " (ignore it)
-        return new FilterToken(FilterToken::T_STRING, $value);
+        return $value;
       }
       $value .= $this->current;
       $this->pop();
     }
     $this->pop();
-    return new FilterToken(FilterToken::T_STRING, $value);
+    return array('string', $value);
   }
 
   private function scanWord() {
     $value = '';
-    while ($this->current != null AND strpos(self::$reserved, $this->current) === false) {
-      if ($this->current == '\\') {
+    while ($this->current != null and
+           strpos(self::$reserved, $this->current) === false) {
+            if ($this->current == '\\') {
         $this->pop();
       }
       if ($this->current == null) {
@@ -60,21 +61,25 @@ class FilterScanner {
       $value .= $this->current;
       $this->pop();
     }
-    switch ($value) {
-    	case 'not':
-    	  return new FilterToken(FilterToken::T_NOT);
-    	case 'and':
-    	  return new FilterToken(FilterToken::T_AND);
-    	case 'or':
-    	  return new FilterToken(FilterToken::T_OR);
-    	case 'NOT':
-    	  return new FilterToken(FilterToken::T_NOT);
-    	case 'AND':
-    	  return new FilterToken(FilterToken::T_AND);
-    	case 'OR':
-    	  return new FilterToken(FilterToken::T_OR);
+    switch (strtolower($value)) {
+      case 'and':
+        return array('&', $value);
+      case 'or':
+        return array('|', $value);
+      case 'not':
+        return array('!', $value);
+      case 'contains':
+        return array($value, $value);
+      case 'before':
+        return array('<', $value);
+      case 'after':
+        return array('>', $value);
+      case 'in':
+      case 'on':
+      case 'at':
+        return array('=', $value);
     }
-    return new FilterToken(FilterToken::T_STRING, $value);
+    return array('string', $value);
   }
 
   private function scanNext() {
@@ -87,25 +92,24 @@ class FilterScanner {
     if ($this->current == '"') {
       return $this->scanString();
     }
-    switch ($this->current) {
-    	case self::$reserved[0]:
-    	  $this->pop();
-    	  return new FilterToken(FilterToken::T_EQUALS);
-    	case '(':
-    	  $this->pop();
-    	  return new FilterToken(FilterToken::T_LPARENTHESIS);
-    	case ')':
-    	  $this->pop();
-    	  return new FilterToken(FilterToken::T_RPARENTHESIS);
-    	case '!':
-    	  $this->pop();
-    	  return new FilterToken(FilterToken::T_NOT);
-    	case '&':
-    	  $this->pop();
-    	  return new FilterToken(FilterToken::T_AND);
-    	case '|':
-    	  $this->pop();
-    	  return new FilterToken(FilterToken::T_OR);
+    $value = $this->current;
+    switch ($value) {
+      case '(':
+      case ')':
+      case '=':
+      case '|':
+      case '&':
+        $this->pop();
+        return array($value, $value);
+      case '<':
+      case '>':
+      case '!':
+        $this->pop();
+        if ($this->current == '=') {
+          $this->pop();
+          return array($value, $value . '=');
+        }
+        return array($value, $value);
     }
     return $this->scanWord();
   }

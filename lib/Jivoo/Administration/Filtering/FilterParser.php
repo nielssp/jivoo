@@ -42,7 +42,7 @@ class FilterParser {
   private $tokens = array();
   private $currentToken = null;
   private $nextToken = null;
-
+  
   public function parse($tokens) {
     $this->tokens = $tokens;
     if (isset($tokens[0])) {
@@ -54,28 +54,39 @@ class FilterParser {
     $this->currentToken = null;
     return $this->parseFilter();
   }
-
-  private function lookAhead($type) {
-    return $this->nextToken != null && $this->nextToken->type == $type;
+  
+  private function is($type) {
+    return $this->nextToken != null and $this->nextToken[0] == $type;
   }
-
-  private function accept($type) {
-    if ($this->lookAhead($type)) {
+  
+  private function isComparisonOperator() {
+    $type = $this->nextToken[0];
+    return $this->nextToken != null
+    and $type != 'string'
+      and $type != '!'
+        and $type != '&'
+          and $type != '|'
+            and $type != '('
+              and $type != ')';
+  }
+  
+  private function accept($type = null) {
+    if ($this->nextToken != null and ($type == null or $this->is($type))) {
       $this->pop();
       return true;
     }
     return false;
   }
-
-  private function expect($type) {
+  
+  private function expect($type = null) {
     if ($this->accept($type)) {
       return $this->currentToken;
     }
-    throw new Exception('Parse error: Unexpected token '
-      . FilterToken::getType($this->nextToken->type) . ', expected '
-      . FilterToken::getType($type));
+    throw new Exception(
+      'Parse error: Unexpected token "' . $this->nextToken[0]
+      . '" expected "' . $type . '"');
   }
-
+  
   private function pop() {
     $this->currentToken = array_shift($this->tokens);
     if (isset($this->tokens[0])) {
@@ -86,7 +97,7 @@ class FilterParser {
     }
     return $this->currentToken;
   }
-
+  
   private function parseFilter() {
     $node = new FilterNode();
     if ($this->nextToken != null) {
@@ -95,14 +106,14 @@ class FilterParser {
         return $node;
       }
       $node->children[] = $notTerm;
-      while ($this->nextToken != null && !$this->lookAhead(FilterToken::T_RPARENTHESIS)) {
+      while ($this->nextToken != null && !$this->is(')')) {
         // default operator is and
         $operator = 'and';
-        if ($this->accept(FilterToken::T_OR)) {
+        if ($this->accept('|')) {
           $operator = 'or';
         }
         else {
-          $this->accept(FilterToken::T_AND);
+          $this->accept('&');
         }
         $notTerm = $this->parseNotTerm();
         if ($notTerm == null) {
@@ -117,25 +128,27 @@ class FilterParser {
     }
     return $node;
   }
-
+  
   private function parseNotTerm() {
-    if ($this->accept(FilterToken::T_NOT)) {
+    if ($this->accept('!')) {
       return new NotTermNode($this->parseTerm());
     }
     return $this->parseTerm();
   }
-
+  
   private function parseTerm() {
-    if ($this->accept(FilterToken::T_LPARENTHESIS)) {
+    if ($this->accept('(')) {
       $node = $this->parseFilter();
-      $this->expect(FilterToken::T_RPARENTHESIS);
+      $this->expect(')');
       return $node;
     }
-    $this->expect(FilterToken::T_STRING);
-    $value = $this->currentToken->value;
-    if ($this->accept(FilterToken::T_EQUALS)) {
-      $this->expect(FilterToken::T_STRING);
-      return new ComparisonNode($value, $this->currentToken->value);
+    $this->expect();
+    $value = $this->currentToken[1];
+    if ($this->isComparisonOperator()) {
+      $this->expect();
+      $operator = $this->currentToken[0];
+      $this->expect();
+      return new ComparisonNode($value, $this->currentToken[1]);
     }
     return new StringNode($value);
   }
