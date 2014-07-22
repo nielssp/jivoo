@@ -5,6 +5,8 @@
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Templates
 
+Lib::import('Jivoo/Administration/Filtering');
+
 /**
  * Administration module
  * @package Jivoo\Administration

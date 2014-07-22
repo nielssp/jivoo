@@ -41,16 +41,17 @@ abstract class Helper extends Module {
 
   /**
    * Get a model instance or a helper instance, in that order.
-   * @param string $name Name of model or helper (without 'Helper'-suffix)
+   * @param string $property Name of model or helper (without 'Helper'-suffix)
    * @return Model|Helper|void Model object or helper object
    */
-  public function __get($name) {
-    if (isset($this->modelObjects[$name])) {
-      return $this->modelObjects[$name];
+  public function __get($property) {
+    if (isset($this->modelObjects[$property])) {
+      return $this->modelObjects[$property];
     }
-    if (isset($this->helperObjects[$name])) {
-      return $this->helperObjects[$name];
+    if (isset($this->helperObjects[$property])) {
+      return $this->helperObjects[$property];
     }
+    return parent::__get($property);
   }
 
   /**

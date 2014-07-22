@@ -1,6 +1,6 @@
 <?php
 class DataTableWidget extends TraversableWidget {
-  protected $helpers = array('Html', 'Form', 'Pagination', 'Widget');
+  protected $helpers = array('Html', 'Form', 'Pagination', 'Widget', 'Filtering');
   
   protected $options = array(
     'model' => null,
@@ -26,6 +26,7 @@ class DataTableWidget extends TraversableWidget {
       $this->records = $options['selection'];
     else
       $this->records = $options['model'];
+    $this->records = $this->Filtering->apply($this->records);
     if (isset($options['columns']))
       $this->columns = $options['columns'];
     else

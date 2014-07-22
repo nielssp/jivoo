@@ -49,6 +49,21 @@ abstract class Module implements IEventSubject {
     $this->e = new EventManager($this, $this->app->eventManager);
   }
   
+  public function __get($property) {
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  public function __set($property, $value) {
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  public function __isset($property) {
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  public function __unset($property) {
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
   
   /**
    * Combine array property default values from parent classes.

@@ -32,6 +32,12 @@ class PagesAdminController extends AdminController {
     return $this->render();
   }
   
+//   public function add() {
+//     $this->title = tr('Add page');
+//     $this->ContentForm->doAdd($this->Page, tr('Page saved.'));
+//     return $this->render();
+//   }
+  
   public function edit($pageId) {
     $this->title = tr('Edit page');
     $this->page = $this->Page->find($pageId);
