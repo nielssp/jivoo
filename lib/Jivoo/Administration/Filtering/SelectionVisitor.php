@@ -1,10 +1,12 @@
 <?php
 class SelectionVisitor extends FilterVisitor {
 
+  private $Filtering;
   private $primary;
 
-  public function __construct($primary) {
-    $this->primary = $primary;
+  public function __construct($Filtering) {
+    $this->Filtering = $Filtering;
+    $this->primary = $this->Filtering->primary;
   }
 
   protected function visitFilter(FilterNode $node) {
@@ -37,7 +39,12 @@ class SelectionVisitor extends FilterVisitor {
     }
   }
   protected function visitString(StringNode $node) {
-    // Foreach search column add condition
-    return new Condition($this->primary . ' LIKE %s', '%' . $node->value . '%');
+    if (count($this->primary) == 0)
+      return new Condition('false');
+    $condition = new Condition();
+    foreach ($this->primary as $column) {
+      $condition->or($column . ' LIKE %s', '%' . $node->value . '%');
+    }
+    return $condition;
   }
 }

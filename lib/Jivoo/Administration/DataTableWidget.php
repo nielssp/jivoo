@@ -26,7 +26,6 @@ class DataTableWidget extends TraversableWidget {
       $this->records = $options['selection'];
     else
       $this->records = $options['model'];
-    $this->records = $this->Filtering->apply($this->records);
     if (isset($options['columns']))
       $this->columns = $options['columns'];
     else
@@ -37,6 +36,7 @@ class DataTableWidget extends TraversableWidget {
     }
     $this->actions = $options['actions'];
     $this->primaryColumn = $options['primaryColumn'];
+    
     $this->sortBy = $options['defaultSortBy'];
     $this->sortOptions = $options['sortOptions'];
     if (!isset($this->sortOptions)) {
@@ -51,6 +51,10 @@ class DataTableWidget extends TraversableWidget {
     $this->labels = $options['labels'];
     if (!isset($this->primaryColumn))
       $this->primaryColumn = $this->columns[0];
+    
+    $this->Filtering->addPrimary($this->primaryColumn);
+    $this->records = $this->Filtering->apply($this->records);
+    
     if (!isset($this->sortBy))
       $this->sortBy = $this->sortOptions[0];
     $this->primaryAction = $options['primaryAction'];

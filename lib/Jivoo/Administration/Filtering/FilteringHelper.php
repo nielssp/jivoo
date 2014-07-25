@@ -14,10 +14,14 @@ class FilteringHelper extends Helper {
   private $scanner = null;
   private $parser = null;
   
+  private $primary = array();
+  
   public function __get($property) {
     switch ($property) {
       case 'query':
         return $this->request->query['filter'];
+      case 'primary':
+        return $this->$property;
     }
     return parent::__get($property);
   }
@@ -26,8 +30,18 @@ class FilteringHelper extends Helper {
     switch ($property) {
       case 'query':
         return isset($this->request->query['filter']);
+      case 'primary':
+        return isset($this->$property);
     }
     return parent::__isset($property);
+  }
+  
+  public function addPrimary($column) {
+    $this->primary[] = $column;
+  }
+  
+  public function removePrimary($column) {
+    $this->primary = array_diff($this->primary, array($column));
   }
 
   public function apply(IReadSelection $selection) {
@@ -41,7 +55,7 @@ class FilteringHelper extends Helper {
     if (count($tokens) == 0)
       return $selection;
     $root = $this->parser->parse($tokens);
-    $visitor = new SelectionVisitor('title');
+    $visitor = new SelectionVisitor($this);
     $selection = $selection->where($visitor->visit($root));
     return $selection;
   }
