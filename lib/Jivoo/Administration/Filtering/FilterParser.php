@@ -1,4 +1,28 @@
 <?php
+/*
+unichar     ::= any unicode character
+stringchar  ::= unichar - ('"' | '\')
+wordchar    ::= stringchar - (" " | "=" | "(" | ")" | "!" | "&" | "|" | "<" | ">")
+reserved    ::= not | and | or
+
+string      ::= '"' {stringchar | escape} '"'
+              | word
+word        ::= ((wordchar | escape) {wordchar | escape}) - reserved
+escape      ::= "\" unichar
+
+filter      ::= [notterm {[operator] notterm}]
+notterm     ::= [not] term
+term        ::= "(" filter ")"
+              | string comparison string
+              | string comparison "(" string {[operator] string} ")"
+              | string
+operator    ::= and | or
+comparison  ::= "=" | "<" | ">" | "<=" | ">=" | "contains" | "on" | "at" | "in"
+
+not         ::= "!" | "not"
+and         ::= "&" | "and"
+or          ::= "|" | "or"
+*/
 abstract class Node {
   public $operator = '';
 }
@@ -63,13 +87,8 @@ class FilterParser {
   
   private function isComparisonOperator() {
     $type = $this->nextToken[0];
-    return $this->nextToken != null
-    and $type != 'string'
-      and $type != '!'
-        and $type != '&'
-          and $type != '|'
-            and $type != '('
-              and $type != ')';
+    return $this->nextToken != null and $type != 'string' and $type != '!' and
+           $type != '&' and $type != '|' and $type != '(' and $type != ')';
   }
   
   private function accept($type = null) {
@@ -111,16 +130,13 @@ class FilterParser {
       while ($this->nextToken != null && !$this->is(')')) {
         // default operator is and
         $operator = 'and';
-        if ($this->accept('|')) {
+        if ($this->accept('|'))
           $operator = 'or';
-        }
-        else {
+        else
           $this->accept('&');
-        }
         $notTerm = $this->parseNotTerm();
-        if ($notTerm == null) {
+        if ($notTerm == null)
           break;
-        }
         $notTerm->operator = $operator;
         $node->children[] = $notTerm;
       }
@@ -145,12 +161,30 @@ class FilterParser {
       return $node;
     }
     $this->expect();
-    $value = $this->currentToken[1];
+    $field = $this->currentToken[1];
     if ($this->isComparisonOperator()) {
       $this->expect();
-      $operator = $this->currentToken[0];
+      $comparison = $this->currentToken[0];
+      if ($this->accept('(')) {
+        $node = new FilterNode();
+        $this->expect();
+        $node->children[] = new ComparisonNode($field, $comparison, $this->currentToken[1]);
+        while ($this->nextToken != null && !$this->is(')')) {
+          $operator = 'and';
+          if ($this->accept('|'))
+            $operator = 'or';
+          else
+            $this->accept('&');
+          $this->expect();
+          $child = new ComparisonNode($field, $comparison, $this->currentToken[1]);
+          $child->operator = $operator;
+          $node->children[] = $child;
+        }
+        $this->expect(')');
+        return $node;
+      }
       $this->expect();
-      return new ComparisonNode($value, $operator, $this->currentToken[1]);
+      return new ComparisonNode($field, $comparison, $this->currentToken[1]);
     }
     return new StringNode($value);
   }
