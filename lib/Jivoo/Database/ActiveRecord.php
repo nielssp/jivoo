@@ -98,7 +98,6 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       $this->model->setAssociation($this, $this->associations[$field], $value);
     }
     else if (array_key_exists($field, $this->data)) {
-      $value = $this->model->getType($field)->convert($value);
       $this->data[$field] = $value;
       $this->updatedData[$field] = $value;
       $this->saved = false;
@@ -191,6 +190,8 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       return false;
     $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if ($this->isNew()) {
+      foreach ($this->data as $field => $value)
+        $this->data[$field] = $this->model->getType($field)->convert($value);
       $insertId = $this->model->insert($this->data);
       $pk = $this->model->getAiPrimaryKey();
       if (isset($pk))
@@ -199,6 +200,11 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       $this->new = false;
     }
     else if (count($this->updatedData) > 0) {
+      foreach ($this->updatedData as $field => $value) {
+        $value = $this->model->getType($field)->convert($value);
+        $this->data[$field] = $value;
+        $this->updatedData[$field] = $value;
+      }
       $this->model->selectRecord($this)->set($this->updatedData)->update();
     }
     $this->updatedData = array();
