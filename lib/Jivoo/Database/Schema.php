@@ -55,6 +55,7 @@ class Schema implements ISchema {
     if (isset($this->_fields[$field])) {
       return $this->_fields[$field];
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**

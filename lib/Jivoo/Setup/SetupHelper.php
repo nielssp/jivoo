@@ -13,6 +13,8 @@ class SetupHelper extends Helper {
     if ($property == 'done') {
       $this->m->Setup->currentState = $value;
     }
+    else
+      return parent::__set($property, $value);
   }
   
   public function done() {

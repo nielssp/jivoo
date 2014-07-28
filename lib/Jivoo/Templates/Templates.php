@@ -52,6 +52,7 @@ class Templates extends LoadableModule {
       case 'view':
         return $this->getView();
     }
+    return parnet::__get($property);
   }
 
   /**

@@ -52,6 +52,7 @@ class Setup extends LoadableModule {
         }
         return false;
     }
+    return parnet::__get($property);
   }
 
   public function __set($property, $value) {
@@ -62,6 +63,7 @@ class Setup extends LoadableModule {
         }
         return;
     }
+    return parent::__set($property, $value);
   }
   
   public function getState($route) {

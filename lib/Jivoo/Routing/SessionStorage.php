@@ -49,6 +49,7 @@ class SessionStorage implements arrayaccess {
       case 'flash':
         return $this->flash;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

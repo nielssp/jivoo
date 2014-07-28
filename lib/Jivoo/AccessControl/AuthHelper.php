@@ -84,7 +84,7 @@ class AuthHelper extends Helper {
       case 'user':
         return $this->getUser();
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    return parent::__get($property);
   }
 
   public function __set($property, $value) {
@@ -153,7 +153,7 @@ class AuthHelper extends Helper {
         }
         return;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    return parent::__set($property, $value);
   }
   
   private function loadAuthentication($name, $options = array()) {

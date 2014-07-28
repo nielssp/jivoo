@@ -7,14 +7,14 @@ interface IRecord extends IBasicRecord {
    * Set value of a field
    * @param string $field Field name
    * @param mixed $value Value
-   * @throws InvalidRecordFieldException if the field does not exist
+   * @throws InvalidPropertyException if the field does not exist
    */
   public function __set($field, $value);
   
   /**
    * Set a field value to null
    * @param string $field Field name
-   * @throws InvalidRecordFieldException if the field does not exist
+   * @throws InvalidPropertyException if the field does not exist
    */
   public function __unset($field);
 
@@ -23,7 +23,7 @@ interface IRecord extends IBasicRecord {
    * @param string $field Field name
    * @param mixed $value Value
    * @return self Self
-   * @throws InvalidRecordFieldException if the field does not exist
+   * @throws InvalidPropertyException if the field does not exist
    */
   public function set($field, $value);
 

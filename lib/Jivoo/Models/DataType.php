@@ -109,6 +109,7 @@ class DataType {
           return !$this->signed;
       }
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   public function __isset($property) {

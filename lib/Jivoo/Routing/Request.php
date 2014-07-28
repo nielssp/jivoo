@@ -185,6 +185,7 @@ class Request {
       case 'userAgent':
         return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
   /**
@@ -199,7 +200,9 @@ class Request {
       case 'query':
       case 'fragment':
         $this->$name = $value;
+        return;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
   /**

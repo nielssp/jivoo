@@ -22,6 +22,7 @@ class IconMenuItem implements ILinkable {
       case 'badge':
         return $this->$property;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   public function __isset($property) {
@@ -32,6 +33,7 @@ class IconMenuItem implements ILinkable {
       case 'badge':
         return isset($this->$property);
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   public function getRoute() {

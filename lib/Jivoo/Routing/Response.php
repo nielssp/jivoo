@@ -25,6 +25,7 @@ abstract class Response {
       case 'body':
         return $this->getBody();
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   public function __set($property, $value) {
@@ -32,7 +33,9 @@ abstract class Response {
       case 'modified':
       case 'maxAge':
         $this->$property = $value;
+        return;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   public function __isset($property) {

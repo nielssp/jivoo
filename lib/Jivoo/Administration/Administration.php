@@ -26,5 +26,6 @@ class Administration extends LoadableModule {
       case 'menu':
         return $this->$property;
     }
+    return parent::__get($property);
   }
 }

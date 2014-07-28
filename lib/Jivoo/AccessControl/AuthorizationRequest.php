@@ -16,5 +16,6 @@ class AuthorizationRequest {
       case 'user':
         return $this->$property;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 }

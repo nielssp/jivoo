@@ -88,7 +88,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       return $this->data[$field];
     if (array_key_exists($field, $this->virtualData))
       return $this->virtualData[$field];
-    throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   public function __set($field, $value) {
@@ -105,7 +105,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     else if (array_key_exists($field, $this->virtualData))
       $this->virtualData[$field] = $value;
     else
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   public function __isset($field) {
@@ -119,7 +119,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       return isset($this->data[$field]);
     if (array_key_exists($field, $this->virtualData))
       return isset($this->virtualData[$field]);
-    throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   public function __unset($field) {
@@ -136,7 +136,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       $this->virtualData[$field] = null;
     }
     else
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));;
   }
 
   public function __call($method, $parameters) {
@@ -145,7 +145,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     array_unshift($parameters, $this);
     if (is_callable($function))
       return call_user_func_array($function, $parameters);
-    throw new InvalidMethodException(tr('"%1" is not a valid method', $method));
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
   public function set($field, $value) {

@@ -8,7 +8,7 @@ interface IBasicRecord extends arrayaccess {
    * Get value of a field
    * @param string $field Field name
    * @return mixed Value
-   * @throws InvalidRecordFieldException if the field does not exist
+   * @throws InvalidPropertyException if the field does not exist
    */
   public function __get($field);
   
@@ -16,7 +16,7 @@ interface IBasicRecord extends arrayaccess {
    * Determine if a field is set
    * @param string $field Field name
    * @return bool True if not null, false otherwise
-   * @throws InvalidRecordFieldException if the field does not exist
+   * @throws InvalidPropertyException if the field does not exist
    */
   public function __isset($field);
   
@@ -34,6 +34,3 @@ interface IBasicRecord extends arrayaccess {
   /** @return bool True if record is considered valid (i.e. no errors) */
   public function isValid();
 }
-
-/** A field does not exist in the model associated with the record */
-class InvalidRecordFieldException extends Exception { }

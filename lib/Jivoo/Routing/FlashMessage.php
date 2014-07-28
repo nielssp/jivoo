@@ -37,6 +37,7 @@ class FlashMessage {
       case 'message':
         return $this->$property;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   public function __toString() {

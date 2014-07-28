@@ -167,6 +167,7 @@ class App implements IEventSubject {
       case 'eventManager':
         return $this->e;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -178,7 +179,9 @@ class App implements IEventSubject {
     switch ($property) {
       case 'basePath':
         $this->$property = $value;
+        return;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   public function getEvents() {

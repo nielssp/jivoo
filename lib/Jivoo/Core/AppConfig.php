@@ -106,6 +106,7 @@ class AppConfig implements arrayaccess {
       case 'parent':
         return $this->$property;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**
@@ -117,11 +118,12 @@ class AppConfig implements arrayaccess {
     switch ($property) {
       case 'defaults':
         $this->setDefaults(is_array($value) ? $value : array());
-        break;
+        return;
       case 'override':
         $this->setMultiple(is_array($value) ? $value : array());
-        break;
+        return;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

@@ -27,6 +27,7 @@ class Localization {
           $this->$property
         );
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   public function __set($property, $value) {
@@ -38,7 +39,13 @@ class Localization {
       case 'monthDay':
       case 'weekDay':
         $this->$property = $value;
+        return;
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  public function __unset($property) {
+    $this->__set($property, null);
   }
 
   public function __isset($property) {
@@ -51,6 +58,7 @@ class Localization {
       case 'weekDay':
         return isset($this->$property);
     }
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   /**
    * Extend this localization with additional messages from another one

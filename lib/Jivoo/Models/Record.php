@@ -56,13 +56,13 @@ class Record implements IRecord {
   
   public function __get($field) {
     if (!array_key_exists($field, $this->data))
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     return $this->data[$field];
   }
   
   public function __set($field, $value) {
     if (!array_key_exists($field, $this->data))
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     $this->data[$field] = $value;
     $this->updatedData[$field] = $value;
     $this->saved = false;
@@ -70,13 +70,13 @@ class Record implements IRecord {
   
   public function __isset($field) {
     if (!array_key_exists($field, $this->data))
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     return isset($this->data[$field]);
   }
   
   public function __unset($field) {
     if (!array_key_exists($field, $this->data))
-      throw new InvalidRecordFieldException(tr('"%1" is not a valid field', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     $this->data[$field] = null;
     $this->updatedData[$field] = null;
     $this->saved = false;
