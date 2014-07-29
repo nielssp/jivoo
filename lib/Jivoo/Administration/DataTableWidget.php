@@ -13,7 +13,7 @@ class DataTableWidget extends TraversableWidget {
     'sortOptions' => null,
     'defaultSortBy' => null,
     'defaultDescending' => false, 
-    'itemsPerPage' => 20,
+    'itemsPerPage' => 10,
     'primaryAction' => null,
     'bulkActions' => array(),
     'actions' => array(),

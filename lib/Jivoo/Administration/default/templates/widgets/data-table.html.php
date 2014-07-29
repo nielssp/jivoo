@@ -137,4 +137,10 @@
 </tfoot>
 </table>
 
+<div class="table-operations">
+<span class="selection-count">0</span> items selected
+<a href="#" class="select-all">(Select all <?php echo $Pagination->getCount(); ?> items)</a>
+</div>
+
 <?php echo $this->embed('widgets/data-table-pagination.html', array('Pagination' => $Pagination)); ?>
+

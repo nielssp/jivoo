@@ -5,7 +5,7 @@
 <?php echo $Pagination->getFrom() . '&ndash;' . $Pagination->getTo(); ?>    
 </strong>
 of
-<strong><?php echo $Pagination->getCount(); ?></strong>
+<strong class="item-count"><?php echo $Pagination->getCount(); ?></strong>
 <?php if ($Pagination->isFirst()): ?>
 <button class="prev" disabled="disabled">
 <span class="icon"><?php echo $Icon->icon('arrow-left2'); ?></span>

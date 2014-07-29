@@ -1024,6 +1024,8 @@ form {
     float: left; }
     .table-operations + .pagination {
       float: right; } }
+.table-operations .select-all {
+  display: none; }
 
 .pagination {
   text-align: center;
