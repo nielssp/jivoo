@@ -65,7 +65,7 @@ abstract class Module implements IEventSubject {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
-  public function __call($methdo, $parameters) {
+  public function __call($method, $parameters) {
     throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
   

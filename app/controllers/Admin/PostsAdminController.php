@@ -53,4 +53,28 @@ class PostsAdminController extends AdminController {
     }
     return $this->render('admin/posts/add.html');
   }
+  
+  public function publish($postId) {
+    return $this->ContentAdmin->quickEdit(array(
+      'record' => $this->Post->find($postId),
+      'edit' => array('status' => 'published'),
+      'confirm' => tr('Do you want to publish this post?'),
+    ));
+  }
+  
+  public function unpublish($postId) {
+    return $this->ContentAdmin->quickEdit(array(
+      'record' => $this->Post->find($postId),
+      'edit' => array('status' => 'pending'),
+      'confirm' => tr('Do you want to unpublish this post?')
+    ));
+  }
+  
+  public function delete($postId) {
+    return $this->ContentAdmin->delete(array(
+      'record' => $this->Post->find($postId),
+      'confirm' => tr('Do you want to delete this post?'),
+      'title' => tr('Delete post')
+    ));
+  }
 }

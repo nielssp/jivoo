@@ -56,6 +56,9 @@ class Post extends ActiveModel {
   protected $actions = array(
     'view' => 'Posts::view::%id%',
     'edit' => 'Admin::Posts::edit::%id%',
+    'publish' => 'Admin::Posts::publish::%id%',
+    'unpublish' => 'Admin::Posts::unpublish::%id%',
+    'delete' => 'Admin::Posts::delete::%id%',
   );
 
   public function getRoute(ActiveRecord $record) {
