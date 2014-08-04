@@ -11,3 +11,4 @@ doc/
 *.scssc
 user/*/config.php
 user/*/db.sqlite3
+public/*/index.php
