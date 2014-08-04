@@ -3,7 +3,7 @@
 // Name           : Extensions
 // Description    : The Jivoo extension system
 // Author         : apakoh.dk
-// Dependencies   : Jivoo/Database Jivoo/Routing Jivoo/Templates
+// Dependencies   : Jivoo/Routing Jivoo/Templates
 
 /**
  * Extension system
@@ -11,7 +11,7 @@
  */
 class Extensions extends LoadableModule {
   
-  protected $modules = array('Database', 'Routing', 'Templates');
+  protected $modules = array('Routing', 'Templates');
   
   protected $events = array(
     'beforeLoadExtensions', 'beforeLoadExtension',
