@@ -11,11 +11,11 @@
 
 $appName = 'adk';
 
-require_once 'lib/Jivoo/Core/bootstrap.php';
+require_once '../../lib/Jivoo/Core/bootstrap.php';
 
-$app = new App(include 'app/' . $appName . '/app.php', basename(__FILE__));
+$app = new App(include '../../app/' . $appName . '/app.php', basename(__FILE__));
 
-$userDir = 'user/' . $appName;
+$userDir = '../../user/' . $appName;
 
 // Paths are relative to the current directory (dirname($_SERVER['SCRIPT_FILENAME']))
 // unless they begin with '/' or 'x:' where x is any drive letter.

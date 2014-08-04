@@ -1,6 +1,5 @@
 .project
 *.swp
-/tmp
 /apigen
 /index.php
 doc/
@@ -8,8 +7,7 @@ doc/
 .buildpath
 .settings/.jsdtscope
 .settings/
-config/db.sqlite3
 .sass-cache/*
 *.scssc
-user/config.php
-user/db.sqlite3
+user/*/config.php
+user/*/db.sqlite3
