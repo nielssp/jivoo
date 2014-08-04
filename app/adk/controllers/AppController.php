@@ -5,9 +5,10 @@ class AppController extends Controller {
   
   protected function init() {
     $menu = new IconMenu(tr('Main'));
-
+    
     $apps = array();
-    $this->appDir = $this->p('app') . '/..';
+    $this->appDir = realpath($this->p('app') . '/..');
+    $appMenu = array();
     $files = scandir($this->appDir);
     if ($files !== false) {
       foreach ($files as $file) {
@@ -15,21 +16,19 @@ class AppController extends Controller {
           continue;
         }
         if (file_exists($this->appDir . '/' . $file . '/app.php')) {
-          $apps[] = include $this->appDir . '/' . $file . '/app.php';
+          $app = include $this->appDir . '/' . $file . '/app.php';
+          $apps[] = $app;
+          $appMenu[$file] = IconMenu::menu($app['name'], null, 'cog', array(
+            IconMenu::item(tr('Dashboard')),
+            IconMenu::item(tr('Controllers')),
+            IconMenu::item(tr('Models')),
+            IconMenu::item(tr('Schemas')),
+          ));
         }
       }
     }
     $this->apps = $apps;
-    
-    $appMenu = array();
-    foreach ($this->apps as $app) {
-      $appMenu[] = IconMenu::menu($app['name'], null, 'cog', array(
-        IconMenu::item(tr('Dashboard')),
-        IconMenu::item(tr('Controllers')),
-        IconMenu::item(tr('Models')),
-        IconMenu::item(tr('Schemas')),
-      ));
-    }
+    ksort($appMenu);
     
     $menu->fromArray(array(
       'status' => IconMenu::menu(tr('Status'), null, null, array(

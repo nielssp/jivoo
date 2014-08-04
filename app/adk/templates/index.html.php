@@ -2,23 +2,62 @@
 
 <p>Welcome to the Jivoo App Development Kit.</p>
 
-<h2>System</h2>
+<h2>Applications (<?php echo $appDir; ?>)</h2>
 
-<p><?php echo php_uname(); ?></p>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Version</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($apps as $app): ?>
+<tr>
+<td><?php echo $app['name']; ?></td>
+<td><?php echo $app['version']; ?></td>
+<td><?php echo $app['path']; ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
 
-<p>PHP <?php echo phpversion(); ?></p>
 
 <h2>Libraries (<?php echo LIB_PATH; ?>)</h2>
 
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
 <?php foreach ($libs as $lib): ?>
-<p><?php echo $lib; ?></p>
+<tr>
+<td><?php echo $lib; ?></td>
+<td>Unknown</td>
+</tr>
 <?php endforeach; ?>
+</tbody>
+</table>
 
-<h2>Applications</h2>
+<h2>System</h2>
 
-<?php foreach ($apps as $app): ?>
-<p>
-<?php echo $app['name'] . ' ' . $app['version']; ?>
-</p>
-<?php endforeach; ?>
-
+<table>
+<tbody>
+<tr>
+<td>Operating system</td>
+<td><?php echo php_uname(); ?></td>
+</tr>
+<tr>
+<td>PHP version</td>
+<td><?php echo phpversion(); ?></td>
+</tr>
+<tr>
+<td>Document root</td>
+<td><?php echo $_SERVER['DOCUMENT_ROOT']; ?></td>
+</tr>
+</tbody>
+</table>
