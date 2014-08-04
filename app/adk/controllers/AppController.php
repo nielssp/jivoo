@@ -1,7 +1,7 @@
 <?php
 class AppController extends Controller {
   
-  protected $helpers = array('Html', 'Admin', 'Icon');
+  protected $helpers = array('Html', 'Form', 'Admin', 'Icon');
   
   protected function init() {
     $menu = new IconMenu(tr('Main'));
@@ -35,12 +35,10 @@ class AppController extends Controller {
         IconMenu::item(tr('Dashboard'), 'App::index', 'meter'),
       )),
       'applications' => IconMenu::menu(tr('Applications'), null, null, $appMenu),
-      'settings' => IconMenu::menu(tr('Settings'), array(), null, array(
-        IconMenu::item(tr('Settings'), null, 'wrench'),
-      )),
       'about' => IconMenu::menu(tr('About'), array(), null, array(
-        IconMenu::item(tr('Help & support'), null, 'support'),
-        IconMenu::item(tr('About Jivoo'), null, 'jivoo'),
+        IconMenu::item(tr('Settings'), 'App::settings', 'wrench'),
+        IconMenu::item(tr('Help & support'), 'App::about', 'support'),
+        IconMenu::item(tr('About Jivoo'), 'App::about', 'jivoo'),
       )),
     ));
     $this->m->Administration->menu['main'] = $menu;
@@ -67,6 +65,22 @@ class AppController extends Controller {
       }
     }
     $this->libs = $libs;
+    return $this->render();
+  }
+  
+  public function settings() {
+    $this->title = tr('Settings');
+    return $this->render();
+  }
+  
+  public function about() {
+    $this->title = tr('About');
+    return $this->render();
+  }
+  
+  public function notFound() {
+    $this->title = tr('Not found');
+    $this->setStatus(404);
     return $this->render();
   }
 }
