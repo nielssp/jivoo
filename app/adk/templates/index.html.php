@@ -1,4 +1,12 @@
-<p>Welcome to Jivoo ADK</p>
+<?php $this->extend('admin/layout.html'); ?>
+
+<p>Welcome to the Jivoo App Development Kit.</p>
+
+<h2>System</h2>
+
+<p><?php echo php_uname(); ?></p>
+
+<p>PHP <?php echo phpversion(); ?></p>
 
 <h2>Libraries (<?php echo LIB_PATH; ?>)</h2>
 
