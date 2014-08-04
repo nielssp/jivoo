@@ -2,10 +2,6 @@
 
 class PagesController extends AppController {
 
-  protected $helpers = array('Html', 'Form', 'Pagination', 'Backend');
-
-  protected $modules = array('Editors');
-
   protected $models = array('Page');
 
   public function view($page) {
