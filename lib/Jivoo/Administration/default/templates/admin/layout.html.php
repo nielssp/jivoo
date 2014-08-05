@@ -14,7 +14,6 @@ $this->script('admin/theme.js');
 <title><?php echo $title . ' | ' . $app['name']; ?></title>
 
 <?php echo $this->block('meta'); ?>
-<link rel="shortcut icon" href="<?php echo $this->file('img/jivoo.ico'); ?>" />
 <?php echo $this->block('style'); ?>
 <?php echo $this->block('script'); ?>
 

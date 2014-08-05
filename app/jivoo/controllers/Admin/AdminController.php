@@ -13,6 +13,7 @@ class AdminController extends AppController {
   }
   
   public function before() {
+    $this->view->icon('jivoo-green.ico');
     $this->Admin->importDefaultTheme();
     // TODO move to theme or something
     $this->Icon->addProvider(new ClassIconProvider());

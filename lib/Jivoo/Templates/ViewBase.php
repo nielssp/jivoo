@@ -260,11 +260,11 @@ abstract class ViewBase {
     }
     if ($block == 'script') {
       return '<script type="text/javascript" src="' . h($path) . '"></script>'
-          . PHP_EOL;
+        . PHP_EOL;
     }
     else {
       return '<link rel="stylesheet" type="text/css" href="' . h($path) . '" />'
-          . PHP_EOL;
+        . PHP_EOL;
     }
   }
 
@@ -315,6 +315,14 @@ abstract class ViewBase {
    */
   public function script($script) {
     $this->insert($script);
+  }
+  
+  /**
+   * Insert shortcut icon, will look for file in 'assets/img'
+   * @param string $icon Icon name, e.g. 'icon.ico'
+   */
+  public function icon($icon) {
+    $this->resource('shortcut icon', null, $this->file('img/' . $icon));
   }
 
   /**
