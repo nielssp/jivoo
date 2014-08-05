@@ -14,6 +14,10 @@
 
 <header>
 <h1><?php echo $app; ?></h1>
+<div class="version">
+<?php echo $app; ?> 
+<?php echo $version; ?>
+</div>
 </header>
 
 <div id="main">
