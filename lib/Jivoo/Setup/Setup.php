@@ -35,6 +35,7 @@ class Setup extends LoadableModule {
           }
           $object->autoRoute($action);
           $this->m->Routing->reroute($controller, $action);
+          $this->view->addTemplateDir($this->p('templates'));
           $this->m->Routing->followRoute($route);
         }
       }

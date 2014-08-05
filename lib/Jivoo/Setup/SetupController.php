@@ -9,6 +9,7 @@ class SetupController extends Controller {
   protected $helpers = array('Setup');
   
   public function saveConfig() {
+    $this->title = tr('Unable to save configuration file');
     $this->file = $this->config->file;
     $this->exists = file_exists($this->file);
     if ($this->exists) {

@@ -15,17 +15,9 @@ $this->style('core.css');
 </head>
 <body>
 
-<div id="header">
-<div class="right"><?php echo $app['name']; ?></div>
-</div>
-
-<div id="content">
-
-<?php echo $this->block('content'); ?>
-
-</div>
-
-<div class="footer" id="poweredby">
+<header>
+<h1><?php echo $app['name']; ?></h1>
+<div class="version">
 <?php if (isset($app['website'])): ?>
 <?php echo $Html->link(
   $app['name'] . ' ' . $app['version'],
@@ -36,9 +28,22 @@ $this->style('core.css');
 <?php echo $app['version']; ?>
 <?php endif; ?>
 </div>
+</header>
 
-<div class="footer" id="links">
-<a href="http://apakoh.dk">Jivoo</a>
+<div id="main">
+
+<?php if (isset($title)): ?>
+<h1><?php echo $title; ?></h1>
+<?php endif; ?>
+
+<?php foreach ($flash as $message): ?>
+<div class="flash flash-<?php echo $message->type; ?>">
+<?php echo $message; ?>
+</div>
+<?php endforeach; ?>
+
+<?php echo $this->block('content'); ?>
+
 </div>
 
 </body>

@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8" />
 <title><?php echo $title; ?></title>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Jivoo" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style type="text/css">
 <?php include dirname(__FILE__) . '/../../assets/css/core.css'; ?>
 </style>
 </head>
 <body class="exception">
 
-<div id="header">
-<div class="right"><?php echo $app; ?></div>
-</div>
+<header>
+<h1><?php echo $app; ?></h1>
+</header>
 
-<div id="content">
-<div class="section">
-<div class="container">
+<div id="main">
 <div id="sad">
 :-(
 </div>
 <h1><?php echo $title; ?></h1>
-
-<div class="clearl"></div>
 
 <?php
 if (isset($exception)) {
@@ -92,17 +90,7 @@ else {
 ?>
 
 </div>
-</div>
-</div>
 
-<div class="footer" id="poweredby">
-<a href="#"><?php echo $app; ?> 
-<?php echo $version; ?></a>
-</div>
-
-<div class="footer" id="links">
-<a href="http://apakoh.dk">Jivoo</a>
-</div>
 
 </body>
 </html>

@@ -6,25 +6,34 @@ class AppController extends Controller {
   protected function init() {
     $menu = new IconMenu(tr('Main'));
     
-    $apps = array();
     $this->appDir = realpath($this->p('app') . '/..');
-    $appMenu = array();
     $files = scandir($this->appDir);
     if ($files !== false) {
       foreach ($files as $file) {
-        if ($file[0] == '.') {
+        if ($file[0] == '.')
           continue;
-        }
-        if (file_exists($this->appDir . '/' . $file . '/app.php')) {
-          $app = include $this->appDir . '/' . $file . '/app.php';
-          $apps[] = $app;
-          $appMenu[$file] = IconMenu::menu($app['name'], null, 'cog', array(
-            IconMenu::item(tr('Dashboard')),
-            IconMenu::item(tr('Controllers')),
-            IconMenu::item(tr('Models')),
-            IconMenu::item(tr('Schemas')),
-          ));
-        }
+        if (file_exists($this->appDir . '/' . $file . '/app.php'))
+          $this->config['applications'][$file] = $this->appDir . '/' . $file . '/app.php';
+      }
+    }
+
+    $apps = array();
+    $appMenu = array();
+    foreach ($this->config['applications']->getArray() as $name => $path) {
+      if (!file_exists($path)) {
+        unset($this->config['applications'][$name]);
+        $this->session->flash['warn'][] = tr('%1 no longer exists.', $path);
+      }
+      else {
+        $app = include $path;
+        $apps[$name] = $app;
+        $route = array('controller' => 'Applications', 'action' => 'dashboard', $name);
+        $appMenu[$name] = IconMenu::menu($app['name'], $route, 'cog', array(
+          IconMenu::item(tr('Dashboard'), $route),
+          IconMenu::item(tr('Controllers'), $route),
+          IconMenu::item(tr('Models'), $route),
+          IconMenu::item(tr('Schemas'), $route),
+        ));
       }
     }
     $this->apps = $apps;
@@ -37,7 +46,7 @@ class AppController extends Controller {
       'applications' => IconMenu::menu(tr('Applications'), null, null, $appMenu),
       'about' => IconMenu::menu(tr('About'), array(), null, array(
         IconMenu::item(tr('Settings'), 'App::settings', 'wrench'),
-        IconMenu::item(tr('Help & support'), 'App::about', 'support'),
+        IconMenu::item(tr('Help & support'), 'App::help', 'support'),
         IconMenu::item(tr('About Jivoo'), 'App::about', 'jivoo'),
       )),
     ));
@@ -75,6 +84,11 @@ class AppController extends Controller {
   
   public function about() {
     $this->title = tr('About');
+    return $this->render();
+  }
+  
+  public function help() {
+    $this->title = tr('Help & support');
     return $this->render();
   }
   

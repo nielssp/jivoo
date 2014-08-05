@@ -13,9 +13,13 @@
 </tr>
 </thead>
 <tbody>
-<?php foreach ($apps as $app): ?>
+<?php foreach ($apps as $name => $app): ?>
 <tr>
-<td><?php echo $app['name']; ?></td>
+<td><?php echo $Html->link($app['name'], array(
+  'controller' => 'Applications',
+  'action' => 'dashboard',
+  $name
+)); ?></td>
 <td><?php echo $app['version']; ?></td>
 <td><?php echo $app['path']; ?></td>
 </tr>
@@ -23,6 +27,11 @@
 </tbody>
 </table>
 
+<p>
+<?php echo $Icon->link(tr('Create application'), 'Applications::create', 'wand', null, array('class' => 'button')); ?>
+
+<?php echo $Icon->link(tr('Add application'), 'Applications::add', 'box-add', null, array('class' => 'button')); ?>
+</p>
 
 <h2>Libraries (<?php echo LIB_PATH; ?>)</h2>
 

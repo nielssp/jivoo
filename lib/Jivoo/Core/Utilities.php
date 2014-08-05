@@ -47,6 +47,10 @@ class Utilities {
     return $camelCase;
   }
   
+  public static function stringToDashes($string) {
+    return preg_replace('/ /', '-', preg_replace('/[^a-z -]/', '', strtolower($string)));
+  }
+  
   /**
    * Get plural form of word
    * @param string $word Word

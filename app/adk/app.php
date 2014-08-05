@@ -22,4 +22,7 @@ return array(
     'Jivoo/Theme',
     'Jivoo/Widgets',
   ),
+  'setup' => array(
+    'Setup::Config::install'
+  )
 );
