@@ -1,7 +1,5 @@
 
 table {
-  border-top: 2px solid darken($mainBg, 10%);
-  border-bottom: 2px solid darken($mainBg, 10%);
   font-size: 0.9em;
   margin: 0 0 6px 0;
   border-spacing: 0;
@@ -14,21 +12,42 @@ table {
       }
     }
   }
-  thead th {
-    border-bottom: 1px solid darken($mainBg, 10%);
+  td, th {
+    padding: 12px 8px;
+    display: none;
+    vertical-align: top;
+    width: 15%;
+
+    &.primary {
+      width: auto;
+    }
   }
-  tfoot th {
-    border-top: 1px solid darken($mainBg, 10%);
+  thead th, tfoot th {
+    background-color: $navBg;
+    color: $navDisFg;
+    a, label {
+      &, &:link, &:visited {
+        color: $navFg;
+        padding: 12px 8px;
+        margin: -12px -8px;
+        text-decoration: none;
+        display: block;
+      }
+      &:hover, &:active {
+        background-color: $navHlBg;
+        color: $navHlFg;
+        border-color: $navHlFg;
+        text-decoration: none;
+      }
+    }
   }
   tbody {
     tr {
-      &:nth-child(2n + 1) {
-        background-color: darken($mainBg, 3%);
+      &:first-child td {
+        border-top: 0;
       }
-
-      td:first-child {
-        border-left: 4px solid transparent;
-        padding-left: 0;
+      td {
+        border-top: 1px solid darken($mainBg, 10%);
       }
       &.warn {
         td:first-child {
@@ -47,8 +66,8 @@ table {
       }
 
       &:hover {
-        td:first-child {
-          border-left: 4px solid $primaryBg;
+        td {
+          background-color: darken($mainBg, 3%);
         }
       }
 
@@ -71,16 +90,6 @@ table {
         }
       }
 
-    }
-  }
-  td, th {
-    padding: 12px 8px;
-    display: none;
-    vertical-align: top;
-    width: 15%;
-
-    &.primary {
-      width: auto;
     }
   }
   td.primary {
@@ -115,10 +124,10 @@ table {
   .selection {
     display: table-cell;
     width: 32px;
-    padding: 12px 0 0 4px;
     label {
-      padding: 12px 0 12px 12px;
-      margin-left: -4px;
+      padding: 12px 0 12px 8px;
+      margin: -12px -8px;
+      display: block;
       cursor: pointer;
     }
   }
@@ -134,4 +143,6 @@ table {
     }
   }
 }
+
+
 

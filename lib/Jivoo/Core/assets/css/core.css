@@ -403,8 +403,6 @@ form {
       margin: 0 12px 0 0px; }
 
 table {
-  border-top: 2px solid #e6e6e6;
-  border-bottom: 2px solid #e6e6e6;
   font-size: 0.9em;
   margin: 0 0 6px 0;
   border-spacing: 0;
@@ -412,23 +410,39 @@ table {
   table thead tr th, table tfoot tr th {
     text-align: left;
     font-weight: 600; }
-  table thead th {
-    border-bottom: 1px solid #e6e6e6; }
-  table tfoot th {
+  table td, table th {
+    padding: 12px 8px;
+    display: none;
+    vertical-align: top;
+    width: 15%; }
+    table td.primary, table th.primary {
+      width: auto; }
+  table thead th, table tfoot th {
+    background-color: #eeeeee;
+    color: #999999; }
+    table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
+      color: #444444;
+      padding: 12px 8px;
+      margin: -12px -8px;
+      text-decoration: none;
+      display: block; }
+    table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
+      background-color: #dddddd;
+      color: #2272cc;
+      border-color: #2272cc;
+      text-decoration: none; }
+  table tbody tr:first-child td {
+    border-top: 0; }
+  table tbody tr td {
     border-top: 1px solid #e6e6e6; }
-  table tbody tr:nth-child(2n + 1) {
-    background-color: #f7f7f7; }
-  table tbody tr td:first-child {
-    border-left: 4px solid transparent;
-    padding-left: 0; }
   table tbody tr.warn td:first-child {
     border-left: 4px solid #eeee99; }
   table tbody tr.error td:first-child {
     border-left: 4px solid #ee9999; }
   table tbody tr.unread td:first-child {
     border-left: 4px solid #99c1ee; }
-  table tbody tr:hover td:first-child {
-    border-left: 4px solid #2272cc; }
+  table tbody tr:hover td {
+    background-color: #f7f7f7; }
   table tbody tr .actions a {
     text-decoration: none;
     margin-right: 2px; }
@@ -438,13 +452,6 @@ table {
       padding-right: 10px; }
     table tbody tr:hover td.actions a {
       visibility: visible; } }
-  table td, table th {
-    padding: 12px 8px;
-    display: none;
-    vertical-align: top;
-    width: 15%; }
-    table td.primary, table th.primary {
-      width: auto; }
   table td.primary {
     width: auto; }
     table td.primary > a:first-child {
@@ -466,11 +473,11 @@ table {
         margin-right: 0; }
   table .selection {
     display: table-cell;
-    width: 32px;
-    padding: 12px 0 0 4px; }
+    width: 32px; }
     table .selection label {
-      padding: 12px 0 12px 12px;
-      margin-left: -4px;
+      padding: 12px 0 12px 8px;
+      margin: -12px -8px;
+      display: block;
       cursor: pointer; }
   table .primary {
     display: table-cell; }
