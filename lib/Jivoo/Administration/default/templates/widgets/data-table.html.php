@@ -49,6 +49,8 @@
 </div>
 <?php endif; ?>
 
+<?php echo $Icon->button('Test', 'wand'); ?>
+
 <?php if (count($sortOptions) > 0): ?>
 
 <div class="dropdown">

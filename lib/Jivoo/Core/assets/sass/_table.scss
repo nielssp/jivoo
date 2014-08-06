@@ -1,0 +1,137 @@
+
+table {
+  border-top: 2px solid darken($mainBg, 10%);
+  border-bottom: 2px solid darken($mainBg, 10%);
+  font-size: 0.9em;
+  margin: 0 0 6px 0;
+  border-spacing: 0;
+  width: 100%;
+  thead, tfoot {
+    tr {
+      th {
+        text-align: left;
+        font-weight: 600;
+      }
+    }
+  }
+  thead th {
+    border-bottom: 1px solid darken($mainBg, 10%);
+  }
+  tfoot th {
+    border-top: 1px solid darken($mainBg, 10%);
+  }
+  tbody {
+    tr {
+      &:nth-child(2n + 1) {
+        background-color: darken($mainBg, 3%);
+      }
+
+      td:first-child {
+        border-left: 4px solid transparent;
+        padding-left: 0;
+      }
+      &.warn {
+        td:first-child {
+          border-left: 4px solid lighten(#cccc22, 30%);
+        }
+      }
+      &.error {
+        td:first-child {
+          border-left: 4px solid lighten(#cc2222, 30%);
+        }
+      }
+      &.unread {
+        td:first-child {
+          border-left: 4px solid lighten(#2272CC, 30%);
+        }
+      }
+
+      &:hover {
+        td:first-child {
+          border-left: 4px solid $primaryBg;
+        }
+      }
+
+      .actions {
+        a {
+          text-decoration: none;
+          margin-right: 2px;
+        }
+      }
+
+      @media screen and (min-width: $sm) {
+        .actions a {
+          visibility: hidden;
+          padding-right: 10px;
+        }
+        &:hover {
+          td.actions a {
+            visibility: visible;
+          }
+        }
+      }
+
+    }
+  }
+  td, th {
+    padding: 12px 8px;
+    display: none;
+    vertical-align: top;
+    width: 15%;
+
+    &.primary {
+      width: auto;
+    }
+  }
+  td.primary {
+    width: auto;
+    & > a:first-child {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    .essential > span {
+      white-space: nowrap;
+      margin-right: 8px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    @media screen and (min-width: $sm) {
+      .essential {
+        display: none;
+      }
+    }
+  }
+  .action-links {
+    margin-top: 8px;
+
+    a {
+      margin-right: 8px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .selection {
+    display: table-cell;
+    width: 32px;
+    padding: 12px 0 0 4px;
+    label {
+      padding: 12px 0 12px 12px;
+      margin-left: -4px;
+      cursor: pointer;
+    }
+  }
+  .primary {
+    display: table-cell;
+  }
+  @media screen and (min-width: $sm) {
+    td, th {
+      display: table-cell;
+    }
+    .action-links {
+      display: none;
+    }
+  }
+}
+

@@ -1,0 +1,48 @@
+.flash {
+  background-color: #eee;
+  font-size: 0.9em;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid #2272CC;
+  box-shadow: 1px 2px 1px darken($mainBg, 10%);
+
+  &.flash-info {
+    border-color: #cccc22;
+    &:before {
+      color: #cccc22;
+    }
+  }
+
+  &.flash-error {
+    border-color: #cc2222;
+    &:before {
+      color: #cc2222;
+    }
+  }
+
+  &.flash-warn {
+    border-color: #cc7222;
+    &:before {;
+      color: #cc7222;
+    }
+  }
+
+  &.flash-success {
+    border-color: #50CC22;
+    &:before {
+      color: #50CC22;
+    }
+  }
+
+  &.flash-question {
+    border-color: #2272CC;
+    &:before {
+      color: #2272CC;
+    }
+  }
+
+  h2 {
+    font-size: 1.1em;
+    font-weight: 600;
+  }
+}

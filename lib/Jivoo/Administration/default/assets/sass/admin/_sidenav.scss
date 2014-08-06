@@ -1,0 +1,166 @@
+body.menu-open {
+  overflow-x: hidden;
+  header {
+    .toggle-menu {
+      background-color: $headerHlBg;
+    }
+  }
+  nav {
+    &.ontop {
+      position: absolute;
+      top: 48px;
+      @media screen and (min-width: $sm) {
+        top: 32px;
+      }
+      left: 0;
+      z-index:999;
+    }
+    display: block; 
+    width: 220px;
+    background-color: $navBg;
+    & > ul > li > ul > li > a {
+      &.current + ul {
+        display: block;
+        position: static;
+        width: 100%;
+        box-shadow: none;
+      }
+      .label {
+        display: inline;
+      }
+      .count {
+        display: inline;
+      }
+    }
+  }
+  #main {
+    margin-left: 220px;
+    @media screen and (max-width: $md - 1) {
+      margin-right: -220px;
+    }
+  }
+  footer {
+    margin-left: 220px;
+    @media screen and (max-width: $md - 1) {
+      margin-right: -220px;
+    }
+  }
+}
+
+header .toggle-menu {
+  display: block;
+  float: left;
+  width: 32px;
+  line-height: 48px;
+  font-size: 24px;
+  margin-left: -32px;
+  text-align: center;
+  &:link, &:active, &:visited {
+    color: $headerFg;
+    text-decoration: none;
+  }
+  &:hover {
+    background-color: $headerHlBg;
+    color: $headerHlFg;
+  }
+  &:before {
+    font-family: icomoon;
+    content: '\e66c';
+  }
+  @media screen and (min-width: $sm) {
+    height: 32px;
+    line-height: 32px;
+    font-size: 16px;
+  }
+  @media screen and (min-width: $md) {
+    display: none;
+  }
+}
+
+nav {
+  float: left;
+  display: none;
+  color: $navFg;
+  font-size: 1em;
+  padding-top: 56px;
+  @media screen and (min-width: $xs) {
+    display: block;
+  }
+  @media screen and (min-width: $sm) {
+    padding-top: 48px;
+  }
+  @media screen and (min-width: $md) {
+    width: 220px;
+  }
+
+  h1 {
+    color: $navFg;
+    font-size: 1.0em;
+    font-weight: 600;
+    padding-left: 32px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin: 0;
+    display: none;
+  }
+  & > ul {
+    list-style-type: none;
+    margin: 0;
+    & > li {
+      display: block;
+      & > a {
+        display: none;
+      }
+      & > ul {
+        @include dropdown;
+        margin-bottom: 20px;
+        & > li {
+          color: $navFg;
+          &:hover {
+            background-color: $navHlBg;
+            color: $navHlFg;
+          }
+          & > a {
+            &.current {
+              background-color: $navCuBg;
+              color: $navCuFg;
+
+              @media screen and (min-width: $md) {
+                & + ul {
+                  display: block;
+                  position: static;
+                  width: 100%;
+                  box-shadow: none;
+                  & > li:hover {
+                  }
+                }
+              }
+            }
+
+            .label {
+              display: none;
+            }
+
+            @media screen and (min-width: $md) {
+              .label {
+                display: inline;
+              }
+              .count {
+                display: inline;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#main {
+  @media screen and (min-width: $xs) {
+    margin-left: 32px;
+  }
+  @media screen and (min-width: $md) {
+    margin-left: 220px;
+  }
+}

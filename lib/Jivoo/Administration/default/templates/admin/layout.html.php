@@ -65,5 +65,13 @@ $this->script('admin/theme.js');
 <?php echo $this->block('content'); ?>
 </div>
 
+<footer>
+<?php if (isset($app['website'])): ?>
+<?php echo $Html->link($app['name'] . ' ' . $app['version'], $app['website']); ?>
+<?php else: ?>
+<?php echo $app['name'] . ' ' . $app['version'];?>
+<?php endif; ?>
+</footer>
+
 </body>
 </html>
