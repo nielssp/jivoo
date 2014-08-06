@@ -389,11 +389,10 @@ form {
       form .field {
         margin-left: 240px; } }
     form .field.field-required label:first-child:after {
-      content: '(required)';
-      font-size: 0.8em;
-      margin-left: 12px;
+      content: '*';
+      margin-left: 4px;
       font-style: italic;
-      color: #999; }
+      color: #c22; }
     form .field input[type=checkbox],
     form .field input[type=radio] {
       margin-right: 6px; }

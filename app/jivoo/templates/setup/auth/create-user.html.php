@@ -6,25 +6,25 @@ $this->extend('setup/layout.html');
 
 <p><?php echo tr('Please select a username and a password.'); ?></p>
 
-<div class="field<?php echo $Form->ifRequired('username', ' fireld-required'); ?>">
+<div class="field<?php echo $Form->ifRequired('username', ' field-required'); ?>">
 <?php echo $Form->label('username'); ?>
 <?php echo $Form->text('username'); ?>
 <?php echo $Form->error('username'); ?>
 </div>
 
-<div class="field<?php echo $Form->ifRequired('password', ' fireld-required'); ?>">
+<div class="field<?php echo $Form->ifRequired('password', ' field-required'); ?>">
 <?php echo $Form->label('password'); ?>
 <?php echo $Form->text('password'); ?>
 <?php echo $Form->error('password'); ?>
 </div>
 
-<div class="field<?php echo $Form->ifRequired('confirmPassword', ' fireld-required'); ?>">
+<div class="field<?php echo $Form->ifRequired('confirmPassword', ' field-required'); ?>">
 <?php echo $Form->label('confirmPassword'); ?>
 <?php echo $Form->text('confirmPassword'); ?>
 <?php echo $Form->error('confirmPassword'); ?>
 </div>
 
-<div class="field<?php echo $Form->ifRequired('email', ' fireld-required'); ?>">
+<div class="field<?php echo $Form->ifRequired('email', ' field-required'); ?>">
 <?php echo $Form->label('email'); ?>
 <?php echo $Form->text('email'); ?>
 <?php echo $Form->error('email'); ?>
