@@ -53,7 +53,7 @@ class DatabaseSetupController extends SetupController implements ITableRevisionM
       case 'tablePrefix':
         return tr('Table prefix');
       default:
-        return tr($option);
+        return tr(ucfirst($option));
     }
   }
 

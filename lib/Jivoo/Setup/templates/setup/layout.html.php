@@ -17,17 +17,6 @@ $this->style('core.css');
 
 <header>
 <h1><?php echo $app['name']; ?></h1>
-<div class="version">
-<?php if (isset($app['website'])): ?>
-<?php echo $Html->link(
-  $app['name'] . ' ' . $app['version'],
-  $app['website']
-); ?>
-<?php else: ?>
-<?php echo $app['name']; ?> 
-<?php echo $app['version']; ?>
-<?php endif; ?>
-</div>
 </header>
 
 <div id="main">
@@ -45,6 +34,14 @@ $this->style('core.css');
 <?php echo $this->block('content'); ?>
 
 </div>
+
+<footer>
+<?php if (isset($app['website'])): ?>
+<?php echo $Html->link($app['name'] . ' ' . $app['version'], $app['website']); ?>
+<?php else: ?>
+<?php echo $app['name'] . ' ' . $app['version']; ?> 
+<?php endif; ?>
+</footer
 
 </body>
 </html>

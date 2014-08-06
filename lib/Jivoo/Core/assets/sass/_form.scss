@@ -193,11 +193,10 @@ form {
       margin-left: 240px;
     }
     &.field-required label:first-child:after {
-      content: '(required)';
-      font-size: 0.8em;
-      margin-left: 12px;
+      content: '*';
+      margin-left: 4px;
       font-style: italic;
-      color: #999;
+      color: #c22;
     }
     input[type=checkbox],
     input[type=radio] {
