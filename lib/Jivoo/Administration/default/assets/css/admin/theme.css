@@ -480,10 +480,6 @@ table {
       display: table-cell; }
     table .action-links {
       display: none; } }
-  table.trace td, table.trace th {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    display: table-cell; }
 
 .flash {
   background-color: #eee;
@@ -581,11 +577,11 @@ table thead th a {
   margin-left: 8px; }
 .flash.flash-error:before {
   content: '\e698'; }
-.flash.flash-error:before {
+.flash.flash-warn:before {
   content: '\e699'; }
-.flash.flash-error:before {
+.flash.flash-success:before {
   content: '\e686'; }
-.flash.flash-error:before {
+.flash.flash-question:before {
   content: '\e69a'; }
 
 .dropdown {

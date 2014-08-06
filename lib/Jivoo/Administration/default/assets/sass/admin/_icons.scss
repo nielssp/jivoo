@@ -70,13 +70,13 @@ table thead th a {
   &.flash-error:before {
     content: '\e698';
   }
-  &.flash-error:before {
+  &.flash-warn:before {
     content: '\e699';
   }
-  &.flash-error:before {
+  &.flash-success:before {
     content: '\e686';
   }
-  &.flash-error:before {
+  &.flash-question:before {
     content: '\e69a';
   }
 }
