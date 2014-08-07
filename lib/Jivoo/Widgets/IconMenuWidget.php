@@ -11,6 +11,8 @@ class IconMenuWidget extends Widget {
   
   public function main($options) {
     $this->menu = $options['menu'];
+    if (!isset($this->menu))
+      $this->menu = array();
     return $this->fetch();
   }
 }

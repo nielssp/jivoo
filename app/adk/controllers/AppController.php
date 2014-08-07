@@ -51,6 +51,13 @@ class AppController extends Controller {
       )),
     ));
     $this->m->Administration->menu['main'] = $menu;
+    $this->m->Administration->menu['shortcuts'] = IconMenu::menu(
+      tr('Shortcuts'), null, null, array(
+        IconMenu::item(tr('Dashboard'), 'App::index', 'meter'),
+        IconMenu::item(tr('Create application'), 'Applications::create', 'wand'),
+        IconMenu::item(tr('Add application'), 'Applications::add', 'plus'),
+      )
+    );
   }
   
   public function before() {

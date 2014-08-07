@@ -40,5 +40,16 @@ class AdminMenu extends AppListener {
       )),
     ));
     $this->m->Administration->menu['main'] = $menu;
+    $this->m->Administration->menu['shortcuts'] = IconMenu::menu(
+      tr('Shortcuts'), null, null, array(
+        IconMenu::item($this->config['Templates']['title'], null, 'home'),
+        IconMenu::item(tr('Dashboard'), 'Admin::dashboard', 'meter'),
+        IconMenu::menu(tr('Add'), array('fragment' => ''), 'plus', array(
+          IconMenu::item(tr('Add post'), 'Admin::Posts::add'),
+          IconMenu::item(tr('Add page'), 'Admin::Pages::add'),
+          IconMenu::item(tr('Add comment'), 'Admin::Comments::add'),
+        )),
+      )
+    );
   }
 }

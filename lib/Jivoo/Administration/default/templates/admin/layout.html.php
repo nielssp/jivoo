@@ -23,10 +23,7 @@ $this->script('admin/theme.js');
 <header>
 <a href="#" class="toggle-menu"></a>
 <h1><?php echo $app['name']; ?></h1>
-<ul class="shortcuts">
-<li><?php echo $Icon->link($site['title'], null, 'home'); ?></li>
-<li><?php echo $Icon->link('Dashboard', 'Admin::dashboard', 'meter'); ?></li>
-</ul>
+<?php echo $Admin->menu('shortcuts'); ?>
 
 <ul class="account">
 <li><?php echo $Icon->link(h($user->username), 'Admin', 'user'); ?></li>
