@@ -1,7 +1,12 @@
 <?php
 class UsersAdminController extends AdminController {
   
-  protected $models = array('User');
+  protected $models = array('User', 'Group');
+  
+  public function before() {
+    parent::before();
+    $this->groups = $this->Group;
+  }
   
   public function index() {
     $this->title = tr('All users');

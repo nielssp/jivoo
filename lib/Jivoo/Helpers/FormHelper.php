@@ -324,6 +324,28 @@ class FormHelper extends Helper {
     return $html;
   }
   
+  public function selectFromSelection($field, IReadSelection $selection, $valueField, $labelField, $attributes = array()) {
+    $attributes = array_merge(array(
+      'name' => $this->name($field),
+      'id' => $this->id($field),
+      'value' => $this->value($field),
+      'size' => 1
+    ), $attributes);
+    $currentValue = $attributes['value'];
+    unset($attributes['value']);
+    $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    foreach ($selection as $record) {
+      $value = $record->$valueField;
+      $label = $record->$labelField;
+      $html .= '<option value="' . h($value) . '"';
+      if ($currentValue == $value)
+        $html .= ' selected="selected"';
+      $html .= '>' . h($label) . '</option>' . PHP_EOL;
+    }
+    $html .= '</select>';
+    return $html;
+  }
+  
   public function option($value, $text, $attributes = array()) {
     $attributes['value'] = $value;
     if ($value == $this->selectValue)

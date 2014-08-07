@@ -45,6 +45,10 @@
   <?php echo $Form->password('confirmPassword'); ?>
 </div>
 
+<div class="field">
+  <?php echo $Form->label('groupId', tr('Group')); ?>
+  <?php echo $Form->selectFromSelection('groupId', $groups, 'id', 'title'); ?>
+</div>
 
 <?php echo $Form->end(); ?>
 
