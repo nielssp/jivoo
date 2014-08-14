@@ -9,19 +9,23 @@ of
 <?php if ($Pagination->isFirst()): ?>
 <button class="prev" disabled="disabled">
 <span class="icon"><?php echo $Icon->icon('arrow-left2'); ?></span>
+<span class="label">Previous</span>
 </button>
 <?php else: ?>
 <a href="<?php echo $this->link($Pagination->prevLink()); ?>" class="prev button">
 <span class="icon"><?php echo $Icon->icon('arrow-left2'); ?></span>
+<span class="label">Previous</span>
 </a>
 <?php endif; ?>
 <?php if ($Pagination->isLast()): ?>
 <button class="next" disabled="disabled">
 <span class="icon"><?php echo $Icon->icon('arrow-right2'); ?></span>
+<span class="label">Next</span>
 </button>
 <?php else: ?>
 <a href="<?php echo $this->link($Pagination->nextLink()); ?>" class="next button">
 <span class="icon"><?php echo $Icon->icon('arrow-right2'); ?></span>
+<span class="label">Next</span>
 </a>
 <?php endif; ?>
 </div>

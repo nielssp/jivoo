@@ -1155,6 +1155,9 @@ nav {
     .pagination button > .icon,
     .pagination .button > .icon {
       margin: 0; }
+    .pagination button > .label,
+    .pagination .button > .label {
+      display: none; }
   @media screen and (min-width: 768px) {
     .pagination {
       font-size: 0.9em;

@@ -103,6 +103,9 @@
     & > .icon {
       margin: 0;
     }
+    & > .label {
+      display: none;
+    }
   }
   @media screen and (min-width: $sm) {
     font-size: 0.9em;
