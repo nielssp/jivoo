@@ -148,7 +148,7 @@ class Utilities {
    */
   public static function getContentType($fileName) {
     $fileExt = strtolower($fileName);
-    if (strpos($fileExt, '.')) {
+    if (strpos($fileExt, '.') !== false) {
       $segments = explode('.', $fileExt);
       $fileExt = $segments[count($segments) - 1];
     }
