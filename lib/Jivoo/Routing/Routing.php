@@ -137,7 +137,7 @@ class Routing extends LoadableModule {
 //       $this->redirectPath(array(), $this->request->query);
 //     }
 
-    $routeFile = $this->p('config', 'routes.php');
+    $routeFile = $this->p('app', 'config/routes.php');
     if (file_exists($routeFile)) {
       $routes = include $routeFile;
       foreach ($routes as $route) {

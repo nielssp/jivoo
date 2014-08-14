@@ -20,7 +20,7 @@ class Templates extends LoadableModule {
   
   public function createView() {
     $view = new View($this, $this->m->Routing);
-    $view->addTemplateDir($this->p('templates', ''), 4);
+    $view->addTemplateDir($this->p('app', 'templates'), 4);
     $view->site = $this->config->getArray();
     $view->app = $this->app->appConfig;
     

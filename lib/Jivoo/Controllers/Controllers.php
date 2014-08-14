@@ -33,7 +33,7 @@ class Controllers extends LoadableModule {
   private $controllerObjects = array();
 
   protected function init() {
-    if (is_dir($this->p('controllers', ''))) {
+    if (is_dir($this->p('app', 'controllers'))) {
       $this->findControllers();
     }
   }
@@ -42,21 +42,16 @@ class Controllers extends LoadableModule {
    * Find controllers 
    * @param string $dir Directory
    */
-  private function findControllers($dir = '') {
-    Lib::addIncludePath($this->p('controllers', $dir));
-    $files = scandir($this->p('controllers', $dir));
+  private function findControllers($dir = 'controllers') {
+    Lib::addIncludePath($this->p('app', $dir));
+    $files = scandir($this->p('app', $dir));
     if ($files !== false) {
       foreach ($files as $file) {
         if ($file[0] == '.') {
           continue;
         }
-        if (is_dir($this->p('controllers', $file))) {
-          if ($dir == '') {
-            $this->findControllers($file);
-          }
-          else {
-            $this->findControllers($dir . '/' . $file);
-          }
+        if (is_dir($this->p('app', $dir . '/' . $file))) {
+          $this->findControllers($dir . '/' . $file);
         }
         else {
           $split = explode('.', $file);

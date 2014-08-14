@@ -94,10 +94,11 @@ class App implements IEventSubject {
   /**
    * Create application
    * @param array $appConfig Associative array containing at least the 'path'-key
+   * @param string $userPath Path to user-directory
    * @param string $entryScript Name of entry script, e.g. 'index.php'
    * @throws Exception if $appconfig['path'] is not set
    */
-  public function __construct($appConfig, $entryScript = 'index.php') {
+  public function __construct($appConfig, $userPath, $entryScript = 'index.php') {
     if (!isset($appConfig['path'])) {
       throw new Exception('Application path not set.');
     }
@@ -106,9 +107,10 @@ class App implements IEventSubject {
     $this->m = new Map();
     $this->paths = new PathMap(
       dirname($_SERVER['SCRIPT_FILENAME']),
-      $appConfig['path']
+      $userPath
     );
     $this->paths->app = $appConfig['path'];
+    $this->paths->user = $userPath;
 //     $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
     $this->entryScript = $entryScript;
     
@@ -280,7 +282,7 @@ class App implements IEventSubject {
       $title = tr('Uncaught exception');
       $custom = null;
       try {
-        $custom = $this->p('templates', 'error/exception.php');
+        $custom = $this->p('app', 'templates/error/exception.php');
         if (!file_exists($custom))
           $custom = null;
         else
@@ -294,7 +296,7 @@ class App implements IEventSubject {
     else {
       $custom = null;
       try {
-        $custom = $this->p('templates', 'error/error.php');
+        $custom = $this->p('app', 'templates/error/error.php');
         if (!file_exists($custom))
           $custom = null;
         else
@@ -323,13 +325,13 @@ class App implements IEventSubject {
       return;
     }
     
-    Lib::addIncludePath($this->p('lib', ''));
+    Lib::addIncludePath($this->p('app', 'lib'));
 
     $this->config = new AppConfig($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
 
     $environmentConfigFile = $this
-      ->p('config', 'environments/' . $environment . '.php');
+      ->p('app', 'config/environments/' . $environment . '.php');
     if (file_exists($environmentConfigFile)) {
       $this->config->override = include $environmentConfigFile;
     }

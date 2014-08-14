@@ -20,7 +20,7 @@ class Helpers extends LoadableModule {
 
   
   protected function init() {
-    Lib::addIncludePath($this->p('helpers', ''));
+    Lib::addIncludePath($this->p('app', 'helpers'));
   }
   
   /**

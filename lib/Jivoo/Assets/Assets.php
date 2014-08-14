@@ -52,7 +52,7 @@ class Assets extends LoadableModule {
       if (count($filename) > 1 AND !empty($filename[0])) {
         $extension = strtolower(array_pop($filename));
         if (!in_array($extension, $this->extensionBlacklist)) {
-          if (!$this->returnAsset($this->p('assets', implode('/', $path)))) {
+          if (!$this->returnAsset($this->p('app', 'assets/' . implode('/', $path)))) {
             $key = array_shift($path);
             $file = $this->p($key, implode('/', $path));
             $this->returnAsset($file);
@@ -74,10 +74,10 @@ class Assets extends LoadableModule {
 
   private function returnAppJs() {
     $text = '';
-    $files = scandir($this->p('assets', 'js'));
+    $files = scandir($this->p('app', 'assets/js'));
     if ($files !== false) {
       foreach ($files as $file) {
-        $path = $this->p('assets', 'js/' . $file);
+        $path = $this->p('app', 'assets/js/' . $file);
         if (is_file($path)) {
           $text .= $this->minifyJs(file_get_contents($path)) . PHP_EOL;
         }
@@ -90,10 +90,10 @@ class Assets extends LoadableModule {
 
   private function returnAppCss() {
     $text = '';
-    $files = scandir($this->p('assets', 'css'));
+    $files = scandir($this->p('app', 'assets/css'));
     if ($files !== false) {
       foreach ($files as $file) {
-        $path = $this->p('assets', 'css/' . $file);
+        $path = $this->p('app', 'assets/css/' . $file);
         if (is_file($path)) {
           $text .= $this->minifyCss(file_get_contents($path)) . PHP_EOL;
         }
@@ -142,13 +142,22 @@ class Assets extends LoadableModule {
    */
   public function getAsset($key, $path = null) {
     if (!isset($path)) {
-      $path = $key;
-      $key = 'assets';
-      if (!$this->sorted) {
-        uasort($this->assetDirs, array('Utilities', 'prioritySorter'));
-        $this->sorted = true;
+      if (file_exists($this->p('app', 'assets/' . $key))) {
+        $p = $this->p('app', 'assets/' . $key);
+        if (strncmp($p, $this->docRoot, $this->docRootLength) == 0)
+          return substr($p, $this->docRootLength);
+        else
+          return $this->m->Routing->getLinkFromPath(
+            array_merge(array('assets'), explode('/', $key))
+          );
       }
-      if (!file_exists($this->p($key, $path))) {
+      else {
+        if (!$this->sorted) {
+          uasort($this->assetDirs, array('Utilities', 'prioritySorter'));
+          $this->sorted = true;
+        }
+        $path = $key;
+        $key = null;
         foreach ($this->assetDirs as $dir) {
           if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
             $key = $dir['key'];
@@ -158,15 +167,11 @@ class Assets extends LoadableModule {
       }
     }
     $p = $this->p($key, $path);
-    if (strncmp($p, $this->docRoot, $this->docRootLength) == 0) {
+    if (strncmp($p, $this->docRoot, $this->docRootLength) == 0)
       return substr($p, $this->docRootLength);
-    }
-    else {
-      $pArray = ($key == 'assets' ? array($key) : array('assets', $key));
-      $pArray = array_merge($pArray, explode('/', $path));
-      return $this->m
-        ->Routing
-        ->getLinkFromPath($pArray);
-    }
+    else
+      return $this->m->Routing->getLinkFromPath(
+        array_merge(array('assets', $key), explode('/', $path))
+      );
   }
 }

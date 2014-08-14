@@ -13,17 +13,10 @@ $appName = 'adk';
 
 require_once '../../lib/Jivoo/Core/bootstrap.php';
 
-$app = new App(include '../../app/' . $appName . '/app.php', basename(__FILE__));
-
-$userDir = '../../user/' . $appName;
-
-// Paths are relative to the current directory (dirname($_SERVER['SCRIPT_FILENAME']))
-// unless they begin with '/' or 'x:' where x is any drive letter.
-$app->paths->user = $userDir;
-$app->paths->log = $userDir . '/log';
-$app->paths->tmp = $userDir . '/tmp';
-$app->paths->extensions = $userDir . '/extensions';
-$app->paths->themes = $userDir . '/themes';
-$app->paths->media = $userDir . '/media';
+$app = new App(
+  include '../../app/' . $appName . '/app.php',
+  '../../user/' . $appName,
+  basename(__FILE__)
+);
 
 $app->run('development');

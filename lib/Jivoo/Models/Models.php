@@ -26,7 +26,7 @@ class Models extends LoadableModule {
   private $modelObjects = array();
   
   protected function init() {
-    $modelsDir = $this->p('models', '');
+    $modelsDir = $this->p('app', 'models');
     if (is_dir($modelsDir)) {
       Lib::addIncludePath($modelsDir);
       $files = scandir($modelsDir);

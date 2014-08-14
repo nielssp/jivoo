@@ -176,7 +176,7 @@ class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
     $schema = new TableRevisionSchema();
     $this->addSchema($schema);
 
-    $schemasDir = $this->p('schemas', '');
+    $schemasDir = $this->p('app', 'schemas');
     if (is_dir($schemasDir)) {
       Lib::addIncludePath($schemasDir);
       $files = scandir($schemasDir);
