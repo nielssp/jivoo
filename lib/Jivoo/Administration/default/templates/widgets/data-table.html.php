@@ -38,6 +38,10 @@
 
 <div class="table-operations">
 
+<?php if (isset($options['addRoute'])): ?>
+<?php echo $Icon->link(h('Add'), $options['addRoute'], 'plus', null, array('class' => 'button')); ?>
+<?php endif; ?>
+
 <?php if (count($options['bulkActions']) > 0): ?>
 <div class="dropdown dropdown-actions">
 <a href="#"><?php echo tr('With selection'); ?></a>

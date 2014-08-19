@@ -9,6 +9,7 @@ class DataTableWidget extends TraversableWidget {
     'filters' => array(),
     'columns' => null,
     'labels' => array(),
+    'addRoute' => null,
     'primaryColumn' => null,
     'sortOptions' => null,
     'defaultSortBy' => null,

@@ -7,6 +7,7 @@ $widget = $Widget->begin('DataTable', array(
   'labels' => array(
     'group' => tr('Group'),
   ),
+  'addRoute' => 'add',
   'sortOptions' => array('username', 'email', 'updatedAt', 'createdAt'),
   'defaultSortBy' => 'createdAt',
   'defaultDescending' => true,

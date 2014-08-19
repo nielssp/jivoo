@@ -7,6 +7,7 @@ $widget = $Widget->begin('DataTable', array(
   'sortOptions' => array('title', 'name', 'published', 'updatedAt', 'createdAt'),
   'defaultSortBy' => 'name',
   'primaryAction' => 'edit',
+  'addRoute' => 'add',
   'filters' => array(
     tr('Published') => 'published=true',
     tr('Draft') => 'published=false'
