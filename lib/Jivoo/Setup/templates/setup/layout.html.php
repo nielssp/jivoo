@@ -41,7 +41,7 @@ $this->style('core.css');
 <?php else: ?>
 <?php echo $app['name'] . ' ' . $app['version']; ?> 
 <?php endif; ?>
-</footer
+</footer>
 
 </body>
 </html>

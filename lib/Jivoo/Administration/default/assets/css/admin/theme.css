@@ -1163,6 +1163,9 @@ nav {
       font-size: 0.9em;
       text-align: right; } }
 
+.data-table table {
+  clear: right; }
+
 #login {
   overflow-y: auto;
   text-align: center;

@@ -1,6 +1,6 @@
 <div class="pagination">
-<a href="#" class="icon icon-cog"></a>
-<a href="#" class="icon icon-binoculars"></a>
+<a href="#" class="table-settings icon icon-cog"></a>
+<a href="#" class="table-find icon icon-binoculars"></a>
 <strong>
 <?php echo $Pagination->getFrom() . '&ndash;' . $Pagination->getTo(); ?>    
 </strong>

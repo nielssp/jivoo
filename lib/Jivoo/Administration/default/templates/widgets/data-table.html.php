@@ -1,3 +1,8 @@
+<?php
+$this->script('jquery.js'); 
+$this->script('widgets/data-table.js');
+?>
+<div class="data-table">
 <div class="toolbar">
 <?php echo $Form->form(array(), array(
   'method' => 'get',
@@ -148,3 +153,4 @@
 
 <?php echo $this->embed('widgets/data-table-pagination.html', array('Pagination' => $Pagination)); ?>
 
+</div>
