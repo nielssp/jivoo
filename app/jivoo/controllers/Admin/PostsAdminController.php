@@ -3,8 +3,13 @@ class PostsAdminController extends AdminController {
   
   protected $models = array('Post');
   
+  public function before() {
+    parent::before();
+    $this->Filtering->addPrimary('title');
+  }
+  
   public function index() {
-    $this->title = tr('All posts');
+    $this->title = tr('Posts');
     $this->posts = $this->Post;
     return $this->render();
   }
@@ -32,49 +37,54 @@ class PostsAdminController extends AdminController {
     return $this->render();
   }
   
-  public function edit($postId) {
-    $this->title = tr('Edit post');
-    $this->post = $this->Post->find($postId);
-    if ($this->post and $this->request->hasValidData('Post')) {
-      $data = $this->request->data['Post'];
-      $data['commenting'] = isset($data['commenting']);
-      $this->post->addData($data);
-      if ($this->post->save()) {
-        $this->session->flash['success'][] = tr(
-          'Post saved. %1',
-          $this->Html->link(tr('Click here to view.'), $this->post)
-        );
-        if (isset($this->request->data['save-close']))
-          return $this->redirect('index');
-        else if (isset($this->request->data['save-new']))
-          return $this->redirect('add');
-        return $this->refresh();
+  public function edit($postIds = null) {
+    $this->ContentAdmin->makeSelection($this->Post, $postIds);
+    if (isset($this->ContentAdmin->selection)) {
+      if ($this->request->hasValidData('Post')) {
+        $this->ContentAdmin->selection->set($this->request->data['Post'])->update();
+        //...
       }
+      //...
     }
-    return $this->render('admin/posts/add.html');
+    else {
+      $this->title = tr('Edit post');
+      $this->post = $this->ContentAdmin->record;
+      if ($this->post and $this->request->hasValidData('Post')) {
+        $data = $this->request->data['Post'];
+        $data['commenting'] = isset($data['commenting']);
+        $this->post->addData($data);
+        if ($this->post->save()) {
+          $this->session->flash['success'][] = tr(
+            'Post saved. %1',
+            $this->Html->link(tr('Click here to view.'), $this->post)
+          );
+          if (isset($this->request->data['save-close']))
+            return $this->redirect('index');
+          else if (isset($this->request->data['save-new']))
+            return $this->redirect('add');
+          return $this->refresh();
+        }
+      }
+      return $this->render('admin/posts/add.html');
+    }
   }
   
-  public function publish($postId) {
-    return $this->ContentAdmin->quickEdit(array(
-      'record' => $this->Post->find($postId),
-      'edit' => array('status' => 'published'),
-      'confirm' => tr('Do you want to publish this post?'),
-    ));
-  }
-  
-  public function unpublish($postId) {
-    return $this->ContentAdmin->quickEdit(array(
-      'record' => $this->Post->find($postId),
-      'edit' => array('status' => 'pending'),
-      'confirm' => tr('Do you want to unpublish this post?')
-    ));
-  }
-  
-  public function delete($postId) {
-    return $this->ContentAdmin->delete(array(
-      'record' => $this->Post->find($postId),
-      'confirm' => tr('Do you want to delete this post?'),
-      'title' => tr('Delete post')
-    ));
+  public function delete($postIds = null) {
+    $this->ContentAdmin->makeSelection($this->Post, $postIds);
+    if (isset($this->ContentAdmin->selection)) {
+      if ($this->request->hasValidData()) {
+        $this->ContentAdmin->selection->delete();
+        //...
+      }
+      //...
+    }
+    else {
+      $this->post = $this->ContentAdmin->record;
+      if ($this->post and $this->request->hasValidData()) {
+        $this->post->delete();
+        //...
+      }
+      //...
+    }
   }
 }

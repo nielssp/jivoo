@@ -67,7 +67,7 @@ class FormHelper extends Helper {
     $html = '<form action="' . $this->getLink($route) . '"';
     $html .= $this->addAttributes($attributes) . '>' . PHP_EOL;
     if ($hiddenToken)
-      $html .= $this->request->createHiddenToken() . PHP_EOL;
+      $html .= $this->hiddenToken();
     if (isset($specialMethod)) {
       $html .= $this->element('input', array(
         'type' => 'hidden',
@@ -117,6 +117,10 @@ class FormHelper extends Helper {
       case 'optgroup':
         return '</optgroup>' . PHP_EOL;
     }
+  }
+  
+  public function hiddenToken() {
+    return $this->request->createHiddenToken() . PHP_EOL;
   }
   
   public function id($field, $value = null) {

@@ -53,7 +53,6 @@ class DataTableWidget extends TraversableWidget {
     if (!isset($this->primaryColumn))
       $this->primaryColumn = $this->columns[0];
     
-    $this->Filtering->addPrimary($this->primaryColumn);
     $this->records = $this->Filtering->apply($this->records);
     
     if (!isset($this->sortBy))

@@ -1,7 +1,7 @@
 <tr<?php if (isset($class)) echo ' class="' . $class . '"'; ?>>
 <td class="selection">
 <label>
-<input type="checkbox" />
+<input type="checkbox" name="selection" value="<?php echo $options['id']; ?>" />
 </label>
 </td>
 <?php $i = 0; ?>

@@ -24,10 +24,10 @@ $widget = $Widget->begin('DataTable', array(
     new RowAction(tr('Delete'), 'delete', 'remove'),
   ),
   'bulkActions' => array(
-    new BulkAction(tr('Edit'), 'Admin::Posts::bulkEdit', 'pencil'),
-    new BulkAction(tr('Publish'), 'Admin::Posts::bulkEdit', 'eye'),
-    new BulkAction(tr('Unpublish'), 'Admin::Posts::bulkEdit', 'eye-blocked'),
-    new BulkAction(tr('Delete'), 'Admin::Posts::bulkEdit', 'remove'),
+    new BulkAction(tr('Edit'), 'Admin::Posts::edit', 'pencil', array(), 'GET'),
+    new BulkAction(tr('Publish'), 'Admin::Posts::edit', 'eye', array('Post' => array('status' => 'published'))),
+    new BulkAction(tr('Unpublish'), 'Admin::Posts::edit', 'eye-blocked', array('Post' => array('status' => 'pending'))),
+    new BulkAction(tr('Delete'), 'Admin::Posts::delete', 'remove'),
   )
 ));
 foreach ($widget as $item) {

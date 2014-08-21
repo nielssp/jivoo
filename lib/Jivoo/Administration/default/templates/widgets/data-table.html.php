@@ -41,6 +41,8 @@ $this->script('widgets/data-table.js');
 
 </div>
 
+<?php echo $Form->hiddenToken(); ?>
+
 <div class="table-operations">
 
 <?php if (isset($options['addRoute'])): ?>
@@ -52,7 +54,13 @@ $this->script('widgets/data-table.js');
 <a href="#"><?php echo tr('With selection'); ?></a>
 <ul>
 <?php foreach($options['bulkActions'] as $bulkAction): ?>
-<li><?php echo $Icon->button(h($bulkAction->label), $bulkAction->icon); ?></li>
+<li><?php echo $Icon->button(h($bulkAction->label), $bulkAction->icon, array(
+  'data' => array(
+    'action' => $this->link($this->mergeRoutes($bulkAction->route, array('?'))),
+    'method' => $bulkAction->method,
+    'data' => json_encode($bulkAction->data)
+  )
+)); ?></li>
 <?php endforeach; ?>
 </ul>
 </div>
