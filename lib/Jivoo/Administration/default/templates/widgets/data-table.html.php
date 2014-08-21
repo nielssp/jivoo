@@ -58,7 +58,8 @@ $this->script('widgets/data-table.js');
   'data' => array(
     'action' => $this->link($this->mergeRoutes($bulkAction->route, array('?'))),
     'method' => $bulkAction->method,
-    'data' => json_encode($bulkAction->data)
+    'data' => json_encode($bulkAction->data),
+    'confirm' => $bulkAction->confirmation
   )
 )); ?></li>
 <?php endforeach; ?>

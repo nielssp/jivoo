@@ -35,8 +35,16 @@
 <td class="actions">
 <?php foreach ($options['actions'] as $action): ?>
 <?php echo $Html->link(
-  $Icon->icon($action->icon), $options['record']->action($action->action),
-  array('title' => $action->label)
+  $Icon->icon($action->icon),
+  $this->link($this->mergeRoutes($action->route, array($options['id']))),
+  array(
+    'title' => $action->label,
+    'data' => array(
+      'method' => $action->method,
+      'data' => json_encode($action->data),
+      'confirm' => $action->confirmation
+    )
+  )
 ); ?>
 <?php endforeach; ?>
 </td>

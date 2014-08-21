@@ -40,11 +40,13 @@ class HtmlHelper extends Helper {
       $data = $options['data'];
       unset($options['data']);
       foreach ($data as $key => $value) {
-        $html .= ' data-' . $key . '="' . h($value) . '"';
+        if ($value != null)
+          $html .= ' data-' . $key . '="' . h($value) . '"';
       }
     }
     foreach ($options as $attribute => $value) {
-      $html .= ' ' . $attribute . '="' . h($value) . '"';
+      if ($value != null)
+        $html .= ' ' . $attribute . '="' . h($value) . '"';
     }
     return $html;
   }

@@ -12,12 +12,16 @@ $widget = $Widget->begin('DataTable', array(
   'defaultSortBy' => 'createdAt',
   'defaultDescending' => true,
   'actions' => array(
-    new RowAction(tr('Edit'), 'edit', 'pencil'),
-    new RowAction(tr('Delete'), 'delete', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Users::edit',
+      'pencil', array(), 'get'),
+    new TableAction(tr('Delete'), 'Admin::Users::delete',
+      'remove', array(), 'post', tr('Delete selected user?')),
   ),
   'bulkActions' => array(
-    new BulkAction(tr('Edit'), 'Admin::Users::bulkEdit', 'pencil'),
-    new BulkAction(tr('Delete'), 'Admin::Users::bulkEdit', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Users::edit',
+      'pencil', array(), 'get'),
+    new TableAction(tr('Delete'), 'Admin::Users::delete',
+      'remove', array(), 'post', tr('Delete selected users?')),
   )
 ));
 foreach ($widget as $item) {

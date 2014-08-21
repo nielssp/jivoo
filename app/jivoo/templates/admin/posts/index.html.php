@@ -17,17 +17,26 @@ $widget = $Widget->begin('DataTable', array(
     tr('Draft') => 'status=draft'
   ),
   'actions' => array(
-    new RowAction(tr('Edit'), 'edit', 'pencil'),
-    new RowAction(tr('View'), 'view', 'screen'),
-    'publish' => new RowAction(tr('Publish'), 'publish', 'eye'),
-    'unpublish' => new RowAction(tr('Unpublish'), 'unpublish', 'eye-blocked'),
-    new RowAction(tr('Delete'), 'delete', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Posts::edit',
+      'pencil', array(), 'get'),
+    new TableAction(tr('View'), 'Posts::view',
+      'screen', array(), 'get'),
+    'publish' => new TableAction(tr('Publish'), 'Admin::Posts::edit',
+      'eye', array('Post' => array('status' => 'published'))),
+    'unpublish' => new TableAction(tr('Unpublish'), 'Admin::Posts::edit',
+      'eye-blocked', array('Post' => array('status' => 'pending'))),
+    new TableAction(tr('Delete'), 'Admin::Posts::delete',
+      'remove', array(), 'post', tr('Delete selected post?')),
   ),
   'bulkActions' => array(
-    new BulkAction(tr('Edit'), 'Admin::Posts::edit', 'pencil', array(), 'GET'),
-    new BulkAction(tr('Publish'), 'Admin::Posts::edit', 'eye', array('Post' => array('status' => 'published'))),
-    new BulkAction(tr('Unpublish'), 'Admin::Posts::edit', 'eye-blocked', array('Post' => array('status' => 'pending'))),
-    new BulkAction(tr('Delete'), 'Admin::Posts::delete', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Posts::edit',
+      'pencil', array(), 'get'),
+    new TableAction(tr('Publish'), 'Admin::Posts::edit',
+      'eye', array('Post' => array('status' => 'published'))),
+    new TableAction(tr('Unpublish'), 'Admin::Posts::edit',
+      'eye-blocked', array('Post' => array('status' => 'pending'))),
+    new TableAction(tr('Delete'), 'Admin::Posts::delete',
+      'remove', array(), 'post', tr('Delete selected posts?')),
   )
 ));
 foreach ($widget as $item) {

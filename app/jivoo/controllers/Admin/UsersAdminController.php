@@ -6,6 +6,7 @@ class UsersAdminController extends AdminController {
   public function before() {
     parent::before();
     $this->groups = $this->Group;
+    $this->Filtering->addPrimary('username');
   }
   
   public function index() {
@@ -54,4 +55,23 @@ class UsersAdminController extends AdminController {
     }
     return $this->render('admin/users/add.html');
   }
+
+  public function delete($userIds = null) {
+    $this->ContentAdmin->makeSelection($this->User, $userIds);
+    if (isset($this->ContentAdmin->selection)) {
+      if ($this->request->hasValidData()) {
+        $this->ContentAdmin->selection->delete();
+        //...
+      }
+      //...
+    }
+    else {
+      $this->user = $this->ContentAdmin->record;
+      if ($this->user and $this->request->hasValidData()) {
+        $this->user->delete();
+        //...
+      }
+      //...
+    }
+  }  
 }

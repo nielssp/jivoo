@@ -3,6 +3,11 @@ class CommentsAdminController extends AdminController {
   
   protected $models = array('Comment');
   
+  public function before() {
+    parent::before();
+    $this->Filtering->addPrimary('content');
+  }
+  
   public function index() {
     $this->title = tr('All comments');
     $this->comments = $this->Comment;
@@ -50,4 +55,23 @@ class CommentsAdminController extends AdminController {
     }
     return $this->render('admin/comments/add.html');
   }
+
+  public function delete($commentIds = null) {
+    $this->ContentAdmin->makeSelection($this->Comment, $commentIds);
+    if (isset($this->ContentAdmin->selection)) {
+      if ($this->request->hasValidData()) {
+        $this->ContentAdmin->selection->delete();
+        //...
+      }
+      //...
+    }
+    else {
+      $this->comment = $this->ContentAdmin->record;
+      if ($this->comment and $this->request->hasValidData()) {
+        $this->comment->delete();
+        //...
+      }
+      //...
+    }
+  }  
 }

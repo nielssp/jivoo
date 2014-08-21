@@ -2,9 +2,14 @@
 class PagesAdminController extends AdminController {
   
   protected $models = array('Page');
+
+  public function before() {
+    parent::before();
+    $this->Filtering->addPrimary('title');
+  }
   
   public function index() {
-    $this->title = tr('All pages');
+    $this->title = tr('Pages');
     $this->pages = $this->Page;
     return $this->render();
   }
@@ -58,5 +63,24 @@ class PagesAdminController extends AdminController {
       }
     }
     return $this->render('admin/pages/add.html');
+  }
+
+  public function delete($pageIds = null) {
+    $this->ContentAdmin->makeSelection($this->Page, $pageIds);
+    if (isset($this->ContentAdmin->selection)) {
+      if ($this->request->hasValidData()) {
+        $this->ContentAdmin->selection->delete();
+        //...
+      }
+      //...
+    }
+    else {
+      $this->page = $this->ContentAdmin->record;
+      if ($this->page and $this->request->hasValidData()) {
+        $this->page->delete();
+        //...
+      }
+      //...
+    }
   }
 }

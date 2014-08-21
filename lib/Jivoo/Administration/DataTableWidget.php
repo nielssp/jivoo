@@ -78,8 +78,10 @@ class DataTableWidget extends TraversableWidget {
   }
   
   public function handle($item, $options = array()) {
+    $primaryKey = $this->model->getAiPrimaryKey(); // TODO
     $options = array_merge(array(
       'record' => $item,
+      'id' => $item->$primaryKey,
       'model' => $this->model,
       'columns' => $this->columns,
       'labels' => $this->labels,

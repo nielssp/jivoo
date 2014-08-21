@@ -13,21 +13,31 @@ $widget = $Widget->begin('DataTable', array(
     tr('Draft') => 'published=false'
   ),
   'actions' => array(
-    new RowAction(tr('Edit'), 'edit', 'pencil'),
-    new RowAction(tr('View'), 'view', 'screen'),
-    'publish' => new RowAction(tr('Publish'), 'publish', 'eye'),
-    'unpublish' => new RowAction(tr('Unpublish'), 'unpublish', 'eye-blocked'),
-    new RowAction(tr('Delete'), 'delete', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Pages::edit',
+      'pencil', array(), 'get'),
+    new TableAction(tr('View'), 'Pages::view',
+      'screen', array(), 'get'),
+    'publish' => new TableAction(tr('Publish'), 'Admin::Pages::edit',
+      'eye', array('Page' => array('published' => true))),
+    'unpublish' => new TableAction(tr('Unpublish'), 'Admin::Pages::edit',
+      'eye-blocked', array('Page' => array('published' => false))),
+    new TableAction(tr('Delete'), 'Admin::Pages::delete',
+      'remove', array(), 'post', tr('Delete selected page')),
   ),
   'bulkActions' => array(
-    new BulkAction(tr('Edit'), 'Admin::Pages::bulkEdit', 'pencil'),
-    new BulkAction(tr('Publish'), 'Admin::Pages::bulkEdit', 'eye'),
-    new BulkAction(tr('Unpublish'), 'Admin::Pages::bulkEdit', 'eye-blocked'),
-    new BulkAction(tr('Delete'), 'Admin::Pages::bulkEdit', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Pages::edit',
+      'pencil', array(), 'get'),
+    new TableAction(tr('Publish'), 'Admin::Pages::edit',
+      'eye', array('Page' => array('published' => true))),
+    new TableAction(tr('Unpublish'), 'Admin::Pages::edit',
+      'eye-blocked', array('Page' => array('published' => false))),
+    new TableAction(tr('Delete'), 'Admin::Pages::delete',
+      'remove', array(), 'post', tr('Delete selected pages')),
   )
 ));
 foreach ($widget as $item) {
   echo $widget->handle($item, array(
+    'id' => $item->id,
     'removeActions' => array($item->published ? 'publish' : 'unpublish')
   ));
 }

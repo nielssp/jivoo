@@ -17,34 +17,41 @@ $widget = $Widget->begin('DataTable', array(
     tr('Spam') => 'status=spam'
   ),
   'actions' => array(
-    new RowAction(tr('Edit'), 'edit', 'pencil'),
-    new RowAction(tr('View'), 'view', 'screen'),
-    'approve' => new RowAction(tr('Approve'), 'approve', 'checkmark'),
-    'unapprove' => new RowAction(tr('Unapprove'), 'unapprove', 'close'),
-    'spam' => new RowAction(tr('Spam'), 'spam', 'thumbs-up2'),
-    'notSpam' => new RowAction(tr('Not spam'), 'notSpam', 'thumbs-up'),
-    new RowAction(tr('Delete'), 'delete', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Comments::edit', 
+      'pencil', array(), 'get'),
+    'approve' => new TableAction(tr('Approve'), 'Admin::Comments::edit',
+      'checkmark', array('Comment' => array('status' => 'approved'))),
+    'unapprove' => new TableAction(tr('Unapprove'), 'Admin::Comments::edit',
+      'close', array('Comment' => array('status' => 'pending'))),
+    'spam' => new TableAction(tr('Spam'), 'Admin::Comments::edit',
+      'thumbs-up2', array('Comment' => array('status' => 'spam'))),
+    new TableAction(tr('Delete'), 'Admin::Comments::delete',
+      'remove', array(), 'post', tr('Delete selected comment?')),
   ),
   'bulkActions' => array(
-    new BulkAction(tr('Edit'), 'Admin::Comments::bulkEdit', 'pencil'),
-    new BulkAction(tr('Approve'), 'Admin::Comments::bulkEdit', 'checkmark'),
-    new BulkAction(tr('Unapprove'), 'Admin::Comments::bulkEdit', 'close'),
-    new BulkAction(tr('Spam'), 'Admin::Comments::bulkEdit', 'thumbs-up2'),
-    new BulkAction(tr('Not spam'), 'Admin::Comments::bulkEdit', 'thumbs-up'),
-    new BulkAction(tr('Delete'), 'Admin::Comments::bulkEdit', 'remove'),
+    new TableAction(tr('Edit'), 'Admin::Comments::edit', 
+      'pencil', array(), 'get'),
+    new TableAction(tr('Approve'), 'Admin::Comments::edit',
+      'checkmark', array('Comment' => array('status' => 'approved'))),
+    new TableAction(tr('Unapprove'), 'Admin::Comments::edit',
+      'close', array('Comment' => array('status' => 'pending'))),
+    new TableAction(tr('Spam'), 'Admin::Comments::edit',
+      'thumbs-up2', array('Comment' => array('status' => 'spam'))),
+    new TableAction(tr('Delete'), 'Admin::Comments::delete',
+      'remove', array(), 'post', tr('Delete selected comments?')),
   )
 ));
 foreach ($widget as $item) {
   $removeActions = null;
   switch ($item->status) {
     case 'approved':
-      $removeActions = array('notSpam', 'approve');
+      $removeActions = array('approve');
       break;
     case 'spam':
       $removeActions = array('spam', 'unapprove');
       break;
     case 'pending':
-      $removeActions = array('notSpam', 'unapprove');
+      $removeActions = array('unapprove');
       break;
   }
   echo $widget->handle($item, array(
