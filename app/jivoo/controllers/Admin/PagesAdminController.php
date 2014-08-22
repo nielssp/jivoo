@@ -47,9 +47,7 @@ class PagesAdminController extends AdminController {
     $this->title = tr('Edit page');
     $this->page = $this->Page->find($pageId);
     if ($this->page and $this->request->hasValidData('Page')) {
-      $data = $this->request->data['Page'];
-      $data['published'] = isset($data['published']);
-      $this->page->addData($data);
+      $this->page->addData($this->request->data['Page']);
       if ($this->page->save()) {
         $this->session->flash['success'][] = tr(
           'Page saved. %1',

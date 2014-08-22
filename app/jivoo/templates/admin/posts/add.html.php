@@ -61,6 +61,7 @@
 
   <div class="field">
     <label>Comments</label>
+    <?php echo $Form->hidden('commenting', array('value' => false)); ?>
     <?php echo $Form->checkbox('commenting', true); ?>
     <?php echo $Form->checkboxLabel('commenting', true, tr('Allow comments')); ?>
   </div>

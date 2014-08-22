@@ -49,6 +49,7 @@
 
   <div class="field">
     <label>Status</label>
+    <?php echo $Form->hidden('published', array('value' => false)); ?>
     <?php echo $Form->checkbox('published', true); ?>
     <?php echo $Form->checkboxLabel('published', true, tr('Published')); ?>
   </div>
