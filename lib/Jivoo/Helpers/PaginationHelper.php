@@ -13,8 +13,10 @@ class PaginationHelper extends Helper {
   private $page = 1;
 
   private $offset = 0;
+  
+  private $from = null;
 
-  private $to = 1;
+  private $to = null;
 
   public function paginate(IReadSelection $select, $itemsPerPage = 5) {
     Utilities::precondition($itemsPerPage > 0);
