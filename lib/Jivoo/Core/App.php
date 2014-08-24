@@ -98,10 +98,11 @@ class App implements IEventSubject {
    * @param string $entryScript Name of entry script, e.g. 'index.php'
    * @throws Exception if $appconfig['path'] is not set
    */
-  public function __construct($appConfig, $userPath, $entryScript = 'index.php') {
-    if (!isset($appConfig['path'])) {
-      throw new Exception('Application path not set.');
-    }
+  public function __construct($appPath, $userPath, $entryScript = 'index.php') {
+    $appFile = $appPath . '/app.php';
+    if (!file_exists($appFile))
+      throw new Exception('Invalid application');
+    $appConfig = include $appFile;
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
     $this->m = new Map();
@@ -109,7 +110,7 @@ class App implements IEventSubject {
       dirname($_SERVER['SCRIPT_FILENAME']),
       $userPath
     );
-    $this->paths->app = $appConfig['path'];
+    $this->paths->app = $appPath;
     $this->paths->user = $userPath;
 //     $this->basePath = dirname($_SERVER['SCRIPT_NAME']);
     $this->entryScript = $entryScript;

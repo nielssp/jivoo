@@ -14,7 +14,7 @@ $appName = 'adk';
 require_once 'lib/Jivoo/Core/bootstrap.php';
 
 $app = new App(
-  include 'app/' . $appName . '/app.php',
+  'app/' . $appName,
   'user/' . $appName,
   basename(__FILE__)
 );

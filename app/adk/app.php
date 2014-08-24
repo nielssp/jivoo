@@ -1,6 +1,5 @@
 <?php
 return array(
-  'path' => str_replace('\\', '/', dirname(__FILE__)),
   'name' => 'Jivoo ADK',
   'version' => '0.15-dev-5',
   'website' => 'http://jivoo.org',
