@@ -286,10 +286,14 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   }
 
   public function deleteColumn($table, $column) {
-    // Not implemented
+    throw new Exception(tr('Not implemented'));
   }
 
   public function alterColumn($table, $column, DataType $type) {
+    throw new Exception(tr('Not implemented'));
+  }
+
+  public function renameColumn($table, $column, $newName) {
     throw new Exception(tr('Not implemented'));
   }
 

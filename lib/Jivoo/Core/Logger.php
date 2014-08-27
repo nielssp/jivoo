@@ -79,15 +79,16 @@ class Logger {
   }
 
   /**
-   * Destructor will attempt to save the log
+   * Attempt to save the log
+   * @return boolean True if successful, false otherwise
    */
-  function __destruct() {
+  public function save() {
     $filePointer = fopen($this->file, $this->append ? 'a' : 'w');
     if ($filePointer) {
       foreach (self::$log as $entry) {
         if (($this->level & $entry['type']) != 0) {
-          fwrite($filePointer, tdate('c', $entry['time']));
-          fwrite($filePointer, ' ' . Logger::getType($entry['type']) . ':');
+          fwrite($filePointer, '[' . Logger::getType($entry['type']) . '] ');
+          fwrite($filePointer, tdate('c', $entry['time']) . ':');
           fwrite($filePointer, ' ' . $entry['message']);
           if (isset($entry['file'])) {
             fwrite($filePointer, ' in ' . $entry['file']);
@@ -99,7 +100,9 @@ class Logger {
         }
       }
       fclose($filePointer);
+      return true;
     }
+    return false;
   }
 
   /**
@@ -140,6 +143,15 @@ class Logger {
    */
   public static function getLog() {
     return self::$log;
+  }
+  
+  public static function saveAll() {
+    $status = true;
+    foreach (self::$files as $file) {
+      if (!$file->save())
+        $status = false;
+    }
+    return $status;
   }
 
   /**

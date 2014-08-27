@@ -13,13 +13,14 @@ class AppController extends Controller {
         if ($file[0] == '.')
           continue;
         if (file_exists($this->appDir . '/' . $file . '/app.php'))
-          $this->config['applications'][$file] = $this->appDir . '/' . $file . '/app.php';
+          $this->config['applications'][$file] = $this->appDir . '/' . $file;
       }
     }
 
     $apps = array();
     $appMenu = array();
     foreach ($this->config['applications']->getArray() as $name => $path) {
+      $path = $path . '/app.php';
       if (!file_exists($path)) {
         unset($this->config['applications'][$name]);
         $this->session->flash['warn'][] = tr('%1 no longer exists.', $path);

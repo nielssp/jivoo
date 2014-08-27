@@ -44,7 +44,7 @@ foreach ($widget as $item) {
     'id' => $item->id,
     'cells' => array(
       $Html->link($item->title, $item->action('edit')),
-      $Html->link($item->user->username, $item->user),
+      isset($item->user) ? $Html->link($item->user->username, $item->user) : '',
       $item->status,
       ldate($item->updatedAt)
     ),

@@ -21,7 +21,7 @@
 </div>
 <div class="action-links">
 <?php foreach ($options['actions'] as $action): ?>
-<?php echo $Html->link(h($action->label), $options['record']->action($action->action)); ?>
+<?php echo $Html->link(h($action->label), $this->mergeRoutes($action->route, array($options['id']))); ?>
 <?php endforeach; ?>
 </div>
 </td>

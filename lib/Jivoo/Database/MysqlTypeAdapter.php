@@ -284,6 +284,14 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $this->db->rawQuery($sql);
   }
 
+  public function renameColumn($table, $column, $newName) {
+    $type = $this->db->$table->getSchema()->$column;
+    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
+        . ' ' . $newName;
+    $sql .= ' ' . $this->convertType($type);
+    $this->db->rawQuery($sql);
+  }
+
   public function createIndex($table, $index, $options = array()) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {

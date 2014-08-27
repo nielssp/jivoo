@@ -99,6 +99,8 @@ class App implements IEventSubject {
    * @throws Exception if $appconfig['path'] is not set
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
+    $appPath = realpath($appPath);
+    $userPath = realpath($userPath);
     $appFile = $appPath . '/app.php';
     if (!file_exists($appFile))
       throw new Exception('Invalid application');
@@ -364,13 +366,14 @@ class App implements IEventSubject {
       $this->p('log', $this->environment . '.log'),
       $this->config['core']['logLevel']
     );
+    register_shutdown_function(array('Logger', 'saveAll'));
 
     // I18n system
     I18n::setup($this->config['core'], $this->paths->languages);
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
-    
+        
     // Import modules
     $this->triggerEvent('beforeImportModules');
     $modules = array();
@@ -388,7 +391,7 @@ class App implements IEventSubject {
       Lib::assumeSubclassOf($listener, 'AppListener');
       $this->attachEventListener(new $listener($this));
     }
-
+    
     // Load modules
     $this->triggerEvent('beforeLoadModules');
     foreach ($modules as $module) {

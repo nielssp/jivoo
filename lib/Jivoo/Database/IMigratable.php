@@ -48,6 +48,14 @@ interface IMigratable {
    * @param DataType $type Type
    */
   public function alterColumn($table, $column, DataType $type);
+  
+  /**
+   * Rename a column in a table
+   * @param string $table Table name
+   * @param string $column Column name
+   * @param string $newName New column name
+   */
+  public function renameColumn($table, $column, $newName);
 
   /**
    * Create an index

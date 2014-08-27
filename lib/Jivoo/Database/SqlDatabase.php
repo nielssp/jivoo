@@ -170,6 +170,10 @@ abstract class SqlDatabase extends MigratableDatabase implements ISqlDatabase {
     $this->typeAdapter->alterColumn($table, $column, $type);
   }
 
+  public function renameColumn($table, $column, $newName) {
+    $this->typeAdapter->renameColumn($table, $column, $newName);
+  }
+
   public function createIndex($table, $index, $options = array()) {
     $this->typeAdapter->createIndex($table, $index, $options);
   }
