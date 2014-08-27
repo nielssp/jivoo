@@ -40,7 +40,7 @@ class Assets extends LoadableModule {
   private $sorted = true;
 
   protected function init() {
-    $this->docRoot = $_SERVER['DOCUMENT_ROOT'];
+    $this->docRoot = Utilities::convertPath($_SERVER['DOCUMENT_ROOT']);
     $this->docRootLength = strlen($this->docRoot);
     
     $this->addAssetDir('Core', 'assets');
