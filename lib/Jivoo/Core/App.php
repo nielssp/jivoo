@@ -99,8 +99,8 @@ class App implements IEventSubject {
    * @throws Exception if $appconfig['path'] is not set
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
-    $appPath = realpath($appPath);
-    $userPath = realpath($userPath);
+    $appPath = Utilities::convertPath($appPath);
+    $userPath = Utilities::convertPath($userPath);
     $appFile = $appPath . '/app.php';
     if (!file_exists($appFile))
       throw new Exception('Invalid application');

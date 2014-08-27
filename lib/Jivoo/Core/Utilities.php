@@ -9,6 +9,10 @@ class Utilities {
   private function __construct() {
   }
 
+  public static function convertPath($path) {
+    return str_replace('\\', '/', realpath($path));
+  }
+  
   /**
    * Convert a CamelCase class-name to a lowercase dash-separated name. E.g.
    * from "CamelCase" to "camel-case".

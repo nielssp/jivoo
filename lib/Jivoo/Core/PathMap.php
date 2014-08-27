@@ -52,6 +52,6 @@ class PathMap extends Map {
    * Associate a path with a key. Automatically converts '\\' to '/'.
    */
   public function __set($key, $path) {
-    parent::__set($key, str_replace('\\', '/', realpath($path)));
+    parent::__set($key, Utilities::convertPath($path));
   }
 }
