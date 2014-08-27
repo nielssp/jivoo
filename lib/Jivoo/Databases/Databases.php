@@ -66,3 +66,5 @@ class Databases extends LoadableModule {
     }
   }
 }
+
+class DatabaseNotConfiguredException extends Exception { }
