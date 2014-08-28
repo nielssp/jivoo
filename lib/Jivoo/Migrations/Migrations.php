@@ -17,8 +17,5 @@ class Migrations extends LoadableModule {
     $schema = new Schema();
     $schema->revision = DataType::string(255);
     $schema->setPrimaryKey('revision');
-    if (isset($this->m->Databases->default)) {
-      
-    }
   }
 }

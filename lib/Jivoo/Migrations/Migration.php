@@ -5,7 +5,7 @@ class Migration {
   
   private $operations = array();
   
-  public final function __construct(MigratableDatabase $db) {
+  public final function __construct(LoadableDatabase $db) {
     $this->db = $db;
   }
   
