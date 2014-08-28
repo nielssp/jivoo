@@ -16,8 +16,6 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
    */
   protected $tables = array();
   
-  private $tableNames = array();
-
   /**
    * Destructor
    */
@@ -25,17 +23,8 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     $this->close();
   }
   
-  public function __get($name) {
-    $table = $this->tableName($name);
-    if (!isset($this->tables[$table]))
-      throw new TableNotFoundException(tr(
-        'Table "%1" does not exist.', $name
-      ));
-    return $this->tables[$table];
-  }
-
-  public function __isset($name) {
-    return isset($this->tableNames[$this->tableName($name)]);
+  protected function getTable($table) {
+    return new SqlTable($this->app, $this, $table);
   }
   
   protected function getMigrationAdapter() {
@@ -44,14 +33,6 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   
   protected function setTypeAdapter(IMigrationTypeAdapter $typeAdapter) {
     $this->typeAdapter = $typeAdapter;
-  }
-
-  public function getTable($name, ISchema $schema) {
-    $table = $this->tableName($name);
-    if (!isset($this->tables[$table])) {
-      $this->tables[$table] = new SqlTable($this->app, $this, $name, $schema);
-    }
-    return $this->tables[$table];
   }
 
   public function tableName($name) {

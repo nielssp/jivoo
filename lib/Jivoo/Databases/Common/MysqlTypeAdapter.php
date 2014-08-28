@@ -228,6 +228,21 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       'SHOW TABLES LIKE "' . $this->db->tableName($table) . '"');
     return $result->hasRows();
   }
+  
+  public function getTables() {
+    $prefix = $this->db->tableName('');
+    $prefixLength = strlen($prefix);
+    $result = $this->db->rawQuery('SHOW TABLES');
+    $tables = array();
+    while ($row = $result->fetchRow()) {
+      $name = $row[0];
+      if (substr($name, 0, $prefixLength) == $prefix) {
+        $name = substr($name, $prefixLength);
+        $tables[] = Utilities::underscoresToCamelCase($name);
+      }
+    }
+    return $tables;
+  }
 
   public function createTable(Schema $schema) {
     $sql = 'CREATE TABLE `' . $this->db->tableName($schema->getName()) . '` (';

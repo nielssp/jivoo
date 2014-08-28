@@ -19,10 +19,10 @@ class DatabaseDriversHelper extends Helper {
    * not found
    */
   public function checkDriver($driver) {
-    if (!file_exists($this->p('Databases', $driver . '/' . $driver . 'Database.php'))) {
+    if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
       return null;
     }
-    $meta = FileMeta::read($this->p('Databases', $driver . '/' . $driver . 'Database.php'));
+    $meta = FileMeta::read($this->p('Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'));
     if (!isset($meta['required'])) {
       $meta['required'] = '';
     }
@@ -46,10 +46,10 @@ class DatabaseDriversHelper extends Helper {
    */
   public function listDrivers() {
     $drivers = array();
-    $files = scandir($this->p('Databases', ''));
+    $files = scandir($this->p('Databases', 'Drivers'));
     if ($files !== false) {
       foreach ($files as $driver) {
-        if (is_dir($this->p('Databases', $driver))) {
+        if (is_dir($this->p('Databases', 'Drivers/' . $driver))) {
           if ($driverInfo = $this->checkDriver($driver)) {
             $drivers[$driver] = $driverInfo;
           }

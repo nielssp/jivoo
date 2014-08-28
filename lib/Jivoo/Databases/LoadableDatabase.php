@@ -7,13 +7,33 @@ abstract class LoadableDatabase extends Module implements IDatabase, IMigratable
   
   private $migrationAdapter;
   
+  private $tables;
+  
   public final function __construct(App $app, IDatabaseSchema $schema, $options = array()) {
     parent::__construct($app);
     $this->schema = $schema;
     $this->init($options);
-    $this->tableNames = $this->getTables();
     $this->migrationAdapter = $this->getMigrationAdapter();
+    $this->tableNames = $this->getTables();
+    foreach ($this->tableNames as $table) {
+      $this->tables[$table] = $this->getTable($table);
+    }
   }
+  
+  public function __get($table) {
+    if (!isset($this->tables[$table])) {
+      throw new TableNotFoundException(
+        tr('Table not found: "%1"', $table)
+      );
+    }
+    return $this->tables[$table];
+  }
+  
+  public function __isset($table) {
+    return isset($this->tables[$table]);
+  }
+  
+  protected abstract function getTable($table);
   
   protected abstract function init($options);
   

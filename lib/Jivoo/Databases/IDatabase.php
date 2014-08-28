@@ -35,3 +35,6 @@ class DatabaseSelectFailedException extends Exception {}
  * @package Jivoo\Database
  */
 class DatabaseQueryFailedException extends Exception {}
+
+
+class TableNotFoundException extends Exception { }

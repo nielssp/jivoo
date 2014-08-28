@@ -18,6 +18,7 @@ return array(
     'Jivoo/Editors',
     'Jivoo/Helpers',
     'Jivoo/Databases',
+    'Jivoo/ActiveModels',
     'Jivoo/AccessControl',
     'Jivoo/Administration',
     'Jivoo/Theme',

@@ -70,7 +70,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     if (!isset($this->table))
       $this->table = $this->name;
     $table = $this->table;
-    if (!$this->database->tableExists($table))
+    if (!isset($this->database->$table))
       throw new TableNotFoundException(tr(
         'Table "%1" not found in model %2', $table, $this->name
       ));
@@ -468,6 +468,7 @@ class InvalidRecordClassException extends Exception { }
 class DataSourceNotFoundException extends Exception { }
 class InvalidAssociationException extends Exception { }
 class InvalidMixinException extends Exception { }
+class InvalidModelException extends Exception { }
 
 class ActiveModelEvent extends Event {
   public $record = null;

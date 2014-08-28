@@ -45,7 +45,7 @@ class Utilities {
 
   public static function underscoresToCamelCase($underscores) {
     $words = explode('_', $underscores);
-    $camleCase = '';
+    $camelCase = '';
     foreach ($words as $word)
       $camelCase .= ucfirst($word);
     return $camelCase;

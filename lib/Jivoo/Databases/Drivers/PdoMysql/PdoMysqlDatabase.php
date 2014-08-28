@@ -25,7 +25,6 @@ class PdoMysqlDatabase extends PdoDatabase {
       $this->pdo = new PDO(
         'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
         $options['username'], $options['password']);
-      $this->initTables($this->rawQuery('SHOW TABLES'));
     }
     catch (DatabaseQueryFailedException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
