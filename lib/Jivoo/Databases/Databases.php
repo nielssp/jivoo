@@ -11,24 +11,35 @@
  */
 class Databases extends LoadableModule {
 
-  protected $modules = array('Models');
+  protected $modules = array('Models', 'Helpers');
+  
+  private $schemas = array();
   
   private $drivers = null;
   private $connections = array();
   
   protected function init() {
     $this->drivers = new DatabaseDriversHelper($this->app);
-    if (isset($this->app->appConfig['databases']))
-      $databases = $this->app->appConfig['databases'];
-    else
-      $databases = array('default');
-    foreach ($databases as $database) {
-      if (!isset($this->config[$database])) {
-        throw new DatabaseNotConfiguredException(
-          tr('Database "%1" not configured', $database)
-        );
+    
+    $schemasDir = $this->p('app', 'schemas');
+    if (is_dir($schemasDir)) {
+      Lib::addIncludePath($schemasDir);
+      $files = scandir($schemasDir);
+      if ($files !== false) {
+        foreach ($files as $file) {
+          $split = explode('.', $file);
+          if (isset($split[1]) AND $split[1] == 'php') {
+            $class = $split[0];
+            if (is_subclass_of($class, 'DatabaseSchema')) {
+              // AppSchema...
+            }
+            else {
+              Lib::assumeSubclassOf($class, 'Schema');
+              $this->addSchema(new $class());
+            }
+          }
+        }
       }
-      $this->connections[$database] = $this->connect($this->config[$database]);
     }
   }
    
@@ -42,8 +53,35 @@ class Databases extends LoadableModule {
     return isset($this->connections[$database]);
   }
   
+  public function addSchema(Schema $schema) {
+    $name = $schema->getName();
+    $this->schemas[$name] = $schema;
+  }
   
-  public function connect($options) {
+  public function hasSchema($name) {
+    return isset($this->schemas[$name]);
+  }
+  
+  public function getSchema($name) {
+    if (isset($this->schemas[$name]))
+      return $this->schemas[$name];
+    return null;
+  }
+  
+  public function getSchemas() {
+    return $this->schemas;
+  }
+  
+  public function connect($options, $schemas, $name = null) {
+    if (is_string($options)) {
+      $name = $options;
+      if (!isset($this->config[$name])) {
+        throw new DatabaseNotConfiguredException(
+          tr('Database "%1" not configured', $name)
+        );
+      }
+      $options = $this->config[$name];
+    }
     $driver = $options['driver'];
     $driverInfo = $this->drivers->checkDriver($driver);
     foreach ($driverInfo['requiredOptions'] as $option) {
@@ -57,7 +95,23 @@ class Databases extends LoadableModule {
     try {
       $class = $driver . 'Database';
       Lib::assumeSubclassOf($class, 'LoadableDatabase');
-      return new $class($this->app, $options);
+      $dbSchema = new DatabaseSchema();
+      foreach ($schemas as $schema) {
+        if (is_string($schema)) {
+          $name = $schema;
+          $schema = $this->getSchema($name);
+          if (!isset($schema)) {
+            throw new DatabaseMissingSchemaException(
+              tr('Missing schema: "%1"', $name)
+            );
+          }
+        }
+        $dbSchema->addSchema($schema);
+      }
+      $object = new $class($this->app, $dbSchema, $options);
+      if (isset($name))
+        $this->connections[$name] = $object;
+      return $object;
     }
     catch (DatabaseConnectionFailedException $exception) {
       throw new DatabaseConnectionFailedException(
@@ -68,3 +122,5 @@ class Databases extends LoadableModule {
 }
 
 class DatabaseNotConfiguredException extends Exception { }
+
+class DatabaseMissingSchemaException extends Exception { }

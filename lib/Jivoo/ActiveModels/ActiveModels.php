@@ -9,7 +9,7 @@
  * Active models module
  * @package Jivoo\ActiveModels
  */
-class Databases extends LoadableModule {
+class ActiveModels extends LoadableModule {
 
   protected $modules = array('Models', 'Databases');
   

@@ -185,7 +185,8 @@ class Database extends LoadableModule implements IDatabase, ITableRevisionMap {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
             $class = $split[0];
-            $this->addSchema(new $class());
+            if (is_subclass_of($class, 'Schema'))
+              $this->addSchema(new $class());
           }
         }
       }
