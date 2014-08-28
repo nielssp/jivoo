@@ -245,6 +245,7 @@ class App implements IEventSubject {
       Lib::assumeSubclassOf($name, 'LoadableModule');
       $this->m->$name = new $name($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
+      $this->m->$name->afterLoad();
     }
     return $this->m->$name;
   }

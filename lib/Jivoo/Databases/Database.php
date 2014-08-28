@@ -1,13 +1,13 @@
 <?php
-abstract class Database implements IDatabase, IDatabaseSchema {
+abstract class Database extends Module implements IDatabaseSchema {
   
-  protected $Databases;
+  protected $models = array('Databases');
   
   private $tables = array();
   private $schemas = array();
   
-  public final function __construct(Databases $dbs) {
-    $this->Databases = $dbs;
+  public final function __construct(App $app) {
+    parent::__construct($app);
     $this->init();
   }
   
@@ -17,14 +17,14 @@ abstract class Database implements IDatabase, IDatabaseSchema {
    * Connect to default database and attach all schemas found in schemas folder
    */
   protected function attachDefault() {
-    $this->connect('default', $this->Databases->getSchemas());
+    $this->connect('default', $this->m->Databases->getSchemas());
   }
   
   protected function connect($options, $schemas, $name = null) {
-    $this->Databases->connect($options, $schemas, $name);
+    $this->m->Databases->connect($options, $schemas, $name);
     foreach ($schemas as $schema) {
       if (is_string($schema))
-        $schema = $this->Databases->getSchema($schema);
+        $schema = $this->m->Databases->getSchema($schema);
       $this->tables[] = $schema->getName();
       $this->schemas[$schema->getName()] = $schema; 
     }

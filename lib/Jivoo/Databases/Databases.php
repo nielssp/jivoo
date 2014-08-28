@@ -3,7 +3,9 @@
 // Name           : Databases
 // Description    : The Jivoo database system
 // Author         : apakoh.dk
-// Dependencies   : Jivoo/Models
+// Dependencies   : Jivoo/Models Jivoo/Helpers
+
+Lib::import('Jivoo/Databases/Common');
 
 /**
  * Database module
@@ -14,6 +16,8 @@ class Databases extends LoadableModule {
   protected $modules = array('Models', 'Helpers');
   
   private $schemas = array();
+  
+  private $databaseSchemeClasses = array();
   
   private $drivers = null;
   private $connections = array();
@@ -30,8 +34,8 @@ class Databases extends LoadableModule {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
             $class = $split[0];
-            if (is_subclass_of($class, 'DatabaseSchema')) {
-              // AppSchema...
+            if (is_subclass_of($class, 'Database')) {
+              $this->databaseSchemeClasses[] = $class;
             }
             else {
               Lib::assumeSubclassOf($class, 'Schema');
@@ -40,6 +44,12 @@ class Databases extends LoadableModule {
           }
         }
       }
+    }
+  }
+  
+  public function afterLoad() {
+    foreach ($this->databaseSchemeClasses as $class) {
+      $object = new $class($this->app);
     }
   }
    
@@ -91,7 +101,7 @@ class Databases extends LoadableModule {
         );
       }
     }
-    Lib::import('Jivoo/Database/' . $driver);
+    Lib::import('Jivoo/Databases/Drivers/' . $driver);
     try {
       $class = $driver . 'Database';
       Lib::assumeSubclassOf($class, 'LoadableDatabase');
@@ -111,6 +121,8 @@ class Databases extends LoadableModule {
       $object = new $class($this->app, $dbSchema, $options);
       if (isset($name))
         $this->connections[$name] = $object;
+      foreach ($dbSchema->getTables() as $table)
+        $this->m->Models->setModel($table, $object->$table);
       return $object;
     }
     catch (DatabaseConnectionFailedException $exception) {

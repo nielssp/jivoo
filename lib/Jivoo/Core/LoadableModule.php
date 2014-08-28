@@ -8,9 +8,9 @@ abstract class LoadableModule extends Module {
     $this->init();
   }
 
-  protected function init() {
-
-  }
+  protected function init() { }
+  
+  public function afterLoad() { }
 
   /**
    * Get the absolute path of a file.
