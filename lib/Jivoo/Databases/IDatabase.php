@@ -1,5 +1,9 @@
 <?php
 interface IDatabase {
+  /**
+   * @param string $table Table name
+   * @return Table Table
+   */
   public function __get($table);
   
   public function __isset($table);

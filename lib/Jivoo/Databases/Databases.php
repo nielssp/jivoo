@@ -15,14 +15,34 @@ class Databases extends LoadableModule implements IDatabase {
 
   protected $modules = array('Models', 'Helpers');
 
+  /**
+   * @var DatabaseSchema
+   */
   private $schema = null;
+  
+  /**
+   * @var Schema[]
+   */
   private $schemas = array();
   
+  /**
+   * @var IModel[]
+   */
   private $tables = array();
   
+  /**
+   * @var string[]
+   */
   private $databaseSchemeClasses = array();
   
+  /**
+   * @var DatabaseDriversHelper
+   */
   private $drivers = null;
+  
+  /**
+   * @var LodableDatabase[]
+   */
   private $connections = array();
   
   protected function init() {
@@ -56,8 +76,13 @@ class Databases extends LoadableModule implements IDatabase {
     foreach ($this->databaseSchemeClasses as $class) {
       $object = new $class($this->app);
     }
-  }
-   
+  } 
+  
+  /**
+   * (non-PHPdoc)
+   * @see Module::__get()
+   * @return IModel
+   */
   public function __get($table) {
     if (isset($this->tables[$table]))
       return $this->tables[$table];
@@ -76,25 +101,57 @@ class Databases extends LoadableModule implements IDatabase {
     unset($this->tables[$table]);
   }
   
+  /**
+   * Get current database connections
+   * @return LoadableDatabase[] An associative array of connection-name and
+   * object
+   */
+  public function getConnections() {
+    return $this->connections;
+  }
+  
+  /**
+   * Get an active database connection
+   * @param string $database Database name (e.g. "default")
+   * @return LodableDatabase|null A database or null if not loaded
+   */
   public function getConnection($database) {
     if (isset($this->connections[$database]))
       return $this->connections[$database];
     return null;
   }
   
+  /**
+   * Check if a database connection exists
+   * @param string $database Database name
+   * @return bool True if connection exists
+   */
   public function hasConnection($database) {
     return isset($this->connections[$database]);
   }
   
+  /**
+   * Add a table schema
+   * @param Schema $schema Table schema
+   */
   public function addSchema(Schema $schema) {
     $name = $schema->getName();
     $this->schemas[$name] = $schema;
   }
   
+  /**
+   * Check if a schema exists
+   * @param string $name Schema/table name
+   * @return bool True if schema exists
+   */
   public function hasSchema($name) {
     return isset($this->schemas[$name]);
   }
   
+  /**
+   * Get schema of a table or combined database schema
+   * @see IDatabase::getSchema()
+   */
   public function getSchema($name = null) {
     if (!isset($name))
       return $this->schema;
@@ -103,10 +160,29 @@ class Databases extends LoadableModule implements IDatabase {
     return null;
   }
   
+  /**
+   * Get schemas
+   * @return Schema[] Associative array of schema/table names and schemas
+   */
   public function getSchemas() {
     return $this->schemas;
   }
   
+  /**
+   * Make a database connection
+   * @param array $options Associative array of database settings
+   * @param (string|Schema)[] $schemas An array of table/schema-names and
+   * schemas to be attached to the database 
+   * @param string $name An optional name for database connection, if the name
+   * is provided, the connection and the associated tables will be added to 
+   * this Databases-object 
+   * @throws DatabaseNotConfiguredException If the $options-array does not
+   * contain the necessary information for a connection to be made
+   * @throws DatabaseMissingSchemaException If one of the schema names listed
+   * in the $schemas-parameter is unknown
+   * @throws DatabaseConnectionFailedException If the connection fails
+   * @return LoadableDatabase A database object
+   */
   public function connect($options, $schemas, $name = null) {
     if (is_string($options)) {
       $name = $options;
@@ -144,10 +220,11 @@ class Databases extends LoadableModule implements IDatabase {
         $dbSchema->addSchema($schema);
       }
       $object = new $class($this->app, $dbSchema, $options);
-      if (isset($name))
+      if (isset($name)) {
         $this->connections[$name] = $object;
-      foreach ($dbSchema->getTables() as $table)
-        $this->tables[$table] = $object->$table;
+        foreach ($dbSchema->getTables() as $table)
+          $this->tables[$table] = $object->$table;
+      }
       return $object;
     }
     catch (DatabaseConnectionFailedException $exception) {
@@ -178,6 +255,12 @@ class Databases extends LoadableModule implements IDatabase {
   }
 }
 
+/**
+ * Invalid database configuration
+ */
 class DatabaseNotConfiguredException extends Exception { }
 
+/**
+ * Unknown table schema 
+ */
 class DatabaseMissingSchemaException extends Exception { }

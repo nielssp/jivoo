@@ -15,15 +15,15 @@ abstract class LoadableDatabase extends Module implements IDatabase, IMigratable
     $this->init($options);
     $this->migrationAdapter = $this->getMigrationAdapter();
     $this->tableNames = $this->getTables();
-//     foreach ($this->schema->getTables() as $table) {
-//       if (!in_array($table, $this->tableNames))
-//         $this->createTable($this->schema->getSchema($table));
-//     }
     foreach ($this->tableNames as $table) {
       $this->tables[$table] = $this->getTable($table);
     }
   }
-  
+
+  /**
+   * @param string $table Table name
+   * @return Table Table
+   */
   public function __get($table) {
     if (!isset($this->tables[$table])) {
       throw new TableNotFoundException(
@@ -75,7 +75,9 @@ abstract class LoadableDatabase extends Module implements IDatabase, IMigratable
   public function createTable(Schema $schema) {
     $this->migrationAdapter->createTable($schema);
     $this->schema->addSchema($schema);
-    $this->tableNames[] = $schema->getName();
+    $table = $schema->getName();
+    $this->tableNames[] = $table;
+    $this->tables[$table] = $this->getTable($table);
   }
   
   public function renameTable($table, $newName) {
