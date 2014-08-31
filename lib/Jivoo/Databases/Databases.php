@@ -86,11 +86,25 @@ class Databases extends LoadableModule implements IDatabase {
   public function __get($table) {
     if (isset($this->tables[$table]))
       return $this->tables[$table];
+    foreach ($this->connections as $connection) {
+      if (isset($connection->$table)) {
+        $this->tables[$table] = $connection->$table;
+        return $this->tables[$table];
+      }
+    }
     return parent::__get($table);
   }
   
   public function __isset($table) {
-    return isset($this->tables[$table]);
+    if (isset($this->tables[$table]))
+      return true;
+    foreach ($this->connections as $connection) {
+      if (isset($connection->$table)) {
+        $this->tables[$table] = $connection->$table;
+        return true;
+      }
+    }
+    return false;
   }
   
   public function __set($table, IModel $model) {
@@ -222,8 +236,6 @@ class Databases extends LoadableModule implements IDatabase {
       $object = new $class($this->app, $dbSchema, $options);
       if (isset($name)) {
         $this->connections[$name] = $object;
-        foreach ($dbSchema->getTables() as $table)
-          $this->tables[$table] = $object->$table;
       }
       return $object;
     }
