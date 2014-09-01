@@ -1,5 +1,5 @@
 <?php
-abstract class LoadableDatabase extends Module implements IDatabase, IMigratable {
+abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   
   private $schema;
   
