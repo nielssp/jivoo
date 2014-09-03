@@ -9,7 +9,7 @@
 */
 class AuthSetupController extends SetupController {
 
-  protected $modules = array('Database');
+  protected $modules = array('Databases', 'ActiveModels');
   
   protected $helpers = array('Html', 'Form');
 

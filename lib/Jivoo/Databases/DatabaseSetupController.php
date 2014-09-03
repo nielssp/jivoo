@@ -10,7 +10,7 @@ class DatabaseSetupController extends SetupController {
   protected $helpers = array('Html', 'Form', 'DatabaseDrivers');
 
   public function before() {
-    $this->config = $this->config['Database'];
+    $this->config = $this->config['Databases']['default'];
     $this->config->defaults = array(
       'server' => 'localhost',
       'database' => strtolower($this->app->name),
@@ -24,7 +24,7 @@ class DatabaseSetupController extends SetupController {
   public function selectDriver() {
     if (isset($this->config['driver']))
       return $this->Setup->done();
-    $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
+    $this->title = tr('Welcome to %1', $this->app->name);
     $this->drivers = $this->DatabaseDrivers->listDrivers();
     if ($this->request->hasValidData()) {
       foreach ($this->drivers as $driver) {
@@ -71,7 +71,7 @@ class DatabaseSetupController extends SetupController {
       else
         return $this->saveConfig();
     }
-    $this->title = tr('Welcome to %1', $this->config->parent['app']['name']);
+    $this->title = tr('Welcome to %1', $this->app->name);
     $this->setupForm = new Form('setup');
     $this->exception = null;
     foreach ($this->driver['requiredOptions'] as $option) {

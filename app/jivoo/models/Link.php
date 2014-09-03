@@ -127,6 +127,9 @@ class Link extends ActiveModel {
   }
   
   public function install() {
+    if ($this->count() != 0)
+      return;
+    
     $link = $this->create();
     $link->menu = 'main';
     $link->position = 0;

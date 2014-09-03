@@ -41,6 +41,9 @@ class Page extends ActiveModel {
   }
   
   public function install() {
+    if ($this->count() != 0)
+      return;
+
     $page = $this->create();
     $page->title = 'About';
     $page->name = 'about';

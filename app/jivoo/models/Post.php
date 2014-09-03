@@ -75,6 +75,9 @@ class Post extends ActiveModel {
   }
   
   public function install() {
+    if ($this->count() != 0)
+      return;
+
     $post = $this->create();
     $post->title = tr('Welcome to Jivoo');
     $post->name = 'welcome-to-jivoo';
