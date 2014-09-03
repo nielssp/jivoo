@@ -5,12 +5,12 @@
  * @property-read HtmlHelper $Html Html helper
  * @property-read FormHelper $Form Form helper
  */
-class DatabaseSetupController extends SetupController implements ITableRevisionMap {
+class DatabaseSetupController extends SetupController {
 
   protected $helpers = array('Html', 'Form', 'DatabaseDrivers');
 
   public function before() {
-    $this->config = $this->config['Databases']['default'];
+    $this->config = $this->config['Database'];
     $this->config->defaults = array(
       'server' => 'localhost',
       'database' => strtolower($this->app->name),
@@ -92,9 +92,10 @@ class DatabaseSetupController extends SetupController implements ITableRevisionM
       else if ($this->setupForm->isValid()) {
         $driver = $this->driver['driver'];
         $class = $driver . 'Database';
-        Lib::import('Jivoo/Database/' . $driver);
+        Lib::import('Jivoo/Databases/Common');
+        Lib::import('Jivoo/Databases/Drivers/' . $driver);
         try {
-          new $class($this->app, $this, $this->request->data['setup']);
+          new $class($this->app, new DatabaseSchema(), $this->request->data['setup']);
           $options = array_flip(
             array_merge($this->driver['requiredOptions'],
               $this->driver['optionalOptions']
@@ -124,5 +125,8 @@ class DatabaseSetupController extends SetupController implements ITableRevisionM
     }
     return $this->render();
   }
- 
+  
+  public function getRevision($table) {
+    return 0;
+  }
 }
