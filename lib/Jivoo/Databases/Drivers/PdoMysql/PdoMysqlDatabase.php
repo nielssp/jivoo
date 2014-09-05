@@ -22,9 +22,16 @@ class PdoMysqlDatabase extends PdoDatabase {
       $this->tablePrefix = $options['tablePrefix'];
     }
     try {
-      $this->pdo = new PDO(
-        'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
-        $options['username'], $options['password']);
+      if (isset($options['password'])) {
+        $this->pdo = new PDO(
+          'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
+          $options['username'], $options['password']);
+      }
+      else {
+        $this->pdo = new PDO(
+          'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
+          $options['username']);
+      }
     }
     catch (DatabaseQueryFailedException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
