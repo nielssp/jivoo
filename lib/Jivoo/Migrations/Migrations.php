@@ -37,14 +37,18 @@ class Migrations extends LoadableModule {
     $this->schema->revision = DataType::string(255);
     $this->schema->setPrimaryKey('revision');
     
+    $runMigration = false;
+    
     // Check (and migrate) all loaded databases
     foreach ($this->m->Databases->getConnections() as $name => $connection) {
       if ($this->config['indicator'] == 'version') {
-        if ($this->app->version == $this->config['versions'][$name])
-          continue;
+        if ($this->app->version != $this->config['versions'][$name])
+          $runMigration = true;
       }
       $this->check($connection);
-      $this->config['versions'][$name] = $this->app->version;
+    }
+    if ($runMigration) {
+      $this->runMigration();
     }
   }
   
@@ -71,6 +75,11 @@ class Migrations extends LoadableModule {
       }
     }
     return $this->migrations;
+  }
+  
+  
+  public function checkDatabase(IMigratableDatabase $db, $migrationDir) {
+    
   }
   
   /**
@@ -110,7 +119,6 @@ class Migrations extends LoadableModule {
     }
   }
   
-  public function runMigration(IMigratableDatabase $db, $migration) {
-    
+  public function runMigration() {
   }
 }
