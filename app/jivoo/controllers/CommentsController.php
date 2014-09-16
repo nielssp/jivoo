@@ -13,6 +13,26 @@ class CommentsController extends AppController {
   public function index($post) {
     return $this->render('not-implemented.html');
   }
+  
+  public function view($commentId) {
+    $comment = $this->Comment->find($commentId);
+    if (!$comment or $comment->status != 'approved')
+      throw new NotFoundException();
+    $post = $comment->post;
+    $position = $post->comments
+      ->where('status = %CommentStatus', 'approved')
+      ->orderBy('createdAt')
+      ->rowNumber($comment);
+    echo $position;
+    $page = ceil($position / 10);
+    return $this->redirect(array(
+      'controller' => 'Posts',
+      'action' => 'view',
+      'parameters' => array($post->id),
+      'query' => array('page' => $page),
+      'fragment' => 'comment' . $comment->id
+    ));
+  }
 
   public function add($post) {
     if ($this->Auth->hasPermission('Comments.add')) {

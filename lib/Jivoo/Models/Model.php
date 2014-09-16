@@ -105,7 +105,7 @@ abstract class Model extends Module implements IModel {
         $condition->and($column . ' < ' . $type, $record->$column);
       }
     }
-    return $selection->and($condition)->count();
+    return $selection->and($condition)->count() + 1;
   }
 
   /**
