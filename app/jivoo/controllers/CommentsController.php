@@ -14,16 +14,17 @@ class CommentsController extends AppController {
     return $this->render('not-implemented.html');
   }
   
-  public function view($commentId) {
-    $comment = $this->Comment->find($commentId);
-    if (!$comment or $comment->status != 'approved')
+  public function view($postId, $commentId) {
+    $post = $this->Post->find($postId);
+    if (!$post or $post->status != 'published')
       throw new NotFoundException();
-    $post = $comment->post;
+    $comment = $post->comments->find($commentId);
+    if (!comment or $comment->status != 'approved')
+      return $this->redirect($post);
     $position = $post->comments
       ->where('status = %CommentStatus', 'approved')
       ->orderBy('createdAt')
       ->rowNumber($comment);
-    echo $position;
     $page = ceil($position / 10);
     return $this->redirect(array(
       'controller' => 'Posts',

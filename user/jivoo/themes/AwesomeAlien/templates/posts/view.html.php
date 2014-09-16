@@ -83,6 +83,7 @@ foreach ($comments as $comment):
 <div class="byline">
 <?php
     echo sdate($comment->createdAt);
+    echo ' | ' . $Html->link(tr('Permalink'), $comment);
     echo ' | <a href="#">' . tr('Reply') . '</a>';
 ?>
 </div>

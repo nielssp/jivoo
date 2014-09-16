@@ -49,7 +49,7 @@ class Comment extends ActiveModel {
     return array(
       'controller' => 'Comments',
       'action' => 'view',
-      'parameters' => array($record->id)
+      'parameters' => array($record->postId, $record->id)
     );
   }
 
