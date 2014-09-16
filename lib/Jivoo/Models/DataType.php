@@ -92,6 +92,16 @@ class DataType {
         return $this->$property;
       case 'notNull':
         return !$this->null;
+      case 'placeholder':
+        switch ($this->type) {
+          case self::INTEGER: return '%i';
+          case self::STRING: return '%s';
+          case self::TEXT: return '%t';
+          case self::BOOLEAN: return '%b';
+          case self::FLOAT: return '%f';
+          case self::DATE: return '%date';
+          case self::DATETIME: return '%d';
+        }
     }
     if ($this->type == self::STRING) {
       switch ($property) {

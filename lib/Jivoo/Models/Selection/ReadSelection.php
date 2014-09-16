@@ -163,6 +163,10 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     return $this->model->countSelection($this);
   }
   
+  public function rowNumber($record) {
+    return $this->model->rowNumberSelection($this, $record);
+  }
+  
   public function toArray() {
     $array = array();
     foreach ($this as $record)

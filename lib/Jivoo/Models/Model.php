@@ -70,6 +70,10 @@ abstract class Model extends Module implements IModel {
   public function count() {
     return $this->countSelection(new ReadSelection($this));
   }
+
+  public function rowNumber(IRecord $record) {
+    return $this->rowNumberSelection(new ReadSelection($this), $record);
+  } 
   
   public function first() {
     return $this->firstSelection(new ReadSelection($this));
@@ -84,6 +88,24 @@ abstract class Model extends Module implements IModel {
     foreach ($this as $record)
       $array[] = $record;
     return $array;
+  }
+  
+  public function rowNumberSelection(ReadSelection $selection, IRecord $record) {
+    if (empty($selection->orderBy)) {
+      throw new Exception(tr('Can\'t find row number in selection without ordering'));
+    }
+    $condition = new Condition();
+    foreach ($selection->orderBy as $orderBy) {
+      $column = $orderBy['column'];
+      $type = $this->getType($column)->placeholder;
+      if ($orderBy['descending']) {
+        $condition->and($column . ' > ' . $type, $record->$column);
+      }
+      else {
+        $condition->and($column . ' < ' . $type, $record->$column);
+      }
+    }
+    return $selection->and($condition)->count();
   }
 
   /**

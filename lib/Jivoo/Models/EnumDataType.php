@@ -1,10 +1,12 @@
 <?php
 class EnumDataType extends DataType {
   
+  private $class;
   private $values;
   
   protected function __construct($enumClass, $null = false, $default = null) {
     parent::__construct(DataType::ENUM, $null, $default);
+    $this->class = $enumClass;
     $this->values = Enum::getValues($enumClass);
     if (isset($default) and !in_array($default, $this->values)) {
       throw new InvalidArgumentException(tr(
@@ -16,6 +18,8 @@ class EnumDataType extends DataType {
   public function __get($property) {
     if ($property == 'values')
       return $this->values;
+    if ($property == 'placeholder')
+      return '%' . $this->class;
     return parent::__get($property);
   }
 

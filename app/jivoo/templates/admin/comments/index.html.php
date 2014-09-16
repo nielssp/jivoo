@@ -58,7 +58,8 @@ foreach ($widget as $item) {
     'id' => $item->id,
     'cells' => array(
       $item->content,
-      $Html->link($item->post->title, $item->post),
+      isset($item->post->comments) ? $Html->link($item->post->title, $item->post)
+        . ' #' . $item->post->comments->where('status = %CommentStatus', 'approved')->orderBy('createdAt')->rowNumber($item) : '',
       $item->status,
       ldate($item->createdAt)
     ),

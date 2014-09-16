@@ -56,6 +56,10 @@ class Selection extends BasicSelection implements ISelection {
     return $this->copyBasicAttr(new ReadSelection($this->model))->count();
   }
   
+  public function rowNumber(IRecord $record) {
+    return $this->copyBasicAttr(new ReadSelection($this->model))->rowNumber($record);
+  }
+  
   public function toArray() {
     return $this->copyBasicAttr(new ReadSelection($this->model))->toArray();
   }
