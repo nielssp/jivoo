@@ -1,0 +1,57 @@
+{
+  "name": "Jivoo",
+  "version": "0.15-dev-5",
+  "website": "http://jivoo.org",
+  "defaultLanguage": "en",
+  "minPhpVersion": "5.2.0",
+  "sessionPrefix": "jivoo_",
+  "extensions": ["Jquery", "JqueryHotkeys", "JqueryUi", "Tinymce", "BasicWidgets", "Html5shiv", "Respond"],
+  "import": [
+    "Jivoo/Core",
+    "Jivoo/Routing",
+    "Jivoo/Assets",
+    "Jivoo/Templates",
+    "Jivoo/Controllers",
+    "Jivoo/Setup",
+    "Jivoo/Models", 
+    "Jivoo/Editors",
+    "Jivoo/Helpers",
+    "Jivoo/Databases",
+    "Jivoo/Migrations",
+    "Jivoo/ActiveModels",
+    "Jivoo/AccessControl",
+    "Jivoo/Administration",
+    "Jivoo/Theme",
+    "Jivoo/Extensions",
+    "Jivoo/Widgets"
+  ],
+  "setup": [
+    "Setup::Database::selectDriver",
+    "Setup::Database::setupDriver",
+    "Setup::Auth::createUser"
+  ],
+  "listeners": [
+    "PageRouting",
+    "PostRouting",
+    "AdminMenu"
+  ],
+  "defaultConfig": {
+    "blog": {
+      "fancyPermalinks": true,
+      "permalink": "%year%/%month%/%name%",
+      "comments": {
+        "sorting": "desc",
+        "childSorting": "asc",
+        "display": "thread",
+        "levelLimit": 2,
+        "editor": {
+          "name": "HtmlEditor"
+        }
+      },
+      "commentingDefault": true,
+      "anonymousCommenting": false,
+      "commentApproval": false,
+      "editor": {"name": "TinymceEditor"}
+    }
+  }
+}
