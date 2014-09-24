@@ -1,6 +1,5 @@
 <?php $this->extend('layout.html'); ?>
 <div class="post">
-
 <h1><?php echo h($post->title); ?></h1>
 <?php if ($post->status != 'published') : ?>
 <p><strong>This post is a draft and is not visible to the pulic.</strong></p>
@@ -39,30 +38,22 @@ if ($Pagination->getCount() > 0) :
     $Pagination->getCount()); ?></h2>
 
 <ul class="comments">
-<?php
-$level = 0;
-foreach ($comments as $comment):
-  if (false && isset($comment->level)) {
-    if ($level == $comment->level) {
-      echo '</li>';
-    }
-    else if ($level > $comment->level) {
-      for ($i = $comment->level; $level > $i; $i++)
-        echo '</li></ul>';
-      echo '</li>';
-    }
-    if ($level >= 0 AND $level < $comment->level)
-      echo '<ul>';
-  }
-?>
+
+<?php foreach ($comments as $comment): ?>
   
-<li>
+<li<?php
+$title = '';
+if (isset($comment->user) and $comment->user == $post->user) {
+  echo ' class="op"';
+  $title = ' <span class="title">' . tr('Post author') . '</span>';
+}
+?>>
 <div class="comment-avatar">
 <img src="http://1.gravatar.com/avatar/<?php
   if (!empty($comment->email))
     echo md5($comment->email);
   else
-      echo md5($comment->ip);
+    echo md5($comment->ip);
 ?>?s=40&amp;d=monsterid&amp;r=G"
    alt="<?php echo h($comment->author); ?>"/>
 </div>
@@ -78,26 +69,22 @@ foreach ($comments as $comment):
     else
       echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
   }
+  echo $title;
 ?></div>
   <p><?php echo $comment->content; ?></p>
 <div class="byline">
 <?php
-    echo sdate($comment->createdAt);
+    echo '<date datetime="' . date('c', $comment->createdAt) . '">'
+          . sdate($comment->createdAt) . '</date>';
     echo ' | ' . $Html->link(tr('Permalink'), $comment);
-    echo ' | <a href="#">' . tr('Reply') . '</a>';
+    echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
 ?>
 </div>
 </div>
 <div class="clear"></div>
-<?php
-  if (false && isset($comment->level))
-    $level = $comment->level;
-  else
-    echo '</li>';
-endforeach;
-for ($i = $level; $i >= 0; $i--)
-  echo '</li></ul>';
-?>
+<?php endforeach; ?>
+
+</ul>
 
 <div class="pagination">
   <?php if (!$Pagination->isFirst())
@@ -113,26 +100,27 @@ endif;
 
 <?php if ($post->commenting) : ?>
 
+<div id="comment-form-container">
+
+<div id="comment-form">
+
 <h2 id="comment"><?php echo tr('Leave a comment'); ?></h2>
-<?php if (!isset($newComment)) : ?></li>
+<?php if (!isset($newComment)) : ?>
 
 <p><?php echo tr('Please log in to leave a comment.'); ?></p>
-<?php 
-  else : ?>
+<?php else : ?>
 
-  <?php echo $Form->formFor($newComment, array('fragment' => 'comment')); ?>
+<?php echo $Form->formFor($newComment, array('fragment' => 'comment')); ?>
 
-<p><?php echo tr('Have something to say? Say it!'); ?></p>
 <?php if ($user) : ?>
 
 <div class="field">
 <label>
 <?php echo tr('Logged in as %1.', h($user->username)) ?>
 </label>
-(<?php echo $Html->link(tr('Log out?'), 'Backend::logout') ?>)
+(<?php echo $Html->link(tr('Log out?'), 'Admin::logout') ?>)
 </div>
-<?php 
-    else : ?>
+<?php else : ?>
 
 <div class="field">
 <?php echo $Form->label('author'); ?>
@@ -163,8 +151,14 @@ endif;
 <?php echo $Form->error('content'); ?>
 </div>
 
-<p><?php echo $Form->submit(tr('Post comment')); ?></p>
+<p><?php echo $Form->submit(tr('Post comment')); ?>
+<?php echo $Form->submit(tr('Cancel'), array('name' => 'cancel')); ?>
+</p>
 <?php echo $Form->end(); ?>
+
+</div>
+
+</div>
 
 <?php endif; ?>
 

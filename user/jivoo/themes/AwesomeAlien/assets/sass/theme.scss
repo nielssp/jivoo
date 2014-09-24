@@ -456,14 +456,19 @@ div.pagination {
   color: #D81413;
 }
 
+#comment-form {
+  input[name="cancel"] {
+    display: none;
+  }
+}
+
 .comments {
   margin-left: 0;
   
   li {
     list-style-type: none;
-    border-bottom: 1px solid silver;
-    margin-top: 20px;
-    padding-bottom: 20px;
+    border-top: 1px solid #ddd;
+    padding: 20px 0;
     
     ul {
       margin-left: 50px;
@@ -473,6 +478,17 @@ div.pagination {
       border: 0;
       padding-bottom: 0;
       font-size: 1em;
+    }
+    &:first-child {
+      border: none;
+    }
+    &.op {
+      .author {
+        .title {
+          background-color: $color1;
+          color: #fff;
+        }
+      }
     }
   }
   
@@ -488,6 +504,25 @@ div.pagination {
     .author {
       font-size: 1.1em;
       margin-bottom: 5px;
+      font-weight: bold;
+
+      .title {
+        font-weight: normal;
+        font-size: 0.6em;
+        padding: 2px 5px;
+        border-radius: 3px;
+        margin-left: 10px;
+      }
+    }
+
+    #comment-form {
+      margin-top: 20px;
+      h2 {
+        display: none;
+      }
+      input[name="cancel"] {
+        display: inline;
+      }
     }
   }
 }

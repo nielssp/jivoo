@@ -66,6 +66,22 @@ function decode_config2() {
   return json_decode($content, true);
 }
 
+function serialize_config($data) {
+  file_put_contents('config/cached', serialize($data));
+}
+
+function unserialize_config() {
+  return unserialize(file_get_contents('config/cached'));
+}
+
+function serialize_config2($data) {
+  file_put_contents('config/cached2.php', '<?php return ' . var_export($data, true) . ';');
+}
+
+function unserialize_config2() {
+  return include 'config/cached2.php';
+}
+
 function decode_yaml_config() {
   return spyc_load_file('./config/test-config.yaml');
 }
@@ -120,6 +136,10 @@ $r4 = $test->testFunction($rounds, 'decode_yaml_config');
 $test->testFunction($rounds, 'include_config2');
 $test->testFunction($rounds, 'eval_config2');
 $test->testFunction($rounds, 'decode_config2');
+$test->testFunction($rounds, 'serialize_config', $testData);
+$test->testFunction($rounds, 'unserialize_config');
+$test->testFunction($rounds, 'serialize_config2', $testData);
+$test->testFunction($rounds, 'unserialize_config2');
 $test->dump($r1 == $r2, 'r1 == r2');
 $test->dump($r2 == $r3, 'r2 == r3');
 $test->dump($r3 == $r4, 'r3 == r4');

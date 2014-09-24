@@ -1,5 +1,6 @@
 <?php
 $this->script('jquery.js');
+$this->script('theme.js');
 $this->style('theme.css');
 ?>
 <!DOCTYPE html>

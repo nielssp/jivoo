@@ -35,9 +35,26 @@
 <div class="settings">
 
   <div class="field">
+    <?php echo $Form->label('author'); ?>
+    <?php echo $Form->text('author'); ?>
+  </div>
+  
+  <div class="field">
+    <?php echo $Form->label('email'); ?>
+    <?php echo $Form->text('email'); ?>
+  </div>
+  
+  <div class="field">
+    <?php echo $Form->label('website'); ?>
+    <?php echo $Form->text('website'); ?>
+  </div>
+
+  <div class="field">
     <?php echo $Form->label('status'); ?>
     <?php echo $Form->selectOf('status'); ?>
   </div>
+  
+  <p><?php echo tr('IP address: %1', $comment->ip); ?></p>
 </div>
 
 

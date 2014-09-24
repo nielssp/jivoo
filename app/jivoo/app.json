@@ -5,7 +5,7 @@
   "defaultLanguage": "en",
   "minPhpVersion": "5.2.0",
   "sessionPrefix": "jivoo_",
-  "extensions": ["Jquery", "JqueryHotkeys", "JqueryUi", "Tinymce", "BasicWidgets", "Html5shiv", "Respond"],
+  "extensions": ["Jquery"  "JqueryHotkeys"  "JqueryUi"  "Tinymce"  "BasicWidgets"  "Html5shiv"  "Respond"],
   "import": [
     "Jivoo/Core",
     "Jivoo/Routing",
@@ -13,7 +13,7 @@
     "Jivoo/Templates",
     "Jivoo/Controllers",
     "Jivoo/Setup",
-    "Jivoo/Models", 
+    "Jivoo/Models",
     "Jivoo/Editors",
     "Jivoo/Helpers",
     "Jivoo/Databases",
@@ -51,7 +51,7 @@
       "commentingDefault": true,
       "anonymousCommenting": false,
       "commentApproval": false,
-      "editor": {"name": "TinymceEditor"}
+      "editor": { "name": "TinymceEditor" }
     }
   }
 }
