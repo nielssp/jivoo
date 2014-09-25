@@ -74,7 +74,7 @@ if (isset($comment->user) and $comment->user == $post->user) {
   echo $title;
 ?>
 <?php if (isset($comment->parent)): ?>
-<span class="parent"><?php echo tr('In reply to %1', $Html->link(tr('comment #%1', $comment->parent->id), $comment->parent)); ?></span>
+<span class="parent"><?php echo tr('In reply to %1', $Html->link(h($comment->parent->author), $comment->parent)); ?></span>
 <?php endif; ?>
 </div>
   <p><?php echo $comment->content; ?></p>
