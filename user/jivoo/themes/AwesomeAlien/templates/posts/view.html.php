@@ -30,6 +30,8 @@ else {
 ); ?>
 </div>
 
+<?php $replying = false; ?>
+
 </div>
 <?php
 if ($Pagination->getCount() > 0) :
@@ -47,17 +49,17 @@ if (isset($comment->user) and $comment->user == $post->user) {
   echo ' class="op"';
   $title = ' <span class="title">' . tr('Post author') . '</span>';
 }
-?>>
+?> id="comment<?php echo $comment->id; ?>">
 <div class="comment-avatar">
 <img src="http://1.gravatar.com/avatar/<?php
   if (!empty($comment->email))
     echo md5($comment->email);
   else
     echo md5($comment->ip);
-?>?s=40&amp;d=monsterid&amp;r=G"
+?>?s=50&amp;d=monsterid&amp;r=G"
    alt="<?php echo h($comment->author); ?>"/>
 </div>
-<div class="comment" id="comment<?php echo $comment->id; ?>">
+<div class="comment" >
 <div class="author"><?php
   if (empty($comment->author)) {
     echo tr('Anonymous');
@@ -74,12 +76,18 @@ if (isset($comment->user) and $comment->user == $post->user) {
   <p><?php echo $comment->content; ?></p>
 <div class="byline">
 <?php
-    echo '<date datetime="' . date('c', $comment->createdAt) . '">'
-          . sdate($comment->createdAt) . '</date>';
-    echo ' | ' . $Html->link(tr('Permalink'), $comment);
-    echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
+echo '<date datetime="' . date('c', $comment->createdAt) . '">'
+      . sdate($comment->createdAt) . '</date>';
+echo ' | ' . $Html->link(tr('Permalink'), $comment);
+echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
 ?>
 </div>
+
+<?php if (isset($newComment) and $newComment->parentId == $comment->id): ?>
+<?php echo $this->embed('comments/add.html'); ?>
+<?php $replying = true; ?>
+<?php endif; ?>
+
 </div>
 <div class="clear"></div>
 <?php endforeach; ?>
@@ -102,65 +110,12 @@ endif;
 
 <div id="comment-form-container">
 
-<div id="comment-form">
-
-<h2 id="comment"><?php echo tr('Leave a comment'); ?></h2>
-<?php if (!isset($newComment)) : ?>
-
-<p><?php echo tr('Please log in to leave a comment.'); ?></p>
-<?php else : ?>
-
-<?php echo $Form->formFor($newComment, array('fragment' => 'comment')); ?>
-
-<?php if ($user) : ?>
-
-<div class="field">
-<label>
-<?php echo tr('Logged in as %1.', h($user->username)) ?>
-</label>
-(<?php echo $Html->link(tr('Log out?'), 'Admin::logout') ?>)
-</div>
-<?php else : ?>
-
-<div class="field">
-<?php echo $Form->label('author'); ?>
-<?php echo $Form->ifRequired('author', '<span class="star">*</span>'); ?>
-<?php echo $Form->text('author'); ?>
-<?php echo $Form->error('author'); ?>
-</div>
-
-<div class="field">
-<?php echo $Form->label('email'); ?>
-<?php echo $Form->ifRequired('email', '<span class="star">*</span>'); ?>
-<?php echo $Form->text('email'); ?>
-<?php echo $Form->error('email'); ?>
-</div>
-
-<div class="field">
-<?php echo $Form->label('website'); ?>
-<?php echo $Form->ifRequired('website', '<span class="star">*</span>'); ?>
-<?php echo $Form->text('website'); ?>
-<?php echo $Form->error('website'); ?>
-</div>
+<?php if (!$replying): ?>
+<?php echo $this->embed('comments/add.html'); ?>
 <?php endif; ?>
 
-<div class="field">
-<?php echo $Form->label('content'); ?>
-<?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
-<?php echo $Form->textarea('content'); ?>
-<?php echo $Form->error('content'); ?>
 </div>
 
-<p><?php echo $Form->submit(tr('Post comment')); ?>
-<?php echo $Form->submit(tr('Cancel'), array('name' => 'cancel')); ?>
-</p>
-<?php echo $Form->end(); ?>
-
-</div>
-
-</div>
-
-<?php endif; ?>
 
 <?php endif; ?>
 

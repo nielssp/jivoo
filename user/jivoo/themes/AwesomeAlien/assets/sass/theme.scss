@@ -456,7 +456,7 @@ div.pagination {
   color: #D81413;
 }
 
-#comment-form {
+#comment {
   input[name="cancel"] {
     display: none;
   }
@@ -490,16 +490,19 @@ div.pagination {
         }
       }
     }
+    &:target {
+      background-color: #ffe;
+    }
   }
   
   
   .comment-avatar {
     float: left;
-    width: 50px;
+    width: 60px;
   }
   
   .comment {
-    margin-left: 50px;
+    margin-left: 60px;
     
     .author {
       font-size: 1.1em;
@@ -515,7 +518,7 @@ div.pagination {
       }
     }
 
-    #comment-form {
+    #comment {
       margin-top: 20px;
       h2 {
         display: none;

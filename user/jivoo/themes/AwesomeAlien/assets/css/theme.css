@@ -393,7 +393,7 @@ div.pagination {
 .byline a:hover {
   color: #D81413; }
 
-#comment-form input[name="cancel"] {
+#comment input[name="cancel"] {
   display: none; }
 
 .comments {
@@ -413,11 +413,13 @@ div.pagination {
     .comments li.op .author .title {
       background-color: #7799bb;
       color: #fff; }
+    .comments li:target {
+      background-color: #ffe; }
   .comments .comment-avatar {
     float: left;
-    width: 50px; }
+    width: 60px; }
   .comments .comment {
-    margin-left: 50px; }
+    margin-left: 60px; }
     .comments .comment .author {
       font-size: 1.1em;
       margin-bottom: 5px;
@@ -428,9 +430,9 @@ div.pagination {
         padding: 2px 5px;
         border-radius: 3px;
         margin-left: 10px; }
-    .comments .comment #comment-form {
+    .comments .comment #comment {
       margin-top: 20px; }
-      .comments .comment #comment-form h2 {
+      .comments .comment #comment h2 {
         display: none; }
-      .comments .comment #comment-form input[name="cancel"] {
+      .comments .comment #comment input[name="cancel"] {
         display: inline; }

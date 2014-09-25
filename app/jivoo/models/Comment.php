@@ -9,7 +9,10 @@ class Comment extends ActiveModel {
 
   protected $belongsTo = array(
     'Post',
-    'parent' => 'Comment',
+    'parent' => array(
+      'model' => 'Comment',
+      'otherKey' => 'parentId'
+    ),
     'User'
   );
 

@@ -1,12 +1,15 @@
 $(function() {
-  $('.comment').each(function() {
+  $('.comments li').each(function() {
+    var id = $(this).attr('id').replace('comment', '');
     var $byline = $(this).find('.byline');
-    $('#comment-form input[name="cancel"]').click(function() {
-      $('#comment-form').appendTo($('#comment-form-container'));
+    $('#comment input[name="cancel"]').click(function() {
+      $('#comment').appendTo($('#comment-form-container'));
+      $('#comment input[name="Comment[parentId]"]').val(null);
       return false;
     });
     $(this).find('.reply').click(function() {
-      $('#comment-form').insertAfter($byline);
+      $('#comment').insertAfter($byline);
+      $('#comment input[name="Comment[parentId]"]').val(id);
       return false;
     });
   });

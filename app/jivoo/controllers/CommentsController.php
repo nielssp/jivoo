@@ -54,6 +54,11 @@ class CommentsController extends AppController {
              preg_match('/^https?:\/\//', $this->newComment->website) == 0) {
           $this->newComment->website = 'http://' . $this->newComment->website;
         }
+        if (!empty($this->request->data['Comment']['parentId'])) {
+          $parent = $this->post->comments->find($this->request->data['Comment']['parentId']);
+          if ($parent)
+            $this->newComment->parent = $parent;
+        }
         if ($this->user) {
           $this->newComment->user = $this->user;
           $this->newComment->author = $this->user->username;
@@ -79,9 +84,7 @@ class CommentsController extends AppController {
           if (!empty($this->newComment->website)) {
             $this->request->cookies['comment_website'] = $this->newComment->website;
           }
-          
-          $this->refresh(array('page' => $this->Pagination->getPages()), 
-            'comment' . $this->newComment->id);
+          return $this->redirect($this->newComment);
         }
       }
       else {

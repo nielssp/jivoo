@@ -448,13 +448,11 @@ class Routing extends LoadableModule {
     if (isset($route['url'])) {
       return $route;
     }
-    if (isset($route['query'])){
-      if (isset($route['mergeQuery']) AND $route['mergeQuery'] == true) {
-        $route['query'] = array_merge($this->request->query, $route['query']);
-      }
-    }
-    else {
+    if (!isset($route['query'])){
       $route['query'] = array();
+    }
+    if (isset($route['mergeQuery']) and $route['mergeQuery'] == true) {
+      $route['query'] = array_merge($this->request->query, $route['query']);
     }
     if (!isset($route['fragment'])) {
       $route['fragment'] = null;
