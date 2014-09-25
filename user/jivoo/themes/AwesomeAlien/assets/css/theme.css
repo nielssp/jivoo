@@ -430,6 +430,11 @@ div.pagination {
         padding: 2px 5px;
         border-radius: 3px;
         margin-left: 10px; }
+      .comments .comment .author .parent {
+        font-size: 0.8em;
+        font-weight: normal;
+        margin-left: 10px;
+        color: #777; }
     .comments .comment #comment {
       margin-top: 20px; }
       .comments .comment #comment h2 {

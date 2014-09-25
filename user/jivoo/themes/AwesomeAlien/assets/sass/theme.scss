@@ -504,6 +504,7 @@ div.pagination {
   .comment {
     margin-left: 60px;
     
+
     .author {
       font-size: 1.1em;
       margin-bottom: 5px;
@@ -515,6 +516,12 @@ div.pagination {
         padding: 2px 5px;
         border-radius: 3px;
         margin-left: 10px;
+      }
+      .parent {
+        font-size: 0.8em;
+        font-weight: normal;
+        margin-left: 10px;
+        color: #777;
       }
     }
 

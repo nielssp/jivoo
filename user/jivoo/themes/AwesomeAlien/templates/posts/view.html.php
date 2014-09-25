@@ -59,7 +59,7 @@ if (isset($comment->user) and $comment->user == $post->user) {
 ?>?s=50&amp;d=monsterid&amp;r=G"
    alt="<?php echo h($comment->author); ?>"/>
 </div>
-<div class="comment" >
+<div class="comment">
 <div class="author"><?php
   if (empty($comment->author)) {
     echo tr('Anonymous');
@@ -72,7 +72,11 @@ if (isset($comment->user) and $comment->user == $post->user) {
       echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
   }
   echo $title;
-?></div>
+?>
+<?php if (isset($comment->parent)): ?>
+<span class="parent"><?php echo tr('In reply to %1', $Html->link(tr('comment #%1', $comment->parent->id), $comment->parent)); ?></span>
+<?php endif; ?>
+</div>
   <p><?php echo $comment->content; ?></p>
 <div class="byline">
 <?php
@@ -89,7 +93,7 @@ echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
 <?php endif; ?>
 
 </div>
-<div class="clear"></div>
+</li>
 <?php endforeach; ?>
 
 </ul>
