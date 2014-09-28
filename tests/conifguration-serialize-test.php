@@ -94,7 +94,7 @@ function new_appconfig() {
 include '../lib/Jivoo/Core/bootstrap.php';
 include '../../LAB/LabTest.php';
 
-include './spyc-master/spyc.php';
+include './spyc-master/Spyc.php';
 
 
 $config = new AppConfig('../user/jivoo/config.php');

@@ -14,13 +14,13 @@ $this->extend('setup/layout.html');
 
 <div class="field<?php echo $Form->ifRequired('password', ' field-required'); ?>">
 <?php echo $Form->label('password'); ?>
-<?php echo $Form->text('password'); ?>
+<?php echo $Form->password('password'); ?>
 <?php echo $Form->error('password'); ?>
 </div>
 
 <div class="field<?php echo $Form->ifRequired('confirmPassword', ' field-required'); ?>">
 <?php echo $Form->label('confirmPassword'); ?>
-<?php echo $Form->text('confirmPassword'); ?>
+<?php echo $Form->password('confirmPassword'); ?>
 <?php echo $Form->error('confirmPassword'); ?>
 </div>
 
