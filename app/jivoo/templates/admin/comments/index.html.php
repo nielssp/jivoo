@@ -57,7 +57,11 @@ foreach ($widget as $item) {
   echo $widget->handle($item, array(
     'id' => $item->id,
     'cells' => array(
-      $item->content,
+      $Format->html($item, 'content', array(
+        'stripAll' => true,
+        'maxLength' => 150,
+        'append' => $Html->link('[...]', $item)
+      )),
       isset($item->post->comments) ? $Html->link($item->post->title, $item)
         . ' #' . $item->post->comments->where('status = %CommentStatus', 'approved')->orderBy('createdAt')->rowNumber($item) : '',
       $item->status,

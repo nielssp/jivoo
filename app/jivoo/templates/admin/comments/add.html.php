@@ -25,7 +25,7 @@
 
 <div class="article">
 
-<?php echo $Form->textarea('content', array(
+<?php echo $Editor->get('content', array(
   'placeholder' => tr('Content'),
   'class' => 'content'
 )); ?>

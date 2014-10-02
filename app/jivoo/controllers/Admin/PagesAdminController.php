@@ -6,6 +6,7 @@ class PagesAdminController extends AdminController {
   public function before() {
     parent::before();
     $this->Filtering->addPrimary('title');
+    $this->Editor->set($this->Page, 'content', new TextEditor());
   }
   
   public function index() {

@@ -16,7 +16,7 @@
   <h1>
     <?php echo $Html->link(h($post->title), $post); ?>
   </h1>
-<?php echo $post->content; ?>
+<?php echo $Format->html($post, 'content'); ?>
 
 <div class="byline">
 <?php echo tr('Posted on %1', fdate($post->createdAt)) ?>

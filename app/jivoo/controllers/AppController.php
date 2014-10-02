@@ -2,7 +2,7 @@
 
 class AppController extends Controller {
   
-  protected $helpers = array('Html', 'Menu', 'Auth', 'Widgets', 'Form');
+  protected $helpers = array('Html', 'Menu', 'Auth', 'Widgets', 'Form', 'Format', 'Editor');
   
   protected $models = array('User');
   

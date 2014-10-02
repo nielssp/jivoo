@@ -4,13 +4,22 @@ class PostsController extends AppController {
 
   protected $helpers = array('Html', 'Pagination', 'Form');
 
-  protected $modules = array('Editors');
-  
   protected $models = array('User', 'Group', 'Post', 'Comment', 'Tag');
 
   public function before() {
     parent::before();
     $this->config = $this->config['blog'];
+    $this->Format->encoder($this->Comment, 'content')
+      ->allowTag('strong')
+      ->allowTag('p')
+      ->allowTag('br')
+      ->allowTag('em')
+      ->allowTag('b')
+      ->allowTag('i')
+      ->allowTag('u')
+      ->allowAttribute('a', 'href')
+      ->appendAttributes('a', 'rel="nofollow"');
+    $this->Editor->set($this->Comment, 'content', new TextEditor());
   }
 
   public function index() {
@@ -51,10 +60,6 @@ class PostsController extends AppController {
     $this->comments = $this->Pagination->paginate($this->comments, 10);
 
     $this->user = $this->Auth->getUser();
-
-    $this->Comment->setFieldEditor('content',
-      $this->m->Editors->getEditor($this->config['comments']['editor'])
-    );
 
     $this->embed('Comments', 'add', array($post));
 

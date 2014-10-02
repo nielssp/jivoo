@@ -1,0 +1,23 @@
+<?php
+/**
+ * Represents an editor
+ * @package Jivoo\Editors
+ */
+interface IEditor {
+  /**
+   * Get content format used by editor
+   * @return IContentFormat Format object
+   */
+  public function getFormat();
+  
+  public function saveFilter($content);
+
+  /**
+   * Get HTML code for this editor
+   * @param FormHelper $Form A form helper
+   * @param string $field Name of field
+   * @param array $options Additional options
+   * @return string HTML
+   */
+  public function field(FormHelper $Form, $field, $options = array());
+}

@@ -6,6 +6,7 @@ class PostsAdminController extends AdminController {
   public function before() {
     parent::before();
     $this->Filtering->addPrimary('title');
+    $this->Editor->set($this->Post, 'content', new TextEditor());
   }
   
   public function index() {

@@ -435,6 +435,13 @@ div.pagination {
         font-weight: normal;
         margin-left: 10px;
         color: #777; }
+    .comments .comment .content {
+      margin-bottom: 10px; }
+      .comments .comment .content p {
+        margin-bottom: 0;
+        margin-top: 10px; }
+        .comments .comment .content p:first-child {
+          margin: 0; }
     .comments .comment #comment {
       margin-top: 20px; }
       .comments .comment #comment h2 {

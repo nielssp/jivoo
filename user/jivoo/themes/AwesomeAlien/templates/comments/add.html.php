@@ -45,7 +45,7 @@
 <div class="field">
 <?php echo $Form->label('content'); ?>
 <?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
-<?php echo $Form->textarea('content'); ?>
+<?php echo $Editor->get('content'); ?>
 <?php echo $Form->error('content'); ?>
 </div>
 

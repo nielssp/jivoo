@@ -123,6 +123,10 @@ class FormHelper extends Helper {
     return $this->request->createHiddenToken() . PHP_EOL;
   }
   
+  public function getModel() {
+    return $this->model;
+  }
+  
   public function id($field, $value = null) {
     if (isset($this->id))
       $field = $this->id . '_' . $field;

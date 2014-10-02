@@ -6,6 +6,7 @@ class CommentsAdminController extends AdminController {
   public function before() {
     parent::before();
     $this->Filtering->addPrimary('content');
+    $this->Editor->set($this->Comment, 'content', new TextEditor());
   }
   
   public function index() {

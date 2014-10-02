@@ -9,12 +9,7 @@ interface IContentFormat {
    * @param string $text Formatted text
    * @return string HTML text
    */
-  public function toHtml($text);
-
-  /**
-   * Convert from HTML as stored in database
-   * @param string $html HTML text from database
-   * @return string Formatted text
-   */
-  public function fromHtml($html);
+  public function toHtml($content);
+  
+  public function toText($content);
 }

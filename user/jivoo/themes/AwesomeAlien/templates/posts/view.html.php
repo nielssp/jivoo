@@ -5,7 +5,7 @@
 <p><strong>This post is a draft and is not visible to the pulic.</strong></p>
 <?php endif; ?>
 
-<?php echo $post->content; ?>
+<?php echo $Format->html($post, 'content'); ?>
 
 <?php
 $tags = array();
@@ -20,7 +20,7 @@ if (count($tags) > 0) {
     $tags, fdate($post->createdAt));
 }
 else {
-  echo tr('Posted on %1', fdate($post->createdAt));
+  echo tr('Posted on %1 by %2', fdate($post->createdAt), $post->user->username);
 }
 ?>
  | 
@@ -69,7 +69,7 @@ if (isset($comment->user) and $comment->user == $post->user) {
     if (empty($website))
       echo h($comment->author);
     else
-      echo '<a href="' . $website . '">' . h($comment->author) . '</a>';
+      echo '<a rel="nofollow" href="' . $website . '">' . h($comment->author) . '</a>';
   }
   echo $title;
 ?>
@@ -77,7 +77,9 @@ if (isset($comment->user) and $comment->user == $post->user) {
 <span class="parent"><?php echo tr('In reply to %1', $Html->link(h($comment->parent->author), $comment->parent)); ?></span>
 <?php endif; ?>
 </div>
-  <p><?php echo $comment->content; ?></p>
+<div class="content">
+ <?php echo $Format->html($comment, 'content'); ?>
+ </div>
 <div class="byline">
 <?php
 echo '<date datetime="' . date('c', $comment->createdAt) . '">'
