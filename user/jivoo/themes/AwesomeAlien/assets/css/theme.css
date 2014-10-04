@@ -1,4 +1,4 @@
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400");
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400|Source+Code+Pro:400,700");
 * {
   padding: 0;
   margin: 0;
@@ -230,8 +230,19 @@ blockquote {
 a img {
   border: 0; }
 
+pre {
+  margin: 0 0 10px 0;
+  font-family: "Source Code Pro", monospace;
+  font-size: 0.9em; }
+
+pre code {
+  font-family: "Source Code Pro", monospace;
+  border-radius: 5px;
+  padding: 10px; }
+
 ul, ol {
-  margin-left: 32px; }
+  margin-left: 32px;
+  margin-bottom: 10px; }
 
 ul {
   list-style-type: disc; }
