@@ -15,11 +15,13 @@ class Content extends LoadableModule {
   private $encoders = array();
   
   private $editors = array();
+
+  private $defaultEditors = array();
   
   protected function init() {
-    $this->setFormat('html', new HtmlFormat());
-    $this->setFormat('text', new TextFormat());
-    $this->setFormat('altHtml', new AltHtmlFormat());
+    $this->addFormat(new HtmlFormat());
+    $this->addFormat(new TextFormat());
+    $this->addFormat(new AltHtmlFormat());
   }
   
   
@@ -33,15 +35,29 @@ class Content extends LoadableModule {
   }
   
   public function getFormat($name) {
-    return $this->formats[$name];
+    if (isset($this->formats[$name]))
+      return $this->formats[$name];
+    return null;
   }
-  
-  public function setFormat($name, IContentFormat $format) {
+
+  public function addFormat(IContentFormat $format) {
+    $name = $format->getName();
     $this->formats[$name] = $format;
+    $this->editors[$name] = array();
   }
-  
-  public function getEditor(ActiveModel $model, $field) {
+
+  public function addEditor(IEditor $editor) {
+    $format = $editor->getFormat();
+    if (!isset($this->editors[$format]))
+      throw new Exception('Unknown format: ' . $format);
+    $this->editors[$name][] = $editor;
+  }
+
+  public function getEditor(ActiveRecord $record, $field) {
+    $model = $record->getModel();
     $name = $model->getName();
+    $formatField = $field . 'Format';
+    $format = $this->getFormat($record->$formatField);
     if (!isset($this->editors[$name]))
       $this->editors[$name] = array();
     if (!isset($this->editors[$name][$field]))
@@ -51,10 +67,9 @@ class Content extends LoadableModule {
   
   public function setEditor(ActiveModel $model, $field, IEditor $editor) {
     $name = $model->getName();
-    if (!isset($this->editors[$name]))
-      $this->editors[$name] = array();
+    $this->defaultEditors[$name] = $editor;
     $format = $editor->getFormat();
-    $filter = new ContentFilter($field, $format, $this->getFormat($format));
+    $filter = new ContentFilter($field, $this->getFormat($format));
     $model->attachEventHandler('afterCreate', array($filter, 'afterCreate'));
     $model->attachEventHandler('beforeValidate', array($filter, 'beforeSave'));
     $this->editors[$name][$field] = $editor;

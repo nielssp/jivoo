@@ -9,13 +9,11 @@ class EditorHelper extends Helper {
   }
 
   public function get($field, $options = array()) {
-    $model = $this->Form->getModel();
     $record = $this->Form->getRecord();
-    $editor = $this->m->Content->getEditor($model, $field);
-    $format = $this->Format->formatOf($record, $field);
-    if ($format != $editor->getFormat()) {
+    $editor = $this->m->Content->getEditor($record, $field);
+    if (!isset($editor)) {
       // TODO convert / change editor etc...
-      return 'Error: Editor does not support format: ' . $format;
+      return 'Error: No editor available for format: ' . $this->Format->formatOf($record);
     }
     return $editor->field($this->Form, $field, $options);
   }

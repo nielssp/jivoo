@@ -68,11 +68,6 @@ class Post extends ActiveModel {
       'parameters' => array($record->id)
     );
   }
-
-  public function beforeValidate(ActiveModelEvent $event) {
-    $encoder = new HtmlEncoder();
-    $event->record->contentText = $encoder->encode($event->record->content);
-  }
   
   public function install() {
     if ($this->count() != 0)

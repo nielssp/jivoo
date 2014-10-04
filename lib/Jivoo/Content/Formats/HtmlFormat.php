@@ -4,6 +4,9 @@
  * @package Jivoo\Editors
  */
 class HtmlFormat implements IContentFormat {
+  public function getName() {
+    return 'html';
+  }
   public function toHtml($text) {
     return html_entity_decode($text, null, 'UTF-8');
   }

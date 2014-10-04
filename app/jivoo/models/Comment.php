@@ -55,9 +55,4 @@ class Comment extends ActiveModel {
       'parameters' => array($record->postId, $record->id)
     );
   }
-
-  public function beforeValidate(ActiveModelEvent $event) {
-    $encoder = new HtmlEncoder();
-    $event->record->contentText = $encoder->encode($event->record->content);
-  }
 }

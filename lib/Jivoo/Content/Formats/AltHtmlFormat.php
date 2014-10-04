@@ -4,9 +4,12 @@
  * @package Jivoo\Editors
  */
 class AltHtmlFormat implements IContentFormat {
+  public function getName() {
+    return 'altHtml';
+  }
   public function toHtml($text) {
-    $html = preg_replace('/((\r\n|\n\r|\n|\r) *){2}/i', "</p><p>", $text);
-    $html = preg_replace('/(\r\n|\n\r|\n|\r)/i', "<br />\n", $html);
+    $html = preg_replace('/((\r\n|\n) *){2}/i', "</p> <p>", $text);
+    $html = preg_replace('/(\r\n|\n)/i', "<br />\n", $html);
     /** @todo Improve URL-detection */
     $html = preg_replace('/(https?:\/\/([^\n\r"< \Z()]+))/i',
       '<a href="\\1">\\2</a>', $html);

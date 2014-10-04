@@ -2,18 +2,16 @@
 class ContentFilter {
 
   private $field;
-  private $formatName;
   private $format;
   
-  public function __construct($field, $formatName, IContentFormat $format) {
+  public function __construct($field, IContentFormat $format) {
     $this->field = $field;
-    $this->formatName = $formatName;
     $this->format = $format;
   }
 
   public function afterCreate(ActiveModelEvent $event) {
     $formatField = $this->field . 'Format';
-    $event->record->$formatField = $this->formatName;
+    $event->record->$formatField = $this->format->getName();
   }
 
   public function beforeSave(ActiveModelEvent $event) {
@@ -21,7 +19,9 @@ class ContentFilter {
     $content = $event->record->$field;
     $htmlField = $field . 'Html';
     $formatField = $field . 'Format';
-    $event->record->$formatField = $this->formatName;
+    $textField = $field . 'Text';
+    $event->record->$formatField = $this->format->getName();
     $event->record->$htmlField = $this->format->toHtml($event->record->$field);
+    $event->record->$textField = $this->format->toText($event->record->$field);
   }
 }

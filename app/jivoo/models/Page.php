@@ -35,11 +35,6 @@ class Page extends ActiveModel {
     );
   }
   
-  public function beforeValidate(ActiveModelEvent $event) {
-    $encoder = new HtmlEncoder();
-    $event->record->contentText = $encoder->encode($event->record->content);
-  }
-  
   public function install() {
     if ($this->count() != 0)
       return;
