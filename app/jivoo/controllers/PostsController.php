@@ -9,6 +9,7 @@ class PostsController extends AppController {
   public function before() {
     parent::before();
     $this->config = $this->config['blog'];
+    $this->Format->encoder($this->Post, 'content')->setAllowAll(true);
     $this->Format->encoder($this->Comment, 'content')
       ->allowTag('strong')
       ->allowTag('p')

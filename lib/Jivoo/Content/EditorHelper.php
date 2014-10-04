@@ -13,7 +13,7 @@ class EditorHelper extends Helper {
     $editor = $this->m->Content->getEditor($record, $field);
     if (!isset($editor)) {
       // TODO convert / change editor etc...
-      return 'Error: No editor available for format: ' . $this->Format->formatOf($record);
+      return 'Error: No editor available for format: ' . $this->Format->formatOf($record, $field)->getName();
     }
     return $editor->field($this->Form, $field, $options);
   }

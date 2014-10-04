@@ -12,10 +12,6 @@ class HtmlEditor implements IEditor {
     return $this->format;
   }
   
-  public function saveFilter($content) {
-    return $content;
-  }
-  
   public function field(FormHelper $Form, $field, $options = array()) {
     return $Form->textarea($field, $options);
   }

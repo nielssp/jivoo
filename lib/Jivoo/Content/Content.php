@@ -50,7 +50,7 @@ class Content extends LoadableModule {
     $format = $editor->getFormat();
     if (!isset($this->editors[$format]))
       throw new Exception('Unknown format: ' . $format);
-    $this->editors[$name][] = $editor;
+    $this->editors[$format][] = $editor;
   }
 
   public function getEditor(ActiveRecord $record, $field) {
@@ -58,20 +58,31 @@ class Content extends LoadableModule {
     $name = $model->getName();
     $formatField = $field . 'Format';
     $format = $this->getFormat($record->$formatField);
-    if (!isset($this->editors[$name]))
-      $this->editors[$name] = array();
-    if (!isset($this->editors[$name][$field]))
-      throw new Exception('Editor not set for field "' . $field . '" in model ' . $model->getName());
-    return $this->editors[$name][$field];
+    $formatName = $format->getName();
+    if (isset($this->defaultEditors[$name])) {
+      if (isset($this->defaultEditors[$name][$field])) {
+        $editor = $this->defaultEditors[$name][$field];
+        if ($editor->getFormat() == $formatName) {
+          return $editor;
+        }
+      }
+    }
+    if (isset($this->editors[$formatName])) {
+      $num = count($this->editors[$formatName]);
+      if ($num > 0)
+        return $this->editors[$formatName][0];
+    }
+    return null;
   }
   
   public function setEditor(ActiveModel $model, $field, IEditor $editor) {
     $name = $model->getName();
-    $this->defaultEditors[$name] = $editor;
+    if (!isset($this->defaultEditors[$name]))
+      $this->defaultEditors[$name] = array();
+    $this->defaultEditors[$name][$field] = $editor;
     $format = $editor->getFormat();
     $filter = new ContentFilter($field, $this->getFormat($format));
     $model->attachEventHandler('afterCreate', array($filter, 'afterCreate'));
     $model->attachEventHandler('beforeValidate', array($filter, 'beforeSave'));
-    $this->editors[$name][$field] = $editor;
   }
 }

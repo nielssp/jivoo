@@ -5,6 +5,7 @@ class PagesController extends AppController {
   protected $models = array('Page');
 
   public function view($page) {
+    $this->Format->encoder($this->Page, 'content')->setAllowAll(true);
     $this->page = $this->Page->find($page);
     if (!$this->page
       or !($this->page->published

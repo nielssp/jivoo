@@ -5,4 +5,4 @@
 <p><strong>This page is a draft and is not visible to the pulic.</strong></p>
 <?php endif; ?>
 
-<?php echo $page->content; ?>
+<?php echo $Format->html($page, 'content'); ?>

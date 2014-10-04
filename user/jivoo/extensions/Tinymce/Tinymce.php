@@ -4,7 +4,7 @@
 // Category     : JavaScript WYSIWYG editor
 // Website      : http://tinymce.com
 // Version      : 3.4.4 
-// Dependencies : Templates Routing Controllers Editors
+// Dependencies : Templates Routing Controllers Controllers 
 //                Assets ext;Jquery ext;JqueryUi 
 
 class Tinymce extends ExtensionBase {
@@ -18,6 +18,7 @@ class Tinymce extends ExtensionBase {
     $this->load('helpers/TinymceHelper');
 
     $this->controller = new TinymceController($this->app);
+    $this->controller->Tinymce = $this;
     $this->controller->addRoute('tinymce/init.js', 'initJs');
 
     $this->view->addTemplateDir($this->p('templates'));
@@ -25,7 +26,7 @@ class Tinymce extends ExtensionBase {
     $this->m->Controllers->addController($this->controller);
 
     $editor = new TinymceEditor($this);
-    $this->m->Editors->TinymceEditor = $editor;
+    $this->m->Content->addEditor($editor);
 
     $this->view->provide(
       'jquery-tinymce.js',
