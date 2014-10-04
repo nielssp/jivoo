@@ -33,6 +33,10 @@ class Content extends LoadableModule {
       $this->encoders[$name][$field] = new HtmlEncoder();
     return $this->encoders[$name][$field];
   }
+
+  public function getFormats() {
+    return $this->formats;
+  }
   
   public function getFormat($name) {
     if (isset($this->formats[$name]))

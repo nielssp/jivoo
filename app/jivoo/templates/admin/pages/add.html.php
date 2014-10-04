@@ -53,6 +53,11 @@
     <?php echo $Form->checkbox('published', true); ?>
     <?php echo $Form->checkboxLabel('published', true, tr('Published')); ?>
   </div>
+
+  <div class="field">
+    <label>Format</label>
+    <?php echo $Format->selectFormat('content'); ?>
+  </div>
 </div>
 
 

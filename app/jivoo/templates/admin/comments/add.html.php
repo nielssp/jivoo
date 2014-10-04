@@ -53,6 +53,11 @@
     <?php echo $Form->label('status'); ?>
     <?php echo $Form->selectOf('status'); ?>
   </div>
+
+  <div class="field">
+    <label>Format</label>
+    <?php echo $Format->selectFormat('content'); ?>
+  </div>
   
   <p><?php echo tr('IP address: %1', $comment->ip); ?></p>
 </div>

@@ -65,6 +65,11 @@
     <?php echo $Form->checkbox('commenting', true); ?>
     <?php echo $Form->checkboxLabel('commenting', true, tr('Allow comments')); ?>
   </div>
+
+  <div class="field">
+    <label>Format</label>
+    <?php echo $Format->selectFormat('content'); ?>
+  </div>
 </div>
 
 
