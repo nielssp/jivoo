@@ -126,6 +126,10 @@ class FormHelper extends Helper {
   public function getModel() {
     return $this->model;
   }
+
+  public function getRecord() {
+    return $this->record;
+  }
   
   public function id($field, $value = null) {
     if (isset($this->id))

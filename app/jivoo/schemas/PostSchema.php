@@ -4,9 +4,6 @@
  * @package PeanutCMS\Schemas
  */
 class PostSchema extends Schema {
-  
-  const REVISION = 1;
-  
   protected function createSchema() {
     $this->addAutoIncrementId();
     $this->name = DataType::string(255);
@@ -14,6 +11,7 @@ class PostSchema extends Schema {
     $this->content = DataType::text();
     $this->contentText = DataType::text();
     $this->contentHtml = DataType::text();
+    $this->contentFormat = DataType::string(255, false, 'html');
     $this->status = DataType::enum('PostStatus', false, 'published');
     $this->commenting = DataType::boolean(false, false);
     $this->userId = DataType::integer(DataType::UNSIGNED, true);

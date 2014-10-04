@@ -13,6 +13,8 @@ class CommentSchema extends Schema {
     $this->website = DataType::string(255, true);
     $this->content = DataType::text();
     $this->contentText = DataType::text();
+    $this->contentHtml = DataType::text();
+    $this->contentFormat = DataType::string(255, false, 'html');
     $this->ip = DataType::string(255);
     $this->status = DataType::enum('CommentStatus', false, 'pending');
     $this->addTimeStamps();

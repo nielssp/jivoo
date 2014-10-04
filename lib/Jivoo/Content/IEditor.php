@@ -9,8 +9,6 @@ interface IEditor {
    * @return IContentFormat Format object
    */
   public function getFormat();
-  
-  public function saveFilter($content);
 
   /**
    * Get HTML code for this editor

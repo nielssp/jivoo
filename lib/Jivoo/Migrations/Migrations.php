@@ -96,7 +96,8 @@ class Migrations extends LoadableModule {
         $db->SchemaRevision->insert(array('revision' => $migration));
     }
     else {
-      // Run necessary migrations
+      $db->SchemaRevision->setSchema($this->schema);
+      // Schedule necessary migrations
       $currentState = array();
       foreach ($db->SchemaRevision->select('revision') as $row)
         $currentState[$row['revision']] = true;
@@ -124,6 +125,7 @@ class Migrations extends LoadableModule {
         list($db, $migration) = $tuple;
         try {
           $migration->up();
+          $db->SchemaRevision->insert(array('revision' => get_class($migration)));
         }
         catch (Exception $e) {
           $migration->revert();

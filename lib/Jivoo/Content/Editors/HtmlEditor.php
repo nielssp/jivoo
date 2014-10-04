@@ -6,14 +6,7 @@
  */
 class HtmlEditor implements IEditor {
   
-  private $format;
-  
-  /**
-   * Constructor
-   */
-  public function __construct() {
-    $this->format = new HtmlFormat();
-  }
+  protected $format = 'html';
   
   public function getFormat() {
     return $this->format;

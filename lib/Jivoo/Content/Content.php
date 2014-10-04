@@ -19,6 +19,7 @@ class Content extends LoadableModule {
   protected function init() {
     $this->setFormat('html', new HtmlFormat());
     $this->setFormat('text', new TextFormat());
+    $this->setFormat('altHtml', new AltHtmlFormat());
   }
   
   
@@ -52,8 +53,10 @@ class Content extends LoadableModule {
     $name = $model->getName();
     if (!isset($this->editors[$name]))
       $this->editors[$name] = array();
-    $filter = new ContentFilter($field, $editor);
-    $model->attachEventHandler('beforeSave', array($filter, 'beforeSave'));
+    $format = $editor->getFormat();
+    $filter = new ContentFilter($field, $format, $this->getFormat($format));
+    $model->attachEventHandler('afterCreate', array($filter, 'afterCreate'));
+    $model->attachEventHandler('beforeValidate', array($filter, 'beforeSave'));
     $this->editors[$name][$field] = $editor;
   }
 }
