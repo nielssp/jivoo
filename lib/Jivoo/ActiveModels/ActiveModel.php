@@ -2,6 +2,8 @@
 
 abstract class ActiveModel extends Model implements IEventListener {
 
+  protected $database = 'default';
+
   protected $table = null;
 
   protected $record = null;
@@ -34,10 +36,6 @@ abstract class ActiveModel extends Model implements IEventListener {
    * @var Table
    */
   private $source;
-  /**
-   * @var IDatabase
-   */
-  private $database;
   
   private $name;
   
@@ -63,8 +61,14 @@ abstract class ActiveModel extends Model implements IEventListener {
 
   private $cache = array();
   
-  public final function __construct(App $app, IDatabase $database) {
+  public final function __construct(App $app, Databases $databases) {
     parent::__construct($app);
+    $databaseName = $this->database;
+    $database = $databases->$databaseName;
+    if (!isset($database))
+      throw new DataSourceNotFoundException(tr(
+        'Database "%1" not found in model %2', $this->database, $this->name
+      ));
     $this->database = $database;
     $this->name = get_class($this);
     if (!isset($this->table))
@@ -129,6 +133,8 @@ abstract class ActiveModel extends Model implements IEventListener {
       $this->attachEventListener($mixin);
       $this->mixinObjects[] = $mixin;
     }
+
+    $this->database->$table = $this;
   }
   
   public function getEventHandlers() {

@@ -21,9 +21,13 @@ class Migrations extends LoadableModule {
   private $schema;
   
   /**
-   * @var string[] List of migration names
+   * @var array Associative array of migration names and objects that need to run
    */
-  private $migrations = null;
+  private $migrations = array();
+
+  private $checkList = array();
+
+  private $migrationDirs = array();
   
   protected function init() {
     $this->config->defaults = array(
@@ -37,56 +41,53 @@ class Migrations extends LoadableModule {
     $this->schema->revision = DataType::string(255);
     $this->schema->setPrimaryKey('revision');
     
-    $runMigration = false;
-    
-    // Check (and migrate) all loaded databases
-    foreach ($this->m->Databases->getConnections() as $name => $connection) {
-      if ($this->config['indicator'] == 'version') {
-        if ($this->app->version != $this->config['versions'][$name])
-          $runMigration = true;
+
+    if (isset($this->app->appConfig['migrations'])) {
+      foreach ($this->app->appConfig['migrations'] as $name) {
+        $this->attachDatabase($name, $this->p('app', 'schemas/' . $name . '/migrations'));
       }
-      $this->check($connection);
     }
-    if ($runMigration) {
-      $this->runMigration();
+    else if (isset($this->m->Databases->default)) {
+      $this->attachDatabase('default', $this->p('app', 'schemas/migrations'));
+    }
+
+    $this->run();
+    $this->afterRun();
+  }
+
+  public function attachDatabase($name, $migrationDir) {
+    $this->migrationDirs[$name] = $migrationDir;
+    if ($this->config['indicator'] == 'version') {
+      if ($this->app->version != $this->config['versions'][$name])
+        $this->check($name);
     }
   }
-  
-  /**
-   * Get sorted list of migrations
-   * @return string[] List of migrations
-   */
-  public function getMigrations() {
-    if (!isset($this->migrations)) {
-      $this->migrations = array();
-      $migrationsDir = $this->p('app', 'schemas/migrations');
-      if (is_dir($migrationsDir)) {
-        Lib::addIncludePath($migrationsDir);
-        $files = scandir($migrationsDir);
-        if ($files !== false) {
-          foreach ($files as $file) {
-            $split = explode('.', $file);
-            if (isset($split[1]) and $split[1] == 'php') {
-              $this->migrations[] = $split[0];
-            }
+
+  public function getMigrations($name) {
+    $migrationDir = $this->migrationDirs[$name];
+    $migrations = array();
+    if (is_dir($migrationDir)) {
+      Lib::addIncludePath($migrationDir);
+      $files = scandir($migrationDir);
+      if ($files !== false) {
+        foreach ($files as $file) {
+          $split = explode('.', $file);
+          if (isset($split[1]) and $split[1] == 'php') {
+            $migrations[] = $split[0];
           }
         }
-        sort($this->migrations);
       }
     }
-    return $this->migrations;
+    return $migrations;
   }
-  
-  
-  public function checkDatabase(IMigratableDatabase $db, $migrationDir) {
-    
-  }
-  
+
   /**
    * Check a database for 
    * @param LoadableDatabase $db
    */
-  public function check(IMigratableDatabase $db) {
+  public function check($name) {
+    $db = $this->m->Databases->$name->getConnection();
+    Lib::assumeSubclassOf($db, 'IMigratableDatabase');
     if (!isset($db->SchemaRevision)) {
       // Create SchemaRevision table if it doesn't exist
       Logger::debug('Creating SchemaRevision table');
@@ -99,26 +100,58 @@ class Migrations extends LoadableModule {
       $currentState = array();
       foreach ($db->SchemaRevision->select('revision') as $row)
         $currentState[$row['revision']] = true;
-      $migrations = $this->getMigrations();
+      $migrations = $this->getMigrations($name);
       foreach ($migrations as $migration) {
         if (!isset($currentState[$migration])) {
-          Logger::debug('Running migration ' . $migration);
+          Logger::debug('Initializing migration ' . $migration);
           Lib::assumeSubclassOf($migration, 'Migration');
           $object = new $migration($db);
+          $key = $migration . $name;
+          $this->migrations[$key] = array($db, $object);
         }
       }
     }
     
     // Create missing tables
-    $schema = $db->getSchema();
-    foreach ($schema->getTables() as $table) {
-      if (!isset($db->$table)) {
-        Logger::debug('Missing table "' . $table . '": creating it...');
-        $db->createTable($schema->getSchema($table));
-      }
-    }
+    $this->checkList[$name] = $db;
   }
   
-  public function runMigration() {
+  public function run() {
+    ksort($this->migrations);
+    $log = array();
+    try {
+      foreach ($this->migrations as $tuple) {
+        list($db, $migration) = $tuple;
+        try {
+          $migration->up();
+        }
+        catch (Exception $e) {
+          $migration->revert();
+          throw $e;
+        }
+      }
+    }
+    catch (Exception $e) {
+      foreach ($log as $migration) {
+        $migration->down();
+      }
+      throw $e;
+    }
+    $this->migrations = array();
+  }
+
+  public function afterRun() {
+    foreach ($this->checkList as $name => $db) {
+      $schema = $db->getSchema();
+      foreach ($schema->getTables() as $table) {
+        if (!isset($db->$table)) {
+          Logger::debug('Missing table "' . $table . '": creating it...');
+          $db->createTable($schema->getSchema($table));
+        }
+      }
+      if ($this->config['indicator'] == 'version')
+        $this->config['versions'][$name] = $this->app->version;
+    }
+    $this->checkList = array();
   }
 }

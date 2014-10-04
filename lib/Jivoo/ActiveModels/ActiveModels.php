@@ -45,7 +45,6 @@ class ActiveModels extends LoadableModule {
       $model = new $class($this->app, $this->m->Databases);
       $this->m->Models->setModel($class, $model);
       $this->models[$class] = $model;
-      $this->m->Databases->$class = $model;
       return true;
     }
     return false;

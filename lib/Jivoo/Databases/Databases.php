@@ -11,29 +11,9 @@ Lib::import('Jivoo/Databases/Common');
  * Database module
  * @package Jivoo\Databases
  */
-class Databases extends LoadableModule implements IDatabase {
+class Databases extends LoadableModule {
 
   protected $modules = array('Models', 'Helpers');
-
-  /**
-   * @var DatabaseSchema
-   */
-  private $schema = null;
-  
-  /**
-   * @var Schema[]
-   */
-  private $schemas = array();
-  
-  /**
-   * @var IModel[]
-   */
-  private $tables = array();
-  
-  /**
-   * @var string[]
-   */
-  private $databaseSchemeClasses = array();
   
   /**
    * @var DatabaseDriversHelper
@@ -48,10 +28,21 @@ class Databases extends LoadableModule implements IDatabase {
   protected function init() {
     $this->drivers = new DatabaseDriversHelper($this->app);
     
-    $this->schema = new DatabaseSchema();
+    if (isset($this->app->appConfig['databases'])) {
+      foreach ($this->app->appConfig['databases'] as $name) {
+        $this->attachDatabase($name, $this->p('app', 'schemas/' . $name));
+      }
+    }
+    else {
+      $this->attachDatabase('default', $this->p('app', 'schemas'));
+    }
     
     $schemasDir = $this->p('app', 'schemas');
-    if (is_dir($schemasDir)) {
+  }
+
+  public function attachDatabase($name, $schemasDir = null) {
+    $schemas = array();
+    if (isset($schemasDir) and is_dir($schemasDir)) {
       Lib::addIncludePath($schemasDir);
       $files = scandir($schemasDir);
       if ($files !== false) {
@@ -59,127 +50,32 @@ class Databases extends LoadableModule implements IDatabase {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
             $class = $split[0];
-            if (is_subclass_of($class, 'Database')) {
-              $this->databaseSchemeClasses[] = $class;
-            }
-            else {
-              Lib::assumeSubclassOf($class, 'Schema');
-              $this->addSchema(new $class());
-            }
+            Lib::assumeSubclassOf($class, 'Schema');
+            $schemas[] = new $class();
           }
         }
       }
     }
+    $this->connect($name, $schemas, $name);
   }
-  
-  public function afterLoad() {
-    foreach ($this->databaseSchemeClasses as $class) {
-      $object = new $class($this->app);
-    }
-  } 
   
   /**
    * (non-PHPdoc)
    * @see Module::__get()
    * @return IModel
    */
-  public function __get($table) {
-    if (isset($this->tables[$table]))
-      return $this->tables[$table];
-    foreach ($this->connections as $connection) {
-      if (isset($connection->$table)) {
-        $this->tables[$table] = $connection->$table;
-        return $this->tables[$table];
-      }
-    }
-    return parent::__get($table);
+  public function __get($name) {
+    if (isset($this->connections[$name]))
+      return $this->connections[$name];
+    return parent::__get($name);
   }
   
-  public function __isset($table) {
-    if (isset($this->tables[$table]))
-      return true;
-    foreach ($this->connections as $connection) {
-      if (isset($connection->$table)) {
-        $this->tables[$table] = $connection->$table;
-        return true;
-      }
-    }
-    return false;
+  public function __isset($name) {
+    return isset($this->connections[$name]);
   }
-  
-  public function __set($table, IModel $model) {
-    $this->tables[$table] = $model;
-  }
-  
-  public function __unset($table) {
-    unset($this->tables[$table]);
-  }
-  
-  /**
-   * Get current database connections
-   * @return LoadableDatabase[] An associative array of connection-name and
-   * object
-   */
+
   public function getConnections() {
     return $this->connections;
-  }
-  
-  /**
-   * Get an active database connection
-   * @param string $database Database name (e.g. "default")
-   * @return LodableDatabase|null A database or null if not loaded
-   */
-  public function getConnection($database) {
-    if (isset($this->connections[$database]))
-      return $this->connections[$database];
-    return null;
-  }
-  
-  /**
-   * Check if a database connection exists
-   * @param string $database Database name
-   * @return bool True if connection exists
-   */
-  public function hasConnection($database) {
-    return isset($this->connections[$database]);
-  }
-  
-  /**
-   * Add a table schema
-   * @param Schema $schema Table schema
-   */
-  public function addSchema(Schema $schema) {
-    $name = $schema->getName();
-    $this->schemas[$name] = $schema;
-  }
-  
-  /**
-   * Check if a schema exists
-   * @param string $name Schema/table name
-   * @return bool True if schema exists
-   */
-  public function hasSchema($name) {
-    return isset($this->schemas[$name]);
-  }
-  
-  /**
-   * Get schema of a table or combined database schema
-   * @see IDatabase::getSchema()
-   */
-  public function getSchema($name = null) {
-    if (!isset($name))
-      return $this->schema;
-    if (isset($this->schemas[$name]))
-      return $this->schemas[$name];
-    return null;
-  }
-  
-  /**
-   * Get schemas
-   * @return Schema[] Associative array of schema/table names and schemas
-   */
-  public function getSchemas() {
-    return $this->schemas;
   }
   
   /**
@@ -235,7 +131,7 @@ class Databases extends LoadableModule implements IDatabase {
       }
       $object = new $class($this->app, $dbSchema, $options);
       if (isset($name)) {
-        $this->connections[$name] = $object;
+        $this->connections[$name] = new DatabaseConnection($object);
       }
       return $object;
     }
