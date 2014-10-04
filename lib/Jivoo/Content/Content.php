@@ -80,8 +80,7 @@ class Content extends LoadableModule {
     if (!isset($this->defaultEditors[$name]))
       $this->defaultEditors[$name] = array();
     $this->defaultEditors[$name][$field] = $editor;
-    $format = $editor->getFormat();
-    $filter = new ContentFilter($field, $this->getFormat($format));
+    $filter = new ContentFilter($this, $field);
     $model->attachEventHandler('afterCreate', array($filter, 'afterCreate'));
     $model->attachEventHandler('beforeValidate', array($filter, 'beforeSave'));
   }
