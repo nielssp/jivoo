@@ -1,0 +1,11 @@
+{
+  "name": "jQuery JavaScript framework",
+  "version": "1.7.1",
+  "website": "http://jquery.com",
+  "category": "JavaScript",
+  "assets": {
+    "jquery.js": {
+      "file": "jquery-1.7.1.min.js"
+    }
+  }
+}

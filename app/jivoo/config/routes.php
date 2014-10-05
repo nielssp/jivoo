@@ -12,4 +12,5 @@ return array(
   Route::auto('Admin::Pages'),
   Route::auto('Admin::Comments'),
   Route::auto('Admin::Users'),
+  Route::auto('Admin::Extensions'),
 );
