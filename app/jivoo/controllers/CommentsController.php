@@ -23,7 +23,7 @@ class CommentsController extends AppController {
       return $this->redirect($post);
     $position = $post->comments
       ->where('status = %CommentStatus', 'approved')
-      ->orderBy('createdAt')
+      ->orderBy('created')
       ->rowNumber($comment);
     $page = ceil($position / 10);
     return $this->redirect(array(

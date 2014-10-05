@@ -39,8 +39,6 @@ class Comment extends ActiveModel {
     'website' => 'Website',
     'content' => 'Content',
     'status' => 'Status',
-    'createdAt' => 'Created at',
-    'updatedAt' => 'Updated at',
   );
 
   protected $actions = array(

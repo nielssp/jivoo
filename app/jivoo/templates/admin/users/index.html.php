@@ -3,13 +3,13 @@
 <?php
 $widget = $Widget->begin('DataTable', array(
   'model' => $users,
-  'columns' => array('username', 'group', 'email', 'createdAt'),
+  'columns' => array('username', 'group', 'email', 'created'),
   'labels' => array(
     'group' => tr('Group'),
   ),
   'addRoute' => 'add',
-  'sortOptions' => array('username', 'email', 'updatedAt', 'createdAt'),
-  'defaultSortBy' => 'createdAt',
+  'sortOptions' => array('username', 'email', 'updated', 'created'),
+  'defaultSortBy' => 'created',
   'defaultDescending' => true,
   'actions' => array(
     new TableAction(tr('Edit'), 'Admin::Users::edit',
@@ -31,7 +31,7 @@ foreach ($widget as $item) {
       $Html->link($item->username, $item->action('edit')),
       $Html->link($item->group->name, $item->group),
       $item->email,
-      ldate($item->createdAt)
+      ldate($item->created)
     ),
   ));
 }

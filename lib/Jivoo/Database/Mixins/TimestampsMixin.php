@@ -2,11 +2,11 @@
 class TimestampsMixin extends ActiveModelMixin {
   public function beforeValidate(ActiveModelEvent $event) {
     if (!$event->record->isNew())
-      $event->record->updatedAt = time();
+      $event->record->updated = time();
   }
   
   public function afterCreate(ActiveModelEvent $event) {
-    $event->record->createdAt = time();
-    $event->record->updatedAt = time();
+    $event->record->created = time();
+    $event->record->updated = time();
   }
 }

@@ -17,6 +17,6 @@ class PostSchema extends Schema {
     $this->userId = DataType::integer(DataType::UNSIGNED, true);
     $this->addTimestamps();
     $this->addUnique('name', 'name');
-    $this->addIndex('createdAt', 'createdAt');
+    $this->addIndex('created', 'created');
   }
 }

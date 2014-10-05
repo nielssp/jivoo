@@ -17,10 +17,10 @@ foreach ($post->tags as $tag) {
 <?php
 if (count($tags) > 0) {
   echo tr('Posted on %2 and tagged with %1{, }{ and }',
-    $tags, fdate($post->createdAt));
+    $tags, fdate($post->created));
 }
 else {
-  echo tr('Posted on %1 by %2', fdate($post->createdAt), $post->user->username);
+  echo tr('Posted on %1 by %2', fdate($post->created), $post->user->username);
 }
 ?>
  | 
@@ -82,8 +82,8 @@ if (isset($comment->user) and $comment->user == $post->user) {
  </div>
 <div class="byline">
 <?php
-echo '<date datetime="' . date('c', $comment->createdAt) . '">'
-      . sdate($comment->createdAt) . '</date>';
+echo '<date datetime="' . date('c', $comment->created) . '">'
+      . sdate($comment->created) . '</date>';
 echo ' | ' . $Html->link(tr('Permalink'), $comment);
 echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
 ?>

@@ -3,13 +3,13 @@
 <?php
 $widget = $Widget->begin('DataTable', array(
   'model' => $posts,
-  'columns' => array('title', 'author', 'status', 'updatedAt'),
+  'columns' => array('title', 'author', 'status', 'updated'),
   'labels' => array(
     'author' => tr('Author'),
   ),
   'addRoute' => 'add',
-  'sortOptions' => array('title', 'status', 'updatedAt', 'createdAt'),
-  'defaultSortBy' => 'updatedAt',
+  'sortOptions' => array('title', 'status', 'updated', 'created'),
+  'defaultSortBy' => 'updated',
   'defaultDescending' => true,
   'filters' => array(
     tr('Published') => 'status=published',
@@ -46,7 +46,7 @@ foreach ($widget as $item) {
       $Html->link($item->title, $item->action('edit')),
       isset($item->user) ? $Html->link($item->user->username, $item->user) : '',
       $item->status,
-      ldate($item->updatedAt)
+      ldate($item->updated)
     ),
     'removeActions' => array($item->status == 'published' ? 'publish' : 'unpublish')
   ));

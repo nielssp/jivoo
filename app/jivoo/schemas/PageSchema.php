@@ -14,6 +14,6 @@ class PageSchema extends Schema {
     $this->published = DataType::boolean(false, true);
     $this->addTimeStamps();
     $this->addUnique('name', 'name');
-    $this->addIndex('createdAt', 'createdAt');
+    $this->addIndex('created', 'created');
   }
 }

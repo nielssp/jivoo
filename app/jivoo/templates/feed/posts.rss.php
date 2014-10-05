@@ -6,13 +6,13 @@
     <title><?php echo $post->title; ?></title>
     <description><![CDATA[<?php echo $post->content; ?>]]></description>
     <link><?php echo $this->url($post); ?></link>
-    <pubDate><?php echo date('r', $post->createdAt); ?></pubDate>
+    <pubDate><?php echo date('r', $post->created); ?></pubDate>
     <guid><?php echo $this->url($post); ?></guid>
   </item>
 
 <?php 
 if (!isset($this->lastBuildDate)) {
-  $this->lastBuildDate = $post->createdAt;
+  $this->lastBuildDate = $post->created;
 }
 ?>
 

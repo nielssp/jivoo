@@ -3,8 +3,8 @@
 <?php
 $widget = $Widget->begin('DataTable', array(
   'model' => $pages,
-  'columns' => array('title', 'name', 'published', 'updatedAt'),
-  'sortOptions' => array('title', 'name', 'published', 'updatedAt', 'createdAt'),
+  'columns' => array('title', 'name', 'published', 'updated'),
+  'sortOptions' => array('title', 'name', 'published', 'updated', 'created'),
   'defaultSortBy' => 'name',
   'primaryAction' => 'edit',
   'addRoute' => 'add',

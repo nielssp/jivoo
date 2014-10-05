@@ -19,7 +19,7 @@
 <?php echo $Format->html($post, 'content'); ?>
 
 <div class="byline">
-<?php echo tr('Posted on %1', fdate($post->createdAt)) ?>
+<?php echo tr('Posted on %1', fdate($post->created)) ?>
  | 
 <?php
 $comments = $post->comments->where('status = %CommentStatus', 'approved')->count();

@@ -11,11 +11,11 @@ abstract class Migration {
     $this->db = $db;
   }
   
-  protected function __get($table) {
+  public function __get($table) {
     return $this->db->$table;
   }
 
-  protected function __isset($table) {
+  public function __isset($table) {
     return isset($this->db->table);
   }
   

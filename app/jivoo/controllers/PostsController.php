@@ -26,7 +26,7 @@ class PostsController extends AppController {
   public function index() {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
-      ->orderByDescending('createdAt');
+      ->orderByDescending('created');
     $this->posts = $this->Pagination->paginate($this->posts);
     
     $this->view->resource(
@@ -40,7 +40,7 @@ class PostsController extends AppController {
   public function feed() {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
-      ->orderByDescending('createdAt')
+      ->orderByDescending('created')
       ->limit(30);
     return $this->render('feed/posts.rss');
   }
@@ -56,7 +56,7 @@ class PostsController extends AppController {
 
     $this->comments = $this->post->comments
       ->where('status = %CommentStatus', 'approved')
-      ->orderBy('createdAt');
+      ->orderBy('created');
 
     $this->comments = $this->Pagination->paginate($this->comments, 10);
 

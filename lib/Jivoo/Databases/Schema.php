@@ -84,10 +84,10 @@ class Schema implements ISchema {
     }
   }
 
-  public function addTimestamps($createdAt = 'createdAt', $updatedAt = 'updatedAt') {
+  public function addTimestamps($created = 'created', $updated = 'updated') {
     if (!$this->_readOnly) {
-      $this->$createdAt = DataType::dateTime();
-      $this->$updatedAt = DataType::dateTime();
+      $this->$created = DataType::dateTime();
+      $this->$updated = DataType::dateTime();
     }
   }
 

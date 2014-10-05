@@ -3,13 +3,13 @@
 <?php
 $widget = $Widget->begin('DataTable', array(
   'model' => $comments,
-  'columns' => array('content', 'post', 'status', 'createdAt'),
+  'columns' => array('content', 'post', 'status', 'created'),
   'labels' => array(
     'post' => tr('Post'),
   ),
   'addRoute' => 'add',
-  'sortOptions' => array('status', 'updatedAt', 'createdAt'),
-  'defaultSortBy' => 'createdAt',
+  'sortOptions' => array('status', 'updated', 'created'),
+  'defaultSortBy' => 'created',
   'defaultDescending' => true,
   'filters' => array(
     tr('Approved') => 'status=approved',
@@ -63,9 +63,9 @@ foreach ($widget as $item) {
         'append' => $Html->link('[...]', $item)
       )),
       isset($item->post->comments) ? $Html->link($item->post->title, $item)
-        . ' #' . $item->post->comments->where('status = %CommentStatus', 'approved')->orderBy('createdAt')->rowNumber($item) : '',
+        . ' #' . $item->post->comments->where('status = %CommentStatus', 'approved')->orderBy('created')->rowNumber($item) : '',
       $item->status,
-      ldate($item->createdAt)
+      ldate($item->created)
     ),
     'removeActions' => $removeActions
   ));

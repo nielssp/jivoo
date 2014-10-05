@@ -34,6 +34,7 @@ class Migrations extends LoadableModule {
       'force' => false,
       'indicator' => 'version',
       'versions' => array(),
+      'mtimes' => array()
     );
     
     // Initialize SchemaRevision schema
@@ -59,6 +60,10 @@ class Migrations extends LoadableModule {
     $this->migrationDirs[$name] = $migrationDir;
     if ($this->config['indicator'] == 'version') {
       if ($this->app->version != $this->config['versions'][$name])
+        $this->check($name);
+    }
+    else if ($this->config['indicator'] == 'mtime') {
+      if ($this->config['mtimes'][$name] != filemtime($this->migrationDirs[$name] . '/.'))
         $this->check($name);
     }
   }
@@ -153,6 +158,8 @@ class Migrations extends LoadableModule {
       }
       if ($this->config['indicator'] == 'version')
         $this->config['versions'][$name] = $this->app->version;
+      else if ($this->config['indicator'] == 'mtime')
+        $this->config['mtimes'][$name] = filemtime($this->migrationDirs[$name] . '/.');
     }
     $this->checkList = array();
   }
