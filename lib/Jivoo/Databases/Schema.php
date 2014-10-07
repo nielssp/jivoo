@@ -73,6 +73,12 @@ class Schema implements ISchema {
     }
   }
   
+  public function __unset($field) {
+    if (!$this->_readOnly) {
+      unset($this->_fields[$field]);
+    }
+  }
+  
   public function getRevision() {
     return $this->_revision;
   }
@@ -128,6 +134,12 @@ class Schema implements ISchema {
   public function addField($name, DataType $type) {
     if (!$this->_readOnly) {
       $this->_fields[$name] = $type;
+    }
+  }
+  
+  public function removeField($name) {
+    if (!$this->_readOnly) {
+      unset($this->_fields[$name]);
     }
   }
 
@@ -264,6 +276,10 @@ class Schema implements ISchema {
    */
   public function indexExists($name) {
     return isset($this->_indexes[$name]);
+  }
+  
+  public function removeIndex($name) {
+    unset($this->_indexes[$name]);
   }
   
   /**

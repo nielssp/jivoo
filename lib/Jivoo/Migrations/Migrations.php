@@ -24,6 +24,8 @@ class Migrations extends LoadableModule {
    * @var array Associative array of migration names and objects that need to run
    */
   private $migrations = array();
+  
+  private $migrationSchemas = array();
 
   private $checkList = array();
 
@@ -106,20 +108,24 @@ class Migrations extends LoadableModule {
       $currentState = array();
       foreach ($db->SchemaRevision->select('revision') as $row)
         $currentState[$row['revision']] = true;
-      $refresh = false;
+      $refresh = true;
       $migrations = $this->getMigrations($name);
+      $migrationSchema = null;
       foreach ($migrations as $migration) {
         if (!isset($currentState[$migration])) {
-          $refresh = true;
+          if ($refrsh) {
+            $migrationSchema = new MigrationSchema($db);
+            $refresh = false; 
+          }
           Logger::debug('Initializing migration ' . $migration);
           Lib::assumeSubclassOf($migration, 'Migration');
-          $object = new $migration($db);
+          $object = new $migration($db, $migrationSchema);
           $key = $migration . $name;
           $this->migrations[$key] = array($db, $object);
         }
       }
-      if ($refresh)
-        $db->refreshSchema();
+      if (isset($migrationSchema))
+        $this->migrationSchemas[] = $migrationSchema;
     }
     
     // Create missing tables
@@ -144,6 +150,9 @@ class Migrations extends LoadableModule {
   }
 
   public function afterRun() {
+    foreach ($this->migrationSchemas as $migrationSchema) {
+      $migrationSchema->finalize();
+    }
     foreach ($this->checkList as $name => $db) {
       $schema = $db->getSchema();
       foreach ($schema->getTables() as $table) {

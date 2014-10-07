@@ -51,6 +51,10 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
     $this->schema = $schema;
     foreach ($schema->getTables() as $table) {
       $tableSchema = $schema->getSchema($table);
+      if (!in_array($table, $this->tableNames)) {
+        $this->tableNames[] = $table;
+        $this->tables[$table] = $this->getTable($table);
+      }
       $this->$table->setSchema($tableSchema);
     }
   }
@@ -74,10 +78,6 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   
   public function createTable(Schema $schema) {
     $this->migrationAdapter->createTable($schema);
-    $this->schema->addSchema($schema);
-    $table = $schema->getName();
-    $this->tableNames[] = $table;
-    $this->tables[$table] = $this->getTable($table);
   }
   
   public function renameTable($table, $newName) {

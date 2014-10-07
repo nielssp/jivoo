@@ -3,12 +3,15 @@ abstract class Migration {
   
   private $db = null;
   
+  private $schema = null;
+  
   private $operations = array();
 
   private $ignoreExceptions = false;
   
-  public final function __construct(IMigratableDatabase $db) {
+  public final function __construct(IMigratableDatabase $db, MigrationSchema $schema) {
     $this->db = $db;
+    $this->schema = $schema;
   }
   
   public function __get($table) {
@@ -22,6 +25,7 @@ abstract class Migration {
   protected function createTable(Schema $schema) {
     try {
       $this->db->createTable($schema);
+      $this->schema->createTable($schema);
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -31,6 +35,7 @@ abstract class Migration {
   protected function dropTable($table) {
     try {
       $this->db->dropTable($table); 
+      $this->schema->dropTable($table);
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -39,7 +44,8 @@ abstract class Migration {
 
   protected function addColumn($table, $column, DataType $type) {
     try {
-      $this->db->addColumn($table, $column, $type); 
+      $this->db->addColumn($table, $column, $type);
+      $this->schema->addColumn($table, $column, $type); 
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -48,7 +54,8 @@ abstract class Migration {
 
   protected function deleteColumn($table, $column) {
     try {
-      $this->db->deleteColumn($table, $column); 
+      $this->db->deleteColumn($table, $column);
+      $this->schema->deleteColumn($table, $column);
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -57,7 +64,8 @@ abstract class Migration {
 
   protected function alterColumn($table, $column, DataType $type) {
     try {
-      $this->db->alterColumn($table, $column, $type); 
+      $this->db->alterColumn($table, $column, $type);
+      $this->schema->alterColumn($table, $column, $type); 
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -66,7 +74,8 @@ abstract class Migration {
 
   protected function renameColumn($table, $column, $newName) {
     try {
-      $this->db->renameColumn($table, $column, $newName); 
+      $this->db->renameColumn($table, $column, $newName);
+      $this->schema->renameColumn($table, $column, $newName);
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -75,7 +84,8 @@ abstract class Migration {
 
   protected function createIndex($table, $index, $options = array()) {
     try {
-      $this->db->createIndex($table, $index, $options); 
+      $this->db->createIndex($table, $index, $options);
+      $this->schema->createIndex($table, $index, $options);
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -84,7 +94,8 @@ abstract class Migration {
 
   protected function deleteIndex($table, $index) {
     try {
-      $this->db->deleteIndex($table, $index); 
+      $this->db->deleteIndex($table, $index);
+      $this->schema->deleteIndex($table, $index, $options); 
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
@@ -94,6 +105,7 @@ abstract class Migration {
   protected function alterIndex($table, $index, $options = array()) {
     try {
       $this->alterIndex($table, $index, $options); 
+      $this->schema->alterIndex($table, $index, $options);
     }
     catch (Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
