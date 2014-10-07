@@ -54,7 +54,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
    * @param DataType $type
    * @return string MySQL type
    */
-  public function convertType(DataType $type) {
+  private function fromDataType(DataType $type) {
     $autoIncrement = '';
     switch ($type->type) {
       case DataType::INTEGER:
@@ -103,6 +103,56 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     if (isset($type->default))
       $column .= ' DEFAULT ' . $this->encode($type, $type->default);
     return $column . $autoIncrement;
+  }
+  
+  
+  private function toDataType($row) {
+    $null = (isset($row['Null']) and $row['Null'] != 'NO');
+    $default = null;
+    if (isset($row['Default']))
+      $default = $row['Default'];
+    
+    if (preg_match('/enum\((.+)\)/i', $row['Type'], $matches) === 1) {
+      preg_match_all('/\'([^\']+)\'/', $matches[1], $matches);
+      $values = $matches[1];
+      return DataType::enum($values, $null, $default);
+    }
+    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? *(unsigned)? *?/i', $row['Type'], $matches);
+    $actualType = strtolower($matches[1]);
+    $length = isset($matches[3]) ? intval($matches[3]) : 0;
+    $intFlags = 0;
+    if (isset($matches[4]))
+      $intFlags |= DataType::UNSIGNED;
+    if (strpos($row['Extra'], 'auto_increment') !== false)
+      $intFlags |= DataType::AUTO_INCREMENT;
+    switch ($actualType) {
+      case 'bigint':
+        $intFlags |= DataType::BIG;
+        return DataType::integer($intFlags, $null, intval($default));
+      case 'smallint':
+        $intFlags |= DataType::SMALL;
+        return DataType::integer($intFlags, $null, intval($default));
+      case 'tinyint':
+        $intFlags |= DataType::TINY;
+        return DataType::integer($intFlags, $null, intval($default));
+      case 'int':
+        return DataType::integer($intFlags, $null, intval($default));
+      case 'double':
+        return DataType::float($null, floatval($default));
+      case 'varchar':
+        return DataType::string($length, $null, $default);
+      case 'blob':
+        return DataType::binary($null, $default);
+      case 'date':
+        return DataType::date($null, strtotime($default . ' UTC'));
+      case 'datetime':
+        return DataType::dateTime($null, strtotime($default . ' UTC'));
+      case 'text':
+        return DataType::text($null, $default);
+    }
+    throw new Exception(tr(
+      'Unsupported MySQL type for column: %1', $row['Field']
+    ));
   }
 
   public function checkType($row, DataType $type) {
@@ -222,6 +272,36 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       'indexes' => $indexes
     );
   }
+  
+  public function getTableSchema($table) {
+    $result = $this->db->rawQuery('SHOW COLUMNS FROM `' . $this->db->tableName($table) . '`');
+    $schema = new Schema($table);
+    while ($row = $result->fetchAssoc()) {
+      $column = $row['Field'];
+      $schema->addField($column, $this->toDataType($row));
+    }
+    $result = $this->db->rawQuery('SHOW INDEX FROM `' . $this->db->tableName($table) . '`');
+    $indexes = array();
+    while ($row = $result->fetchAssoc()) {
+      $index = $row['Key_name'];
+      $column = $row['Column_name'];
+      $unique = $row['Non_unique'] == 0 ? true : false;
+      if (isset($indexes[$index]))
+        $indexes[$index]['columns'][] = $column;
+      else
+        $indexes[$index] = array(
+          'columns' => array($column),
+          'unique' => $unique
+        );
+    }
+    foreach ($indexes as $name => $index) {
+      if ($index['unique'])
+        $schema->addUnique($name, $index['columns']);
+      else
+        $schema->addIndex($name, $index['columns']);
+    }
+    return $schema;
+  }
 
   public function tableExists($table) {
     $result = $this->db->rawQuery(
@@ -257,7 +337,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
         $first = false;
       }
       $sql .= $column;
-      $sql .= ' ' . $this->convertType($type);
+      $sql .= ' ' . $this->fromDataType($type);
     }
     foreach ($schema->getIndexes() as $index => $options) {
       $sql .= ', ';
@@ -287,7 +367,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
 
   public function addColumn($table, $column, DataType $type) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` ADD ' . $column;
-    $sql .= ' ' . $this->convertType($type);
+    $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 
@@ -299,7 +379,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   public function alterColumn($table, $column, DataType $type) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
         . ' ' . $column;
-    $sql .= ' ' . $this->convertType($type);
+    $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 
@@ -307,7 +387,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $type = $this->db->$table->getSchema()->$column;
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
         . ' ' . $newName;
-    $sql .= ' ' . $this->convertType($type);
+    $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 

@@ -106,9 +106,11 @@ class Migrations extends LoadableModule {
       $currentState = array();
       foreach ($db->SchemaRevision->select('revision') as $row)
         $currentState[$row['revision']] = true;
+      $refresh = false;
       $migrations = $this->getMigrations($name);
       foreach ($migrations as $migration) {
         if (!isset($currentState[$migration])) {
+          $refresh = true;
           Logger::debug('Initializing migration ' . $migration);
           Lib::assumeSubclassOf($migration, 'Migration');
           $object = new $migration($db);
@@ -116,6 +118,8 @@ class Migrations extends LoadableModule {
           $this->migrations[$key] = array($db, $object);
         }
       }
+      if ($refresh)
+        $db->refreshSchema();
     }
     
     // Create missing tables
@@ -125,24 +129,16 @@ class Migrations extends LoadableModule {
   public function run() {
     ksort($this->migrations);
     $log = array();
-    try {
-      foreach ($this->migrations as $tuple) {
-        list($db, $migration) = $tuple;
-        try {
-          $migration->up();
-          $db->SchemaRevision->insert(array('revision' => get_class($migration)));
-        }
-        catch (Exception $e) {
-          $migration->revert();
-          throw $e;
-        }
+    foreach ($this->migrations as $tuple) {
+      list($db, $migration) = $tuple;
+      try {
+        $migration->up();
+        $db->SchemaRevision->insert(array('revision' => get_class($migration)));
       }
-    }
-    catch (Exception $e) {
-      foreach ($log as $migration) {
-        $migration->down();
+      catch (Exception $e) {
+        $migration->revert();
+        throw $e;
       }
-      throw $e;
     }
     $this->migrations = array();
   }

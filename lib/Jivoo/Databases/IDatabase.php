@@ -14,6 +14,8 @@ interface IDatabase {
    */
   public function getSchema();
   
+  public function refreshSchema();
+  
   public function beginTransaction();
   
   public function commit();

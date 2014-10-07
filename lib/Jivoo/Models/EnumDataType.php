@@ -4,10 +4,10 @@ class EnumDataType extends DataType {
   private $class;
   private $values;
   
-  protected function __construct($enumClass, $null = false, $default = null) {
+  protected function __construct($values, $null = false, $default = null) {
     parent::__construct(DataType::ENUM, $null, $default);
     $this->class = $enumClass;
-    $this->values = Enum::getValues($enumClass);
+    $this->values = $values;
     if (isset($default) and !in_array($default, $this->values)) {
       throw new InvalidArgumentException(tr(
         'Default value must be part of enum'
@@ -35,5 +35,4 @@ class EnumDataType extends DataType {
       return true;
     return in_array($value, $this->values);
   }
-  
 }

@@ -44,6 +44,11 @@ class DatabaseConnection implements IDatabase {
   public function getSchema() {
     return $this->schema;
   }
+  
+  public function refreshSchema() {
+    $this->connection->refreshSchema();
+    $this->schema = $this->connection->getSchema();
+  }
 
   public function close() {
     $this->connection->close();

@@ -401,13 +401,16 @@ class DataType {
   
   /**
    * Create enumerated data type
-   * @param string[] $values Enum values as strings. Keys must be integers.
+   * @param string[]|string $valuesOrClass Enum values as strings. Keys must be integers.
+   * Or the name of a class extending {@see Enum}.
    * @param boolean $null whether or not type is nullable
    * @param int $default default value
    * @return DataType
    */
-  public static function enum($enumClass, $null = false, $default = null) {
-    return new EnumDataType($enumClass, $null, $default);
+  public static function enum($valuesOrClass, $null = false, $default = null) {
+    if (!is_array($valuesOrClass))
+      $valuesOrClass = Enum::getValues($valuesOrClass);
+    return new EnumDataType($valuesOrClass, $null, $default);
   }
   
   public static function detectType($value) {
