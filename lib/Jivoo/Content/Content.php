@@ -22,6 +22,8 @@ class Content extends LoadableModule {
     $this->addFormat(new HtmlFormat());
     $this->addFormat(new TextFormat());
     $this->addFormat(new AltHtmlFormat());
+    $this->addEditor(new HtmlEditor());
+    $this->addEditor(new TextEditor());
   }
   
   
