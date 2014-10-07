@@ -1,4 +1,8 @@
-<?php $this->extend('admin/layout.html'); ?>
+<?php
+$this->script('jquery.js');
+$this->script('permalinks.js');
+$this->extend('admin/layout.html');
+?>
 
 <?php if (!$post): ?>
 
@@ -25,10 +29,22 @@
 
 <div class="article">
 
+<?php if ($post->isNew()): ?>
+
+<?php echo $Form->text('title', array(
+  'placeholder' => tr('Title'),
+  'class' => 'title',
+  'data-auto-permalink' => $Form->id('name')
+)); ?>
+
+<?php else: ?>
+
 <?php echo $Form->text('title', array(
   'placeholder' => tr('Title'),
   'class' => 'title'
 )); ?>
+
+<?php endif; ?>
 
 <?php echo $Editor->get('content', array(
   'placeholder' => tr('Content'),
