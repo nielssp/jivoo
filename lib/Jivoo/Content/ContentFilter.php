@@ -10,7 +10,7 @@ class ContentFilter {
   }
 
   public function afterCreate(ActiveModelEvent $event) {
-    $defaultEditor = $this->Content->getEditor($event->record, $this->field);
+    $defaultEditor = $this->Content->getDefaultEditor($event->record, $this->field);
     $formatField = $this->field . 'Format';
     if (isset($defaultEditor))
       $event->record->$formatField = $defaultEditor->getFormat();

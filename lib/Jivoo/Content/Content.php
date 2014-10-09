@@ -21,7 +21,6 @@ class Content extends LoadableModule {
   protected function init() {
     $this->addFormat(new HtmlFormat());
     $this->addFormat(new TextFormat());
-    $this->addFormat(new AltHtmlFormat());
     $this->addEditor(new HtmlEditor());
     $this->addEditor(new TextEditor());
   }
@@ -58,6 +57,17 @@ class Content extends LoadableModule {
       throw new Exception('Unknown format: ' . $format);
     $this->editors[$format][] = $editor;
   }
+  
+  public function getDefaultEditor(ActiveRecord $record, $field) {
+    $model = $record->getModel();
+    $name = $model->getName();
+    if (isset($this->defaultEditors[$name])) {
+      if (isset($this->defaultEditors[$name][$field])) {
+        return $this->defaultEditors[$name][$field];
+      }
+    }
+    return null;
+  }
 
   public function getEditor(ActiveRecord $record, $field) {
     $model = $record->getModel();
@@ -65,14 +75,9 @@ class Content extends LoadableModule {
     $formatField = $field . 'Format';
     $format = $this->getFormat($record->$formatField);
     $formatName = $format->getName();
-    if (isset($this->defaultEditors[$name])) {
-      if (isset($this->defaultEditors[$name][$field])) {
-        $editor = $this->defaultEditors[$name][$field];
-        if ($editor->getFormat() == $formatName) {
-          return $editor;
-        }
-      }
-    }
+    $defaultEditor = $this->getDefaultEditor($record, $field);
+    if ($defaultEditor->getFormat() == $formatName)
+      return $defaultEditor;
     if (isset($this->editors[$formatName])) {
       $num = count($this->editors[$formatName]);
       if ($num > 0)
