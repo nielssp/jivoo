@@ -113,7 +113,7 @@ class Migrations extends LoadableModule {
       $migrationSchema = null;
       foreach ($migrations as $migration) {
         if (!isset($currentState[$migration])) {
-          if ($refrsh) {
+          if ($refresh) {
             $migrationSchema = new MigrationSchema($db);
             $refresh = false; 
           }
