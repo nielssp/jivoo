@@ -35,6 +35,11 @@ class AdminController extends AppController {
     $this->title = tr('About');
     return $this->render();
   }
+  
+  public function update() {
+    $this->title = tr('Update %1', $this->app->name);
+    return $this->render();
+  }
 
   public function accessDenied() {
     $this->title = tr('Access Denied');

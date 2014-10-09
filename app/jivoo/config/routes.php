@@ -13,4 +13,9 @@ return array(
   Route::auto('Admin::Comments'),
   Route::auto('Admin::Users'),
   Route::auto('Admin::Extensions'),
+  Route::auto('Admin::Configuration'),
+  Route::auto('Admin::Media'),
+  Route::auto('Admin::Menus'),
+  Route::auto('Admin::Themes'),
+  Route::auto('Admin::Widgets'),
 );
