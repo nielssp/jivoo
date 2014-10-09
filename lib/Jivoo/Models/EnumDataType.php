@@ -1,13 +1,18 @@
 <?php
 class EnumDataType extends DataType {
   
-  private $class;
+  private $class = null;
   private $values;
   
-  protected function __construct($values, $null = false, $default = null) {
+  protected function __construct($valuesOrClass, $null = false, $default = null) {
     parent::__construct(DataType::ENUM, $null, $default);
-    $this->class = $enumClass;
-    $this->values = $values;
+    if (!is_array($valuesOrClass)) {
+      $this->values = Enum::getValues($valuesOrClass);
+    }
+    else { 
+      $this->class = $valuesOrClass;
+      $this->values = Enum::getValues($this->class);
+    }
     if (isset($default) and !in_array($default, $this->values)) {
       throw new InvalidArgumentException(tr(
         'Default value must be part of enum'
@@ -19,6 +24,8 @@ class EnumDataType extends DataType {
     if ($property == 'values')
       return $this->values;
     if ($property == 'placeholder')
+      if (!isset($this->class))
+        throw new Exception(tr('Invalid use of anonymous enum type'));
       return '%' . $this->class;
     return parent::__get($property);
   }

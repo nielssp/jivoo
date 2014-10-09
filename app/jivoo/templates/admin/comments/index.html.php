@@ -60,10 +60,9 @@ foreach ($widget as $item) {
       $Format->html($item, 'content', array(
         'stripAll' => true,
         'maxLength' => 150,
-        'append' => $Html->link('[...]', $item)
+        'append' => isset($item->post) ? $Html->link('[...]', $item) : '[...]'
       )),
-      isset($item->post->comments) ? $Html->link($item->post->title, $item)
-        . ' #' . $item->post->comments->where('status = %CommentStatus', 'approved')->orderBy('created')->rowNumber($item) : '',
+      isset($item->post) ? $Html->link($item->post->title, $item) : '',
       $item->status,
       ldate($item->created)
     ),

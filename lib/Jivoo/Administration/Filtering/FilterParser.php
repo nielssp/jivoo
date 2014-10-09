@@ -186,6 +186,6 @@ class FilterParser {
       $this->expect();
       return new ComparisonNode($field, $comparison, $this->currentToken[1]);
     }
-    return new StringNode($value);
+    return new StringNode($field);
   }
 }

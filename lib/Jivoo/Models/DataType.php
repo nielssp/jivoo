@@ -408,8 +408,6 @@ class DataType {
    * @return DataType
    */
   public static function enum($valuesOrClass, $null = false, $default = null) {
-    if (!is_array($valuesOrClass))
-      $valuesOrClass = Enum::getValues($valuesOrClass);
     return new EnumDataType($valuesOrClass, $null, $default);
   }
   

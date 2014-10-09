@@ -14,7 +14,7 @@ return array(
     'Jivoo/Controllers',
     'Jivoo/Setup',
     'Jivoo/Models', 
-    'Jivoo/Editors',
+    'Jivoo/Content',
     'Jivoo/Helpers',
     'Jivoo/AccessControl',
     'Jivoo/Administration',
