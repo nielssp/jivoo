@@ -33,7 +33,7 @@ class PageRouting extends AppListener {
     else {
       $record = $this->m->Models->Page->find($parameters[0]);
       if (!$record)
-        return false;
+        return null;
     }
     return explode('/', $record->name);
   }

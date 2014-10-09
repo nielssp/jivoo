@@ -126,7 +126,7 @@ class PostRouting extends AppListener {
         else {
           $record = $this->m->Models->Post->find($parameters[0]);
           if (!$record)
-            return false;
+            return null;
         }
       }
       $time = $record->created;
@@ -151,6 +151,6 @@ class PostRouting extends AppListener {
       }
       return $path;
     }
-    return false;
+    return null;
   }
 }

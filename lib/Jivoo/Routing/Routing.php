@@ -304,7 +304,10 @@ class Routing extends LoadableModule {
     }
     if (!isset($function))
       throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action . '[' . $arity . ']'));
-    return call_user_func($function, $parameters, $additional);
+    $path = call_user_func($function, $parameters, $additional);
+    if (!isset($path))
+      throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action . '[' . $arity . ']'));
+    return $path;
   }
 
   /**
