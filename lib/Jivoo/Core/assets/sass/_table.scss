@@ -14,12 +14,14 @@ table {
   }
   td, th {
     padding: 12px 8px;
-    display: none;
     vertical-align: top;
     width: 15%;
 
     &.primary {
       width: auto;
+    }
+    &.non-essential {
+      display: none;
     }
   }
   thead th, tfoot th {
@@ -131,11 +133,8 @@ table {
       cursor: pointer;
     }
   }
-  .primary {
-    display: table-cell;
-  }
   @media screen and (min-width: $sm) {
-    td, th {
+    td.non-essential, th.non-essential {
       display: table-cell;
     }
     .action-links {

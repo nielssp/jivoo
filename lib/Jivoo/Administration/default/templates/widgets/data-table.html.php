@@ -105,7 +105,12 @@ $this->script('widgets/data-table.js');
 </th>
 <?php foreach ($columns as $column): ?>
 
-<th<?php if ($column == $primaryColumn) echo ' class="primary"'; ?>
+<th<?php
+if ($column == $primaryColumn)
+  echo ' class="primary"';
+else
+  echo ' class="non-essential"';
+?>
  scope="col">
 <?php if (in_array($column, $sortOptions)): ?>
 <?php if ($sortBy == $column and $descending): ?>
@@ -131,7 +136,7 @@ $this->script('widgets/data-table.js');
 <?php endif; ?>
 </th>
 <?php endforeach; ?>
-<th class="actions" scope="col"><?php echo tr('Actions'); ?></th>
+<th class="actions non-essential" scope="col"><?php echo tr('Actions'); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -145,12 +150,17 @@ $this->script('widgets/data-table.js');
 <label><input type="checkbox" /></label>
 </th>
 <?php foreach ($columns as $column): ?>
-<th<?php if ($column == $primaryColumn) echo ' class="primary"'; ?>
+<th<?php
+if ($column == $primaryColumn)
+  echo ' class="primary"';
+else
+  echo ' class="non-essential"';
+?>
  scope="col">
 <?php echo h($labels[$column]); ?>
 </th>
 <?php endforeach; ?>
-<th class="actions" scope="col"><?php echo tr('Actions'); ?></th>
+<th class="actions non-essential" scope="col"><?php echo tr('Actions'); ?></th>
 </tr>
 </tfoot>
 </table>

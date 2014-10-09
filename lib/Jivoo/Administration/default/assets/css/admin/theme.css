@@ -412,11 +412,12 @@ table {
     font-weight: 600; }
   table td, table th {
     padding: 12px 8px;
-    display: none;
     vertical-align: top;
     width: 15%; }
     table td.primary, table th.primary {
       width: auto; }
+    table td.non-essential, table th.non-essential {
+      display: none; }
   table thead th, table tfoot th {
     background-color: #eeeeee;
     color: #999999; }
@@ -479,10 +480,8 @@ table {
       margin: -12px -8px;
       display: block;
       cursor: pointer; }
-  table .primary {
-    display: table-cell; }
   @media screen and (min-width: 768px) {
-    table td, table th {
+    table td.non-essential, table th.non-essential {
       display: table-cell; }
     table .action-links {
       display: none; } }

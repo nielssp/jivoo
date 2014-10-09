@@ -34,7 +34,7 @@ class AdminMenu extends AppListener {
       )),
       'about' => IconMenu::menu(tr('About'), array(), null, array(
         IconMenu::item(tr('Help & support'), null, 'support'),
-        IconMenu::item(tr('About Jivoo'), 'Admin::about', 'jivoo'),
+        IconMenu::item(tr('About %1', $this->app->name), 'Admin::about', 'jivoo'),
       )),
     ));
     $this->m->Administration->menu['main'] = $menu;

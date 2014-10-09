@@ -32,12 +32,11 @@ class AdminController extends AppController {
   }
 
   public function about() {
-    $this->title = tr('About');
+    $this->title = tr('About %1', $this->app->name);
     return $this->render();
   }
   
   public function update() {
-    $this->title = tr('Update %1', $this->app->name);
     return $this->render();
   }
 

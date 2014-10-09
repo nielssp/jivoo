@@ -26,13 +26,13 @@
 </div>
 </td>
 <?php else: ?>
-<td>
+<td class="non-essential">
 <?php echo $options['cells'][$i]; ?>
 </td>
 <?php endif; ?>
 <?php $i++; ?>
 <?php endforeach; ?>
-<td class="actions">
+<td class="actions non-essential">
 <?php foreach ($options['actions'] as $action): ?>
 <?php echo $Html->link(
   $Icon->icon($action->icon),
