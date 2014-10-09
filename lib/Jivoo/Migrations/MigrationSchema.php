@@ -26,7 +26,7 @@ class MigrationSchema implements IDatabaseSchema, IMigratable {
   }
   
   public function finalize() {
-    $this->db->setSchema = $this->targetSchema;
+    $this->db->setSchema($this->targetSchema);
   }
   
   private function reload() {
