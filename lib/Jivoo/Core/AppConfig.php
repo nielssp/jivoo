@@ -71,7 +71,7 @@ class AppConfig implements arrayaccess {
             break;
           case 'json':
             $content = file_get_contents($this->file);
-            $this->data = json_decode($content);
+            $this->data = Json::decode($content);
             break;
           default:
             throw new UnsupportedConfigurationFormat(

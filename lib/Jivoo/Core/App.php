@@ -101,10 +101,13 @@ class App implements IEventSubject {
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
-    $appFile = $appPath . '/app.php';
-    if (!file_exists($appFile))
-      throw new Exception('Invalid application');
-    $appConfig = include $appFile;
+    $appFile = $appPath . '/app.json';
+    if (file_exists($appFile)) 
+      $appConfig = Json::decode(file_get_contents($appFile));
+    else
+      throw new Exception('Invalid application. "app.json" not found.');
+    if (!isset($appConfig))
+      throw new Exception('Invalid application. "app.json" invalid.');
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
     $this->m = new Map();

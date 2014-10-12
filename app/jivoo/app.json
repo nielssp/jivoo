@@ -5,7 +5,7 @@
   "defaultLanguage": "en",
   "minPhpVersion": "5.2.0",
   "sessionPrefix": "jivoo_",
-  "extensions": ["Jquery"  "JqueryHotkeys"  "JqueryUi"  "Tinymce"  "BasicWidgets"  "Html5shiv"  "Respond"],
+  "extensions": ["Jquery", "JqueryHotkeys", "JqueryUi", "Tinymce", "BasicWidgets", "Html5shiv", "Respond", "Markdown"],
   "import": [
     "Jivoo/Core",
     "Jivoo/Routing",
@@ -14,7 +14,7 @@
     "Jivoo/Controllers",
     "Jivoo/Setup",
     "Jivoo/Models",
-    "Jivoo/Editors",
+    "Jivoo/Content",
     "Jivoo/Helpers",
     "Jivoo/Databases",
     "Jivoo/Migrations",
