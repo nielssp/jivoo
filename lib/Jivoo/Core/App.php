@@ -74,6 +74,8 @@ class App implements IEventSubject {
    */
   private $m = null;
 
+  private $waitingCalls = array();
+  
   /**
    * @var string Environment name
    */
@@ -249,6 +251,12 @@ class App implements IEventSubject {
       $this->m->$name = new $name($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
       $this->m->$name->afterLoad();
+      if (isset($this->waitingCalls[$name])) {
+        foreach ($this->waitingCalls[$name] as $tuple) {
+          list($method, $args) = $tuple;
+          call_user_func_array(array($this->m->$name, $method), $args);
+        }
+      }
     }
     return $this->m->$name;
   }
@@ -264,6 +272,16 @@ class App implements IEventSubject {
     return isset($this->m->$name);
   }
 
+  public function call($module, $method) {
+    $args = func_get_args();
+    $args = array_slice($args, 2);
+    if (isset($this->m->$module))
+      return call_user_func_array(array($this->m->$module, $method), $args);
+    if (!isset($this->waitingCalls[$module]))
+      $this->waitingCalls[$module] = array();
+    $this->waitingCalls[$module][] = array($method, $args);
+    return null;
+  }
   
   /**
    * Handler for uncaught exceptions

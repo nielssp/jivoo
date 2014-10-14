@@ -5,7 +5,8 @@
   "category": "JavaScript",
   "assets": {
     "html5shiv.js": {
-      "file": "html5shiv.js"
+      "file": "html5shiv.js",
+      "condition": "lt IE 9"
     }
   }
 }

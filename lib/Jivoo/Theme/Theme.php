@@ -42,7 +42,7 @@ class Theme extends LoadableModule {
           while (($theme = readdir($dir)) !== false) {
             if (is_dir($this->p('themes', $theme)) AND $theme != '.'
               AND $theme != '..') {
-              if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
+              if (file_exists($this->p('themes', $theme . '/theme.json'))) {
                 $this->config['frontend'] = $theme;
                 $this->setTheme($theme, 9);
               }
@@ -93,7 +93,7 @@ class Theme extends LoadableModule {
   private function load($zone = 'frontend') {
     if (isset($this->config[$zone])) {
       $theme = $this->config[$zone];
-      if (file_exists($this->p('themes', $theme . '/' . $theme . '.php'))) {
+      if (file_exists($this->p('themes', $theme . '/theme.json'))) {
         return $theme;
       }
     }

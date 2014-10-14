@@ -13,20 +13,18 @@ if (isset($title)) {
 }
 else {
   echo $site['title'];
-  if (isset($site['subtitle']) and $site['subtitle'] != '')
+  if (!empty($site['subtitle']))
     echo ' | ' . $site['subtitle'];
 }
 ?></title>
 
-<?php echo $this->block('meta'); ?>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<?php echo $this->block('style'); ?>
 
+<?php echo $this->resourceBlock(); ?>
 <!--[if (lt IE 9)]>
 <?php echo $this->insertFile('respond.js'); ?>
 <?php echo $this->insertFile('html5shiv.js'); ?>
 <![endif]-->
-<?php echo $this->block('script'); ?>
 </head>
 <body>
 <?php echo $this->block('body-top'); ?>

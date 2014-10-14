@@ -357,6 +357,16 @@ abstract class ViewBase {
         . '" href="' . $href . '" />' . PHP_EOL;
   }
   
+  public function useResource($resource) {
+    $this->insertFile($resource);
+  }
+  
+  public function resourceBlock() {
+    return $this->block('meta') . PHP_EOL
+      . $this->block('style') . PHP_EOL
+      . $this->block('script') . PHP_EOL;
+  }
+  
   /**
    * Append value to a block
    * @param string $block Block name

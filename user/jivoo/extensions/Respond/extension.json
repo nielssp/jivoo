@@ -5,7 +5,8 @@
   "category": "JavaScript",
   "assets": {
     "respond.js": {
-      "file": "respond.min.js"
+      "file": "respond.min.js",
+      "condition": "lt IE 9"
     }
   }
 }
