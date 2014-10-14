@@ -4,7 +4,7 @@
   "website": "https://github.com/scottjehl/Respond",
   "category": "JavaScript",
   "assets": {
-    "jquery.js": {
+    "respond.js": {
       "file": "respond.min.js"
     }
   }

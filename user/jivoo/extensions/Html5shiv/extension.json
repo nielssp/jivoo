@@ -4,7 +4,7 @@
   "website": "https://code.google.com/p/html5shiv/",
   "category": "JavaScript",
   "assets": {
-    "jquery.js": {
+    "html5shiv.js": {
       "file": "html5shiv.js"
     }
   }
