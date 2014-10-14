@@ -102,7 +102,7 @@ class Extensions extends LoadableModule {
     
     // Load extension modules
     $this->triggerEvent('beforeLoadExtensions');
-    foreach ($this->loadList as $name) {
+    foreach ($this->loadList as $name => $info) {
       $this->getModule($name);
     }
     $this->triggerEvent('afterLoadExtensions');
@@ -121,9 +121,8 @@ class Extensions extends LoadableModule {
         throw new ExtensionNotFoundException(tr('Extension not in load list: "%1"', $name));
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
       Lib::assumeSubclassOf($name, 'ExtensionModule');
-      $extension = $this->loadList[$name];
-      $dir = $extension->dir;
-      $this->e->$name = new $name($this->app, $this->config['config'][$name], $dir);
+      $info = $this->loadList[$name];
+      $this->e->$name = new $name($this->app, $info, $this->config['config'][$name]);
       $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e->$name));
     }
     return $this->e->$name;

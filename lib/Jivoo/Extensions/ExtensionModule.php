@@ -4,15 +4,18 @@ abstract class ExtensionModule extends Module {
 
   private $dir;
 
+  protected $info;
+  
   protected $e = null;
   
   protected $extensions = array();
 
-  public final function __construct(App $app, AppConfig $config, $dir) {
+  public final function __construct(App $app, ExtensionInfo $info, AppConfig $config) {
     parent::__construct($app);
     $this->e = $this->m->Extensions->getModules($this->extensions);
     $this->config = $config;
-    $this->dir = $dir;
+    $this->dir = $info->dir;
+    $this->info = $info;
     $this->init();
   }
 
