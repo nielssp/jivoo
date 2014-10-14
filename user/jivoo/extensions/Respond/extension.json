@@ -1,0 +1,11 @@
+{
+  "name": "Respond",
+  "version": "1.4.2",
+  "website": "https://github.com/scottjehl/Respond",
+  "category": "JavaScript",
+  "assets": {
+    "jquery.js": {
+      "file": "respond.min.js"
+    }
+  }
+}
