@@ -9,7 +9,7 @@
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
  */
-class AppConfig implements arrayaccess {
+class AppConfig implements arrayaccess, IteratorAggregate {
   
   /**
    * @var array Associatve array of key-value pairs for current subset
@@ -264,15 +264,29 @@ class AppConfig implements arrayaccess {
    */
   public static function phpPrettyPrint($data, $prefix = '') {
     $php = 'array(' . PHP_EOL;
-    foreach ($data as $key => $value) {
-      $php .= $prefix . '  ' . var_export($key, true) . ' => ';
-      if (is_array($value)) {
-        $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+    if (is_array($data) and array_diff_key($data, array_keys(array_keys($data)))) {
+      foreach ($data as $key => $value) {
+        $php .= $prefix . '  ' . var_export($key, true) . ' => ';
+        if (is_array($value)) {
+          $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+        }
+        else {
+          $php .= var_export($value, true);
+        }
+        $php .= ',' . PHP_EOL;
       }
-      else {
-        $php .= var_export($value, true);
+    }
+    else {
+      foreach ($data as $value) {
+        $php .= $prefix . '  ';
+        if (is_array($value)) {
+          $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+        }
+        else {
+          $php .= var_export($value, true);
+        }
+        $php .= ',' . PHP_EOL;
       }
-      $php .= ',' . PHP_EOL;
     }
     return $php . $prefix . ')';
   }
@@ -393,6 +407,10 @@ class AppConfig implements arrayaccess {
    */
   public function offsetUnset($key) {
     $this->delete($key);
+  }
+  
+  public function getIterator() {
+    return new MapIterator($this->data);
   }
 }
 

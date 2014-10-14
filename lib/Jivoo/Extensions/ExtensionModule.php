@@ -5,10 +5,12 @@ abstract class ExtensionModule extends Module {
   private $dir;
 
   protected $e = null;
+  
+  protected $extensions = array();
 
   public final function __construct(App $app, AppConfig $config, $dir) {
     parent::__construct($app);
-    $this->e = $this->m->Extensions;
+    $this->e = $this->m->Extensions->getModules($this->extensions);
     $this->config = $config;
     $this->dir = $dir;
     $this->init();

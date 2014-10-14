@@ -5,7 +5,7 @@
   "category": "JavaScript",
   "assets": {
     "jquery.js": {
-      "file": "jquery-1.7.1.min.js"
+      "file": "jquery-$version.min.js"
     }
   }
 }
