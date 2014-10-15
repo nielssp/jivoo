@@ -8,7 +8,7 @@
       "Jquery >=1.3.2"
     ]
   },
-  "assets": {
+  "resources": {
     "jquery-ui.css": {
       "file": "jquery-ui-$version.custom.css"
     },

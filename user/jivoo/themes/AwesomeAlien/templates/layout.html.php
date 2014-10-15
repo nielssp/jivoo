@@ -1,7 +1,6 @@
 <?php
-$this->script('jquery.js');
-$this->script('theme.js');
-$this->style('theme.css');
+$this->import('theme.js', 'theme.css', 'respond.js', 'html5shiv.js');
+$this->meta('viewport', 'width=device-width, initial-scale=1');
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,13 +17,10 @@ else {
 }
 ?></title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<?php echo $this->block('meta'); ?>
 
 <?php echo $this->resourceBlock(); ?>
-<!--[if (lt IE 9)]>
-<?php echo $this->insertFile('respond.js'); ?>
-<?php echo $this->insertFile('html5shiv.js'); ?>
-<![endif]-->
 </head>
 <body>
 <?php echo $this->block('body-top'); ?>

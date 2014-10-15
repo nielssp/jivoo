@@ -395,7 +395,7 @@ class App implements IEventSubject {
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
-        
+
     // Import modules
     $this->triggerEvent('beforeImportModules');
     $modules = array();

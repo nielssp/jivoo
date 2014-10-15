@@ -3,7 +3,10 @@
  * Base class for views
  * @package Jivoo\Templates
  */
-abstract class ViewBase {
+abstract class ViewBase extends Module {
+  
+  protected $modules = array('Templates', 'Routing', 'Assets');
+  
   /**
    * @var array Associative array of data from controller
    */
@@ -32,7 +35,7 @@ abstract class ViewBase {
   /**
    * @var string Content for parent template or layout
    */
-  private $conent = '';
+  private $content = '';
 
   /**
    * @var string Name of parent template
@@ -56,16 +59,6 @@ abstract class ViewBase {
   private $inserted = array();
   
   /**
-   * @var Dictionary Collection of modules
-   */
-  private $m = null;
-  
-  /**
-   * @var Request Current request
-   */
-  private $request;
-  
-  /**
    * @var array Associative array of template dirs and priorities
    */
   private $templateDirs = array();
@@ -75,14 +68,16 @@ abstract class ViewBase {
    */
   private $mobile = false;
   
+  private $resourceManager = null;
+  
   /**
    * Constructor.
    * @param Templates $templates Templates module
    */
-  public function __construct(Templates $templates, Routing $routing) {
-    $this->m = new Map();
-    $this->m->Templates = $templates;
-    $this->m->Routing = $routing;
+  public function __construct(App $app) {
+    $this->view = $this;
+    parent::__construct($app);
+    $this->resourceManager = new ResourceManager($this->m->Assets);
 
     $this->request = $this->m->Routing->getRequest();
     $this->mobile = $this->request->isMobile();
@@ -210,7 +205,7 @@ abstract class ViewBase {
    * @return string Absolute path to asset
    */
   protected function file($file) {
-    return $this->m->Templates->getAsset($file);
+    return $this->m->Assets->getAsset($file);
   }
   
   /**
@@ -231,90 +226,21 @@ abstract class ViewBase {
    * before this one, e.g. 'jquery-ui.js' would depend on 'jquery.js' and
    * 'jquery-ui.css'
    */
-  public function provide($file, $path, $dependencies = array()) {
-    $this->providers[$file] = array(
-      'path' => $path,
-      'dependencies' => $dependencies,
-    );
+  public function provide($resource, $location, $dependencies = array(), $condition) {
+    $this->resourceManager->provide($resource, $location, $dependencies, $condition);
   }
   
-  public function insertFile($file) {
-    $type = Utilities::getFileExtension($file);
-    switch ($type) {
-      case 'js':
-        $path = $this->file('js/' . $file);
-        $block = 'script';
-        break;
-      case 'css':
-        $path = $this->file('css/' . $file);
-        $block = 'style';
-        break;
-      default:
-        throw new Exception(tr('Unknown type of file: %1', $type));
-    }
-    if (isset($this->providers[$file])) {
-      $path = $this->providers[$file]['path'];
-      foreach ($this->providers[$file]['dependencies'] as $dependency) {
-        $this->insert($dependency);
-      }
-    }
-    if ($block == 'script') {
-      return '<script type="text/javascript" src="' . h($path) . '"></script>'
-        . PHP_EOL;
-    }
-    else {
-      return '<link rel="stylesheet" type="text/css" href="' . h($path) . '" />'
-        . PHP_EOL;
-    }
+  public function import($resource) {
+    $args = func_get_args();
+    $this->resourceManager->import($args);
   }
-
-  /**
-   * Insert script or stylesheet into view
-   * @param string $file File name
-   * @throws Exception If unknown type
-   */
-  private function insert($file) {
-    if (is_array($file)) {
-      foreach ($file as $f) {
-        $this->insert($f);
-      }
-      return;
-    }
-    if (isset($this->inserted[$file])) {
-      return;
-    }
-    $this->inserted[$file] = true;
-    $html = $this->insertFile($file);
-    if ($html[1] == 's') {
-      $this->appendTo(
-        'script',
-        $html
-      );
-    }
-    else {
-      $this->appendTo(
-        'style',
-        $html
-      );
-    }
+  
+  public function importConditional($resource, $condition) {
+    $this->resourceManager->importConditional($resource, $condition);
   }
-
-  /**
-   * Insert stylesheet into view, will look for file in 'assets/css' if not
-   * provided by another source
-   * @param string $style Stylesheet name, e.g. 'style.css'
-   */
-  public function style($style) {
-    $this->insert($style);
-  }
-
-  /**
-   * Insert script into view, will look for file in 'assets/js' if not
-   * provided by another source
-   * @param string $script Script name, e.g. 'script.js'
-   */
-  public function script($script) {
-    $this->insert($script);
+  
+  public function resourceBlock() {
+    return $this->resourceManager->createBlock();
   }
   
   /**
@@ -355,16 +281,6 @@ abstract class ViewBase {
     else
       $this->blocks['meta'] .= '<link rel="' . h($rel)
         . '" href="' . $href . '" />' . PHP_EOL;
-  }
-  
-  public function import($resource) {
-    $this->insertFile($resource);
-  }
-  
-  public function resourceBlock() {
-    return $this->block('meta') . PHP_EOL
-      . $this->block('style') . PHP_EOL
-      . $this->block('script') . PHP_EOL;
   }
   
   /**

@@ -46,7 +46,7 @@ class Extensions extends LoadableModule {
     $this->app->attachEventHandler('afterLoadModules', array($this, 'run'));
     
     $this->attachFeature('load', array($this, 'handleLoad'));
-    $this->attachFeature('assets', array($this, 'handleAssets'));
+    $this->attachFeature('resources', array($this, 'handleResources'));
   }
   
   public function handleLoad(ExtensionInfo $info) {
@@ -55,16 +55,18 @@ class Extensions extends LoadableModule {
     }
   }
   
-  public function handleAssets(ExtensionInfo $info) {
-    foreach ($info->assets as $name => $asset) {
-      $dependencies = isset($asset['dependencies']) ? $asset['dependencies'] : array();
+  public function handleResources(ExtensionInfo $info) {
+    foreach ($info->resources as $resource => $resInfo) {
+      $dependencies = isset($resInfo['dependencies']) ? $resInfo['dependencies'] : array();
+      $condition = isset($resInfo['condition']) ? $resInfo['condition'] : null;
       $this->view->provide(
-        $name,
+        $resource,
         $this->m->Assets->getAsset(
           'extensions',
-          $info->dir . '/' . $info->replaceVariables($asset['file'])
+          $info->dir . '/' . $info->replaceVariables($resInfo['file'])
         ),
-        $dependencies
+        $dependencies,
+        $condition
       );
     }
   }

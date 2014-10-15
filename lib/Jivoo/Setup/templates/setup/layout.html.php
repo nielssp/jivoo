@@ -1,5 +1,7 @@
 <?php
-$this->style('core.css');
+$this->meta('viewport', 'width=device-width, initial-scale=1');
+$this->icon('jivoo.ico');
+$this->import('core.css');
 ?>
 <!DOCTYPE html>
 <html>
@@ -8,10 +10,9 @@ $this->style('core.css');
 <title><?php echo $title; ?></title>
 
 <?php echo $this->block('meta'); ?>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="shortcut icon" href="<?php echo $this->file('img/jivoo.ico'); ?>" />
-<?php echo $this->block('style'); ?>
-<?php echo $this->block('script'); ?>
+
+<?php echo $this->resourceBlock(); ?>
+
 </head>
 <body>
 

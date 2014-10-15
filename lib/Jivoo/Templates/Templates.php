@@ -19,7 +19,7 @@ class Templates extends LoadableModule {
   }
   
   public function createView() {
-    $view = new View($this, $this->m->Routing);
+    $view = new View($this->app);
     $view->addTemplateDir($this->p('app', 'templates'), 4);
     $view->site = $this->config->getArray();
     $view->app = $this->app->appConfig;
@@ -54,14 +54,4 @@ class Templates extends LoadableModule {
     }
     return parnet::__get($property);
   }
-
-  /**
-   * Return a link to an asset
-   * @param string $file File name
-   * @return string Link
-   */
-  public function getAsset($file) {
-    return $this->m->Assets->getAsset($file);
-  }
-
 }

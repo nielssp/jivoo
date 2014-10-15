@@ -1,11 +1,14 @@
 <?php
 $this->meta('viewport', 'width=device-width, initial-scale=1');
-$this->style('admin/icomoon/style.css');
-$this->style('admin/theme.css'); 
-$this->script('admin/respond.min.js');
-$this->script('admin/html5shiv.js');
-$this->script('admin/jquery.min.js'); 
-$this->script('admin/theme.js');
+$this->provide('jquery.js', $this->file('js/admin/jquery.min.js'));
+$this->import(
+  'admin/icomoon/style.css',
+  'admin/theme.css',
+  'jquery.js',
+  'admin/theme.js'
+);
+$this->importConditional('admin/html5shiv.js', 'lt IE 9');
+$this->importConditional('admin/respond.min.js', 'lt IE 9');
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,8 +17,8 @@ $this->script('admin/theme.js');
 <title><?php echo $title . ' | ' . $app['name']; ?></title>
 
 <?php echo $this->block('meta'); ?>
-<?php echo $this->block('style'); ?>
-<?php echo $this->block('script'); ?>
+
+<?php echo $this->resourceBlock(); ?>
 
 </head>
 <body>

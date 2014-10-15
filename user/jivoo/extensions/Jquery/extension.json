@@ -3,7 +3,7 @@
   "version": "1.7.1",
   "website": "http://jquery.com",
   "category": "JavaScript",
-  "assets": {
+  "resources": {
     "jquery.js": {
       "file": "jquery-$version.min.js"
     }

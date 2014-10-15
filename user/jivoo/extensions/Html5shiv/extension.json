@@ -3,7 +3,7 @@
   "version": "3.7.0",
   "website": "https://code.google.com/p/html5shiv/",
   "category": "JavaScript",
-  "assets": {
+  "resources": {
     "html5shiv.js": {
       "file": "html5shiv.js",
       "condition": "lt IE 9"

@@ -164,6 +164,8 @@ class Assets extends LoadableModule {
             $path = $dir['path'] . '/' . $path;
           }
         }
+        if (!isset($key))
+          return null;
       }
     }
     $p = $this->p($key, $path);
