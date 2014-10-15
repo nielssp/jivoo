@@ -357,7 +357,7 @@ abstract class ViewBase {
         . '" href="' . $href . '" />' . PHP_EOL;
   }
   
-  public function useResource($resource) {
+  public function import($resource) {
     $this->insertFile($resource);
   }
   
@@ -542,16 +542,6 @@ abstract class ViewBase {
     $output = $this->fetch($template, $data);
     $this->ignoreExtend = $prev;
     return $output;
-  }
-
-  /**
-   * Display a template
-   * @param string $template Template
-   */
-  public function display($template, $data = array()) {
-    $contentType = Utilities::getContentType($template);
-    Http::setContentType($contentType);
-    echo $this->fetch($template, $data);
   }
 }
 
