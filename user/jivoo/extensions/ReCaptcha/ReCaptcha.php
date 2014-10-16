@@ -1,7 +1,7 @@
 <?php
 class ReCaptcha extends ExtensionModule implements IFormExtension {
   
-  protected $helpers = array('Modles');
+  protected $modules = array('Models');
   
   private $Form = null;
   

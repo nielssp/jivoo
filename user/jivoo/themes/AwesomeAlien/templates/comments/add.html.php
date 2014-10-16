@@ -22,48 +22,48 @@
 
 <div class="field">
 <?php echo $Form->label('author'); ?>
-<?php echo $Form->ifRequired('author', '<span class="star">*</span>'); ?>
-<?php echo $Form->text('author'); ?>
-<?php echo $Form->error('author'); ?>
+ <?php echo $Form->ifRequired('author', '<span class="star">*</span>'); ?>
+ <?php echo $Form->text('author'); ?>
+ <?php echo $Form->error('author'); ?>
 </div>
 
 <div class="field">
 <?php echo $Form->label('email'); ?>
-<?php echo $Form->ifRequired('email', '<span class="star">*</span>'); ?>
-<?php echo $Form->text('email'); ?>
-<?php echo $Form->error('email'); ?>
+ <?php echo $Form->ifRequired('email', '<span class="star">*</span>'); ?>
+ <?php echo $Form->text('email'); ?>
+ <?php echo $Form->error('email'); ?>
 </div>
 
 <div class="field">
 <?php echo $Form->label('website'); ?>
-<?php echo $Form->ifRequired('website', '<span class="star">*</span>'); ?>
-<?php echo $Form->text('website'); ?>
-<?php echo $Form->error('website'); ?>
+ <?php echo $Form->ifRequired('website', '<span class="star">*</span>'); ?>
+ <?php echo $Form->text('website'); ?>
+ <?php echo $Form->error('website'); ?>
 </div>
 <?php endif; ?>
 
 <?php foreach ($this->extensions('before-content', 'IFormViewExtension') as $e): ?>
 <div class="field">
 <?php echo $e->label(); ?>
-<?php echo $e->ifRequired('<span class="star">*</span>'); ?>
-<?php echo $e->field(); ?>
-<?php echo $e->error(); ?>
+ <?php echo $e->ifRequired('<span class="star">*</span>'); ?>
+ <?php echo $e->field(); ?>
+ <?php echo $e->error(); ?>
 </div>
 <?php endforeach; ?>
 
 <div class="field">
 <?php echo $Form->label('content'); ?>
-<?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
-<?php echo $Editor->get('content'); ?>
-<?php echo $Form->error('content'); ?>
+ <?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
+ <?php echo $Editor->get('content'); ?>
+ <?php echo $Form->error('content'); ?>
 </div>
 
 <?php foreach ($this->extensions('after-content', 'IFormExtension') as $e): ?>
 <div class="field">
 <?php echo $e->label(); ?>
-<?php echo $e->ifRequired('<span class="star">*</span>'); ?>
-<?php echo $e->field(); ?>
-<?php echo $e->error(); ?>
+ <?php echo $e->ifRequired('<span class="star">*</span>'); ?>
+ <?php echo $e->field(); ?>
+ <?php echo $e->error(); ?>
 </div>
 <?php endforeach; ?>
 
