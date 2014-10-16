@@ -1,5 +1,5 @@
 <?php
-$this->import('theme.js', 'theme.css', 'respond.js', 'html5shiv.js');
+$this->import('jquery.js', 'theme.js', 'theme.css', 'respond.js', 'html5shiv.js');
 $this->meta('viewport', 'width=device-width, initial-scale=1');
 ?>
 <!DOCTYPE html>
