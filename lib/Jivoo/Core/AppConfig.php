@@ -134,6 +134,8 @@ class AppConfig implements arrayaccess, IteratorAggregate {
    * @return AppConfig A subset
    */
   public function getSubset($key) {
+    if (isset($this->emptySubset))
+      $this->createTrueSubset();
     $config = new AppConfig();
     if (!isset($this->data[$key])) {
       $config->data = null;
