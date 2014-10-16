@@ -9,6 +9,8 @@ class View extends LoadableModule {
   
   private $data;
   
+  private $extensions;
+  
   private $blocks;
   
   private $template = null;
@@ -21,6 +23,7 @@ class View extends LoadableModule {
   
   protected function init() {
     $this->resources = new ViewResources($this->m->Assets);
+    $this->extensions = new ViewExtensions($this);
     $this->data = new ViewData();
     $this->blocks = new ViewBlocks($this);
     
@@ -39,6 +42,10 @@ class View extends LoadableModule {
     $this->addFunctions(
       $this->resources,
       array('provide', 'import', 'resourceBlock', 'importConditional')
+    );
+    $this->addFunctions(
+      $this->extensions,
+      array('extensions')
     );
   }
   

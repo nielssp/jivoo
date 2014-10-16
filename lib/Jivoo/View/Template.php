@@ -15,11 +15,13 @@ class Template {
    * @var string Content for parent template or layout
    */
   private $content = '';
-
+  
   /**
    * @var string Name of parent template
    */
   private $extend = null;
+  
+  private $templateStack = array();
   
   /**
    * @var bool Whether or not to ignore extends
@@ -35,6 +37,12 @@ class Template {
   public function ignoreExtend($ignore) {
     $this->ignoreExtend = $ignore;
   } 
+  
+  public function getCurrent() {
+    if (isset($this->templateStack[0]))
+      return $this->templateStack[0];
+    return null;
+  }
   
   /**
    * Extend another template, i.e. set parent template
@@ -52,7 +60,9 @@ class Template {
     if ($_file === false) {
       throw new TemplateNotFoundException(tr('Template not found: %1', $_template));
     }
+    array_unshift($this->templateStack, $_template);
     require $_file;
+    array_shift($this->templateStack);
   }
 
   /**

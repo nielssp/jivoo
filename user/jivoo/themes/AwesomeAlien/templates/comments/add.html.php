@@ -42,12 +42,30 @@
 </div>
 <?php endif; ?>
 
+<?php foreach ($this->extensions('before-content', 'FormViewExtension') as $e): ?>
+<div class="field">
+<?php echo $e->label(); ?>
+<?php echo $e->ifRequired('<span class="star">*</span>'); ?>
+<?php echo $e->field(); ?>
+<?php echo $e->error(); ?>
+</div>
+<?php endforeach; ?>
+
 <div class="field">
 <?php echo $Form->label('content'); ?>
 <?php echo $Form->ifRequired('content', '<span class="star">*</span>'); ?>
 <?php echo $Editor->get('content'); ?>
 <?php echo $Form->error('content'); ?>
 </div>
+
+<?php foreach ($this->extensions('after-content', 'FormViewExtension') as $e): ?>
+<div class="field">
+<?php echo $e->label(); ?>
+<?php echo $e->ifRequired('<span class="star">*</span>'); ?>
+<?php echo $e->field(); ?>
+<?php echo $e->error(); ?>
+</div>
+<?php endforeach; ?>
 
 <p><?php echo $Form->submit(tr('Post comment')); ?>
 <?php echo $Form->submit(tr('Cancel'), array('name' => 'cancel')); ?>
