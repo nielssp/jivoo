@@ -137,6 +137,11 @@ abstract class ActiveModel extends Model implements IEventListener {
     $this->database->$table = $this;
   }
   
+  public function addVirtual($field) {
+    $this->fields[] = $field;
+    $this->virtualFields[] = $field;
+  }
+  
   public function getEventHandlers() {
     return $this->events;
   }
