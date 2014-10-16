@@ -11,6 +11,8 @@
  */
 class AppConfig implements arrayaccess, IteratorAggregate {
   
+  private $emptySubset = null;
+  
   /**
    * @var array Associatve array of key-value pairs for current subset
    */
@@ -134,12 +136,21 @@ class AppConfig implements arrayaccess, IteratorAggregate {
   public function getSubset($key) {
     $config = new AppConfig();
     if (!isset($this->data[$key])) {
-      $this->data[$key] = array();
+      $config->data = null;
+      $config->emptySubset = $key;
     }
-    $config->data =& $this->data[$key];
+    else {
+      $config->data =& $this->data[$key];
+    }
     $config->parent = $this;
     $config->root = $this->root;
     return $config;
+  }
+  
+  private function createTrueSubset() {
+    $this->parent->data[$this->emptySubset] = array();
+    $this->data =& $this->parent->data[$this->emptySubset];
+    $this->emptySubset = null;
   }
   
   /**
@@ -149,6 +160,8 @@ class AppConfig implements arrayaccess, IteratorAggregate {
    * @return bool True if successful, false if not
    */
   public function set($key, $value) {
+    if (isset($this->emptySubset))
+      $this->createTrueSubset();
     $oldValue = null;
     if (isset($this->data[$key])) {
       $oldValue = $this->data[$key];
@@ -192,6 +205,8 @@ class AppConfig implements arrayaccess, IteratorAggregate {
    * @param mixed $value Value
    */
   public function setDefaults($key, $value = null) {
+    if (isset($this->emptySubset))
+      $this->createTrueSubset();
     if (is_array($key)) {
       $array = $key;
       foreach ($array as $key => $value) {
