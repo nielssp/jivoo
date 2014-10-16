@@ -1,0 +1,13 @@
+{
+  "name": "reCAPTCHA",
+  "version": "1.11",
+  "website": "http://www.google.com/recaptcha",
+  "license": "LICENSE",
+  "viewExtensions": [
+    {
+      "module": "ReCaptcha",
+      "template": "comments/add.html",
+      "hook": "after-content"
+    }
+  ]
+}
