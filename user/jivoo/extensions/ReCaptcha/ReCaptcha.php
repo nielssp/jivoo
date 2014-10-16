@@ -21,14 +21,6 @@ class ReCaptcha extends ExtensionModule implements IFormExtension {
       $this->m->Models->Comment->addVirtual('reCaptcha');
       $validator = $this->m->Models->Comment->getValidator();
       $validator->reCaptcha->callback = array($this, 'validate');
-      
-      // TODO only show on add.html template
-      $this->view->blocks->append(
-        'body-top',
-        '<script type="text/javascript">'
-          . 'var RecaptchaOptions = { theme : "clean" };'
-          . '</script>'
-      );
     }
   }
   
@@ -58,6 +50,12 @@ class ReCaptcha extends ExtensionModule implements IFormExtension {
   public function prepare() {
     $this->Form = $this->view->data->Form;
     $this->importLib();
+    $this->view->blocks->append(
+      'body-top',
+      '<script type="text/javascript">'
+        . 'var RecaptchaOptions = { theme : "clean" };'
+        . '</script>' . PHP_EOL
+    );
     return true;
   }
   public function label($label = null, $attributes = array()) {
