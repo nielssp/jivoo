@@ -39,7 +39,7 @@ class ContentAdminHelper extends Helper {
         );
       }
     }
-    return $this->view->fetch('admin/confirm.html', $options);
+    return $this->view->render('admin/confirm.html', $options);
   }
   
   public function delete($options) {
@@ -48,7 +48,7 @@ class ContentAdminHelper extends Helper {
       $record->delete();
       return $this->m->Routing->refresh();
     }
-    return $this->view->fetch('admin/confirm.html', $options);
+    return $this->view->render('admin/confirm.html', $options);
   }
   
   public function makeSelection(IModel $model, $ids, $idField = 'id') {

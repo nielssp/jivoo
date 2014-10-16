@@ -5,7 +5,7 @@
  */
 class JsonHelper extends Helper {
   
-  protected $modules = array('Templates');
+  protected $modules = array('View');
   
   /**
    * Create a JSON response

@@ -3,7 +3,7 @@
 // Name           : Jivoo Administration GUI Toolkit module
 // Description    : Module for creating web application user interfaces
 // Author         : apakoh.dk
-// Dependencies   : Jivoo/Templates
+// Dependencies   : Jivoo/View
 
 Lib::import('Jivoo/Administration/Filtering');
 
@@ -13,7 +13,7 @@ Lib::import('Jivoo/Administration/Filtering');
  */
 class Administration extends LoadableModule {
   
-  protected $modules = array('Templates', 'Widgets');
+  protected $modules = array('View', 'Widgets');
   
   private $menu;
   

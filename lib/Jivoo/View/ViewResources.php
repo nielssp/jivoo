@@ -1,5 +1,5 @@
 <?php
-class ResourceManager {
+class ViewResources {
   
   private $providers = array();
   
@@ -107,7 +107,7 @@ class ResourceManager {
     $this->imported[$resource] = true;
   }
   
-  public function createBlock() {
+  public function resourceBlock() {
     $block = '';
     foreach ($this->imports['style'] as $resource) {
       if (isset($resource['condition']))

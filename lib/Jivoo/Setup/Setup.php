@@ -11,7 +11,7 @@
  */
 class Setup extends LoadableModule {
   
-  protected $modules = array('Controllers', 'Routing', 'Templates', 'Assets');
+  protected $modules = array('Controllers', 'Routing', 'View', 'Assets');
   
   private $current = null;
 

@@ -85,7 +85,7 @@ class Controller extends Module {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
-    return $this->view->$name;
+    return $this->view->data->$name;
   }
 
   /**
@@ -94,17 +94,17 @@ class Controller extends Module {
    * @param mixed $value Value
    */
   public function __set($name, $value) {
-    $this->view->$name = $value;
+    $this->view->data->$name = $value;
   }
   
   public function __isset($name) {
     if (isset($this->modelObjects[$name]))
       return true;
-    return isset($this->view->$name);
+    return isset($this->view->data->$name);
   }
   
   public function __unset($name) {
-    unset($this->view->$name);
+    unset($this->view->data->$name);
   }
   
   public function getName() {

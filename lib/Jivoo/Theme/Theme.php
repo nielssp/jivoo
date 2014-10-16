@@ -11,7 +11,7 @@
  */
 class Theme extends LoadableModule {
   
-  protected $modules = array('Templates', 'Assets');
+  protected $modules = array('View', 'Assets');
   
   /**
    * @var string The current theme
@@ -22,7 +22,7 @@ class Theme extends LoadableModule {
 
   protected function init() {
     // Create meta-tags
-    $this->view->meta('generator', 'Jivoo');
+    $this->view->blocks->meta('generator', 'Jivoo');
     //     if ($this->m
 //       ->Configuration
 //       ->exists('site.description')) {

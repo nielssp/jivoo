@@ -11,6 +11,6 @@ class ViewResponse extends Response {
   }
 
   public function getBody() {
-    return $this->view->fetch($this->template);
+    return $this->view->render($this->template);
   }
 }

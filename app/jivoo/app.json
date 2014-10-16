@@ -10,7 +10,7 @@
     "Jivoo/Core",
     "Jivoo/Routing",
     "Jivoo/Assets",
-    "Jivoo/Templates",
+    "Jivoo/View",
     "Jivoo/Controllers",
     "Jivoo/Setup",
     "Jivoo/Models",
@@ -36,6 +36,10 @@
     "AdminMenu"
   ],
   "defaultConfig": {
+    "site": {
+      "title": "Jivoo",
+      "subtitle": "My Jivoo website"
+    },
     "blog": {
       "fancyPermalinks": true,
       "permalink": "%year%/%month%/%name%",
@@ -45,13 +49,13 @@
         "display": "thread",
         "levelLimit": 2,
         "editor": {
-          "name": "HtmlEditor"
+          "name": "MarkdownEditor"
         }
       },
       "commentingDefault": true,
       "anonymousCommenting": false,
       "commentApproval": false,
-      "editor": { "name": "TinymceEditor" }
+      "editor": { "name": "MarkdownEditor" }
     }
   }
 }

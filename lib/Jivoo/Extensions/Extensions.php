@@ -59,7 +59,7 @@ class Extensions extends LoadableModule {
     foreach ($info->resources as $resource => $resInfo) {
       $dependencies = isset($resInfo['dependencies']) ? $resInfo['dependencies'] : array();
       $condition = isset($resInfo['condition']) ? $resInfo['condition'] : null;
-      $this->view->provide(
+      $this->view->resources->provide(
         $resource,
         $this->m->Assets->getAsset(
           'extensions',
