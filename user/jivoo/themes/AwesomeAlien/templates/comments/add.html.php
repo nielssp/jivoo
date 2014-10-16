@@ -42,7 +42,7 @@
 </div>
 <?php endif; ?>
 
-<?php foreach ($this->extensions('before-content', 'FormViewExtension') as $e): ?>
+<?php foreach ($this->extensions('before-content', 'IFormViewExtension') as $e): ?>
 <div class="field">
 <?php echo $e->label(); ?>
 <?php echo $e->ifRequired('<span class="star">*</span>'); ?>
@@ -58,7 +58,7 @@
 <?php echo $Form->error('content'); ?>
 </div>
 
-<?php foreach ($this->extensions('after-content', 'FormViewExtension') as $e): ?>
+<?php foreach ($this->extensions('after-content', 'IFormExtension') as $e): ?>
 <div class="field">
 <?php echo $e->label(); ?>
 <?php echo $e->ifRequired('<span class="star">*</span>'); ?>

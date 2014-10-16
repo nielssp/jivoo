@@ -55,6 +55,7 @@ class View extends LoadableModule {
       case 'blocks':
       case 'resources':
       case 'template':
+      case 'extensions':
         return $this->$property;
     }
     return parent::__get($property);

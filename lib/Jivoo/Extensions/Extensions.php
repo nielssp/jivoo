@@ -28,13 +28,16 @@ class Extensions extends LoadableModule {
   
   private $loadList = array();
   
+  private $viewExtensions = array();
+  
   private $e = null;
   
   private $featureHandlers = array();
 
   protected function init() {
     $this->config->defaults = array(
-      'config' => array()
+      'config' => array(),
+      'disableBuggy' => true
     );
     
     if (!isset($this->config['import']))
@@ -47,11 +50,36 @@ class Extensions extends LoadableModule {
     
     $this->attachFeature('load', array($this, 'handleLoad'));
     $this->attachFeature('resources', array($this, 'handleResources'));
+    $this->attachFeature('viewExtensions', array($this, 'handleViewExtensions'));
+    
+    $this->attachEventHandler('afterLoadExtensions', array($this, 'addViewExtensions'));
+  }
+  
+  public function addViewExtensions() {
+    foreach ($this->viewExtensions as $module => $veInfo) {
+      $this->view->extensions->add(
+        $veInfo['template'], $this->e->$module, $veInfo['hook']
+      );
+    }
   }
   
   public function handleLoad(ExtensionInfo $info) {
     foreach ($info->load as $name) {
       $this->loadList[$name] = $info;
+    }
+  }
+  
+  public function handleViewExtensions(ExtensionInfo $info) {
+    foreach ($info->viewExtensions as $veInfo) {
+      $module = $veInfo['module'];
+      $template = $veInfo['template'];
+      $hook = isset($veInfo['hook']) ? $veInfo['hook'] : null;
+      Lib::assumeSubclassOf($module, 'IViewExtension');
+      $this->loadList[$module] = $info;
+      $this->viewExtensions[$module] = array(
+        'template' => $template,
+        'hook' => $hook
+      );
     }
   }
   
@@ -95,9 +123,14 @@ class Extensions extends LoadableModule {
         }
       }
       catch (Exception $e) {
-        $this->disable($extension);
-        Logger::error(tr('Extension "%1" disabled, caused by:', $extension));
-        Logger::logException($e);
+        if ($this->config['disableBuggy']) {
+          $this->disable($extension);
+          Logger::error(tr('Extension "%1" disabled, caused by:', $extension));
+          Logger::logException($e);
+        }
+        else {
+          throw $e;
+        }
       }
     }
     $this->triggerEvent('afterImportExtensions');

@@ -12,7 +12,7 @@ class ViewExtensions {
   public function add($template, IViewExtension $extension, $hook = null) {
     if (!isset($this->extensions[$template]))
       $this->extensions[$template] = array();
-    $this->extensions[$template] = array(
+    $this->extensions[$template][] = array(
       'extension' => $extension,
       'hook' => $hook
     );
@@ -26,7 +26,7 @@ class ViewExtensions {
         if ($hook == null or $extInfo['hook'] == $hook) {
           $extension = $extInfo['extension'];
           if ($extension instanceof $type) {
-            if ($extension->init())
+            if ($extension->prepare())
               $extensions[] = $extension;
           }
         }
