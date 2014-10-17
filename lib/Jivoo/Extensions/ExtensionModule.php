@@ -16,8 +16,6 @@ abstract class ExtensionModule extends Module {
 
   protected function init() { }
 
-  public function uninstall() { }
-  
   public function afterLoad() { }
 
   /**
