@@ -12,6 +12,9 @@ class ReCaptcha extends ExtensionModule implements IFormExtension {
   private $imported = false;
   
   protected function init() {
+    $this->config->defaults = array(
+      'theme' => 'clean'
+    );
     if (isset($this->config['publicKey']))
       $this->publicKey = $this->config['publicKey'];
     if (isset($this->config['privateKey']))
@@ -53,7 +56,7 @@ class ReCaptcha extends ExtensionModule implements IFormExtension {
     $this->view->blocks->append(
       'body-top',
       '<script type="text/javascript">'
-        . 'var RecaptchaOptions = { theme : "clean" };'
+        . 'var RecaptchaOptions = { theme : "' . h($this->config['theme']) . '" };'
         . '</script>' . PHP_EOL
     );
     return true;
