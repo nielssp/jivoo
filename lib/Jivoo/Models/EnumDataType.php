@@ -6,8 +6,8 @@ class EnumDataType extends DataType {
   
   protected function __construct($valuesOrClass, $null = false, $default = null) {
     parent::__construct(DataType::ENUM, $null, $default);
-    if (!is_array($valuesOrClass)) {
-      $this->values = Enum::getValues($valuesOrClass);
+    if (is_array($valuesOrClass)) {
+      $this->values = $valuesOrClass;
     }
     else { 
       $this->class = $valuesOrClass;
