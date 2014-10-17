@@ -2,7 +2,7 @@
 
 class PaginationHelper extends Helper {
 
-  protected $modules = array('Templates', 'Routing');
+  protected $modules = array('View', 'Routing');
 
   private $limit = 5;
 
@@ -41,9 +41,9 @@ class PaginationHelper extends Helper {
     $select = $select->offset($this->offset);
 
     if (!$this->isLast())
-      $this->view->resource('next', null, $this->getLink($this->nextLink()));
+      $this->view->blocks->relation('next', null, $this->getLink($this->nextLink()));
     if (!$this->isFirst())
-      $this->view->resource('prev', null, $this->getLink($this->prevLink()));
+      $this->view->blocks->relation('prev', null, $this->getLink($this->prevLink()));
     return $select;
   }
 

@@ -1,7 +1,7 @@
 <?php
 class AdminHelper extends Helper {
   
-  protected $modules = array('Assets', 'Templates', 'Administration');
+  protected $modules = array('Assets', 'View', 'Administration');
   
   protected $helpers = array('Html', 'Widget');
   

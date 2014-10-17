@@ -62,7 +62,7 @@ class AppController extends Controller {
   }
   
   public function before() {
-    $this->view->icon('jivoo-red.ico');
+    $this->view->blocks->icon('jivoo-red.ico');
     $this->Admin->importDefaultTheme();
     // TODO move to theme or something
     $this->Icon->addProvider(new ClassIconProvider());

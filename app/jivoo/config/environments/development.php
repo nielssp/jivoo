@@ -6,4 +6,7 @@ return array(
     'logLevel' => Logger::ALL,
     'createCrashReports' => false,
   ),
+  'Extensions' => array(
+    'disableBuggy' => false
+  ),
 );

@@ -157,7 +157,7 @@ abstract class Widget extends Module {
   public function fetch($options = null) {
     if (isset($options))
       $this->data['options'] = $options;
-    return $this->view->fetch($this->template, $this->data);
+    return $this->view->render($this->template, $this->data);
   }
   
   public function widget($options) {

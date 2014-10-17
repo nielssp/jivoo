@@ -29,7 +29,7 @@ class PostsController extends AppController {
       ->orderByDescending('created');
     $this->posts = $this->Pagination->paginate($this->posts);
     
-    $this->view->resource(
+    $this->view->blocks->relation(
       'alternate', 'application/rss+xml',
       $this->m->Routing->getUrl('feed')
     );

@@ -8,12 +8,12 @@
       "Jquery >=1.3.2"
     ]
   },
-  "assets": {
+  "resources": {
     "jquery-ui.css": {
-      "file": "jquery-ui-1.8.17.custom.css"
+      "file": "jquery-ui-$version.custom.css"
     },
     "jquery-ui.js": {
-      "file": "jquery-ui-1.8.17.custom.min.js",
+      "file": "jquery-ui-$version.custom.min.js",
       "dependencies": ["jquery.js", "jquery-ui.css"]
     }
   }

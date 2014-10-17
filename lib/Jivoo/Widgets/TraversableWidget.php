@@ -6,11 +6,11 @@ abstract class TraversableWidget extends Widget implements IteratorAggregate {
     $this->widget = $this;
     $this->__set('options', $options);
     $this->items = $this->getItems($options);
-    $this->view->begin('widget-content');
+    $this->view->template->begin('widget-content');
   }
   
   public function end() {
-    $this->view->end();
+    $this->view->template->end();
     return $this->main($this->__get('options'));
   }
   

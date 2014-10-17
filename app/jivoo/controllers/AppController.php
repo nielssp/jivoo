@@ -7,6 +7,8 @@ class AppController extends Controller {
   protected $models = array('User');
   
   protected function init() {
+    $this->view->data->site = $this->config['site'];
+    $this->view->data->app = $this->app->appConfig;
     $this->Auth->userModel = $this->User;
     $this->Auth->authentication = array('Form');
     $this->Auth->authorization = array('Action');

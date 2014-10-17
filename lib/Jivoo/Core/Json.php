@@ -10,4 +10,7 @@ class Json {
   public static function decode($json) {
     return json_decode($json, true);
   }
+  public static function decodeFile($file) {
+    return self::decode(file_get_contents($file));
+  }
 }

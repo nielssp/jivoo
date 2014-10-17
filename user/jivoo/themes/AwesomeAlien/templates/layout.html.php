@@ -1,7 +1,6 @@
 <?php
-$this->script('jquery.js');
-$this->script('theme.js');
-$this->style('theme.css');
+$this->import('jquery.js', 'theme.js', 'theme.css', 'respond.js', 'html5shiv.js');
+$this->meta('viewport', 'width=device-width, initial-scale=1');
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,20 +12,15 @@ if (isset($title)) {
 }
 else {
   echo $site['title'];
-  if (isset($site['subtitle']) and $site['subtitle'] != '')
+  if (!empty($site['subtitle']))
     echo ' | ' . $site['subtitle'];
 }
 ?></title>
 
-<?php echo $this->block('meta'); ?>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<?php echo $this->block('style'); ?>
 
-<!--[if (lt IE 9)]>
-<?php echo $this->insertFile('respond.js'); ?>
-<?php echo $this->insertFile('html5shiv.js'); ?>
-<![endif]-->
-<?php echo $this->block('script'); ?>
+<?php echo $this->block('meta'); ?>
+
+<?php echo $this->resourceBlock(); ?>
 </head>
 <body>
 <?php echo $this->block('body-top'); ?>

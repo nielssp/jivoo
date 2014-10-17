@@ -1,0 +1,10 @@
+{
+  "name": "Test View Extension",
+  "viewExtensions": [
+    {
+      "module": "TestVe",
+      "template": "comments/add.html",
+      "hook": "after-content"
+    }
+  ]
+}

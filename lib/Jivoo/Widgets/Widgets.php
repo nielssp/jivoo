@@ -13,7 +13,7 @@
  */
 class Widgets extends LoadableModule {
   
-  protected $modules = array('Templates', 'Routing', 'Helpers', 'Models');
+  protected $modules = array('View', 'Routing', 'Helpers', 'Models');
   
     /**
    * @var array Associative array of widget names and objects

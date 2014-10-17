@@ -9,7 +9,9 @@
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
  */
-class AppConfig implements arrayaccess {
+class AppConfig implements arrayaccess, IteratorAggregate {
+  
+  private $emptySubset = null;
   
   /**
    * @var array Associatve array of key-value pairs for current subset
@@ -132,14 +134,25 @@ class AppConfig implements arrayaccess {
    * @return AppConfig A subset
    */
   public function getSubset($key) {
+    if (isset($this->emptySubset))
+      $this->createTrueSubset();
     $config = new AppConfig();
     if (!isset($this->data[$key])) {
-      $this->data[$key] = array();
+      $config->data = null;
+      $config->emptySubset = $key;
     }
-    $config->data =& $this->data[$key];
+    else {
+      $config->data =& $this->data[$key];
+    }
     $config->parent = $this;
     $config->root = $this->root;
     return $config;
+  }
+  
+  private function createTrueSubset() {
+    $this->parent->data[$this->emptySubset] = array();
+    $this->data =& $this->parent->data[$this->emptySubset];
+    $this->emptySubset = null;
   }
   
   /**
@@ -149,6 +162,8 @@ class AppConfig implements arrayaccess {
    * @return bool True if successful, false if not
    */
   public function set($key, $value) {
+    if (isset($this->emptySubset))
+      $this->createTrueSubset();
     $oldValue = null;
     if (isset($this->data[$key])) {
       $oldValue = $this->data[$key];
@@ -192,6 +207,8 @@ class AppConfig implements arrayaccess {
    * @param mixed $value Value
    */
   public function setDefaults($key, $value = null) {
+    if (isset($this->emptySubset))
+      $this->createTrueSubset();
     if (is_array($key)) {
       $array = $key;
       foreach ($array as $key => $value) {
@@ -264,15 +281,29 @@ class AppConfig implements arrayaccess {
    */
   public static function phpPrettyPrint($data, $prefix = '') {
     $php = 'array(' . PHP_EOL;
-    foreach ($data as $key => $value) {
-      $php .= $prefix . '  ' . var_export($key, true) . ' => ';
-      if (is_array($value)) {
-        $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+    if (is_array($data) and array_diff_key($data, array_keys(array_keys($data)))) {
+      foreach ($data as $key => $value) {
+        $php .= $prefix . '  ' . var_export($key, true) . ' => ';
+        if (is_array($value)) {
+          $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+        }
+        else {
+          $php .= var_export($value, true);
+        }
+        $php .= ',' . PHP_EOL;
       }
-      else {
-        $php .= var_export($value, true);
+    }
+    else {
+      foreach ($data as $value) {
+        $php .= $prefix . '  ';
+        if (is_array($value)) {
+          $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+        }
+        else {
+          $php .= var_export($value, true);
+        }
+        $php .= ',' . PHP_EOL;
       }
-      $php .= ',' . PHP_EOL;
     }
     return $php . $prefix . ')';
   }
@@ -393,6 +424,10 @@ class AppConfig implements arrayaccess {
    */
   public function offsetUnset($key) {
     $this->delete($key);
+  }
+  
+  public function getIterator() {
+    return new MapIterator($this->data);
   }
 }
 

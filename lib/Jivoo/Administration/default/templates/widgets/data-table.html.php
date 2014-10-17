@@ -1,6 +1,5 @@
 <?php
-$this->script('jquery.js'); 
-$this->script('widgets/data-table.js');
+$this->import('jquery.js', 'widgets/data-table.js');
 ?>
 <div class="data-table">
 <div class="toolbar">

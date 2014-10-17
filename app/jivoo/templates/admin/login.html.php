@@ -1,7 +1,6 @@
 <?php
 $this->meta('viewport', 'width=device-width, initial-scale=1');
-$this->style('admin/theme.css'); 
-$this->style('admin/icomoon/style.css'); 
+$this->import('admin/icomoon/style.css', 'admin/theme.css'); 
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,8 +9,8 @@ $this->style('admin/icomoon/style.css');
 <title>Log in | <?php echo $site['title']; ?></title>
 
 <?php echo $this->block('meta'); ?>
-<?php echo $this->block('style'); ?>
-<?php echo $this->block('script'); ?>
+
+<?php echo $this->resourceBlock(); ?>
 
 </head>
 <body id="login">

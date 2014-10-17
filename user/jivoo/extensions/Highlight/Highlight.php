@@ -6,7 +6,7 @@
 // Version      : 8.2
 // Dependencies : Templates Assets
 
-class Highlight extends ExtensionBase {
+class Highlight extends ExtensionModule {
   protected function init() {
     $this->view->provide(
       'highlight.js',
@@ -20,8 +20,6 @@ class Highlight extends ExtensionBase {
       'highlight-style.css',
       $this->getAsset('styles/solarized_dark.css')
     );
-    $this->view->script('highlight.js');
-    $this->view->script('highlight-init.js');
-    $this->view->style('highlight-style.css');
+    $this->view->import('highlight.js', 'highlight-init.js', 'highlight-style.css');
   }
 }
