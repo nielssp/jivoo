@@ -41,6 +41,14 @@ class Content extends LoadableModule {
     }
   }
   
+  public function __get($property) {
+    switch ($property) {
+      case 'extensions':
+        return $this->$property;
+    }
+    return parent::__get($property);
+  }
+  
   public function enableExtensions(IModel $model, $field) {
     $name = $model->getName();
     if (!isset($this->extensionsEnabled[$name]))
