@@ -13,6 +13,4 @@ interface IContentFormat {
    * @return string HTML text
    */
   public function toHtml($content);
-  
-  public function toText($content);
 }

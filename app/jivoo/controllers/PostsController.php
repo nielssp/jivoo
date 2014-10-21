@@ -20,7 +20,7 @@ class PostsController extends AppController {
       ->allowTag('u')
       ->allowAttribute('a', 'href')
       ->appendAttributes('a', 'rel="nofollow"');
-    $this->Editor->set($this->Comment, 'content', new TextEditor());
+    $this->Editor->set($this->Comment, 'content', new TextareaEditor('markdown'));
   }
 
   public function index() {

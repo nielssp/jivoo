@@ -1,6 +1,4 @@
 <?php
-include('../lib/Jivoo/Core/bootstrap.php');
-
 class ContentExtensions {
 
   private $functions = array();
@@ -46,38 +44,3 @@ class ContentExtensions {
     );
   }
 }
-
-function mydate($params) {
-  return date($params['format']);
-}
-
-function figure($params) {
-  var_dump($params);
-  return '<div class="figure"><img src="' . $params['file'] . '" />
-    <div class="caption">' . $params['caption'] . '</div></div>';
-}
-
-echo '<pre>';
-
-$content = 'Edit the Expression & Text to see matches. Roll over matches or
-the expression for details. Undo mistakes with ctrl-z. Save & Share expressions
-with friends or the Community. A full Reference & Help is available
-in {{link "Posts::view::15"}}, or {{break}} watch the video Tutorial.
-
-{{figure file="test.png" caption="An image
-with a \\"multiline\\" caption"}}
-
-The current time is {{date "Y-m-d H:i:s"}}.
-  
-Sample text for testing:';
-
-$compiler = new ContentExtensions;
-
-$compiler->add('date', array('format' => 'Y-m-d'), 'mydate');
-$compiler->add('figure', array('file' => null, 'caption' => null), 'figure');
-
-var_dump($compiler->compile($content));
-
-var_dump(Logger::getLog());
-
-echo '</pre>';

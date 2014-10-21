@@ -22,10 +22,10 @@ class ContentFilter {
     $field = $this->field;
     $content = $event->record->$field;
     $htmlField = $field . 'Html';
-    $formatField = $field . 'Format';
     $textField = $field . 'Text';
-    $format = $this->Content->getFormat($event->record->$formatField);
-    $event->record->$htmlField = $format->toHtml($content);
-    $event->record->$textField = $format->toText($content);
+    $html = $this->Content->compile($event->record, $field);
+    $textEncoder = new HtmlEncoder();
+    $event->record->$htmlField = $html;
+    $event->record->$textField = $textEncoder->encode($html); 
   }
 }

@@ -6,7 +6,6 @@
 // Dependencies   : Jivoo/Models Jivoo/ActiveModels
 
 Lib::import('Jivoo/Content/Formats');
-Lib::import('Jivoo/Content/Editors');
 
 class Content extends LoadableModule {
   
@@ -18,13 +17,45 @@ class Content extends LoadableModule {
 
   private $defaultEditors = array();
   
+  private $extensionsEnabled = array();
+  
+  private $extensions;
+  
   protected function init() {
+    $this->extensions = new ContentExtensions();
+    
     $this->addFormat(new HtmlFormat());
     $this->addFormat(new TextFormat());
-    $this->addEditor(new HtmlEditor());
-    $this->addEditor(new TextEditor());
+    $this->addEditor(new TextareaEditor('html'));
+    $this->addEditor(new TextareaEditor('text'));
+    
+    $this->extensions->add('link', array('route' => null), array($this, 'linkFunction'));
   }
   
+  public function linkFunction($params) {
+    try {
+      return $this->m->Routing->getLink($params['route']);
+    }
+    catch (InvalidRouteException $e) {
+      return 'invalid link';
+    }
+  }
+  
+  public function enableExtensions(IModel $model, $field) {
+    $name = $model->getName();
+    if (!isset($this->extensionsEnabled[$name]))
+      $this->extensionsEnabled[$name] = array();
+    $this->extensionsEnabled[$name][$field] = true;
+  }
+  
+  public function disableExtensions(IModel $model, $field) {
+    $name = $model->getName();
+    if (!isset($this->extensionsEnabled[$name]))
+      return;
+    if (!isset($this->extensionsEnabled[$name][$field]))
+      return;
+    unset($this->extensionsEnabled[$name][$field]);
+  }
   
   public function getEncoder(IModel $model, $field) {
     $name = $model->getName();
@@ -49,6 +80,19 @@ class Content extends LoadableModule {
     $name = $format->getName();
     $this->formats[$name] = $format;
     $this->editors[$name] = array();
+  }
+  
+  public function compile(ActiveRecord $record, $field) {
+    $model = $record->getModel();
+    $name = $model->getName();
+    $formatField = $field . 'Format';
+    $format = $this->getFormat($record->$formatField);
+    $html = $format->toHtml($record->$field);
+    if (!isset($this->extensionsEnabled[$name]))
+      return $html;
+    if (!isset($this->extensionsEnabled[$name][$field]))
+      return $html;
+    return $this->extensions->compile($html);
   }
 
   public function addEditor(IEditor $editor) {

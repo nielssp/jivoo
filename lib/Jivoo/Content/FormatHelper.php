@@ -22,6 +22,10 @@ class FormatHelper extends Helper {
     $formatField = $field . 'Format';
     return $this->m->Content->getFormat($record->$formatField);
   }
+  
+  public function enableExtensions(IModel $model, $field) {
+   $this->m->Content->enableExtensions($model, $field);
+  }
 
   public function text(IRecord $record, $field) {
     $textField = $field . 'Text';
