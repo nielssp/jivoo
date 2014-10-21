@@ -37,42 +37,39 @@ class CommentsAdminController extends AdminController {
     return $this->render();
   }
   
-  public function edit($commentId) {
-    $this->title = tr('Edit comment');
-    $this->comment = $this->Comment->find($commentId);
-    if ($this->comment and $this->request->hasValidData('Comment')) {
-      $this->comment->addData($this->request->data['Comment']);
-      if ($this->comment->save()) {
-        $this->session->flash['success'][] = tr(
-          'Comment saved. %1',
-          $this->Html->link(tr('Click here to view.'), $this->comment)
-        );
-        if (isset($this->request->data['save-close']))
-          return $this->redirect('index');
-        else if (isset($this->request->data['save-new']))
-          return $this->redirect('add');
-        return $this->refresh();
-      }
+  public function edit($commentIds = null) {
+    $this->ContentAdmin->makeSelection($this->Comment, $commentIds);
+    if (isset($this->ContentAdmin->selection)) {
+      return $this->ContentAdmin
+        ->editSelection()
+        ->respond('index');
     }
-    return $this->render('admin/comments/add.html');
+    else {
+      $this->title = tr('Edit comment');
+      $this->comment = $this->ContentAdmin->record;
+      if ($this->comment and $this->request->hasValidData('Comment')) {
+        $this->comment->addData($this->request->data['Comment']);
+        if ($this->comment->save()) {
+          $this->session->flash['success'][] = tr(
+            'Comment saved. %1',
+            $this->Html->link(tr('Click here to view.'), $this->comment)
+          );
+          if (isset($this->request->data['save-close']))
+            return $this->redirect('index');
+          else if (isset($this->request->data['save-new']))
+            return $this->redirect('add');
+          return $this->refresh();
+        }
+      }
+      return $this->render('admin/comments/add.html');
+    }
   }
 
   public function delete($commentIds = null) {
-    $this->ContentAdmin->makeSelection($this->Comment, $commentIds);
-    if (isset($this->ContentAdmin->selection)) {
-      if ($this->request->hasValidData()) {
-        $this->ContentAdmin->selection->delete();
-        //...
-      }
-      //...
-    }
-    else {
-      $this->comment = $this->ContentAdmin->record;
-      if ($this->comment and $this->request->hasValidData()) {
-        $this->comment->delete();
-        //...
-      }
-      //...
-    }
-  }  
+    return $this->ContentAdmin
+      ->makeSelection($this->Comment, $commentIds)
+      ->deleteSelection()
+      ->confirm(tr('Delete the selected comments?'))
+      ->respond('index');
+  }
 }

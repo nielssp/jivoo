@@ -36,42 +36,39 @@ class UsersAdminController extends AdminController {
     return $this->render();
   }
   
-  public function edit($postId) {
-    $this->title = tr('Edit user');
-    $this->newUser = $this->User->find($postId);
-    if ($this->newUser and $this->request->hasValidData('User')) {
-      $this->newUser->addData($this->request->data['User']);
-      if ($this->newUser->save()) {
-        $this->session->flash['success'][] = tr(
-          'User saved. %1',
-          $this->Html->link(tr('Click here to view.'), $this->newUser)
-        );
-        if (isset($this->request->data['save-close']))
-          return $this->redirect('index');
-        else if (isset($this->request->data['save-new']))
-          return $this->redirect('add');
-        return $this->refresh();
-      }
+  public function edit($userIds = null) {
+    $this->ContentAdmin->makeSelection($this->User, $userIds);
+    if (isset($this->ContentAdmin->selection)) {
+      return $this->ContentAdmin
+      ->editSelection()
+      ->respond('index');
     }
-    return $this->render('admin/users/add.html');
+    else {
+      $this->title = tr('Edit user');
+      $this->newUser = $this->ContentAdmin->record;
+      if ($this->newUser and $this->request->hasValidData('User')) {
+        $this->newUser->addData($this->request->data['User']);
+        if ($this->newUser->save()) {
+          $this->session->flash['success'][] = tr(
+            'User saved. %1',
+            $this->Html->link(tr('Click here to view.'), $this->newUser)
+          );
+          if (isset($this->request->data['save-close']))
+            return $this->redirect('index');
+          else if (isset($this->request->data['save-new']))
+            return $this->redirect('add');
+          return $this->refresh();
+        }
+      }
+      return $this->render('admin/users/add.html');
+    }
   }
 
   public function delete($userIds = null) {
-    $this->ContentAdmin->makeSelection($this->User, $userIds);
-    if (isset($this->ContentAdmin->selection)) {
-      if ($this->request->hasValidData()) {
-        $this->ContentAdmin->selection->delete();
-        //...
-      }
-      //...
-    }
-    else {
-      $this->user = $this->ContentAdmin->record;
-      if ($this->user and $this->request->hasValidData()) {
-        $this->user->delete();
-        //...
-      }
-      //...
-    }
-  }  
+    return $this->ContentAdmin
+      ->makeSelection($this->User, $userIds)
+      ->deleteSelection()
+      ->confirm(tr('Delete the selected users?'))
+      ->respond('index');
+  }
 }

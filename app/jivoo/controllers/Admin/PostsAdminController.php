@@ -42,11 +42,9 @@ class PostsAdminController extends AdminController {
   public function edit($postIds = null) {
     $this->ContentAdmin->makeSelection($this->Post, $postIds);
     if (isset($this->ContentAdmin->selection)) {
-      if ($this->request->hasValidData('Post')) {
-        $this->ContentAdmin->selection->set($this->request->data['Post'])->update();
-        //... respond (if ajax) or redirect
-      }
-      //... render bulk edit template 
+      return $this->ContentAdmin
+        ->editSelection()
+        ->respond('index');
     }
     else {
       $this->title = tr('Edit post');
@@ -69,36 +67,11 @@ class PostsAdminController extends AdminController {
     }
   }
 
-//  public function edit($postIds = null) {
-//    $this->ContentAdmin->makeSelection($this->Post, $postIds);
-//    if ($this->ContentAdmin->multiple) {
-//      if ($this->ContentAdmin->saveData()) {
-//      }
-//      return $this->render('admin/posts/bulk-edit.html');
-//    }
-//    else {
-//      if ($this->ContentAdmin->saveData()) {
-//      }
-//      return $this->render('admin/posts/add.html');
-//    }
-//  }
-//  
   public function delete($postIds = null) {
-    $this->ContentAdmin->makeSelection($this->Post, $postIds);
-    if (isset($this->ContentAdmin->selection)) {
-      if ($this->request->hasValidData()) {
-        $this->ContentAdmin->selection->delete();
-        //... respond (if ajax) or redirect
-      }
-      //... render confirmation template
-    }
-    else {
-      $this->post = $this->ContentAdmin->record;
-      if ($this->post and $this->request->hasValidData()) {
-        $this->post->delete();
-        //... respond (if ajax) or redirect (to index..?)
-      }
-      //... render confirmation template
-    }
+    return $this->ContentAdmin
+      ->makeSelection($this->Post, $postIds)
+      ->deleteSelection()
+      ->confirm(tr('Delete the selected posts?'))
+      ->respond('index');
   }
 }

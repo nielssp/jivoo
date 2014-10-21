@@ -1,6 +1,6 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<?php if (!$record): ?>
+<?php if (!$record and !$selection): ?>
 
 <div class="flash flash-warn"><?php echo tr('The record does not exist.'); ?></div>
 
@@ -8,11 +8,11 @@
 
 <?php echo $Form->form(); ?>
 
-<p><?php echo $confirm; ?></p>
+<p><?php echo $confirmation; ?></p>
 
 <?php echo $Form->submit(tr('OK')); ?>
 
-<?php echo $Form->submit(tr('Cancel')); ?>
+<?php echo $Form->submit(tr('Cancel'), array('name' => 'cancel')); ?>
 
 <?php echo $Form->end(); ?>
 

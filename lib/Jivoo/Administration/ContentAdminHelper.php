@@ -3,8 +3,13 @@ class ContentAdminHelper extends Helper {
 
   protected $helpers = array('Filtering');
   
+  private $modelName = null;
+  
   private $record = null;
   private $selection = null;
+  
+  private $cancel = false;
+  private $confirmation = null;
   
   public function __get($property) { 
     switch ($property) {
@@ -24,34 +29,58 @@ class ContentAdminHelper extends Helper {
     return parent::__isset($property);
   }
   
-  public function quickEdit($options) {
-    $record = $options['record'];
-    if ($record and $this->request->hasValidData()) {
-      foreach ($options['edit'] as $field => $value) {
-        $record->$field = $value;
-      }
-      if ($record->save()) {
-        return $this->m->Routing->refresh();
-      }
-      else {
-        $this->session->flash['error'][] = tr(
-          'Unable to perform operation.'
-        );
+  
+  public function editSelection() {
+    if (isset($this->selection)) {
+      if ($this->request->hasValidData($this->modelName)) {
+        $this->selection->set($this->request->data[$this->modelName])->update();
       }
     }
-    return $this->view->render('admin/confirm.html', $options);
+    return $this;
   }
   
-  public function delete($options) {
-    $record = $options['record'];
-    if ($record and $this->request->hasValidData()) {
-      $record->delete();
-      return $this->m->Routing->refresh();
+  public function deleteSelection() {
+    if (isset($this->request->data['cancel'])) {
+      return $this;
     }
-    return $this->view->render('admin/confirm.html', $options);
+    if (isset($this->selection)) {
+      if ($this->request->hasValidData()) {
+        $this->selection->delete();
+      }
+    }
+    else {
+      $record = $this->record;
+      if ($record and $this->request->hasValidData()) {
+        $record->delete();
+      }
+    }
+    return $this;
+  }
+  
+  public function confirm($confirmation) {
+    $this->confirmation = $confirmation;
+    return $this;
+  }
+  
+  public function respond($returnRoute = null) {
+    if ($this->request->hasValidData()) {
+      if ($this->request->isAjax())
+        return new TextResponse(200, 'text/json', '{}');
+      return $this->m->Routing->redirect($returnRoute);
+    }
+    if ($this->request->isAjax())
+      return new TextResponse(200, 'text/json', '{}');
+    if (!isset($this->confirmation))
+      $this->confirmation = tr('Are you sure?');
+    $this->view->data->title = tr('Confirm');
+    $this->view->data->confirmation = $this->confirmation;
+    $this->view->data->selection = $this->selection;
+    $this->view->data->record = $this->record;
+    return new ViewResponse(200, $this->view, 'admin/confirm.html');
   }
   
   public function makeSelection(IModel $model, $ids, $idField = 'id') {
+    $this->modelName = $model->getName();
     $this->record = null;
     $this->selection = null;
     if (isset($ids)) {
@@ -66,5 +95,6 @@ class ContentAdminHelper extends Helper {
     else if (isset($this->request->query['filter'])) {
       $this->selection = $this->Filtering->apply($model);
     }
+    return $this;
   }
 }
