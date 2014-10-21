@@ -1,6 +1,6 @@
 <?php
 $this->extend('admin/layout.html');
-$this->import('jquery.js', 'permalink.js');
+$this->import('jquery.js', 'permalinks.js');
 ?>
 
 <?php if (!$post): ?>
