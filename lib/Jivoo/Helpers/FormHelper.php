@@ -258,6 +258,10 @@ class FormHelper extends Helper {
   public function password($field, $attributes = array()) {
     return $this->inputElement('password', $field, $attributes);
   }
+  
+  public function file($field, $attributes = array()) {
+    return $this->inputElement('file', $field, $attributes);
+  }
 
   public function hidden($field, $attributes = array()) {
     return $this->inputElement('hidden', $field, $attributes);

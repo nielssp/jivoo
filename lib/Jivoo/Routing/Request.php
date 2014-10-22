@@ -53,6 +53,8 @@ class Request {
    */
   private $data;
   
+  private $files;
+  
   /**
    * @var bool Whether or not request is from mobile browser
    */
@@ -123,6 +125,7 @@ class Request {
 
     $this->query = $_GET;
     $this->data = $_POST;
+    $this->files = $_FILES;
     
     $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
     if ($this->method == 'POST' AND isset($this->data['method'])) {
@@ -169,6 +172,7 @@ class Request {
       case 'path':
       case 'realPath':
       case 'data':
+      case 'files':
       case 'query':
       case 'cookies':
       case 'session':
