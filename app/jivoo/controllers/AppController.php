@@ -2,7 +2,7 @@
 
 class AppController extends Controller {
   
-  protected $helpers = array('Html', 'Menu', 'Auth', 'Widgets', 'Form', 'Format', 'Editor');
+  protected $helpers = array('Html', 'Menu', 'Auth', 'Widgets', 'Form', 'Format', 'Editor', 'Media');
   
   protected $models = array('User');
   
@@ -19,21 +19,6 @@ class AppController extends Controller {
     $this->Auth->permissionPrefix = 'frontend.';
     if ($this->Auth->isLoggedIn())
       $this->user = $this->Auth->user;
-    
-    $this->m->Content->extensions->add(
-      'media',
-      array('file' => null, 'alt' => null),
-      array($this, 'mediaFunction')
-    );
-  }
-  
-  public function mediaFunction($params) {
-    $file = $this->m->Assets->getAsset('media', $params['file']);
-    if (!isset($file))
-      return 'invalid file';
-    if (!isset($params['alt']))
-      $params['alt'] = $params['file'];
-    return '<img src="' . $file .'" alt="' . h($params['alt']) . '" />';
   }
   
   public function notFound() {
