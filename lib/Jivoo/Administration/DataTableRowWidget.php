@@ -13,7 +13,7 @@ class DataTableRowWidget extends Widget {
   
   public function main($options) {
     if (count($options['actions']) > 0)
-      assume($options['record'] instanceof IActionRecord);
+      assume($options['record'] instanceof IRecord);
     if (isset($options['removeActions'])) {
       $options['actions'] = array_diff_key(
         $options['actions'],

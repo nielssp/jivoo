@@ -7,7 +7,6 @@
 Lib::import('Jivoo/Models/Validation');
 Lib::import('Jivoo/Models/Selection');
 Lib::import('Jivoo/Models/Condition');
-Lib::import('Jivoo/Models/Encoding');
 
 /**
  * Models module, finds all models in application

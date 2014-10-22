@@ -103,6 +103,16 @@ class Extensions extends LoadableModule {
     $this->featureHandlers[] = array($name, $handler);
   }
 
+  public function getInfo($extension) {
+    $dir = $this->p('extensions', $extension);
+    if (!file_exists($dir . '/extension.json'))
+      return null;
+    $info = Json::decodeFile($dir . '/extension.json');
+    if (!$info)
+      return null;
+    return new ExtensionInfo($extension, $info, $this->isEnabled($extension));
+  }
+  
   public function run() {
     // Import extensions
     $this->triggerEvent('beforeImportExtensions');
@@ -174,11 +184,14 @@ class Extensions extends LoadableModule {
   }
 
   public function isEnabled($extension) {
-    return in_array($extension, $this->config['import']);
+    return in_array($extension, $this->config['import']->getArray());
   }
   
   public function enable($extension) {
-    $this->config['import'][] = $extension;
+    //TODO check dependencies
+    $import = $this->config['import']->getArray();
+    $import[] = $extension;
+    $this->config['import']= $import;
   }
   
   public function disable($extension) {
@@ -189,6 +202,18 @@ class Extensions extends LoadableModule {
     unset($this->config['config'][$extension]);
   }
 
+  public function listExtensions() {
+    $files = scandir($this->p('extensions', ''));
+    $extensions = array();
+    if ($files !== false) {
+      foreach ($files as $file) {
+        $info = $this->getInfo($file);
+        if (isset($info))
+          $extensions[] = $info;
+      }
+    }
+    return $extensions;
+  }
 }
 
 /**

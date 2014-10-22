@@ -396,6 +396,12 @@ class FormHelper extends Helper {
     return $this->element('input', $attributes);
   }
   
+  public function actionButton($label, $route = array(), $attributes = array()) {
+    return $this->form($route)
+      . $this->submit($label, $attributes)
+      . $this->end();
+  }
+  
   private function inputElement($type, $field, $attributes) {
     $attributes = array_merge(array(
       'type' => $type,

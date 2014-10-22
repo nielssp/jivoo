@@ -1,15 +1,20 @@
 <?php
 class ExtensionInfo {
   private $dir;
+  private $enabled;
   private $info;
-  public function __construct($dir, $info) {
+  public function __construct($dir, $info, $enabled = true) {
     $this->dir = $dir;
     $this->info = $info;
+    $this->enabled = $enabled;
   }
   
   public function __get($property) {
-    if ($property == 'dir')
-      return $this->dir;
+    switch ($property) {
+      case 'dir':
+      case 'enabled':
+        return $this->$property;
+    }
     return $this->info[$property];
   }
   
