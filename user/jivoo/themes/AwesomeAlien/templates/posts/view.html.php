@@ -82,8 +82,9 @@ if (isset($comment->user) and $comment->user == $post->user) {
  </div>
 <div class="byline">
 <?php
-echo '<date datetime="' . date('c', $comment->created) . '">'
-      . sdate($comment->created) . '</date>';
+echo '<time datetime="' . date('c', $comment->created)
+      . '" title="' . ldate($comment->created) . '">'
+      . sdate($comment->created) . '</time>';
 echo ' | ' . $Html->link(tr('Permalink'), $comment);
 echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
 ?>
