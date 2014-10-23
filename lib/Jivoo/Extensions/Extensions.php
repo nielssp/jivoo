@@ -104,13 +104,16 @@ class Extensions extends LoadableModule {
   }
 
   public function getInfo($extension) {
-    $dir = $this->p('extensions', $extension);
-    if (!file_exists($dir . '/extension.json'))
-      return null;
-    $info = Json::decodeFile($dir . '/extension.json');
-    if (!$info)
-      return null;
-    return new ExtensionInfo($extension, $info, $this->isEnabled($extension));
+    if (!isset($this->info[$extension])) {
+      $dir = $this->p('extensions', $extension);
+      if (!file_exists($dir . '/extension.json'))
+        return null;
+      $info = Json::decodeFile($dir . '/extension.json');
+      if (!$info)
+        return null;
+      $this->info[$extension] = new ExtensionInfo($extension, $info, $this->isEnabled($extension));
+    }
+    return $this->info[$extension];
   }
   
   public function run() {
@@ -126,6 +129,7 @@ class Extensions extends LoadableModule {
           throw new ExtensionInvalidException(tr('Extension invalid: "%1"', $extension));
         Lib::addIncludePath($dir);
         $extensionInfo = new ExtensionInfo($extension, $info);
+        $this->info[$extension] = $extensionInfo;
         foreach ($this->featureHandlers as $tuple) {
           list($feature, $handler) = $tuple;
           if (isset($extensionInfo->$feature))
@@ -187,11 +191,83 @@ class Extensions extends LoadableModule {
     return in_array($extension, $this->config['import']->getArray());
   }
   
+  public function checkDependencies(ExtensionInfo $info) {
+    if (!isset($info->dependencies))
+      return true;
+    $dependencies = $info->dependencies;
+    $valid = true;
+    $missing = array(
+      'app' => null,
+      'extensions' => array(),
+      'php' => array()
+    );
+    foreach ($dependencies as $key => $value) {
+      switch ($key) {
+        case 'extensions':
+          foreach ($value as $extension) {
+            if (!$this->checkExtensionDependency($extension)) {
+              $valid = false;
+              $missing['extensions'][] = $extension;
+            }
+          }
+          break;
+        case 'php':
+          foreach ($value as $phpExtension) {
+            if (!extension_loaded($phpExtension)) {
+              $valid = false;
+              $missing['php'][] = $phpExtension;
+            }
+          }
+          break;
+        default:
+          if ($this->app->name == $key) {
+            if (!$this->compareVersion($this->app->version, $value)) {
+              $valid = false;
+              $missing['app'] = $value;
+            }
+          }
+          else {
+            $valid = false;
+            $missing['app'] = $value;
+          }
+          break;
+      }
+    }
+    if ($valid)
+      return true;
+    return $missing;
+  }
+  
+  public function checkExtensionDependency($dependency) {
+    preg_match('/^ *([^ <>=!]+) *(.*)$/', $dependency, $matches);
+    if (!$this->isEnabled($matches[1]))
+      return false;
+    if (empty($matches[2]))
+      return true;
+    return $this->compareVersion($this->getInfo($matches[1])->version, $matches[2]);
+  }
+  
+  public function compareVersion($actualVersion, $versionComparison) {
+    while (!empty($versionComparison)) {
+      if (preg_match('/^ *(<>|<=|>=|==|!=|<|>|=) *([^ <>=!]+) *(.*)$/', $versionComparison, $matches) !== 1)
+        return false;
+      $operator = $matches[1];
+      $expectedVersion = $matches[2];
+      if (!version_compare($actualVersion, $expectedVersion, $operator))
+        return false; 
+      $versionComparison = $matches[3];
+    }
+    return true;
+  }
+  
   public function enable($extension) {
-    //TODO check dependencies
+    $missing = $this->checkDependencies($this->getInfo($extension));
+    if ($missing !== true)
+      return $missing;
     $import = $this->config['import']->getArray();
     $import[] = $extension;
-    $this->config['import']= $import;
+    $this->config['import'] = $import;
+    return true;
   }
   
   public function disable($extension) {

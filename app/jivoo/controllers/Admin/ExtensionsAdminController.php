@@ -11,7 +11,13 @@ class ExtensionsAdminController extends AdminController {
   
   public function enable($extension) {
     if ($this->request->hasValidData()) {
-      $this->m->Extensions->enable($extension);
+      $missing = $this->m->Extensions->enable($extension); 
+      if ($missing === true) {
+        $this->session->flash->success = tr('Extension enabled');
+      }
+      else {
+        $this->session->flash->error = tr('Dependencies missing');
+      }
     }
     return $this->redirect('index');
   }
@@ -19,6 +25,7 @@ class ExtensionsAdminController extends AdminController {
   public function disable($extension) {
     if ($this->request->hasValidData()) {
       $this->m->Extensions->disable($extension);
+      $this->session->flash->success = tr('Extension disabled');
     }
     return $this->redirect('index');
   }
