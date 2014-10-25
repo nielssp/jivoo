@@ -1,7 +1,7 @@
 <?php $this->extend('layout.html'); ?>
 
 <div class="pagination">
-  <?php echo $Pagination->getCount(); ?> posts found
+  <?php echo tn('%1 posts found', '%1 post found', $Pagination->getCount()); ?>
   <?php if (!$Pagination->isLast())
   echo $Html->link('&#8592; Older posts', $Pagination->nextLink()); ?>
   <div class="right">

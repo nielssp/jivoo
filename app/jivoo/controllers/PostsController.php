@@ -48,7 +48,7 @@ class PostsController extends AppController {
       if (isset($month)) {
         $start = strtotime($year . '-' . $month . '-01');
         $end = strtotime($year . '-' . $month . '-01 +1 month');
-        $this->title = tdate('F Y', $start);
+        $this->title = ucfirst(tdate('F Y', $start));
       }
       else {
         $start = strtotime($year . '-01-01');
