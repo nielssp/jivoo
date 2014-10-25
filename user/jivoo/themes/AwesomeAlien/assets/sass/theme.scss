@@ -330,6 +330,14 @@ ol {
   }
 }
 
+figure {
+  text-align: center;
+  margin-bottom: 10px;
+  figcaption {
+    font-style: italic;
+  }
+}
+
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
