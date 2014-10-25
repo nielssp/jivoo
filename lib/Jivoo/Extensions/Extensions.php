@@ -107,7 +107,7 @@ class Extensions extends LoadableModule {
         $resource,
         $this->m->Assets->getAsset(
           'extensions',
-          $info->dir . '/' . $info->replaceVariables($resInfo['file'])
+          $info->canonicalName . '/' . $info->replaceVariables($resInfo['file'])
         ),
         $dependencies,
         $condition
@@ -122,12 +122,17 @@ class Extensions extends LoadableModule {
   public function getInfo($extension) {
     if (!isset($this->info[$extension])) {
       $dir = $this->p('extensions', $extension);
-      if (!file_exists($dir . '/extension.json'))
-        return null;
+      $bundled = false;
+      if (!file_exists($dir . '/extension.json')) {
+        $dir = $this->p('app', 'extensions/' . $extension);
+        $bundled = true;
+        if (!file_exists($dir . '/extension.json'))
+          return null;
+      }
       $info = Json::decodeFile($dir . '/extension.json');
       if (!$info)
         return null;
-      $this->info[$extension] = new ExtensionInfo($extension, $info, $this->isEnabled($extension));
+      $this->info[$extension] = new ExtensionInfo($extension, $info, $bundled, $this->isEnabled($extension));
     }
     return $this->info[$extension];
   }
@@ -138,18 +143,10 @@ class Extensions extends LoadableModule {
     $this->triggerEvent('beforeImportExtensions');
     foreach ($this->importList as $extension) {
       try {
-        $dir = $this->p('extensions', $extension);
-        if (!file_exists($dir . '/extension.json')) {
-          $dir = $this->p('app', 'extensions/' . $extension);
-          if (!file_exists($dir . '/extension.json'))
-            throw new ExtensionNotFoundException(tr('Extension not found: "%1"', $extension));
-        }
-        $info = Json::decodeFile($dir . '/extension.json');
-        if (!$info)
-          throw new ExtensionInvalidException(tr('Extension invalid: "%1"', $extension));
-        Lib::addIncludePath($dir);
-        $extensionInfo = new ExtensionInfo($extension, $info);
-        $this->info[$extension] = $extensionInfo;
+        $extensionInfo = $this->getInfo($extension);
+        if (!isset($extensionInfo))
+          throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
+        Lib::addIncludePath($extensionInfo->p($this->app, ''));
         foreach ($this->featureHandlers as $tuple) {
           list($feature, $handler) = $tuple;
           if (isset($extensionInfo->$feature))
@@ -284,14 +281,14 @@ class Extensions extends LoadableModule {
     $missing = $this->checkDependencies($this->getInfo($extension));
     if ($missing !== true)
       return $missing;
-    $import = $this->config['import']->getArray();
-    $import[] = $extension;
-    $this->config['import'] = $import;
+    $this->importList[] = $extension;
+    $this->config['import'] = array_unique(array_values($this->importList));
     return true;
   }
   
   public function disable($extension) {
-    $this->config['import'] = array_diff($this->config['import']->getArray(), array($extension));
+    $this->importList = array_diff($this->importList, array($extension));
+    $this->config['import'] = array_unique(array_values($this->importList));
   }
 
   public function unconfigure($extension) {

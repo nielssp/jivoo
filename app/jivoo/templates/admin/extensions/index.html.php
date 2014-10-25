@@ -16,9 +16,9 @@
 </td>
 <td>
 <?php if ($info->enabled): ?>
-<?php echo $Form->actionButton(tr('Disable'), array('action' => 'disable', $info->dir)); ?>
+<?php echo $Form->actionButton(tr('Disable'), array('action' => 'disable', $info->canonicalName)); ?>
 <?php else: ?>
-<?php echo $Form->actionButton(tr('Enable'), array('action' => 'enable', $info->dir)); ?>
+<?php echo $Form->actionButton(tr('Enable'), array('action' => 'enable', $info->canonicalName)); ?>
 <?php endif; ?>
 </td>
 </tr>

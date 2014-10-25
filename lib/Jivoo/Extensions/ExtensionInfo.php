@@ -1,17 +1,19 @@
 <?php
 class ExtensionInfo {
-  private $dir;
+  private $canonicalName;
   private $enabled;
   private $info;
-  public function __construct($dir, $info, $enabled = true) {
-    $this->dir = $dir;
+  private $bundled;
+  public function __construct($canonicalName, $info, $bundled = false, $enabled = true) {
+    $this->canonicalName = $canonicalName;
     $this->info = $info;
+    $this->bundled = $bundled;
     $this->enabled = $enabled;
   }
   
   public function __get($property) {
     switch ($property) {
-      case 'dir':
+      case 'canonicalName':
       case 'enabled':
         return $this->$property;
     }
@@ -19,7 +21,30 @@ class ExtensionInfo {
   }
   
   public function __isset($property) {
-    return $property == 'dir' or isset($this->info[$property]);
+    switch ($property) {
+      case 'canonicalName':
+      case 'enabled':
+        return true;
+    }
+    return isset($this->info[$property]);
+  }
+  
+  public function isBundled() {
+    return $this->bundled;
+  }
+  
+  public function p(App $app, $path) {
+    if ($this->bundled)
+      return $app->p('app', 'extensions/' . $this->canonicalName . '/' . $path);
+    else
+      return $app->p('extensions', $this->canonicalName . '/' . $path);
+  }
+  
+  public function getAsset(Assets $assets, $path) {
+    if ($this->bundled)
+      return $assets->getAsset('app', 'extensions/' . $this->canonicalName . '/' . $path);
+    else
+      return $assets->getAsset('extensions', $this->canonicalName . '/' . $path);
   }
   
   private function replaceVariable($matches) {

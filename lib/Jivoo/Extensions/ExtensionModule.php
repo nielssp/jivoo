@@ -14,7 +14,7 @@ abstract class ExtensionModule extends Module {
     parent::__construct($app);
     $this->e = $this->m->Extensions->getModules($this->extensions);
     $this->config = $config;
-    $this->dir = $info->dir;
+    $this->dir = $info->canonicalName;
     $this->info = $info;
     $this->init();
   }
@@ -34,6 +34,6 @@ abstract class ExtensionModule extends Module {
   public function p($key, $path = null) {
     if (isset($path))
       return parent::p($key, $path);
-    return parent::p('extensions', $this->dir . '/' . $key);
+    return $this->info->p($key);
   }
 }
