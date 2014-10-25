@@ -173,7 +173,7 @@ class I18n {
     else if ($month == 11)
       $F = tr('November');
     else if ($month == 12)
-      $F = tr('December ');
+      $F = tr('December');
     $M = Utilities::substr($F, 0, 3);
 
     $weekday = date('w', $timestamp);
