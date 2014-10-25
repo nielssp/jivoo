@@ -130,18 +130,25 @@ aside {
     font-size: 12px;
     margin-bottom: 10px;
     color: #777;
-    text-transform: uppercase;
-    margin-left: 10px; }
+    text-transform: uppercase; }
   aside .widget-content {
     line-height: 20px;
-    background-color: #eee;
-    padding: 10px;
     border-radius: 5px; }
     aside .widget-content form {
       margin: 0; }
     aside .widget-content ul, aside .widget-content ol {
       margin-bottom: 0;
-      margin-left: 15px; }
+      margin-left: 15px;
+      list-style-type: none; }
+      aside .widget-content ul li:first-child, aside .widget-content ol li:first-child {
+        border: none; }
+      aside .widget-content ul li, aside .widget-content ol li {
+        border-top: 1px solid #ddd; }
+        aside .widget-content ul li > a, aside .widget-content ol li > a {
+          display: block;
+          padding: 2px 0; }
+    aside .widget-content > ul {
+      margin-left: 0; }
   @media screen and (min-width: 768px) {
     aside {
       clear: none;
@@ -287,7 +294,6 @@ input[type=submit]:visited {
   line-height: normal;
   text-decoration: none;
   padding: 6px 12px 4px;
-  border-radius: 4px;
   display: inline-block;
   cursor: pointer;
   font-size: 14px; }
@@ -335,18 +341,26 @@ select {
   display: block;
   border: 1px solid #ccc;
   font-size: 14px;
-  border-radius: 4px;
   background-color: #fff;
+  box-shadow: inset 0 1px 2px #e6e6e6;
   color: #999;
   width: 100%; }
-  .text.error,
+  .text[data-error], .text.error,
+  input[type=text][data-error],
   input[type=text].error,
+  input[type=email][data-error],
   input[type=email].error,
+  input[type=password][data-error],
   input[type=password].error,
+  input[type=date][data-error],
   input[type=date].error,
+  input[type=time][data-error],
   input[type=time].error,
+  input[type=datetime][data-error],
   input[type=datetime].error,
+  textarea[data-error],
   textarea.error,
+  select[data-error],
   select.error {
     background-color: #fee;
     border: 1px solid #f55; }

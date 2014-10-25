@@ -164,13 +164,10 @@ aside {
     margin-bottom: 10px;
     color: #777;
     text-transform: uppercase;
-    margin-left: 10px;
   }
   
   .widget-content {
     line-height: 20px;
-    background-color: #eee;
-    padding: 10px;
     border-radius: 5px;
     
     form {
@@ -180,6 +177,23 @@ aside {
     ul, ol {
       margin-bottom: 0;
       margin-left: 15px;
+      list-style-type: none;
+      
+      li:first-child {
+        border: none;
+      }
+      
+      li {
+        border-top: 1px solid #ddd;
+        & > a {
+          display: block;
+          padding: 2px 0;
+        }
+      }
+    }
+    
+    & > ul {
+      margin-left: 0;
     }
   }
   
@@ -356,7 +370,6 @@ input[type=submit] {
     line-height: normal;
     text-decoration: none;
     padding: 6px 12px 4px;
-    border-radius: 4px;
     display: inline-block;
     cursor: pointer;
     font-size: 14px;
@@ -393,12 +406,13 @@ select {
   display: block;
   border: 1px solid #ccc;
   font-size: 14px;
-  border-radius: 4px;
   background-color: #fff;
+  box-shadow: inset 0 1px 2px darken(#fff, 10%);
   color: #999;
   width: 100%;
   
-  &.error {
+  &[data-error],
+  &.error{
     background-color: #fee;
     border: 1px solid #f55;
   }
