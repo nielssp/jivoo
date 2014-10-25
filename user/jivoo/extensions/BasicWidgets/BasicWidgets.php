@@ -15,5 +15,10 @@ class BasicWidgets extends ExtensionModule {
       $this->app,
       $this->p('templates/post-search-widget.html.php')
     ));
+
+    $this->m->Widgets->register(new ArchiveWidget(
+      $this->app,
+      $this->p('templates/archive-widget.html.php')
+    ));
   }
 }
