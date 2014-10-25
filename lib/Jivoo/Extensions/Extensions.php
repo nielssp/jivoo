@@ -105,10 +105,7 @@ class Extensions extends LoadableModule {
       $condition = isset($resInfo['condition']) ? $resInfo['condition'] : null;
       $this->view->resources->provide(
         $resource,
-        $this->m->Assets->getAsset(
-          'extensions',
-          $info->canonicalName . '/' . $info->replaceVariables($resInfo['file'])
-        ),
+        $info->getAsset($this->m->Assets, $info->replaceVariables($resInfo['file'])),
         $dependencies,
         $condition
       );

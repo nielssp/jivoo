@@ -21,19 +21,6 @@ class Theme extends LoadableModule {
   private $menuList;
 
   protected function init() {
-    // Create meta-tags
-    $this->view->blocks->meta('generator', 'Jivoo');
-    //     if ($this->m
-//       ->Configuration
-//       ->exists('site.description')) {
-//       $this->m
-//         ->Templates
-//         ->insertMeta('description',
-//           $this->m
-//             ->Configuration
-//             ->get('site.description'));
-//     }
-
     // Find and load theme
     if (!$this->loadThemeFor('frontend', 9)) {
       if (is_dir($this->p('themes', ''))) {

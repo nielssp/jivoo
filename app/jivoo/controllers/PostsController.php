@@ -37,6 +37,37 @@ class PostsController extends AppController {
     return $this->render();
   }
   
+  public function archive($year = null, $month = null) {
+    $this->posts = $this->Post
+      ->where('status = %PostStatus', 'published')
+      ->orderByDescending('created');
+    
+    if (isset($year)) {
+      if (isset($month)) {
+        $start = strtotime($year . '-' . $month . '-01');
+        $end = strtotime($year . '-' . $month . '-01 +1 month');
+      }
+      else {
+        $start = strtotime($year . '-01-01');
+        $end = strtotime(($year + 1) . '-01-01');
+      }
+      $this->posts = $this->posts
+        ->where('created >= %d', $start)
+        ->and('created < %d', $end);
+    }
+    
+    if (isset($this->request->query['q'])) {
+      $query = '%' . $this->request->query['q'] . '%';
+      $this->posts = $this->posts
+        ->where(where('contentText LIKE %s', $query)
+          ->or('title LIKE %s', $query));
+    }
+    
+    $this->posts = $this->Pagination->paginate($this->posts);
+    
+    return $this->render();
+  }
+  
   public function feed() {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')

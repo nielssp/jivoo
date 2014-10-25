@@ -1,12 +1,5 @@
 <?php
-// Extension
-// Name         : Basic widgets
-// Category     : Widgets
-// Website      : http://apakoh.dk
-// Version      : 1.0
-// Dependencies : Templates Routing Widgets
-
-class BasicWidgets extends ExtensionBase {
+class BasicWidgets extends ExtensionModule {
   protected function init() {
     $this->m->Widgets->register(new RecentPostsWidget(
       $this->app,

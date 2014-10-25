@@ -34,6 +34,6 @@ abstract class ExtensionModule extends Module {
   public function p($key, $path = null) {
     if (isset($path))
       return parent::p($key, $path);
-    return $this->info->p($key);
+    return $this->info->p($this->app, $key);
   }
 }

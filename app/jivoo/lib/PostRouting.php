@@ -10,11 +10,49 @@ class PostRouting extends AppListener {
       $this->m->Routing->addPath('Posts', 'view', 1, array($this, 'getPermalink'), 'post');
       $this->m->Routing->addPath('Comments', 'index', 1, array($this, 'getPermalink'), 'comments');
       $this->m->Routing->addPath('Comments', 'view', 2, array($this, 'getPermalink'), 'comment');
+      $this->detectArchive();
+      $this->m->Routing->addPath('Posts', 'archive', 1, array($this, 'getArchiveLink'));
+      $this->m->Routing->addPath('Posts', 'archive', 2, array($this, 'getArchiveLink'));
     }
     else {
       $this->m->Routing->addRoute('posts/*', 'Posts::view');
       $this->m->Routing->addRoute('posts/*/comments', 'Comments::index');
       $this->m->Routing->addRoute('posts/*/comments/*', 'Comments::view');
+      $this->m->Routing->addRoute('archive/*', 'Posts::archive');
+      $this->m->Routing->addRoute('archive/*/*', 'Posts::archive');
+    }
+  }
+  
+  
+  
+  private function detectArchive() {
+    $path = $this->request->path;
+    if (!is_array($path))
+      return;
+    $len = count($path);
+    if ($len < 1 or $len > 2)
+      return;
+    $year = $path[0];
+    if (preg_match('/^[0-9]{4}$/', $year) !== 1)
+      return;
+    if ($len == 1) {
+      $this->m->Routing->setRoute(array(
+        'controller' => 'Posts',
+        'action' => 'archive',
+        $year
+        ), 6
+      );
+    }
+    else {
+      $month = $path[1];
+      if (preg_match('/^[0-9]{2}$/', $month) !== 1)
+        return;
+      $this->m->Routing->setRoute(array(
+        'controller' => 'Posts',
+        'action' => 'archive',
+        $year, $month
+        ), 6
+      );
     }
   }
   
@@ -108,6 +146,21 @@ class PostRouting extends AppListener {
         'parameters' => array($post->id)
         ), 6
       );
+    }
+  }
+  
+  public function getArchiveLink($parameters) {
+    $len = count($parameters);
+    switch ($len) {
+      case 0:
+        return array('archive');
+      case 1:
+        return array(sprintf('%04d', $parameters[0]));
+      default:
+        return array(
+          sprintf('%04d', $parameters[0]),
+          sprintf('%02d', $parameters[1])
+        );
     }
   }
 
