@@ -26,6 +26,8 @@ class Extensions extends LoadableModule {
 
   private $loading = array();
   
+  private $importList = array();
+  
   private $loadList = array();
   
   private $viewExtensions = array();
@@ -42,6 +44,20 @@ class Extensions extends LoadableModule {
     
     if (!isset($this->config['import']))
       $this->config['import'] = $this->app->appConfig['extensions']; 
+    
+    $this->importList = $this->config['import']->getArray();
+    
+    $appExtensions = $this->p('app', 'extensions');
+    if (is_dir($appExtensions)) {
+      $dirs = scandir($appExtensions);
+      foreach ($dirs as $extension) {
+        if ($extension[0] != '.') {
+          $dir = $this->p('app', 'extensions/' . $extension);
+          if (is_dir($dir))
+            $this->importList[] = $extension;
+        }
+      }
+    }
     
     $this->e = new Map();
 
@@ -118,12 +134,16 @@ class Extensions extends LoadableModule {
   
   public function run() {
     // Import extensions
+    $this->importList = array_unique($this->importList);
     $this->triggerEvent('beforeImportExtensions');
-    foreach ($this->config['import'] as $extension) {
+    foreach ($this->importList as $extension) {
       try {
         $dir = $this->p('extensions', $extension);
-        if (!file_exists($dir . '/extension.json'))
-          throw new ExtensionNotFoundException(tr('Extension not found: "%1"', $extension));
+        if (!file_exists($dir . '/extension.json')) {
+          $dir = $this->p('app', 'extensions/' . $extension);
+          if (!file_exists($dir . '/extension.json'))
+            throw new ExtensionNotFoundException(tr('Extension not found: "%1"', $extension));
+        }
         $info = Json::decodeFile($dir . '/extension.json');
         if (!$info)
           throw new ExtensionInvalidException(tr('Extension invalid: "%1"', $extension));
