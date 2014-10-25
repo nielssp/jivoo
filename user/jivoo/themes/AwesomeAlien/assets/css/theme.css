@@ -137,8 +137,11 @@ aside {
     background-color: #eee;
     padding: 10px;
     border-radius: 5px; }
-    aside .widget-content ul {
-      margin-bottom: 0; }
+    aside .widget-content form {
+      margin: 0; }
+    aside .widget-content ul, aside .widget-content ol {
+      margin-bottom: 0;
+      margin-left: 15px; }
   @media screen and (min-width: 768px) {
     aside {
       clear: none;

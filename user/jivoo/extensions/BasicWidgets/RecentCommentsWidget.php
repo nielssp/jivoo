@@ -8,6 +8,8 @@ class RecentCommentsWidget extends Widget {
   
   protected $models = array('Comment');
   
+  protected $helpers = array('Html');
+  
   public function getDefaultTitle() {
     return tr('Recent comments');
   }
@@ -19,7 +21,7 @@ class RecentCommentsWidget extends Widget {
     }
     $this->comments = $this->Comment
       ->where('status = %CommentStatus', 'approved')
-      ->orderByDescending('date')
+      ->orderByDescending('created')
       ->limit($limit);
     return $this->fetch();
   }

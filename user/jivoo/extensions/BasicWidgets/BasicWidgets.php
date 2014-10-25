@@ -10,5 +10,10 @@ class BasicWidgets extends ExtensionModule {
       $this->app,
       $this->p('templates/recent-comments-widget.html.php')
     ));
+
+    $this->m->Widgets->register(new PostSearchWidget(
+      $this->app,
+      $this->p('templates/post-search-widget.html.php')
+    ));
   }
 }

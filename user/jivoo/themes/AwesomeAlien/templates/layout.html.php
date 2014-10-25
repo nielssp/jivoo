@@ -8,12 +8,12 @@ $this->meta('viewport', 'width=device-width, initial-scale=1');
 <meta charset="utf-8" />
 <title><?php
 if (isset($title)) {
-  echo $title . ' | ' . $site['title'];
+  echo h($title . ' | ' . $site['title']);
 }
 else {
-  echo $site['title'];
+  echo h($site['title']);
   if (!empty($site['subtitle']))
-    echo ' | ' . $site['subtitle'];
+    echo ' | ' . h($site['subtitle']);
 }
 ?></title>
 

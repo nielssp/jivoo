@@ -42,14 +42,18 @@ class PostsController extends AppController {
       ->where('status = %PostStatus', 'published')
       ->orderByDescending('created');
     
+    $this->title = tr('Archive');
+    
     if (isset($year)) {
       if (isset($month)) {
         $start = strtotime($year . '-' . $month . '-01');
         $end = strtotime($year . '-' . $month . '-01 +1 month');
+        $this->title = tdate('F Y', $start);
       }
       else {
         $start = strtotime($year . '-01-01');
         $end = strtotime(($year + 1) . '-01-01');
+        $this->title = tdate('Y', $start);
       }
       $this->posts = $this->posts
         ->where('created >= %d', $start)
@@ -57,10 +61,11 @@ class PostsController extends AppController {
     }
     
     if (isset($this->request->query['q'])) {
-      $query = '%' . $this->request->query['q'] . '%';
+      $query = '%' . Condition::escapeLike($this->request->query['q']) . '%';
       $this->posts = $this->posts
         ->where(where('contentText LIKE %s', $query)
           ->or('title LIKE %s', $query));
+      $this->title = tr('Search: %1', $this->request->query['q']);
     }
     
     $this->posts = $this->Pagination->paginate($this->posts);

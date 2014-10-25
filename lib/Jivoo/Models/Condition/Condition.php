@@ -107,4 +107,11 @@ class Condition implements ICondition {
     return $this;
   }
 
+  public static function escapeLike($string) {
+    return str_replace(
+      array('%', '_'),
+      array('\\%', '\\_'),
+      str_replace('\\', '\\\\', $string)
+    );
+  }
 }
