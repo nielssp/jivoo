@@ -366,21 +366,23 @@ class App implements IEventSubject {
       );
     }
 
-    $defaultTimeZone = 'UTC';
-    try {
-      $defaultTimeZone = @date_default_timezone_get();
-    }
-    catch (ErrorException $e) { }
-    
     $this->config->defaults = array(
       'core' => array(
         'language' => $this->appConfig['defaultLanguage'],
-        'timeZone' => $defaultTimeZone,
         'showExceptions' => false,
         'logLevel' => Logger::ALL,
         'createCrashReports' => true
       ),
     );
+    
+    if (!isset($this->config['core']['timeZone'])) {
+      $defaultTimeZone = 'UTC';
+      try {
+        $defaultTimeZone = @date_default_timezone_get();
+      }
+      catch (ErrorException $e) { }
+      $this->config['core']['timeZone'] = $defaultTimeZone;
+    }
     
     $this->config->defaults = $this->defaultConfig;
 
