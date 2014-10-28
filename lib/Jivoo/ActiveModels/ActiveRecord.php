@@ -98,8 +98,10 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       $this->model->setAssociation($this, $this->associations[$field], $value);
     }
     else if (array_key_exists($field, $this->data)) {
+      $oldValue = $this->data[$field];
       $this->data[$field] = $value;
-      $this->updatedData[$field] = $value;
+      if ($oldValue !== $value)
+        $this->updatedData[$field] = $value;
       $this->saved = false;
     }
     else if (array_key_exists($field, $this->virtualData))

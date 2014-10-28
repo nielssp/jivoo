@@ -115,8 +115,6 @@ class PostsController extends AppController {
 
     $this->posts = $this->tag->posts->where('published = true');
 
-    $this->Pagination->setCount($this->posts);
-
     $this->Pagination->paginate($this->posts);
     $this->title = $this->tag->tag;
     $this->render('posts/index.html');

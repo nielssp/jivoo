@@ -74,6 +74,29 @@ class Post extends ActiveModel {
     );
   }
   
+  public function afterSave(ActiveModelEvent $event) {
+    if (isset($event->record->jsonTags)) {
+      $tags = Json::decode($event->record->jsonTags);
+      if (is_array($tags)) {
+        $event->record->tags->removeAll();
+        $Tag = $this->getDatabase()->Tag;
+        foreach ($tags as $name => $tag) {
+          $existing = $Tag->where('name = %s', $name)->first();
+          if ($existing) {
+            $event->record->tags->add($existing);
+          }
+          else {
+            $new = $Tag->create();
+            $new->tag = $tag;
+            $new->name = $name;
+            if ($new->save())
+              $event->record->tags->add($new);
+          }
+        }
+      }
+    }
+  }
+  
   public function recordCreateJsonTags(ActiveRecord $record) {
     if (!$record->isNew()) {
       $tagObject = array();
@@ -86,7 +109,7 @@ class Post extends ActiveModel {
       $record->jsonTags = '{}';
     }
   }
-  
+
   public function install() {
     if ($this->count() != 0)
       return;

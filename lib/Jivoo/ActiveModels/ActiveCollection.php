@@ -97,17 +97,18 @@ class ActiveCollection extends Model {
     }
   }
 
-  public function removeAll(ISelection $selection) {
+  public function removeAll(ISelection $selection = null) {
+    $selection = $this->prepareSelection($selection);
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
       foreach ($selection as $record) {
-        return $this->join->where($this->thisKey . ' = ?', $this->recordId)
+        $this->join->where($this->thisKey . ' = ?', $this->recordId)
           ->and($this->otherKey . ' = ?', $record->$pk)
           ->delete();
       }
     }
     else {
-      $this->prepareSelection($selection)->set($this->thisKey, null)->update();
+      $selection->set($this->thisKey, null)->update();
     }
   }
 

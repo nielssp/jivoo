@@ -5,6 +5,23 @@ class Tag extends ActiveModel {
   protected $hasAndBelongsToMany = array(
     'posts' => 'Post'
   );
+  
+  protected $validate = array(
+    'name' => array(
+      'presence' => true,
+      'unique' => true,
+      'minLength' => 1,
+      'maxLength' => 50,
+      'rule0' => array(
+        'match' => '/^[a-z0-9-]+$/',
+        'message' => 'Only lowercase letters, numbers and dashes allowed.'
+      ),
+    ),
+    'tag' => array(
+      'presence' => true,
+      'maxLength' => 50
+    ),
+  );
 
   public function getRoute(ActiveRecord $record) {
     return array(
