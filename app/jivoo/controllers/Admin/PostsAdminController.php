@@ -34,6 +34,7 @@ class PostsAdminController extends AdminController {
     }
     else {
       $this->post = $this->Post->create();
+      $this->post->createJsonTags();
       $this->post->commenting = $this->config['blog']['commentingDefault'];
     }
     return $this->render();

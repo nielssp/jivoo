@@ -103,7 +103,10 @@ class Post extends ActiveModel {
       foreach ($record->tags as $tag) {
         $tagObject[$tag->name] = $tag->tag;
       }
-      $record->jsonTags = Json::encode($tagObject);
+      if (count($tagObject) == 0)
+        $record->jsonTags = '{}';
+      else
+        $record->jsonTags = Json::encode($tagObject);
     }
     else {
       $record->jsonTags = '{}';
