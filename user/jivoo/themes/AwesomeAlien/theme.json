@@ -10,5 +10,8 @@
       "Respond",
       "Html5shiv"
     ]
+  },
+  "widgetAreas": {
+    "right": ["sidebar"]
   }
 }

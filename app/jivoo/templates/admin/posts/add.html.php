@@ -1,6 +1,6 @@
 <?php
 $this->extend('admin/layout.html');
-$this->import('jquery.js', 'permalinks.js');
+$this->import('jquery.js', 'jquery-ui.js', 'permalinks.js', 'tags.js');
 ?>
 
 <?php if (!$post): ?>
@@ -70,8 +70,20 @@ $this->import('jquery.js', 'permalinks.js');
   </div>
 
   <div class="field">
-    <label>Tags</label>
-    <input type="text" value="not implemented" disabled />
+    <label for="Post_addTag">Tags</label>
+    <?php echo $Form->hidden('jsonTags'); ?>
+    <div class="tags">
+      <?php foreach ($tags as $tag): ?>
+        <span class="tag" data-name="<?php echo $tag->name; ?>">
+          <?php echo $tag->tag; ?>
+          <a href="#" class="tag-remove">
+            <span class="icon-remove"></span>
+          </a>
+        </span>
+      <?php endforeach; ?>
+    </div>
+    <input type="text" id="Post_addTag" />
+    <input type="button" id="Post_addTag_button" value="<?php echo tr('Add'); ?>" />
   </div>
 
   <div class="field">

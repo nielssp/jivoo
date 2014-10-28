@@ -1267,3 +1267,22 @@ nav {
   font-size: 0.9em; }
   .publish .permalink input {
     padding: 2px; }
+.publish .tags {
+  font-style: normal;
+  margin: 6px 0; }
+  .publish .tags .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    background-color: #eeeeee;
+    color: #444444;
+    cursor: default; }
+    .publish .tags .tag:hover {
+      background-color: #dddddd; }
+    .publish .tags .tag a, .publish .tags .tag a:link, .publish .tags .tag a:visited {
+      margin-left: 4px;
+      color: #444444;
+      text-decoration: none; }
+    .publish .tags .tag a:hover {
+      color: #2272cc; }

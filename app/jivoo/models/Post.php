@@ -34,6 +34,11 @@ class Post extends ActiveModel {
 //     )
 //   );
 
+  protected $virtual = array(
+    'jsonTags'
+  );
+  
+
   protected $validate = array(
     'title' => array(
       'presence' => true,
@@ -67,6 +72,19 @@ class Post extends ActiveModel {
       'action' => 'view',
       'parameters' => array($record->id)
     );
+  }
+  
+  public function recordCreateJsonTags(ActiveRecord $record) {
+    if (!$record->isNew()) {
+      $tagObject = array();
+      foreach ($record->tags as $tag) {
+        $tagObject[$tag->name] = $tag->tag;
+      }
+      $record->jsonTags = Json::encode($tagObject);
+    }
+    else {
+      $record->jsonTags = '{}';
+    }
   }
   
   public function install() {

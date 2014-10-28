@@ -46,6 +46,7 @@ class AdminMenu extends AppListener {
           IconMenu::item(tr('Add post'), 'Admin::Posts::add'),
           IconMenu::item(tr('Add page'), 'Admin::Pages::add'),
           IconMenu::item(tr('Add comment'), 'Admin::Comments::add'),
+          IconMenu::item(tr('Add media'), 'Admin::Media::add'),
         )),
       )
     );

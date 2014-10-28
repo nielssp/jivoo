@@ -49,6 +49,8 @@ class PostsAdminController extends AdminController {
     else {
       $this->title = tr('Edit post');
       $this->post = $this->ContentAdmin->record;
+      $this->post->createJsonTags();
+      $this->tags = $this->post->tags;
       if ($this->post and $this->request->hasValidData('Post')) {
         $this->post->addData($this->request->data['Post']);
         if ($this->post->save()) {
