@@ -73,9 +73,9 @@ $this->import('jquery.js', 'jquery-ui.js', 'permalinks.js', 'tags.js');
     <label for="Post_addTag">Tags</label>
     <?php echo $Form->hidden('jsonTags'); ?>
     <div class="tags">
-      <?php foreach ($tags as $tag): ?>
-        <span class="tag" data-name="<?php echo $tag->name; ?>">
-          <?php echo $tag->tag; ?>
+      <?php foreach ($tags as $name => $tag): ?>
+        <span class="tag" data-name="<?php echo $name; ?>">
+          <?php echo $tag; ?>
           <a href="#" class="tag-remove">
             <span class="icon-remove"></span>
           </a>

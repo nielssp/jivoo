@@ -37,6 +37,7 @@ class PostsAdminController extends AdminController {
       $this->post->createJsonTags();
       $this->post->commenting = $this->config['blog']['commentingDefault'];
     }
+    $this->tags = Json::decode($this->post->jsonTags);
     return $this->render();
   }
   
@@ -51,7 +52,6 @@ class PostsAdminController extends AdminController {
       $this->title = tr('Edit post');
       $this->post = $this->ContentAdmin->record;
       $this->post->createJsonTags();
-      $this->tags = $this->post->tags;
       if ($this->post and $this->request->hasValidData('Post')) {
         $this->post->addData($this->request->data['Post']);
         if ($this->post->save()) {
@@ -66,6 +66,7 @@ class PostsAdminController extends AdminController {
           return $this->refresh();
         }
       }
+      $this->tags = Json::decode($this->post->jsonTags);
       return $this->render('admin/posts/add.html');
     }
   }
