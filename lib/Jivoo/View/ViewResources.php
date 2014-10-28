@@ -83,16 +83,17 @@ class ViewResources {
     $this->imported[$resource] = true;
   }
   
-  public function import($resource) {
-    if (is_array($resource)) {
-      $resources = array_reverse($resource);
-      foreach ($resources as $resource)
-        $this->import($resource);
+  private function push($resource) {
+    if (isset($this->imported[$resource]))
       return;
-    }
-    $args = func_get_args();
-    if (count($args) > 1)
-      return $this->import($args);
+    $resInfo = $this->find($resource);
+    foreach ($resInfo['dependencies'] as $dependency)
+      $this->unshift($dependency);
+    array_push($this->imports[$resInfo['type']], $resInfo);
+    $this->imported[$resource] = true;
+  }
+  
+  private function unshift($resource) {
     if (isset($this->imported[$resource]))
       return;
     $resInfo = $this->find($resource);
@@ -101,10 +102,33 @@ class ViewResources {
     }
     else {
       foreach ($resInfo['dependencies'] as $dependency)
-        $this->import($dependency);
+        $this->unshift($dependency);
       array_push($this->imports[$resInfo['type']], $resInfo);
     }
     $this->imported[$resource] = true;
+  }
+  
+  public function import($resource) {
+    if (is_array($resource)) {
+      if (count($resource) == 0) {
+        return;
+      }
+      else if (count($resource) == 1) {
+        $resource = $resource[0];
+      }
+      else {
+        $dependencies = $resource;
+        $resource = array_pop($dependencies);
+        $this->import($dependencies);
+        return $this->push($resource);
+      }
+    }
+    else {
+      $args = func_get_args();
+      if (count($args) > 1)
+        return $this->import($args);
+    }
+    return $this->unshift($resource);
   }
   
   public function resourceBlock() {
