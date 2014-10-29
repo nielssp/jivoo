@@ -11,20 +11,14 @@ class MediaAdminController extends AdminController {
 
   public function index() {
     $this->title = tr('Media');
+    $this->Filtering->addPrimary('name');
     $subDir = '';
-    $dir = scandir($this->p('media', $subDir));
-    $files = array();
-    if ($dir !== false) { 
-      foreach ($dir as $file) {
-        if ($file[0] != '.') {
-          $files[] = array(
-            'name' => $file,
-            'relativePath' => $subDir . '/' . $file
-          );
-        }
-      }
-    }
-    $this->files = $files;
+    $this->model = new FileModel();
+    $dir = new DirectoryRecord(
+      $this->model,
+      $this->p('media', $subDir)
+    );
+    $this->files = $dir->getContent();
     return $this->render();
   }
   

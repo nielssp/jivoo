@@ -132,7 +132,7 @@ class Widgets extends LoadableModule {
             $object->setTemplate($template);
           }
         }
-        $html = $object->main($config);
+        $html = $object->widget($config);
         if ($html === false) {
           // Widget incorrectly configured.. Remove and inform user
           continue;

@@ -15,12 +15,12 @@ abstract class TraversableWidget extends Widget implements IteratorAggregate {
   }
   
   public function widget($options) {
+    echo 1;
     $this->begin($options);
     foreach ($this as $item) {
       echo $this->handle($item, $options);
     }
     return $this->end();
-    return $this->main($options);
   }
     
   public abstract function handle($item, $options = array());
