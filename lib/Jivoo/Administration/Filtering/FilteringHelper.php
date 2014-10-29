@@ -55,7 +55,7 @@ class FilteringHelper extends Helper {
     if (count($tokens) == 0)
       return $selection;
     $root = $this->parser->parse($tokens);
-    $visitor = new SelectionVisitor($this);
+    $visitor = new SelectionFilterVisitor($this);
     $selection = $selection->where($visitor->visit($root));
     return $selection;
   }
