@@ -1,5 +1,5 @@
 <?php
-class SelectionVisitor extends FilterVisitor {
+class SelectionFilterVisitor extends FilterVisitor {
 
   private $Filtering;
   private $primary;

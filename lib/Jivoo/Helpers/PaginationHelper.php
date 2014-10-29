@@ -19,7 +19,7 @@ class PaginationHelper extends Helper {
   private $to = null;
 
   public function paginate(IReadSelection $select, $itemsPerPage = 5) {
-    Utilities::precondition($itemsPerPage > 0);
+    assume($itemsPerPage > 0);
     $this->limit = $itemsPerPage;
     $this->count = $select->count();
     $this->pages = max(ceil($this->count / $this->limit), 1);
