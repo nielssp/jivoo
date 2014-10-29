@@ -4,7 +4,7 @@ class RecordFilterVisitor extends FilterVisitor {
   private $record;
   private $primary;
 
-  public function __construct($Filtering, IBasicRecord $record) {
+  public function __construct($Filtering, IBasicRecord $record = null) {
     $this->primary = $Filtering->primary;
     $this->record = $record;
   }

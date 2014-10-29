@@ -44,7 +44,12 @@ class FilteringHelper extends Helper {
     $this->primary = array_diff($this->primary, array($column));
   }
 
-  public function apply(IReadSelection $selection) {
+  /**
+   * 
+   * @param IBasicSelection|IBasicRecord[] $selection
+   * @return unknown|Condition
+   */
+  public function apply($selection) {
     if (!isset($this->query) or empty($this->query))
       return $selection;
     if (!isset($this->scanner))
@@ -55,8 +60,20 @@ class FilteringHelper extends Helper {
     if (count($tokens) == 0)
       return $selection;
     $root = $this->parser->parse($tokens);
-    $visitor = new SelectionFilterVisitor($this);
-    $selection = $selection->where($visitor->visit($root));
-    return $selection;
+    if ($selection instanceof IBasicSelection) {
+      $visitor = new SelectionFilterVisitor($this);
+      $selection = $selection->where($visitor->visit($root));
+      return $selection;
+    }
+    else {
+      $result = array();
+      $visitor = new RecordFilterVisitor($this);
+      foreach ($selection as $record) {
+        $visitor->setRecord($record);
+        if ($visitor->visit($root))
+          $result[] = $record;
+      }
+      return $result;
+    }
   }
 }

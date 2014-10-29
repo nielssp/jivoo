@@ -18,10 +18,19 @@ class PaginationHelper extends Helper {
 
   private $to = null;
 
-  public function paginate(IReadSelection $select, $itemsPerPage = 5) {
+  /**
+   * 
+   * @param IReadSelection|array $select
+   * @param number $itemsPerPage
+   * @return unknown
+   */
+  public function paginate($select, $itemsPerPage = 5) {
     assume($itemsPerPage > 0);
     $this->limit = $itemsPerPage;
-    $this->count = $select->count();
+    if ($select instanceof IReadSelection)
+      $this->count = $select->count();
+    else
+      $this->count = count($select);
     $this->pages = max(ceil($this->count / $this->limit), 1);
     
     if (isset($this->request->query['page'])) {
@@ -37,14 +46,18 @@ class PaginationHelper extends Helper {
       $this->to = min(max($this->request->query['to'], 1), $this->count);
       $this->limit = $this->to - $this->from + 1;
     }
-    $select = $select->limit($this->limit);
-    $select = $select->offset($this->offset);
-
     if (!$this->isLast())
       $this->view->blocks->relation('next', null, $this->getLink($this->nextLink()));
     if (!$this->isFirst())
       $this->view->blocks->relation('prev', null, $this->getLink($this->prevLink()));
-    return $select;
+    if ($select instanceof IReadSelection) {
+      $select = $select->limit($this->limit);
+      $select = $select->offset($this->offset);
+      return $select;
+    }
+    else {
+      return array_slice($select, $this->offset, $this->limit);
+    }
   }
 
   public function getCount() {
