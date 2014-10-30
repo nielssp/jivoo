@@ -101,14 +101,8 @@ echo ' | <a href="#comment" class="reply">' . tr('Reply') . '</a>';
 
 </ul>
 
-<div class="pagination">
-  <?php if (!$Pagination->isFirst())
-    echo $Html->link('&#8592; Back ', $Pagination->prevLink('comments')); ?>
-  <div class="right">
-    <?php if (!$Pagination->isLast())
-    echo $Html->link('More comments &#8594;', $Pagination->nextLink('comments')); ?>
-  </div>
-</div>
+<?php echo $this->embed('comments/pagination.html'); ?>
+
 <?php
 endif;
 ?>
