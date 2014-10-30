@@ -37,7 +37,7 @@ class PostsController extends AppController {
     return $this->render();
   }
   
-  public function archive($year = null, $month = null) {
+  public function archive($year = null, $month = null, $day = null) {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
       ->orderByDescending('created');
@@ -46,10 +46,18 @@ class PostsController extends AppController {
     
     if (isset($year)) {
       if (isset($month)) {
-        $this->start = strtotime($year . '-' . $month . '-01');
-        $end = strtotime($year . '-' . $month . '-01 +1 month');
-        $this->title = ucfirst(tdate('F Y', $this->start));
-        $this->searchType = 'month';
+        if (isset($day)) {
+          $this->start = strtotime($year . '-' . $month . '-' . $day);
+          $end = strtotime($year . '-' . $month . '-' . $day .' +1 day');
+          $this->title = ucfirst(fdate($this->start));
+          $this->searchType = 'day';
+        }
+        else {
+          $this->start = strtotime($year . '-' . $month . '-01');
+          $end = strtotime($year . '-' . $month . '-01 +1 month');
+          $this->title = ucfirst(tdate('F Y', $this->start));
+          $this->searchType = 'month';
+        }
       }
       else {
         $this->start = strtotime($year . '-01-01');
