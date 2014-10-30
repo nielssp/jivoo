@@ -87,6 +87,30 @@ class PaginationHelper extends Helper {
   public function isLast() {
     return $this->page == $this->pages;
   }
+  
+  public function getPageList($middle = 3, $start = 1, $end = 1) {
+    $pages = array();
+    for ($i = 1; $i <= $start and $i <= $this->pages; $i++) {
+      $pages[] = $i;
+    }
+    $i = max($i, $this->page - $middle + min(ceil($middle / 2), $this->pages - $this->page));
+    for ($j = 1; $j <= $middle and $i <= $this->pages; $j++, $i++) {
+      $pages[] = $i;
+    }
+    $i = max($i, $this->pages - $end + 1);
+    for ( ; $i <= $this->pages; $i++) {
+      $pages[] = $i;
+    }
+    return $pages;
+  }
+  
+  public function link($page, $fragment = null) {
+    return array(
+      'query' => array('page' => $page),
+      'fragment' => $fragment,
+      'mergeQuery' => true
+    );
+  }
 
   public function prevLink($fragment = null) {
     return array(

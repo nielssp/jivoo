@@ -46,17 +46,19 @@ class PostsController extends AppController {
     
     if (isset($year)) {
       if (isset($month)) {
-        $start = strtotime($year . '-' . $month . '-01');
+        $this->start = strtotime($year . '-' . $month . '-01');
         $end = strtotime($year . '-' . $month . '-01 +1 month');
-        $this->title = ucfirst(tdate('F Y', $start));
+        $this->title = ucfirst(tdate('F Y', $this->start));
+        $this->searchType = 'month';
       }
       else {
-        $start = strtotime($year . '-01-01');
+        $this->start = strtotime($year . '-01-01');
         $end = strtotime(($year + 1) . '-01-01');
-        $this->title = tdate('Y', $start);
+        $this->title = tdate('Y', $this->start);
+        $this->searchType = 'year';
       }
       $this->posts = $this->posts
-        ->where('created >= %d', $start)
+        ->where('created >= %d', $this->start)
         ->and('created < %d', $end);
     }
     
@@ -65,10 +67,12 @@ class PostsController extends AppController {
       $this->posts = $this->posts
         ->where(where('contentText LIKE %s', $query)
           ->or('title LIKE %s', $query));
-      $this->title = tr('Search: %1', $this->request->query['q']);
+      $this->query = $this->request->query['q'];
+      $this->title = tr('Search: %1', $this->query);
+      $this->searchType = 'query';
     }
     
-    $this->posts = $this->Pagination->paginate($this->posts);
+    $this->posts = $this->Pagination->paginate($this->posts, 10);
     
     return $this->render();
   }

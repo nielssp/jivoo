@@ -454,18 +454,53 @@ form {
   }
 }
 
-div.pagination {
-  margin-bottom: 1.2em;
-  font-weight: bold;
-  
-  .right {
+.pagination {
+  text-align: center;
+  font-weight: normal;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 6px 0;
+  color: #555;
+
+  .next, .prev {
+    font-weight: bold;
+    padding: 2px 4px;
+  }
+  .next {
+    margin-left: 16px;
+  }
+
+  .prev {
+    margin-right: 16px;
+  }
+
+  .this {
+    background-color: #555;
+    color: #fff;
+    padding: 2px 4px;
+  }
+
+  a {
+    &, &:link, &:active, &:visited {
+      padding: 2px 4px;
+    }
+    &:hover {
+    }
+  }
+}
+
+.archive-pagination {
+  margin-bottom: 20px;
+  color: #555;
+
+  .title {
+    font-weight: bold;
+  }
+
+  .quantity {
     float: right;
   }
-  &:after {
-    content: ' ';
-    display: block;
-    clear: right;
-  }
+
 }
 
 .post {

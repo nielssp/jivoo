@@ -398,15 +398,34 @@ form {
   form p {
     color: #444; }
 
-div.pagination {
-  margin-bottom: 1.2em;
-  font-weight: bold; }
-  div.pagination .right {
+.pagination {
+  text-align: center;
+  font-weight: normal;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 6px 0;
+  color: #555; }
+  .pagination .next, .pagination .prev {
+    font-weight: bold;
+    padding: 2px 4px; }
+  .pagination .next {
+    margin-left: 16px; }
+  .pagination .prev {
+    margin-right: 16px; }
+  .pagination .this {
+    background-color: #555;
+    color: #fff;
+    padding: 2px 4px; }
+  .pagination a, .pagination a:link, .pagination a:active, .pagination a:visited {
+    padding: 2px 4px; }
+
+.archive-pagination {
+  margin-bottom: 20px;
+  color: #555; }
+  .archive-pagination .title {
+    font-weight: bold; }
+  .archive-pagination .quantity {
     float: right; }
-  div.pagination:after {
-    content: ' ';
-    display: block;
-    clear: right; }
 
 .post {
   padding-bottom: 20px;

@@ -1,13 +1,33 @@
 <?php $this->extend('layout.html'); ?>
 
-<div class="pagination">
-  <?php echo tn('%1 posts found', '%1 post found', $Pagination->getCount()); ?>
-  <?php if (!$Pagination->isLast())
-  echo $Html->link('&#8592; Older posts', $Pagination->nextLink()); ?>
-  <div class="right">
-    <?php if (!$Pagination->isFirst())
-  echo $Html->link('Newer posts &#8594;', $Pagination->prevLink()); ?>
-  </div>
+<div class="archive-pagination">
+<div class="quantity">
+<strong>
+<?php echo $Pagination->getFrom() . '&ndash;' . $Pagination->getTo(); ?>    
+</strong>
+of
+<strong class="item-count"><?php echo $Pagination->getCount(); ?></strong>
+</div>
+<div class="title"><?php
+switch ($searchType) {
+  case 'query':
+    echo tr('Search results for: %1', h($query));
+    break;
+  case 'year':
+    echo tr('Archive for %1', tdate('Y', $start));
+    break;
+  case 'month':
+    echo tr('Archive for %1', tdate('F Y', $start));
+    break;
+  case 'day':
+    echo tr('Archive for %1', fdate($start));
+    break;
+  default:
+    echo tr('Archive');
+    break;
+}
+?></div>
+<?php echo $this->embed('posts/pagination.html'); ?>
 </div>
 
 <?php foreach ($posts as $post) : ?>
@@ -41,11 +61,4 @@ else {
 </div>
 <?php endforeach; ?>
 
-<div class="pagination">
-  <?php if (!$Pagination->isLast())
-  echo $Html->link('&#8592; Older posts', $Pagination->nextLink()); ?>
-  <div class="right">
-    <?php if (!$Pagination->isFirst())
-  echo $Html->link('Newer posts &#8594;', $Pagination->prevLink()); ?>
-  </div>
-</div>
+<?php echo $this->embed('posts/pagination.html'); ?>

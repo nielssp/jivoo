@@ -1,15 +1,5 @@
 <?php $this->extend('layout.html'); ?>
 
-<?php if (!$Pagination->isFirst()) : ?>
-<div class="pagination">
-  <?php if (!$Pagination->isLast())
-    echo $Html->link('&#8592; Older posts', $Pagination->nextLink()); ?>
-  <div class="right">
-    <?php echo $Html->link('Newer posts &#8594', $Pagination->prevLink()); ?>
-  </div>
-</div>
-<?php endif; ?>
-
 <?php foreach ($posts as $post) : ?>
 
 <div class="post">
@@ -41,11 +31,4 @@ else {
 </div>
 <?php endforeach; ?>
 
-<div class="pagination">
-  <?php if (!$Pagination->isLast())
-  echo $Html->link('&#8592; Older posts', $Pagination->nextLink()); ?>
-  <div class="right">
-    <?php if (!$Pagination->isFirst())
-  echo $Html->link('Newer posts &#8594;', $Pagination->prevLink()); ?>
-  </div>
-</div>
+<?php echo $this->embed('posts/pagination.html'); ?>
