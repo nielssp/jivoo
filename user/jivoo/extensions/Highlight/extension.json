@@ -1,0 +1,6 @@
+{
+  "name": "Highlight.js",
+  "version": "8.2",
+  "website": "https://highlightjs.org",
+  "load": ["Highlight"]
+}

@@ -36,4 +36,10 @@ abstract class ExtensionModule extends Module {
       return parent::p($key, $path);
     return $this->info->p($this->app, $key);
   }
+  
+  public function getAsset($key, $path = null) {
+    if (isset($path))
+      return $this->m->Assets->getAsset($key, $path);
+    return $this->info->getAsset($this->m->Assets, $key);
+  }
 }

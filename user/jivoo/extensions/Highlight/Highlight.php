@@ -1,13 +1,10 @@
 <?php
-// Extension
-// Name         : Highlight.js
-// Category     : JavaScript
-// Website      : https://highlightjs.org
-// Version      : 8.2
-// Dependencies : Templates Assets
 
 class Highlight extends ExtensionModule {
   protected function init() {
+    $this->config->defaults = array(
+      'theme' => 'solarized_dark'
+    );
     $this->view->provide(
       'highlight.js',
       $this->getAsset('highlight.pack.js')
@@ -18,7 +15,7 @@ class Highlight extends ExtensionModule {
     );
     $this->view->provide(
       'highlight-style.css',
-      $this->getAsset('styles/solarized_dark.css')
+      $this->getAsset('styles/' . $this->config['theme'] . '.css')
     );
     $this->view->import('highlight.js', 'highlight-init.js', 'highlight-style.css');
   }
