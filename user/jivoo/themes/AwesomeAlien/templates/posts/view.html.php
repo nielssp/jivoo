@@ -7,32 +7,33 @@
 
 <?php echo $Format->html($post, 'content'); ?>
 
+<div class="byline">
+<?php 
+if (isset($post->user))
+  echo h($post->user->username) . ' | ';
+?>
+<?php 
+echo '<time datetime="' . date('c', $post->created)
+      . '" title="' . ldate($post->created) . '">'
+      . sdate($post->created) . '</time>';
+?> | 
 <?php
 $tags = array();
-foreach ($post->tags as $tag) {
+foreach ($post->tags as $tag)
   $tags[] = $Html->link(h($tag->tag), $tag);
-}
+if (count($tags) > 0)
+  echo implode(', ', $tags) . ' | ';
 ?>
-<div class="byline">
-<?php
-if (count($tags) > 0) {
-  echo tr('Posted on %2 and tagged with %1{, }{ and }',
-    $tags, fdate($post->created));
-}
-else {
-  echo tr('Posted on %1 by %2', fdate($post->created), $post->user->username);
-}
-?>
- | 
 <?php echo $Html->link(
   tr('Leave a comment'),
   $this->mergeRoutes($post, array('fragment' => 'comment'))
 ); ?>
 </div>
 
-<?php $replying = false; ?>
 
 </div>
+
+<?php $replying = false; ?>
 <?php
 if ($Pagination->getCount() > 0) :
 ?>

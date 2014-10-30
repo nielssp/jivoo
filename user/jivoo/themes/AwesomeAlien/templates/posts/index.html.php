@@ -9,8 +9,15 @@
 <?php echo $Format->html($post, 'content'); ?>
 
 <div class="byline">
-<?php echo tr('Posted on %1', fdate($post->created)) ?>
- | 
+<?php 
+if (isset($post->user))
+  echo h($post->user->username) . ' | ';
+?>
+<?php 
+echo '<time datetime="' . date('c', $post->created)
+      . '" title="' . ldate($post->created) . '">'
+      . sdate($post->created) . '</time>';
+?> | 
 <?php
 $comments = $post->comments->where('status = %CommentStatus', 'approved')->count();
 if ($comments == 0) {
