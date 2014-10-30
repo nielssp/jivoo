@@ -13,6 +13,9 @@ switch ($searchType) {
   case 'query':
     echo tr('Search results for: %1', h($query));
     break;
+  case 'tag':
+    echo tr('Posts tagged with: %1', h($tag->tag));
+    break;
   case 'year':
     echo tr('Archive for %1', tdate('Y', $start));
     break;

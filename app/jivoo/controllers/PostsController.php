@@ -125,11 +125,12 @@ class PostsController extends AppController {
     if (!isset($this->tag))
       throw new NotFoundException();
 
-    $this->posts = $this->tag->posts->where('published = true');
+    $this->posts = $this->tag->posts->where('status = %PostStatus', 'published');
 
     $this->Pagination->paginate($this->posts);
-    $this->title = $this->tag->tag;
-    $this->render('posts/index.html');
+    $this->title = tr('Tag: %1', $this->tag->tag);
+    $this->searchType = 'tag';
+    return $this->render('posts/archive.html');
   }
 
 }

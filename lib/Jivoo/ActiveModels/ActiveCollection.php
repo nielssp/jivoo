@@ -24,6 +24,7 @@ class ActiveCollection extends Model {
   }
 
   private function prepareSelection(IBasicSelection $selection = null) {
+    Logger::logException(new Exception());
     if (!isset($selection))
       return $this->source;
     if (isset($this->join)) {
@@ -170,7 +171,9 @@ class ActiveCollection extends Model {
   }
   
   public function countSelection(ReadSelection $selection) {
-    return $this->other->countSelection($this->prepareSelection($selection));
+//     return $this->other->countSelection($this->prepareSelection($selection));
+      
+    return $this->other->countSelection($selection);
   }
   
   public function firstSelection(ReadSelection $selection) {
