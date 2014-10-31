@@ -21,12 +21,13 @@ class EnumDataType extends DataType {
   }
 
   public function __get($property) {
-    if ($property == 'values')
+    if ($property === 'values')
       return $this->values;
-    if ($property == 'placeholder')
+    if ($property === 'placeholder') {
       if (!isset($this->class))
         throw new Exception(tr('Invalid use of anonymous enum type'));
       return '%' . $this->class;
+    }
     return parent::__get($property);
   }
 
