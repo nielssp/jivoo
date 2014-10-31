@@ -124,7 +124,7 @@ class View extends LoadableModule {
     $this->data->flash = $this->request->session->flash;
     $this->template = new Template($this);
     $this->template->ignoreExtend(true);
-    $result = $template->render($template, $data);
+    $result = $this->template->render($template, $data);
     $this->template = null;
     return $result;
   }
