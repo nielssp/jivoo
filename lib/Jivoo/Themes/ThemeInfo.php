@@ -14,6 +14,10 @@ class ThemeInfo extends ExtensionInfo {
       $this->zones = $info['zones'];
   }
   
+  public function getModel() {
+    return ThemeModel::getInstance();
+  }
+  
   public function __get($property) {
     switch ($property) {
       case 'extend':

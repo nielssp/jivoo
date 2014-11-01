@@ -1,5 +1,5 @@
 <?php
-class ExtensionInfo {
+class ExtensionInfo implements IBasicRecord {
   protected $kind = 'extensions';
   private $canonicalName;
   private $enabled;
@@ -28,6 +28,22 @@ class ExtensionInfo {
         return true;
     }
     return isset($this->info[$property]);
+  }
+  
+  public function getData() {
+    return $this->info;
+  }
+  
+  public function getErrors() {
+    return array();
+  }
+  
+  public function isValid() {
+    return true;
+  }
+  
+  public function getModel() {
+    return ExtensionModel::getInstance();
   }
   
   public function isBundled() {
@@ -67,5 +83,19 @@ class ExtensionInfo {
       array($this, 'replaceVariable'),
       $string
     );
+  }
+
+  public function offsetExists($field) {
+    return $this->__isset($field);
+  }
+
+  public function offsetGet($field) {
+    return $this->__get($field);
+  }
+
+  public function offsetSet($field, $value) {
+  }
+
+  public function offsetUnset($field) {
   }
 }

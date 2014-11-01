@@ -1,27 +1,25 @@
 <?php $this->extend('admin/layout.html'); ?>
 
-<table>
-<tbody>
-<?php foreach ($extensions as $info): ?>
-<tr>
-<td class="primary">
-<h2>
-<?php echo h($info->name); ?>
-
-<span class="version"><?php echo h($info->version); ?></span>
-</h2>
-<div class="description">
-<?php echo h($info->description); ?>
-</div>
-</td>
-<td>
-<?php if ($info->enabled): ?>
-<?php echo $Form->actionButton(tr('Disable'), array('action' => 'disable', $info->canonicalName)); ?>
-<?php else: ?>
-<?php echo $Form->actionButton(tr('Enable'), array('action' => 'enable', $info->canonicalName)); ?>
-<?php endif; ?>
-</td>
-</tr>
-<?php endforeach; ?>
-</tbody>
-</table>
+<?php
+$widget = $Widget->begin('BasicDataTable', array(
+  'model' => $model,
+  'records' => $extensions,
+  'columns' => array('name', 'canonicalName', 'version'),
+  'primaryColumn' => 'name',
+  'sortOptions' => array('name', 'canonicalName'),
+  'defaultSortBy' => 'name',
+  'actions' => array(
+    'enable' => new TableAction(tr('Enable'), 'Admin::Extensions::enable',
+      'checkmark', array(), 'post'),
+    'disable' => new TableAction(tr('Disable'), 'Admin::Extensions::disable',
+      'close', array(), 'post'),
+  ),
+));
+foreach ($widget as $item) {
+  echo $widget->handle($item, array(
+    'id' => $item->canonicalName,
+    'removeActions' => array($item->enabled ? 'enable' : 'disable')
+  ));
+}
+echo $widget->end();
+?>

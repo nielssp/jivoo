@@ -5,6 +5,7 @@ class ExtensionsAdminController extends AdminController {
   
   public function index() {
     $this->title = tr('Extensions');
+    $this->model = ExtensionModel::getInstance();
     $this->extensions = $this->m->Extensions->listExtensions();
     return $this->render();
   }
