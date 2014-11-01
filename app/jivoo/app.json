@@ -21,8 +21,8 @@
     "Jivoo/ActiveModels",
     "Jivoo/AccessControl",
     "Jivoo/Administration",
-    "Jivoo/Theme",
     "Jivoo/Extensions",
+    "Jivoo/Themes",
     "Jivoo/Widgets"
   ],
   "setup": [

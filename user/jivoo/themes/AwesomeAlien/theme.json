@@ -4,6 +4,7 @@
   "author": "Jivoo",
   "website": "http://jivoo.org",
   "description": "Default Jivoo theme.",
+  "zones": ["main"],
   "dependencies": {
     "extensions": [
       "Jquery >=1.7",

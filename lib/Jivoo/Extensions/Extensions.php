@@ -19,6 +19,10 @@ class Extensions extends LoadableModule {
     'afterLoadExtension', 'afterLoadExtensions'
   );
   
+  private $kinds = array(
+    'extensions' => 'extension'
+  );
+  
   private $info = array();
   private $installed = array();
 
@@ -115,8 +119,12 @@ class Extensions extends LoadableModule {
   public function attachFeature($name, $handler) {
     $this->featureHandlers[] = array($name, $handler);
   }
+  
+  public function addKind($kind, $infoName) {
+    $this->kinds[$kind] = $infoName;
+  }
 
-  public function getInfo($extension) {
+  public function getInfo($extension, $kind = 'extensions') {
     if (!isset($this->info[$extension])) {
       $dir = $this->p('extensions', $extension);
       $bundled = false;

@@ -1,5 +1,6 @@
 <?php
 class ExtensionInfo {
+  protected $kind = 'extensions';
   private $canonicalName;
   private $enabled;
   private $info;
@@ -35,16 +36,23 @@ class ExtensionInfo {
   
   public function p(App $app, $path) {
     if ($this->bundled)
-      return $app->p('app', 'extensions/' . $this->canonicalName . '/' . $path);
+      return $app->p('app', $this->kind . '/' . $this->canonicalName . '/' . $path);
     else
-      return $app->p('extensions', $this->canonicalName . '/' . $path);
+      return $app->p($this->kind, $this->canonicalName . '/' . $path);
   }
   
   public function getAsset(Assets $assets, $path) {
     if ($this->bundled)
-      return $assets->getAsset('app', 'extensions/' . $this->canonicalName . '/' . $path);
+      return $assets->getAsset('app', $this->kind . '/' . $this->canonicalName . '/' . $path);
     else
-      return $assets->getAsset('extensions', $this->canonicalName . '/' . $path);
+      return $assets->getAsset($this->kind, $this->canonicalName . '/' . $path);
+  }
+  
+  public function addAssetDir(Assets $assets, $path) {
+    if ($this->bundled)
+      return $assets->addAssetDir('app', $this->kind . '/' . $thic->canonicalName . '/' . $path);
+    else
+      return $assets->addAssetDir($this->kind, $this->canonicalName . '/' . $path);
   }
   
   private function replaceVariable($matches) {
