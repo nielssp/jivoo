@@ -8,6 +8,7 @@ class ExtensionModel extends BasicModel {
     $this->addField('name', tr('Name'), DataType::string());
     $this->addField('version', tr('Version'), DataType::string());
     $this->addField('description', tr('Description'), DataType::text());
+    $this->addField('enabled', tr('Enabled'), DataType::boolean());
   }
   
   public static function getInstance() {

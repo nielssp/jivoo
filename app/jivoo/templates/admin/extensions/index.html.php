@@ -4,9 +4,9 @@
 $widget = $Widget->begin('BasicDataTable', array(
   'model' => $model,
   'records' => $extensions,
-  'columns' => array('name', 'canonicalName', 'version'),
+  'columns' => array('name', 'enabled', 'canonicalName', 'version'),
   'primaryColumn' => 'name',
-  'sortOptions' => array('name', 'canonicalName'),
+  'sortOptions' => array('name', 'enabled', 'canonicalName'),
   'defaultSortBy' => 'name',
   'actions' => array(
     'enable' => new TableAction(tr('Enable'), 'Admin::Extensions::enable',
