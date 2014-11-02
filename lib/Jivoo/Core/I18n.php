@@ -97,21 +97,18 @@ class I18n {
 
   public static function shortDate($timestamp = null) {
     $l = self::$language;
-    $distance = abs(floor(($timestamp - time()) / (60 * 60 * 24)));
-    $cDay = date('d');
-    if ($distance >= 60) {
-      return self::date($l->monthYear, $timestamp);
+    $cYear = date('Y');
+    $date = date('Y-m-d', $timestamp);
+    if (date('Y-m-d') == $date) {
+      return tr('Today %1', self::formatTime($timestamp));
     }
-    else if ($cDay == date('d', $timestamp)) {
-      return tr('Today %1', self::date($l->timeFormat, $timestamp));
-    } 
-    else if ($cDay == date('d', $timestamp) - 1) {
-      return tr('Tomorrow %1', self::date($l->timeFormat, $timestamp));
-    } 
-    else if ($cDay == date('d', $timestamp) + 1) {
-      return tr('Yesterday %1', self::date($l->timeFormat, $timestamp));
-    } 
-    else if ($distance <= 6 AND $timestamp > time()) {
+    else if (date('Y-m-d', strtotime('yesterday')) == $date) {
+      return tr('Yesterday %1', self::formatTime($timestamp));
+    }
+    else if (date('Y-m-d', strtotime('tomorrow')) == $date) {
+      return tr('Tomorrow %1', self::formatTime($timestamp));
+    }
+    else if ($cYear == date('Y', $timestamp)) {
       return self::date($l->monthDay, $timestamp);
     }
     else {
