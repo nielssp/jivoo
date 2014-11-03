@@ -3,7 +3,7 @@
   "version": "1.11",
   "website": "http://www.google.com/recaptcha",
   "license": "LICENSE",
-  "configure": "ConfigureRecaptcha"
+  "configure": "ConfigureRecaptcha",
   "viewExtensions": [
     {
       "module": "ReCaptcha",
