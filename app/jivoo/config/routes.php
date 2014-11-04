@@ -6,7 +6,7 @@ return array(
   Route::match('archive', 'Posts::archive'),
   Route::match('tags', 'Posts::tagIndex'),
   Route::match('tags/*', 'Posts::viewTag'),
-  Route::match('feed/posts.rss', 'Posts::feed'),
+  Route::match('posts.rss', 'Posts::feed'),
   Route::auto('Admin'),
   Route::auto('Admin::Posts'),
   Route::auto('Admin::Pages'),
