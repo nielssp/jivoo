@@ -1,14 +1,13 @@
 <?php
-class ConfigureRecaptcha extends ExtensionController {
+class ConfigureAnalytics extends ExtensionController {
   
   protected $helpers = array('Form');
  
   public function configure() {
-    $this->title = 'reCAPTCHA';
+    $this->title = 'Google Analytics';
     $this->settings = new Form('settings', $this->config);
     if ($this->request->hasValidData('settings')) {
-      $this->config['privateKey'] = $this->request->data['settings']['privateKey'];
-      $this->config['publicKey'] = $this->request->data['settings']['publicKey'];
+      $this->config['id'] = $this->request->data['settings']['id'];
       if ($this->config->save())
         $this->refresh();
       else
