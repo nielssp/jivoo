@@ -57,7 +57,7 @@ $this->importConditional('admin/respond.min.js', 'lt IE 9');
 <?php endif; ?>
 
 <?php foreach ($flash as $message): ?>
-<div class="flash flash-<?php echo $message->type; ?>">
+<div class="flash flash-<?php echo h($message->type); ?>">
 <?php echo $message; ?>
 </div>
 <?php endforeach; ?>

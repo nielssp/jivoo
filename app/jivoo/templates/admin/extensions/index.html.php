@@ -13,12 +13,23 @@ $widget = $Widget->begin('BasicDataTable', array(
       'checkmark', array(), 'post'),
     'disable' => new TableAction(tr('Disable'), 'Admin::Extensions::disable',
       'close', array(), 'post'),
+    'configure' => new TableAction(tr('Configure'), 'Admin::Extensions::configure',
+      'wrench', array(), 'get')
   ),
 ));
 foreach ($widget as $item) {
+  $hide = array($item->enabled ? 'enable' : 'disable');
+  if ($item->enabled) {
+    if (isset($item->configure))
+      $hide = array('enable');
+    else
+      $hide = array('enable', 'configure');
+  }
+  else
+    $hide = array('disable', 'configure');
   echo $widget->handle($item, array(
     'id' => $item->canonicalName,
-    'removeActions' => array($item->enabled ? 'enable' : 'disable')
+    'removeActions' => $hide
   ));
 }
 echo $widget->end();

@@ -38,16 +38,6 @@ class Controller extends Module {
   private $actions = array();
 
   /**
-   * @var string[] List of template paths
-   */
-  private $templatePaths = array();
-
-  /**
-   * @var array Associative array of data to be passed along to template
-   */
-  private $data = array();
-
-  /**
    * @var HTTP status code
    */
   private $status = 200;

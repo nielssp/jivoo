@@ -10,6 +10,23 @@ class ExtensionsAdminController extends AdminController {
     return $this->render();
   }
   
+  public function configure($extension) {
+    $info = $this->m->Extensions->getInfo($extension);
+    if (!isset($info)) {
+      $this->session->flash->error = tr('Extension not found: %1', h($extension));
+      return $this->redirect('index');
+    }
+    if (!isset($info->configure)) {
+      $this->session->flash->error = tr('Extension has no configuration: %1', h($extension));
+      return $this->redirect('index');
+    }
+    $component = $info->configure;
+    Lib::assumeSubclassOf($component, 'ExtensionController');
+    $controller = new $component($this->app, $info, $this->config['Extensions']['config'][$extension]);
+    $this->component = $controller->configure();
+    return $this->render();
+  }
+  
   public function enable($extension) {
     if ($this->request->hasValidData()) {
       $missing = $this->m->Extensions->enable($extension); 

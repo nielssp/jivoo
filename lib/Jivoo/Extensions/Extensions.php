@@ -11,7 +11,7 @@
  */
 class Extensions extends LoadableModule {
   
-  protected $modules = array('Assets');
+  protected $modules = array('Assets', 'View');
   
   protected $events = array(
     'beforeImportExtensions', 'afterImportExtensions',
