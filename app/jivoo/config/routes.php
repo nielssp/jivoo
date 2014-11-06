@@ -9,6 +9,7 @@ return array(
   Route::match('posts.rss', 'Posts::feed'),
   Route::auto('Admin'),
   Route::auto('Admin::Posts'),
+  Route::auto('Admin::Tags'),
   Route::auto('Admin::Pages'),
   Route::auto('Admin::Comments'),
   Route::auto('Admin::Users'),

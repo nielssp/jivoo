@@ -10,7 +10,7 @@ class UsersAdminController extends AdminController {
   }
   
   public function index() {
-    $this->title = tr('All users');
+    $this->title = tr('Users');
     $this->users = $this->User;
     return $this->render();
   }

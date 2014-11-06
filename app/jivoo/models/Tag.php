@@ -23,6 +23,12 @@ class Tag extends ActiveModel {
     ),
   );
 
+  protected $actions = array(
+    'view' => 'Posts::viewTag::%name%',
+    'edit' => 'Admin::Tags::edit::%id%',
+    'delete' => 'Admin::Tags::delete::%id%',
+  );
+
   public function getRoute(ActiveRecord $record) {
     return array(
       'controller' => 'Posts',

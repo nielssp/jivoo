@@ -4,7 +4,7 @@
 
   <item>
     <title><?php echo $post->title; ?></title>
-    <description><![CDATA[<?php echo $post->content; ?>]]></description>
+    <description><![CDATA[<?php echo $Format->html($post, 'content'); ?>]]></description>
     <link><?php echo $this->url($post); ?></link>
     <pubDate><?php echo date('r', $post->created); ?></pubDate>
     <guid><?php echo $this->url($post); ?></guid>

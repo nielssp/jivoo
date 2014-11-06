@@ -11,10 +11,8 @@ class AdminMenu extends AppListener {
         IconMenu::item(tr('Install updates'), 'Admin::update', 'download3', '3'),
       )),
       'content' => IconMenu::menu(tr('Content'), null, null, array(
-        'posts' => IconMenu::menu(tr('Posts'), 'Admin::Posts', 'newspaper', array(
-          IconMenu::item(tr('Posts'), 'Admin::Posts::index'),
-          IconMenu::item(tr('Tags'), null),
-        )),
+        'posts' => IconMenu::item(tr('Posts'), 'Admin::Posts', 'newspaper'),
+        'tags' => IconMenu::item(tr('Tags'), 'Admin::Tags', 'tags'),
         'pages' => IconMenu::item(tr('Pages'), 'Admin::Pages', 'file'),
         'comments' => IconMenu::item(tr('Comments'), 'Admin::Comments', 'bubbles'),
         'media' => IconMenu::item(tr('Media'), 'Admin::Media', 'images'),
