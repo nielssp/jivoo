@@ -29,7 +29,8 @@ foreach ($widget as $item) {
     $hide = array('disable', 'configure');
   echo $widget->handle($item, array(
     'id' => $item->canonicalName,
-    'removeActions' => $hide
+    'removeActions' => $hide,
+    'class' => $item->enabled ? null : 'warn'
   ));
 }
 echo $widget->end();

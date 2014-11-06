@@ -53,17 +53,26 @@ table {
       }
       &.warn {
         td:first-child {
+          padding-left: 4px;
           border-left: 4px solid lighten(#cccc22, 30%);
         }
       }
       &.error {
         td:first-child {
+          padding-left: 4px;
           border-left: 4px solid lighten(#cc2222, 30%);
         }
       }
       &.unread {
         td:first-child {
+          padding-left: 4px;
           border-left: 4px solid lighten(#2272CC, 30%);
+        }
+      }
+      &.success {
+        td:first-child {
+          padding-left: 4px;
+          border-left: 4px solid lighten(#50cc22, 30%);
         }
       }
 

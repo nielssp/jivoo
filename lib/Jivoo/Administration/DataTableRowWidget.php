@@ -8,7 +8,8 @@ class DataTableRowWidget extends Widget {
     'labels' => array(),
     'primaryColumn' => null,
     'actions' => array(),
-    'removeActions' => null
+    'removeActions' => null,
+    'class' => null
   );
   
   public function main($options) {

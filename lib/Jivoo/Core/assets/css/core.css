@@ -437,11 +437,17 @@ table {
   table tbody tr td {
     border-top: 1px solid #e6e6e6; }
   table tbody tr.warn td:first-child {
+    padding-left: 4px;
     border-left: 4px solid #eeee99; }
   table tbody tr.error td:first-child {
+    padding-left: 4px;
     border-left: 4px solid #ee9999; }
   table tbody tr.unread td:first-child {
+    padding-left: 4px;
     border-left: 4px solid #99c1ee; }
+  table tbody tr.success td:first-child {
+    padding-left: 4px;
+    border-left: 4px solid #b0ee99; }
   table tbody tr:hover td {
     background-color: #f7f7f7; }
   table tbody tr .actions a {

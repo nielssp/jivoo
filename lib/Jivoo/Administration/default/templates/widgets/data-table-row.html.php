@@ -1,4 +1,4 @@
-<tr<?php if (isset($class)) echo ' class="' . $class . '"'; ?>>
+<tr<?php if (isset($options['class'])) echo ' class="' . $options['class'] . '"'; ?>>
 <td class="selection">
 <label>
 <input type="checkbox" name="selection" value="<?php echo $options['id']; ?>" />
