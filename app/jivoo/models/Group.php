@@ -6,6 +6,10 @@ class Group extends ActiveModel {
   protected $hasMany = array(
     'users' => 'User'
   );
+  
+  protected $actions = array(
+    'edit' => 'Admin::Groups::edit::%id%',
+  );
 
 }
 
