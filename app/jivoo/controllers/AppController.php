@@ -25,20 +25,4 @@ class AppController extends Controller {
     $this->setStatus(404);
     return $this->render();
   }
-  
-  public function login() {
-    if ($this->request->isPost()) {
-      if ($this->Auth->logIn()) {
-        return $this->refresh();
-      }
-      else {
-        $this->session->alert(tr('Incorret username and/or password.'));
-      }
-    }
-    if (isset($this->request->query['logout'])) {
-      $this->Auth->logOut();
-      return $this->refresh(array());
-    }
-    return $this->render();
-  }
 }
