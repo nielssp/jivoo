@@ -9,8 +9,8 @@ class ApplicationsController extends AppController {
     $this->title = tr('Add application');
     if ($this->request->hasValidData()) {
       $path = $this->request->data['path'];
-      if (file_exists($path)) {
-        $app = include $path;
+      if (file_exists($path . '/app.json')) {
+        $app = Json::decode(file_get_contents($path . '/app.json'));
         $name = Utilities::stringToDashes($app['name']);
         $this->config['applications'][$name] = $path;
         $this->session->flash['success'][] = tr('Application "%1" successfully added.', $app['name']);
@@ -24,8 +24,8 @@ class ApplicationsController extends AppController {
   }
   
   public function dashboard($name) {
-    $this->app = new App($this->apps[$name]);
-    $this->title = $this->app->name;
+    $this->app = $this->apps[$name];
+    $this->title = $this->app['name'];
     return $this->render();
   }
 }

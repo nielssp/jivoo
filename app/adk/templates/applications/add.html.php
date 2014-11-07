@@ -5,7 +5,7 @@
 <?php echo $Form->form(); ?>
 
 <div class="field">
-<?php echo $Form->label('path', tr('Absolute path to %1-file', '<code>app.php</code>')); ?>
+<?php echo $Form->label('path', tr('Absolute path to %1-directory', '<code>app</code>')); ?>
 <?php echo $Form->text('path'); ?>
 </div>
 

@@ -12,7 +12,7 @@ class AppController extends Controller {
       foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
-        if (file_exists($this->appDir . '/' . $file . '/app.php'))
+        if (file_exists($this->appDir . '/' . $file . '/app.json'))
           $this->config['applications'][$file] = $this->appDir . '/' . $file;
       }
     }
@@ -20,13 +20,15 @@ class AppController extends Controller {
     $apps = array();
     $appMenu = array();
     foreach ($this->config['applications']->getArray() as $name => $path) {
-      $path = $path . '/app.php';
-      if (!file_exists($path)) {
+      if (!file_exists($path . '/app.json')) {
         unset($this->config['applications'][$name]);
-        $this->session->flash['warn'][] = tr('%1 no longer exists.', $path);
+        $this->session->flash['warn'][] = tr('%1 no longer exists.', $path . '/app.json');
       }
       else {
-        $app = include $path;
+        $app = Json::decode(file_get_contents($path . '/app.json'));
+        if (!isset($app))
+          $this->session->flash['warn'][] = tr('%1 has an invalid app.json file.', $name);
+        $app['path'] = $path;
         $apps[$name] = $app;
         $route = array('controller' => 'Applications', 'action' => 'dashboard', $name);
         $appMenu[$name] = IconMenu::menu($app['name'], $route, 'cog', array(
