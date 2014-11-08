@@ -11,8 +11,8 @@
     "Jivoo": "<= 1.0",
     "php": ["mysql", "pdo"],
     "extensions": [
-      "Jquery =1.7.1",
-      "Markdown"
+      "jquery =1.7.1",
+      "markdown"
     ]
   }
 }
