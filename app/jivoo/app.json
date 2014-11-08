@@ -5,7 +5,7 @@
   "defaultLanguage": "en",
   "minPhpVersion": "5.2.0",
   "sessionPrefix": "jivoo_",
-  "extensions": ["Jquery", "JqueryUi", "Html5shiv", "Respond", "Markdown"],
+  "extensions": ["jquery", "jqueryui", "html5shiv", "respond", "markdown"],
   "import": [
     "Jivoo/Core",
     "Jivoo/Routing",
