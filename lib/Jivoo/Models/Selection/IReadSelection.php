@@ -2,10 +2,17 @@
 interface IReadSelection extends IBasicSelection, IteratorAggregate {
   /**
    * @param string|string[]|array $expression Expression, list of expressions or array of expressions and aliases
-   * @param string|alias $alias Alias 
+   * @param string $alias Alias 
    * @return array[] List of associative arrays
    */
   public function select($expression, $alias = null);
+  
+  /**
+   * @param string|array[] $field Virtual field name (alias) or associative array of field names and expressions
+   * @param string $expression Expression to calculate
+   * @return IReadSelection
+   */
+  //public function with($field, $expression = null);
   
   /**
    * Group by one or more columns
