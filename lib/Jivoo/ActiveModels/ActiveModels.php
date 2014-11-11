@@ -4,6 +4,7 @@
 // Description    : The Jivoo active record/active model system
 // Author         : apakoh.dk
 // Dependencies   : Jivoo/Models Jivoo/Databases
+// After          : Jivoo/Migrations
 
 /**
  * Active models module
@@ -11,7 +12,8 @@
  */
 class ActiveModels extends LoadableModule {
 
-  protected $modules = array('Models', 'Databases');
+  // TODO: Don't depend on migrations
+  protected $modules = array('Models', 'Databases', 'Migrations');
   
   private $models = array();
   
