@@ -6,8 +6,8 @@ class ThemeInfo extends ExtensionInfo {
   private $extend = array();
   private $zones = array();
 
-  public function __construct($canonicalName, $info, $bundled, $zones) {
-    parent::__construct($canonicalName, $info, $bundled, count($zones) > 0);
+  public function __construct($canonicalName, $info, $zones, $pKey = null) {
+    parent::__construct($canonicalName, $info, $pKey, count($zones) > 0);
     if (isset($info['extend']) and is_array($info['extend']))
       $this->extend = $info['extend'];
     if (isset($info['zones']) and is_array($info['zones']))

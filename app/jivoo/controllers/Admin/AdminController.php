@@ -14,8 +14,7 @@ class AdminController extends AppController {
   
   public function before() {
     $this->view->blocks->icon('jivoo-green.ico');
-    $this->Admin->importDefaultTheme();
-    // TODO move to theme or something
+    $this->m->Themes->load($this->m->Themes->zone('admin'));
     $this->Icon->addProvider(new ClassIconProvider());
   }
   

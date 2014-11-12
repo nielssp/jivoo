@@ -23,6 +23,8 @@ class Extensions extends LoadableModule {
     'extensions' => 'extension'
   );
   
+  private $libraries = array('app', 'share');
+  
   private $info = array();
   private $installed = array();
 
@@ -124,20 +126,23 @@ class Extensions extends LoadableModule {
     $this->kinds[$kind] = $infoName;
   }
 
-  public function getInfo($extension, $kind = 'extensions') {
+  public function getInfo($extension) {
     if (!isset($this->info[$extension])) {
       $dir = $this->p('extensions', $extension);
-      $bundled = false;
+      $library = null;
       if (!file_exists($dir . '/extension.json')) {
-        $dir = $this->p('app', 'extensions/' . $extension);
-        $bundled = true;
-        if (!file_exists($dir . '/extension.json'))
+        foreach ($this->libraries as $key) {
+          $dir = $this->p($key, 'extensions/' . $extension);
+          if (file_exists($dir . '/extension.json'))
+            $library = $key;
+        }
+        if (!isset($library))
           return null;
       }
       $info = Json::decodeFile($dir . '/extension.json');
       if (!$info)
         return null;
-      $this->info[$extension] = new ExtensionInfo($extension, $info, $bundled, $this->isEnabled($extension));
+      $this->info[$extension] = new ExtensionInfo($extension, $info, $library, $this->isEnabled($extension));
     }
     return $this->info[$extension];
   }
@@ -299,9 +304,22 @@ class Extensions extends LoadableModule {
   public function unconfigure($extension) {
     unset($this->config['config'][$extension]);
   }
+  
+  public function listAllExtensions() {
+    $extensions = $this->listExtensions();
+    foreach ($this->libraries as $library)
+      $extensions = array_merge($extensions, $this->listExtensions($library));
+    return $extensions;
+  }
 
-  public function listExtensions() {
-    $files = scandir($this->p('extensions', ''));
+  public function listExtensions($library = null) {
+    if (isset($library))
+      $dir = $this->p($library, 'extensions');
+    else
+      $dir = $this->p('extensions', '');
+    if (!is_dir($dir))
+      return array();
+    $files = scandir($dir);
     $extensions = array();
     if ($files !== false) {
       foreach ($files as $file) {

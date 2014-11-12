@@ -4,11 +4,11 @@ class ExtensionInfo implements IBasicRecord {
   private $canonicalName;
   private $enabled;
   private $info;
-  private $bundled;
-  public function __construct($canonicalName, $info, $bundled = false, $enabled = true) {
+  private $pKey;
+  public function __construct($canonicalName, $info, $pKey = null, $enabled = true) {
     $this->canonicalName = $canonicalName;
     $this->info = $info;
-    $this->bundled = $bundled;
+    $this->pKey = $pKey;
     $this->enabled = $enabled;
   }
   
@@ -51,22 +51,22 @@ class ExtensionInfo implements IBasicRecord {
   }
   
   public function p(App $app, $path) {
-    if ($this->bundled)
-      return $app->p('app', $this->kind . '/' . $this->canonicalName . '/' . $path);
+    if ($this->pKey)
+      return $app->p($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
     else
       return $app->p($this->kind, $this->canonicalName . '/' . $path);
   }
   
   public function getAsset(Assets $assets, $path) {
-    if ($this->bundled)
-      return $assets->getAsset('app', $this->kind . '/' . $this->canonicalName . '/' . $path);
+    if ($this->pKey)
+      return $assets->getAsset($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
     else
       return $assets->getAsset($this->kind, $this->canonicalName . '/' . $path);
   }
   
   public function addAssetDir(Assets $assets, $path) {
-    if ($this->bundled)
-      return $assets->addAssetDir('app', $this->kind . '/' . $thic->canonicalName . '/' . $path);
+    if ($this->pKey)
+      return $assets->addAssetDir($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
     else
       return $assets->addAssetDir($this->kind, $this->canonicalName . '/' . $path);
   }

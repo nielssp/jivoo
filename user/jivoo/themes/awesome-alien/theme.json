@@ -7,9 +7,9 @@
   "zones": ["main"],
   "dependencies": {
     "extensions": [
-      "Jquery >=1.7",
-      "Respond",
-      "Html5shiv"
+      "jquery >=1.7",
+      "respond",
+      "html5shiv"
     ]
   },
   "widgetAreas": {

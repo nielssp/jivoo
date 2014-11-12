@@ -5,10 +5,10 @@ $this->import(
   'admin/icomoon/style.css',
   'admin/theme.css',
   'jquery.js',
-  'admin/theme.js'
+  'admin/theme.js',
+  'html5shiv.js',
+  'respond.js'
 );
-$this->importConditional('admin/html5shiv.js', 'lt IE 9');
-$this->importConditional('admin/respond.min.js', 'lt IE 9');
 ?>
 <!DOCTYPE html>
 <html>

@@ -1,15 +1,15 @@
 {
-  "name": "Flatmin",
+  "name": "Flatmin Base",
   "version": "1.0",
   "author": "Jivoo",
   "website": "http://jivoo.org",
   "description": "Default Jivoo Administration-module theme.",
-  "zones": ["main"],
+  "zones": ["admin"],
   "dependencies": {
     "extensions": [
-      "Jquery >=1.7",
-      "Respond",
-      "Html5shiv"
+      "jquery >=1.7",
+      "respond",
+      "html5shiv"
     ]
-  },
+  }
 }
