@@ -1,0 +1,82 @@
+@mixin icon($icon, $size: 16px) {
+  font-family: 'icomoon';
+  speak: none;
+  font-size: $size;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: $icon;
+}
+
+@mixin iconsize($size: 16px, $valign: -2px) {
+  & > .icon {
+    font-size: $size;
+    vertical-align: $valign;
+    * {
+      height: $size;
+      width: $size;
+    }
+  }
+}
+
+.button,
+button,
+input[type=button],
+input[type=reset],
+input[type=submit] {
+  @include iconsize(12px, 0px);
+  .icon {
+    margin-right: 6px;
+  }
+}
+
+table thead th a {
+  display: block;
+  &:after {
+    @include icon('', 12px);
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  &.selected-desc:after {
+    content: '\e6b3';
+  }
+  &:hover {
+    text-decoration: none;
+    &:after {
+      content: '\e6b4';
+    }
+  }
+  &.selected-asc {
+    &:after {
+      content: '\e6b4';
+    }
+    &:hover:after {
+      content: '\e6b3';
+    }
+  }
+}
+
+.flash {
+  &:before {
+    @include icon('\e69b');
+    color: #2272CC;
+    float: right;
+    margin-left: 8px;
+  }
+  &.flash-error:before {
+    content: '\e698';
+  }
+  &.flash-warn:before {
+    content: '\e699';
+  }
+  &.flash-success:before {
+    content: '\e686';
+  }
+  &.flash-question:before {
+    content: '\e69a';
+  }
+}

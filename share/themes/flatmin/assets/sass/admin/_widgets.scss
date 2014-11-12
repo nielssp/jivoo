@@ -1,0 +1,120 @@
+.toolbar {
+  @media screen and (min-width: $sm) {
+    position: absolute;
+    top: 52px;
+    right: 24px;
+    text-align: right;
+    input[type=text],
+    input[type=email],
+    input[type=password],
+    input[type=date],
+    input[type=time],
+    input[type=datetime],
+    textarea,
+    select {
+      display: inline-block;
+      width: 250px;
+    }
+
+    .dropdown {
+      & > ul {
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+}
+
+
+.dropdown-actions {
+  @media screen and (max-width: $sm - 1) {
+    & > ul > li {
+      input, button {
+        background: none;
+        color: inherit;
+        border: none;
+        display: block;
+        min-width: 100%;
+        text-align: left;
+        overflow: hidden;
+        margin: 0;
+      }
+    }
+  }
+  @media screen and (min-width: $sm) {
+    & > a {
+      display: none!important;
+    }
+    & > ul {
+      display: inline-block;
+      position: static;
+      box-shadow: none;
+      background: none;
+      & > li {
+        display: inline-block;
+        background: none !important;
+        a, input, button {
+          &, &:link, &:active, &:visited, &:hover {
+            padding: 6px 12px 4px;
+          }
+          .icon {
+            margin-left: 0;
+            width: auto;
+            vertical-align: 0;
+            float: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.table-operations {
+  @media screen and (min-width: $sm) {
+    font-size: 0.9em;
+    float: left;
+    & + .pagination {
+      float: right;
+    }
+  }
+  .select-all {
+    display: none;
+  }
+}
+
+.pagination {
+  text-align: center;
+  margin-left: 8px;
+  margin-bottom: 8px;
+  & > a.icon {
+    vertical-align: middle;
+    margin-right: 8px;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  button,
+  .button {
+    margin-left: 8px;
+    &:last-child {
+      margin-left: 0;
+    }
+    & > .icon {
+      margin: 0;
+    }
+    & > .label {
+      display: none;
+    }
+  }
+  @media screen and (min-width: $sm) {
+    font-size: 0.9em;
+    text-align: right;
+  }
+}
+
+.data-table {
+  table {
+    clear: right;
+  }
+}
