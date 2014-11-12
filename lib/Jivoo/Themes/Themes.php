@@ -92,7 +92,6 @@ class Themes extends LoadableModule {
     }
     return $themes;
   }
-
   
   public function isEnabled($theme) {
     return false;

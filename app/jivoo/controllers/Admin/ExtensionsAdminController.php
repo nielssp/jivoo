@@ -39,8 +39,11 @@ class ExtensionsAdminController extends AdminController {
       else {
         $this->session->flash->error = tr('Dependencies missing');
       }
+      return $this->redirect('index');
     }
-    return $this->redirect('index');
+    $this->title = tr('Enable extension');
+    $this->confirmation = tr('Enable extension "%1"?', h($extension));
+    return $this->render('admin/confirm.html');
   }
   
   public function disable($extension) {
