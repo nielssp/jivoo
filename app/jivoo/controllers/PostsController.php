@@ -99,7 +99,7 @@ class PostsController extends AppController {
     $this->post = $this->Post->find($post);
 
     if (!$this->post or ($this->post->status != 'published'
-        and !$this->Auth->hasPermission('Admin.Posts.viewDraft')))
+        and !$this->Auth->hasPermission('Posts.viewDraft', 'Admin.')))
       throw new NotFoundException();
 
     $this->comments = $this->post->comments

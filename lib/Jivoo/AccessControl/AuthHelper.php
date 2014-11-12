@@ -214,8 +214,10 @@ class AuthHelper extends Helper {
       $this->authorizationError();
   }
   
-  public function hasPermission($permission) {
-    return $this->checkAcl($this->permissionPrefix . $permission);
+  public function hasPermission($permission, $prefix = null) {
+    if (!isset($prefix))
+      $prefix = $this->permissionPrefix;
+    return $this->checkAcl($prefix . $permission);
   }
   
   private function checkAcl($permission) {
