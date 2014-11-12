@@ -198,7 +198,7 @@ class Extensions extends LoadableModule {
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
       Lib::assumeSubclassOf($name, 'ExtensionModule');
       $info = $this->loadList[$name];
-      $this->e->$name = new $name($this->app, $info, $this->config['config'][$name]);
+      $this->e->$name = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
       $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e->$name));
     }
     return $this->e->$name;
