@@ -17,9 +17,9 @@
 <?php $previous = $page; ?>
 <?php endforeach; ?>
 <?php if ($Pagination->isLast()): ?>
-<span class="next"><?php echo tr('Older') . ' &#8594'; ?></span>
+<span class="next"><?php echo tr('Older') . ' &#8594;'; ?></span>
 <?php else: ?>
-<?php echo $Html->link(tr('Older') . ' &#8594', $Pagination->nextLink(), array(
+<?php echo $Html->link(tr('Older') . ' &#8594;', $Pagination->nextLink(), array(
   'class' => 'next'
 )); ?>
 <?php endif; ?>
