@@ -5,7 +5,7 @@ class CommentsAdminController extends AdminController {
   
   public function before() {
     parent::before();
-    $this->Filtering->addPrimary('content');
+    $this->Filtering->addPrimary('contentText');
     $this->Editor->set($this->Comment, 'content', new TextareaEditor('markdown'));
   }
   

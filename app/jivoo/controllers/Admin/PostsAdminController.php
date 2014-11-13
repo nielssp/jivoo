@@ -6,6 +6,7 @@ class PostsAdminController extends AdminController {
   public function before() {
     parent::before();
     $this->Filtering->addPrimary('title');
+    $this->Filtering->addPrimary('contentText');
     $this->Editor->set($this->Post, 'content', new TextareaEditor('markdown'));
     $this->Format->enableExtensions($this->Post, 'content');
   }
