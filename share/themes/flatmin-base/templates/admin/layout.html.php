@@ -1,6 +1,5 @@
 <?php
 $this->meta('viewport', 'width=device-width, initial-scale=1');
-$this->provide('jquery.js', $this->file('js/admin/jquery.min.js'));
 $this->import(
   'admin/icomoon/style.css',
   'admin/theme.css',
