@@ -184,13 +184,20 @@ aside {
       }
       
       li {
+        padding: 2px 0;
         border-top: 1px solid #ddd;
-        & > a {
-          display: block;
-          padding: 2px 0;
+      }
+      &.menu {
+        li {
+          padding: 0;
+          & > a {
+            display: block;
+            padding: 2px 0;
+          }
         }
       }
     }
+
     
     & > ul {
       margin-left: 0;

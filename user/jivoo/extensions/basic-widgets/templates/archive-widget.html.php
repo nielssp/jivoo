@@ -1,4 +1,4 @@
-<ul>
+<ul class="menu">
 <?php foreach ($years as $year): ?>
 <li><?php echo $Html->link($year['year'] . ' (' . $year['num'] . ')', array(
   'controller' => 'Posts',

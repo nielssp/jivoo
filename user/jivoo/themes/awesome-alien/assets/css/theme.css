@@ -143,8 +143,11 @@ aside {
       aside .widget-content ul li:first-child, aside .widget-content ol li:first-child {
         border: none; }
       aside .widget-content ul li, aside .widget-content ol li {
+        padding: 2px 0;
         border-top: 1px solid #ddd; }
-        aside .widget-content ul li > a, aside .widget-content ol li > a {
+      aside .widget-content ul.menu li, aside .widget-content ol.menu li {
+        padding: 0; }
+        aside .widget-content ul.menu li > a, aside .widget-content ol.menu li > a {
           display: block;
           padding: 2px 0; }
     aside .widget-content > ul {
