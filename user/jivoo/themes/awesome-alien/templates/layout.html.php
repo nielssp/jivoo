@@ -21,6 +21,7 @@ else {
 <?php echo $this->block('meta'); ?>
 
 <?php echo $this->resourceBlock(); ?>
+
 </head>
 <body>
 <?php echo $this->block('body-top'); ?>
@@ -32,11 +33,8 @@ else {
 <h1><?php echo $Html->link($site['title']); ?></h1>
 <h2><?php echo $site['subtitle']; ?></h2>
 </div>
-<?php
-$rand = floor(time() / 60) % 5 + 1;
-?>
 <img src="<?php echo $this->file('img/banner.jpg'); ?>"
-alt="<?php echo $site['title']; ?>" />
+     alt="<?php echo $site['title']; ?>" />
 <nav>
 <ul>
 <?php foreach ($Menu->getMenu('main') as $link) : ?>
