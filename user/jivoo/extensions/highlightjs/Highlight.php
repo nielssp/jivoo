@@ -15,7 +15,7 @@ class Highlight extends ExtensionModule {
     );
     $this->view->provide(
       'highlight-style.css',
-      $this->getAsset('styles/' . $this->config['theme'] . '.css')
+      $this->getAsset('styles/' . h($this->config['theme']) . '.css')
     );
     $this->view->import('highlight.js', 'highlight-init.js', 'highlight-style.css');
   }
