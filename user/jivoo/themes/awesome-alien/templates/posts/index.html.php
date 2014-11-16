@@ -14,10 +14,11 @@ if (isset($post->user))
   echo h($post->user->username) . ' | ';
 ?>
 <?php 
-echo '<time datetime="' . date('c', $post->created)
-      . '" title="' . ldate($post->created) . '">'
-      . sdate($post->created) . '</time>';
-?> | 
+if (isset($post->published))
+  echo '<time datetime="' . date('c', $post->published)
+        . '" title="' . ldate($post->published) . '">'
+        . sdate($post->published) . '</time>' . ' | ';
+?> 
 <?php
 $comments = $post->comments->where('status = %CommentStatus', 'approved')->count();
 if ($comments == 0) {

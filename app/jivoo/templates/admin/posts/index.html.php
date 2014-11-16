@@ -8,7 +8,7 @@ $widget = $Widget->begin('DataTable', array(
     'author' => tr('Author'),
   ),
   'addRoute' => 'add',
-  'sortOptions' => array('title', 'status', 'updated', 'created'),
+  'sortOptions' => array('title', 'status', 'updated', 'created', 'published'),
   'defaultSortBy' => 'updated',
   'defaultDescending' => true,
   'filters' => array(

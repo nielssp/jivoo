@@ -21,6 +21,9 @@ class PostsAdminController extends AdminController {
     if ($this->request->hasValidData('Post')) {
       $this->post = $this->Post->create($this->request->data['Post']);
       $this->post->user = $this->user;
+      if ($this->post->status == 'published') {
+        $this->post->published = time();
+      }
       if ($this->post->save()) {
         $this->session->flash['success'][] = tr(
           'Post saved. %1',
@@ -55,6 +58,9 @@ class PostsAdminController extends AdminController {
       $this->post->createJsonTags();
       if ($this->post and $this->request->hasValidData('Post')) {
         $this->post->addData($this->request->data['Post']);
+        if ($this->post->status == 'published' and empty($this->post->published)) {
+          $this->post->published = time();
+        }
         if ($this->post->save()) {
           $this->session->flash['success'][] = tr(
             'Post saved. %1',

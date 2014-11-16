@@ -26,7 +26,7 @@ class PostsController extends AppController {
   public function index() {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
-      ->orderByDescending('created');
+      ->orderByDescending('published');
     $this->posts = $this->Pagination->paginate($this->posts);
     
     $this->view->blocks->relation(
