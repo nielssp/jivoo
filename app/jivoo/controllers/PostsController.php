@@ -40,7 +40,7 @@ class PostsController extends AppController {
   public function archive($year = null, $month = null, $day = null) {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
-      ->orderByDescending('created');
+      ->orderByDescending('published');
     
     $this->title = tr('Archive');
     
@@ -66,8 +66,8 @@ class PostsController extends AppController {
         $this->searchType = 'year';
       }
       $this->posts = $this->posts
-        ->where('created >= %d', $this->start)
-        ->and('created < %d', $end);
+        ->where('published >= %d', $this->start)
+        ->and('published < %d', $end);
     }
     
     if (isset($this->request->query['q'])) {
@@ -88,7 +88,7 @@ class PostsController extends AppController {
   public function feed() {
     $this->posts = $this->Post
       ->where('status = %PostStatus', 'published')
-      ->orderByDescending('created')
+      ->orderByDescending('published')
       ->limit(30);
     return $this->render('feed/posts.rss');
   }

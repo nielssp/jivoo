@@ -13,10 +13,10 @@ class ArchiveWidget extends Widget {
     // TODO SQLite support for this widget? (YEAR and MONTH not supported)
     $selection = $this->Post
       ->where('status = %PostStatus', 'published')
-      ->groupBy('YEAR(created)')
-      ->orderByDescending('YEAR(created)')
+      ->groupBy('YEAR(published)')
+      ->orderByDescending('YEAR(published)')
       ->select(array(
-        'YEAR(created)' => 'year',
+        'YEAR(published)' => 'year',
         'COUNT(*)' => 'num'
       ));
     $years = array();
@@ -25,11 +25,11 @@ class ArchiveWidget extends Widget {
       if ($year['year'] == $selectedYear) {
         $months = $this->Post
           ->where('status = %PostStatus', 'published')
-          ->and('YEAR(created) = %i', $selectedYear)
-          ->groupBy('MONTH(created)')
-          ->orderByDescending('MONTH(created)')
+          ->and('YEAR(published) = %i', $selectedYear)
+          ->groupBy('MONTH(published)')
+          ->orderByDescending('MONTH(published)')
           ->select(array(
-            'MONTH(created)' => 'month',
+            'MONTH(published)' => 'month',
             'COUNT(*)' => 'num'
           ));
         $year['months'] = array();
