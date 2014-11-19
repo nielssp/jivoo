@@ -4,6 +4,8 @@ class FormatHelper extends Helper {
 
   protected $helpers = array('Form');
   
+  private $hasBreak = false;
+  
   public function set(IModel $model, $field, HtmlEncoder $encoder) {
     $this->m->Content->setEncoder($model, $field, $encoder);
   }
@@ -36,8 +38,17 @@ class FormatHelper extends Helper {
     $encoder = $this->m->Content->getEncoder($record->getModel(), $field);
     $htmlField = $field . 'Html';
     $content = $record->$htmlField;
-    if (!isset($options['full']) or !$options['full'])
-      list($content) = explode('<div class="break"></div>', $content);
+    $this->hasBreak = false;
+    if (!isset($options['full']) or !$options['full']) {
+      $sections = explode('<div class="break"></div>', $content);
+      if (count($sections) > 1)
+        $this->hasBreak = true;
+      $content = $sections[0];
+    }
     return $encoder->encode($content, $options);
+  }
+  
+  public function hasBreak() {
+    return $this->hasBreak;
   }
 }
