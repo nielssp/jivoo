@@ -35,6 +35,9 @@ class FormatHelper extends Helper {
   public function html(IRecord $record, $field, $options = array()) {
     $encoder = $this->m->Content->getEncoder($record->getModel(), $field);
     $htmlField = $field . 'Html';
-    return $encoder->encode($record->$htmlField, $options);
+    $content = $record->$htmlField;
+    if (!isset($options['full']) or !$options['full'])
+      list($content) = explode('<div class="break"></div>', $content);
+    return $encoder->encode($content, $options);
   }
 }

@@ -30,6 +30,9 @@ class Content extends LoadableModule {
     $this->addEditor(new TextareaEditor('text'));
     
     $this->extensions->add('link', array('route' => null), array($this, 'linkFunction'));
+    $this->extensions->add('break', array(), array($this, 'breakFunction'));
+    $this->extensions->add('page', array('name' => null), array($this, 'pageFunction'));
+    $this->extensions->add('pagebreak', array(), array($this, 'pageBreakFunction'));
   }
   
   public function linkFunction($params) {
@@ -40,6 +43,22 @@ class Content extends LoadableModule {
       return 'invalid link';
     }
   }
+  
+  public function breakFunction($params) {
+    return '<div class="break"></div>';
+  }
+  
+  public function pageBreakFunction($params) {
+    return '<div class="page-break"></div>';
+  }
+  
+  public function pageFunction($params) {
+    if (isset($params['name']))
+      return '<div class="page-name" data-name="' . h($params['name']) . '"></div>';
+    else
+      return '<div class="page-name"></div>';
+  }
+  
   
   public function __get($property) {
     switch ($property) {

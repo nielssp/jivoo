@@ -1,6 +1,9 @@
 <?php
 class ContentExtensions {
 
+  const INLINE_REGEX = '/\{\{\s*([a-z]+)((?:\s+([a-z]+=)?"(?:[^\\\\"]|\\\\.)*")*)\s*\}\}/im';
+  const BLOCK_REGEX = '/(?:<p>\s*)\{\{\{\s*([a-z]+)((?:\s+([a-z]+=)?"(?:[^\\\\"]|\\\\.)*")*)\s*\}\}\}(?:\s*<\/p>)/im';
+
   private $functions = array();
   
   public function add($function, $parameters, $callback) {
@@ -39,8 +42,13 @@ class ContentExtensions {
   
   public function compile($content) {
     return preg_replace_callback(
-      '/\{\{\s*([a-z]+)((?:\s+([a-z]+=)?"(?:[^\\\\"]|\\\\.)*")*)\s*\}\}/im',
-      array($this, 'replace'), $content
+      self::INLINE_REGEX,
+      array($this, 'replace'),
+      preg_replace_callback(
+        self::BLOCK_REGEX,
+        array($this, 'replace'),
+        $content
+      )
     );
   }
 }
