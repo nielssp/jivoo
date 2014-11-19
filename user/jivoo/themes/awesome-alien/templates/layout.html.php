@@ -55,7 +55,9 @@ else {
 <aside>
 <?php foreach ($Widgets->get('sidebar') as $widget): ?>
 <div class="widget">
+<?php if (!empty($widget['title'])): ?>
 <div class="widget-title"><?php echo $widget['title']; ?></div>
+<?php endif; ?>
 <div class="widget-content"><?php echo $widget['content']; ?></div>
 </div>
 <?php endforeach; ?>
