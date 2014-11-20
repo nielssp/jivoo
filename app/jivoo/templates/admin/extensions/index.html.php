@@ -30,7 +30,15 @@ foreach ($widget as $item) {
   echo $widget->handle($item, array(
     'id' => $item->canonicalName,
     'removeActions' => $hide,
-    'class' => $item->enabled ? null : 'warn'
+    'class' => $item->enabled ? null : 'warn',
+    'cells' => array(
+      $item->enabled && isset($item->configure)
+        ? $Html->link($item->name, array('action' => 'configure', $item->canonicalName))
+        : $item->name,
+      $item->enabled ? tr('Yes') : tr('No'),
+      $item->canonicalName,
+      $item->version
+    ),
   ));
 }
 echo $widget->end();
