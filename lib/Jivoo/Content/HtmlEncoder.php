@@ -217,7 +217,7 @@ class HtmlEncoder {
    * @return string|false Encoded string or false if entire tag should be removed
    */
   private function replaceAttributes($tag, $attributes) {
-    preg_match_all('/\s+(\w+)(\s*=\s*((?:".*?"|\'.*?\'|[^\'">\s]+)))?/',
+    preg_match_all('/\s+([\w-]+)(\s*=\s*((?:".*?"|\'.*?\'|[^\'">\s]+)))?/',
       $attributes, $matches);
     $attributes = $matches[1];
     $values = $matches[3];
@@ -352,7 +352,7 @@ class HtmlEncoder {
       $shortened = true;
     }
     $text = preg_replace_callback(
-      '/<((\/?)(\w+)((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/',
+      '/<((\/?)(\w+)((\s+[\w-]+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)(\/?)>)?/',
       array($this, 'replaceTag'), $text);
     foreach ($this->openTags as $tag => $number) {
       for ($i = 0; $i < $number; $i++) {

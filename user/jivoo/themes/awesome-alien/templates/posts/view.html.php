@@ -2,10 +2,10 @@
 <div class="post">
 <h1><?php echo h($post->title); ?></h1>
 <?php if ($post->status != 'published') : ?>
-<p><strong>This post is a draft and is not visible to the pulic.</strong></p>
+<p><strong><?php echo tr('This post is a draft and is not visible to the public.'); ?></strong></p>
 <?php endif; ?>
 
-<?php echo $Format->html($post, 'content'); ?>
+<?php echo $Format->html($post, 'content', array('full' => true)); ?>
 
 <div class="byline">
 <?php 

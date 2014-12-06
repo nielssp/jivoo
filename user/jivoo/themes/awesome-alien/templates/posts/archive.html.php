@@ -41,6 +41,10 @@ switch ($searchType) {
   </h1>
 <?php echo $Format->html($post, 'content'); ?>
 
+<?php if ($Format->hasBreak()): ?>
+<p><?php echo $Html->link(tr('Continue reading&hellip;'), $post); ?></p>
+<?php endif; ?>
+
 <div class="byline">
 <?php 
 if (isset($post->user))

@@ -195,7 +195,7 @@ class PostRouting extends AppListener {
         if ($parameters[0] == 0) {
           $record = $this->m->Models->Post->create();
           $record->name = '%name%';
-          $record->created = time();
+          $record->published = time();
         }
         else {
           $record = $this->m->Models->Post->find($parameters[0]);
@@ -203,7 +203,7 @@ class PostRouting extends AppListener {
             return null;
         }
       }
-      $time = $record->created;
+      $time = $record->published;
       $replace = array(
         '%name%' => $record->name,
         '%id%' => (isset($record->id)) ? $record->id : 0,
