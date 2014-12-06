@@ -352,6 +352,11 @@ class App implements IEventSubject {
     
     Lib::addIncludePath($this->p('app', 'lib'));
 
+    if (isset($this->appConfig['lib'])) {
+      foreach ($this->appConfig['lib'] as $lib)
+        Lib::addIncludePath($this->p('app', 'lib/' . $lib));
+    }
+
     $this->config = new AppConfig($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
 
