@@ -4,7 +4,9 @@ abstract class Enum {
 
   private final function __construct() { }
 
-  public static function getValues($class) {
+  public static function getValues($class = null) {
+    if (!isset($class))
+      $class = get_called_class();
     if (!isset(self::$values[$class])) {
       Lib::assumeSubclassOf($class, 'Enum');
       $ref = new ReflectionClass($class);
@@ -13,6 +15,14 @@ abstract class Enum {
         throw new InvalidEnumException(tr('Enum type "%1" must contain at least one constant', $class));
     }
     return self::$values[$class];
+  }
+
+  public static function getValue($str, $class = null) {
+    if (!isset($class))
+      $class = get_called_class();
+    if (!isset(self::$values[$class]))
+      self::getValues($class);
+    return self::$values[$class][$str];
   }
 }
 
