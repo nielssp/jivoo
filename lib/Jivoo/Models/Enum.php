@@ -22,7 +22,7 @@ abstract class Enum {
       $class = get_called_class();
     if (!isset(self::$values[$class]))
       self::getValues($class);
-    return self::$values[$class][$str];
+    return array_search($str, self::$values[$class]);
   }
 }
 
