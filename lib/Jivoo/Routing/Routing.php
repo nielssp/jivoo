@@ -366,7 +366,7 @@ class Routing extends LoadableModule {
     if (is_array($query) AND count($query) > 0) {
       $queryStrings = array();
       foreach ($query as $key => $value) {
-        if ($value == '') {
+        if ($value === '') {
           $queryStrings[] = urlencode($key);
         }
         else {
