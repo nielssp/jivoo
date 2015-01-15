@@ -1,10 +1,4 @@
 <?php
-// Database
-// Name              : SQLite3
-// Dependencies      : php;sqlite3
-// Required          : filename
-// Optional          : tablePrefix
-
 /**
  * SQLite3 database driver
  * @package Jivoo\Database\Sqlite3

@@ -1,10 +1,4 @@
 <?php
-// Database
-// Name              : MySQLi
-// Dependencies      : php;mysqli
-// Required          : server username database
-// Optional          : password tablePrefix
-
 /**
  * MySQLi database driver
  * @package Jivoo\Database\Mysqli

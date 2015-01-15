@@ -1,9 +1,4 @@
 <?php
-// Database
-// Name              : MySQL (PDO)
-// Dependencies      : php;pdo_mysql
-// Required          : server username database
-// Optional          : password tablePrefix
 /**
  * PDO MySQL database driver
  * @package Jivoo\Database\PdoMysql

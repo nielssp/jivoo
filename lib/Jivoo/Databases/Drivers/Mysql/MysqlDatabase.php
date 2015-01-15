@@ -1,10 +1,4 @@
 <?php
-// Database
-// Name              : MySQL
-// Dependencies      : php;mysql
-// Required          : server username database
-// Optional          : password tablePrefix
-
 /**
  * MySQL database driver
  * @package Jivoo\Database\Mysql

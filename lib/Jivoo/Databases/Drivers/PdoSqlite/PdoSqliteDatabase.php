@@ -1,10 +1,4 @@
 <?php
-// Database
-// Name              : SQLite (PDO)
-// Dependencies      : php;pdo_sqlite
-// Required          : filename
-// Optional          : tablePrefix
-
 /**
  * PDO SQLite database driver
  * @package Jivoo\Database\PdoSqlite

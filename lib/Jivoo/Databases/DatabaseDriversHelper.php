@@ -22,20 +22,31 @@ class DatabaseDriversHelper extends Helper {
     if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
       return null;
     }
-    $meta = FileMeta::read($this->p('Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'));
-    if (!isset($meta['required'])) {
-      $meta['required'] = '';
+    if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/driver.json'))) {
+      return null;
     }
+    $info = Json::decodeFile($this->p('Databases', 'Drivers/' . $driver . '/driver.json'));
+    if (!isset($info))
+      return null;
+    if (!isset($info['required']))
+      $info['required'] = array();
+    if (!isset($info['optional']))
+      $info['optional'] = array();
+    if (!isset($info['phpExtensions']))
+      $info['phpExtensions'] = array();
     $missing = array();
-    foreach ($meta['dependencies']['php'] as $dependency => $versionInfo) {
+    foreach ($info['phpExtensions'] as $dependency) {
       if (!extension_loaded($dependency)) {
         $missing[] = $dependency;
       }
     }
-    return array('driver' => $driver, 'name' => $meta['name'],
-      'requiredOptions' => explode(' ', $meta['required']),
-      'optionalOptions' => explode(' ', $meta['optional']),
-      'isAvailable' => count($missing) < 1, 'missingExtensions' => $missing
+    return array(
+      'driver' => $driver,
+      'name' => $info['name'],
+      'requiredOptions' => $info['required'],
+      'optionalOptions' => $info['optional'],
+      'isAvailable' => count($missing) < 1,
+      'missingExtensions' => $missing
     );
   }
   

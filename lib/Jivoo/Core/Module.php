@@ -1,8 +1,5 @@
 <?php
 abstract class Module implements IEventSubject {
-  // supports events -[and behaviours]
-  // no more filemeta on every load?
-
   protected $modules = array();
 
   protected $app = null;

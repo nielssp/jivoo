@@ -51,41 +51,6 @@ class Lib {
   } 
 
   /**
-   * Get information about a module
-   * @param string $module Module name
-   * @return array|false Array of key/value pairs or false if information
-   * unavailable
-   */
-  public static function getModuleInfo($module) {
-    if (isset(self::$info[$module])) {
-      return self::$info[$module];
-    }
-    $parent = null;
-    $moduleName = $module;
-    if (strpos($module, '/') !== false) {
-      $segments = explode('/', $module);
-      if (count($segments) >= 2) {
-        $parent = implode('/', array_slice($segments, 0, -1));
-      }
-      $moduleName = $segments[count($segments) - 1];
-    }
-    $meta = FileMeta::read(
-      LIB_PATH . '/' . $module . '/' . $moduleName . '.php');
-    if (!$meta OR $meta['type'] != 'module') {
-      return false;
-    }
-    if (!isset($meta['name'])) {
-      $meta['name'] = $moduleName;
-    }
-    if (!isset($meta['version']) AND isset($parent)) {
-      $parentInfo = Lib::getModuleInfo($parent);
-      $meta['version'] = $parentInfo['version'];
-    }
-    self::$info[$module] = $meta;
-    return $meta;
-  }
-
-  /**
    * @var int Number of calls to auto loader
    */
   public static $loadCalls = 0;

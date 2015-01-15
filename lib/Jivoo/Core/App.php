@@ -105,7 +105,7 @@ class App implements IEventSubject {
     $userPath = Utilities::convertPath($userPath);
     $appFile = $appPath . '/app.json';
     if (file_exists($appFile)) 
-      $appConfig = Json::decode(file_get_contents($appFile));
+      $appConfig = Json::decodeFile($appFile);
     else
       throw new Exception('Invalid application. "app.json" not found.');
     if (!isset($appConfig))
