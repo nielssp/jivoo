@@ -1,6 +1,6 @@
 {
-  'name': 'MySQL',
-  'phpExtensions': ['mysql'],
-  'required': ['server', 'username', 'database'],
-  'optional': ['password', 'tablePrefix']
+  "name": "MySQL",
+  "phpExtensions": ["mysql"],
+  "required": ["server", "username", "database"],
+  "optional": ["password", "tablePrefix"]
 }
