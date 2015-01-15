@@ -33,14 +33,23 @@ class Sqlite3Database extends SqlDatabase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function close() {
     $this->handle->close();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function quoteString($string) {
     return '"' . $this->handle->escapeString($string) . '"';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function rawQuery($sql) {
     Logger::query($sql);
     $result = $this->handle
@@ -53,12 +62,10 @@ class Sqlite3Database extends SqlDatabase {
       return new Sqlite3ResultSet($result);
     }
     else if (preg_match('/^\\s*(insert|replace) /i', $sql)) {
-      return $this->handle
-        ->lastInsertRowID();
+      return $this->handle->lastInsertRowID();
     }
     else {
-      return $this->handle
-        ->changes();
+      return $this->handle->changes();
     }
   }
 }
