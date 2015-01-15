@@ -283,6 +283,23 @@ class App implements IEventSubject {
     return null;
   }
   
+  public function crashReport(Exception $exception) {
+    $app = $this->name;
+    $version = $this->version;
+    $title = tr('Uncaught exception');
+    $custom = null;
+    try {
+      $custom = $this->p('app', 'templates/error/exception.php');
+      if (!file_exists($custom))
+        $custom = null;
+      else
+        include $custom;
+    }
+    catch (Exception $e) { }
+    if (!isset($custom))
+      include CORE_LIB_PATH . '/templates/error/exception.php';
+  }
+  
   /**
    * Handler for uncaught exceptions
    * @param Exception $exception The exception
@@ -291,31 +308,26 @@ class App implements IEventSubject {
     /** @todo attempt to create error report */
     if ($this->config['core']['createCrashReports']) {
       $hash = substr(md5($exception->__toString()), 0, 10);
-      if (!file_exists($this->p('log', 'crash-' . $hash . '.log'))) {
-        Logger::attachFile(
-          $this->p('log', 'crash-' . $hash . '.log'),
-          Logger::ALL
-        );
+      $name = date('Y-m-d') . '_crash_' . $hash . '.html';
+      if (!file_exists($this->p('log', $name))) {
+        $file = fopen($this->p('log', $name), 'w');
+        if ($file !== false) {
+          ob_start();
+          $this->crashReport($exception);
+          fwrite($file, ob_get_clean());
+          fclose($file);
+          Logger::error(tr('A crash report has been generated: "%1"', $name));
+        }
+        else {
+          Logger::error(tr('Failed to create crash report "%1"', $name));
+        }
       }
     }
     // Clean the view
     while (ob_get_level() > 0)
       ob_end_clean(); 
     if ($this->config['core']['showExceptions']) {
-      $app = $this->name;
-      $version = $this->version;
-      $title = tr('Uncaught exception');
-      $custom = null;
-      try {
-        $custom = $this->p('app', 'templates/error/exception.php');
-        if (!file_exists($custom))
-          $custom = null;
-        else
-          include $custom;
-      }
-      catch (Exception $e) { }
-      if (!isset($custom))
-        include CORE_LIB_PATH . '/templates/error/exception.php';
+      $this->crashReport($exception);
       $this->stop();
     }
     else {

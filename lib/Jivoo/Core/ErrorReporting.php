@@ -76,11 +76,11 @@ class ErrorReporting {
    * @param Exception $exception Exception
    */
   public static function handleException(Exception $exception) {
-    Logger::logException($exception);
     if (isset(self::$handler)) {
       call_user_func(self::$handler, $exception); 
       return;
     }
+    Logger::logException($exception);
     if (defined('OUTPUTTING')) {
       echo '<pre>';
     }

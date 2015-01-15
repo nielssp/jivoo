@@ -35,14 +35,13 @@ if (isset($exception)) {
   '<strong>' . get_class($exception) . '</strong>',
   '<em>' . basename($file) . '</em>', '<strong>' . $line . '</strong>'
 ); ?></p>
-<h2><?php echo tr('Where it happened') ?></h2>
+<p><?php echo tr('The exception was thrown from the following file:')?></p>
 <p><code><?php echo $file ?></code></p>
 <h2><?php echo tr('Stack Trace') ?></h2>
 <table class="trace">
 <thead>
 <tr>
 <th><?php echo tr('File') ?></th>
-<th><?php echo tr('Line') ?></th>
 <th><?php echo tr('Class') ?></th>
 <th><?php echo tr('Function') ?></th>
 <th><?php echo tr('Arguments') ?></th>
@@ -54,9 +53,8 @@ if (isset($exception)) {
 <td>
 <span title="<?php echo (isset($trace['file']) ? $trace['file'] : '') ?>">
 <?php echo (isset($trace['file']) ? basename($trace['file']) : '') ?>
-</span>
-</td>
-<td><?php echo (isset($trace['line']) ? $trace['line'] : '') ?></td>
+<?php echo (isset($trace['line']) ? ' : ' . $trace['line'] : '') ?>
+</span></td>
 <td><?php echo (isset($trace['class']) ? $trace['class'] : '') ?></td>
 <td><?php echo (isset($trace['function']) ? $trace['function'] : '') ?></td>
 <td>
@@ -82,6 +80,66 @@ null
 <?php endforeach; ?>
 </tbody>
 </table>
+
+<h2><?php echo tr('System'); ?></h2>
+
+<table class="trace">
+<tbody>
+<tr>
+<td><?php echo tr('Operating system'); ?></td>
+<td><?php echo php_uname(); ?></td>
+</tr>
+<tr>
+<td><?php echo tr('PHP version'); ?></td>
+<td><?php echo phpversion(); ?></td>
+</tr>
+<tr>
+<td><?php echo tr('Server API'); ?></td>
+<td><?php echo php_sapi_name(); ?></td>
+</tr>
+<tr>
+<td><?php echo tr('%1 version', 'Jivoo'); ?></td>
+<td><?php echo Core::VERSION; ?></td>
+<tr>
+<td><?php echo tr('%1 version', $app); ?></td>
+<td><?php echo $version; ?></td>
+</tr>
+</tbody>
+</table>
+
+<h2><?php echo tr('Log messages')?></h2>
+
+<?php
+$log = Logger::getLog()
+?>
+
+<table class="trace">
+<thead>
+<tr>
+<th style="width: 50%;"><?php echo tr('Message') ?></th>
+<th><?php echo tr('File') ?></th>
+<th><?php echo tr('Time') ?></th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($log as $message): ?>
+<tr>
+<td>
+[<?php echo Logger::getType($message['type']); ?>]
+<?php echo h($message['message']); ?>
+</td>
+<td>
+<span title="<?php echo (isset($message['file']) ? $message['file'] : '') ?>">
+<?php echo (isset($message['file']) ? basename($message['file']) : '') ?>
+<?php echo (isset($message['line']) ? ' : ' . $message['line'] : '') ?>
+</span>
+</td>
+<td><?php echo date('Y-m-d H:i:s', $message['time']); ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+
 <?php
 }
 else {
