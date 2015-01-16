@@ -1,76 +1,74 @@
 <?php
 /**
- * Jivoo logger
- *
- * @package Core
+ * Jivoo logging.
+ * @package Jivoo\Core
  */
 class Logger {
-
   /**
-   * @var int Database query log level
+   * @var int Database query log level.
    */
   const QUERY = 1;
   
   /**
-   * @var int Debug log level
+   * @var int Debug log level.
    */
   const DEBUG = 2;
   
   /**
-   * @var int Notice log level
+   * @var int Notice log level.
    */
   const NOTICE = 4;
   
   /**
-   * @var int Warning log level
+   * @var int Warning log level.
    */
   const WARNING = 8;
   
   /**
-   * @var int Error log level
+   * @var int Error log level.
    */
   const ERROR = 16;
   
   /**
-   * @var int All log levels
+   * @var int All log levels.
    */
   const ALL = 31;
   
   /**
-   * @var int No log levels
+   * @var int No log levels.
    */
   const NONE = 0;
 
   /**
-   * @var array[] List of log messages
+   * @var array[] List of log messages.
    */
   private static $log = array();
 
   /**
-   * @var Logger[] List of active loggers
+   * @var Logger[] List of active loggers.
    */
   private static $files = array();
 
   /**
-   * @var string File path
+   * @var string File path.
    */
   private $file;
   
   /**
-   * @var int Log level bit mask
+   * @var int Log level bit mask.
    */
   private $level;
   
   /**
-   * @var bool Whether to append messages to file
+   * @var bool Whether to append messages to file.
    */
   private $append;
 
   /**
-   * Constructor
-   * @param string $logFile Log file path
-   * @param int $level Log level bit mask
-   * @param string $append Whether to append messages to file
+   * Constructor.
+   * @param string $logFile Log file path.
+   * @param int $level Log level bit mask.
+   * @param string $append Whether to append messages to file.
    */
   private function __construct($logFile, $level = Logger::ALL, $append = true) {
     $this->file = $logFile;
@@ -79,8 +77,8 @@ class Logger {
   }
 
   /**
-   * Attempt to save the log
-   * @return boolean True if successful, false otherwise
+   * Attempt to save the log.
+   * @return boolean True if successful, false otherwise.
    */
   public function save() {
     $filePointer = fopen($this->file, $this->append ? 'a' : 'w');
@@ -106,9 +104,9 @@ class Logger {
   }
 
   /**
-   * Get a string representation of a log level
-   * @param int $type Log level e.g. Logger::NOTICE
-   * @return string String representation e.g. 'NOTICE'
+   * Get a string representation of a log level.
+   * @param int $type Log level e.g. {@see Logger::NOTICE}.
+   * @return string String representation e.g. 'NOTICE'.
    */
   public static function getType($type) {
     switch ($type) {
@@ -127,7 +125,7 @@ class Logger {
   }
 
   /**
-   * Get list of all log messages
+   * Get list of all log messages.
    * 
    * Each message is of the format:
    * <code>
@@ -139,12 +137,16 @@ class Logger {
    *   'line' => ... // Line if applicable
    * )
    * </code>
-   * @return array[] List of log messages
+   * @return array[] List of log messages.
    */
   public static function getLog() {
     return self::$log;
   }
   
+  /**
+   * Save all attached log files.
+   * @return boolean True if all files saved successfully, false otherwise.
+   */
   public static function saveAll() {
     $status = true;
     foreach (self::$files as $file) {
@@ -155,21 +157,21 @@ class Logger {
   }
 
   /**
-   * Attach a log file
-   * @param string $logFile Log file path
-   * @param int $level Log level bit mask, e.g. Logger::Notice | Logger::Error 
-   * @param string $append Whether or not to append messages to file
+   * Attach a log file.
+   * @param string $logFile Log file path.
+   * @param int $level Log level bit mask, e.g. Logger::Notice | Logger::Error. 
+   * @param string $append Whether or not to append messages to file.
    */
   public static function attachFile($logFile, $level = Logger::ALL, $append = true) {
     self::$files[] = new Logger($logFile, $level, $append);
   }
 
   /**
-   * Log a message to the log
-   * @param string $message Log message
-   * @param int $type Log level e.g. Logger::WARNING
-   * @param string $file File if applicable
-   * @param int $line Line if applicable
+   * Log a message to the log.
+   * @param string $message Log message.
+   * @param int $type Log level e.g. Logger::WARNING.
+   * @param string $file File if applicable.
+   * @param int $line Line if applicable.
    */
   public static function log($message, $type = Logger::NOTICE, $file = null, $line = null) {
     $entry = array(
@@ -183,48 +185,48 @@ class Logger {
   }
   
   /**
-   * Log a database query
-   * @param string $message Log message
+   * Log a database query.
+   * @param string $message Log message.
    */
   public static function query($message) {
     self::log($message, Logger::QUERY);
   }
 
   /**
-   * Log a debug message
-   * @param string $message Log message
+   * Log a debug message.
+   * @param string $message Log message.
    */
   public static function debug($message) {
     self::log($message, Logger::DEBUG);
   }
 
   /**
-   * Log a notice
-   * @param string $message Log message
+   * Log a notice.
+   * @param string $message Log message.
    */
   public static function notice($message) {
     self::log($message, Logger::NOTICE);
   }
 
   /**
-   * Log a warning
-   * @param string $message Log message
+   * Log a warning.
+   * @param string $message Log message.
    */
   public static function warning($message) {
     self::log($message, Logger::WARNING);
   }
 
   /**
-   * Log an error
-   * @param string $message Log message
+   * Log an error.
+   * @param string $message Log message.
    */
   public static function error($message) {
     self::log($message, Logger::ERROR);
   }
 
   /**
-   * Log an exception
-   * @param Exception $exception Exception
+   * Log an exception.
+   * @param Exception $exception Exception.
    */
   public static function logException(Exception $exception) {
     $file = $exception->getFile();

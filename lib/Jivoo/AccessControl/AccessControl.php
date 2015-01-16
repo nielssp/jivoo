@@ -1,18 +1,11 @@
 <?php
-// Module
-// Name           : Access control
-// Description    : The Jivoo authentication and authorization system
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Routing Jivoo/Helpers Jivoo/Models
-
 Lib::import('Jivoo/AccessControl/Hashing');
 Lib::import('Jivoo/AccessControl/Authentication');
 Lib::import('Jivoo/AccessControl/Authorization');
 Lib::import('Jivoo/AccessControl/Acl');
 
 /**
- * Access control module
- *
+ * Access control module for authentication and authorization.
  * @package Jivoo\AccessControl
  */
 class AccessControl extends LoadableModule {
@@ -51,4 +44,8 @@ class AccessControl extends LoadableModule {
   }
 }
 
+/**
+ * Thrown when a hash type is unsupported.
+ * @package Jivoo\AccessControl
+ */
 class UnsupportedHashTypeException extends Exception { }

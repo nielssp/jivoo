@@ -1,24 +1,24 @@
 <?php
 /**
- * A collection of paths
- * @package Core
+ * A collection of paths.
+ * @package Jivoo\Core
  */
 class PathMap extends Map {
   /**
-   * @var string Base path
+   * @var string Base path.
    */
   private $basePath;
   
   /**
-   * @var string Default base path
+   * @var string Default base path.
    */
   private $defaultBasePath;
 
   /**
-   * Constructor
-   * @param string $basePath Base path
+   * Constructor.
+   * @param string $basePath Base path.
    * @param string $defaultBasePath If defined, this will be used instead of
-   * $basePath when keys are undefined
+   * $basePath when keys are undefined.
    */
   public function __construct($basePath, $defaultBasePath = null) {
     $this->basePath = rtrim($basePath, '\\/');
@@ -29,12 +29,14 @@ class PathMap extends Map {
   }
 
   /**
-   * Get the path associated with a key
+   * Get the path associated with a key.
    * 
    * If the key is undefined, the key will be appended to the default base path.
    * 
    * If the associated path is absolute, e.g. begins with '/' or 'C:/' then
    * only the path is returned, otherwise the path is appended to the base path.
+   * @param string $Key Key.
+   * @return string Path.
    */
   public function __get($key) {
     if (!parent::__isset($key)) {
@@ -50,6 +52,8 @@ class PathMap extends Map {
 
   /**
    * Associate a path with a key. Automatically converts '\\' to '/'.
+   * @param string $key Key.
+   * @param string $path Path.
    */
   public function __set($key, $path) {
     parent::__set($key, Utilities::convertPath($path));

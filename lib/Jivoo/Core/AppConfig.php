@@ -419,6 +419,9 @@ class AppConfig implements arrayaccess, IteratorAggregate {
     $this->delete($key);
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function getIterator() {
     return new MapIterator($this->data);
   }

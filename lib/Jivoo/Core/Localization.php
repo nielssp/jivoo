@@ -194,7 +194,17 @@ class Localization {
     return $this->replacePlaceholders($message, $args);
   }
 
+  /**
+   * @var mixed[] List currently being inserted into a string by
+   * {@see replaceList}.
+   */
   private $list = array();
+  
+  /**
+   * For use with {@see preg_replace_callback}.
+   * @param array $matches Regular expression matches.
+   * @return string Replacement.
+   */
   public function replaceList($matches) {
     $length = count($this->list);
     $list = '';
@@ -210,6 +220,12 @@ class Localization {
     return $list;
   }
 
+  /**
+   * Replace placeholders in a translation string.
+   * @param string $message Translation string.
+   * @param mixed[] $values Replacement values.
+   * @return string Translation string after replacements.
+   */
   public function replacePlaceholders($message, $values = array()) {
     $length = count($values);
     $i = 1;

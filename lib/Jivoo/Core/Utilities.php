@@ -1,29 +1,38 @@
 <?php
 /**
- * Useful functions
- * 
- * @package Core
+ * Collection of useful utility functions.
+ * @package Jivoo\Core
  */
 class Utilities {
- 
   private function __construct() {
   }
 
+  /**
+   * Convert path from Windows-style to UNIX-style.
+   * @param string $path Windows-style path.
+   * @return string UNIX-style path.
+   */
   public static function convertPath($path) {
     return str_replace('\\', '/', realpath($path));
   }
   
   /**
    * Convert a CamelCase class-name to a lowercase dash-separated name. E.g.
-   * from "CamelCase" to "camel-case".
-   * @param string $camelCase A camel case string
-   * @return string Dash-separated string
+   * from "CamelCase" to "camel-case". Also known as "lisp-case"
+   * @param string $camelCase A camel case string.
+   * @return string Dash-separated string.
    */
   public static function camelCaseToDashes($camelCase) {
     $dashes = preg_replace('/([A-Z])/', '-$1', lcfirst($camelCase));
     return strtolower($dashes);
   }
 
+  /**
+   * Convert a CamelCase class-name to a lowercase underscore-separated name.
+   * E.g. from "CamelCase" to "camel_case". Also known as "snake_case".
+   * @param string $camelCase A camel case string.
+   * @return string Uderscore-separated string.
+   */
   public static function camelCaseToUnderscores($camelCase) {
     $underscores = preg_replace('/([A-Z])/', '_$1', lcfirst($camelCase));
     return strtolower($underscores);
@@ -43,6 +52,12 @@ class Utilities {
     return $camelCase;
   }
 
+  /**
+   * Convert a lowercase underscore-separated name to a camel case class-name.
+   * E.g. from "camel_case" to "CamelCase".
+   * @param string $underscores Underscores-separated string
+   * @return string A camel case string
+   */
   public static function underscoresToCamelCase($underscores) {
     $words = explode('_', $underscores);
     $camelCase = '';
@@ -51,18 +66,15 @@ class Utilities {
     return $camelCase;
   }
   
+  /**
+   * Create slug style string from any string.
+   * @TODO Unicode support?
+   * @param string $string String.
+   * @return string Slug.
+   */
   public static function stringToDashes($string) {
     return preg_replace('/ /', '-', preg_replace('/[^a-z -]/', '', strtolower($string)));
   }
-  
-  /**
-   * Get plural form of word
-   * @param string $word Word
-   * @return string Plural
-   */
-  public static function getPlural($word) {
-    return $word . 's';
-  } 
   
   /**
    * Check if a character is uppercase
@@ -86,10 +98,22 @@ class Utilities {
     return $ascii >= 97 AND $ascii <= 122;
   }
   
+  /**
+   * Generate a random number.
+   * @param int $min Lowest value.
+   * @param int $max Highest value.
+   * @return int Random number.
+   */
   public static function randomInt($min, $max) {
     return mt_rand($min, $max);
   }
 
+  /**
+   * Generate a random string.
+   * @param int $length Length of random string.
+   * @param string $allowedChars Allowed characters.
+   * @return string Random string.
+   */
   public static function randomString($length, $allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
     $max = strlen($allowedChars) - 1;
     $string = '';
@@ -101,9 +125,9 @@ class Utilities {
   
   /**
    * Returns the portion of string specified by the start and length parameters.
-   * @param string $string
-   * @param int $start
-   * @param int $length
+   * @param string $string String.
+   * @param int $start Start index.
+   * @param int $length Length of substring.
    * @return string Returns the extracted part of string; or FALSE on failure, or an empty string.
    */
   public static function substr($string, $start, $length = NULL) {
@@ -118,27 +142,9 @@ class Utilities {
   }
   
   /**
-   * Test a condition and throw an exception if it's false 
-   * @param boolean $condition Condition
-   * @throws InvalidArgumentException When condition is false
-   */
-  public static function precondition($condition) {
-    if ($condition === true) {
-      return;
-    }
-    $bt = debug_backtrace();
-    $call = $bt[0];
-    $lines = file($call['file']);
-    preg_match('/' . $call['function'] . '\((.+)\)/',
-      $lines[$call['line'] - 1], $matches);
-    throw new InvalidArgumentException(
-      'Precondition not met (' . $matches[1] . ').');
-  }
-  
-  /**
-   * Get lower case file extension from file name
-   * @param string $file File name
-   * @return string File extension
+   * Get lower case file extension from file name.
+   * @param string $file File name.
+   * @return string File extension.
    */
   public static function getFileExtension($file) {
     $array = explode('.', $file);
@@ -146,9 +152,9 @@ class Utilities {
   }
 
   /**
-   * Get content-type (MIME type) of a file name or file extension
-   * @param string $fileName File name or extension
-   * @return string Content type, 'text/plain' if unknown
+   * Get content-type (MIME type) of a file name or file extension.
+   * @param string $fileName File name or extension.
+   * @return string Content type, 'text/plain' if unknown.
    */
   public static function getContentType($fileName) {
     $fileExt = strtolower($fileName);
@@ -185,6 +191,11 @@ class Utilities {
     }
   }
 
+  /**
+   * Get file extension for a MIME type.
+   * @param string $mimeType MIME type.
+   * @return string|null File extension or null if unknown.
+   */
   public static function getExtension($mimeType) {
     switch ($mimeType) {
       case 'text/html':
