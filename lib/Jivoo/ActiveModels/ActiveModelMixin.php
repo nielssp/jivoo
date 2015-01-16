@@ -1,11 +1,25 @@
 <?php
-
+/**
+ * A mixin for active models.
+ * @package Jivoo\ActiveModels
+ */
 abstract class ActiveModelMixin extends Module implements IEventListener {
-  /** @var ActiveModel Model */
+  /**
+   * @var ActiveModel Associated model.
+   */
   protected $model;
   
+  /**
+   * @var array Associative array of default options for mixin.
+   */
   protected $options = array();
   
+  /**
+   * Construct mixin.
+   * @param App $app Association application.
+   * @param ActiveModel $model Associated model.
+   * @param array $options Associative array of options for mixin.
+   */
   public final function __construct(App $app, ActiveModel $model, $options = array()) {
     parent::__construct($app);
     $this->model = $model;
@@ -13,23 +27,66 @@ abstract class ActiveModelMixin extends Module implements IEventListener {
     $this->init();
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function getEventHandlers() {
-    return array('beforeSave', 'afterSave', 'beforeValidate', 'afterValidate', 'afterCreate', 'afterLoad', 'beforeDelete', 'install');
+    return array(
+      'beforeSave','afterSave','beforeValidate','afterValidate',
+      'afterCreate','afterLoad','beforeDelete','install'
+    );
   }
 
+  /**
+   * Initialize mixin.
+   */
   public function init() { }
 
+  /**
+   * Event called before saving a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function beforeSave(ActiveModelEvent $event) { }
+
+  /**
+   * Event called after saving a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function afterSave(ActiveModelEvent $event) { }
-  
+
+  /**
+   * Event called before validating a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function beforeValidate(ActiveModelEvent $event) { }
+
+  /**
+   * Event called after validating a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function afterValidate(ActiveModelEvent $event) { }
-  
+
+  /**
+   * Event called after creating a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function afterCreate(ActiveModelEvent $event) { }
-  
+
+  /**
+   * Event called after loading a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function afterLoad(ActiveModelEvent $event) { }
-  
+
+  /**
+   * Event called before deleting a record.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function beforeDelete(ActiveModelEvent $event) { }
 
+  /**
+   * Event called before installing model.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function install(ActiveModelEvent $event) { }
 }

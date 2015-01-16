@@ -1,26 +1,70 @@
 <?php
+/**
+ * An active record, see also {@see ActiveModel}.
+ * @package Jivoo\ActiveModels
+ */
 class ActiveRecord implements IRecord, IActionRecord, ILinkable {
-  
+  /**
+   * @var array Record data.
+   */
   private $data = array();
   
+  /**
+   * @var array Virtual record data.
+   */
   private $virtualData = array();
   
+  /**
+   * @var array Data that has been updated.
+   */
   private $updatedData = array();
 
+  /**
+   * @var string[] Associative array of fields and custom getters.
+   */
   private $getters = array();
+
+  /**
+   * @var string[] Associative array of fields and custom setters.
+   */
   private $setters = array();
 
   /**
-   * @var ActiveModel
+   * @var ActiveModel Associated model.
    */
   private $model;
+  
+  /**
+   * @var string[] Associative array of fields and error messages.
+   */
   private $errors = array();
+  
+  /**
+   * @var bool Whether or not record has not been saved yet.
+   */
   private $new = false;
+  
+  /**
+   * @var bool Whether or not record has unsaved data.
+   */
   private $saved = true;
 
+  /**
+   * @var array Association options.
+   */
   private $associations = array();
+  
+  /**
+   * @var array Association objects.
+   */
   private $associationObjects = array();
 
+  /**
+   * Construct record.
+   * @param ActiveModel $model Associated model.
+   * @param array $data Associative array of record data.
+   * @param string[] $allowedFields Names of allowed fields.
+   */
   private final function __construct(ActiveModel $model, $data = array(), $allowedFields = null) {
     $this->model = $model;
     $this->data = array_fill_keys($model->getNonVirtualFields(), null);
@@ -32,6 +76,14 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     $this->setters = $this->model->getSetters();
   }
 
+  /**
+   * Create new record.
+   * @param ActiveModel $model Associated model.
+   * @param array $data Associative array of record data.
+   * @param string[] $allowedFields Names of allowed fields. 
+   * @param string $class Name of custom record class.
+   * @return ActiveRecord New unsaved record.
+   */
   public static function createNew(ActiveModel $model, $data = array(), $allowedFields = null, $class = null) {
     if (isset($class))
       $record = new $class($model, $data, $allowedFields);
@@ -43,6 +95,13 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     return $record;
   }
   
+  /**
+   * Create an existing record.
+   * @param ActiveModel $model Associated model.
+   * @param array $data Associative array of record data.
+   * @param string $class Name of custom record class.
+   * @return ActiveREcord A record.
+   */
   public static function createExisting(ActiveModel $model, $data = array(), $class = null) {
     if (isset($class))
       $record = new $class($model, $data);
@@ -54,10 +113,16 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     return $record;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getModel() {
     return $this->model;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function addData($data, $allowedFields = null) {
     assume(is_array($data));
     if (!isset($allowedFields))
@@ -70,11 +135,17 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       $this->__set($field, $data[$field]);
     }
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getData() {
     return $this->data;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __get($field) {
     if (isset($this->getters[$field]))
       return call_user_func(array($this->model, $this->getters[$field]), $this);
@@ -91,6 +162,9 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __set($field, $value) {
     if (isset($this->setters[$field]))
       call_user_func(array($this->model, $this->setters[$field]), $this, $value);
@@ -110,6 +184,9 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($field) {
     if (isset($this->getters[$field])) {
       $value = call_user_func(array($this->model, $this->getters[$field]), $this);
@@ -124,6 +201,9 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __unset($field) {
     if (isset($this->setters[$field]))
       call_user_func(array($this->model, $this->setters[$field]), $this, null);
@@ -141,6 +221,12 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       throw new InvalidPropertyException(tr('Invalid property: %1', $field));;
   }
 
+  /**
+   * Call a method.
+   * @param string $method Method name.
+   * @param mixed[] $paramters List of parameters.
+   * @throws InvalidMethodException If method is not defined.
+   */
   public function __call($method, $parameters) {
     $method = 'record' . ucfirst($method);
     $function = array($this->model, $method);
@@ -150,27 +236,47 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function set($field, $value) {
     $this->__set($field, $value);
     return $this;
   }
 
+  /**
+   * Whether or not a field has been changed, i.e. contains unsaved data.
+   * @param string $field Name of field.
+   * @return boolean True if changed, false otherwise.
+   */
   public function hasChanged($field) {
     return array_key_exists($field, $this->updatedData);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isSaved() {
     return $this->saved;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function isNew() {
     return $this->new;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getErrors() {
     return $this->errors;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function isValid() {
     $this->model->triggerEvent('beforeValidate', new ActiveModelEvent($this));
     $validator = $this->model->getValidator();
@@ -179,14 +285,23 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     return count($this->errors) == 0;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getRoute() {
     return $this->model->getRoute($this);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function action($action) {
     return $this->model->getAction($this, $action);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function save($validate = true) {
     if ($validate and !$this->isValid())
       return false;
@@ -214,24 +329,39 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     $this->model->triggerEvent('afterSave', new ActiveModelEvent($this));
     return true;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function delete() {
     $this->model->triggerEvent('beforeDelete', new ActiveModelEvent($this));
     $this->model->selectRecord($this)->delete();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetExists($field) {
     return $this->__isset($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetGet($field) {
     return $this->__get($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetSet($field, $value) {
     $this->__set($field, $value);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetUnset($field) {
     $this->__unset($field);
   }

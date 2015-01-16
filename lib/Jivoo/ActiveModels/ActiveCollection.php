@@ -1,15 +1,57 @@
 <?php
-
+/**
+ * A special model representing an association collection as result from for
+ * instance a many-to-many relationship between models.
+ * @package Jivoo\ActiveModels
+ */
 class ActiveCollection extends Model {
+  /**
+   * @var ActiveModel "This" model.
+   */
   private $model;
+  
+  /**
+   * @var scalar Id of "this" record.
+   */
   private $recordId;
+  
+  /**
+   * @var ActiveModel "Other" model.
+   */
   private $other;
+  
+  /**
+   * @var string Name of the foreign key in "other" that points to "this".
+   */
   private $thisKey;
+
+  /**
+   * @var string Name of the foreign key in "this" that points to "other".
+   */
   private $otherKey;
+  
+  /**
+   * @var IBasicSelection Source selection.
+   */
   private $source;
+  
+  /**
+   * @var IModel Model used for joining in a many-to-many relationship.
+   */
   private $join = null;
+  
+  /**
+   * @var string Name of "other" primary key.
+   */
   private $otherPrimary;
 
+  /**
+   * Construct active collection.
+   * @param ActiveModel $thisModel "This" model.
+   * @param scalar $recordId Id of "this" record.
+   * @param array $association Associative array of association options, see
+   * {@see ActiveModel}.
+   */
   public function __construct(ActiveModel $thisModel, $recordId, $association) {
     $this->model = $thisModel;
     $this->recordId = $recordId;
@@ -23,6 +65,11 @@ class ActiveCollection extends Model {
     $this->source = $this->prepareSelection($this->other);
   }
 
+  /**
+   * Prepare selection, e.g. by joining with join table.
+   * @param IBasicSelection $selection Input selection or null for source.
+   * @return IReadSelection Resulting selection.
+   */
   private function prepareSelection(IBasicSelection $selection = null) {
     if (!isset($selection))
       return $this->source;
@@ -40,6 +87,10 @@ class ActiveCollection extends Model {
     }
   }
 
+  /**
+   * Add a record to collection.
+   * @param ActiveRecord $record A record.
+   */
   public function add(ActiveRecord $record) {
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
@@ -55,6 +106,10 @@ class ActiveCollection extends Model {
     }
   }
 
+  /**
+   * Add all records from selection to collection.
+   * @param ISelection $selection Selection of records.
+   */
   public function addAll(ISelection $selection) {
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
@@ -70,6 +125,11 @@ class ActiveCollection extends Model {
     }
   }
 
+  /**
+   * Whether or not collection contains a record.
+   * @param ActiveRecord $record A record.
+   * @return boolean True if collection contains record, false otherwise.
+   */
   public function contains(ActiveRecord $record) {
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
@@ -83,6 +143,10 @@ class ActiveCollection extends Model {
     }
   }
 
+  /**
+   * Remove a record from collection.
+   * @param ActiveRecord $record A record.
+   */
   public function remove(ActiveRecord $record) {
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
@@ -97,6 +161,10 @@ class ActiveCollection extends Model {
     }
   }
 
+  /**
+   * Remove all records in selection from collection.
+   * @param ISelection $selection A selection of records.
+   */
   public function removeAll(ISelection $selection = null) {
     $selection = $this->prepareSelection($selection);
     if (isset($this->join)) {
@@ -112,14 +180,23 @@ class ActiveCollection extends Model {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return $this->other->getName();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSchema() {
     return $this->other->getSchema();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function create($data = array(), $allowedFields = null) {
     $record = $this->other->create($data, $allowedFields);
     if (!isset($this->join)) {
@@ -129,10 +206,16 @@ class ActiveCollection extends Model {
     return $record;
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function createExisting($data = array()) {
     return $this->other->createExisting($data, $allowedFields);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function updateSelection(UpdateSelection $selection) {
     if (!isset($this->join))
       return $this->other->updateSelection(
@@ -149,7 +232,10 @@ class ActiveCollection extends Model {
     }
     return $num;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function deleteSelection(DeleteSelection $selection) {
     if (!isset($this->join))
       return $this->other->deleteSelection($this->prepareSelection($selection));
@@ -168,29 +254,47 @@ class ActiveCollection extends Model {
     }
     return $num;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function countSelection(ReadSelection $selection) {
 //     return $this->other->countSelection($this->prepareSelection($selection));
       
     return $this->other->countSelection($selection);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function firstSelection(ReadSelection $selection) {
     return $this->other->firstSelection($this->prepareSelection($selection));
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function lastSelection(ReadSelection $selection) {
     return $this->other->lastSelection($this->prepareSelection($selection));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function read(ReadSelection $selection) {
     return $this->other->read($this->prepareSelection($selection));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function readCustom(ReadSelection $selection) {
     return $this->other->readCustom($this->prepareSelection($selection));
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function insert($data) {
     if (!isset($this->join)) {
       $data[$this->thisKey] = $this->recordId;
