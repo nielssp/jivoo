@@ -1,33 +1,37 @@
 <?php
 /**
- * A helper for use in controllers and views
+ * A helper for use in controllers and templates.
  * @package Jivoo\Helpers
  */
 abstract class Helper extends Module {
-  protected $modules = array('Helpers', 'Models');
   /**
-   * @var string[] A list of other helpers needed by this helper
+   * {@inheritdoc}
+   */
+  protected $modules = array('Helpers', 'Models');
+
+  /**
+   * @var string[] A list of other helpers needed by this helper.
    */
   protected $helpers = array();
   
   /**
-   * @var string[] A list of models needed by this helper
+   * @var string[] A list of models needed by this helper.
    */
   protected $models = array();
 
   /**
-   * @var array An associative array of helper names and objects
+   * @var Helper[] An associative array of helper names and objects.
    */
   private $helperObjects = array();
 
   /**
-   * @var array An associative array of model names and objects
+   * @var IModel[] An associative array of model names and objects.
    */
   private $modelObjects = array();
 
   /**
-   * Constructor.
-   * @param Routing $routing Routing module
+   * Construct helper.
+   * @param App $app Associated application.
    */
   public final function __construct(App $app) {
     $this->inheritElements('modules');
@@ -41,8 +45,8 @@ abstract class Helper extends Module {
 
   /**
    * Get a model instance or a helper instance, in that order.
-   * @param string $property Name of model or helper (without 'Helper'-suffix)
-   * @return Model|Helper|void Model object or helper object
+   * @param string $property Name of model or helper (without 'Helper'-suffix).
+   * @return Model|Helper|void Model object or helper object.
    */
   public function __get($property) {
     if (isset($this->modelObjects[$property])) {
@@ -60,9 +64,9 @@ abstract class Helper extends Module {
   protected function init() {}
   
   /**
-   * Convert a route to a link
-   * @param array|ILinkable|string|null $route Route, see {@see Routing}
-   * @return string A link
+   * Convert a route to a link.
+   * @param array|ILinkable|string|null $route Route, see {@see Routing}.
+   * @return string A link.
    */
   protected function getLink($route) {
     return $this->m->Routing->getLink($route);

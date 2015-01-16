@@ -1,17 +1,17 @@
 <?php
-// Module
-// Name           : Console
-// Description    : Jivoo developer console.
-// Author         : apakoh.dk
-
 /**
- * Console module.
+ * Developer console module.
  * @package Jivoo\Console
  */
 class Console extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array();
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
   }
 }

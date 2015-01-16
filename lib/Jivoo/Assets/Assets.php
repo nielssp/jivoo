@@ -1,17 +1,12 @@
 <?php
-// Module
-// Name           : Assets
-// Description    : The Jivoo asset system
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Routing
-
 /**
- * Assets module
- * 
+ * Asset system.
  * @package Jivoo\Assets
  */
 class Assets extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Routing');
   
   /**
@@ -39,6 +34,9 @@ class Assets extends LoadableModule {
    */
   private $sorted = true;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->docRoot = Utilities::convertPath($_SERVER['DOCUMENT_ROOT']);
     $this->docRootLength = strlen($this->docRoot);
@@ -72,6 +70,9 @@ class Assets extends LoadableModule {
     return $css;
   }
 
+  /**
+   * Respond with all JavaScript assets in one file.
+   */
   private function returnAppJs() {
     $text = '';
     $files = scandir($this->p('app', 'assets/js'));
@@ -88,6 +89,9 @@ class Assets extends LoadableModule {
     $this->m->Routing->respond($response);
   }
 
+  /**
+   * Respond with all CSS assets in one file.
+   */
   private function returnAppCss() {
     $text = '';
     $files = scandir($this->p('app', 'assets/css'));

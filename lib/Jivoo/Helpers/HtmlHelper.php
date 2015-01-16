@@ -4,7 +4,6 @@
  * @package Jivoo\Helpers
  */
 class HtmlHelper extends Helper {
-
   /**
    * @var array Associative array of begin and end tags.
    */

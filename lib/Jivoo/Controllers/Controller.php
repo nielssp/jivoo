@@ -1,49 +1,51 @@
 <?php
 /**
- * A controller, the C of MVC
+ * A controller, the C of MVC.
  * @package Jivoo\Controllers
  */
 class Controller extends Module {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Helpers', 'Models');
   /**
-   * @var string[] A list of other helpers needed by this helper
+   * @var string[] A list of other helpers needed by this helper.
   */
   protected $helpers = array();
   
   /**
-   * @var string[] A list of models needed by this helper
+   * @var string[] A list of models needed by this helper.
   */
   protected $models = array();
   
   /**
-   * @var array An associative array of helper names and objects
+   * @var Helper[] An associative array of helper names and objects.
   */
   private $helperObjects = array();
   
   /**
-   * @var array An associative array of model names and objects
+   * @var IBasicModel[] An associative array of model names and objects.
   */
   private $modelObjects = array();
   
-  
   /**
-   * @var string Name of controller (without 'Controller'-part)
+   * @var string Name of controller (without 'Controller'-suffix).
    */
   private $name;
 
   /**
-   * @var string[] List of actions
+   * @var string[] List of actions.
    */
   private $actions = array();
 
   /**
-   * @var HTTP status code
+   * @var HTTP status code.
    */
   private $status = 200;
   
   /**
-   * Constructor
+   * Construct controller.
+   * @param App $app Associated application.
    */
   public final function __construct(App $app) {
     $this->inheritElements('modules');
@@ -67,9 +69,9 @@ class Controller extends Module {
   }
 
   /**
-   * Get an associated model, helper or data-value (in that order)
-   * @param string $name Name of model/helper or key for data-value
-   * @return Model|Helper|mixed Associated value 
+   * Get an associated model, helper or data-value (in that order).
+   * @param string $name Name of model/helper or key for data-value.
+   * @return Model|Helper|mixed Associated value.
    */
   public function __get($name) {
     if (isset($this->modelObjects[$name])) {
@@ -79,33 +81,43 @@ class Controller extends Module {
   }
 
   /**
-   * Set data value, the data is passed along to the template when rendering
-   * @param string $name Key
-   * @param mixed $value Value
+   * Set data value, the data is passed along to the template when rendering.
+   * @param string $name Key.
+   * @param mixed $value Value.
    */
   public function __set($name, $value) {
     $this->view->data->$name = $value;
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($name) {
     if (isset($this->modelObjects[$name]))
       return true;
     return isset($this->view->data->$name);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __unset($name) {
     unset($this->view->data->$name);
   }
   
+  /**
+   * Get name of controller (without "Controller"-suffix).
+   * @return string Name of controller.
+   */
   public function getName() {
     return $this->name;
   }
   
   /**
-   * Create a route to an action for auto routing
-   * @param string $action Action name
-   * @param string $prefix Prefix for the resulting path
-   * @throws Exception If action does not exist
+   * Create a route to an action for auto routing.
+   * @param string $action Action name.
+   * @param string $prefix Prefix for the resulting path.
+   * @throws Exception If action does not exist.
    */
   private function createRoute($action, $prefix = '') {
     if (!in_array($action, $this->actions)) {
@@ -151,19 +163,19 @@ class Controller extends Module {
   }
 
   /**
-   * Automatically route a single or all actions in this controller
-   * @param string $action If set, the name of the single action to auto route
-   * @param string $prefix A prefix to use for all resulting paths
+   * Automatically route a single or all actions in this controller.
+   * @param string $action If set, the name of the single action to auto route.
+   * @param string $prefix A prefix to use for all resulting paths.
    */
   public function autoRoute($action = null, $prefix = '') {
     $this->m->Routing->autoRoute($this->name, $action, $prefix);
   }
 
   /**
-   * Add a custom route to an action
-   * @param string $path Path that should lead to action
-   * @param string $action Action name
-   * @param int $priority Priority of route
+   * Add a custom route to an action.
+   * @param string $path Path that should lead to action.
+   * @param string $action Action name.
+   * @param int $priority Priority of route.
    */
   public function addRoute($path, $action, $priority = 5) {
     $this->m->Routing->addRoute(
@@ -174,10 +186,10 @@ class Controller extends Module {
   }
 
   /**
-   * Set the current route
-   * @param stirng $action Action name
-   * @param int $priority Priority of route
-   * @param mixed[] $parameters Array of additional parameters for action
+   * Set the current route.
+   * @param stirng $action Action name.
+   * @param int $priority Priority of route.
+   * @param mixed[] $parameters Array of additional parameters for action.
    */
   public function setRoute($action, $priority = 5, $parameters = array()) {
     $this->m->Routing->setRoute(
@@ -200,7 +212,7 @@ class Controller extends Module {
   }
 
   /**
-   * Set return path
+   * Set return path.
    * @see Controller::goBack()
    */
   protected function returnToThis() {
@@ -213,9 +225,9 @@ class Controller extends Module {
   }
 
   /**
-   * Return to a previously set return path
-   * @see Controller::returnToThis()
-   * @return false False if no return path set
+   * Return to a previously set return path.
+   * @see Controller::returnToThis().
+   * @return false False if no return path set.
    */
   protected function goBack() {
     if (!isset($this->session['returnTo'])) {
@@ -225,22 +237,29 @@ class Controller extends Module {
     $this->redirect($this->session['returnTo']);
   }
 
+  /**
+   * Call another action in another controller in order.
+   * @param string $controller Controller name.
+   * @param string $action Action name.
+   * @param mixed[] $parameters Parameters.
+   * @return Response Response.
+   */
   protected function embed($controller, $action, $parameters = array()) {
     return $this->m->Routing->callAction($controller, $action, $parameters);
   }
 
   /**
-   * Redirect to a route
-   * @param array|ILinkable|string|null $route Route, see {@see Routing}
+   * Redirect to a route.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   protected function redirect($route = null) {
     $this->m->Routing->redirect($route);
   }
 
   /**
-   * Refresh the current path with optional query data and fragment
-   * @param array $query Associative array of query data
-   * @param string $fragment Fragment of page
+   * Refresh the current path with optional query data and fragment.
+   * @param array $query Associative array of query data.
+   * @param string $fragment Fragment of page.
    */
   protected function refresh($query = null, $fragment = null) {
     $this->m->Routing->refresh($query, $fragment);
@@ -248,14 +267,14 @@ class Controller extends Module {
 
   /**
    * Set HTTP status code, e.g. 200 for OK or 404 for file not found.
-   * @param integer $httpStatus HTTP status code
+   * @param integer $httpStatus HTTP status code.
    */
   protected function setStatus($httpStatus) {
     $this->status = $httpStatus;
   }
   
   /**
-   * Render a template
+   * Render a template.
    * 
    * If $templateName is not set, the path of the template will be computed
    * based on the name of the controller and the name of the action. Each level
@@ -266,8 +285,8 @@ class Controller extends Module {
    * template path is 'setup/authentication/setup-root.html'.
    * {@see Utilities::camelCaseToDashes()} is used on each level.
    * 
-   * @param string $templateName Name of template to render
-   * @return string The output of $return is set to true
+   * @param string $templateName Name of template to render.
+   * @return ViewResponse A view response for template.
    */
   protected function render($templateName = null) {
     if (!isset($templateName)) {
@@ -295,22 +314,21 @@ class Controller extends Module {
   }
 
   /**
-   * Controller initialisation, called by constructor. Modules, helpers and
-   * models are NOT available when this function is called.
+   * Controller initialization, called by constructor.
    */
   protected function init() {
   }
   
   /**
    * Called just before the selected action is called, useful for doing common
-   * tasks for all actions
+   * tasks for all actions.
    */
   public function before() {
   }
   
   /**
-   * Called right after the selected action is called
-   * @param Response $response Respone object, as created by action
+   * Called right after the selected action is called.
+   * @param Response $response Respone object, as returned by action.
    */
   public function after(Response $response) {
   }

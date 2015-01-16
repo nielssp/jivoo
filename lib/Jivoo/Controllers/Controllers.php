@@ -1,9 +1,4 @@
 <?php
-// Module
-// Name           : Controllers
-// Description    : For contollers
-// Author         : apakoh.dk
-
 /**
  * Controller module. Will automatically find controllers in the controllers
  * directory (and subdirectories). 
@@ -13,25 +8,28 @@ class Controllers extends LoadableModule {
   
   /**
    * @var array An associative array of controller names and associated class
-   * names
+   * names.
    */
   private $controllers = array();
   
   /**
-   * @var array An associative array of controller names and actions
+   * @var array An associative array of controller names and actions.
    */
   private $actions = array();
   
   /**
-   * @var array Associative array of controller names and paths
+   * @var array Associative array of controller names and paths.
    */
   private $paths = array();
 
   /**
-   * @var array An associative array of controller names and associated objects
+   * @var array An associative array of controller names and associated objects.
    */
   private $controllerObjects = array();
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     if (is_dir($this->p('app', 'controllers'))) {
       $this->findControllers();
@@ -39,8 +37,8 @@ class Controllers extends LoadableModule {
   }
   
   /**
-   * Find controllers 
-   * @param string $dir Directory
+   * Find controllers in a directory.
+   * @param string $dir Directory.
    */
   private function findControllers($dir = 'controllers') {
     Lib::addIncludePath($this->p('app', $dir));
@@ -68,9 +66,9 @@ class Controllers extends LoadableModule {
   }
   
   /**
-   * Get class name of controller
-   * @param string $controller Controller name
-   * @return string|false Class name or false if not found
+   * Get class name of controller.
+   * @param string $controller Controller name.
+   * @return string|false Class name or false if not found.
    */
   public function getClass($controller) {
     if (isset($this->controllers[$controller])) {
@@ -80,9 +78,9 @@ class Controllers extends LoadableModule {
   }
   
   /**
-   * Get path for controller
-   * @param string $controller Controller name
-   * @return string|false Path or false if not found
+   * Get path for controller.
+   * @param string $controller Controller name.
+   * @return string|false Path or false if not found.
    */
   public function getControllerPath($controller) {
     if (!isset($this->paths[$controller])) {
@@ -91,14 +89,19 @@ class Controllers extends LoadableModule {
     return $this->paths[$controller];
   }
   
+  /**
+   * Set path of a controller.
+   * @param string $controller Controller name..
+   * @param string $path Path.
+   */
   public function setControllerPath($controller, $path) {
     $this->paths[$controller] = $path;
   }
   
   /**
-   * Get list of actions
-   * @param string $controller Controller name
-   * @return string[]|boolean List of actions or false if controller not found 
+   * Get list of actions.
+   * @param string $controller Controller name.
+   * @return string[]|boolean List of actions or false if controller not found. 
    */
   public function getActions($controller) {
     if (isset($this->controllers[$controller])) {
@@ -118,14 +121,11 @@ class Controllers extends LoadableModule {
     return false;
   }
   
-  /**
-   * 
-   */
 
   /**
-   * Get instance of controller
-   * @param string $name Controller name
-   * @return Controller|null Controller object or null if not found
+   * Get instance of controller.
+   * @param string $name Controller name.
+   * @return Controller|null Controller object or null if not found.
    */
   private function getInstance($name) {
     if (!isset($this->controllers[$name])) {
@@ -142,8 +142,8 @@ class Controllers extends LoadableModule {
   }
 
   /**
-   * Add a controller object
-   * @param Controller $controller Controller object
+   * Add a controller object.
+   * @param Controller $controller Controller object.
    */
   public function addController(Controller $controller) {
     $name = str_replace('Controller', '', get_class($controller));
@@ -152,9 +152,9 @@ class Controllers extends LoadableModule {
   }
 
   /**
-   * Get a controller object
-   * @param string $name Controller name
-   * @return Controller|null Controller object or null if not found
+   * Get a controller object.
+   * @param string $name Controller name.
+   * @return Controller|null Controller object or null if not found.
    */
   public function getController($name) {
     if (isset($this->controllerObjects[$name])) {
@@ -164,9 +164,9 @@ class Controllers extends LoadableModule {
   }
 
   /**
-   * Get a controller object
-   * @param string $name Controller name
-   * @return Controller|null Controller object or null if not found
+   * Get a controller object.
+   * @param string $name Controller name.
+   * @return Controller|null Controller object or null if not found.
    */
   public function __get($name) {
     return $this->getController($name);

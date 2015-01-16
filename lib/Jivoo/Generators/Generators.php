@@ -1,17 +1,17 @@
 <?php
-// Module
-// Name           : Generators
-// Description    : Jivoo application generators.
-// Author         : apakoh.dk
-
 /**
- * Generators module.
+ * Generators module for generating Jivoo applications.
  * @package Jivoo\Generators
  */
 class Generators extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array();
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
   }
 }

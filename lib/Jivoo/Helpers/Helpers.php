@@ -1,24 +1,23 @@
 <?php
-// Module
-// Name           : Helpers
-// Description    : For helpers
-// Author         : apakoh.dk
-
 /**
  * Helpers module. All helpers added to the module, can be accessed as
  * read-only properties.
  * @package Jivoo\Helpers
  */
 class Helpers extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $events = array('beforeLoadHelper', 'afterLoadHelper');
   
-    /**
-   * @var array Associative array loaded helpers (name => object)
+  /**
+   * @var Helper[] Associative array of loaded helpers
    */
   private $helpers = array();
 
-  
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     Lib::addIncludePath($this->p('app', 'helpers'));
   }
@@ -39,7 +38,11 @@ class Helpers extends LoadableModule {
     return $this->helpers[$name];
   }
 
-  
+  /**
+   * Get multiple helpers.
+   * @param string[] $names Names of helpers.
+   * @return Helper[] Helper objects.
+   */
   public function getHelpers($names) {
     $helpers = array();
     foreach ($names as $name)
@@ -47,6 +50,11 @@ class Helpers extends LoadableModule {
     return $helpers;
   }
   
+  /**
+   * Whether the helper exists.
+   * @param string $name Helper name
+   * @return bool True if it exists, false otherwise.
+   */
   public function hasHelper($name) {
     return isset($this->helpers[$name]);
   }
@@ -59,7 +67,12 @@ class Helpers extends LoadableModule {
   public function __get($name) {
     return $this->getHelper($name);
   }
-  
+
+  /**
+   * Whether the helper exists.
+   * @param string $name Helper name
+   * @return bool True if it exists, false otherwise.
+   */
   public function __isset($name) {
     return $this->hasHelper($name);
   }
@@ -67,5 +80,6 @@ class Helpers extends LoadableModule {
 
 /**
  * Event sent before and after a helper has been loaded
+ * @package Jivoo\Helpers
  */
 class LoadHelperEvent extends LoadEvent { }
