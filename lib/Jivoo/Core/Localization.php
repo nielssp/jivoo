@@ -1,17 +1,55 @@
 <?php
+/**
+ * A localization, e.g. translation strings and date formats.
+ * @package Jivoo\Core
+ */
 class Localization {
+  /**
+   * @var array Messages in english and their local translation.
+   */
   private $messages = array();
 
+  /**
+   * @var string Preferred date format.
+   */
   private $dateFormat = 'Y-m-d';
+  
+  /**
+   * @var string Preferred time format.
+   */
   private $timeFormat = 'H:i';
 
+  /**
+   * @var string Preferred long date format.
+   */
   private $longFormat = '%DATE %TIME';
+  
+  /**
+   * @var string Month+year format
+   */
   private $monthYear = 'F Y';
+  
+  /**
+   * @var string Month+day format.
+   */
   private $monthDay = 'F j';
+  
+  /**
+   * @var string Week day+time format
+   */
   private $weekDay = 'l %TIME';
 
+  /**
+   * Construct new localization.
+   */
   public function __construct() { }
 
+  /**
+   * Get value of a property.
+   * @param string $property Property name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property is not defined.
+   */
   public function __get($property) {
     switch ($property) {
       case 'dateFormat':
@@ -30,6 +68,12 @@ class Localization {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
+  /**
+   * Set value of a property.
+   * @param string $property Property name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If property is not defined.
+   */
   public function __set($property, $value) {
     switch ($property) {
       case 'dateFormat':
@@ -43,11 +87,22 @@ class Localization {
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
-  
+
+  /**
+   * Unset value of a property.
+   * @param string $property Property name.
+   * @throws InvalidPropertyException If property is not defined.
+   */
   public function __unset($property) {
     $this->__set($property, null);
   }
 
+  /**
+   * Whether or not a property is set, i.e. not null.
+   * @param string $property Property name.
+   * @return bool True if not null, false otherwise.
+   * @throws InvalidPropertyException If property is not defined.
+   */
   public function __isset($property) {
     switch ($property) {
       case 'dateFormat':
@@ -60,20 +115,21 @@ class Localization {
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
+
   /**
-   * Extend this localization with additional messages from another one
-   * @param Localization $l Other localization object
+   * Extend this localization with additional messages from another one.
+   * @param Localization $l Other localization object.
    */
   public function extend(Localization $l) {
     $this->messages = array_merge($this->messages, $l->messages);
   }
 
   /**
-   * Set translation string
-   * @param string $message Message in english
-   * @param string $translation Translation string
+   * Set translation string.
+   * @param string $message Message in english.
+   * @param string $translation Translation string.
    * @param string $patterns,... Regular expression patterns to match message variables
-   * against
+   * against.
    */
   public function set($message, $translation) {
     $args = func_get_args();
@@ -84,10 +140,10 @@ class Localization {
   }
 
   /**
-   * Translate a string
-   * @param string $message Message in english
-   * @param mixed $vars,... Values for placeholders starting from %1
-   * @return string Translated string
+   * Translate a string.
+   * @param string $message Message in english.
+   * @param mixed $vars,... Values for placeholders starting from %1.
+   * @return string Translated string.
    */
   public function get($message) {
     $args = func_get_args();
@@ -119,11 +175,11 @@ class Localization {
   /**
    * Translate a string containing a numeric value, e.g.
    * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
-   * @param string $message Message in english (plural)
-   * @param string $singular Singular version of message in english
+   * @param string $message Message in english (plural).
+   * @param string $singular Singular version of message in english.
    * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
-   * numeral to test
-   * @return Translated string
+   * numeral to test.
+   * @return Translated string.
    */
   public function getNumeric($message, $singular) {
     $args = func_get_args();

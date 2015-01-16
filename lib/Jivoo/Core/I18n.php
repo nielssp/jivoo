@@ -1,19 +1,25 @@
 <?php
 /**
- * Internationalization and localization
+ * Internationalization and localization.
  * @package Jivoo\Core
  */
 class I18n {
-  /** @var AppConfig Configuration */
+  /**
+   * @var AppConfig Configuration.
+   */
   private static $config = null;
 
-  /** @var Localization Current localization */
+  /**
+   * @var Localization Current localization.
+   */
   private static $language = null;
   
   /**
-   * Configure I18n system with a configuration
-   * @param AppConfig $config Configuration
-   * @param string $location Path of language directory
+   * Configure I18n system with a configuration.
+   * @param AppConfig $config Configuration.
+   * @param string $location Path of language directory.
+   * @throws I18nException If language file does not return an instance of
+   * {@see Localization}.
    */
   public static function setup(AppConfig $config, $location) {
     self::$config = $config;
@@ -39,10 +45,10 @@ class I18n {
   }
 
   /**
-   * Translate a string
-   * @param string $message Message in english
-   * @param mixed $vars,... Values for placeholders starting from %1
-   * @return string Translated string
+   * Translate a string.
+   * @param string $message Message in english.
+   * @param mixed $vars,... Values for placeholders starting from %1.
+   * @return string Translated string.
    */
   public static function get($message) {
     if (!isset(self::$language)) {
@@ -55,11 +61,11 @@ class I18n {
   /**
    * Translate a string containing a numeric value, e.g.
    * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
-   * @param string $message Message in english (plural)
-   * @param string $singular Singular version of message in english
+   * @param string $message Message in english (plural).
+   * @param string $singular Singular version of message in english.
    * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
-   * numeral to test
-   * @return Translated string
+   * numeral to test.
+   * @return Translated string.
    */
   public static function getNumeric($message, $singular, $number) {
     if (!isset(self::$language)) {
@@ -70,31 +76,43 @@ class I18n {
   }
 
   /**
-   * Returns the preferred date format
-   *
-   * @return string Format string used with date()
+   * Returns the preferred date format.
+   * @return string Format string used with date().
    */
   public static function dateFormat() {
     return self::$language->dateFormat;
   }
 
   /**
-   * Returns the preferred time format
-   *
-   * @return string Format string used with date()
+   * Returns the preferred time format.
+   * @return string Format string used with date().
    */
   public static function timeFormat() {
     return self::$language->timeFormat;
   }
 
+  /**
+   * Return the preferred long format.
+   * @return string Format string used with date().
+   */
   public static function longFormat() {
     return self::$language->longFormat;
   }
 
+  /**
+   * Format a timestamp using preferred long format.
+   * @param string $timestamp Timestamp, default is now.
+   * @return string Formatted date and time.
+   */
   public static function longDate($timestamp = null) {
     return self::date(self::longFormat(), $timestamp);
   }
 
+  /**
+   * Format a timestamp using a short style.
+   * @param string $timestamp Timestamp, default is now.
+   * @return string Formatted date and time.
+   */
   public static function shortDate($timestamp = null) {
     $l = self::$language;
     $cYear = date('Y');
@@ -198,4 +216,8 @@ class I18n {
   }
 }
 
+/**
+ * Thrown when language is invalid.
+ * @package Jivoo\Core
+ */
 class I18nException extends Exception { }

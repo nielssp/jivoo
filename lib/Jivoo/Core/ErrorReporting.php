@@ -1,27 +1,36 @@
 <?php
 /**
- * Utility class for handling errors/exceptions
- * @package Core
+ * Utility class for handling errors/exceptions.
+ * @package Jivoo\Core
  */
 class ErrorReporting {
-
   /**
-   * @var callback Exception handler
+   * @var callback Exception handler.
    */
   private static $handler = null;
 
+  /**
+   * @var string What to do with PHP warnings, 'log' or 'exception'.
+   */
   public static $warningBehavior = 'log';
+
+  /**
+   * @var string What to do with PHP notices, 'log' or 'exception'.
+   */
   public static $noticeBehavior = 'log';
 
+  /**
+   * Private constructor.
+   */
   private function __construct() {}
 
   /**
-   * Handle PHP error
-   * @param int $type Type
-   * @param string $message Message
-   * @param string $file File
-   * @param int $line Line
-   * @throws ErrorException to convert PHP errors to exceptions
+   * Handle PHP error.
+   * @param int $type Type.
+   * @param string $message Message.
+   * @param string $file File.
+   * @param int $line Line.
+   * @throws ErrorException To convert PHP errors to exceptions.
    */
   public static function handleError($type, $message, $file, $line) {
     switch ($type) {
@@ -64,16 +73,16 @@ class ErrorReporting {
   }
 
   /**
-   * Set exception handler
-   * @param callback $handler Function/method for handling exceptions
+   * Set exception handler.
+   * @param callback $handler Function/method for handling exceptions.
    */
   public static function setHandler($handler) {
     self::$handler = $handler;
   }
 
   /**
-   * Uncaught Exception handler
-   * @param Exception $exception Exception
+   * Uncaught exception handler.
+   * @param Exception $exception Exception.
    */
   public static function handleException(Exception $exception) {
     if (isset(self::$handler)) {

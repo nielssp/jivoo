@@ -366,14 +366,7 @@ class AppConfig implements arrayaccess, IteratorAggregate {
     $this->updated = false;
     return true;
   }
-  
-  /**
-   * @deprecated Unknown origin and purpose
-   * @param array $array
-   */
-  public function merge($array) {
-  }
-  
+    
   /* arrayaccess implementation */
   
   /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Jivoo bootstrap script
+ * Jivoo bootstrap script.
  * @package Jivoo\Core
  */
 ini_set('magic_quotes_runtime', 0);
@@ -16,7 +16,7 @@ if (!defined('CORE_LIB_PATH')) {
 // PHP 5.2 compatibility
 if (!function_exists('get_called_class')) {
   /**
-   * Gets the name of the class the static method is called in
+   * Gets the name of the class the static method is called in.
    * @return boolean|string Returns the class name of false on failure.
    */
   function get_called_class() {
@@ -56,9 +56,9 @@ if (!function_exists('get_called_class')) {
 // PHP 5.2 compatibility
 if (!function_exists('lcfirst')) {
   /**
-   * Convert first character of string to lowercase
-   * @param string $str Input
-   * @return string Output
+   * Convert first character of string to lowercase.
+   * @param string $str Input.
+   * @return string Output.
    */
   function lcfirst($str) {
     $str[0] = strtolower($str[0]);
@@ -67,7 +67,7 @@ if (!function_exists('lcfirst')) {
 }
 
 /**
- * Translate function alias
+ * Translate function alias.
  * @see I18n::get()
  */
 function tr($message) {
@@ -76,7 +76,7 @@ function tr($message) {
 }
 
 /**
- * Translate function alias
+ * Translate function alias.
  * @see I18n::getNumeric()
  */
 function tn($message, $singular, $number) {
@@ -85,9 +85,9 @@ function tn($message, $singular, $number) {
 }
 
 /**
- * Encode string for HTML usage
- * @param string $string Input
- * @return string Input
+ * Encode string for HTML usage.
+ * @param string $string Input.
+ * @return string Input.
  */
 function h($string) {
   return htmlentities($string, ENT_COMPAT, 'UTF-8');
@@ -95,9 +95,9 @@ function h($string) {
 }
 
 /**
- * Alias for Condition constructor
- * @param ICondition|string Condition
- * @return Condition Condition object
+ * Alias for Condition constructor.
+ * @param ICondition|string Condition.
+ * @return Condition Condition object.
  */
 function where($condition) {
   $args = func_get_args();
@@ -141,6 +141,13 @@ function tdate($format, $timestamp = null) {
   return I18n::date($format, $timestamp);
 }
 
+/**
+ * Precondition function that can be used to add additional constraints to
+ * function parameters.
+ * @param bool $condition Condition.
+ * @param string $message Failure message.
+ * @throws InvalidArgumentException If condition is false.
+ */
 function assume($condition, $message = null) {
   if ($condition === true) {
     return;
@@ -159,10 +166,20 @@ function assume($condition, $message = null) {
 }
 
 if (!class_exists('InvalidArgumentException')) {
+  /**
+   * Thrown by function if parameters are invalid.
+   */
   class InvalidArgumentException extends Exception { }
 }
 
+/**
+ * Thrown when a magic method is undefined.
+ */
 class InvalidMethodException extends Exception { }
+
+/**
+ * Thrown when a magic property is undefined.
+ */
 class InvalidPropertyException extends Exception { }
 
 require CORE_LIB_PATH . '/Lib.php';

@@ -42,7 +42,7 @@ class EventManager {
    * Attach an event handler to an event.
    * @param string $name Name of event to handle.
    * @param callback $callback Function to call. Function must accept an
-   * {@see Event) as its first parameter.
+   * {@see Event} as its first parameter.
    */
   public function attachHandler($name, $callback) {
     if (!isset($this->events[$name]))

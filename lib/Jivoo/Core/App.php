@@ -1,104 +1,121 @@
 <?php
 /**
- * Application class for initiating Jivoo applications
+ * Application class for initiating Jivoo applications.
  * @package Jivoo\Core
- * @property string $basePath Web base path
- * @property-read PathDictionary $paths Paths
- * @property-read string $name Application name
- * @property-read string $version Application version
- * @property-read string $minPhpVersion Minimum PHP version
- * @property-read string $environment Environment name
- * @property-read AppConfig $config User configuration
- * @property-read array $appConfig Application configuration
- * @property-read string $sessionPrefix Application session prefix
+ * @property string $basePath Web base path.
+ * @property-read PathDictionary $paths Paths.
+ * @property-read string $name Application name.
+ * @property-read string $version Application version.
+ * @property-read string $minPhpVersion Minimum PHP version.
+ * @property-read string $environment Environment name.
+ * @property-read AppConfig $config User configuration.
+ * @property-read array $appConfig Application configuration.
+ * @property-read string $sessionPrefix Application session prefix.
+ * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
+ * @property-read EventManager $eventManager Application event manager.
  */
 class App implements IEventSubject {
   /**
-   * @var array Application configuration
+   * @var array Application configuration.
    */
   private $appConfig = array();
 
   /**
-   * @var AppConfig User configuration
+   * @var AppConfig User configuration.
    */
   private $config = null;
   
+  /**
+   * @var array Default user configuration.
+   */
   private $defaultConfig = array();
 
   /**
-   * @var PathMap Paths
+   * @var PathMap Paths.
    */
   private $paths = null;
 
   /**
-   * @var string Web base path
+   * @var string Web base path.
    */
   private $basePath = '/';
   
   /**
-   * @var string Entry script name
+   * @var string Entry script name.
    */
   private $entryScript = 'index.php';
 
   /**
-   * @var string Application name
+   * @var string Application name.
    */
   private $name = 'Jivoo Application';
 
   /**
-   * @var string Application version
+   * @var string Application version.
    */
   private $version = '0.0.0';
 
   /**
-   * @var string Minimum PHP version
+   * @var string Minimum PHP version.
    */
   private $minPhpVersion = '5.2.0';
 
   /**
-   * @var string[] List of modules to load
+   * @var string[] List of modules to load.
    */
   private $modules = array('Jivoo/Core');
 
   /**
-   * @var string[] List of modules to import and load
+   * @var string[] List of modules to import and load.
    */
   private $import = array('Jivoo/Core');
   
+  /**
+   * @var string[] List of application listener names.
+   */
   private $listenerNames = array();
-  
-  private $listeners = array();
 
   /**
-   * @var Map Map of modules
+   * @var Map Map of modules.
    */
   private $m = null;
 
+  /**
+   * @var callback[][] Associative array mapping module names to a list of
+   * callbacks.
+   */
   private $waitingCalls = array();
   
   /**
-   * @var string Environment name
+   * @var string Environment name.
    */
   private $environment = 'production';
 
   /**
-   * @var string Application session prefix
+   * @var string Application session prefix.
    */
   private $sessionPrefix = 'jivoo_';
   
+  /**
+   * @var string[] Names of events produced by this object.
+   */
   private $events = array(
     'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
     'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit'
   );
   
+  /**
+   * @var EventManager Application event manager.
+   */
   private $e = null;
 
   /**
-   * Create application
-   * @param array $appConfig Associative array containing at least the 'path'-key
-   * @param string $userPath Path to user-directory
-   * @param string $entryScript Name of entry script, e.g. 'index.php'
-   * @throws Exception if $appconfig['path'] is not set
+   * Create application.
+   * @param string $appPath Path to app-directory containing at least an
+   * 'app.json' configuration file.
+   * @param string $userPath Path to user-directory.
+   * @param string $entryScript Name of entry script, e.g. 'index.php'.
+   * @throws Exception In application configuration is missing or invalid.
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $appPath = Utilities::convertPath($appPath);
@@ -157,9 +174,10 @@ class App implements IEventSubject {
   }
 
   /**
-   * Get value of property
-   * @param string $property Property name
-   * @return mixed Value
+   * Get value of a property.
+   * @param string $property Property name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property is not defined.
    */
   public function __get($property) {
     switch ($property) {
@@ -181,9 +199,10 @@ class App implements IEventSubject {
   }
 
   /**
-   * Set value of property
-   * @param string $property Property name
-   * @param mixed $value Value
+   * Set value of a property.
+   * @param string $property Property name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If property is not defined.
    */
   public function __set($property, $value) {
     switch ($property) {
@@ -194,48 +213,72 @@ class App implements IEventSubject {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function getEvents() {
     return $this->events;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function attachEventHandler($name, $callback) {
     $this->e->attachHandler($name, $callback);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function attachEventListener(IEventListener $listener) {
     $this->e->attachListener($listener);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function detachEventHandler($name, $callback) {
     $this->e->detachHandler($name, $callback);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function detachEventListener(IEventListener $listener) {
     $this->e->detachListener($listener);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasEvent($name) {
     return in_array($name, $this->events);
   }
-  
+
+  /**
+   * Trigger an event on this object.
+   * @param string $name Name of event.
+   * @param Event $event Event object.
+   * @return bool False if event was stopped, true otherwise.
+   */
   private function triggerEvent($name, Event $event = null) {
-    $this->e->trigger($name, $event);
+    return $this->e->trigger($name, $event);
   }
 
   /**
-   * Get the absolute path of a file
-   * @param string $key Location-identifier
-   * @param string $path File
-   * @return string Absolute path
+   * Get the absolute path of a file.
+   * @param string $key Location-identifier.
+   * @param string $path File.
+   * @return string Absolute path.
    */
   public function p($key, $path = '') {
     return $this->paths->$key . '/' . $path;
   }
 
   /**
-   * Get the absolute path of a file relative to the public directory
-   * @param string $path File
-   * @return string Path
+   * Get the absolute path of a file relative to the public directory.
+   * @param string $path File.
+   * @return string Path.
    */
   public function w($path = '') {
     if ($this->basePath == '/') {
@@ -244,6 +287,11 @@ class App implements IEventSubject {
     return $this->basePath . '/' . $path;
   }
   
+  /**
+   * Get a module, or load it if not yet loaded (must be imported however).
+   * @param string $name Name of module class.
+   * @return LoadableModule Module object.
+   */
   public function getModule($name) {
     if (!isset($this->m->$name)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
@@ -261,6 +309,11 @@ class App implements IEventSubject {
     return $this->m->$name;
   }
   
+  /**
+   * Load several modules.
+   * @param string[] $modules List of module names.
+   * @return Map A map of all loaded modules.
+   */
   public function getModules($modules) {
     foreach ($modules as $name) {
       $this->getModule($name);
@@ -268,10 +321,23 @@ class App implements IEventSubject {
     return $this->m;
   }
   
+  /**
+   * Whether or not a module has been loaded.
+   * @param string $name Module name.
+   * @return bool True if loaded, false otherwise.
+   */
   public function hasModule($name) {
     return isset($this->m->$name);
   }
 
+  /**
+   * Call a method in a module immediately if the module has been loaded, or
+   * whenever the module is loaded if it has not.
+   * @param string $module Module name.
+   * @param string $method Method name.
+   * @param mixed $parameters,.. Paremeters to method.
+   * @return mixed|null Returned value, or null if module not yet loaded.
+   */
   public function call($module, $method) {
     $args = func_get_args();
     $args = array_slice($args, 2);
@@ -283,6 +349,11 @@ class App implements IEventSubject {
     return null;
   }
   
+  /**
+   * Output an HTML crash report based on an exception. Can use a custom
+   * template stored in 'app/templates/error/exception.php'.
+   * @param Exception $exception Exception to report.
+   */
   public function crashReport(Exception $exception) {
     $app = $this->name;
     $version = $this->version;
@@ -301,8 +372,8 @@ class App implements IEventSubject {
   }
   
   /**
-   * Handler for uncaught exceptions
-   * @param Exception $exception The exception
+   * Handler for uncaught exceptions.
+   * @param Exception $exception The exception.
    */
   public function handleError(Exception $exception) {
     /** @todo attempt to create error report */
@@ -347,8 +418,10 @@ class App implements IEventSubject {
   }
 
   /**
-   * Run the application
-   * @param string $environment Configuration environment to use
+   * Run the application.
+   * @param string $environment Configuration environment to use, e.g.
+   * 'production' or 'development'. Environments are stored in
+   * 'app/config/environments'.
    */
   public function run($environment = 'production') {
     $this->environment = $environment;
@@ -454,5 +527,6 @@ class App implements IEventSubject {
 
 /**
  * Event sent before and after a module has been loaded
+ * @package Jivoo\Core
  */
 class LoadModuleEvent extends LoadEvent { }

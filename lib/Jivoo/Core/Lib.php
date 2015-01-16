@@ -1,10 +1,9 @@
 <?php
 /**
- * Library system
+ * Library system for importing directories and autoloading classes.
  * @package Jivoo\Core
  */
 class Lib {
-
   /**
    * @var array List of paths (strings) to look for classes
    */

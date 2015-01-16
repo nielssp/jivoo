@@ -1,15 +1,26 @@
 <?php
-
+/**
+ * Subclasses of this class can be loaded by {@see App}.
+ */
 abstract class LoadableModule extends Module {
-
+  /**
+   * Construct module.
+   * @param App $app Associated application.
+   */
   public final function __construct(App $app) {
     parent::__construct($app);
     $this->config = $this->config[get_class($this)];
     $this->init();
   }
 
+  /**
+   * Module initialization method.
+   */
   protected function init() { }
   
+  /**
+   * Called after the module has been loaded.
+   */
   public function afterLoad() { }
 
   /**
