@@ -1,27 +1,36 @@
 <?php
 /**
- * Collection of events and handlers
- * @package Core
+ * Collection of events and handlers.
+ * @package Jivoo\Core
  */
 class EventManager {
   /**
    * @var array Associative array where the key is an event name and the value
-   * is an array of callbacks
+   * is an array of callbacks.
    */
   private $events = array();
 
   /**
-   * @var IEventSubject The object that triggers events in this collection
+   * @var IEventSubject The object that triggers events in this collection.
   */
   private $subject = null;
   
+  /**
+   * @var string Subject class name.
+   */
   private $subjectClass = null;
   
+  /**
+   * @var EventManager|null A parent EventManager.
+   */
   private $parent = null;
 
   /**
-   * Create a new event collection
-   * @param IEventSubject $subject The object that triggers events in this collection
+   * Create a new event collection.
+   * @param IEventSubject $subject The object that triggers events in this collection.
+   * @param EventManager|null $parent Optional parent event manager, will receive
+   * the same events as child, but with class name of the subject prepended
+   * to the event name (separated by a dot).
    */
   public function __construct(IEventSubject $subject, EventManager $parent = null) {
     $this->subject = $subject;
@@ -29,12 +38,23 @@ class EventManager {
     $this->parent = $parent;
   }
   
+  /**
+   * Attach an event handler to an event.
+   * @param string $name Name of event to handle.
+   * @param callback $callback Function to call. Function must accept an
+   * {@see Event) as its first parameter.
+   */
   public function attachHandler($name, $callback) {
     if (!isset($this->events[$name]))
       $this->events[$name] = array();
     $this->events[$name][] = $callback;
   }
   
+  /**
+   * Attach an event listener to object (i.e. multiple handlers to multiple
+   * events).
+   * @param IEventListener $listener An event listener.
+   */
   public function attachListener(IEventListener $listener) {
     foreach ($listener->getEventHandlers() as $name => $method) {
       if (!is_string($name)) {
@@ -48,6 +68,11 @@ class EventManager {
     }
   }
   
+  /**
+   * Detach an already attached event handler.
+   * @param string $name Name of event.
+   * @param callback $callback Function to detach from event.
+   */
   public function detachHandler($name, $callback) {
     if (!isset($this->events[$name]))
       return false;
@@ -58,6 +83,10 @@ class EventManager {
     return true;
   }
   
+  /**
+   * Detach all handlers implemented by an event listener.
+   * @param IEventListener $listener An event listener.
+   */
   public function detachListener(IEventListener $listener) {
     foreach ($listener->getEventHandlers() as $name => $method) {
       if (!is_string($name)) {
@@ -72,10 +101,10 @@ class EventManager {
   }
 
   /**
-   * Execute all functions attached to an event
-   * @param string $event Event name
-   * @param Event $event Event object
-   * @return bool False if event was stopped, true otherwise
+   * Execute all functions attached to an event.
+   * @param string $event Event name.
+   * @param Event $event Event object.
+   * @return bool False if event was stopped, true otherwise.
    */
   public function trigger($name, Event $event = null) {
     if (!isset($event))
