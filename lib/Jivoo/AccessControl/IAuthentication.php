@@ -1,17 +1,35 @@
 <?php
-
+/**
+ * A method of authentication.
+ * @package Jivoo\AccessControl
+ */
 interface IAuthentication {
   /**
-   * 
-   * @param Request $request
-   * @param IUserModel $userModel
-   * @return ActiveRecord
+   * Attempt to authenticate a user.
+   * @param array $data Associative array of authentication data.
+   * @param IUserModel $userModel User model to use for authentication.
+   * @return ActiveRecord|null An authenticated user or null if authentication
+   * not possible.
    */
   public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher);
   
+  /**
+   * Deauthenticate a user.
+   * @param IRecord $user User record.
+   * @param IUserModel $userModel User model.
+   */
   public function deauthenticate(IRecord $user, IUserModel $userModel);
   
+  /**
+   * Whether or not a cookie (for long-lived sessions) should be created based
+   * on the most recent call to {@see authenticate}.
+   * @return bool True if a cookie should be created, false otherwise.
+   */
   public function cookie();
   
+  /**
+   * Whether or not this method of authentication is stateless.
+   * @return bool True if stateless, false otherwise.
+   */
   public function isStateLess();
 }

@@ -9,19 +9,27 @@ Lib::import('Jivoo/AccessControl/Acl');
  * @package Jivoo\AccessControl
  */
 class AccessControl extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Routing', 'Helpers', 'Models');
   
   /**
-   * @var string[] List of built-in hashing algorithms
+   * @var string[] List of built-in hashing algorithms.
    */
   private $builtIn = array(
     'Sha512Hasher', 'Sha256Hasher', 'BlowfishHasher',
     'Md5Hasher', 'ExtDesHasher', 'StdDesHasher'
   );
   
+  /**
+   * @var IPasswordHasher[] Associative array of named password hasshers.
+   */
   private $hashers = array();
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     foreach ($this->builtIn as $builtIn) {
       try {
@@ -35,10 +43,20 @@ class AccessControl extends LoadableModule {
     $this->hashers['Default'] = $this->hashers[$this->config['defaultHasher']];
   }
   
+  /**
+   * Add a password hasher.
+   * @param IPasswordHasher $hasher Password hasher.
+   */
   public function addPasswordHasher(IPasswordHasher $hasher) {
     $this->hashers[get_class($hasher)] = $hasher;
   }
   
+  /**
+   * Get a named password hasher.
+   * @param string $hasher Name of password hasher, or 'Default' for default
+   * password hasher.
+   * @return IPasswordHasher Password hasher.
+   */
   public function getPasswordHasher($hasher = 'Default') {
     return $this->hashers[$hasher];
   }

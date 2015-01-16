@@ -1,9 +1,24 @@
 <?php
+/**
+ * Default modifiable access control list. Permissions are independent of user.
+ * Can be used to dynamically set permissions in the controller. Default is
+ * to deny everything.
+ * @package Jivoo\AccessControl\Acl
+ */
 class DefaultAcl extends LoadableAcl {
-  
+  /**
+   * @var true|array Allowed permissions.
+   */
   private $allow = array();
+  
+  /**
+   * @var true|array Disallowed permissions.
+   */
   private $deny = true;
   
+  /**
+   * {@inheritdoc}
+   */
   public function hasPermission(IRecord $user = null, $permission) {
     if ($this->allow === true) {
       return !isset($this->deny[$permission]);
@@ -11,6 +26,11 @@ class DefaultAcl extends LoadableAcl {
     return isset($this->allow[$permission]);
   }
   
+  /**
+   * Allow a permission.
+   * @param string|null $permission Permission string. If null all permissions
+   * are allowed (unless denied using {@see deny}.
+   */
   public function allow($permission = null) {
     if (!isset($permission)) {
       $this->allow = true;
@@ -23,7 +43,12 @@ class DefaultAcl extends LoadableAcl {
       unset($this->deny[$permission]);
     }
   }
-  
+
+  /**
+   * Disallow a permission.
+   * @param string|null $permission Permission string. If null all permissions
+   * are disallowed (unless allowed using {@see allow}.
+   */
   public function deny($permission = null) {
     if (!isset($permission)) {
       $this->allow = array();

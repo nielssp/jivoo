@@ -1,18 +1,26 @@
 <?php
 /**
  * Controller for setting up root user
-* @package Jivoo\Authentication
+* @package Jivoo\AccessControl
 * @property-read HtmlHelper $Html Html helper
 * @property-read FormHelper $Form Form helper
-* $property-read ActiveModel $User User model
-* $property-read ActiveModel $Group Group model
+* @property-read ActiveModel $User User model
+* @property-read ActiveModel $Group Group model
 */
 class AuthSetupController extends SetupController {
-
+  /**
+   * @var {@inheritdoc}
+   */
   protected $modules = array('Databases', 'ActiveModels');
-  
+
+  /**
+   * @var {@inheritdoc}
+   */
   protected $helpers = array('Html', 'Form');
 
+  /**
+   * @var {@inheritdoc}
+   */
   protected $models = array('User', 'Group');
 
   /**

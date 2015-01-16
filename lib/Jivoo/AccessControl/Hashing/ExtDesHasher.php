@@ -1,7 +1,16 @@
 <?php
+/**
+ * A password hasher using extended DES.
+ * @package Jivoo\AccessControl\Hashing
+ */
 class ExtDesHasher extends CryptHasher {
   protected $constant = 'CRYPT_EXT_DES';
   protected $saltLength = 4;
+  
+  /**
+   * Construct extended DES password hasher.
+   * @param int $iterations Number of iterations used by algorithm.
+   */
   public function __construct($iterations = 751) {
     assume($iterations > 0 and $iterations <= 15752960);
     $bytes = array(

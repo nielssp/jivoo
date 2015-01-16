@@ -1,9 +1,26 @@
 <?php
+/**
+ * A loadable authorization module. Subclasses should use the prefix
+ * "Authorization".
+ * @package Jivoo\AccessControl
+ */
 abstract class LoadableAuthorization extends Module implements IAuthorization {
-  protected $options = array();
-  
+  /**
+   * @var AuthHelper Authentication and authorization helper.
+   */
   protected $Auth;
 
+  /**
+   * @var array Associative array of default options for module.
+   */
+  protected $options = array();
+  
+  /**
+   * Construct module.
+   * @param App $app Associated application.
+   * @param array $options Associative array of options for module.
+   * @param AuthHelper $Auth The authentication and authorization helper.
+   */
   public final function __construct(App $app, $options = array(), AuthHelper $Auth) {
     parent::__construct($app);
     $this->options = array_merge($this->options, $options);
