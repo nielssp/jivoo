@@ -1,4 +1,12 @@
 <?php
+/**
+ * A basic selection. Base class for other selections.
+ * @package Jivoo\Models\Selection
+ * @property-read array[] $orderBy List of arrays describing ordering.
+ * @property-read int|null $limit Row limit or null for no limit.
+ * @property-read Condition $where Select condition.
+ * @property-read Model $model Target of selection.
+ */
 abstract class BasicSelection implements IBasicSelection {
   /**
    * List of arrays describing ordering.
@@ -15,22 +23,23 @@ abstract class BasicSelection implements IBasicSelection {
   protected $orderBy = array();
 
   /**
-   * @var int|null Limit
+   * @var int|null Limit.
   */
   protected $limit = null;
 
   /**
-   * @var Condition Select condition
+   * @var Condition Select condition.
    */
   protected $where = null;
 
   /**
-   * @var Model
+   * @var Model.
    */
   protected $model = null;
 
   /**
-   * Constructor.
+   * Construct basic selection.
+   * @param Model $model Target of selection.
    */
   public function __construct(Model $model) {
     $this->where = new Condition();
@@ -38,9 +47,10 @@ abstract class BasicSelection implements IBasicSelection {
   }
 
   /**
-   * Get value of property
-   * @param string $property Property name
-   * @return mixed Value
+   * Get value of property.
+   * @param string $property Property name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property undefined.
    */
   public function __get($property) {
     if (isset($this->$property)) {
@@ -58,6 +68,9 @@ abstract class BasicSelection implements IBasicSelection {
     return isset($this->$property);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __call($method, $args) {
     switch ($method) {
       case 'and':
@@ -75,32 +88,42 @@ abstract class BasicSelection implements IBasicSelection {
 
 
   /**
-   * Limit number of affected rows
-   * @param int $limit Limit
-   * @return self Self
+   * {@inheritdoc}
    */
   public function limit($limit) {
     $this->limit = (int) $limit;
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasClauses() {
     return $this->where
     ->hasClauses();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function where($clause) {
     $args = func_get_args();
     call_user_func_array(array($this->where, 'where'), $args);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function andWhere($clause) {
     $args = func_get_args();
     call_user_func_array(array($this->where, 'andWhere'), $args);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function orWhere($clause) {
     $args = func_get_args();
     call_user_func_array(array($this->where, 'orWhere'), $args);
@@ -108,9 +131,7 @@ abstract class BasicSelection implements IBasicSelection {
   }
 
   /**
-   * Order by a column in ascending order
-   * @param string $column Column name
-   * @return self Self
+   * {@inheritdoc}
    */
   public function orderBy($column) {
     $this->orderBy[] = array('column' => $column, 'descending' => false);
@@ -118,9 +139,7 @@ abstract class BasicSelection implements IBasicSelection {
   }
 
   /**
-   * Order by a column in descending order
-   * @param string $column Column name
-   * @return self Self
+   * {@inheritdoc}
    */
   public function orderByDescending($column) {
     $this->orderBy[] = array('column' => $column, 'descending' => true);
@@ -128,8 +147,7 @@ abstract class BasicSelection implements IBasicSelection {
   }
 
   /**
-   * Reverse order of all orderBy's
-   * @return self Self
+   * {@inheritdoc}
    */
   public function reverseOrder() {
     foreach ($this->orderBy as $key => $orderBy) {
@@ -141,7 +159,7 @@ abstract class BasicSelection implements IBasicSelection {
   /**
    * Convert a basic selection to a full selection. Removes
    * all information specific to read/update/delete.
-   * @return Selection Selection
+   * @return Selection Selection.
    */
   public function toSelection() {
     $selection = new Selection($this->model);

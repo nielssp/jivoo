@@ -1,20 +1,64 @@
 <?php
+/**
+ * A file record.
+ * @package Jivoo\Models\File
+ * @property-read string $path File path.
+ * @property-read string $name File name.
+ * @property-read string $type Type. 'file' or 'directory'.
+ * @property-read int $size File size in bytes.
+ * @property-read int $modified Modification time.
+ * @property-read int $created Creation time.
+ */
 class FileRecord implements IBasicRecord {
+  /**
+   * @var FileModel Model.
+   */
   private $model;
   
+  /**
+   * @var string File path.
+   */
   private $path;
+  
+  /**
+   * @var string File name.
+   */
   private $name;
+  
+  /**
+   * @var string Type.
+   */
   private $type = 'file';
+  
+  /**
+   * @var int File size in bytes.
+   */
   private $size = null;
+  
+  /**
+   * @var int File modified time.
+   */
   private $modified = null;
+  
+  /**
+   * @var int File created time.
+   */
   private $created = null;
   
+  /**
+   * Construct file record.
+   * @param FileModel $model Model.
+   * @param string $path File path.
+   */
   public function __construct(FileModel $model, $path) {
     $this->model = $model;
     $this->path = $path;
     $this->name = basename($path);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __get($field) {
     switch ($field) {
       case 'path':
@@ -36,11 +80,17 @@ class FileRecord implements IBasicRecord {
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($field) {
     return $this->__get($field) !== null;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getData() {
     return array(
       'path' => $this->path,
@@ -51,30 +101,51 @@ class FileRecord implements IBasicRecord {
       'created' => $this->created
     );
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getModel() {
     return $this->model;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getErrors() {
     return array();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function isValid() {
     return true;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function offsetExists($field) {
     return $this->__isset($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetGet($field) {
     return $this->__get($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetSet($field, $value) {
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetUnset($field) {
   }
 }

@@ -1,8 +1,17 @@
 <?php
+/**
+ * The file model.
+ * @package Jivoo\Models\File
+ */
 class FileModel extends BasicModel {
-
+  /**
+   * @var FileModel Singleton instance.
+   */
   private static $instance = null;
 
+  /**
+   * Construct file model.
+   */
   public function __construct() {
     parent::__construct('File');
     $this->addField('path', tr('Path'), DataType::string());
@@ -13,6 +22,10 @@ class FileModel extends BasicModel {
     $this->addField('created', tr('Created'), DataType::dateTime());
   }
   
+  /**
+   * Get singleton instance.
+   * @return FileModel Instance.
+   */
   public static function getInstance() {
     if (!isset(self::$instance))
       self::$instance = new FileModel();

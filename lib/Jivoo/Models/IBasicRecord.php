@@ -1,36 +1,46 @@
 <?php
 /**
- * Contains data for a single record belonging to a model
+ * Contains data for a single record belonging to a model.
  * @package Jivoo\Models
  */
 interface IBasicRecord extends arrayaccess {
   /**
-   * Get value of a field
-   * @param string $field Field name
-   * @return mixed Value
-   * @throws InvalidPropertyException if the field does not exist
+   * Get value of a field.
+   * @param string $field Field name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If the field does not exist.
    */
   public function __get($field);
   
   /**
-   * Determine if a field is set
-   * @param string $field Field name
-   * @return bool True if not null, false otherwise
-   * @throws InvalidPropertyException if the field does not exist
+   * Determine if a field is set.
+   * @param string $field Field name.
+   * @return bool True if not null, false otherwise.
+   * @throws InvalidPropertyException If the field does not exist.
    */
   public function __isset($field);
   
   /**
-   * @return array Get all data as an associative array
+   * Get all data as an associative array.
+   * @return array Array of data.
    */
   public function getData();
 
-  /** @return IBasicModel Associated model */
+  /** 
+   * Get associated model.
+   * @return IBasicModel Associated model.
+   */
   public function getModel();
   
-  /** @return array[] Associative array of field names and errors */
+  /**
+   * Get associative array of field names and error messages. 
+   * @return string[] Associative array of field names and error messages.
+   */
   public function getErrors();
   
-  /** @return bool True if record is considered valid (i.e. no errors) */
+  /**
+   * Whether or not the record contains errors.
+   * @return bool True if record is considered valid (i.e. no errors).
+   */
   public function isValid();
 }

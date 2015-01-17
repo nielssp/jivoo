@@ -1,10 +1,18 @@
 <?php
+/**
+ * An update selection.
+ * @package Jivoo\Models\Selection
+ * @property-read array $sets An associative array of field names and values.
+ */
 class UpdateSelection extends BasicSelection implements IUpdateSelection {
   /**
    * @var array Associative array of field names and values
    */
   protected $sets = array();
 
+  /**
+   * {@inheritdoc}
+   */
   public function set($field, $value = null) {
     if (is_array($field)) {
       foreach ($field as $f => $val) {
@@ -23,6 +31,9 @@ class UpdateSelection extends BasicSelection implements IUpdateSelection {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function update() {
     $this->model->updateSelection($this);
   }

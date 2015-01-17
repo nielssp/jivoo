@@ -1,4 +1,11 @@
 <?php
+/**
+ * A read selection.
+ * @package Jivoo\Models\Selection
+ * @property-read int $offset Offset.
+ * @proeprty-read array[] $joins List of arrays describing joings.
+ * @property-read array[] $fields List of arrays describing fields.
+ */
 class ReadSelection extends BasicSelection implements IReadSelection {
 
   /**
@@ -37,19 +44,8 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   protected $fields = array();
 
   /**
-   * List of arrays describing other data sources.
-   *
-   * Each array is of the following format:
-   * <code>
-   * array(
-   *   'source' => ..., // Other data source ({@see IDatasource})
-   *   'alias' => ... // Alias to use for data source (string)
-   * )
-   * </code>
-   * @var array[]
-  */
-  protected $sources = array();
-
+   * {@inheritdoc}
+   */
   public function select($expression, $alias = null) {
     $this->fields = array();
     if (is_array($expression)) {
@@ -78,10 +74,9 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     $this->fields = array();
     return $result;
   }
+
   /**
-   * @param string|string[] $columns
-   * @param string $condition
-   * @return IReadSelection
+   * {@inheritdoc}
    */
   public function groupBy($columns, $condition = null) {
     if (!is_array($columns)) {
@@ -94,7 +89,9 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     return $this;
   }
 
-  // joins
+  /**
+   * {@inheritdoc}
+   */
   public function innerJoin(IModel $dataSource, $condition = null, $alias = null) {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
@@ -109,11 +106,7 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   }
 
   /**
-   * A left join
-   * @param IDataSource $dataSource Other data source to join with
-   * @param Condition|string $condition Join condition
-   * @param string $alias Alias to use for other data source in rest of query
-   * @return self Self
+   * {@inheritdoc}
    */
   public function leftJoin(IModel $dataSource, $condition, $alias = null) {
     if (!($condition instanceof Condition)) {
@@ -126,11 +119,7 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   }
 
   /**
-   * A right join
-   * @param IDataSource $dataSource Other data source to join with
-   * @param Condition|string $condition Join condition
-   * @param string $alias Alias to use for other data source in rest of query
-   * @return self Self
+   * {@inheritdoc}
    */
   public function rightJoin(IModel $dataSource, $condition, $alias = null) {
     if (!($condition instanceof Condition)) {
@@ -143,30 +132,38 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   }
 
   /**
-   * @return IRecord
+   * {@inheritdoc}
    */
   public function first() {
     return $this->model->firstSelection($this);
   }
 
   /**
-   * @return IRecord
+   * {@inheritdoc}
    */
   public function last() {
     return $this->model->lastSelection($this);
   }
 
   /**
-   * @return int
+   * {@inheritdoc}
    */
   public function count() {
     return $this->model->countSelection($this);
   }
   
-  public function rowNumber($record) {
+  /**
+   * Find row number of a record in selection.
+   * @param IRecord $record A record.
+   * @return int Row number.
+   */
+  public function rowNumber(IRecord $record) {
     return $this->model->rowNumberSelection($this, $record);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function toArray() {
     $array = array();
     foreach ($this as $record)
@@ -175,15 +172,16 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   }
 
   /**
-   * Set offset
-   * @param int $offset Offset
-   * @return IReadSelection Self
+   * {@inheritdoc}
    */
   public function offset($offset) {
     $this->offset = (int) $offset;
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function getIterator() {
     return $this->model->getIterator($this);
   }

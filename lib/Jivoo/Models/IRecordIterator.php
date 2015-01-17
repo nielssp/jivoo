@@ -1,6 +1,6 @@
 <?php
 /**
- * A record iterator
+ * A record iterator.
  * @package Jivoo\Models
  */
 interface IRecordIterator extends Iterator {

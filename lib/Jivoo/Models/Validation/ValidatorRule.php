@@ -1,23 +1,23 @@
 <?php
 /**
- * A custom validator rule
- * @package Jivoo\Models
- * @property string $message The error message for the rule
+ * A custom validator rule.
+ * @package Jivoo\Models\Validation
+ * @property string $message The error message for the rule.
  */
 class ValidatorRule {
   /**
-   * @var string Error message for rule
+   * @var string Error message for rule.
    */
   private $message = null;
   
   /**
-   * @var array Associative array of rule names and values
+   * @var array Associative array of rule names and values.
    */
   private $rules = array();
   
   /**
-   * Constructor.
-   * @param array $rules Associative array of validation rules for field
+   * Construct validator rule.
+   * @param array $rules Associative array of validation rules for field.
    */
   public function __construct($rules = array()) {
     $this->rules = $rules;
@@ -28,9 +28,9 @@ class ValidatorRule {
   }
 
   /**
-   * Get a single subrule
-   * @param string $rule Rule name
-   * @return mixed|ValidatorRule Rule value or a more complex rule
+   * Get a single subrule.
+   * @param string $rule Rule name.
+   * @return mixed|ValidatorRule Rule value or a more complex rule.
    */
   public function __get($rule) {
     if ($rule == 'message') {
@@ -40,9 +40,9 @@ class ValidatorRule {
   }
 
   /**
-   * Add/set a subrule
-   * @param string $rule Rule name
-   * @param mixed $value Rule value
+   * Add/set a subrule.
+   * @param string $rule Rule name.
+   * @param mixed $value Rule value.
    */
   public function __set($rule, $value) {
     if ($rule == 'message') {
@@ -52,42 +52,42 @@ class ValidatorRule {
   }
 
   /**
-   * Check whether or not a subrule exists
-   * @param string $rule Rule name
-   * @return bool True if it exists, false otherwise
+   * Check whether or not a subrule exists.
+   * @param string $rule Rule name.
+   * @return bool True if it exists, false otherwise.
    */
   public function __isset($rule) {
     return isset($this->rules[$rule]);
   }
 
   /**
-   * Remove a subrule
-   * @param string $rule Rule name
+   * Remove a subrule.
+   * @param string $rule Rule name.
    */
   public function __unset($rule) {
     $this->remove($rule);
   }
 
   /**
-   * Set error message for rule
-   * @param string $message Error message
+   * Set error message for rule.
+   * @param string $message Error message.
    */
   public function setMessage($message) {
     $this->message = $message;
   }
 
   /**
-   * Get error message for rule
-   * @return string Error message
+   * Get error message for rule.
+   * @return string Error message.
    */
   public function getMessage() {
     return $this->message;
   }
 
   /**
-   * Get a single subrule
-   * @param string $rule Rule name
-   * @return mixed|ValidatorRule Rule value or a more complex rule
+   * Get a single subrule.
+   * @param string $rule Rule name.
+   * @return mixed|ValidatorRule Rule value or a more complex rule.
    */
   public function get($rule) {
     if (!isset($this->rules[$rule])) {
@@ -97,9 +97,10 @@ class ValidatorRule {
   }
 
   /**
-   * Add/set a subrule
-   * @param string $rule Rule name
-   * @param mixed $value Rule value
+   * Add/set a subrule.
+   * @param string $rule Rule name.
+   * @param mixed $value Rule value.
+   * @return self Self.
    */
   public function add($rule, $value = true) {
     $this->rules[$rule] = $value;
@@ -107,8 +108,8 @@ class ValidatorRule {
   }
 
   /**
-   * Remove a subrule
-   * @param string $rule Rule name
+   * Remove a subrule.
+   * @param string $rule Rule name.
    */
   public function remove($rule) {
     if (isset($this->rules[$rule])) {
@@ -124,6 +125,12 @@ class ValidatorRule {
     return $this->rules;
   }
 
+  /**
+   * Validate a record field using this rule.
+   * @param IRecord $record A record.
+   * @param string $field Field name.
+   * @return true|string True if valid, otherwise return an error message.
+   */
   public function validate(IRecord $record, $field) {
     foreach ($this->rules as $name => $rule) {
       $result = Validator::validateRule($record, $field, $name, $rule);

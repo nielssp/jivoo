@@ -1,21 +1,24 @@
 <?php
 /**
- * A validator
- * @package Jivoo\Models
+ * A record validator.
+ * @package Jivoo\Models\Validation
  * @TODO Some information about $validator-array and use of validators here
  */
-class Validator {
+class Validator implements IValidator {
   /**
-   * @var array Associative array of field names and ValidatorField objects
+   * @var ValidatorField[] Associative array of field names and ValidatorField objects
    */
   private $fields = array();
 
+  /**
+   * @var IBasicModel Model.
+   */
   private $model;
 
   /**
-   * Constructor
-   * @param IBasicModel $model Associated model
-   * @param array $fields Associative array of field-names and rules
+   * Construct validator.
+   * @param IBasicModel $model Associated model.
+   * @param array $fields Associative array of field-names and rules.
    */
   public function __construct(IBasicModel $model, $fields = array()) {
     $this->model = $model;
@@ -25,35 +28,35 @@ class Validator {
   }
 
   /**
-   * Get a field or create it if it doesn't exist
-   * @param string $field Field name
-   * @return ValidatorField A validator field
+   * Get a field or create it if it doesn't exist.
+   * @param string $field Field name.
+   * @return ValidatorField A validator field.
    */
   public function __get($field) {
     return $this->get($field);
   }
 
   /**
-   * Check whether or not a field is set
-   * @param string $field Field name
-   * @return bool True if set, false otherwise
+   * Check whether or not a field is set.
+   * @param string $field Field name.
+   * @return bool True if set, false otherwise.
    */
   public function __isset($field) {
     return isset($this->fields[$field]);
   }
 
   /**
-   * Remove a validator field
-   * @param string $field Field name
+   * Remove a validator field.
+   * @param string $field Field name.
    */
   public function __unset($field) {
     $this->remove($field);
   }
 
   /**
-   * Get a field or create it if it doesn't exist
-   * @param string $field Field name
-   * @return ValidatorField A validator field
+   * Get a field or create it if it doesn't exist.
+   * @param string $field Field name.
+   * @return ValidatorField A validator field.
    */
   public function get($field) {
     if (!isset($this->fields[$field])) {
@@ -63,8 +66,8 @@ class Validator {
   }
 
   /**
-   * Remove a validator field
-   * @param string $field Field name
+   * Remove a validator field.
+   * @param string $field Field name.
    */
   public function remove($field) {
     if (isset($this->fields[$field])) {
@@ -73,20 +76,28 @@ class Validator {
   }
 
   /**
-   * Get array of all fields
+   * Get array of all fields.
    * @return array Associative array of field names and {@see ValidatorField}
-   * objects
+   * objects.
    */
   public function getFields() {
     return $this->fields;
   }
 
+  /**
+   * Whether or not field is required.
+   * @param string $field Field name.
+   * @return boolean True if required, false if optional.
+   */
   public function isRequired($field) {
     if (!isset($this->fields[$field]))
       return false;
     return $this->fields[$field]->isRequired();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function validate(IRecord $record) {
     $result = array();
     foreach ($this->fields as $field => $validator) {
@@ -97,6 +108,14 @@ class Validator {
     return $result;
   }
 
+  /**
+   * Validate a rule on a record.
+   * @param IRecord $record A record.
+   * @param string $field Field name.
+   * @param string $ruleName Name of rule.
+   * @param mixed $rule Value of rule.
+   * @return true|string True if valid, otherwise returns an error message.
+   */
   public static function validateRule(IRecord $record, $field, $ruleName, $rule) {
     if ($rule instanceof ValidatorRule) {
       return $rule->validate($record, $field);

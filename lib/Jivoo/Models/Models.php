@@ -1,21 +1,16 @@
 <?php
-// Module
-// Name           : Models
-// Description    : Jivoo model system
-// Author         : apakoh.dk
-
 Lib::import('Jivoo/Models/Validation');
 Lib::import('Jivoo/Models/Selection');
 Lib::import('Jivoo/Models/Condition');
 Lib::import('Jivoo/Models/File');
 
 /**
- * Models module, finds all models in application
+ * Models module, finds all models in application.
  * @package Jivoo\Models
  */
 class Models extends LoadableModule {
   
-    /**
+   /**
    * @var string[] List of model class names
    */
   private $modelClasses = array();
@@ -24,7 +19,10 @@ class Models extends LoadableModule {
    * @var array Associative array of model names and objects
    */
   private $modelObjects = array();
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $modelsDir = $this->p('app', 'models');
     if (is_dir($modelsDir)) {
@@ -100,28 +98,45 @@ class Models extends LoadableModule {
     return null;
   }
   
+  /**
+   * Get several models.
+   * @param string[] $names List of model names.
+   * @return IModel[] List of model objects.
+   */
   public function getModels($names) {
     $models = array();
     foreach ($names as $name)
       $models[$name] = $this->getModel($name);
     return $models;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __get($name) {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
     throw new ModelNotfoundException(tr('Model "%1" not found', $name));
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __set($name, $model) {
     $this->setModel($name, $model);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($name) {
     return isset($this->modelObjects[$name]);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __unset($name) {
     unset($this->modelObjects[$name]);
   }

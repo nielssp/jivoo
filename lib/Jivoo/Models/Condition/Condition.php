@@ -1,8 +1,8 @@
 <?php
 /**
- * A condition for selecting rows in a database table
- * @package Jivoo\Database
- * @property-read array[] A list of clauses in the form of arrays of the format
+ * A condition for selecting records in a model.
+ * @package Jivoo\Models\Condition
+ * @property-read array[] $clauses A list of clauses in the form of arrays of the format
  * array('glue' => ..., 'clause' => ..., 'vars' => array(...)) where the glue
  * is either 'AND' or 'OR'. 
  */
@@ -13,10 +13,10 @@ class Condition implements ICondition {
   private $clauses = array();
 
   /**
-   * Constructor
-   * @param ICondition|string $clause
-   * @param mixed $vars,... Additional values to replace question marks in
-   * $clause with
+   * Construct condition. The function {@see where} is an alias.
+   * @param ICondition|string $clause Clause.
+   * @param mixed $vars,... Additional values to replace placeholders in
+   * $clause with.
    */
   public function __construct($clause = null) {
     if (isset($clause) AND !empty($clause)) {
@@ -26,8 +26,9 @@ class Condition implements ICondition {
   }
 
   /**
-   * Get value of property
-   * @param string $property Property name
+   * Get value of property.
+   * @param string $property Property name.
+   * @throws InvalidPropertyException If property undefined.
    */
   public function __get($property) {
     if (isset($this->$property)) {
@@ -36,6 +37,9 @@ class Condition implements ICondition {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __call($method, $args) {
     switch ($method) {
       case 'and':
@@ -58,7 +62,7 @@ class Condition implements ICondition {
   /**
    * Create condition, can be used instead of constructor for chaining purposes
    * @param ICondition|string $clause
-   * @param mixed $vars,... Additional values to replace question marks in
+   * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
    * @return Condition A new condition
    */
@@ -69,15 +73,24 @@ class Condition implements ICondition {
     return $obj;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasClauses() {
     return count($this->clauses) > 0;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function where($clause) {
     $args = func_get_args();
     return call_user_func_array(array($this, 'andWhere'), $args);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function andWhere($clause) {
     if (empty($clause)) {
       return $this;
@@ -90,6 +103,9 @@ class Condition implements ICondition {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function orWhere($clause) {
     if (empty($clause)) {
       return $this;
@@ -102,11 +118,21 @@ class Condition implements ICondition {
     return $this;
   }
 
+  /**
+   * Add value of placeholder.
+   * @param mixed $var Value.
+   * @return self Self.
+   */
   public function addVar($var) {
     $this->clauses[count($this->clauses) - 1]['vars'][] = $var;
     return $this;
   }
 
+  /**
+   * Escape string for use with the SQL LIKE operator.
+   * @param string $string String.
+   * @return string Escaped string.
+   */
   public static function escapeLike($string) {
     return str_replace(
       array('%', '_'),

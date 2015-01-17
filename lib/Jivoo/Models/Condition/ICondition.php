@@ -1,7 +1,7 @@
 <?php
 /**
  * A condition for selecting rows in a database table
- * @package Jivoo\Database
+ * @package Jivoo\Models\Condition
  * @method ICondition and(Condition|string $clause, mixed $vars,... ) AND operator
  * @method ICondition or(Condition|string $clause, mixed $vars,... ) OR operator
  */
@@ -22,7 +22,7 @@ interface ICondition {
   /**
    * Add clause with AND operator
    * @param Condition|string $clause Clause
-   * @param mixed $vars,... Additional values to replace question marks in
+   * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
    * @return ICondition Self
    */
@@ -31,7 +31,7 @@ interface ICondition {
   /**
    * Add clause with AND operator
    * @param Condition|string $clause Clause
-   * @param mixed $vars,... Additional values to replace question marks in
+   * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
    * @return ICondition Self
    */
@@ -40,7 +40,7 @@ interface ICondition {
   /**
    * Add clause with OR operator
    * @param Condition|string $clause Clause
-   * @param mixed $vars,... Additional values to replace question marks in
+   * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
    * @return ICondition Self
    */

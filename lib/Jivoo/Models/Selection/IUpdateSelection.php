@@ -1,4 +1,8 @@
 <?php
+/**
+ * An update selection.
+ * @package Jivoo\Models\Selection
+ */
 interface IUpdateSelection extends IBasicSelection {
   /**
    * Assign value to field. If $field is an associative array, then multiple
@@ -7,12 +11,13 @@ interface IUpdateSelection extends IBasicSelection {
    * @param string|array $field Field name or associative array of field names
    * and values
    * @param string $value Value
-   * @return self Self
-  */
+   * @return IUpdateSelection An update selection.
+   */
   public function set($field, $value = null);
 
   /**
-   * @return int Number of updated records
-  */
+   * Execute updates.
+   * @return int Number of updated records.
+   */
   public function update();
 }

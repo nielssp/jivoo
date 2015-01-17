@@ -1,39 +1,41 @@
 <?php
 /**
- * A generic form
+ * A generic form.
  * @TODO rename: FormBuilder ??
  * @package Jivoo\Models
  */
 class Form implements IBasicRecord, IBasicModel {
   
   /**
-   * @var array Associative array of data
+   * @var array Associative array of data.
    */
   private $data = array();
   
   /**
-   * @var array Associative array of field names and error messages
+   * @var string[] Associative array of field names and error messages.
    */
   private $errors = array();
 
   /**
-   * @var string Form name
+   * @var string Form name.
    */
   private $name;
   
   /**
-   * @var Associative array of field names and information (label, type and
-   * required)
+   * @var array Associative array of field names and information (label, type and
+   * required).
    */
   private $fields = array();
 
-  
+  /**
+   * @var Validator Validator.
+   */
   private $validator;
 
   /**
-   * Constructor.
-   * @param string $name Form name
-   * @param array $data Associative array of data
+   * Construct form.
+   * @param string $name Form name.
+   * @param array $data Associative array of data.
    */
   public function __construct($name, $data = array()) {
     $this->name = $name;
@@ -43,12 +45,17 @@ class Form implements IBasicRecord, IBasicModel {
     $this->validator = new Validator($this);
   }
 
+  /**
+   * Get form validator.
+   * @return Validator Validator.
+   */
   public function getValidator() {
     return $this->validator;
   }
 
-  /* IRecord implementation */
-
+  /**
+   * {@inheritdoc}
+   */
   public function __get($field) {
     if (isset($this->data[$field])) {
       return $this->data[$field];
@@ -56,16 +63,25 @@ class Form implements IBasicRecord, IBasicModel {
     return null;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __set($field, $value) {
     if (isset($this->fields[$field])) {
       $this->data[$field] = $value;
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($field) {
     return isset($this->data[$field]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addData($data, $allowedFields = null) {
     if (is_array($allowedFields)) {
       $allowedFields = array_flip($allowedFields);
@@ -77,18 +93,24 @@ class Form implements IBasicRecord, IBasicModel {
       }
     }
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getData() {
     return $this->data;
   }
-  
+
   /**
-   * @return Form Model
+   * {@inheritdoc}
    */
   public function getModel() {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isValid() {
     foreach ($this->fields as $field => $options) {
       if ($options['required'] AND empty($this->data[$field])
@@ -99,24 +121,21 @@ class Form implements IBasicRecord, IBasicModel {
     return count($this->errors) == 0;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getErrors() {
     return $this->errors;
   }
 
-  public function encode($field, $options = array()) {
-    if (isset($this->data[$field])) {
-      return h($this->data[$field]);
-    }
-  }
-
   /**
-   * Add a field to form
-   * @param string $field Field name
-   * @param string $type Type of field, e.g. 'string', 'text', 'date', 'hidden'
-   * @param string $label Field label, if not set the field name will be used
-   * @param bool $required Whether or not the field is required
+   * Add a field to form.
+   * @param string $field Field name.
+   * @param DataType $type Type of field.
+   * @param string $label Field label, if not set the field name will be used.
+   * @param bool $required Whether or not the field is required.
    */
-  public function addField($field, $type = 'string', $label = null,
+  public function addField($field, $type, $label = null,
                            $required = true) {
     if (!isset($label)) {
       $label = tr(ucfirst($field));
@@ -127,29 +146,29 @@ class Form implements IBasicRecord, IBasicModel {
   }
 
   /**
-   * Add a string field to form
-   * @param string $field Field name
-   * @param string $label Field label, if not set the field name will be used
-   * @param bool $required Whether or not the field is required
+   * Add a string field to form.
+   * @param string $field Field name.
+   * @param string $label Field label, if not set the field name will be used.
+   * @param bool $required Whether or not the field is required.
    */
   public function addString($field, $label = null, $required = true) {
     $this->addField($field, 'string', $label, $required);
   }
 
   /**
-   * Add a text field to form
-   * @param string $field Field name
-   * @param string $label Field label, if not set the field name will be used
-   * @param bool $required Whether or not the field is required
+   * Add a text field to form.
+   * @param string $field Field name.
+   * @param string $label Field label, if not set the field name will be used.
+   * @param bool $required Whether or not the field is required.
    */
   public function addText($field, $label = null, $required = true) {
     $this->addField($field, 'text', $label, $required);
   }
   
   /**
-   * Add an error
-   * @param string $field Field name
-   * @param string $errorMsg Error message
+   * Add an error.
+   * @param string $field Field name.
+   * @param string $errorMsg Error message.
    */
   public function addError($field, $errorMsg) {
     $this->errors[$field] = $errorMsg;
@@ -158,7 +177,8 @@ class Form implements IBasicRecord, IBasicModel {
   /* IModel implementation */
 
   /**
-   * @return Form New form from this model
+   * Create a new form using same fields as this one.
+   * @return Form New form from this model.
    */
   public function create($data = array(), $allowedFields = null) {
     if (is_array($allowedFields)) {
@@ -168,52 +188,78 @@ class Form implements IBasicRecord, IBasicModel {
     return new Form($this, $data);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return $this->name;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFields() {
     return array_keys($this->fields);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getType($field) {
     if (isset($this->fields[$field])) {
       return $this->fields[$field]['type'];
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getLabel($field) {
     if (isset($this->fields[$field])) {
       return $this->fields[$field]['label'];
     }
   }
 
-  public function getEditor($field) {
-    return null;
-  }
-
+  /**
+   * {@inheritdoc}
+   */
   public function isRequired($field) {
     if (isset($this->fields[$field])) {
       return $this->fields[$field]['required'];
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasField($field) {
     return isset($this->fields[$field]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetExists($field) {
     return $this->__isset($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetGet($field) {
     return $this->__get($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetSet($field, $value) {
     $this->__set($field, $value);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetUnset($field) {
     $this->__unset($field);
   }

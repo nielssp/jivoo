@@ -1,71 +1,73 @@
 <?php
 /**
- * Model field data type
- * @property-read int $type Type (see type constants)
- * @property-read boolean $null Whether or not type is nullable
- * @property-read boolean $notNull Opposite of null
- * @property-read mixed $default Default value
- * @property-read int $length Length (strings only)
- * @property-read int $size Size: BIG, SMALL, TINY or 0 (integers only)
- * @property-read boolean $signed Signed (integers only)
- * @property-read boolean $unsigned Opposite of signed (integers only)
- * @property-read boolean $autoIncrement Auto increment (integers only)
+ * Model field data type.
+ * @property-read int $type Type (see type constants).
+ * @property-read bool $null Whether or not type is nullable.
+ * @property-read bool $notNull Opposite of null.
+ * @property-read mixed $default Default value.
+ * @property-read int $length Length (strings only).
+ * @property-read int $size Size: BIG, SMALL, TINY or 0 (integers only).
+ * @property-read bool $signed Signed (integers only).
+ * @property-read bool $unsigned Opposite of signed (integers only).
+ * @property-read bool $autoIncrement Auto increment (integers only).
+ * @property-read string $placeholder Placeholder of data type.
  * @package Jivoo\Models
  */
 class DataType {
-  /** @var int Type: Integer */
+  /** @var int Type: Integer. */
   const INTEGER = 1;
-  /** @var int Type: String (length <= 255) */
+  /** @var int Type: String (length <= 255). */
   const STRING = 2;
-  /** @var int Type: Text */
+  /** @var int Type: Text. */
   const TEXT = 3;
-  /** @var int Type: Boolean*/
+  /** @var int Type: Boolean. */
   const BOOLEAN = 4;
-  /** @var int Type: Float */
+  /** @var int Type: Float. */
   const FLOAT = 5;
-  /** @var int Type: Date */
+  /** @var int Type: Date. */
   const DATE = 6;
-  /** @var int Type: Date/time */
+  /** @var int Type: Date/time. */
   const DATETIME = 7;
-  /** @var int Type: Binary object */
+  /** @var int Type: Binary object. */
   const BINARY = 8;
-  /** @var int Type: Enumerated type */
+  /** @var int Type: Enumerated type. */
   const ENUM = 0;
 
-  /** @var int Flag: Unsigned (integers only) */
+  /** @var int Flag: Unsigned (integers only). */
   const UNSIGNED = 0x02;
-  /** @var int Flag: Auto increment (integers only) */
+  /** @var int Flag: Auto increment (integers only). */
   const AUTO_INCREMENT = 0x04;
-  /** @var int Flag: Tiny integer (8 bit) (integers only) */
+  /** @var int Flag: Tiny integer (8 bit) (integers only). */
   const TINY = 0x10;
-  /** @var int Flag: Small integer (16 bit) (integers only) */
+  /** @var int Flag: Small integer (16 bit) (integers only). */
   const SMALL = 0x20;
-  /** @var int Flag: Big integer (64 bit) (integers only) */
+  /** @var int Flag: Big integer (64 bit) (integers only). */
   const BIG = 0x30;
   
-  /** @var int Type */
+  /** @var int Type. */
   private $type;
-  /** @var boolean Null */
+  /** @var bool Null. */
   private $null = false;
-  /** @var int String length */
+  /** @var int String length. */
   private $length = null;
-  /** @var boolean Signed */
+  /** @var bool Signed. */
   private $signed = true;
-  /** @var boolean Auto increment */
+  /** @var bool Auto increment. */
   private $autoIncrement = false;
-  /** @var mixed Default value */
+  /** @var mixed Default value. */
   private $default = null;
-  /** @var int Integer size */
+  /** @var int Integer size. */
   private $size = null;
   
   /**
-   * Constructor
-   * @param int $type Type
-   * @param int $flags Flags
-   * @param int|null $length String length
-   * @param mixed Default value
+   * Construct data type.
+   * @param int $type Type.
+   * @param bool $null Null.
+   * @param mixed $default Default value.
+   * @param int $flags Integer flags.
+   * @param int|null $length String length.
    */
-  protected function __construct($type, $null = false, $default = null, $flags = 0, $length = null, $values = null) {
+  protected function __construct($type, $null = false, $default = null, $flags = 0, $length = null) {
     if ($type < 0 or $type > 8)
       throw new InvalidDataTypeException(tr('%1 is not a valid type'), $type);
     $this->type = $type;
@@ -83,6 +85,7 @@ class DataType {
    * Get property value
    * @param string $property Property name
    * @return mixed Property value
+   * @throws InvalidPropertyException If property undefined.
    */
   public function __get($property) {
     switch ($property) {
@@ -122,60 +125,73 @@ class DataType {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
+  /**
+   * Whether or not a property is set.
+   * @param string $property Property name.
+   * @return bool True if set.
+   */
   public function __isset($property) {
     return $this->$property !== null;
   }
 
+  /**
+   * Create string representation of data type.
+   * @return string String.
+   */
   public function __toString() {
     switch ($this->type) {
     }
   }
 
-  /** @return Whether or not the type is integer */
+  /** @return bool Whether or not the type is integer */
   public function isInteger() {
     return $this->type == self::INTEGER;
   }
 
-  /** @return Whether or not the type is string */
+  /** @return bool Whether or not the type is string */
   public function isString() {
     return $this->type == self::STRING;
   }
 
-  /** @return Whether or not the type is text */
+  /** @return bool Whether or not the type is text */
   public function isText() {
     return $this->type == self::TEXT;
   }
 
-  /** @return Whether or not the type is boolean */
+  /** @return bool Whether or not the type is boolean */
   public function isBoolean() {
     return $this->type == self::BOOLEAN;
   }
 
-  /** @return Whether or not the type is float */
+  /** @return bool Whether or not the type is float */
   public function isFloat() {
     return $this->type == self::FLOAT;
   }
 
-  /** @return Whether or not the type is date */
+  /** @return bool Whether or not the type is date */
   public function isDate() {
     return $this->type == self::DATE;
   }
 
-  /** @return Whether or not the type is date/time */
+  /** @return bool Whether or not the type is date/time */
   public function isDateTime() {
     return $this->type == self::DATETIME;
   }
 
-  /** @return Whether or not the type is binary */
+  /** @return bool Whether or not the type is binary */
   public function isBinary() {
     return $this->type == self::BINARY;
   }
 
-  /** @return Whether or not the type is enum */
+  /** @return bool Whether or not the type is enum */
   public function isEnum() {
     return $this->type == self::ENUM;
   }
 
+  /**
+   * Create validation rules for data type.
+   * @param ValidatorField $validator A validator field.
+   */
   public function createValidationRules(ValidatorField $validator) {
     $validator = $validator->ruleDataType;
     if (!$this->null && $this->type != self::INTEGER && !$this->autoIncrement)
@@ -238,9 +254,9 @@ class DataType {
   }
 
   /**
-   * Check if value is of this type
-   * @param mixed $value Value to test
-   * @return boolean True if it is, false otherwise
+   * Check if value is of this type.
+   * @param mixed $value Value to test.
+   * @return bool True if it is, false otherwise.
    */
   public function isValid($value) {
     if ($this->null and $value == null)
@@ -291,6 +307,11 @@ class DataType {
     return false;
   }
   
+  /**
+   * Convert a value to this data type.
+   * @param mixed $value Value.
+   * @return mixed A value depending on this data type.
+   */
   public function convert($value) {
     //if ($this->null and $value == null)
     if ($value === null)
@@ -318,99 +339,104 @@ class DataType {
   }
   
   /**
-   * Create integer type
-   * @param int $flags Combination of: UNSIGNED, AUTO_INCREMENT, BIG, SMALL, TINY
-   * @param boolean $null Whether or not type is nullable
-   * @param int|null $default Default value
-   * @return DataType Type object
+   * Create integer type.
+   * @param int $flags Combination of: UNSIGNED, AUTO_INCREMENT, BIG, SMALL, TINY.
+   * @param bool $null Whether or not type is nullable.
+   * @param int|null $default Default value.
+   * @return DataType Type object.
    */
   public static function integer($flags = 0, $null = false, $default = null) {
     return new self(self::INTEGER, $null, $default, $flags);
   }
   
   /**
-   * Create string type
-   * @param int $length String maximum length (0 to 255)
-   * @param boolean $null Whether or not type is nullable
-   * @param string $default Default value
-   * @return DataType Type object
+   * Create string type.
+   * @param int $length String maximum length (0 to 255).
+   * @param bool $null Whether or not type is nullable.
+   * @param string $default Default value.
+   * @return DataType Type object.
    */
   public static function string($length = 255, $null = false, $default = null) {
     return new self(self::STRING, $null, $default, 0, $length);
   }
   
   /**
-   * Create text type
-   * @param boolean $null Whether or not type is nullable
-   * @param string $default Default value
-   * @return DataType Type object
+   * Create text type.
+   * @param bool $null Whether or not type is nullable.
+   * @param string $default Default value.
+   * @return DataType Type object.
    */
   public static function text($null = false, $default = null) {
     return new self(self::TEXT, $null, $default);
   }
   
   /**
-   * Create boolean type
-   * @param boolean $null whether or not type is nullable
-   * @param boolean $default default value
-   * @return datatype type object
+   * Create boolean type.
+   * @param bool $null Whether or not type is nullable.
+   * @param bool $default Default value.
+   * @return DataType Type object.
    */
   public static function boolean($null = false, $default = null) {
     return new self(self::BOOLEAN, $null, $default);
   }
   
   /**
-   * Create float type
-   * @param boolean $null whether or not type is nullable
-   * @param float $default default value
-   * @return datatype type object
+   * Create float type.
+   * @param bool $null Whether or not type is nullable.
+   * @param float $default Default value.
+   * @return DataType Type object.
    */
   public static function float($null = false, $default = null) {
     return new self(self::FLOAT, $null, $default);
   }
 
   /**
-   * Create date type
-   * @param boolean $null whether or not type is nullable
-   * @param int $default default value (unix timestamp)
-   * @return datatype type object
+   * Create date type.
+   * @param bool $null Whether or not type is nullable.
+   * @param int $default Default value (unix timestamp).
+   * @return DataType Type object.
    */
   public static function date($null = false, $default = null) {
     return new self(self::DATE, $null, $default);
   }
   
   /**
-   * Create date/time type
-   * @param boolean $null whether or not type is nullable
-   * @param int $default default value (unix timestamp)
-   * @return datatype type object
+   * Create date/time type.
+   * @param bool $null Whether or not type is nullable.
+   * @param int $default Default value (unix timestamp).
+   * @return DataType Type object.
    */
   public static function dateTime($null = false, $default = null) {
     return new self(self::DATETIME, $null, $default);
   }
   
   /**
-   * Create binary object type
-   * @param boolean $null whether or not type is nullable
-   * @param string $default default value
-   * @return datatype type object
+   * Create binary object type.
+   * @param bool $null Whether or not type is nullable.
+   * @param string $default Default value.
+   * @return DataType Type object.
    */
   public static function binary($null = false, $default = null) {
     return new self(self::BINARY, $null, $default);
   }
   
   /**
-   * Create enumerated data type
+   * Create enumerated data type.
    * @param string[]|string $valuesOrClass Enum values as strings. Keys must be integers.
    * Or the name of a class extending {@see Enum}.
-   * @param boolean $null whether or not type is nullable
-   * @param int $default default value
-   * @return DataType
+   * @param bool $null Whether or not type is nullable.
+   * @param int $default Default value.
+   * @return DataType Type object.
    */
   public static function enum($valuesOrClass, $null = false, $default = null) {
     return new EnumDataType($valuesOrClass, $null, $default);
   }
   
+  /**
+   * Return data type corresponding to value.
+   * @param mixed $value Value.
+   * @return DataType Type of value.
+   */
   public static function detectType($value) {
     if (is_bool($value))
       return self::boolean();
@@ -421,6 +447,11 @@ class DataType {
     return self::text();
   }
   
+  /**
+   * Create data type from a placeholder.
+   * @param string $placeholder Placeholder string.
+   * @return DataType Type object.
+   */
   public static function fromPlaceholder($placeholder) {
     if (Lib::classExists($placeholder))
       return self::enum($placeholder);
