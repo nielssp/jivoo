@@ -1,16 +1,39 @@
 <?php
+/**
+ * Theming module.
+ * @package Jivoo\Themes
+ */
 class Themes extends LoadableModule {
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Extensions', 'View', 'Assets');
   
+  /**
+   * @var ThemeInfo[] Associative array of theme names and theme information.
+   */
   private $info = array();
   
+  /**
+   * @var string[] Where to look for themes (path keys).
+   */
   private $libraries = array('app', 'share');
   
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->m->Extensions->addKind('themes', 'theme');
     $this->load($this->zone('main'));
   }
   
+  /**
+   * Get the name of a theme associated with the given zone.
+   * @param string $zone Zone name, e.g. "frontend", "admin", etc.
+   * @throws ThemeNotFoundException If no theme could be found for the
+   * sepcified zone.
+   * @return AppConfig
+   */
   public function zone($zone) {
     if (!isset($this->config[$zone])) {
       $themes = $this->listAllThemes();
@@ -26,6 +49,12 @@ class Themes extends LoadableModule {
     return $this->config[$zone];
   }
 
+  /**
+   * Get information about a theme.
+   * @param string $theme Theme name.
+   * @return ThemeInfo|null Theme information or null if theme not found or
+   * invalid. Will produce a warning if the JSON file is invalid.
+   */
   public function getInfo($theme) {
     if (!isset($this->info[$theme])) {
       $dir = $this->p('themes', $theme);
@@ -49,10 +78,24 @@ class Themes extends LoadableModule {
     return $this->info[$theme];
   }
   
+  /**
+   * Check dependencies for a theme.
+   * @param ThemeInfo $info Theme information.
+   * @return true|array Returns true if no dependencies are missing, otherwise
+   * returns an associative array structure listing missing dependencies of
+   * different categories,s ee {@see Extensions::checkDependencies()}.
+   */
   public function checkDependencies(ThemeInfo $info) {
     return $this->m->Extensions->checkDependencies($info);
   }
   
+  /**
+   * Load the templates and assets of a theme.
+   * @param string $theme Theme name.
+   * @param int $priority Priority of templates, if the theme has one or more
+   * parent themes, those themes will be loaded with a lower priority.
+   * @throws ThemeNotFoundException If the theme was not found or invalid.
+   */
   public function load($theme, $priority = 10) {
     $info = $this->getInfo($theme);
     if (!isset($info))
@@ -67,6 +110,10 @@ class Themes extends LoadableModule {
     $info->addAssetDir($this->m->Assets, 'assets');
   }
   
+  /**
+   * List all themes.
+   * @return ThemeInfo[] List of theme infos.
+   */
   public function listAllThemes() {
     $themes = $this->listThemes();
     foreach ($this->libraries as $library)
@@ -74,6 +121,11 @@ class Themes extends LoadableModule {
     return $themes;
   }
   
+  /**
+   * List themes found in a specific library (default is user-library).
+   * @param string $library Library (path key).
+   * @return ThemeInfo[] List of theme infos.
+   */
   public function listThemes($library = null) {
     if (isset($library))
       $dir = $this->p($library, 'themes');
@@ -93,14 +145,27 @@ class Themes extends LoadableModule {
     return $themes;
   }
   
+  /**
+   * Whether or not a theme is enabled.
+   * @param string $theme Theme name.
+   * @return boolean True if enabled, false otherwise.
+   */
   public function isEnabled($theme) {
     return false;
   }
   
+  /**
+   * Enable a theme.
+   * @param string $theme Theme name.
+   */
   public function enable($theme) {
     $info = $this->getInfo($theme);
     
   }
 }
 
+/**
+ * Thrown if a theme could not be found.
+ * @package Jivoo\Themes
+ */
 class ThemeNotFoundException extends Exception { }

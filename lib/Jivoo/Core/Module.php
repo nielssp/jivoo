@@ -5,7 +5,7 @@
  */
 abstract class Module implements IEventSubject {
   /**
-   * @var string[] Names of other modules that this module depends on.
+   * @var string[] Names of modules required by this module.
    */
   protected $modules = array();
 

@@ -429,6 +429,6 @@ class AppConfig implements arrayaccess, IteratorAggregate {
 
 /**
  * A configuration file format is not supported
- * @package Core
+ * @package Jivoo\Core
  */
 class UnsupportedConfigurationFormatException extends Exception { }

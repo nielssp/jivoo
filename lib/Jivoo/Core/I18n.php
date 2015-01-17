@@ -2,6 +2,7 @@
 /**
  * Internationalization and localization.
  * @package Jivoo\Core
+ * @see Localization
  */
 class I18n {
   /**
@@ -59,8 +60,13 @@ class I18n {
   }
 
   /**
-   * Translate a string containing a numeric value, e.g.
-   * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
+   * Translate a string containing a numeric value.
+   * 
+   * For instance:
+   * <code>
+   * $l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);
+   * </code>
+   * 
    * @param string $message Message in english (plural).
    * @param string $singular Singular version of message in english.
    * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the

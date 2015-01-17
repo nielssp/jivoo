@@ -1,10 +1,44 @@
 <?php
+/**
+ * Information about an extension.
+ * @package Jivoo\Extensions
+ * @property-read string $canonicalName Canonical (i.e. directory) name of
+ * extension.
+ * @property-read bool $enabled Whether or not extension is enabled..
+ */
 class ExtensionInfo implements IBasicRecord {
+  /**
+   * @var string Kind of extension, used for looking up location, e.g. "themes".
+   */
   protected $kind = 'extensions';
+  
+  /**
+   * @var string Canonical name.
+   */
   private $canonicalName;
+  
+  /**
+   * @var bool Whether or not extension is enabled.
+   */
   private $enabled;
+  
+  /**
+   * @var array Extension info.
+   */
   private $info;
+  
+  /**
+   * @var string Path key for library.
+   */
   private $pKey;
+  
+  /**
+   * Construct extension information.
+   * @param string $canonicalName Canonical (i.e. directory) name of extension.
+   * @param array $info Content of "extension.json" as an associative array.
+   * @param string $pKey Library of extension as a path key.
+   * @param bool $enabled Whether or not extension is enabled.
+   */
   public function __construct($canonicalName, $info, $pKey = null, $enabled = true) {
     $this->canonicalName = $canonicalName;
     $this->info = $info;
@@ -12,6 +46,9 @@ class ExtensionInfo implements IBasicRecord {
     $this->enabled = $enabled;
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'canonicalName':
@@ -20,7 +57,10 @@ class ExtensionInfo implements IBasicRecord {
     }
     return $this->info[$property];
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($property) {
     switch ($property) {
       case 'canonicalName':
@@ -29,27 +69,41 @@ class ExtensionInfo implements IBasicRecord {
     }
     return isset($this->info[$property]);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getData() {
     return $this->info;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getErrors() {
     return array();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function isValid() {
     return true;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getModel() {
     return ExtensionModel::getInstance();
   }
   
-  public function isBundled() {
-    return $this->bundled;
-  }
-  
+  /**
+   * Get a path relative to this extension's directory.
+   * @param App $app Application.
+   * @param string $path A relative path.
+   * @return string An absolute path.
+   */
   public function p(App $app, $path) {
     if ($this->pKey)
       return $app->p($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
@@ -57,6 +111,12 @@ class ExtensionInfo implements IBasicRecord {
       return $app->p($this->kind, $this->canonicalName . '/' . $path);
   }
   
+  /**
+   * Get an asset relative to this extension's directory.
+   * @param Assets $assets Assets module.
+   * @param string $path A relative path.
+   * @return string An asset path.
+   */
   public function getAsset(Assets $assets, $path) {
     if ($this->pKey)
       return $assets->getAsset($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
@@ -64,19 +124,35 @@ class ExtensionInfo implements IBasicRecord {
       return $assets->getAsset($this->kind, $this->canonicalName . '/' . $path);
   }
   
+  /**
+   * Add a subdirectory of this extension as an asset dir.
+   * @param Assets $assets Assets module.
+   * @param string $path A relative path.
+   */
   public function addAssetDir(Assets $assets, $path) {
     if ($this->pKey)
-      return $assets->addAssetDir($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
+      $assets->addAssetDir($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
     else
-      return $assets->addAssetDir($this->kind, $this->canonicalName . '/' . $path);
+      $assets->addAssetDir($this->kind, $this->canonicalName . '/' . $path);
   }
   
+  /**
+   * Replaces variables in extension settings.
+   * @param string[] $matches Matches.
+   * @return string Value.
+   */
   private function replaceVariable($matches) {
     if (isset($this->info[$matches[1]]))
       return $this->info[$matches[1]];
     return $matches[0];
   }
   
+  /**
+   * Replace PHP-style variables in a string if they correspond to keys in this
+   * extension's settings.
+   * @param string $string String containing variables.
+   * @return string String with known variables replaced.
+   */
   public function replaceVariables($string) {
     return preg_replace_callback(
       '/\$([a-z0-9]+)/i',
@@ -85,17 +161,29 @@ class ExtensionInfo implements IBasicRecord {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetExists($field) {
     return $this->__isset($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetGet($field) {
     return $this->__get($field);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetSet($field, $value) {
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function offsetUnset($field) {
   }
 }

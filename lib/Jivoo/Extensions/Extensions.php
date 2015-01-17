@@ -1,47 +1,70 @@
 <?php
-// Module
-// Name           : Extensions
-// Description    : The Jivoo extension system
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Routing Jivoo/Templates
-
 /**
- * Extension system
+ * Extension system.
  * @package Jivoo\Extensions
  */
 class Extensions extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Assets', 'View');
   
+  /**
+   * {@inheritdoc}
+   */
   protected $events = array(
     'beforeImportExtensions', 'afterImportExtensions',
     'beforeLoadExtensions', 'beforeLoadExtension',
     'afterLoadExtension', 'afterLoadExtensions'
   );
   
+  /**
+   * @var string[] Associate array mapping plural to singular for extension
+   * kinds (e.g. "extensions" => "extension").
+   */
   private $kinds = array(
     'extensions' => 'extension'
   );
   
+  /**
+   * @var string[] Libraries to search for extensions.
+   */
   private $libraries = array('app', 'share');
   
+  /**
+   * @var ExtensionInfo[] Associative array of extension names and information.
+   */
   private $info = array();
-  private $installed = array();
-
-  private $extensions = array();
-
-  private $loading = array();
   
+  /**
+   * @var string[] List of extensions to import.
+   */
   private $importList = array();
   
+  /**
+   * @var ExtensionInfo[] Associative array mapping extension module names to
+   * extension information.
+   */
   private $loadList = array();
   
+  /**
+   * @var array Array of view extensions.
+   */
   private $viewExtensions = array();
   
+  /**
+   * @var map Map of extension modules.
+   */
   private $e = null;
   
+  /**
+   * @var array[] Array of 2-tuples of feature name and handler callback.
+   */
   private $featureHandlers = array();
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->config->defaults = array(
       'config' => array(),
@@ -77,6 +100,9 @@ class Extensions extends LoadableModule {
     $this->attachEventHandler('afterLoadExtensions', array($this, 'addViewExtensions'));
   }
   
+  /**
+   * Add all view extensions..
+   */
   public function addViewExtensions() {
     foreach ($this->viewExtensions as $module => $veInfo) {
       $this->view->extensions->add(
@@ -85,12 +111,20 @@ class Extensions extends LoadableModule {
     }
   }
   
+  /**
+   * Handle "load" feature.
+   * @param ExtensionInfo $info Extension information.
+   */
   public function handleLoad(ExtensionInfo $info) {
     foreach ($info->load as $name) {
       $this->loadList[$name] = $info;
     }
   }
   
+  /**
+   * Handle "viewExtensions" feature.
+   * @param ExtensionInfo $info Extension information.
+   */
   public function handleViewExtensions(ExtensionInfo $info) {
     foreach ($info->viewExtensions as $veInfo) {
       $module = $veInfo['module'];
@@ -105,6 +139,10 @@ class Extensions extends LoadableModule {
     }
   }
   
+  /**
+   * Handle "resources" feature.
+   * @param ExtensionInfo $info Extension information.
+   */
   public function handleResources(ExtensionInfo $info) {
     foreach ($info->resources as $resource => $resInfo) {
       $dependencies = isset($resInfo['dependencies']) ? $resInfo['dependencies'] : array();
@@ -118,14 +156,31 @@ class Extensions extends LoadableModule {
     }
   }
   
+  /**
+   * Attach an extension feature, i.e. a handler for extension properties.
+   * @param string $name Name of feature (property key).
+   * @param callback $handler Handler callback, must accept an
+   * {@see ExtensionInfo} object as its first parameter.
+   */
   public function attachFeature($name, $handler) {
     $this->featureHandlers[] = array($name, $handler);
   }
   
+  /**
+   * Add extension kind.
+   * @param string $kind Kind (plural), e.g. "themes".
+   * @param String $infoName Name of JSON file (singular), e.g. "theme".
+   */
   public function addKind($kind, $infoName) {
     $this->kinds[$kind] = $infoName;
   }
 
+  /**
+   * Get extension information.
+   * @param string $extension Extension name.
+   * @return ExtensionInfo|null Extension information or null if not found or
+   * invalid.
+   */
   public function getInfo($extension) {
     if (!isset($this->info[$extension])) {
       $dir = $this->p('extensions', $extension);
@@ -147,6 +202,12 @@ class Extensions extends LoadableModule {
     return $this->info[$extension];
   }
   
+  /**
+   * Import extensions and load extension modules.
+   * @throws ExtensionNotFoundException If an extension was not found or invalid.
+   * @throws Exception If "disableBuggy" is not enabled and importing an
+   * extension causes an exception to be thrown.
+   */
   public function run() {
     // Import extensions
     $this->importList = array_unique($this->importList);
@@ -183,14 +244,15 @@ class Extensions extends LoadableModule {
     }
     $this->triggerEvent('afterLoadExtensions');
   }
-
-  public function request($extension) {
-    if (!isset($this->extensions[$extension])) {
-      return false;
-    }
-    return $this->extensions[$extension];
-  }
   
+  /**
+   * Get a module provided by an extension. Load it if has not yet been
+   * loaded.
+   * @param string $name Name of module.
+   * @throws ExtensionNotFoundException If extension module not found in the
+   * load list, i.e. if the extension that provides the module has not been 
+   * imported.
+   */
   public function getModule($name) {
     if (!isset($this->e->$name)) {
       if (!isset($this->loadList[$name]))
@@ -204,20 +266,57 @@ class Extensions extends LoadableModule {
     return $this->e->$name;
   }
   
+  /**
+   * Get several extension modules.
+   * @param string[] $modules List of module names.
+   * @return Map Map of module names and objects.
+   */
   public function getModules($modules) {
     foreach ($modules as $name)
       $this->getModule($name);
     return $this->m;
   }
 
+  /**
+   * Whether or not a module is loaded.
+   * @param string $name Module name.
+   * @return bool True if loaded, false otherwise.
+   */
   public function hasModule($name) {
     return isset($this->e->$name);
   }
 
+  /**
+   * Whether or not an extension is enabled.
+   * @param string $extension Extension name.
+   * @return bool True if enabled, false otherwise.
+   */
   public function isEnabled($extension) {
     return in_array($extension, $this->config['import']->getArray());
   }
   
+  /**
+   * Check dependencies of an extension.
+   * 
+   * The returned array (if dependencies are missing) has the following
+   * structure:
+   * <code>
+   *  array(
+   *    'app' => '>= 1.0' // the required application version or null if valid
+   *    'extensions => array(
+   *      'my-ext >= 1.0' // required extension and version
+   *    ),
+   *    'php' => array(
+   *      'mcrypt' // a required PHP extension
+   *    )
+   *  )
+   * </code>
+   * 
+   * @param ExtensionInfo $info
+   * @return true|array True if no dependencies are missing, otherwise
+   * returns an associative array structure listing missing dependencies of
+   * different categories. 
+   */
   public function checkDependencies(ExtensionInfo $info) {
     if (!isset($info->dependencies))
       return true;
@@ -265,6 +364,14 @@ class Extensions extends LoadableModule {
     return $missing;
   }
   
+  /**
+   * Check an extension dependency.
+   * @param string $dependency An extension name followed by an optional version
+   * comparison, see {@see compareVersion()} for valid version comparisons.
+   * E.g. "my-extension >= 3.5.2".
+   * @return boolean True if extension exists and the version comparison
+   * evalutates to true.
+   */
   public function checkExtensionDependency($dependency) {
     preg_match('/^ *([^ <>=!]+) *(.*)$/', $dependency, $matches);
     if (!$this->isEnabled($matches[1]))
@@ -274,6 +381,15 @@ class Extensions extends LoadableModule {
     return $this->compareVersion($this->getInfo($matches[1])->version, $matches[2]);
   }
   
+  /**
+   * Perform a version comparison.
+   * @param string $actualVersion Actual version, see {@see version_compare()}
+   * for valid version strings.
+   * @param string $versionComparison Version comparison: an operator followed
+   * by a valid version string. Supported opertors are: <>, <=, >=, ==, !=, <,
+   * >, and =.
+   * @return boolean
+   */
   public function compareVersion($actualVersion, $versionComparison) {
     while (!empty($versionComparison)) {
       if (preg_match('/^ *(<>|<=|>=|==|!=|<|>|=) *([^ <>=!]+) *(.*)$/', $versionComparison, $matches) !== 1)
@@ -287,6 +403,13 @@ class Extensions extends LoadableModule {
     return true;
   }
   
+  /**
+   * Attempt to enable an extension.
+   * @param string $extension Extension name.
+   * @return true|array Returns true if no dependencies are missing, otherwise
+   * returns an associative array structure listing missing dependencies of
+   * different categories,s ee {@see Extensions::checkDependencies()}.
+   */
   public function enable($extension) {
     $missing = $this->checkDependencies($this->getInfo($extension));
     if ($missing !== true)
@@ -296,15 +419,27 @@ class Extensions extends LoadableModule {
     return true;
   }
   
+  /**
+   * Disable an extension.
+   * @param string $extension Extension name.
+   */
   public function disable($extension) {
     $this->importList = array_diff($this->importList, array($extension));
     $this->config['import'] = array_unique(array_values($this->importList));
   }
 
+  /**
+   * Delete the configuration of an extension.
+   * @param string $extension Extension name.
+   */
   public function unconfigure($extension) {
     unset($this->config['config'][$extension]);
   }
   
+  /**
+   * List all available extensions.
+   * @return ExtensionInfo[] List of extension information objects.
+   */
   public function listAllExtensions() {
     $extensions = $this->listExtensions();
     foreach ($this->libraries as $library)
@@ -312,6 +447,11 @@ class Extensions extends LoadableModule {
     return $extensions;
   }
 
+  /**
+   * List available extensions in a library (default is user-library).
+   * @param string $library Library (path key).
+   * @return ExtensionInfo[] List of extension information objects.
+   */
   public function listExtensions($library = null) {
     if (isset($library))
       $dir = $this->p($library, 'extensions');
@@ -333,19 +473,20 @@ class Extensions extends LoadableModule {
 }
 
 /**
- * Extension not found
- * @package PeanutCMS\Extensions
+ * Extension not found.
+ * @package Jivoo\Extensions
  */
 class ExtensionNotFoundException extends Exception {}
 
 /**
- * Extension is invalid
- * @package PeanutCMS\Extensions
+ * Extension is invalid.
+ * @package Jivoo\Extensions
  */
 class ExtensionInvalidException extends Exception {}
 
 /**
- * Event sent before and after an extension module has been loaded
+ * Event sent before and after an extension module has been loaded.
+ * @package Jivoo\Extensions
  */
 class LoadExtensionEvent extends LoadEvent { }
 

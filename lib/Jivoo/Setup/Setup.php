@@ -1,24 +1,31 @@
 <?php
-// Module
-// Name           : Setup
-// Description    : The Jivoo installation/setup system.
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Controllers Jivoo/Routing Jivoo/Templates Jivoo/Assets
-
 /**
- * Setup module.
+ * Installation and setup system..
  * @package Jivoo\Setup
  */
 class Setup extends LoadableModule {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Controllers', 'Routing', 'View', 'Assets');
   
+  /**
+   * @var string Name of current setup action.
+   */
   private $current = null;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->app->attachEventHandler('afterLoadModule', array($this, 'runSetup'));
   }
 
+  /**
+   * Run configured setups.
+   * @param LoadModuleEvent $event Event data.
+   * @throws Exception If controller not found.
+   */
   public function runSetup(LoadModuleEvent $event) {
     $this->app->detachEventHandler('afterLoadModule', array($this, 'runSetup'));
     if (isset($this->app->appConfig['setup'])) {
@@ -42,6 +49,9 @@ class Setup extends LoadableModule {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'current':
@@ -56,6 +66,9 @@ class Setup extends LoadableModule {
     return parnet::__get($property);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __set($property, $value) {
     switch ($property) {
       case 'currentState':
@@ -67,6 +80,11 @@ class Setup extends LoadableModule {
     return parent::__set($property, $value);
   }
   
+  /**
+   * Get state of a setup action.
+   * @param array|ILinkable|string|null $route Setup route, see {@see Routing}.
+   * @return bool True if setup has finished, false otherwise.
+   */
   public function getState($route) {
     $route = $this->m->Routing->validateActionRoute($route);
     $controller = $route['controller'];
@@ -75,6 +93,11 @@ class Setup extends LoadableModule {
     return isset($this->config[$name]) and $this->config[$name] === true;
   }
   
+  /**
+   * Set state of a setup action.
+   * @param array|ILinkable|string|null $route Setup route, see {@see Routing}.
+   * @param bool $done Whether or not the setup has finished.
+   */
   public function setState($route, $done) {
     $route = $this->m->Routing->validateActionRoute($route);
     $controller = $route['controller'];

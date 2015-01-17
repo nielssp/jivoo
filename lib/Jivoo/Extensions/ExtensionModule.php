@@ -1,15 +1,35 @@
 <?php
-
+/**
+ * A module that can be loaded by an extension.
+ * @package Jivoo\Extensions
+ */
 abstract class ExtensionModule extends Module {
-
+  /**
+   * @var string Extension directory name.
+   */
   private $dir;
 
+  /**
+   * @var ExtensionInfo Extension information.
+   */
   protected $info;
   
+  /**
+   * @var Map Map of loaded extension modules.
+   */
   protected $e = null;
   
+  /**
+   * @var string[] Names of extension modules required by this module.
+   */
   protected $extensions = array();
 
+  /**
+   * Construct extension module.
+   * @param App $app Associated application.
+   * @param ExtensionInfo $info Extension information.
+   * @param AppConfig $config Extension configuration.
+   */
   public final function __construct(App $app, ExtensionInfo $info, AppConfig $config) {
     parent::__construct($app);
     $this->e = $this->m->Extensions->getModules($this->extensions);
@@ -19,17 +39,25 @@ abstract class ExtensionModule extends Module {
     $this->init();
   }
 
+  /**
+   * Module initialization.
+   */
   protected function init() { }
 
+  /**
+   * Called after loading extension.
+   */
   public function afterLoad() { }
 
   /**
    * Get the absolute path of a file.
-   * If called with a single parameter, then the name of the current module
-   * is used as location identifier.
-   * @param string $key Location-identifier
-   * @param string $path File
-   * @return string Absolute path
+   * 
+   * If called with a single parameter, then the current extension directory is
+   * used as base path.
+   * 
+   * @param string $key Location identifier.
+   * @param string $path File.
+   * @return string Absolute path.
    */
   public function p($key, $path = null) {
     if (isset($path))
@@ -37,6 +65,16 @@ abstract class ExtensionModule extends Module {
     return $this->info->p($this->app, $key);
   }
   
+  /**
+   * Get an asset.
+   * 
+   * If called with a single parameter, then the current extension directory is
+   * used as base path.
+   * 
+   * @param string $key Location identifier.
+   * @param string $path File.
+   * @return string Asset path.
+   */
   public function getAsset($key, $path = null) {
     if (isset($path))
       return $this->m->Assets->getAsset($key, $path);

@@ -1,13 +1,23 @@
 <?php
 /**
- * Setup controller base 
+ * Base class for setup controllers.
  * @package Jivoo\Setup
  */
 class SetupController extends Controller {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Setup');
+
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Setup');
   
+  /**
+   * Display in case the configuration cannot be saved.
+   * @return ViewResponse Response.
+   */
   public function saveConfig() {
     $this->title = tr('Unable to save configuration file');
     $this->file = $this->config->file;

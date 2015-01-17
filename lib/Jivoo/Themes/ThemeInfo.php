@@ -1,11 +1,34 @@
 <?php
+/**
+ * Information about a theme including custom properties in the "theme.json"
+ * file.
+ * @package Jivoo\Themes
+ * @property-read string[] $extend List of parent themes.
+ * @property-read string[] $zones List of enabled zones.
+ */
 class ThemeInfo extends ExtensionInfo {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $kind = 'themes';
 
+  /**
+   * @var string[] List of parent themes.
+   */
   private $extend = array();
+  
+  /**
+   * @var string[] List of enabled zones.
+   */
   private $zones = array();
 
+  /**
+   * Construct theme information.
+   * @param string $canonicalName Canonical (i.e. directory) name of theme.
+   * @param array $info Content of "theme.json" as an associative array.
+   * @param string[] $zones List of zones that the theme is enabled for.
+   * @param string $pKey Library of theme as a path key.
+   */
   public function __construct($canonicalName, $info, $zones, $pKey = null) {
     parent::__construct($canonicalName, $info, $pKey, count($zones) > 0);
     if (isset($info['extend']) and is_array($info['extend']))
@@ -14,10 +37,16 @@ class ThemeInfo extends ExtensionInfo {
       $this->zones = $info['zones'];
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function getModel() {
     return ThemeModel::getInstance();
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'extend':
@@ -27,6 +56,9 @@ class ThemeInfo extends ExtensionInfo {
     return parent::__get($property);
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($property) {
     switch ($property) {
       case 'extend':
