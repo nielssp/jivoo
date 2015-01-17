@@ -1,7 +1,7 @@
 <?php
 /**
  * Validator for a single field.
- * @package Jivoo\Models\Validation.
+ * @package Jivoo\Models\Validation
  */
 class ValidatorField {
   /**

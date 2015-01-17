@@ -1,27 +1,56 @@
 <?php
+/**
+ * Base class for migrations.
+ * @package Jivoo\Migrations
+ */
 abstract class Migration {
-  
+  /**
+   * @var IMigratableDatabase Database.
+   */
   private $db = null;
   
+  /**
+   * @var MigrationSchema Schema.
+   */
   private $schema = null;
-  
-  private $operations = array();
 
+  /**
+   * @var bool Whether to ignore exceptions.
+   */
   private $ignoreExceptions = false;
   
+  /**
+   * Construct migration.
+   * @param IMigratableDatabase $db Database to run migration on.
+   * @param MigrationSchema $schema A migration schema.
+   */
   public final function __construct(IMigratableDatabase $db, MigrationSchema $schema) {
     $this->db = $db;
     $this->schema = $schema;
   }
   
+  /**
+   * Get a table.
+   * @param string $table Table name.
+   * @return ITable Table.
+   */
   public function __get($table) {
     return $this->db->$table;
   }
 
+  /**
+   * Whether or not the table exists.
+   * @param string $table Table name.
+   * @return bool True if table exists.
+   */
   public function __isset($table) {
     return isset($this->db->table);
   }
   
+  /**
+   * Create a table.
+   * @param Schema $schema Schema for table.
+   */
   protected function createTable(Schema $schema) {
     try {
       $this->db->createTable($schema);
@@ -32,6 +61,10 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Delete a table.
+   * @param string $table Table name.
+   */
   protected function dropTable($table) {
     try {
       $this->db->dropTable($table); 
@@ -41,7 +74,13 @@ abstract class Migration {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
-
+  
+  /**
+   * Add a column to a table.
+   * @param string $table Table name.
+   * @param string $column Column name.
+   * @param DataType $type Column type.
+   */
   protected function addColumn($table, $column, DataType $type) {
     try {
       $this->db->addColumn($table, $column, $type);
@@ -52,6 +91,11 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Delete a column from a table.
+   * @param string $table Table name.
+   * @param string $column Column nane.
+   */
   protected function deleteColumn($table, $column) {
     try {
       $this->db->deleteColumn($table, $column);
@@ -62,6 +106,12 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Modify type of a column.
+   * @param string $table Table name.
+   * @param string $column Column name.
+   * @param DataType $type Column type.
+   */
   protected function alterColumn($table, $column, DataType $type) {
     try {
       $this->db->alterColumn($table, $column, $type);
@@ -72,6 +122,12 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Rename a column.
+   * @param string $table Table name.
+   * @param string  $column Current column name.
+   * @param string $newName New column name.
+   */
   protected function renameColumn($table, $column, $newName) {
     try {
       $this->db->renameColumn($table, $column, $newName);
@@ -82,6 +138,13 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Create an index.
+   * @param string $table Table name.
+   * @param string $index Index name.
+   * @param array $options Associative array of index options, with keys
+   * 'unique' and 'columns'.
+   */
   protected function createIndex($table, $index, $options = array()) {
     try {
       $this->db->createIndex($table, $index, $options);
@@ -92,6 +155,11 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Delete an index.
+   * @param string $table Table name.
+   * @param string $index Index name.
+   */
   protected function deleteIndex($table, $index) {
     try {
       $this->db->deleteIndex($table, $index);
@@ -102,6 +170,14 @@ abstract class Migration {
     }
   }
 
+  /**
+   * Alter an index.
+   * @param string $table Table name.
+   * @param string $index Index name.
+   * @param array $options Associative array of index options, with keys
+   * 'unique' and 'columns'.
+   * @throws Exception
+   */
   protected function alterIndex($table, $index, $options = array()) {
     try {
       $this->alterIndex($table, $index, $options); 
@@ -112,14 +188,23 @@ abstract class Migration {
     }
   }
   
+  /**
+   * Revert changes made by this migration.
+   */
   public final function revert() {
     $this->ignoreExceptions = true;
     $this->down();
     $this->ignoreExceptions = false;
   }
 
+  /**
+   * Perform database changes.
+   */
   public abstract function up();
 
+  /**
+   * Undo database changes made by {@see up()}.
+   */
   public abstract function down();
   
   //public function up() {
@@ -136,6 +221,10 @@ abstract class Migration {
     //}
   //}
   
+  /**
+   * List of changes. Not implemented.
+   * @return array
+   */
   protected function change() {
     return array();
   }

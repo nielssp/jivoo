@@ -1,36 +1,43 @@
 <?php
-// Module
-// Name           : Migrations
-// Description    : The Jivoo schema and data migration system
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Databases
-// After          : Databases
-// Before         : ActiveModels
-
 /**
- * Migration module
+ * Schema and data migration module.
  * @package Jivoo\Migrations
  */
 class Migrations extends LoadableModule {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Databases');
   
   /**
-   * @var Schema Table schema for SchemaRevision-table
+   * @var Schema Table schema for SchemaRevision-table.
    */
   private $schema;
   
   /**
-   * @var array Associative array of migration names and objects that need to run
+   * @var Migration[] Associative array of migration names and objects that need to run.
    */
   private $migrations = array();
   
+  /**
+   * @var MigrationSchema[] Array of schemas.
+   */
   private $migrationSchemas = array();
 
+  /**
+   * @var IMigratableDatabase[] Associative array of names and databases
+   * to check.
+   */
   private $checkList = array();
 
+  /**
+   * @var string[] Associative array of database names and migration dirs.
+   */
   private $migrationDirs = array();
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->config->defaults = array(
       'force' => false,
@@ -70,6 +77,11 @@ class Migrations extends LoadableModule {
     }
   }
 
+  /**
+   * Find migrations for a database.
+   * @param string $name Database name.
+   * @return string[] List of migration class names.
+   */
   public function getMigrations($name) {
     $migrationDir = $this->migrationDirs[$name];
     $migrations = array();
@@ -89,8 +101,8 @@ class Migrations extends LoadableModule {
   }
 
   /**
-   * Check a database for 
-   * @param LoadableDatabase $db
+   * Check a database for schema changes and initialize neccessary migrations.
+   * @param string $name Database name.
    */
   public function check($name) {
     $db = $this->m->Databases->$name->getConnection();
@@ -132,6 +144,9 @@ class Migrations extends LoadableModule {
     $this->checkList[$name] = $db;
   }
   
+  /**
+   * Attempt to run migrations.
+   */
   public function run() {
     ksort($this->migrations);
     $log = array();
@@ -149,6 +164,9 @@ class Migrations extends LoadableModule {
     $this->migrations = array();
   }
 
+  /**
+   * Finalizes migration schemas and creates missing tables. Updates indicators.
+   */
   public function afterRun() {
     foreach ($this->migrationSchemas as $migrationSchema) {
       $migrationSchema->finalize();
