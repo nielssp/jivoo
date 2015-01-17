@@ -1,14 +1,33 @@
 <?php
+/**
+ * Collection of view extensions.
+ * @package Jivoo\View
+ */
 class ViewExtensions {
-  
+  /**
+   * @var View View.
+   */
   private $view;
   
+  /**
+   * @var array[] Array of view extensions and hooks.
+   */
   private $extensions = array();
   
+  /**
+   * Construct view extension collection.
+   * @param View $view The view.
+   */
   public function __construct(View $view) {
     $this->view = $view;
   }
   
+  /**
+   * Add a view extension.
+   * @param string $template Template to extend.
+   * @param IViewExtension $extension The view extension.
+   * @param string $hook Names of hooks to attach view extension to.
+   */
   public function add($template, IViewExtension $extension, $hook = null) {
     if (!isset($this->extensions[$template]))
       $this->extensions[$template] = array();
@@ -18,6 +37,13 @@ class ViewExtensions {
     );
   }
   
+  /**
+   * Access view extensions attached to a hook, and make sure they
+   * implement the desired interface.
+   * @param string $hook Hook name.
+   * @param string $type Interface that view extensions must implement.
+   * @return IViewExtension[] List of view extensions for hook.
+   */
   public function extensions($hook = null, $type = 'IViewExtension') {
     $template = $this->view->template->getCurrent();
     $extensions = array();

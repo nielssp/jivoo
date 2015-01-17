@@ -2,6 +2,14 @@
 /**
  * A localization, e.g. translation strings and date formats.
  * @package Jivoo\Core
+ * @property string $dateFormat Preferred date format.
+ * @property string $timeFormat Preferred time format.
+ * @property string $longFormat Preferred long format, can use special
+ * placeholders "%DATE" and "%TIME" to refer to already defined date and
+ * time formats.
+ * @property string $monthYear Month and year format.
+ * @property string $monthDay Month and day format.
+ * @property string $weekDay Week day and time format. 
  */
 class Localization {
   /**

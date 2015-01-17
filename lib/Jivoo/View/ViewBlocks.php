@@ -1,16 +1,33 @@
 <?php
+/**
+ * Collection of view blocks.
+ * @package Jivoo\View
+ */
 class ViewBlocks {
   /**
-   * @var array Associative array of block names and content
+   * @var string[] Associative array of block names and content.
    */
   private $blocks = array();
   
+  /**
+   * @var View View.
+   */
   private $view;
   
+  /**
+   * Construct collection of view blocks.
+   * @param View $view The view.
+   */
   public function __construct(View $view) {
     $this->view = $view;
   }
   
+  /**
+   * Get the value of a block.
+   * @param string $block Block name.
+   * @param string $default Value to return if block is undefined.
+   * @return string Content of block.
+   */
   public function block($block, $default = '') {
     if (isset($this->blocks[$block])) {
       return $this->blocks[$block];
@@ -18,20 +35,40 @@ class ViewBlocks {
     return $default;
   }
     
+  /**
+   * Whether or not a block is undefined.
+   * @param string $block Block name.
+   * @return boolean True if undefined, false otherwise.
+   */
   public function isEmpty($block) {
     return !isset($this->blocks[$block]);
   }
   
+  /**
+   * Assign the content of a block.
+   * @param string $block Block name.
+   * @param string $value Content.
+   */
   public function assign($block, $value) {
     $this->blocks[$block] = $value;
   }
   
+  /**
+   * Append content to a block.
+   * @param string $block Block name.
+   * @param string $value Content.
+   */
   public function append($block, $value) {
     if (!isset($this->blocks[$block]))
       $this->blocks[$block] = '';
     $this->blocks[$block] .= $value;
   }
 
+  /**
+   * Prepend content to a block.
+   * @param string $block Block name.
+   * @param string $value Content.
+   */
   public function prepend($block, $value) {
     if (!isset($this->blocks[$block]))
       $this->blocks[$block] = '';
@@ -39,17 +76,17 @@ class ViewBlocks {
   }
   
   /**
-   * Insert shortcut icon, will look for file in 'assets/img'
-   * @param string $icon Icon name, e.g. 'icon.ico'
+   * Insert shortcut icon into meta block, will look for file in 'assets/img'.
+   * @param string $icon Icon name, e.g. 'icon.ico'.
    */
   public function icon($icon) {
     $this->relation('shortcut icon', null, $this->view->file('img/' . $icon));
   }
   
   /**
-   * Insert meta into view
-   * @param string $name Meta name
-   * @param string $content Meta content
+   * Insert a meta tag into the meta block.
+   * @param string $name Meta name.
+   * @param string $content Meta content.
    */
   public function meta($name, $content) {
     $this->append(
@@ -59,11 +96,10 @@ class ViewBlocks {
   }
   
   /**
-   * Insert relation link into view
-   * @param string $rel Relationship, e.g. 'stylesheet' or 'alternate'
-   * @param string $type Resource type or null for no type
-   * @param string $href Resource URL
-   * @todo Rename, confuse with ResourceManager resources?
+   * Insert relation (e.g. stylesheet or RSS) link into the meta block.
+   * @param string $rel Relationship, e.g. 'stylesheet' or 'alternate'.
+   * @param string $type Resource MIME type or null for no type.
+   * @param string $href Resource URL.
    */
   public function relation($rel, $type, $href) {
     if (isset($type))

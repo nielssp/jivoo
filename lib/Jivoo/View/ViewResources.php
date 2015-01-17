@@ -1,25 +1,55 @@
 <?php
+/**
+ * Collection of scripts and stylesheets to be included into the template.
+ * @package Jivoo\View
+ */
 class ViewResources {
-  
+  /**
+   * @var array Associative array of providers.
+   */
   private $providers = array();
   
+  /**
+   * @var array Script and style imports.
+   */
   private $imports = array(
     'script' => array(),
     'style' => array()
   );
   
+  /**
+   * @var bool[] Associative array of imported resources.
+   */
   private $imported = array();
   
+  /**
+   * @var Assets Assets module.
+   */
   private $assets;
   
+  /**
+   * Cnstruct collection of view resources.
+   * @param Assets $assets Assets module.
+   */
   public function __construct(Assets $assets) {
     $this->assets = $assets;
   }
   
+  /**
+   * Get a file.
+   * @param string $file File name.
+   * @return string|null Asset.
+   */
   private function file($file) {
     return $this->assets->getAsset($file);
   }
   
+  /**
+   * Type of file extension.
+   * @param string $resource Resource name.
+   * @throws Exception If unknown type.
+   * @return string Type.
+   */
   private function type($resource) {
     $type = Utilities::getFileExtension($resource);
     switch ($type) {
@@ -32,6 +62,12 @@ class ViewResources {
     }
   }
   
+  /**
+   * Find a resource.
+   * @param string $resource Resource name.
+   * @throws Exception If unknown type of resource.
+   * @return array Description of resource and dependencies.
+   */
   private function find($resource) {
     if (isset($this->providers[$resource]))
       return $this->providers[$resource];
@@ -58,6 +94,13 @@ class ViewResources {
     );
   }
   
+  /**
+   * Provide a named resource.
+   * @param string $resource Resource name, e.g. 'jquery.js'.
+   * @param string $location Location of resource (relative to docroot).
+   * @param string[] $dependencies List resource dependencies.
+   * @param string $condition Condition for resource.
+   */
   public function provide($resource, $location, $dependencies = array(), $condition = null) {
     $this->providers[$resource] = array(
       'location' => $location,
@@ -67,6 +110,11 @@ class ViewResources {
     );
   }
   
+  /**
+   * Import conditional resource.
+   * @param string $resource Resource name.
+   * @param string $condition Condition.
+   */
   public function importConditional($resource, $condition) {
     if (isset($this->imported[$resource]))
       return;
@@ -83,6 +131,10 @@ class ViewResources {
     $this->imported[$resource] = true;
   }
   
+  /**
+   * Push resource on import stack.
+   * @param string $resource Resource name.
+   */
   private function push($resource) {
     if (isset($this->imported[$resource]))
       return;
@@ -93,6 +145,10 @@ class ViewResources {
     $this->imported[$resource] = true;
   }
   
+  /**
+   * Unshift a resource to import queue.
+   * @param string $resource Resource name.
+   */
   private function unshift($resource) {
     if (isset($this->imported[$resource]))
       return;
@@ -108,6 +164,10 @@ class ViewResources {
     $this->imported[$resource] = true;
   }
   
+  /**
+   * Import a resource and its dependencies.
+   * @param string $resource Resource name.
+   */
   public function import($resource) {
     if (is_array($resource)) {
       if (count($resource) == 0) {
@@ -131,6 +191,10 @@ class ViewResources {
     return $this->unshift($resource);
   }
   
+  /**
+   * Output resource block.
+   * @return string Resource block HTML.
+   */
   public function resourceBlock() {
     $block = '';
     foreach ($this->imports['style'] as $resource) {
