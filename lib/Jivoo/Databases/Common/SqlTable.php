@@ -49,7 +49,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function setSchema(Schema $schema = null) {
+  public function setSchema(ISchema $schema) {
     $this->schema = $schema;
   }
   

@@ -305,7 +305,7 @@ class Schema implements ISchema {
    * @param string $package Package (for documentation).
    * @return string PHP source.
    */
-  public function export($package = 'Core') {
+  public function export($package = 'Jivoo') {
     $source = '<?php' . PHP_EOL;
     $source .= '/**' . PHP_EOL;
     $source .= ' * Automatically generated schema for ' . $this->_name

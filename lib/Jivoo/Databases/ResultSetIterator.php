@@ -1,4 +1,4 @@
-<?phpunknown
+<?php
 /**
  * Iterator for {@see IResultSet} instances.
  * @package Jivoo\Databases
