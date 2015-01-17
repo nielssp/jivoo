@@ -1,24 +1,29 @@
 <?php
+/**
+ * A table in an SQL database.
+ * @package Jivoo\Databases\Common
+ */
 class SqlTable extends Table {
   /**
-   * @var SqlDatabase Owner database
+   * @var SqlDatabase Owner database.
    */
   private $owner = null;
 
   /**
-   * @var string Table name (without prefix)
+   * @var string Table name (without prefix etc.).
    */
   private $name = '';
 
   /**
-   * @var Schema|null Table schema if set
+   * @var Schema|null Table schema if set.
    */
   private $schema = null;
 
   /**
-   * Constructor.
-   * @param SqlDatabase $database Owner database
-   * @param string $table Table name (without prefix)
+   * Construct table.
+   * @param App $app Associated application.
+   * @param SqlDatabase $database Owner database.
+   * @param string $table Table name (without prefix etc.).
    */
   public function __construct(App $app, SqlDatabase $database, $table) {
     $this->owner = $database;
@@ -27,19 +32,30 @@ class SqlTable extends Table {
     parent::__construct($app);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return $this->name;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getSchema() {
     return $this->schema;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setSchema(Schema $schema = null) {
     $this->schema = $schema;
   }
   
-
+  /**
+   * {@inheritdoc}
+   */
   public function createExisting($data = array()) {
     $typeAdapter = $this->owner->getTypeAdapter();
     foreach ($data as $field => $value) {
@@ -52,9 +68,9 @@ class SqlTable extends Table {
   }
 
   /**
-   * Convert a condition to SQL
-   * @param Condition $where The condition
-   * @return string SQL subquery
+   * Convert a condition to SQL.
+   * @param Condition $where The condition.
+   * @return string SQL subquery.
    */
   protected function conditionToSql(Condition $where) {
     $sqlString = '';
@@ -81,9 +97,9 @@ class SqlTable extends Table {
    * For use with array_walk(), will run {@see SqlTable::owner->escapeQuery()} on
    * each column in an array. The input $value should be an associative array
    * as described in the documentation for {@see SelectQuery::$columns}.
-   * The resulting $value vil be a string.
-   * @param array $value Array reference
-   * @param mixed $key Key (not used)
+   * The resulting $value will be a string.
+   * @param array $value Array reference.
+   * @param mixed $key Key (not used).
    */
   protected function getColumnList(&$value, $key) {
     $expression = $this->owner->escapeQuery($value['expression'], array());
@@ -95,6 +111,9 @@ class SqlTable extends Table {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function readSelection(ReadSelection $selection) {
     $sqlString = 'SELECT ';
     if (!empty($selection->fields)) {
@@ -176,10 +195,10 @@ class SqlTable extends Table {
     }
     return $this->owner->rawQuery($sqlString);
   }
+  
   /**
-   * @param UpdateSelection $selection
-   * @return int Number of affected records
-  */
+   * {@inheritdoc}
+   */
   public function updateSelection(UpdateSelection $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
     $sqlString = 'UPDATE ' . $this->owner->quoteTableName($this->name);
@@ -225,10 +244,10 @@ class SqlTable extends Table {
     }
     return $this->owner->rawQuery($sqlString);
   }
+  
   /**
-   * @param DeleteSelection $selection
-   * @return int Number of affected records
-  */
+   * {@inheritdoc}
+   */
   public function deleteSelection(DeleteSelection $selection) {
     $sqlString = 'DELETE FROM ' . $this->owner->quoteTableName($this->name);
     if ($selection->where->hasClauses()) {
@@ -247,7 +266,10 @@ class SqlTable extends Table {
     }
     return $this->owner->rawQuery($sqlString);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function insert($data) {
     $typeAdapter = $this->owner->getTypeAdapter();
     $columns = array_keys($data);

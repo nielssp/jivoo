@@ -1,19 +1,19 @@
 <?php
 /**
- * SQLite3 database driver
- * @package Jivoo\Database\Sqlite3
+ * SQLite3 database driver.
+ * @package Jivoo\Databases\Drivers\Sqlite3
  */
 class Sqlite3Database extends SqlDatabase {
   /**
-   * @var SQLite3 SQLite3 object
+   * @var SQLite3 SQLite3 object.
    */
   private $handle;
 
   /**
-   * Constructor.
+   * Construct database.
    * @param array $options An associative array with options for at least
    * 'filename'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException if connection fails
+   * @throws DatabaseConnectionFailedException If connection fails.
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new  SqliteTypeAdapter($this));

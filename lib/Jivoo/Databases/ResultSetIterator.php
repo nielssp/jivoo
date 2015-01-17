@@ -1,15 +1,34 @@
-<?php
+<?phpunknown
+/**
+ * Iterator for {@see IResultSet} instances.
+ * @package Jivoo\Databases
+ */
 class ResultSetIterator implements IRecordIterator {
   /**
-   * @var IResultSet
+   * @var IResultSet Result set.
    */
   private $resultSet;
   
+  /**
+   * @var Model Model.
+   */
   private $model;
 
+  /**
+   * @var int Index.
+   */
   private $position = 0;
+  
+  /**
+   * @var IRecord[] Records.
+   */
   private $array = array();
 
+  /**
+   * Construct iterator.
+   * @param Model $model Model.
+   * @param IResultSet $resultSet Result set.
+   */
   public function __construct(Model $model, IResultSet $resultSet) {
     $this->model = $model;
     $this->resultSet = $resultSet;
@@ -17,25 +36,41 @@ class ResultSetIterator implements IRecordIterator {
       $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc());
   }
 
-  function rewind() {
+  /**
+   * {@inheritdoc}
+   */
+  public function rewind() {
     $this->position = 0;
   }
 
-  function current() {
+  /**
+   * Get current record.
+   * @return IRecord A record.
+   */
+  public function current() {
     return $this->array[$this->position];
   }
 
-  function key() {
+  /**
+   * {@inheritdoc}
+   */
+  public function key() {
     return $this->position;
   }
 
-  function next() {
+  /**
+   * {@inheritdoc}
+   */
+  public function next() {
     if ($this->resultSet->hasRows())
       $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc());
     $this->position++;
   }
 
-  function valid() {
+  /**
+   * {@inheritdoc}
+   */
+  public function valid() {
     return isset($this->array[$this->position]);
   }
 }

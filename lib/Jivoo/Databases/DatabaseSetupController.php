@@ -1,14 +1,20 @@
 <?php
 /**
- * Controller for setting up database 
- * @package Jivoo\Database
- * @property-read HtmlHelper $Html Html helper
- * @property-read FormHelper $Form Form helper
+ * Controller for setting up database. 
+ * @package Jivoo\Databases
+ * @property-read HtmlHelper $Html Html helper.
+ * @property-read FormHelper $Form Form helper.
+ * @property-read DatabaseDriversHelper $DatabaseDrivers Database drivers helper.
  */
 class DatabaseSetupController extends SetupController {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Html', 'Form', 'DatabaseDrivers');
 
+  /**
+   * {@inheritdoc}
+   */
   public function before() {
     $this->config = $this->config['Databases']['default'];
     $this->config->defaults = array(
@@ -19,7 +25,7 @@ class DatabaseSetupController extends SetupController {
   }
 
   /**
-   * Action for selecting database driver
+   * Action for selecting database driver.
    */
   public function selectDriver() {
     if (isset($this->config['driver']))
@@ -44,9 +50,9 @@ class DatabaseSetupController extends SetupController {
   }
 
   /**
-   * Get label for a driver option
-   * @param string $option Option name
-   * @return string Translated label
+   * Get label for a driver option.
+   * @param string $option Option name.
+   * @return string Translated label.
    */
   private function getOptionLabel($option) {
     switch ($option) {
@@ -58,7 +64,7 @@ class DatabaseSetupController extends SetupController {
   }
 
   /**
-   * Action for configuring database driver
+   * Action for configuring database driver.
    */
   public function setupDriver() {
     if (!isset($this->config['driver']))
@@ -124,9 +130,5 @@ class DatabaseSetupController extends SetupController {
       $this->setupForm->addData($this->config->getArray());
     }
     return $this->render();
-  }
-  
-  public function getRevision($table) {
-    return 0;
   }
 }

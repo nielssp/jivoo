@@ -1,30 +1,29 @@
 <?php
-// Module
-// Name           : Databases
-// Description    : The Jivoo database system
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Models Jivoo/Helpers
-
 Lib::import('Jivoo/Databases/Common');
 
 /**
- * Database module
+ * Database module.
  * @package Jivoo\Databases
  */
 class Databases extends LoadableModule {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Models', 'Helpers');
   
   /**
-   * @var DatabaseDriversHelper
+   * @var DatabaseDriversHelper Driver helper.
    */
   private $drivers = null;
   
   /**
-   * @var LodableDatabase[]
+   * @var LodableDatabase[] Named database connections.
    */
   private $connections = array();
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->drivers = new DatabaseDriversHelper($this->app);
     
@@ -40,6 +39,11 @@ class Databases extends LoadableModule {
     $schemasDir = $this->p('app', 'schemas');
   }
 
+  /**
+   * Attach a database connection.
+   * @param string $name Name of database.
+   * @param string $schemasDir Location of schema classes.
+   */
   public function attachDatabase($name, $schemasDir = null) {
     $schemas = array();
     if (isset($schemasDir) and is_dir($schemasDir)) {
@@ -58,40 +62,48 @@ class Databases extends LoadableModule {
     }
     $this->connect($name, $schemas, $name);
   }
-  
+
   /**
-   * (non-PHPdoc)
-   * @see Module::__get()
-   * @return IModel
+   * Get a database connection.
+   * @param string $name Connection name.
+   * @return LoadableDatabase Database.
    */
   public function __get($name) {
     if (isset($this->connections[$name]))
       return $this->connections[$name];
     return parent::__get($name);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($name) {
     return isset($this->connections[$name]);
   }
 
+  /**
+   * Get all database connections.
+   * @return LoadableDatabase[] Associative array of database names and
+   * connections.
+   */
   public function getConnections() {
     return $this->connections;
   }
   
   /**
-   * Make a database connection
-   * @param array $options Associative array of database settings
+   * Make a database connection.
+   * @param array $options Associative array of database settings.
    * @param (string|Schema)[] $schemas An array of table/schema-names and
-   * schemas to be attached to the database 
+   * schemas to be attached to the database .
    * @param string $name An optional name for database connection, if the name
    * is provided, the connection and the associated tables will be added to 
-   * this Databases-object 
+   * this Databases-object .
    * @throws DatabaseNotConfiguredException If the $options-array does not
-   * contain the necessary information for a connection to be made
+   * contain the necessary information for a connection to be made.
    * @throws DatabaseMissingSchemaException If one of the schema names listed
-   * in the $schemas-parameter is unknown
-   * @throws DatabaseConnectionFailedException If the connection fails
-   * @return LoadableDatabase A database object
+   * in the $schemas-parameter is unknown.
+   * @throws DatabaseConnectionFailedException If the connection fails.
+   * @return LoadableDatabase A database object.
    */
   public function connect($options, $schemas, $name = null) {
     if (is_string($options)) {
@@ -142,21 +154,33 @@ class Databases extends LoadableModule {
     }
   }
   
+  /**
+   * Close all connections.
+   */
   public function close() {
     foreach ($this->connections as $connection)
       $connection->close();
   }
   
+  /**
+   * Begin transaction in all connections.
+   */
   public function beginTransaction() {
     foreach ($this->connections as $connection)
       $connection->beginTransaction();
   }
   
+  /**
+   * Commit all transactions.
+   */
   public function commit() {
     foreach ($this->connections as $connection)
       $connection->commit();
   }
   
+  /**
+   * Rollback all transactions.
+   */
   public function rollback() {
     foreach ($this->connections as $connection)
       $connection->rollback();
@@ -164,11 +188,13 @@ class Databases extends LoadableModule {
 }
 
 /**
- * Invalid database configuration
+ * Invalid database configuration.
+ * @package Jivoo\Databases
  */
 class DatabaseNotConfiguredException extends Exception { }
 
 /**
- * Unknown table schema 
+ * Unknown table schema.
+ * @package Jivoo\Databases
  */
 class DatabaseMissingSchemaException extends Exception { }

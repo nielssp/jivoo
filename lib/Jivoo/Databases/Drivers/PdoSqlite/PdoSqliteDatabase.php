@@ -1,14 +1,14 @@
 <?php
 /**
- * PDO SQLite database driver
- * @package Jivoo\Database\PdoSqlite
+ * PDO SQLite database driver.
+ * @package Jivoo\Databases\Drivers\PdoSqlite
  */
 class PdoSqliteDatabase extends PdoDatabase {
   /**
-   * Constructor.
+   * Construct database.
    * @param array $options An associative array with options for at least
    * 'filename'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException if connection fails
+   * @throws DatabaseConnectionFailedException If connection fails.
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new  SqliteTypeAdapter($this));

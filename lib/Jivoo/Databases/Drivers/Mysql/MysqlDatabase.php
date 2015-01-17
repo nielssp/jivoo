@@ -1,20 +1,20 @@
 <?php
 /**
- * MySQL database driver
- * @package Jivoo\Database\Mysql
+ * MySQL database driver.
+ * @package Jivoo\Databases\Drivers\Mysql
  */
 class MysqlDatabase extends SqlDatabase {
   /**
-   * @var resource MySQL connection handle
+   * @var resource MySQL connection handle.
    */
   private $handle;
 
   /**
-   * Constructor.
+   * Construct database.
    * @param array $options An associative array with options for at least
    * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException if connection fails
-   * @throws DatabaseSelectFailedException if database selection fails
+   * @throws DatabaseConnectionFailedException If connection fails.
+   * @throws DatabaseSelectFailedException If database selection fails.
    */
   protected function init($options = array()) {
     $this->setTypeAdapter(new MysqlTypeAdapter($this));
@@ -36,15 +36,24 @@ class MysqlDatabase extends SqlDatabase {
       throw new DatabaseConnectionFailedException($exception->getMessage());
     }
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function close() {
     mysql_close($this->handle);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function quoteString($string) {
     return '"' . mysql_real_escape_string($string) . '"';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function rawQuery($sql) {
     Logger::query($sql);
     $result = mysql_query($sql, $this->handle);

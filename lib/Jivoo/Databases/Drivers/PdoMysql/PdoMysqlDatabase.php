@@ -1,15 +1,14 @@
 <?php
 /**
- * PDO MySQL database driver
- * @package Jivoo\Database\PdoMysql
+ * PDO MySQL database driver.
+ * @package Jivoo\Databases\Drivers\PdoMysql
  */
 class PdoMysqlDatabase extends PdoDatabase {
-
   /**
-   * Constructor.
+   * Construct database.
    * @param array $options An associative array with options for at least
    * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException if connection fails
+   * @throws DatabaseConnectionFailedException If connection fails.
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new MysqlTypeAdapter($this));

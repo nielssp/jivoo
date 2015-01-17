@@ -1,13 +1,25 @@
 <?php
-
+/**
+ * Type adapter for MySQL database drivers.
+ * @package Jivoo\Databases\Common
+ */
 class MysqlTypeAdapter implements IMigrationTypeAdapter {
-
+  /**
+   * @var SqlDatabase Database
+   */
   private $db;
 
+  /**
+   * Construct type adapter.
+   * @param SqlDatabase $db Database.
+   */
   public function __construct(SqlDatabase $db) {
     $this->db = $db;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function encode(DataType $type, $value) {
     $value = $type->convert($value);
     switch ($type->type) {
@@ -28,6 +40,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function decode(DataType $type, $value) {
     if (!isset($value))
       return null;
@@ -105,7 +120,12 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     return $column . $autoIncrement;
   }
   
-  
+  /**
+   * Convert output of SHOW COLUMN to DataType.
+   * @param array $row Row result.
+   * @throws Exception If type unsupported.
+   * @return DataType The type.
+   */
   private function toDataType($row) {
     $null = (isset($row['Null']) and $row['Null'] != 'NO');
     $default = null;
@@ -155,6 +175,12 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     ));
   }
 
+  /**
+   * Compare output of SHOW COLUMN with a data type.
+   * @param array $row Row result.
+   * @param DataType $type Type.
+   * @return boolean True if matching types.
+   */
   public function checkType($row, DataType $type) {
     $null = (isset($row['Null']) and $row['Null'] != 'NO');
     if ($null != $type->null)
@@ -224,55 +250,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     return true;
   }
 
-  public function checkSchema($table, ISchema $schema) {
-    $result = $this->db->rawQuery('SHOW COLUMNS FROM `' . $this->db->tableName($table) . '`');
-    $columns = array();
-    while ($row = $result->fetchAssoc()) {
-      $column = $row['Field'];
-      if (isset($schema->$column))
-        $columns[$column] = $this->checkType($row, $schema->$column) ? 'ok' : 'alter';
-      else
-        $columns[$column] = 'delete';
-    }
-    foreach ($schema->getFields() as $field) {
-      if (!isset($columns[$field]))
-        $columns[$field] = 'add';
-    }
-    $result = $this->db->rawQuery('SHOW INDEX FROM `' . $this->db->tableName($table) . '`');
-    $actualIndexes = array();
-    while ($row = $result->fetchAssoc()) {
-      $index = $row['Key_name'];
-      $column = $row['Column_name'];
-      $unique = $row['Non_unique'] == 0 ? true : false;
-      if (isset($actualIndexes[$index]))
-        $actualIndexes[$index]['columns'][] = $column;
-      else
-        $actualIndexes[$index] = array(
-          'columns' => array($column),
-          'unique' => $unique
-        );
-    }
-    $expectedIndexes = $schema->getIndexes();
-    $allIndexes = array_unique(array_merge(
-      array_keys($actualIndexes), array_keys($expectedIndexes)
-    ));
-    $indexes = array();
-    foreach ($allIndexes as $index) {
-      if (!isset($actualIndexes[$index]))
-        $indexes[$index] = 'add';
-      else if (!isset($expectedIndexes[$index]))
-        $indexes[$index] = 'delete';
-      else if ($actualIndexes[$index] != $expectedIndexes[$index])
-        $indexes[$index] = 'alter';
-      else
-        $indexes[$index] = 'ok';
-    }
-    return array(
-      'columns' => $columns,
-      'indexes' => $indexes
-    );
-  }
-  
+  /**
+   * {@inheritdoc}
+   */
   public function getTableSchema($table) {
     $result = $this->db->rawQuery('SHOW COLUMNS FROM `' . $this->db->tableName($table) . '`');
     $schema = new Schema($table);
@@ -303,12 +283,18 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     return $schema;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function tableExists($table) {
     $result = $this->db->rawQuery(
       'SHOW TABLES LIKE "' . $this->db->tableName($table) . '"');
     return $result->hasRows();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getTables() {
     $prefix = $this->db->tableName('');
     $prefixLength = strlen($prefix);
@@ -324,6 +310,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     return $tables;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function createTable(Schema $schema) {
     $sql = 'CREATE TABLE `' . $this->db->tableName($schema->getName()) . '` (';
     $columns = $schema->getFields();
@@ -355,27 +344,42 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $sql .= ') CHARACTER SET utf8';
     $this->db->rawQuery($sql);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function renameTable($table, $newName) {
     throw new Exception('Not implemented');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function dropTable($table) {
     $sql = 'DROP TABLE `' . $this->db->tableName($table) . '`';
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addColumn($table, $column, DataType $type) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` ADD ' . $column;
     $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function deleteColumn($table, $column) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` DROP ' . $column;
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function alterColumn($table, $column, DataType $type) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
         . ' ' . $column;
@@ -383,6 +387,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function renameColumn($table, $column, $newName) {
     $type = $this->db->$table->getSchema()->$column;
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
@@ -391,6 +398,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function createIndex($table, $index, $options = array()) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {
@@ -408,6 +418,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function deleteIndex($table, $index) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {
@@ -419,6 +432,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function alterIndex($table, $index, $options = array()) {
     $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {

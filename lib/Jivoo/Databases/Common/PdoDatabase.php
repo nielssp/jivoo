@@ -1,21 +1,30 @@
 <?php
 /**
- * A generic PDO SQL database
- * @package Jivoo\Database
+ * A generic PDO SQL database.
+ * @package Jivoo\Databases\Common
  */
 abstract class PdoDatabase extends SqlDatabase {
   /**
-   * @var PDO PDO Connection
+   * @var PDO PDO Connection.
    */
   protected $pdo;
 
+  /**
+   * {@inheritdoc}
+   */
   public function close() {
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function quoteString($string) {
     return $this->pdo->quote($string);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function rawQuery($sql) {
     Logger::query($sql);
 //     Logger::logException(new Exception());

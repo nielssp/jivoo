@@ -48,6 +48,7 @@ interface ISchema {
    *   )
    * )
    * </code>
+   * 
    * @return array Associative array of index names and info.
    */
   public function getIndexes();

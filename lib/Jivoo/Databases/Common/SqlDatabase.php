@@ -1,63 +1,104 @@
 <?php
 /**
- * A generic SQL database
- * @package Jivoo\Database
+ * A generic SQL database.
+ * @package Jivoo\Databases\Common
  */
 abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   /**
-   * @var string Table prefix
+   * @var string Table prefix.
    */
   protected $tablePrefix = '';
 
+  /**
+   * @var IMigrationTypeAdapter Type/migration adapter.
+   */
   private $typeAdapter = null;
   
   /**
-   * @var array Associative array of table names and {@see SqlTable} objects
+   * @var array Associative array of table names and {@see SqlTable} objects.
    */
   protected $tables = array();
   
   /**
-   * Destructor
+   * Destruct and close database.
    */
   function __destruct() {
     $this->close();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getTable($table) {
     return new SqlTable($this->app, $this, $table);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getMigrationAdapter() {
     return $this->typeAdapter;
   }
   
+  /**
+   * Set migration/type adapter.
+   * @param IMigrationTypeAdapter $typeAdapter Adapter.
+   */
   protected function setTypeAdapter(IMigrationTypeAdapter $typeAdapter) {
     $this->typeAdapter = $typeAdapter;
   }
 
+  /**
+   * Convert table name. E.g. "UserSession" to "prefix_user_session".
+   * @param string $name Table name.
+   * @return string Real table name.
+   */
   public function tableName($name) {
     return $this->tablePrefix . Utilities::camelCaseToUnderscores($name);
   }
 
+  /**
+   * Quote table name for queries.
+   * @param string $name Table name.
+   * @return string Quoted table name.
+   */
   public function quoteTableName($name) {
     return '`' . $this->tableName($name) . '`';
   }
 
   /**
-   * Escape a string and surround with quotation marks
-   * @param string $string String
+   * Escape a string and surround with quotation marks.
+   * @param string $string String.
    */
   public abstract function quoteString($string);
   
+  /**
+   * @var mixed[] Placeholder values.
+   */
   private $vars;
+  
+  /**
+   * @var int Current placeholder index.
+   */
   private $varCount;
   
+  /**
+   * Encode a value.
+   * @param DataType $type Type.
+   * @param mixed $value Value.
+   * @return string Encoded string.
+   */
   private function encodeValue(DataType $type = null, $value) {
     if (!isset($type))
       return $this->typeAdapter->encode(DataType::detectType($value), $value);
     return $this->typeAdapter->encode($type, $value);
   }
 
+  /**
+   * Replace a placeholder with a value.
+   * @param array $matches Regex matches.
+   * @return string Replacements.
+   */
   private function replaceVar($matches) {
     $value = $this->vars[$this->varCount];
     $this->varCount++;
@@ -73,15 +114,39 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     return $this->encodeValue($type, $value);
   }
   
+  /**
+   * Replace table match by quoting and converting the table name.
+   * @param array $matches Regex matches.
+   * @return string Replacement.
+   */
   private function replaceTable($matches) {
     return $this->quoteTableName($matches[1]);
   }
   
   /**
-   * Escape a query
-   * @param string $format Query format, use question marks '?' instead of values
-   * @param mixed[] $vars List of values to replace question marks with
-   * @return string The escaped query
+   * Escape a query.
+   * 
+   * Placeholders (see also {@see DataType::fromPlaceHolder()}:
+   * <code>
+   * ? // Any scalar value.
+   * %true // Boolean true
+   * %false // Boolean false
+   * {AnyTableName} // A table name
+   * %i %int %integer // An integer value
+   * %f %float // A floating point value
+   * %s %str %string // A string
+   * %t $text // Text
+   * %b %bool %boolean // A boolean value
+   * %date // A date value
+   * %d %datetime // A date/time value
+   * %n %bin %binary // A binary object
+   * %AnyEnumClassName // An enum value of that class
+   * %anyPlaceholder() // An array of values
+   * </code>
+   * 
+   * @param string $format Query format, use placeholders instead of values.
+   * @param mixed[] $vars List of values to replace Placeholders with.
+   * @return string The escaped query.
    */
   public function escapeQuery($format, $vars = array()) {
     $sqlString = '';
@@ -102,25 +167,37 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     return preg_replace_callback('/((\?)|%([a-z]+))(\(\))?/i', array($this, 'replaceVar'), $format);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getTypeAdapter() {
     return $this->typeAdapter;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function tableExists($table) {
     return $this->typeAdapter->tableExists($table);
   }
 
-
-  
+  /**
+   * {@inheritdoc}
+   */
   public function beginTransaction() {
     $this->rawQuery('BEGIN');
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function commit() {
     $this->rawQuery('COMMIT');
-    
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */  
   public function rollback() {
     $this->rawQuery('ROLLBACK');
   }

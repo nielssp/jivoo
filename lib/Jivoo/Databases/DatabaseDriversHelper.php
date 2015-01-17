@@ -1,4 +1,8 @@
 <?php
+/**
+ * Helper for listing database drivers.
+ * @package Jivoo\Databases
+ */
 class DatabaseDriversHelper extends Helper {
   /**
    * Get information about a database driver.
@@ -51,9 +55,9 @@ class DatabaseDriversHelper extends Helper {
   }
   
   /**
-   * Get an array of all drivers and their information
+   * Get an array of all drivers and their information.
    * @return array An associative array of driver names and driver information
-   * as returned by {@see Database::checkDriver()}
+   * as returned by {@see Database::checkDriver()}.
    */
   public function listDrivers() {
     $drivers = array();

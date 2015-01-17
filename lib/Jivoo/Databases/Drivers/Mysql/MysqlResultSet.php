@@ -1,40 +1,46 @@
 <?php
 /**
- * Result set for MySQL driver
- * @package Jivoo\Database\Mysql
+ * Result set for MySQL driver.
+ * @package Jivoo\Databases\Drivers\Mysql
  */
 class MysqlResultSet implements IResultSet {
   /**
-   * @var resource MySQL result resource
+   * @var resource MySQL result resource.
    */
   private $mysqlResult;
   
   /**
-   * @var array[] List of saved rows
+   * @var array[] List of saved rows.
    */
   private $rows = array();
 
   /**
-   * Constructor
-   * @param resource MySQL result resource as returned by {@see mysql_query()}
+   * Construct result set.
+   * @param resource MySQL result resource as returned by {@see mysql_query()}.
    */
   public function __construct($result) {
     $this->mysqlResult = $result;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasRows() {
     return ($this->rows[] = $this->fetchAssoc()) !== false;
   }
 
   /**
-   * Get ordered array from associative array
-   * @param array $assoc Associative array
-   * @return mixed[] Ordered array
+   * Get ordered array from associative array.
+   * @param array $assoc Associative array.
+   * @return mixed[] Ordered array.
    */
   private function rowFromAssoc($assoc) {
     return array_values($assoc);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchRow() {
     if (!empty($this->rows)) {
       return $this->rowFromAssoc(array_shift($this->rows));
@@ -42,6 +48,9 @@ class MysqlResultSet implements IResultSet {
     return mysql_fetch_row($this->mysqlResult);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAssoc() {
     if (!empty($this->rows)) {
       return array_shift($this->rows);
