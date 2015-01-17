@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides functions related to redirects and HTTP status codes
+ * Provides functions related to redirects and HTTP status codes.
  * @package Jivoo\Routing
  */
 class Http {
@@ -23,13 +23,12 @@ class Http {
   private function __construct() { }
   
   /**
-   * Redirect the user to another page
+   * Redirect the user to another page.
    *
-   * @todo Might require an absolute URI in some cases? Look into that
+   * @todo Might require an absolute URI in some cases? Look into that.
    *
-   * @param int $status HTTP status code, should be 3xx e.g. 301 for Moved Permanently
-   * @param string $location The page to redirect to
-   * @return void
+   * @param int $status HTTP status code, should be 3xx e.g. 301 for Moved Permanently.
+   * @param string $location The page to redirect to.
    */
   public static function redirect($status, $location) {
     if (!Http::setStatus($status)) {
@@ -44,16 +43,16 @@ class Http {
   
   /**
    * Set HTTP content type (and encoding)
-   * @param string Content type, e.g. 'text/html'
+   * @param string Content type, e.g. 'text/html'.
    */
   public static function setContentType($type, $encoding = 'UTF-8') {
     header('Content-Type: ' . $type . '; charset=' . $encoding);
   }
   
   /**
-   * Set HTTP status code
-   * @param int $status Status code
-   * @return boolean False if invalid/unknown/unimplemented code, true otherwise
+   * Set HTTP status code.
+   * @param int $status Status code.
+   * @return boolean False if invalid/unknown/unimplemented code, true otherwise.
    */
   public static function setStatus($status) {
     $phrase = Http::statusPhrase($status);
@@ -65,9 +64,9 @@ class Http {
   }
   
   /**
-   * Returns the phrase for a HTTP status code
-   * @param int $status HTTP status code
-   * @return string Phrase
+   * Returns the phrase for a HTTP status code.
+   * @param int $status HTTP status code.
+   * @return string Phrase.
    */
   public static function statusPhrase($status) {
     switch ($status) {
@@ -103,13 +102,18 @@ class Http {
     return false;
   }
 
+  /**
+   * Format a date for use in HTTP headers.
+   * @param int $timestamp Time stamp.
+   * @return string Formatted date.
+   */
   public static function date($timestamp) {
     return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
   }
   
   /**
-   * Throw an exception if headers have already been sent and can't be changed
-   * @throws HeadersAlreadySentException if headers already sent
+   * Throw an exception if headers have already been sent and can't be changed.
+   * @throws HeadersAlreadySentException If headers already sent.
    */
   public static function assumeHeadersNotSent() {
     if (headers_sent($file, $line)) {
@@ -118,31 +122,10 @@ class Http {
       ));
     }
   }
-  
-  /**
-   * Append a query string to a URI.
-   * @param string $query Query string e.g. 'p=4&k=3'
-   * @param string $uri URI Optional. Default is content of $_SERVER['REQUEST_URI']
-   * @deprecated Not used anywhere... Use routing system instead
-   * @return string Uri + query string
-   */
-  public static function appendQuery($query, $uri = null) {
-    // Just in case someone puts a question mark at the beginning
-    $query = ltrim($query, '?');
-    if (is_null($uri)) {
-      $uri = $_SERVER['REQUEST_URI'];
-    }
-    if (strpos($uri, '?') !== false) {
-      return $uri . '&' . $query;
-    }
-    else {
-      return $uri . '?' . $query;
-    }
-  }
 }
 
 /**
- * Headers have already been sent and cannot be changed
+ * Headers have already been sent and cannot be changed.
  * @package Jivoo\Routing
  */
 class HeadersAlreadySentException extends Exception { }

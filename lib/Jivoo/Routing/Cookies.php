@@ -9,22 +9,25 @@
 class Cookies implements arrayaccess {
 
   /**
-   * @var string Cookie prefix
+   * @var string Cookie prefix.
    */
   private $prefix = '';
 
   /**
-   * @var unknown
+   * @var string[] Cookie values.
    */
   private $cookies = array();
   
+  /**
+   * @var string Base path for cookies.
+   */
   private $basePath = '/'; 
 
   /**
-   * Constructor
-   * @param array $cookies Key/value pairs, e.g. from $_COOKIE.
+   * Opens the cookie jar.
+   * @param string[] $cookies Associative array of cookies, e.g. from $_COOKIE.
    * @param string $prefix Cookie prefix to use.
-   * @param string $basePath Default path for cookies to be available on
+   * @param string $basePath Default path for cookies to be available on.
    */
   public function __construct($cookies = array(), $prefix = '', $basePath = '/') {
     $this->cookies = $cookies;
@@ -34,10 +37,10 @@ class Cookies implements arrayaccess {
 
   /**
    * Create a cookie.
-   * @param string $name Name of cookie
-   * @param string $value Value of cookie
+   * @param string $name Name of cookie.
+   * @param string $value Value of cookie.
    * @param int $expire The time the cookie expires as a UNIX timestamp, default
-   * is a year
+   * is a year.
    * @param string $path The path on the server in which the cookie will be available on.
    */
   public function setCookie($name, $value, $expire = null, $path = null) {
@@ -56,27 +59,27 @@ class Cookies implements arrayaccess {
   }
 
   /**
-   * Whether or not a cookie exists
-   * @param string $name Name of cookie
-   * @return bool True if it exists, false otherwise
+   * Whether or not a cookie exists.
+   * @param string $name Name of cookie.
+   * @return bool True if it exists, false otherwise.
    */
   public function offsetExists($name) {
     return isset($this->cookies[$this->prefix . $name]);
   }
 
   /**
-   * Gets the value of a cookie
-   * @param string $name Name of cookie
-   * @return string Value of cookie
+   * Gets the value of a cookie.
+   * @param string $name Name of cookie.
+   * @return string Value of cookie.
    */
   public function offsetGet($name) {
     return $this->cookies[$this->prefix . $name];
   }
 
   /**
-   * Set the value of a cookie
-   * @param string $name Name of cookie
-   * @param string $value Value of cookie
+   * Set the value of a cookie.
+   * @param string $name Name of cookie.
+   * @param string $value Value of cookie.
    */
   public function offsetSet($name, $value) {
     if (is_null($name)) {
@@ -87,8 +90,8 @@ class Cookies implements arrayaccess {
   }
 
   /**
-   * Delete a cookie
-   * @param string $name Name of cookie
+   * Delete a cookie.
+   * @param string $name Name of cookie.
    */
   public function offsetUnset($name) {
     $this->setCookie($name, '', time());

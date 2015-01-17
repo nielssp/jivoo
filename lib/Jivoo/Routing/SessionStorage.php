@@ -1,30 +1,40 @@
 <?php
 /**
- * Session storage access
+ * Session storage access.
  *
  * Implements arrayaccess, so the []-operator can be used
  * to get and set session values.
- * @property-read string $id Session id
- * @property-read FlashMap $flash Flash messages
+ * 
+ * @property-read string $id Session id.
+ * @property-read FlashMap $flash Flash messages.
  * @package Jivoo\Routing
  */
 class SessionStorage implements arrayaccess {
+  
   /**
-   * @var string Session prefix
+   * @var bool Whether or not session is open.
+   */
+  private $open = true;
+  
+  /**
+   * @var string Session prefix.
    */
   private $prefix = '';
   
   /**
-   * @var array Associative array of uid and Flash-objects
+   * @var array Associative array of uid and Flash-objects.
    */
   private $messages = array();
   
+  /**
+   * @var FlashMap Flash messages.
+   */
   private $flash;
   
   /**
-   * Constructor
-   * @param string $prefix Session prefix to use
-   * @param string $clientIp Client IP for verification
+   * Construct session storage.
+   * @param string $prefix Session prefix to use.
+   * @param string $clientIp Client IP (not used).
    */
   public function __construct($prefix = '', $clientIp = null) {
     session_start();
@@ -32,15 +42,19 @@ class SessionStorage implements arrayaccess {
     $this->flash = new FlashMap($this);
   }
   
+  /**
+   * Destruct. Saves flash messages.
+   */
   public function __destruct() {
     if ($this->id != '')
       $this->flash->save();
   }
   
   /**
-   * Get value of property
-   * @param string $property Name of property
-   * @return mixed Value
+   * Get value of property.
+   * @param string $property Name of property.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property unknown.
    */
   public function __get($property) {
     switch ($property) {
@@ -53,10 +67,11 @@ class SessionStorage implements arrayaccess {
   }
   
   /**
-   * Reopen a closed session
-   * @return boolean True on success, false on failure
+   * Reopen a closed session.
+   * @return boolean True on success, false on failure.
    */
   public function open() {
+    $this->open = true;
     return session_start();
   }
   
@@ -65,13 +80,14 @@ class SessionStorage implements arrayaccess {
    * Allows other scripts to use session.
    */
   public function close() {
+    $this->open = false;
     $this->flash->save();
     session_write_close();
   }
   
   /**
-   * Replace session id with new one
-   * @return boolean True on success, false on failure
+   * Replace session id with new one.
+   * @return boolean True on success, false on failure.
    */
   public function regenerate() {
     return session_regenerate_id();
@@ -79,35 +95,35 @@ class SessionStorage implements arrayaccess {
   
   /**
    * Whether or not a key exists.
-   * @param string $name Key
-   * @return bool True if it does, false otherwise
+   * @param string $name Key.
+   * @return bool True if it does, false otherwise.
    */
   public function offsetExists($name) {
     return isset($_SESSION[$this->prefix . $name]);
   }
   
   /**
-   * Get value, return as reference
-   * @param string $name Key
-   * @return mixed Value
+   * Get value, return as reference.
+   * @param string $name Key.
+   * @return mixed Value.
    */
   private function &get($name) {
     return $_SESSION[$this->prefix . $name];
   }
 
   /**
-   * Get a value
-   * @param string $name Key
-   * @return mixed Value
+   * Get a value.
+   * @param string $name Key.
+   * @return mixed Value.
    */
   public function offsetGet($name) {
     return $this->get($name);
   }
 
   /**
-   * Associate a value with a key
-   * @param string $name Key
-   * @param mixed $value Value
+   * Associate a value with a key.
+   * @param string $name Key.
+   * @param mixed $value Value.
    */
   public function offsetSet($name, $value) {
     if (is_null($name)) {
@@ -118,8 +134,8 @@ class SessionStorage implements arrayaccess {
   }
 
   /**
-   * Delete a key
-   * @param string $name Key
+   * Delete a key.
+   * @param string $name Key.
    */
   public function offsetUnset($name) {
     unset($_SESSION[$this->prefix . $name]);

@@ -1,71 +1,71 @@
 <?php
 /**
- * Used for configuring routes between paths and actions
+ * Used for configuring routes between paths and actions.
  * @package Jivoo\Routing
- * @property-read array|ILinkable|string|null $route A route, see {@see Routing}
- * @property-read int $type Type of routing
+ * @property-read array|ILinkable|string|null $route A route, see {@see Routing}.
+ * @property-read int $type Type of routing.
  */
 class Route {
   
   /**
-   * @var int Auto routing
+   * @var int Auto routing.
    */
   const TYPE_AUTO = 1;
   
   /**
-   * @var int Routing root (frontpage)
+   * @var int Routing root (frontpage).
    */
   const TYPE_ROOT = 2;
   
   /**
-   * @var int Routing error page
+   * @var int Routing error page.
    */
   const TYPE_ERROR = 3;
   
   /**
-   * @var int Match a path
+   * @var int Match a path.
    */
   const TYPE_MATCH = 4;
   
   /**
-   * @var int Resource routes
+   * @var int Resource routes.
    */
   const TYPE_RESOURCE = 5;
   
   /**
-   * @var mixed A route
+   * @var mixed A route.
    */
   private $route;
   
   /**
-   * @var int Type of route
+   * @var int Type of route.
    */
   private $type;
   
   /**
-   * @var Path pattern for matching
+   * @var Path pattern for matching.
    */
   private $pattern;
   
   /**
-   * @var int Priority of route
+   * @var int Priority of route.
    */
   private $priority = 5;
   
   /**
-   * @var string Auto route only these actions
+   * @var string Auto route only these actions.
    */
   private $only = array();
   
   /**
-   * @var string Don't auto route these actions
+   * @var string Don't auto route these actions.
    */
   private $except = array();
   
   /**
-   * Constructor.
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}
-   * @param int $type Type of route
+   * Construct route.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param int $type Type of route.
    */
   private function __construct($route, $type) {
     $this->route = $route;
@@ -73,9 +73,10 @@ class Route {
   }
   
   /**
-   * Get value of property
-   * @param string $property Property name
-   * @return mixed Value
+   * Get value of property.
+   * @param string $property Property name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property undefined.
    */
   public function __get($property) {
     switch ($property) {
@@ -87,9 +88,9 @@ class Route {
   }
   
   /**
-   * Make route
-   * @param Routing $routing Routing module 
-   * @throws Exception if type is auto routing and controller is not set
+   * Make route.
+   * @param Routing $routing Routing module. 
+   * @throws Exception If type is auto routing and controller is not set.
    */
   public function draw(Routing $routing) {
     switch ($this->type) {
@@ -138,10 +139,10 @@ class Route {
 
   /**
    * Automatically create routes for all actions in a controller or just a
-   * single action
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}
-   * @param array $options An associative array of options for auto routing
-   * @return Route Route object
+   * single action.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array $options An associative array of options for auto routing.
+   * @return Route Route object.
    */
   public static function auto($route, $options = array()) {
     $object = new Route($route, self::TYPE_AUTO);
@@ -155,9 +156,9 @@ class Route {
   }
   
   /**
-   * Create route for root, i.e. the frontpage
-   * @param array|ILinkable|string|null $route A route, {@see Routing}
-   * @return Route Route object
+   * Create route for root, i.e. the frontpage.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
+   * @return Route Route object.
    */
   public static function root($route) {
     $object = new Route($route, self::TYPE_ROOT);
@@ -165,9 +166,9 @@ class Route {
   }
   
   /**
-   * Create route for error page
-   * @param array|ILinkable|string|null $route A route, {@see Routing}
-   * @return Route Route object
+   * Create route for error page.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
+   * @return Route Route object.
    */
   public static function error($route) {
     $object = new Route($route, self::TYPE_ERROR);
@@ -176,11 +177,11 @@ class Route {
 
 
   /**
-   * Create route for requests matching a pattern
-   * @param string $pattern A path to match, see {@see Routing::addRoute}
-   * @param array|ILinkable|string|null $route A route, {@see Routing}
-   * @param int $priority Priority of route
-   * @return Route Route object
+   * Create route for requests matching a pattern.
+   * @param string $pattern A path to match, see {@see Routing::addRoute}.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
+   * @param int $priority Priority of route.
+   * @return Route Route object.
    */
   public static function match($pattern, $route, $priority = 5) {
     $object = new Route($route, self::TYPE_MATCH);
@@ -192,8 +193,8 @@ class Route {
   /**
    * Automatically create routes for a resource. Expects controller to be set in
    * the route.
-   * @param array|ILinkable|string|null $route A route, {@see Routing}
-   * @return Route Route object
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
+   * @return Route Route object.
    */
   public static function resource($route) {
     $object = new Route($route, self::TYPE_RESOURCE);

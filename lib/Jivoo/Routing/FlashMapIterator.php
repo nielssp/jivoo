@@ -1,10 +1,24 @@
 <?php
+/**
+ * An iterator for {@see FlashMap}.
+ * @package Jivoo\Routing
+ */
 class FlashMapIterator implements Iterator {
-  
+  /**
+   * @var FlashMap Flash map.
+   */
   private $flash;
   
+  /**
+   * @var array Messages.
+   */
   private $list = array();
   
+  /**
+   * Construct iterator
+   * @param FlashMap $flash Flash map.
+   * @param string[] $lists Names of lists to iterate.
+   */
   public function __construct(FlashMap $flash, $lists) {
     $this->flash = $flash;
     foreach ($lists as $type => $list) {
@@ -15,7 +29,10 @@ class FlashMapIterator implements Iterator {
     }
   }
   
-  
+  /**
+   * Current message.
+   * @return FlashMessage Message.
+   */
   public function current() {
     $tuple = current($this->list);
     $index = $tuple[0];
@@ -24,18 +41,30 @@ class FlashMapIterator implements Iterator {
     return $tuple[1];
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function next() {
     next($this->list);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function key() {
     return key($this->list);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function valid() {
     return key($this->list) !== null;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function rewind() {
     reset($this->list);
   }

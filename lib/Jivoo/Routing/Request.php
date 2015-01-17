@@ -1,67 +1,71 @@
 <?php
 /**
- * A class representing a HTTP request
+ * A class representing an HTTP request.
  * @package Jivoo\Routing
- * @property string[] $path The path relative to the application root as an array
- * @property array $query The GET query as an associative array
- * @property string $fragment The fragment
- * @property-read string[] $realPath The original $path
- * @property-read array $data POST data as an associative array
- * @property-read Cookies $cookies Cookie access object
- * @property-read SessionStorage $session Session storage access object
- * @property-read string|null $ip The remote address or null if not set
- * @property-read string|null $url The request uri or null if not set
- * @property-read string|null $referer HTTP referer or null if not set
- * @property-read string|null $userAgent HTTP user agent or null if not set
- * @property-read string|null $domain Domain name protocol and port
+ * @property string[] $path The path relative to the application root as an array.
+ * @property array $query The GET query as an associative array.
+ * @property string $fragment The fragment.
+ * @property-read string[] $realPath The original $path.
+ * @property-read array $data POST data as an associative array.
+ * @property-read array $files File upload data.
+ * @property-read Cookies $cookies Cookie access object.
+ * @property-read SessionStorage $session Session storage access object.
+ * @property-read string|null $ip The remote address or null if not set.
+ * @property-read string|null $url The request uri or null if not set.
+ * @property-read string|null $referer HTTP referer or null if not set.
+ * @property-read string|null $userAgent HTTP user agent or null if not set.
+ * @property-read string|null $domain Domain name protocol and port.
  * @property-read string|null $method Request method, e.g. 'GET', 'POST' etc.
  */
 class Request {
 
   /**
-   * @var string[] Original path
+   * @var string[] Original path.
    */
   private $realPath;
 
   /**
-   * @var string[] Path as array
+   * @var string[] Path as array.
    */
   private $path;
 
   /**
-   * @var array GET query
+   * @var array GET query.
    */
   private $query;
 
   /**
-   * @var Cookies Cookies object
+   * @var Cookies Cookies object.
    */
   private $cookies;
 
   /**
-   * @var SessionStorage Session object
+   * @var SessionStorage Session object.
    */
   private $session;
 
   /**
-   * @var string Fragment 
+   * @var string Fragment. 
    */
   private $fragment = null;
 
   /**
-   * @var array POST data
+   * @var array POST data.
    */
   private $data;
   
+  /**
+   * @var array File upload data.
+   */
   private $files;
   
   /**
-   * @var bool Whether or not request is from mobile browser
+   * @var bool Whether or not request is from mobile browser.
    */
   private $mobile = null;
   
   /**
-   * @var string Domain name, protocol and port
+   * @var string Domain name, protocol and port.
    */
   private $domainName = '';
   
@@ -72,19 +76,19 @@ class Request {
 
   /**
    * @var string[] List of types accepted by the client (assumes that the client
-   * wants HTML if no accept header is set)
+   * wants HTML if no accept header is set).
    */
   private $accepts = array('html');
 
   /**
-   * @var string[] List of encodings accepted by the client
+   * @var string[] List of encodings accepted by the client.
    */
   private $encodings = array();
 
   /**
-   * Constructor
-   * @param string $sessionPrefix Session prefix to use for session variables
-   * @param string $basePath Base path of application
+   * Construct request.
+   * @param string $sessionPrefix Session prefix to use for session variables.
+   * @param string $basePath Base path of application.
    */
   public function __construct($sessionPrefix = '', $basePath = '/') {
     $url = $_SERVER['REQUEST_URI'];
@@ -162,9 +166,10 @@ class Request {
   }
 
   /**
-   * Get value of property
-   * @param string $name Property name
-   * @return mixed Value of property
+   * Get value of property.
+   * @param string $name Property name.
+   * @return mixed Value of property.
+   * @throws InvalidPropertyException If unknown property.
    */
   public function __get($name) {
     switch ($name) {
@@ -193,9 +198,10 @@ class Request {
   }
 
   /**
-   * Set value of property
-   * @param string $name Name of property
-   * @param string $value Value of property
+   * Set value of property.
+   * @param string $name Property name.
+   * @param string $value Value of property.
+   * @throws InvalidPropertyException If unknown property.
    */
   public function __set($name, $value) {
     switch ($name) {
@@ -210,8 +216,8 @@ class Request {
   }
 
   /**
-   * Unset the entire GET query array or part of it
-   * @param string $key A specific key to unset
+   * Unset the entire GET query array or part of it.
+   * @param string $key A specific key to unset.
    */
   public function unsetQuery($key = null) {
     if (!isset($key)) {
@@ -223,9 +229,9 @@ class Request {
   }
   
   /**
-   * Whether or not the current request is POST and has a valid access token
-   * @param string $key Optional key to test for existence in POST-data
-   * @return boolean True if valid, false otherwise
+   * Whether or not the current request is POST and has a valid access token.
+   * @param string $key Optional key to test for existence in POST-data.
+   * @return boolean True if valid, false otherwise.
    */
   public function hasValidData($key = null) {
     if (!$this->isPost()) {
@@ -238,16 +244,16 @@ class Request {
   }
   
   /**
-   * Create HTML for a hidden form input containing the access token
-   * @return string HTML for hidden input
+   * Create HTML for a hidden form input containing the access token.
+   * @return string HTML for hidden input.
    */
   public function createHiddenToken() {
     return '<input type="hidden" name="access_token" value="' . $this->getToken() . '" />';
   }
 
   /**
-   * Get the current access token or generate a new one
-   * @return string Access token
+   * Get the current access token or generate a new one.
+   * @return string Access token.
    */
   public function getToken() {
     if (!isset($this->session['access_token'])) {
@@ -257,8 +263,8 @@ class Request {
   }
 
   /**
-   * Compare the session access token with the POST'ed access token
-   * @return bool True if they match, false otherwise
+   * Compare the session access token with the POST'ed access token.
+   * @return bool True if they match, false otherwise.
    */
   public function checkToken() {
     if (!isset($this->data['access_token'])
@@ -269,51 +275,65 @@ class Request {
   }
 
   /**
-   * Whether or not the current request method is GET
-   * @return bool True if GET, false if not
+   * Whether or not the current request method is GET.
+   * @return bool True if GET, false if not.
    */
   public function isGet() {
     return $this->method == 'GET';
   }
 
   /**
-   * Whether or not the current request method is POST
-   * @return bool True if POST, false if not
+   * Whether or not the current request method is POST.
+   * @return bool True if POST, false if not.
    */
   public function isPost() {
     return $this->method == 'POST';
   }
 
   /**
-   * Whether or not the current request method is PATCH
-   * @return bool True if PATCH, false if not
+   * Whether or not the current request method is PATCH.
+   * @return bool True if PATCH, false if not.
    */
   public function isPatch() {
     return $this->method == 'PATCH';
   }
 
   /**
-   * Whether or not the current request method is DELETE
-   * @return bool True if DELETE, false if not
+   * Whether or not the current request method is DELETE.
+   * @return bool True if DELETE, false if not.
    */
   public function isDelete() {
     return $this->method == 'DELETE';
   }
 
   /**
-   * Whether or not the current request method is PUT
-   * @return bool True if PUT, false if not
+   * Whether or not the current request method is PUT.
+   * @return bool True if PUT, false if not.
    */
   public function isPut() {
     return $this->method == 'PUT';
   }
 
+  /**
+   * Whether or not the client accepts the specified type. If the type is
+   * omitted then a list of acceptable types is returned.
+   * @param string $type Type.
+   * @return bool|string[] True if client accepts provided type, false otherwise.
+   * List of accepted types if type parameter omitted.
+   */
   public function accepts($type = null) {
     if (!isset($type))
       return $this->accepts;
     return in_array($type, $this->accepts);
   }
 
+  /**
+   * Whether or not the client accepts the specified encoding. If the type is
+   * omitted then a list of acceptable encodings is returned.
+   * @param string $encoding Encoding.
+   * @return bool|string[] True if client accepts provided encoding, false otherwise.
+   * List of accepted encodings if type parameter omitted.
+   */
   public function acceptsEncoding($encoding = null) {
     if (!isset($encoding))
       return $this->encodings;
@@ -321,8 +341,8 @@ class Request {
   }
 
   /**
-   * Whether or not the current request was made with AJAX
-   * @return bool True if it is, false otherwise
+   * Whether or not the current request was made with AJAX.
+   * @return bool True if it is, false otherwise.
    */
   public function isAjax() {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
@@ -330,8 +350,8 @@ class Request {
   }
   
   /**
-   * Whether or  not the current request was made by a mobile browser
-   * @return boolean True if a mobile browser was detected, false otherwise
+   * Whether or  not the current request was made by a mobile browser.
+   * @return boolean True if a mobile browser was detected, false otherwise.
    */
   public function isMobile() {
     if (!isset($this->mobile)) {
@@ -339,19 +359,19 @@ class Request {
       $this->mobile = false;
       if (isset($agent)) {
         if (strpos($agent, 'android') !== false
-            OR strpos($agent, 'iphone') !== false
-            OR strpos($agent, 'ipad') !== false
-            OR strpos($agent, 'mobile') !== false // e.g. IEMobile
-            OR strpos($agent, 'phone') !== false // e.g. Windows Phone OS
-            OR strpos($agent, 'opera mini') !== false
-            OR strpos($agent, 'maemo') !== false
-            OR strpos($agent, 'blackberry') !== false
-            OR strpos($agent, 'nokia') !== false
-            OR strpos($agent, 'sonyericsson') !== false
-            OR strpos($agent, 'opera mobi') !== false
-            OR strpos($agent, 'symbos') !== false
-            OR strpos($agent, 'symbianos') !== false
-            OR strpos($agent, 'j2me') !== false) {
+            or strpos($agent, 'iphone') !== false
+            or strpos($agent, 'ipad') !== false
+            or strpos($agent, 'mobile') !== false // e.g. IEMobile
+            or strpos($agent, 'phone') !== false // e.g. Windows Phone OS
+            or strpos($agent, 'opera mini') !== false
+            or strpos($agent, 'maemo') !== false
+            or strpos($agent, 'blackberry') !== false
+            or strpos($agent, 'nokia') !== false
+            or strpos($agent, 'sonyericsson') !== false
+            or strpos($agent, 'opera mobi') !== false
+            or strpos($agent, 'symbos') !== false
+            or strpos($agent, 'symbianos') !== false
+            or strpos($agent, 'j2me') !== false) {
           $this->mobile = true;
         }
       }

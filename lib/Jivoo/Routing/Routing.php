@@ -1,10 +1,4 @@
 <?php
-// Module
-// Name           : Routing
-// Description    : The Jivoo routing system
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Controllers
-
 /**
  * Module for handling routes and HTTP requests.
  * 
@@ -66,6 +60,9 @@
  */
 class Routing extends LoadableModule {
   
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Controllers');
   
   /**
@@ -93,10 +90,19 @@ class Routing extends LoadableModule {
    */
   private $errorRoute = null;
 
+  /**
+   * @var bool Use etags.
+   */
   private $etags = false;
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $events = array('beforeRender', 'afterRender', 'beforeRedirect', 'beforeCallAction', 'afterCallAction');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     // Set default settings
     $this->config->defaults = array(
@@ -161,9 +167,9 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Set current route
+   * Set current route.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @param number $priority Priority of route
+   * @param number $priority Priority of route.
    */
   public function setRoot($route, $priority = 9) {
     $route = $this->validateRoute($route);
@@ -194,7 +200,7 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Set error route
+   * Set error route.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function setError($route) {
@@ -203,10 +209,10 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Get a controller name with or without suffix
-   * @param string|Controller $controller Controller name or object
-   * @param bool $withSuffix Whether or not to include 'Controller'-suffix
-   * @return string Controller name
+   * Get a controller name with or without suffix.
+   * @param string|Controller $controller Controller name or object.
+   * @param bool $withSuffix Whether or not to include 'Controller'-suffix.
+   * @return string Controller name.
    */
   protected function controllerName($controller, $withSuffix = false) {
     if (is_object($controller)) {
@@ -225,20 +231,20 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Get current request object
-   * @return Request Current request
+   * Get current request object.
+   * @return Request Current request.
    */
   public function getRequest() {
     return $this->request;
   }
 
   /**
-   * Will replace **, :*, * and :n in path with parameters
-   * @param mixed[] $parameters Parameters list
+   * Will replace **, :*, * and :n in path with parameters.
+   * @param mixed[] $parameters Parameters list.
    * @param mixed[] $additional Additional parameters, one is used. The first
-   * one is used as a path-array (string[])
-   * @throws InvalidRouteException if unknown pattern
-   * @return mixed[] Resulting path
+   * one is used as a path-array (string[]).
+   * @throws InvalidRouteException If unknown pattern.
+   * @return mixed[] Resulting path.
    */
   public function insertParameters($parameters, $additional) {
     $path = $additional[0];
@@ -278,12 +284,12 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Get path associated with an action
-   * @param string|Controller $controller Controller name or object
-   * @param string $action Action name
-   * @param mixed[] $parameters Parameters list
-   * @throws InvalidRouteException if path was not found
-   * @return mixed[] A path
+   * Get path associated with an action.
+   * @param string|Controller $controller Controller name or object.
+   * @param string $action Action name.
+   * @param mixed[] $parameters Parameters list.
+   * @throws InvalidRouteException If path was not found.
+   * @return string[] A path.
    */
   public function getPath($controller = null, $action = 'index',
                           $parameters = array()) {
@@ -311,10 +317,10 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Check whether or not a route matches the current request
+   * Check whether or not a route matches the current request.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @throws InvalidRouteException If route is not valid
-   * @return boolean True if current route, false otherwise
+   * @throws InvalidRouteException If route is not valid.
+   * @return boolean True if current route, false otherwise.
    */
   public function isCurrent($route = null, $defaultAction = 'index', $defaultParameters = array()) {
     $route = $this->validateRoute($route, $defaultAction, $defaultParameters);
@@ -344,12 +350,12 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Get a URL from a path, query and fragment
-   * @param string[] $path Path as array
-   * @param array $query GET query
-   * @param string $fragment Fragment
+   * Get a URL from a path, query and fragment.
+   * @param string[] $path Path as array.
+   * @param array $query GET query.
+   * @param string $fragment Fragment.
    * @param string $rewrite If true 'index.php/' will not be included in link.
-   * @return string A URL
+   * @return string A URL.
    */
   public function getLinkFromPath($path = null, $query = null, $fragment = null,
     $rewrite = false) {
@@ -400,10 +406,10 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Merge two routes
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}
-   * @param array $mergeWith Route array to merge with
-   * @param array Resulting route (as an array)
+   * Merge two routes.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array $mergeWith Route array to merge with.
+   * @param array Resulting route (as an array).
    */
   public function mergeRoutes($route = null, $mergeWith = array()) {
     $route = $this->validateRoute($route);
@@ -411,10 +417,10 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Validate route
+   * Validate route.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @throws InvalidRouteException If invalid route
-   * @return array A valid route array
+   * @throws InvalidRouteException If invalid route.
+   * @return array A valid route array.
    */
   public function validateRoute($route, $defaultAction = 'index', $defaultParameters = array()) {
     if (!isset($route)) {
@@ -494,10 +500,10 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Get a URL for a route (including http://domain.name)
+   * Get a URL for a route (including http://domain.name).
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @throws InvalidRouteException if incomplete route
-   * @return string A URL
+   * @throws InvalidRouteException If incomplete route.
+   * @return string A URL.
    */
   public function getUrl($route = null) {
     $route = $this->validateRoute($route);
@@ -521,10 +527,10 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Get a link for a route (absolute path)
+   * Get a link for a route (absolute path).
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @throws InvalidRouteException if incomplete route
-   * @return string A link
+   * @throws InvalidRouteException If incomplete route.
+   * @return string A link.
    */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);
@@ -545,12 +551,12 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Perform a redirect
-   * @param string[] $path Path array
-   * @param array $query GET query
-   * @param string $moved Whether or not to use a 301 status code
-   * @param string $fragment Fragment
-   * @param string $rewrite If true 'index.php/' will not be included
+   * Perform a redirect.
+   * @param string[] $path Path array.
+   * @param array $query GET query.
+   * @param string $moved Whether or not to use a 301 status code.
+   * @param string $fragment Fragment.
+   * @param string $rewrite If true 'index.php/' will not be included.
    */
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
@@ -559,7 +565,7 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Perform a redirect
+   * Perform a redirect.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function redirect($route = null) {
@@ -568,7 +574,7 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Perform a permanent redirect
+   * Perform a permanent redirect.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function moved($route = null) {
@@ -577,9 +583,9 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Refresh current page
-   * @param array $query GET query, default is current
-   * @param string $fragment Fragment, default is none
+   * Refresh current page.
+   * @param array $query GET query, default is current.
+   * @param string $fragment Fragment, default is none.
    */
   public function refresh($query = null, $fragment = null) {
     if (!isset($query)) {
@@ -590,9 +596,9 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Automatically create routes for a controller
-   * @param string $controller Controller name, e.g. 'Posts'
-   * @param string $action Optional action name
+   * Automatically create routes for a controller.
+   * @param string $controller Controller name, e.g. 'Posts'.
+   * @param string $action Optional action name.
    * @param string $prefix Prefix...
    */
   public function autoRoute($controller, $action = null, $prefix = '') {
@@ -671,10 +677,11 @@ class Routing extends LoadableModule {
    *   of the path being put into parameters.
    * * The placeholder ':controller' will set the controller, and ':action' will
    *   set the action. 
-   * @param string $pattern A path pattern
+   *
+   * @param string $pattern A path pattern.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @param number $priority Priority of route
-   * @throws InvalidRouteException if unknown placeholder
+   * @param number $priority Priority of route.
+   * @throws InvalidRouteException If unknown placeholder.
    */
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
@@ -773,20 +780,23 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Add a path for a controller/action combination. This is done automatically
+   * Add a path for a controller/action combination.
+   * 
+   * This is done automatically
    * with the use of {@see Routing::addRoute()}. The path function provided is
    * called with a parameters-array as its first parameter and $additional as
    * its second parameter. It is used when converting a route to a path. For an
    * example of a path function see {@see Routing::insertParameters()}.
-   * @param string|Controller $controller Controller name or object
-   * @param string $action Action name
-   * @param int|"Variadic" $arity Number of parameters or 'variadic' for arbitrary number
-   * @param callback $pathFunction Path function used to compute path
+   * 
+   * @param string|Controller $controller Controller name or object.
+   * @param string $action Action name.
+   * @param int|"Variadic" $arity Number of parameters or 'variadic' for arbitrary number.
+   * @param callback $pathFunction Path function used to compute path.
    * @param mixed[] $additional Additional parameters, the second parameter for
-   * the path function
-   * @param int $priority Priority of path
+   * the path function.
+   * @param int $priority Priority of path.
    * @return boolean True if path function added, false if a path function with
-   * a higher priority already exists for that controller and action
+   * a higher priority already exists for that controller and action.
    */
   public function addPath($controller, $action, $arity, $pathFunction,
                           $additional = array(), $priority = 5) {
@@ -811,9 +821,9 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Set current route
+   * Set current route.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @param int $priority Priority of route
+   * @param int $priority Priority of route.
    * @return boolean True if successful, false if a route with higher priority
    * was previously set.
    */
@@ -831,7 +841,7 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Create routes as desbribed by the routes configuration file
+   * Create routes as desbribed by the routes configuration file.
    */
   public function drawRoutes() {
     foreach ($this->routes as $route) {
@@ -840,9 +850,9 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Find the best route and execute action
-   * @throws ModuleNotLoadedException if Controllers module is missing
-   * @throws InvalidRouteException if no route selected or no controller selected
+   * Find the best route and execute action.
+   * @throws ModuleNotLoadedException If Controllers module is missing.
+   * @throws InvalidRouteException If no route selected or no controller selected.
    */
   public function findRoute() {
     $this->triggerEvent('beforeRender');
@@ -859,6 +869,11 @@ class Routing extends LoadableModule {
     $this->followRoute($route); 
   }
 
+  /**
+   * Follow a route.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @throws InvalidRouteException If route is invalid.
+   */
   public function followRoute($route) {
     $route = $this->validateRoute($route);
     if (isset($route['url']) OR isset($route['path'])) {
@@ -898,6 +913,16 @@ class Routing extends LoadableModule {
     }
   }
 
+  /**
+   * Calls an action in a controller.
+   * @param string $controllerName Controller name.
+   * @param string $action Action name.
+   * @param string[] $parameters Parameters for action.
+   * @throws InvalidRouteException If controller or action invalid.
+   * @throws InvalidResponseException If action did not return a valid response
+   * object.
+   * @return Response A respone object.
+   */
   public function callAction($controllerName, $action, $parameters = array()) {
     $controller = $this->m->Controllers->getController($controllerName);
     if (!isset($controller))
@@ -926,8 +951,8 @@ class Routing extends LoadableModule {
   }
 
   /**
-   * Sends a response to the client and stops execution of the applicaton
-   * @param Response $response Response object
+   * Sends a response to the client and stops execution of the applicaton.
+   * @param Response $response Response object.
    */
   public function respond(Response $response) {
     if (headers_sent())
@@ -980,9 +1005,9 @@ class Routing extends LoadableModule {
   /**
    * Make sure that the current path matches the controller and action. If not,
    * redirect to the right path.
-   * @param string|Controller $controller Controller name or object
-   * @param string $action Action name
-   * @param mixed[] $parameters Action parameters
+   * @param string|Controller $controller Controller name or object.
+   * @param string $action Action name.
+   * @param mixed[] $parameters Action parameters.
    */
   public function reroute($controller, $action, $parameters = array()) {
     $currentPath = $this->request->path;
@@ -994,35 +1019,78 @@ class Routing extends LoadableModule {
 }
 
 /**
- * Invalid route
+ * Invalid route.
  * @package Jivoo\Routing
  */
 class InvalidRouteException extends Exception { }
 
 /**
- * Invalid response
+ * Invalid response.
  * @package Jivoo\Routing
  */
 class InvalidResponseException extends Exception { }
 
+/**
+ * Can be used in an action to send the client to the error page.
+ * @package Jivoo\Routing
+ */
 class NotFoundException extends Exception { }
 
+/**
+ * When thrown, the current response is replaced.
+ * @package Jivoo\Routing
+ */
 class ResponseOverrideException extends Exception {
+  /**
+   * @var Response New response object.
+   */
   private $response;
 
+  /**
+   * Construct response override.
+   * @param Response $response New response object.
+   */
   function __construct(Response $response) {
     $this->response = $response;
   }
 
+  /**
+   * Get the response object.
+   * @return Response Response object.
+   */
   function getResponse() {
     return $this->response;
   }
 }
 
+/**
+ * The event of calling an action.
+ * @package Jivoo\Routing
+ */
 class CallActionEvent extends Event {
+  /**
+   * @var Controller The controller.
+   */
   public $controller;
+  
+  /**
+   * @var string The name of the action.
+   */
   public $action;
+  
+  /**
+   * @var Response|null Response returned by action if any.
+   */
   public $response;
+  
+  /**
+   * Construct call action event.
+   * @param object $sender Sender object.
+   * @param Controller $controller The controller.
+   * @param string $action Name of the action.
+   * @param string[] $parameters Parameters for action.
+   * @param Response|null $response Response returned by action if any.
+   */
   public function __construct($sender, Controller $controller, $action, $parameters, Response $response = null) {
     parent::__construct($sender, $parameters);
     $this->controller = $controller;
@@ -1031,9 +1099,27 @@ class CallActionEvent extends Event {
   }
 }
 
+/**
+ * A redirect event.
+ * @package Jivoo\Routing
+ */
 class RedirectEvent extends Event {
+  /**
+   * @var array|ILinkable|string|null $route A route, see {@see Routing}.
+   */
   public $route;
+  
+  /**
+   * @var bool Whether it is a permanent (true) or temporary (false) redirect.
+   */
   public $moved;
+  
+  /**
+   * Construct redirect event.
+   * @param object $sender Sender object.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param bool $movied Whether it is a permanent (true) or temporary (false) redirect.
+   */
   public function __construct($sender, $route, $moved) {
     parent::__construct($sender);
     $this->route = $route;
