@@ -10,7 +10,7 @@ class CallbackAuthorization extends LoadableAuthorization {
    * {@inheritdoc}
    */
   protected $options = array(
-  	'method' => 'authorize',
+    'method' => 'authorize',
   );
 
   /**

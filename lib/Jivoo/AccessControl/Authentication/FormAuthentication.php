@@ -16,7 +16,7 @@ class FormAuthentication extends LoadableAuthentication {
    * {@inheritdoc}
    */
   protected $options = array(
-  	'username' => 'username',
+    'username' => 'username',
     'password' => 'password'
   );
 

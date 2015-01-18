@@ -3,7 +3,7 @@ class PublishWidget extends Widget {
   protected $helpers = array('Form');
   
   protected $options = array(
-  	'record' => null,
+    'record' => null,
     'title' => 'title',
     'content' => 'content',
     'route' => array()

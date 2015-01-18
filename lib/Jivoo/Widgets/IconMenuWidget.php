@@ -4,7 +4,7 @@ class IconMenuWidget extends Widget {
   protected $helpers = array('Widget', 'Icon');
   
   protected $options = array(
-  	'menu' => array(),
+    'menu' => array(),
     'defaultAction' => '*',
     'defaultParameters' => '*'
   );
