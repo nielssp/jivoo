@@ -63,12 +63,12 @@ class App implements IEventSubject {
   /**
    * @var string[] List of modules to load.
    */
-  private $modules = array('Jivoo/Core');
+  private $modules = array('Jivoo/Core', 'Jivoo/Generators');
 
   /**
    * @var string[] List of modules to import and load.
    */
-  private $import = array('Jivoo/Core');
+  private $import = array('Jivoo/Core', 'Jivoo/Generators');
   
   /**
    * @var string[] List of application listener names.
@@ -121,12 +121,12 @@ class App implements IEventSubject {
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
     $appFile = $appPath . '/app.json';
-    if (file_exists($appFile)) 
+    if (file_exists($appFile)) {
       $appConfig = Json::decodeFile($appFile);
-    else
-      throw new Exception('Invalid application. "app.json" not found.');
-    if (!isset($appConfig))
-      throw new Exception('Invalid application. "app.json" invalid.');
+      Logger::error('Invalid application. "app.json" not found. Configuring default application.');
+      if (!isset($appConfig))
+        throw new Exception('Invalid application. "app.json" invalid.');
+    }
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
     $this->m = new Map();
