@@ -344,7 +344,6 @@ class AppConfig implements arrayaccess, IteratorAggregate {
       return $this->root->save();
     }
     if ($this->updated == false) {
-      /** @TODO If not updated, it's successful, no? */
       return true;
     }
     // The following returns false when file doesn't exist, even if it can be

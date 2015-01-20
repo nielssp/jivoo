@@ -13,7 +13,8 @@ class Utilities {
    * @return string UNIX-style path.
    */
   public static function convertPath($path) {
-    return str_replace('\\', '/', realpath($path));
+    return str_replace('\\', '/', $path);
+//     return str_replace('\\', '/', realpath($path));
   }
   
   /**

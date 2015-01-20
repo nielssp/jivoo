@@ -61,14 +61,9 @@ class App implements IEventSubject {
   private $minPhpVersion = '5.2.0';
 
   /**
-   * @var string[] List of modules to load.
-   */
-  private $modules = array('Jivoo/Core', 'Jivoo/Generators');
-
-  /**
    * @var string[] List of modules to import and load.
    */
-  private $import = array('Jivoo/Core', 'Jivoo/Generators');
+  private $import = array('Jivoo/Core', 'Jivoo/Controllers', 'Jivoo/Routing', 'Jivoo/Assets', 'Jivoo/View', 'Jivoo/Generators');
   
   /**
    * @var string[] List of application listener names.
@@ -157,8 +152,6 @@ class App implements IEventSubject {
       $this->version = $appConfig['version'];
     if (isset($appConfig['minPhpVersion']))
       $this->minPhpVersion = $appConfig['minPhpVersion'];
-    if (isset($appConfig['modules']))
-      $this->modules = $appConfig['modules'];
     if (isset($appConfig['import']))
       $this->import = $appConfig['import'];
     if (!isset($appConfig['defaultLanguage']))
