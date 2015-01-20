@@ -1,14 +1,33 @@
 <?php
+/**
+ * A filter for active models to apply content format, encoding, and extensions.
+ * @package Jivoo\Content
+ */
 class ContentFilter {
-
+  /**
+   * @var Content Content module.
+   */
   private $Content;
+  
+  /**
+   * @var string Field name.
+   */
   private $field;
   
+  /**
+   * Construct filter.
+   * @param Content $Content Content module.
+   * @param string $field Field name.
+   */
   public function __construct(Content $Content, $field) {
     $this->Content = $Content;
     $this->field = $field;
   }
 
+  /**
+   * Event handler for afterCreate-event. Sets format for new records.
+   * @param ActiveModelEvent $event Event data.
+   */
   public function afterCreate(ActiveModelEvent $event) {
     $defaultEditor = $this->Content->getDefaultEditor($event->record, $this->field);
     $formatField = $this->field . 'Format';
@@ -18,6 +37,11 @@ class ContentFilter {
       $event->record->$formatField = 'html';
   }
 
+  /**
+   * Event handler for beforeSave-event. Compiles content and creates 
+   * searchable text data.
+   * @param ActiveModelEvent $event Event data.a
+   */
   public function beforeSave(ActiveModelEvent $event) {
     $field = $this->field;
     $content = $event->record->$field;

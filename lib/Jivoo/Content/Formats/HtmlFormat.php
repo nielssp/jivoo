@@ -1,18 +1,20 @@
 <?php
 /**
- * Format used by {@see HtmlEditor}
- * @package Jivoo\Editors
+ * Html format.
+ * @package Jivoo\Content\Formats
  */
 class HtmlFormat implements IContentFormat {
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return 'html';
   }
+
+  /**
+   * {@inheritdoc}
+   */
   public function toHtml($text) {
     return html_entity_decode($text, null, 'UTF-8');
-  }
-  
-  public function toText($content) {
-    $encoder = new HtmlEncoder();
-    return $encoder->encode($content);
   }
 }

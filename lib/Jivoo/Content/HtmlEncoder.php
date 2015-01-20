@@ -2,7 +2,7 @@
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
  * and automatically closing tags and stripping invalid HTML.
- * @package Jivoo\Models\Encoding
+ * @package Jivoo\Content
  */
 class HtmlEncoder {
   /**
@@ -19,17 +19,17 @@ class HtmlEncoder {
   );
 
   /**
-   * @var bool Whether or not to allow all tags
+   * @var bool Whether or not to allow all tags.
    */
   private $allowAll = false;
   
   /**
-   * @var bool Whether r not to strip all tags
+   * @var bool Whether r not to strip all tags.
    */
   private $stripAll = false;
 
   /**
-   * @var array Associative array of allowed tags and additional options
+   * @var array Associative array of allowed tags and additional options.
    */
   private $allow = array();
 
@@ -40,23 +40,23 @@ class HtmlEncoder {
   private $append = array();
 
   /**
-   * @var array Associative array of tags and number of open tags
+   * @var array Associative array of tags and number of open tags.
    */
   private $openTags = array();
 
   /**
-   * @var int Max length of encoded text (-1 means no limit)
+   * @var int Max length of encoded text (-1 means no limit).
    */
   private $maxLength = -1;
 
   /** 
    * @var bool Whether or not to encode XHTML rather than HTML
-   * (it is not valid to use <br /> in HTML4)
+   * (it is not valid to use <br /> in HTML4).
    * */
   private $xhtml = true;
 
   /**
-   * Constructor
+   * Construct encoder.
    * @param AppConfig $config Encoder configuration, accepted configuration keys
    * are 'allow' and 'xhtml'. 'xhtml' is expected to be a boolean, see 
    * {@see Encoder::setXhtml()}. 'allow' is expected to be an associative array of
@@ -85,7 +85,7 @@ class HtmlEncoder {
   }
 
   /**
-   * Allow all tags
+   * Allow all tags.
    * @param bool $allowAll Whether or not to allow all tags 
    */
   public function setAllowAll($allowAll = false) {
@@ -112,7 +112,8 @@ class HtmlEncoder {
    * )
    * </code>
    * Currently the only supported attribute validation is 'url'.
-   * @param array $allow Allowed tags
+   * 
+   * @param array $allow Allowed tags.
    */
   public function setAllowed($allow = array()) {
     $this->allow = $allow;
@@ -121,8 +122,8 @@ class HtmlEncoder {
 
   /**
    * Set max length of encoded text, additional text will be removed and
-   * tags unclosed tags automatically closed
-   * @param int $length Max length or -1 for no limit
+   * tags unclosed tags automatically closed.
+   * @param int $length Max length or -1 for no limit.
    */
   public function setMaxLength($length = -1) {
     $this->maxLength = $length;
@@ -130,8 +131,8 @@ class HtmlEncoder {
   }
 
   /**
-   * Allow an HTML tag
-   * @param string $tag Name of tag, e.g. 'h1' or 'strong'
+   * Allow an HTML tag.
+   * @param string $tag Name of tag, e.g. 'h1' or 'strong'.
    */
   public function allowTag($tag) {
     if (!isset($this->allow[$tag])) {
@@ -141,9 +142,9 @@ class HtmlEncoder {
   }
 
   /**
-   * Automatically append attributes to all occurences of a tag
-   * @param string $tag Name of tag, e.g. 'a'
-   * @param string $attributes Attribute(s) to append, e.g. 'rel="no-follow"'
+   * Automatically append attributes to all occurences of a tag.
+   * @param string $tag Name of tag, e.g. 'a'.
+   * @param string $attributes Attribute(s) to append, e.g. 'rel="no-follow"'.
    */
   public function appendAttributes($tag, $attributes) {
     if (!isset($this->append[$tag])) {
@@ -157,9 +158,9 @@ class HtmlEncoder {
   }
 
   /**
-   * Allow an attribute on a tag
-   * @param string $tag Name of tag, e.g. 'a'
-   * @param string $attribute Name of attribute, e.g. 'href'
+   * Allow an attribute on a tag.
+   * @param string $tag Name of tag, e.g. 'a'.
+   * @param string $attribute Name of attribute, e.g. 'href'.
    */
   public function allowAttribute($tag, $attribute) {
     $this->allowTag($tag);
@@ -170,7 +171,7 @@ class HtmlEncoder {
   }
 
   /**
-   * Validate value of all occurences of a tag attribute
+   * Validate value of all occurences of a tag attribute.
    * 
    * The $stripTags parameter determines what to do with an invalid attribute:
    * 
@@ -182,10 +183,11 @@ class HtmlEncoder {
    * <code>
    * <a href="not-valid-link">Test</a> --> Test
    * </code>
+   * 
    * @param string $tag Name of tag, e.g. 'img'
    * @param string $attribute Name of attribute, e.g. 'src'
    * @param string $type Type of validation: 'url' is the only supported value
-   * at the moment
+   * at the moment.
    * @param string $stripTag Whether or not to strip the entire tag if the value
    * is not valid. Default is to just remove the attribute.
    */
@@ -197,10 +199,10 @@ class HtmlEncoder {
   }
 
   /**
-   * Test if a value is valid according  to a rule
-   * @param string $value Value to validate
-   * @param string $rule Rule
-   * @return boolean True if valid, false otherwise
+   * Test if a value is valid according  to a rule.
+   * @param string $value Value to validate.
+   * @param string $rule Rule.
+   * @return boolean True if valid, false otherwise.
    */
   private function isValid($value, $rule) {
     switch ($rule) {
@@ -211,10 +213,10 @@ class HtmlEncoder {
   }
 
   /**
-   * Replace attributes
-   * @param string $tag Tag name
-   * @param string $attributes The attributes-part of the tag
-   * @return string|false Encoded string or false if entire tag should be removed
+   * Replace attributes.
+   * @param string $tag Tag name.
+   * @param string $attributes The attributes-part of the tag.
+   * @return string|false Encoded string or false if entire tag should be removed.
    */
   private function replaceAttributes($tag, $attributes) {
     preg_match_all('/\s+([\w-]+)(\s*=\s*((?:".*?"|\'.*?\'|[^\'">\s]+)))?/',
@@ -251,8 +253,8 @@ class HtmlEncoder {
   }
 
   /**
-   * Called when an open tag is detected
-   * @param string $tag Tag name
+   * Called when an open tag is detected.
+   * @param string $tag Tag name.
    */
   private function openTag($tag) {
     if (!isset($this->openTags[$tag])) {
@@ -262,8 +264,8 @@ class HtmlEncoder {
   }
 
   /**
-   * Called when a close tag is detected
-   * @param string $tag Tag name
+   * Called when a close tag is detected.
+   * @param string $tag Tag name.
    */
   private function closeTag($tag) {
     if (!isset($this->openTags[$tag])) {
@@ -273,9 +275,9 @@ class HtmlEncoder {
   }
 
   /**
-   * Working on a single HTML-object
-   * @param string[] $matches Matches as produced by preg_replace_callback()
-   * @return string Encoded string
+   * Working on a single HTML-object.
+   * @param string[] $matches Matches as produced by preg_replace_callback().
+   * @return string Encoded string.
    */
   private function replaceTag($matches) {
     $num = count($matches);
@@ -331,9 +333,9 @@ class HtmlEncoder {
    * * 'stripAll' Whether or not to strip all tags (bool)
    * * 'append' A string to append to the result if shortened by 'maxLength',
    *   e.g. '...'
-   * @param string $text Text to encode
-   * @param array $options Associative array of additional options
-   * @return string The encoded text
+   * @param string $text Text to encode.
+   * @param array $options Associative array of additional options.
+   * @return string The encoded text.
    */
   public function encode($text, $options = array()) {
     $this->openTags = array();

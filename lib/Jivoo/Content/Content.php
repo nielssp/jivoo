@@ -1,26 +1,45 @@
 <?php
-// Module
-// Name           : Content
-// Description    : Jivoo content editing and presentation
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/Models Jivoo/ActiveModels
-
 Lib::import('Jivoo/Content/Formats');
 
+/**
+ * Content editing and presentation module.
+ * @package Jivoo\Content
+ * @property-read ContentExtensions $extensions Collection of content extensions.
+ */
 class Content extends LoadableModule {
-  
+  /**
+   * @var IContentFormat[] Formats.
+   */
   private $formats = array();
   
+  /**
+   * @var HtmlEncoder[][] Associative array of model names and field encoders.
+   */
   private $encoders = array();
   
+  /**
+   * @var IEditor[][] Associative array of format names and list of editors.
+   */
   private $editors = array();
 
+  /**
+   * @var IEditor[][] Associative array of model names and field editors.
+   */
   private $defaultEditors = array();
   
+  /**
+   * @var bool[][] Whether or not extensions are enabled on a model field.
+   */
   private $extensionsEnabled = array();
   
+  /**
+   * @var ContentExtensions Collection of content extensions.
+   */
   private $extensions;
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->extensions = new ContentExtensions();
     
@@ -35,6 +54,11 @@ class Content extends LoadableModule {
     $this->extensions->add('pagebreak', array(), array($this, 'pageBreakFunction'));
   }
   
+  /**
+   * Insert link for route.
+   * @param array $params Content extension parameters.
+   * @return string Link.
+   */
   public function linkFunction($params) {
     try {
       return $this->m->Routing->getLink($params['route']);
@@ -44,14 +68,29 @@ class Content extends LoadableModule {
     }
   }
   
+  /**
+   * Create a break between summary and full content.
+   * @param array $params Content extension parameters.
+   * @return string Break div.
+   */
   public function breakFunction($params) {
     return '<div class="break"></div>';
   }
-  
+
+  /**
+   * Create a page break.
+   * @param array $params Content extension parameters.
+   * @return string Page break div.
+   */
   public function pageBreakFunction($params) {
     return '<div class="page-break"></div>';
   }
-  
+
+  /**
+   * Name the current content page.
+   * @param array $params Content extension parameters.
+   * @return string Page name div.
+   */
   public function pageFunction($params) {
     if (isset($params['name']))
       return '<div class="page-name" data-name="' . h($params['name']) . '"></div>';
@@ -59,7 +98,10 @@ class Content extends LoadableModule {
       return '<div class="page-name"></div>';
   }
   
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'extensions':
@@ -68,6 +110,11 @@ class Content extends LoadableModule {
     return parent::__get($property);
   }
   
+  /**
+   * Enable content extensions on a field in a model.
+   * @param IModel $model A model.
+   * @param string $field Field name.
+   */
   public function enableExtensions(IModel $model, $field) {
     $name = $model->getName();
     if (!isset($this->extensionsEnabled[$name]))
@@ -75,6 +122,11 @@ class Content extends LoadableModule {
     $this->extensionsEnabled[$name][$field] = true;
   }
   
+  /**
+   * Disable content extensions on a field in a model.
+   * @param IModel $model A model.
+   * @param string $field Field name.
+   */
   public function disableExtensions(IModel $model, $field) {
     $name = $model->getName();
     if (!isset($this->extensionsEnabled[$name]))
@@ -84,7 +136,13 @@ class Content extends LoadableModule {
     unset($this->extensionsEnabled[$name][$field]);
   }
   
-  public function getEncoder(IModel $model, $field) {
+  /**
+   * Get encoder for a field.
+   * @param IBasicModel $model A model.
+   * @param string $field Field name.
+   * @return HtmlEncoder Encoder.
+   */
+  public function getEncoder(IBasicModel $model, $field) {
     $name = $model->getName();
     if (!isset($this->encoders[$name]))
       $this->encoders[$name] = array();
@@ -93,23 +151,43 @@ class Content extends LoadableModule {
     return $this->encoders[$name][$field];
   }
 
+  /**
+   * Get all formats.
+   * @return IContentFormat[] Associative array of format names and format objects.
+   */
   public function getFormats() {
     return $this->formats;
   }
   
+  /**
+   * Get a content format.
+   * @param string $name Format name.
+   * @return IContentFormat|null Format object or null if undefined.
+   */
   public function getFormat($name) {
     if (isset($this->formats[$name]))
       return $this->formats[$name];
     return null;
   }
 
+  /**
+   * Add a content format.
+   * @param IContentFormat $format Format object.
+   */
   public function addFormat(IContentFormat $format) {
     $name = $format->getName();
     $this->formats[$name] = $format;
     $this->editors[$name] = array();
   }
   
-  public function compile(ActiveRecord $record, $field) {
+  /**
+   * Compile content of a field, i.e. convert to HTML, encode, and apply content
+   * extensions if enabled. 
+   * @param IBasicRecord $record A record.
+   * @param string $field Field name.
+   * @return string Compiled and encoded content.
+   */
+  public function compile(IBasicRecord $record, $field) {
     $model = $record->getModel();
     $name = $model->getName();
     $formatField = $field . 'Format';
@@ -122,6 +200,11 @@ class Content extends LoadableModule {
     return $this->extensions->compile($html);
   }
 
+  /**
+   * Add an editor.
+   * @param IEditor $editor Editor object.
+   * @throws Exception If format used by editor is unknown.
+   */
   public function addEditor(IEditor $editor) {
     $format = $editor->getFormat();
     if (!isset($this->editors[$format]))
@@ -129,7 +212,13 @@ class Content extends LoadableModule {
     $this->editors[$format][] = $editor;
   }
   
-  public function getDefaultEditor(ActiveRecord $record, $field) {
+  /**
+   * Get default editor for field.
+   * @param IBasicRecord $record A record.
+   * @param string $field Field name.
+   * @return IEdtor|null An editor or null if no default.
+   */
+  public function getDefaultEditor(IBasicRecord $record, $field) {
     $model = $record->getModel();
     $name = $model->getName();
     if (isset($this->defaultEditors[$name])) {
@@ -140,7 +229,13 @@ class Content extends LoadableModule {
     return null;
   }
 
-  public function getEditor(ActiveRecord $record, $field) {
+  /**
+   * Get editor for field.
+   * @param IBasicRecord $record A record.
+   * @param string $field Field name.
+   * @return IEdtitor|null An editor or null if none available.
+   */
+  public function getEditor(IBasicRecord $record, $field) {
     $model = $record->getModel();
     $name = $model->getName();
     $formatField = $field . 'Format';
@@ -157,6 +252,12 @@ class Content extends LoadableModule {
     return null;
   }
   
+  /**
+   * Set editor for field.
+   * @param IBasicModel $model A model.
+   * @param string $field Field name.
+   * @param IEditor $editor An editor.
+   */
   public function setEditor(ActiveModel $model, $field, IEditor $editor) {
     $name = $model->getName();
     if (!isset($this->defaultEditors[$name]))

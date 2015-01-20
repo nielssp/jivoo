@@ -332,19 +332,19 @@ class Routing extends LoadableModule {
         if ($this->request->path == array()) {
           return true;
         }
-        if (isset($this->root['route']) AND isset($this->root['route']['path'])
+        if (isset($this->root['route']) and isset($this->root['route']['path'])
           AND $this->request->path == $this->root['route']['path']) {
           return true;
         }
       }
       return $this->request->path == $route['path'];
     }
-    if (isset($route['controller']) AND isset($route['action'])) {
+    if (isset($route['controller']) and isset($route['action'])) {
       return $this->selection['route']['controller'] == $route['controller']
-        AND ($route['action'] == '*'
-          OR $this->selection['route']['action'] == $route['action'])
-        AND ($route['parameters'] == '*'
-          OR $this->selection['route']['parameters'] == $route['parameters']);
+        and ($route['action'] == '*'
+          or $this->selection['route']['action'] == $route['action'])
+        and ($route['parameters'] == '*'
+          or $this->selection['route']['parameters'] == $route['parameters']);
     }
     throw new InvalidRouteException(tr('Incomplete route'));
   }
@@ -360,8 +360,7 @@ class Routing extends LoadableModule {
   public function getLinkFromPath($path = null, $query = null, $fragment = null,
     $rewrite = false) {
     if (!isset($path)) {
-      $path = $this->request
-      ->path;
+      $path = $this->request->path;
     }
     if (isset($fragment)) {
       $fragment = '#' . $fragment;
@@ -369,7 +368,7 @@ class Routing extends LoadableModule {
     else {
       $fragment = '';
     }
-    if (is_array($query) AND count($query) > 0) {
+    if (is_array($query) and count($query) > 0) {
       $queryStrings = array();
       foreach ($query as $key => $value) {
         if ($value === '') {
@@ -379,8 +378,8 @@ class Routing extends LoadableModule {
           $queryStrings[] = urlencode($key) . '=' . urlencode($value);
         }
       }
-      $combined = implode('/', $path) . '?' . implode('&', $queryStrings)
-      . $fragment;
+      $combined = implode('/', $path) . '?' . implode('&', $queryStrings) .
+                   $fragment;
       if ($this->config['rewrite'] OR $rewrite) {
         return $this->w($combined);
       }
