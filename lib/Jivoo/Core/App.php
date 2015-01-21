@@ -85,6 +85,26 @@ class App implements IEventSubject {
    * @var string Environment name.
    */
   private $environment = 'production';
+  
+  /**
+   * @var array Associative array of default environment configurations.
+   */
+  private $defaultEnvironments = array(
+    'production' => array(
+      'core' => array(
+        'showExceptions' => false,
+        'logLevel' => Logger::ERROR,
+        'createCrashReports' => true,
+      )
+    ),
+    'development' => array(
+      'core' => array(
+        'showExceptions' => true,
+        'logLevel' => Logger::ALL,
+        'createCrashReports' => false,
+      )
+    )
+  );
 
   /**
    * @var string Application session prefix.
@@ -444,6 +464,9 @@ class App implements IEventSubject {
       $this->config->override = include $environmentConfigFile;
     }
     else {
+      if (isset($this->defaultEnvironments[$environment])) {
+        $this->config->override = $this->defaultEnvironments[$environment];
+      }
       Logger::notice(
         'Configuration file for environment "' . $environment . '" not found'
       );
