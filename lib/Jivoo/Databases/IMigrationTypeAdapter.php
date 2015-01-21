@@ -1,6 +1,7 @@
 <?php
 /**
  * A type and migration adapter.
+ * @packakge Jivoo\Databases
  */
 interface IMigrationTypeAdapter extends IMigratable, ITypeAdapter {
   /**

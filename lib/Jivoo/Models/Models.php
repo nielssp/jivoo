@@ -142,4 +142,8 @@ class Models extends LoadableModule {
   }
 }
 
+/**
+ * A model could not be found.
+ * @package Jivoo\Models
+ */
 class ModelNotFoundException extends Exception { }
