@@ -54,6 +54,7 @@ interface IModel extends ISelection, IBasicModel {
    * @param string[]|null $allowedFields List of allowed fields (null for all
    * fields allowed), fields that are not allowed (or not in the model) will be
    * ignored.
+   * @return IRecord A record.
    */
   public function create($data = array(), $allowedFields = null);
   /**

@@ -348,7 +348,7 @@ class App implements IEventSubject {
    * whenever the module is loaded if it has not.
    * @param string $module Module name.
    * @param string $method Method name.
-   * @param mixed $parameters,.. Paremeters to method.
+   * @param mixed $parameters,... Paremeters to method.
    * @return mixed|null Returned value, or null if module not yet loaded.
    */
   public function call($module, $method) {

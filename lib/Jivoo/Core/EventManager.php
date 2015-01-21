@@ -72,6 +72,7 @@ class EventManager {
    * Detach an already attached event handler.
    * @param string $name Name of event.
    * @param callback $callback Function to detach from event.
+   * @return bool True if handler found and removed, false otherwise.
    */
   public function detachHandler($name, $callback) {
     if (!isset($this->events[$name]))

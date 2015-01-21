@@ -27,7 +27,9 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   }
 
   /**
-   * {@inheritdoc}
+   * Create new table object.
+   * @param string $table Table name.
+   * @return SqlTable Table object.
    */
   protected function getTable($table) {
     return new SqlTable($this->app, $this, $table);
@@ -69,6 +71,7 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   /**
    * Escape a string and surround with quotation marks.
    * @param string $string String.
+   * @return string String surrounded with quotation marks.
    */
   public abstract function quoteString($string);
   
@@ -175,7 +178,9 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   }
 
   /**
-   * {@inheritdoc}
+   * Whether or not a table exists.
+   * @param string $table Table name.
+   * @return bool True if table exists, false otherwise.
    */
   public function tableExists($table) {
     return $this->typeAdapter->tableExists($table);

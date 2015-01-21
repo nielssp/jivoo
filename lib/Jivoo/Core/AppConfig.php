@@ -5,6 +5,7 @@
  * Implements arrayaccess, so the []-operator can be used
  * to get and set configuration values.
  * @package Jivoo\Core
+ * @property-read string $file File name of configuration file.
  * @property-read AppConfig $parent Get parent configuration
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
@@ -53,6 +54,8 @@ class AppConfig implements arrayaccess, IteratorAggregate {
    * @param string $configFile File name of configuration file
    * @param string $fileType Configuration file type. Supported types are: 'php'
    * and 'json'. Default is to use file extension.
+   * @throws UnsupportedConfigurationFormatException If file format is not PHP
+   * or JSON.
    */
   public function __construct($configFile = null, $type = null) {
     $this->root = $this;
@@ -97,9 +100,10 @@ class AppConfig implements arrayaccess, IteratorAggregate {
   }
   
   /**
-   * Get the value of a property
-   * @param string $property Property name
-   * @return mixed Value
+   * Get the value of a property.
+   * @param string $property Property nam.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property undefined.
    */
   public function __get($property) {
     switch ($property) {
@@ -112,9 +116,10 @@ class AppConfig implements arrayaccess, IteratorAggregate {
   }
   
   /**
-   * Set the value of a property
-   * @param string $property Property name
-   * @param mixed $value Value
+   * Set the value of a property.
+   * @param string $property Property name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If property undefined.
    */
   public function __set($property, $value) {
     switch ($property) {
@@ -129,9 +134,9 @@ class AppConfig implements arrayaccess, IteratorAggregate {
   }
   
   /**
-   * Get a subset AppConfig
-   * @param string $key Key
-   * @return AppConfig A subset
+   * Get a subset AppConfig.
+   * @param string $key Key.
+   * @return AppConfig A subset.
    */
   public function getSubset($key) {
     if (isset($this->emptySubset))
@@ -149,6 +154,9 @@ class AppConfig implements arrayaccess, IteratorAggregate {
     return $config;
   }
   
+  /**
+   * Create actual subset.
+   */
   private function createTrueSubset() {
     $this->parent->data[$this->emptySubset] = array();
     $this->data =& $this->parent->data[$this->emptySubset];
@@ -159,7 +167,6 @@ class AppConfig implements arrayaccess, IteratorAggregate {
    * Update a configuration key
    * @param string $key The configuration key to access
    * @param mixed $value The variable to associate with the key. Could be a string/array/object etc.
-   * @return bool True if successful, false if not
    */
   public function set($key, $value) {
     if (isset($this->emptySubset))
@@ -183,7 +190,6 @@ class AppConfig implements arrayaccess, IteratorAggregate {
   /**
    * Delete a configuration key
    * @param string $key The configuration key to delete
-   * @return bool True if successful, false if not
    */
   public function delete($key) {
     if (isset($this->data[$key])) {
@@ -259,6 +265,10 @@ class AppConfig implements arrayaccess, IteratorAggregate {
     return $this->data[$key];
   }
   
+  /**
+   * Get as array.
+   * @return array Configuration as an associative array.
+   */
   public function getArray() {
     return $this->data;
   }

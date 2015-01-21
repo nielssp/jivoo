@@ -1,31 +1,32 @@
 <?php
 /**
  * Controller for setting up root user
-* @package Jivoo\AccessControl
-* @property-read HtmlHelper $Html Html helper
-* @property-read FormHelper $Form Form helper
-* @property-read ActiveModel $User User model
-* @property-read ActiveModel $Group Group model
-*/
+ * @package Jivoo\AccessControl
+ * @property-read HtmlHelper $Html Html helper
+ * @property-read FormHelper $Form Form helper
+ * @property-read ActiveModel $User User model
+ * @property-read ActiveModel $Group Group model
+ */
 class AuthSetupController extends SetupController {
   /**
-   * @var {@inheritdoc}
+   * {@inheritdoc}
    */
   protected $modules = array('Databases', 'ActiveModels');
 
   /**
-   * @var {@inheritdoc}
+   * {@inheritdoc}
    */
   protected $helpers = array('Html', 'Form');
 
   /**
-   * @var {@inheritdoc}
+   * {@inheritdoc}
    */
   protected $models = array('User', 'Group');
 
   /**
    * Action for setting up root user
-  */
+   * @return Response A response.
+   */
   public function createUser() {
     $this->title = tr('Welcome to %1', $this->app->name);
 

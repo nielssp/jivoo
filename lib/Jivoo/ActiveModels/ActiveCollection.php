@@ -150,7 +150,7 @@ class ActiveCollection extends Model {
   public function remove(ActiveRecord $record) {
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
-      return $this->join->where($this->thisKey . ' = ?', $this->recordId)
+      $this->join->where($this->thisKey . ' = ?', $this->recordId)
         ->and($this->otherKey . ' = ?', $record->$pk)
         ->delete();
     }

@@ -6,6 +6,7 @@
  */
 interface IEventListener {
   /**
+   * Get list of event handlers.
    * @return string[] An associative array from event names to method names.
    * @todo Event names can be omitted and some dot-notation used, explain.
    */

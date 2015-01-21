@@ -42,6 +42,7 @@ interface IRecord extends IBasicRecord {
   
   /**
    * Save record.
+   * @return bool True if successfully saved, false on errors.
    */
   public function save();
   
@@ -52,11 +53,13 @@ interface IRecord extends IBasicRecord {
   
   /**
    * Determine if the record is new (i.e. not yet saved).
+   * @return bool True if new, false otherwise.
    */
   public function isNew();
   
   /**
    * Determine if the record has unsaved data.
+   * @return bool True if saved, false otherwise.
    */
   public function isSaved();
 }

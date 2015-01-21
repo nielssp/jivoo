@@ -78,6 +78,7 @@ abstract class Module implements IEventSubject {
    */
   public function __get($property) {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    return null;
   }
   
   /**
@@ -98,6 +99,7 @@ abstract class Module implements IEventSubject {
    */
   public function __isset($property) {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    return false;
   }
 
   /**

@@ -225,6 +225,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
    * Call a method.
    * @param string $method Method name.
    * @param mixed[] $paramters List of parameters.
+   * @return mixed Return value.
    * @throws InvalidMethodException If method is not defined.
    */
   public function __call($method, $parameters) {
@@ -300,7 +301,9 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
   }
 
   /**
-   * {@inheritdoc}
+   * Save record.
+   * @param bool $validate Whether or not to validate record before saving.
+   * @return bool True if successfully saved, false on errors.
    */
   public function save($validate = true) {
     if ($validate and !$this->isValid())

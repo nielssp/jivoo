@@ -82,11 +82,12 @@ class FormatHelper extends Helper {
   }
 
   /**
-   * Get html content of field.
+   * Get HTML content of field.
    * @param IBasicRecord $record A record.
    * @param string $field Field name.
    * @param array $options Associative array of options for encoder, see
    * {@see HtmlEncoder::encode}.
+   * @return string HTML encoded content.
    */
   public function html(IBasicRecord $record, $field, $options = array()) {
     $encoder = $this->m->Content->getEncoder($record->getModel(), $field);

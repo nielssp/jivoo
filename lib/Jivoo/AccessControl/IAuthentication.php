@@ -8,6 +8,7 @@ interface IAuthentication {
    * Attempt to authenticate a user.
    * @param array $data Associative array of authentication data.
    * @param IUserModel $userModel User model to use for authentication.
+   * @param IPasswordHasher $hasher Password hasher used for passwords.
    * @return ActiveRecord|null An authenticated user or null if authentication
    * not possible.
    */

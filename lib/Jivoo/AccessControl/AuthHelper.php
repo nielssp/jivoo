@@ -256,7 +256,7 @@ class AuthHelper extends Helper {
         }
         return;
     }
-    return parent::__set($property, $value);
+    parent::__set($property, $value);
   }
   
   /**

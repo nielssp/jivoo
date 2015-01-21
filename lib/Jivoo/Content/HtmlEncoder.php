@@ -78,6 +78,7 @@ class HtmlEncoder {
    * Set whether or not to encode for XHTML (<code><br></code> versus
    * <code><br /></code> (which is not allowed in HTML4)).
    * @param bool $xhtml Whether or not to encode for XHTML  
+   * @return self Self.
    */
   public function setXhtml($xhtml = true) {
     $this->xhtml = $xhtml;
@@ -86,7 +87,8 @@ class HtmlEncoder {
 
   /**
    * Allow all tags.
-   * @param bool $allowAll Whether or not to allow all tags 
+   * @param bool $allowAll Whether or not to allow all tags   
+   * @return self Self.
    */
   public function setAllowAll($allowAll = false) {
     $this->allowAll = $allowAll;
@@ -113,7 +115,8 @@ class HtmlEncoder {
    * </code>
    * Currently the only supported attribute validation is 'url'.
    * 
-   * @param array $allow Allowed tags.
+   * @param array $allow Allowed tags.  
+   * @return self Self.
    */
   public function setAllowed($allow = array()) {
     $this->allow = $allow;
@@ -123,7 +126,8 @@ class HtmlEncoder {
   /**
    * Set max length of encoded text, additional text will be removed and
    * tags unclosed tags automatically closed.
-   * @param int $length Max length or -1 for no limit.
+   * @param int $length Max length or -1 for no limit.  
+   * @return self Self.
    */
   public function setMaxLength($length = -1) {
     $this->maxLength = $length;
@@ -132,7 +136,8 @@ class HtmlEncoder {
 
   /**
    * Allow an HTML tag.
-   * @param string $tag Name of tag, e.g. 'h1' or 'strong'.
+   * @param string $tag Name of tag, e.g. 'h1' or 'strong'.  
+   * @return self Self.
    */
   public function allowTag($tag) {
     if (!isset($this->allow[$tag])) {
@@ -144,7 +149,8 @@ class HtmlEncoder {
   /**
    * Automatically append attributes to all occurences of a tag.
    * @param string $tag Name of tag, e.g. 'a'.
-   * @param string $attributes Attribute(s) to append, e.g. 'rel="no-follow"'.
+   * @param string $attributes Attribute(s) to append, e.g. 'rel="no-follow"'.  
+   * @return self Self.
    */
   public function appendAttributes($tag, $attributes) {
     if (!isset($this->append[$tag])) {
@@ -160,7 +166,8 @@ class HtmlEncoder {
   /**
    * Allow an attribute on a tag.
    * @param string $tag Name of tag, e.g. 'a'.
-   * @param string $attribute Name of attribute, e.g. 'href'.
+   * @param string $attribute Name of attribute, e.g. 'href'.  
+   * @return self Self.
    */
   public function allowAttribute($tag, $attribute) {
     $this->allowTag($tag);
@@ -189,7 +196,8 @@ class HtmlEncoder {
    * @param string $type Type of validation: 'url' is the only supported value
    * at the moment.
    * @param string $stripTag Whether or not to strip the entire tag if the value
-   * is not valid. Default is to just remove the attribute.
+   * is not valid. Default is to just remove the attribute.  
+   * @return self Self.
    */
   public function validateAttribute($tag, $attribute, $type, $stripTag = false) {
     if (isset($this->allow[$tag]['attributes'][$attribute])) {

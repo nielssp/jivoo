@@ -5,27 +5,28 @@
  */
 interface IUserModel extends IModel {
   /**
-   * Create a session
-   * @param ActiveRecord $user
-   * @param integer $validUntil
-   * @return string A session id
+   * Create a session.
+   * @param ActiveRecord $user A user.
+   * @param int $validUntil Time at which session is no longer valid.
+   * @return string A session id.
    */
   public function createSession(ActiveRecord $user, $validUntil);
   /**
-   * 
-   * @param string $sessionId
-   * @return ActiveRecord|null A user object or null if invalid Session
+   * Open an existing session, i.e. find the user associated with the session id.
+   * @param string $sessionId A session id.
+   * @return ActiveRecord|null A user object or null if invalid session id.
    */
   public function openSession($sessionId);
   
   /**
-   * @param string $sessionId
-   * @param integer $validUntil
+   * Renew a session.
+   * @param string $sessionId A session id.
+   * @param int $validUntil Time at which session is no longer valid.
    */
   public function renewSession($sessionId, $validUntil);
   /**
-   * 
-   * @param string $sessionId
+   * Delete a session.
+   * @param string $sessionId A session id.
    */
   public function deleteSession($sessionId);
 }
