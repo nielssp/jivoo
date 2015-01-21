@@ -136,11 +136,14 @@ class App implements IEventSubject {
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
     $appFile = $appPath . '/app.json';
+    $appConfig = array();
     if (file_exists($appFile)) {
       $appConfig = Json::decodeFile($appFile);
-      Logger::error('Invalid application. "app.json" not found. Configuring default application.');
       if (!isset($appConfig))
         throw new Exception('Invalid application. "app.json" invalid.');
+    }
+    else {
+      Logger::error('Invalid application. "app.json" not found. Configuring default application.');
     }
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
