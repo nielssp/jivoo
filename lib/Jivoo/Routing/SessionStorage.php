@@ -2,14 +2,14 @@
 /**
  * Session storage access.
  *
- * Implements arrayaccess, so the []-operator can be used
+ * Implements ArrayAccess, so the []-operator can be used
  * to get and set session values.
  * 
  * @property-read string $id Session id.
  * @property-read FlashMap $flash Flash messages.
  * @package Jivoo\Routing
  */
-class SessionStorage implements arrayaccess {
+class SessionStorage implements ArrayAccess {
   
   /**
    * @var bool Whether or not session is open.

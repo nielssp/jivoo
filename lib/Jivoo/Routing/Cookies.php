@@ -2,11 +2,11 @@
 /**
  * Provides access to cookies.
  * 
- * Implements arrayaccess, so the []-operator can be used
+ * Implements ArrayAccess, so the []-operator can be used
  * to get and set cookies.
  * @package Jivoo\Routing
  */
-class Cookies implements arrayaccess {
+class Cookies implements ArrayAccess {
 
   /**
    * @var string Cookie prefix.

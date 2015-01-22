@@ -2,7 +2,7 @@
 /**
  * Represents a configuration file or subset
  *
- * Implements arrayaccess, so the []-operator can be used
+ * Implements ArrayAccess, so the []-operator can be used
  * to get and set configuration values.
  * @package Jivoo\Core
  * @property-read string $file File name of configuration file.
@@ -10,7 +10,7 @@
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
  */
-class AppConfig implements arrayaccess, IteratorAggregate {
+class AppConfig implements ArrayAccess, IteratorAggregate {
   
   private $emptySubset = null;
   
@@ -376,8 +376,6 @@ class AppConfig implements arrayaccess, IteratorAggregate {
     return true;
   }
     
-  /* arrayaccess implementation */
-  
   /**
    * Whether or not a key exists.
    * @param string $name Key

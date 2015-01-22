@@ -3,7 +3,7 @@
  * Contains data for a single record belonging to a model.
  * @package Jivoo\Models
  */
-interface IBasicRecord extends arrayaccess {
+interface IBasicRecord extends ArrayAccess {
   /**
    * Get value of a field.
    * @param string $field Field name.
