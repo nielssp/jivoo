@@ -120,6 +120,12 @@ class App implements IEventSubject {
   );
   
   /**
+   * @var string[][] Associative array of module names and lists of optional
+   * dependencies.
+   */
+  private $optionalDependencies = array();
+  
+  /**
    * @var EventManager Application event manager.
    */
   private $e = null;
@@ -311,6 +317,12 @@ class App implements IEventSubject {
   public function getModule($name) {
     if (!isset($this->m->$name)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
+      if (isset($this->optionalDependencies[$name])) {
+        foreach ($this->optionalDependencies[$name] as $dependency) {
+          if (Lib::classExists($dependency))
+            $this->getModule($dependency);
+        }
+      }
       Lib::assumeSubclassOf($name, 'LoadableModule');
       $this->m->$name = new $name($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
@@ -516,6 +528,7 @@ class App implements IEventSubject {
       $name = $segments[count($segments) - 1];
       $this->paths->$name = LIB_PATH . '/' . implode('/', $segments);
       $modules[] = $name;
+      $this->optionalDependencies = LoadableModule::getLoadOrder($name, $this->optionalDependencies);
     }
     $this->triggerEvent('afterImportModules');
     

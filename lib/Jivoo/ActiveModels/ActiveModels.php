@@ -5,8 +5,12 @@
  */
 class ActiveModels extends LoadableModule {
 
-  // TODO: Don't depend on migrations
-  protected $modules = array('Models', 'Databases', 'Migrations');
+  protected static $loadAfter = array('Migrations');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $modules = array('Models', 'Databases');
   
   /**
    * @var ActiveModel[] Mapping of model names to models.

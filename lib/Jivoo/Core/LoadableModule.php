@@ -4,6 +4,19 @@
  * @package Jivoo\Core
  */
 abstract class LoadableModule extends Module {
+  
+  /**
+   * @var string[] Names of modules that (if they are loaded) must be loaded
+   * before this module.
+   */
+  protected static $loadAfter = array();
+  
+  /**
+   * @var string[] Names of modules that (if they are loaded) must be loaded
+   * after this module.
+   */
+  protected static $loadBefore = array();
+  
   /**
    * Construct module.
    * @param App $app Associated application.
@@ -36,5 +49,28 @@ abstract class LoadableModule extends Module {
     if (isset($path))
       return parent::p($key, $path);
     return parent::p(get_class($this), $key);
+  }
+  
+  /**
+   * Get load order for optional dependencies of module and modify a list of
+   * optional dependencies.
+   * @param string $module Module name (name class that extends {@see LoadableModule}).
+   * @param string[][] $dependencies Associative array of module names and their dependencies.
+   * @return string[][] Associative array of module names and their dependencies.
+   */
+  public static function getLoadOrder($module, $dependencies) {
+    $vars = get_class_vars($module);
+    foreach ($vars['loadBefore'] as $other) {
+      if (!isset($dependencies[$other]))
+        $dependencies[$other] = array();
+      $dependencies[$other][] = $module;
+    }
+    if (count($vars['loadAfter']) > 0) {
+      if (!isset($dependencies[$module]))
+        $dependencies[$module] = array();
+      foreach ($vars['loadAfter'] as $other)
+        $dependencies[$module][] = $other;
+    }
+    return $dependencies;
   }
 }

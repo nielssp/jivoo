@@ -71,7 +71,7 @@ class Logger {
    * @param string $append Whether to append messages to file.
    */
   private function __construct($logFile, $level = Logger::ALL, $append = true) {
-    $this->file = $logFile;
+    $this->file = realpath($logFile);
     $this->level = $level;
     $this->append = $append;
   }
