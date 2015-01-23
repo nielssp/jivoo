@@ -57,6 +57,8 @@
  * the action. The resulting controller would be 'DatabaseSetupController'.
  * 
  * @package Jivoo\Routing
+ * @property-read array|ILinkable|string|null $route The currently selected
+ * route, contains the current controller, action and parameters, see {@see Routing}.
  */
 class Routing extends LoadableModule {
   
@@ -164,6 +166,17 @@ class Routing extends LoadableModule {
     }
 
     $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function __get($property) {
+    switch ($property) {
+      case 'route':
+        return $this->selection['route'];
+    }
+    return parent::__get($property);
   }
   
   /**
@@ -889,6 +902,8 @@ class Routing extends LoadableModule {
     if (isset($route['query'])) {
       $this->request->query = array_merge($route['query'], $this->request->query);
     }
+    
+    $this->selection['route'] = $route;
 
     if (isset($route['controller'])) {
       Logger::debug('Select action: ' . $route['controller'] . '::' . $route['action']);
