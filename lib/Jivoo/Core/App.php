@@ -63,7 +63,10 @@ class App implements IEventSubject {
   /**
    * @var string[] List of modules to import and load.
    */
-  private $import = array('Jivoo/Core', 'Jivoo/Controllers', 'Jivoo/Routing', 'Jivoo/Assets', 'Jivoo/View', 'Jivoo/Generators');
+  private $import = array(
+    'Jivoo/Core', 'Jivoo/Controllers', 'Jivoo/Routing', 'Jivoo/Assets',
+    'Jivoo/View', 'Jivoo/Models', 'Jivoo/Helpers', 'Jivoo/Generators'
+  );
   
   /**
    * @var string[] List of application listener names.
