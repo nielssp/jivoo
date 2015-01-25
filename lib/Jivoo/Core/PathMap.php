@@ -15,7 +15,7 @@ class PathMap extends Map {
   private $defaultBasePath;
 
   /**
-   * Constructor.
+   * Constructor path map.
    * @param string $basePath Base path.
    * @param string $defaultBasePath If defined, this will be used instead of
    * $basePath when keys are undefined.
@@ -26,6 +26,14 @@ class PathMap extends Map {
     if (isset($defaultBasePath)) {
       $this->defaultBasePath = $defaultBasePath;
     }
+  }
+  
+  /**
+   * Get the base path, i.e. application root.
+   * @return string Base path.
+   */
+  public function getBasePath() {
+    return $this->basePath;
   }
 
   /**

@@ -15,6 +15,7 @@ class GeneratorController extends Controller {
    */
   public function index() {
     $this->title = tr('Generate application');
+    $this->appDir = $this->p('app');
     return $this->render();
   }
 }

@@ -23,6 +23,22 @@ body.exception {
   }
 }
 
+body.narrow {
+  @media screen and (min-width: $sm) {
+    background-color: $mainBg;
+    text-align: center;
+    & > * {
+      text-align: left;
+    }
+    #main {
+      padding-left: 0;
+      padding-right: 0;
+      width: $sm - 48px;
+      margin: 0 auto;
+    }
+  }
+}
+
 table.trace {
   td, th {
     padding-top: 4px;
