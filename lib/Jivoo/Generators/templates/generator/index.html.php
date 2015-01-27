@@ -10,4 +10,6 @@ $this->extend('generator/layout.html');
 
 <p><?php echo tr('Do you want Jivoo to generate a new application?')?></p>
 
-<input type="submit" value="<?php echo tr('Continue'); ?>" />
+<p>
+<?php echo $Html->link(tr('Continue'), 'configure', array('class' => 'button')); ?>
+</p>

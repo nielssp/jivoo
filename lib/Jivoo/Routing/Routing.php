@@ -969,8 +969,8 @@ class Routing extends LoadableModule {
    * @param Response $response Response object.
    */
   public function respond(Response $response) {
-    if (headers_sent())
-      throw new Exception(tr('Headers already sent'));
+    if (headers_sent($file, $line))
+      throw new Exception(tr('Headers already sent in %1 on line %2', $file, $line));
     Http::setStatus($response->status);
     Http::setContentType($response->type);
     if (isset($response->modified)) {

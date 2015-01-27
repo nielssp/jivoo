@@ -22,6 +22,7 @@ class Generators extends LoadableModule {
     if (empty($this->app->appConfig)) {
       $controller = $this->m->Controllers->getController('Generator');
       $controller->autoRoute('index');
+      $controller->autoRoute('configure');
       $this->m->Routing->setRoot('Generator::index');
       $this->view->addTemplateDir($this->p('templates'));
     }
