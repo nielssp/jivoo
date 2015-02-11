@@ -1,23 +1,18 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * Library system for importing directories and autoloading classes.
- * @package Jivoo\Core
  */
 class Lib {
   /**
    * @var array List of paths (strings) to look for classes
    */
   private static $paths = array();
-
-  /**
-   * @var array Associative array of module info as returned by getModuleInfo()
-   */
-  private static $info = array();
-
-  /**
-   * @var string|null The last module to be used
-   */
-  private static $lastModule = null;
   
   /**
    * @var bool Whether or not to throw exceptions
@@ -27,38 +22,13 @@ class Lib {
   private function __construct() {}
 
   /**
-   * Import a module, i.e. add to include paths
-   * @param string $module Module name/path
-   * @return boolean True if successful, false otherwise
+   * Add another library path.
+   * @param string $path Path.
    */
-  public static function import($module) {
-    $module = trim($module, '/');
-    if (isset(self::$paths[$module])) {
-      return true;
-    }
-    $path = LIB_PATH . ($module != '' ? '/' : '') . $module;
-    self::$paths[$module] = $path;
-    return true;
+  public static function import($path) {
+    self::$paths[] = $path;
   }
 
-  /**
-   * Add just an include path
-   * @param string $path Path
-   */
-  public static function addIncludePath($path) {
-    self::$paths[] = $path;
-  } 
-
-  /**
-   * @var int Number of calls to auto loader
-   */
-  public static $loadCalls = 0;
-  
-  /**
-   * @var int Number of places looked for classes
-   */
-  public static $loadIterations = 0;
-  
   /**
    * Check if a class exists anywhere
    * @param string $className Name of class
@@ -102,29 +72,10 @@ class Lib {
    * @return boolean True on success false on failure
    */
   public static function autoload($className) {
-    self::$loadCalls++;
-    if (isset(self::$lastModule)) {
-      $classPath = self::$lastModule . '/' . $className . '.php';
-      if (file_exists($classPath)) {
-        require $classPath;
-        return true;
-      }
-    }
-    $bt = debug_backtrace();
-    if (isset($bt[1]) AND isset($bt[1]['file'])) {
-      $module = dirname($bt[1]['file']);
-      $classPath = $module . '/' . $className . '.php';
-      if (file_exists($classPath)) {
-        self::$lastModule = $module;
-        require $classPath;
-        return true;
-      }
-    }
-    foreach (self::$paths as $module => $path) {
-      self::$loadIterations++;
+    $className = str_replace('\\', '/', $className);
+    foreach (self::$paths as $path) {
       $classPath = $path . '/' . $className . '.php';
       if (file_exists($classPath)) {
-        self::$lastModule = $path;
         require $classPath;
         return true;
       }
@@ -138,12 +89,10 @@ class Lib {
 
 /**
  * Thrown when a class could not be found
- * @package Jivoo\Core
  */
-class ClassNotFoundException extends Exception { }
+class ClassNotFoundException extends \Exception { }
 
 /**
  * Thrown when a class is invalid
- * @package Jivoo\Core
  */
-class ClassInvalidException extends Exception { }
+class ClassInvalidException extends \Exception { }

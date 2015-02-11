@@ -1,16 +1,21 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * Represents a configuration file or subset
  *
  * Implements ArrayAccess, so the []-operator can be used
  * to get and set configuration values.
- * @package Jivoo\Core
  * @property-read string $file File name of configuration file.
  * @property-read AppConfig $parent Get parent configuration
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
  */
-class AppConfig implements ArrayAccess, IteratorAggregate {
+class AppConfig implements \ArrayAccess, \IteratorAggregate {
   
   private $emptySubset = null;
   
@@ -436,6 +441,5 @@ class AppConfig implements ArrayAccess, IteratorAggregate {
 
 /**
  * A configuration file format is not supported
- * @package Jivoo\Core
  */
-class UnsupportedConfigurationFormatException extends Exception { }
+class UnsupportedConfigurationFormatException extends \Exception { }

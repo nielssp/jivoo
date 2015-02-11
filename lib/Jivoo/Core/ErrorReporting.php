@@ -1,7 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * Utility class for handling errors/exceptions.
- * @package Jivoo\Core
  */
 class ErrorReporting {
   /**
@@ -40,7 +45,7 @@ class ErrorReporting {
         $line = $backtrace[2]['line'];
       case E_ERROR:
       case E_RECOVERABLE_ERROR:
-        throw new ErrorException($message, 0, $type, $file, $line);
+        throw new \ErrorException($message, 0, $type, $file, $line);
         break;
       case E_USER_WARNING:
       case E_USER_DEPRECATED:
@@ -52,7 +57,7 @@ class ErrorReporting {
         if (self::$warningBehavior == 'log')
           Logger::log($message, Logger::WARNING, $file, $line);
         else if (self::$warningBehavior == 'exception')
-          throw new ErrorException($message, 0, $type, $file, $line);
+          throw new \ErrorException($message, 0, $type, $file, $line);
         break;
       case E_USER_NOTICE:
         $backtrace = debug_backtrace();
@@ -64,10 +69,10 @@ class ErrorReporting {
         if (self::$noticeBehavior == 'log')
           Logger::log($message, Logger::NOTICE, $file, $line);
         else if (self::$noticeBehavior == 'exception')
-          throw new ErrorException($message, 0, $type, $file, $line);
+          throw new \ErrorException($message, 0, $type, $file, $line);
         break;
       default:
-        throw new ErrorException($message, 0, $type, $file, $line);
+        throw new \ErrorException($message, 0, $type, $file, $line);
         break;
     }
   }
@@ -84,7 +89,7 @@ class ErrorReporting {
    * Uncaught exception handler.
    * @param Exception $exception Exception.
    */
-  public static function handleException(Exception $exception) {
+  public static function handleException(\Exception $exception) {
     if (isset(self::$handler)) {
       call_user_func(self::$handler, $exception); 
       return;

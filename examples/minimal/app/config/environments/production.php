@@ -2,7 +2,7 @@
 return array(
   'core' => array(
     'showExceptions' => false,
-    'logLevel' => Logger::ERROR,
+    'logLevel' => Jivoo\Core\Logger::ERROR,
     'createCrashReports' => true,
   ),
 );

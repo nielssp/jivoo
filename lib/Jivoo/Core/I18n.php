@@ -1,7 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * Internationalization and localization.
- * @package Jivoo\Core
  * @see Localization
  */
 class I18n {
@@ -224,6 +229,5 @@ class I18n {
 
 /**
  * Thrown when language is invalid.
- * @package Jivoo\Core
  */
-class I18nException extends Exception { }
+class I18nException extends \Exception { }

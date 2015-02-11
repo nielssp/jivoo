@@ -99,7 +99,7 @@ null
 </tr>
 <tr>
 <td><?php echo tr('%1 version', 'Jivoo'); ?></td>
-<td><?php echo Core::VERSION; ?></td>
+<td><?php echo Jivoo\Core\VERSION; ?></td>
 <tr>
 <td><?php echo tr('%1 version', $app); ?></td>
 <td><?php echo $version; ?></td>
@@ -110,7 +110,7 @@ null
 <h2><?php echo tr('Log messages')?></h2>
 
 <?php
-$log = Logger::getLog()
+$log = Jivoo\Core\Logger::getLog()
 ?>
 
 <table class="trace">
@@ -125,7 +125,7 @@ $log = Logger::getLog()
 <?php foreach ($log as $message): ?>
 <tr>
 <td>
-[<?php echo Logger::getType($message['type']); ?>]
+[<?php echo Jivoo\Core\Logger::getType($message['type']); ?>]
 <?php echo h($message['message']); ?>
 </td>
 <td>

@@ -1,7 +1,7 @@
 <?php
 require_once '../../lib/Jivoo/Core/bootstrap.php';
 
-$app = new App(
+$app = new Jivoo\Core\App(
   'app',
   'user',
   basename(__FILE__)

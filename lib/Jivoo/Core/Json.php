@@ -1,8 +1,13 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * JSON encoding and decoding.
  * @TODO Fallback when json php extension is missing.
- * @package Jivoo\Core
  */
 class Json {
   /**

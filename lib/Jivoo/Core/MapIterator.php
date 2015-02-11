@@ -1,9 +1,15 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * Iterator for use with {@see Map}, but can be used with any associative array.
  * @package Jivoo\Core
  */
-class MapIterator implements Iterator {
+class MapIterator implements \Iterator {
   /**
    * @var array Map to iterate.
    */

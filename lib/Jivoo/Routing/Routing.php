@@ -1,4 +1,13 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Rotuing;
+
+use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Event;
+
 /**
  * Module for handling routes and HTTP requests.
  * 
@@ -56,7 +65,6 @@
  * which 'Setup' is a namespace, 'Database' is the controller and 'setup' is
  * the action. The resulting controller would be 'DatabaseSetupController'.
  * 
- * @package Jivoo\Routing
  * @property-read array|ILinkable|string|null $route The currently selected
  * route, contains the current controller, action and parameters, see {@see Routing}.
  */
@@ -1036,25 +1044,25 @@ class Routing extends LoadableModule {
  * Invalid route.
  * @package Jivoo\Routing
  */
-class InvalidRouteException extends Exception { }
+class InvalidRouteException extends \Exception { }
 
 /**
  * Invalid response.
  * @package Jivoo\Routing
  */
-class InvalidResponseException extends Exception { }
+class InvalidResponseException extends \Exception { }
 
 /**
  * Can be used in an action to send the client to the error page.
  * @package Jivoo\Routing
  */
-class NotFoundException extends Exception { }
+class NotFoundException extends \Exception { }
 
 /**
  * When thrown, the current response is replaced.
  * @package Jivoo\Routing
  */
-class ResponseOverrideException extends Exception {
+class ResponseOverrideException extends \Exception {
   /**
    * @var Response New response object.
    */
@@ -1115,7 +1123,6 @@ class CallActionEvent extends Event {
 
 /**
  * A redirect event.
- * @package Jivoo\Routing
  */
 class RedirectEvent extends Event {
   /**

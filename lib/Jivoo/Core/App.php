@@ -1,4 +1,10 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * Application class for initiating Jivoo applications.
  * @package Jivoo\Core
@@ -61,11 +67,11 @@ class App implements IEventSubject {
   private $minPhpVersion = '5.3.0';
 
   /**
-   * @var string[] List of modules to import and load.
+   * @var string[] List of modules to load.
    */
-  private $import = array(
-    'Jivoo/Core', 'Jivoo/Controllers', 'Jivoo/Routing', 'Jivoo/Assets',
-    'Jivoo/View', 'Jivoo/Models', 'Jivoo/Helpers', 'Jivoo/Generators'
+  private $modules = array(
+    'Controllers', 'Routing', 'Assets',
+    'View', 'Models', 'Helpers', 'Generators'
   );
   
   /**
@@ -184,8 +190,8 @@ class App implements IEventSubject {
       $this->version = $appConfig['version'];
     if (isset($appConfig['minPhpVersion']))
       $this->minPhpVersion = $appConfig['minPhpVersion'];
-    if (isset($appConfig['import']))
-      $this->import = $appConfig['import'];
+    if (isset($appConfig['modules']))
+      $this->modules = $appConfig['modules'];
     if (!isset($appConfig['defaultLanguage']))
       $this->appConfig['defaultLanguage'] = 'en';
     if (isset($appConfig['sessionPrefix']))
@@ -385,7 +391,7 @@ class App implements IEventSubject {
    * template stored in 'app/templates/error/exception.php'.
    * @param Exception $exception Exception to report.
    */
-  public function crashReport(Exception $exception) {
+  public function crashReport(\Exception $exception) {
     $app = $this->name;
     $version = $this->version;
     $title = tr('Uncaught exception');
@@ -399,14 +405,14 @@ class App implements IEventSubject {
     }
     catch (Exception $e) { }
     if (!isset($custom))
-      include CORE_LIB_PATH . '/templates/error/exception.php';
+      include \Jivoo\PATH . '/Jivoo/Core/templates/error/exception.php';
   }
   
   /**
    * Handler for uncaught exceptions.
    * @param Exception $exception The exception.
    */
-  public function handleError(Exception $exception) {
+  public function handleError(\Exception $exception) {
     /** @todo attempt to create error report */
     if ($this->config['core']['createCrashReports']) {
       $hash = substr(md5($exception->__toString()), 0, 10);
@@ -443,7 +449,7 @@ class App implements IEventSubject {
       }
       catch (Exception $e) { }
       if (!isset($custom))
-        include CORE_LIB_PATH . '/templates/error/error.php';
+        include \Jivoo\PATH . '/Jivoo/Core/templates/error/error.php';
       $this->stop();
     }
   }
@@ -466,12 +472,7 @@ class App implements IEventSubject {
       return;
     }
     
-    Lib::addIncludePath($this->p('app', 'lib'));
-
-    if (isset($this->appConfig['lib'])) {
-      foreach ($this->appConfig['lib'] as $lib)
-        Lib::addIncludePath($this->p('app', 'lib/' . $lib));
-    }
+    Lib::import($this->p('app', 'lib'));
 
     $this->config = new AppConfig($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
@@ -514,7 +515,7 @@ class App implements IEventSubject {
       $this->p('log', $this->environment . '.log'),
       $this->config['core']['logLevel']
     );
-    register_shutdown_function(array('Logger', 'saveAll'));
+    register_shutdown_function(array('Jivoo\Core\Logger', 'saveAll'));
 
     // I18n system
     I18n::setup($this->config['core'], $this->paths->languages);
@@ -525,13 +526,18 @@ class App implements IEventSubject {
     // Import modules
     $this->triggerEvent('beforeImportModules');
     $modules = array();
-    foreach ($this->import as $module) {
-      Lib::import($module);
-      $segments = explode('/', $module);
-      $name = $segments[count($segments) - 1];
-      $this->paths->$name = LIB_PATH . '/' . implode('/', $segments);
-      $modules[] = $name;
-      $this->optionalDependencies = LoadableModule::getLoadOrder($name, $this->optionalDependencies);
+    foreach ($this->modules as $module) {
+      if (strpos($module, '\\') === false) {
+        $name = $module;
+        $module = 'Jivoo\\' . $name . '\\' . $name;
+      }
+      else {
+        $segments = explode('\\', $module);
+        $name = $segments[count($segments) - 1];
+      }
+      $this->paths->$name = \Jivoo\PATH . '/' . str_replace('\\', '/', $module);
+      $modules[] = $module;
+      $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
     }
     $this->triggerEvent('afterImportModules');
     
@@ -562,6 +568,5 @@ class App implements IEventSubject {
 
 /**
  * Event sent before and after a module has been loaded
- * @package Jivoo\Core
  */
 class LoadModuleEvent extends LoadEvent { }

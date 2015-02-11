@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 return array(
   'core' => array(
     'showExceptions' => true,
-    'logLevel' => Logger::ALL,
+    'logLevel' => Jivoo\Core\Logger::ALL,
     'createCrashReports' => false,
   ),
   'Extensions' => array(

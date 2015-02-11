@@ -1,9 +1,15 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Core;
+
 /**
  * A collection of key/value pairs.
  * @package Jivoo\Core
  */
-class Map implements IteratorAggregate, ArrayAccess, Countable {
+class Map implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**
    * @var array Key/value pairs.
    */
@@ -133,12 +139,10 @@ class Map implements IteratorAggregate, ArrayAccess, Countable {
 
 /**
  * Thrown if a key is not defined in map.
- * @package Jivoo\Core
  */
-class MapKeyInvalidException extends Exception { }
+class MapKeyInvalidException extends \Exception { }
 
 /**
  * Thrown when editting a read-only map.
- * @package Jivoo\Core
  */
-class MapReadOnlyException extends Exception { }
+class MapReadOnlyException extends \Exception { }

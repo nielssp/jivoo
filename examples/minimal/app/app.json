@@ -1,15 +1,14 @@
 {
   "name": "Minimal Jivoo example application",
   "version": "1.0",
-  "import": [
-    "Jivoo/Core",
-    "Jivoo/Routing",
-    "Jivoo/Assets",
-    "Jivoo/View",
-    "Jivoo/Controllers",
-    "Jivoo/Setup",
-    "Jivoo/Models",
-    "Jivoo/Content",
-    "Jivoo/Helpers"
+  "modules": [
+    "Routing",
+    "Assets",
+    "View",
+    "Controllers",
+    "Setup",
+    "Models",
+    "Content",
+    "Helpers"
   ]
 }
