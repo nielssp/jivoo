@@ -9,12 +9,12 @@ class Controller extends Module {
    */
   protected $modules = array('Helpers', 'Models');
   /**
-   * @var string[] A list of other helpers needed by this helper.
+   * @var string[] A list of other helpers needed by this module.
   */
   protected $helpers = array();
   
   /**
-   * @var string[] A list of models needed by this helper.
+   * @var string[] A list of models needed by this module.
   */
   protected $models = array();
   
