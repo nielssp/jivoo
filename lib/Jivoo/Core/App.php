@@ -58,7 +58,7 @@ class App implements IEventSubject {
   /**
    * @var string Minimum PHP version.
    */
-  private $minPhpVersion = '5.2.0';
+  private $minPhpVersion = '5.3.0';
 
   /**
    * @var string[] List of modules to import and load.
