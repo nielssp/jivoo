@@ -1,7 +1,14 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Setup;
+
+use Jivoo\Core\LoadableModule;
+
 /**
  * Installation and setup system..
- * @package Jivoo\Setup
  */
 class Setup extends LoadableModule {
   /**

@@ -83,6 +83,11 @@ class App implements IEventSubject {
    * @var Map Map of modules.
    */
   private $m = null;
+  
+  /**
+   * @var string[] Module load list.
+   */
+  private $imports = array();
 
   /**
    * @var callback[][] Associative array mapping module names to a list of
@@ -326,14 +331,17 @@ class App implements IEventSubject {
   public function getModule($name) {
     if (!isset($this->m->$name)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
+      if (!isset($this->imports[$name]))
+        throw new \Exception(tr('Module not imported: %1', $name));
+      $module = $this->imports[$name];
       if (isset($this->optionalDependencies[$name])) {
         foreach ($this->optionalDependencies[$name] as $dependency) {
           if (Lib::classExists($dependency))
             $this->getModule($dependency);
         }
       }
-      Lib::assumeSubclassOf($name, 'LoadableModule');
-      $this->m->$name = new $name($this);
+      Lib::assumeSubclassOf($module, 'Jivoo\Core\LoadableModule');
+      $this->m->$name = new $module($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
       $this->m->$name->afterLoad();
       if (isset($this->waitingCalls[$name])) {
@@ -525,7 +533,6 @@ class App implements IEventSubject {
 
     // Import modules
     $this->triggerEvent('beforeImportModules');
-    $modules = array();
     foreach ($this->modules as $module) {
       if (strpos($module, '\\') === false) {
         $name = $module;
@@ -536,7 +543,7 @@ class App implements IEventSubject {
         $name = $segments[count($segments) - 1];
       }
       $this->paths->$name = \Jivoo\PATH . '/' . str_replace('\\', '/', $module);
-      $modules[] = $module;
+      $this->imports[$name] = $module;
       $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
     }
     $this->triggerEvent('afterImportModules');
@@ -549,8 +556,8 @@ class App implements IEventSubject {
     
     // Load modules
     $this->triggerEvent('beforeLoadModules');
-    foreach ($modules as $module) {
-      $object = $this->getModule($module);
+    foreach ($this->imports as $name => $module) {
+      $object = $this->getModule($name);
     }
     $this->triggerEvent('afterLoadModules');
     

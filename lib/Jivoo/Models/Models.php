@@ -1,8 +1,11 @@
 <?php
-Lib::import('Jivoo/Models/Validation');
-Lib::import('Jivoo/Models/Selection');
-Lib::import('Jivoo/Models/Condition');
-Lib::import('Jivoo/Models/File');
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Models;
+
+use Jivoo\Core\LoadableModule;
 
 /**
  * Models module, finds all models in application.
@@ -144,6 +147,5 @@ class Models extends LoadableModule {
 
 /**
  * A model could not be found.
- * @package Jivoo\Models
  */
-class ModelNotFoundException extends Exception { }
+class ModelNotFoundException extends \Exception { }
