@@ -3,7 +3,10 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Routing;
+namespace Jivoo\Routing\Dispatch;
+
+use Jivoo\Routing\IDispatcher;
+use Jivoo\Routing\Routing;
 
 /**
  * Implements a type of route.
