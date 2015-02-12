@@ -1,4 +1,8 @@
 <?php
+namespace Minimal\Controllers;
+
+use Jivoo\Controllers\Controller;
+
 class AppController extends Controller {
   
   protected $helpers = array('Html');

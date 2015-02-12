@@ -1,4 +1,6 @@
 <?php
+namespace Minimal\Controllers;
+
 class PagesController extends AppController {
   public function view() {
     $template = 'pages/' . implode('/', $this->request->path) . '.html';
