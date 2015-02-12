@@ -12,6 +12,7 @@ namespace Jivoo\Core;
  * @property-read PathDictionary $paths Paths.
  * @property-read string $name Application name.
  * @property-read string $version Application version.
+ * @property-read string $namespace Application namespace.
  * @property-read string $minPhpVersion Minimum PHP version.
  * @property-read string $environment Environment name.
  * @property-read AppConfig $config User configuration.
@@ -60,6 +61,11 @@ class App implements IEventSubject {
    * @var string Application version.
    */
   private $version = '0.0.0';
+  
+  /**
+   * @var string Application namespace.
+   */
+  private $namespace = '';
 
   /**
    * @var string Minimum PHP version.
@@ -193,6 +199,8 @@ class App implements IEventSubject {
       $this->name = $appConfig['name'];
     if (isset($appConfig['version']))
       $this->version = $appConfig['version'];
+    if (isset($appConfig['namespace']))
+      $this->namespace = $appConfig['namespace'];
     if (isset($appConfig['minPhpVersion']))
       $this->minPhpVersion = $appConfig['minPhpVersion'];
     if (isset($appConfig['modules']))
@@ -220,6 +228,7 @@ class App implements IEventSubject {
       case 'paths':
       case 'name':
       case 'version':
+      case 'namespace':
       case 'minPhpVersion':
       case 'environment':
       case 'config':

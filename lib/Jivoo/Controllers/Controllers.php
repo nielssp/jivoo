@@ -50,24 +50,27 @@ class Controllers extends LoadableModule {
    * Find controllers in a directory.
    * @param string $dir Directory.
    */
-  private function findControllers($dir = 'controllers') {
-//     Lib::addIncludePath($this->p('app', $dir));
-    $files = scandir($this->p('app', $dir));
+  private function findControllers($dir = '') {
+    $files = scandir($this->p('app', 'controllers/' . $dir));
     if ($files !== false) {
       foreach ($files as $file) {
         if ($file[0] == '.') {
           continue;
         }
-        if (is_dir($this->p('app', $dir . '/' . $file))) {
+        if (is_dir($this->p('app', 'controllers/' . $dir . '/' . $file))) {
           $this->findControllers($dir . '/' . $file);
         }
         else {
           $split = explode('.', $file);
           if (isset($split[1]) and $split[1] == 'php') {
-            $class = $split[0];
+            if ($dir === '')
+              $class = $this->app->namespace . '\Controllers\\' . $split[0];
+            else
+              $class = $this->app->namespace . '\Controllers\\' . str_replace('/', '\\', $dir) . '\\' . $split[0];
+            require $this->p('app', 'controllers/' . $file);
             if (Lib::classExists($class) and
                  is_subclass_of($class, 'Jivoo\Controllers\Controller')) {
-              $name = str_replace('Controller', '', $class);
+              $name = str_replace('Controller', '', $split[0]);
               $this->controllers[$name] = $class;
             }
           }

@@ -1,5 +1,6 @@
 {
   "name": "Minimal Jivoo example application",
+  "namespace": "Minimal",
   "version": "1.0",
   "modules": [
     "Routing",
