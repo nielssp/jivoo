@@ -1,8 +1,9 @@
 <?php
-Lib::import('Jivoo/AccessControl/Hashing');
-Lib::import('Jivoo/AccessControl/Authentication');
-Lib::import('Jivoo/AccessControl/Authorization');
-Lib::import('Jivoo/AccessControl/Acl');
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\AccessControl;
 
 /**
  * Access control module for authentication and authorization.
@@ -66,4 +67,4 @@ class AccessControl extends LoadableModule {
  * Thrown when a hash type is unsupported.
  * @package Jivoo\AccessControl
  */
-class UnsupportedHashTypeException extends Exception { }
+class UnsupportedHashTypeException extends \Exception { }

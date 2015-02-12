@@ -1,4 +1,13 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
+use Jivoo\Core\Logger;
+use Jivoo\Core\Utilities;
+
 /**
  * A class representing an HTTP request.
  * @package Jivoo\Routing
@@ -194,7 +203,7 @@ class Request {
       case 'userAgent':
         return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $name));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
   /**
@@ -212,7 +221,7 @@ class Request {
         $this->$name = $value;
         return;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $name));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
   /**

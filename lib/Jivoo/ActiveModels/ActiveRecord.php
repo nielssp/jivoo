@@ -1,4 +1,14 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\ActiveModels;
+
+use Jivoo\Models\IRecord;
+use Jivoo\Models\IActionRecord;
+use Jivoo\Routing\ILinkable;
+
 /**
  * An active record, see also {@see ActiveModel}.
  * @package Jivoo\ActiveModels

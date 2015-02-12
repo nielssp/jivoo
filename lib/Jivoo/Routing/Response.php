@@ -1,4 +1,10 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
 /**
  * Base class for HTTP responses.
  * @package Jivoo\Routing
@@ -62,7 +68,7 @@ abstract class Response {
       case 'body':
         return $this->getBody();
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -78,7 +84,7 @@ abstract class Response {
         $this->$property = $value;
         return;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
 

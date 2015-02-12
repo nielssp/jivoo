@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Generators;
+
+use Jivoo\Controllers\Controller;
+
 /**
  * Controller for generators
  * @package Jivoo\Generators
@@ -25,14 +33,14 @@ class GeneratorController extends Controller {
   }
   
   private function getModules() {
-    $files = scandir(LIB_PATH . '/Jivoo');
+    $files = scandir(Jivoo\PATH . '/Jivoo');
     $modules = array();
     if ($files !== false) {
       foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
         $module = 'Jivoo/' . $file;
-        if (is_dir(LIB_PATH . '/' . $module)) {
+        if (is_dir(Jivoo\PATH . '/' . $module)) {
           $modules[] = $module;
         }
       }

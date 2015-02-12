@@ -6,6 +6,7 @@
 namespace Jivoo\Assets;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Utilities;
 
 /**
  * Asset system.

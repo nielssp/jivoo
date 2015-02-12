@@ -1,9 +1,15 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
 /**
  * A list of flash messages, i.e. {@see FlashMessage}.
  * @package Jivoo\Routing
  */
-class FlashMessageList implements ArrayAccess, Countable, Iterator {
+class FlashMessageList implements \ArrayAccess, \Countable, \Iterator {
   /**
    * @var string Message type.
    */

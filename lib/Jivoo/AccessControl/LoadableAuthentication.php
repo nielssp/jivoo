@@ -1,4 +1,14 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\AccessControl;
+
+use Jivoo\Core\App;
+use Jivoo\Core\Module;
+use Jivoo\Models\IRecord;
+
 /**
  * A loadable authentication module. Subclasses should use the prefix
  * "Authentication".

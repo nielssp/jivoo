@@ -1,7 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
 /**
  * Provides functions related to redirects and HTTP status codes.
- * @package Jivoo\Routing
  */
 class Http {
 
@@ -32,7 +37,7 @@ class Http {
    */
   public static function redirect($status, $location) {
     if (!Http::setStatus($status)) {
-      throw new Exception(
+      throw new \Exception(
         tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
       );
     }
@@ -126,6 +131,5 @@ class Http {
 
 /**
  * Headers have already been sent and cannot be changed.
- * @package Jivoo\Routing
  */
-class HeadersAlreadySentException extends Exception { }
+class HeadersAlreadySentException extends \Exception { }

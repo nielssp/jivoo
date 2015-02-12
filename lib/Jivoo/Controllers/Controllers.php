@@ -6,6 +6,8 @@
 namespace Jivoo\Controllers;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * Controller module. Will automatically find controllers in the controllers
@@ -49,7 +51,7 @@ class Controllers extends LoadableModule {
    * @param string $dir Directory.
    */
   private function findControllers($dir = 'controllers') {
-    Lib::addIncludePath($this->p('app', $dir));
+//     Lib::addIncludePath($this->p('app', $dir));
     $files = scandir($this->p('app', $dir));
     if ($files !== false) {
       foreach ($files as $file) {

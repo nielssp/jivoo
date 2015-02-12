@@ -1,4 +1,10 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Helpers;
+
 /**
  * A helper for creating HTML forms
  * @package Jivoo\Helpers
@@ -710,4 +716,4 @@ class FormHelper extends Helper {
  * Form helper exception.
  * @package Jivoo\Helpers
  */
-class FormHelperException extends Exception { }
+class FormHelperException extends \Exception { }

@@ -1,4 +1,13 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\AccessControl\Hashing;
+
+use Jivoo\AccessControl\IPasswordHasher;
+use Jivoo\Core\Utilities;
+
 /**
  * A password hasher using the PHP {@see crypt} function.
  * @package Jivoo\AccessControl\Hashing

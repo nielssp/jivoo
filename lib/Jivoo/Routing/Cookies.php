@@ -1,12 +1,17 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
 /**
  * Provides access to cookies.
  * 
  * Implements ArrayAccess, so the []-operator can be used
  * to get and set cookies.
- * @package Jivoo\Routing
  */
-class Cookies implements ArrayAccess {
+class Cookies implements \ArrayAccess {
 
   /**
    * @var string Cookie prefix.
@@ -54,7 +59,7 @@ class Cookies implements ArrayAccess {
     try {
       setcookie($this->prefix . $name, $value, $expire, $path);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
     }
   }
 

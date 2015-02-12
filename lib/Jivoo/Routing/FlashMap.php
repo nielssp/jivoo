@@ -1,4 +1,10 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
 /**
  * Collection of flash messages, i.e. error/warning/success messages for
  * the user of the web application.
@@ -11,7 +17,7 @@
  * 
  * @package Jivoo\Routing
  */
-class FlashMap implements IteratorAggregate, ArrayAccess, Countable {
+class FlashMap implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**
    * @var SessionStorage Session variables.
    */

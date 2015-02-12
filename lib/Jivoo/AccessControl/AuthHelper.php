@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\AccessControl;
+
+use Jivoo\Helpers\Helper;
+
 /**
  * Helper class for authentication and autorization.
  * @package Jivoo\AccessControl
@@ -267,8 +275,8 @@ class AuthHelper extends Helper {
   private function loadAuthentication($name, $options = array()) {
     if ($name instanceof IAuthentication)
       return $this->addAuthentication($name);
-    $name = $name . 'Authentication';
-    Lib::assumeSubclassOf($name, 'LoadableAuthentication');
+    $name = 'Jivoo\AccessControl\Authentication\\' . $name . 'Authentication';
+    Lib::assumeSubclassOf($name, 'Jivoo\AccessControl\LoadableAuthentication');
     $this->addAuthentication(new $name($this->app, $options));
   }
   
@@ -280,8 +288,8 @@ class AuthHelper extends Helper {
   private function loadAuthorization($name, $options = array()) {
     if ($name instanceof IAuthorization)
       return $this->addAuthorization($name);
-    $name = $name . 'Authorization';
-    Lib::assumeSubclassOf($name, 'LoadableAuthorization');
+    $name = 'Jivoo\AccessControl\Authorization\\' . $name . 'Authorization';
+    Lib::assumeSubclassOf($name, 'Jivoo\AccessControl\LoadableAuthorization');
     $this->addAuthorization(new $name($this->app, $options, $this));
   }
 
@@ -293,8 +301,8 @@ class AuthHelper extends Helper {
   private function loadAcl($name, $options = array()) {
     if ($name instanceof IAcl)
       return $this->addAcl($name);
-    $name = $name . 'Acl';
-    Lib::assumeSubclassOf($name, 'LoadableAcl');
+    $name = 'Jivoo\AccessControl\Acl\\' . $name . 'Acl';
+    Lib::assumeSubclassOf($name, 'Jivoo\AccessControl\LoadableAcl');
     $this->addAcl(new $name($this->app, $options));
   }
   

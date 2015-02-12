@@ -7,6 +7,8 @@ namespace Jivoo\Routing;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Event;
+use Jivoo\Core\Utilities;
+use Jivoo\Core\Logger;
 
 /**
  * Module for handling routes and HTTP requests.
@@ -631,7 +633,7 @@ class Routing extends LoadableModule {
         'controller' => $controller,
         'action' => $action
       );
-      $reflect = new ReflectionMethod($class, $action);
+      $reflect = new \ReflectionMethod($class, $action);
       $required = $reflect->getNumberOfRequiredParameters();
       $total = $reflect->getNumberOfParameters();
       if (!empty($prefix) AND substr($prefix, -1) != '/') {
@@ -671,7 +673,7 @@ class Routing extends LoadableModule {
     else {
       $actions = $this->m->Controllers->getActions($controller);
       if ($actions === false) {
-        throw new Exception(tr('Invalid controller: %1', $controller));
+        throw new \Exception(tr('Invalid controller: %1', $controller));
       }
       foreach ($actions as $action) {
         $this->autoRoute($controller, $action, $prefix);

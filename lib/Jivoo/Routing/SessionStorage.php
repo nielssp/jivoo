@@ -1,4 +1,10 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Routing;
+
 /**
  * Session storage access.
  *
@@ -9,7 +15,7 @@
  * @property-read FlashMap $flash Flash messages.
  * @package Jivoo\Routing
  */
-class SessionStorage implements ArrayAccess {
+class SessionStorage implements \ArrayAccess {
   
   /**
    * @var bool Whether or not session is open.

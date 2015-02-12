@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\ActiveModels;
+
+use Jivoo\Models\Model;
+
 /**
  * A special model representing an association collection as result from for
  * instance a many-to-many relationship between models.
