@@ -6,6 +6,7 @@
 namespace Jivoo\Setup;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\LoadModuleEvent;
 
 /**
  * Installation and setup system..

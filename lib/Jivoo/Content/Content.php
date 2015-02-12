@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Controllers;
+namespace Jivoo\Content;
 
 use Jivoo\Core\LoadableModule;
 
@@ -48,8 +48,8 @@ class Content extends LoadableModule {
   protected function init() {
     $this->extensions = new ContentExtensions();
     
-    $this->addFormat(new HtmlFormat());
-    $this->addFormat(new TextFormat());
+    $this->addFormat(new Formats\HtmlFormat());
+    $this->addFormat(new Formats\TextFormat());
     $this->addEditor(new TextareaEditor('html'));
     $this->addEditor(new TextareaEditor('text'));
     

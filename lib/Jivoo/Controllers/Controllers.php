@@ -63,9 +63,10 @@ class Controllers extends LoadableModule {
         }
         else {
           $split = explode('.', $file);
-          if (isset($split[1]) AND $split[1] == 'php') {
+          if (isset($split[1]) and $split[1] == 'php') {
             $class = $split[0];
-            if (Lib::classExists($class) AND is_subclass_of($class, 'Controller')) {
+            if (Lib::classExists($class) and
+                 is_subclass_of($class, 'Jivoo\Controllers\Controller')) {
               $name = str_replace('Controller', '', $class);
               $this->controllers[$name] = $class;
             }

@@ -66,6 +66,9 @@ abstract class LoadableModule extends Module {
    */
   public static function getLoadOrder($module, $dependencies) {
     $vars = get_class_vars($module);
+    if (!is_array($vars['loadBefore'])) {
+    var_dump($module);
+    exit;}
     foreach ($vars['loadBefore'] as $other) {
       if (!isset($dependencies[$other]))
         $dependencies[$other] = array();
