@@ -17,6 +17,6 @@ abstract class FilterVisitor {
     if ($node instanceof StringNode) {
       return $this->visitString($node);
     }
-    throw new Exception('Unknown node: ' . get_class($node));
+    throw new \Exception('Unknown node: ' . get_class($node));
   }
 }

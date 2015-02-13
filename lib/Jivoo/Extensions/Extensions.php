@@ -212,7 +212,7 @@ class Extensions extends LoadableModule {
   /**
    * Import extensions and load extension modules.
    * @throws ExtensionNotFoundException If an extension was not found or invalid.
-   * @throws Exception If "disableBuggy" is not enabled and importing an
+   * @throws \Exception If "disableBuggy" is not enabled and importing an
    * extension causes an exception to be thrown.
    */
   public function run() {
@@ -482,12 +482,12 @@ class Extensions extends LoadableModule {
 /**
  * Extension not found.
  */
-class ExtensionNotFoundException extends Exception {}
+class ExtensionNotFoundException extends \Exception {}
 
 /**
  * Extension is invalid.
  */
-class ExtensionInvalidException extends Exception {}
+class ExtensionInvalidException extends \Exception {}
 
 /**
  * Event sent before and after an extension module has been loaded.

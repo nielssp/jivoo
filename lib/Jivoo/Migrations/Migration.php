@@ -183,7 +183,7 @@ abstract class Migration {
    * @param string $index Index name.
    * @param array $options Associative array of index options, with keys
    * 'unique' and 'columns'.
-   * @throws Exception
+   * @throws \Exception
    */
   protected function alterIndex($table, $index, $options = array()) {
     try {

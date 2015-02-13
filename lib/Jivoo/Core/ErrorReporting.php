@@ -10,7 +10,7 @@ namespace Jivoo\Core;
  */
 class ErrorReporting {
   /**
-   * @var callback Exception handler.
+   * @var callback \Exception handler.
    */
   private static $handler = null;
 
@@ -87,7 +87,7 @@ class ErrorReporting {
 
   /**
    * Uncaught exception handler.
-   * @param Exception $exception Exception.
+   * @param \Exception $exception \Exception.
    */
   public static function handleException(\Exception $exception) {
     if (isset(self::$handler)) {

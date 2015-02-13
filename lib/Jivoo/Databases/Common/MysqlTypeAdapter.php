@@ -130,7 +130,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   /**
    * Convert output of SHOW COLUMN to DataType.
    * @param array $row Row result.
-   * @throws Exception If type unsupported.
+   * @throws \Exception If type unsupported.
    * @return DataType The type.
    */
   private function toDataType($row) {
@@ -177,7 +177,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case 'text':
         return DataType::text($null, $default);
     }
-    throw new Exception(tr(
+    throw new \Exception(tr(
       'Unsupported MySQL type for column: %1', $row['Field']
     ));
   }
@@ -356,7 +356,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function renameTable($table, $newName) {
-    throw new Exception('Not implemented');
+    throw new \Exception('Not implemented');
   }
 
   /**

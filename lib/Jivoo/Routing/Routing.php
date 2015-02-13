@@ -486,7 +486,7 @@ class Routing extends LoadableModule {
     if (isset($action)) {
       $class = $this->m->Controllers->getClass($controller);
       if (!$class) {
-        throw new Exception(tr('Invalid controller: %1', $controller));
+        throw new \Exception(tr('Invalid controller: %1', $controller));
       }
       $route = array(
         'controller' => $controller,
@@ -753,7 +753,7 @@ class Routing extends LoadableModule {
    */
   public function respond(Response $response) {
     if (headers_sent($file, $line))
-      throw new Exception(tr('Headers already sent in %1 on line %2', $file, $line));
+      throw new \Exception(tr('Headers already sent in %1 on line %2', $file, $line));
     Http::setStatus($response->status);
     Http::setContentType($response->type);
     if (isset($response->modified)) {

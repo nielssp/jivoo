@@ -231,7 +231,7 @@ class Logger {
 
   /**
    * Log an exception.
-   * @param Exception $exception Exception.
+   * @param \Exception $exception \Exception.
    */
   public static function logException(\Exception $exception) {
     $file = $exception->getFile();

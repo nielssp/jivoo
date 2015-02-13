@@ -67,4 +67,4 @@ abstract class Enum {
 /**
  * For invalid enums.
  */
-class InvalidEnumException extends Exception { }
+class InvalidEnumException extends \Exception { }

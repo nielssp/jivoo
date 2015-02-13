@@ -195,9 +195,9 @@ class Databases extends LoadableModule {
 /**
  * Invalid database configuration.
  */
-class DatabaseNotConfiguredException extends Exception { }
+class DatabaseNotConfiguredException extends \Exception { }
 
 /**
  * Unknown table schema.
  */
-class DatabaseMissingSchemaException extends Exception { }
+class DatabaseMissingSchemaException extends \Exception { }

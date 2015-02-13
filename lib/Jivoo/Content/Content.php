@@ -208,12 +208,12 @@ class Content extends LoadableModule {
   /**
    * Add an editor.
    * @param IEditor $editor Editor object.
-   * @throws Exception If format used by editor is unknown.
+   * @throws \Exception If format used by editor is unknown.
    */
   public function addEditor(IEditor $editor) {
     $format = $editor->getFormat();
     if (!isset($this->editors[$format]))
-      throw new Exception('Unknown format: ' . $format);
+      throw new \Exception('Unknown format: ' . $format);
     $this->editors[$format][] = $editor;
   }
   

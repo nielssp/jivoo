@@ -103,7 +103,7 @@ class FilterParser {
     if ($this->accept($type)) {
       return $this->currentToken;
     }
-    throw new Exception(
+    throw new \Exception(
       'Parse error: Unexpected token "' . $this->nextToken[0]
       . '" expected "' . $type . '"');
   }

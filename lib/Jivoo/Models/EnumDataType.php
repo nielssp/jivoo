@@ -53,7 +53,7 @@ class EnumDataType extends DataType {
       return $this->values;
     if ($property === 'placeholder') {
       if (!isset($this->class))
-        throw new Exception(tr('Invalid use of anonymous enum type'));
+        throw new \Exception(tr('Invalid use of anonymous enum type'));
       return '%' . $this->class;
     }
     return parent::__get($property);

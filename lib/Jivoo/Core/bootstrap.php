@@ -121,18 +121,18 @@ namespace {
     /**
      * Thrown by function if parameters are invalid.
      */
-    class InvalidArgumentException extends Exception { }
+    class InvalidArgumentException extends \Exception { }
   }
   
   /**
    * Thrown when a magic method is undefined.
    */
-  class InvalidMethodException extends Exception { }
+  class InvalidMethodException extends \Exception { }
   
   /**
    * Thrown when a magic property is undefined.
    */
-  class InvalidPropertyException extends Exception { }
+  class InvalidPropertyException extends \Exception { }
   
   require Jivoo\PATH . '/Jivoo/Core/Lib.php';
   require Jivoo\PATH . '/Jivoo/Core/ErrorReporting.php';

@@ -128,11 +128,11 @@ class Controller extends Module {
    * Create a route to an action for auto routing.
    * @param string $action Action name.
    * @param string $prefix Prefix for the resulting path.
-   * @throws Exception If action does not exist.
+   * @throws \Exception If action does not exist.
    */
   private function createRoute($action, $prefix = '') {
     if (!in_array($action, $this->actions)) {
-      throw new Exception(tr('Invalid action "%1"', $action));
+      throw new \Exception(tr('Invalid action "%1"', $action));
     }
     $reflect = new ReflectionMethod(get_class($this), $action);
     $required = $reflect->getNumberOfRequiredParameters();

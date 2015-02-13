@@ -152,12 +152,12 @@ abstract class Model extends Module implements IModel {
    * must be ordered.
    * @param ReadSelection $selection A read selection.
    * @param IRecord $record A record.
-   * @throws Exception If the selection is not ordered.
+   * @throws \Exception If the selection is not ordered.
    * @return int Row number.
    */
   public function rowNumberSelection(ReadSelection $selection, IRecord $record) {
     if (empty($selection->orderBy)) {
-      throw new Exception(tr('Can\'t find row number in selection without ordering'));
+      throw new \Exception(tr('Can\'t find row number in selection without ordering'));
     }
     $condition = new Condition();
     foreach ($selection->orderBy as $orderBy) {
@@ -408,4 +408,4 @@ abstract class Model extends Module implements IModel {
 /**
  * Thrown if primary key is invalid
  */
-class InvalidPrimaryKeyException extends Exception { }
+class InvalidPrimaryKeyException extends \Exception { }

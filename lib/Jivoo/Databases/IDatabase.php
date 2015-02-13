@@ -53,19 +53,19 @@ interface IDatabase {
 /**
  * A database connection has failed.
  */
-class DatabaseConnectionFailedException extends Exception {}
+class DatabaseConnectionFailedException extends \Exception {}
 
 /**
  * A database selection has failed.
  */
-class DatabaseSelectFailedException extends Exception {}
+class DatabaseSelectFailedException extends \Exception {}
 
 /**
  * A database query has failed.
  */
-class DatabaseQueryFailedException extends Exception {}
+class DatabaseQueryFailedException extends \Exception {}
 
 /**
  * A table could not be found.
  */
-class TableNotFoundException extends Exception { }
+class TableNotFoundException extends \Exception { }

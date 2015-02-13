@@ -95,14 +95,14 @@ class Route {
   /**
    * Make route.
    * @param Routing $routing Routing module. 
-   * @throws Exception If type is auto routing and controller is not set.
+   * @throws \Exception If type is auto routing and controller is not set.
    */
   public function draw(Routing $routing) {
     switch ($this->type) {
       case self::TYPE_AUTO:
         $this->route = $routing->validateRoute($this->route, null);
         if (!isset($this->route['controller'])) {
-          throw new Exception(tr('Auto routing requires controller'));
+          throw new \Exception(tr('Auto routing requires controller'));
         }
         if (isset($this->route['action'])) {
           $routing->autoRoute($this->route['controller'], $this->route['action']);
@@ -114,7 +114,7 @@ class Route {
       case self::TYPE_RESOURCE:
         $this->route = $routing->validateRoute($this->route);
         if (!isset($this->route['controller'])) {
-          throw new Exception(tr('Resource routing requires controller'));
+          throw new \Exception(tr('Resource routing requires controller'));
         }
         $controller = $this->route['controller'];
         $split = explode('-', Utilities::camelCaseToDashes($controller));

@@ -27,7 +27,7 @@ class Json {
   /**
    * Pretty print a value as JSON.
    * @param mixed $object Any object.
-   * @throws Exception If pretty printing not available.
+   * @throws \Exception If pretty printing not available.
    * @return string JSON.
    */
   public static function prettyPrint($object) {
@@ -36,7 +36,7 @@ class Json {
     if (self::$hasPrettyPrinting)
       return json_encode($object, JSON_PRETTY_PRINT);
     else
-      throw new Exception('not implemented');
+      throw new \Exception('not implemented');
   }
   
   /**

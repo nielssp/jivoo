@@ -32,7 +32,7 @@ class Setup extends LoadableModule {
   /**
    * Run configured setups.
    * @param LoadModuleEvent $event Event data.
-   * @throws Exception If controller not found.
+   * @throws \Exception If controller not found.
    */
   public function runSetup(LoadModuleEvent $event) {
     $this->app->detachEventHandler('afterLoadModule', array($this, 'runSetup'));
@@ -46,7 +46,7 @@ class Setup extends LoadableModule {
           $this->current = $name;
           $object = $this->m->Controllers->getController($controller);
           if (!isset($object)) {
-            throw new Exception(tr('Controller not found: %1', $controller));
+            throw new \Exception(tr('Controller not found: %1', $controller));
           }
           $object->autoRoute($action);
           $this->m->Routing->reroute($controller, $action);

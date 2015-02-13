@@ -155,7 +155,7 @@ class App implements IEventSubject {
    * 'app.json' configuration file.
    * @param string $userPath Path to user-directory.
    * @param string $entryScript Name of entry script, e.g. 'index.php'.
-   * @throws Exception In application configuration is missing or invalid.
+   * @throws \Exception In application configuration is missing or invalid.
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $appPath = Utilities::convertPath($appPath);
@@ -165,7 +165,7 @@ class App implements IEventSubject {
     if (file_exists($appFile)) {
       $appConfig = Json::decodeFile($appFile);
       if (!isset($appConfig))
-        throw new Exception('Invalid application. "app.json" invalid.');
+        throw new \Exception('Invalid application. "app.json" invalid.');
     }
     else {
       Logger::error('Invalid application. "app.json" not found. Configuring default application.');
@@ -418,7 +418,7 @@ class App implements IEventSubject {
   /**
    * Output an HTML crash report based on an exception. Can use a custom
    * template stored in 'app/templates/error/exception.php'.
-   * @param Exception $exception Exception to report.
+   * @param \Exception $exception \Exception to report.
    */
   public function crashReport(\Exception $exception) {
     $app = $this->name;
@@ -439,7 +439,7 @@ class App implements IEventSubject {
   
   /**
    * Handler for uncaught exceptions.
-   * @param Exception $exception The exception.
+   * @param \Exception $exception The exception.
    */
   public function handleError(\Exception $exception) {
     /** @todo attempt to create error report */

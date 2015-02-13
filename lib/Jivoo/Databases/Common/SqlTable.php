@@ -69,7 +69,7 @@ class SqlTable extends Table {
     foreach ($data as $field => $value) {
       $type = $this->getType($field);
       if (!isset($type))
-        throw new Exception(tr('Schema %1 does not contain field %2', $this->getName(), $field));
+        throw new \Exception(tr('Schema %1 does not contain field %2', $this->getName(), $field));
       $data[$field] = $typeAdapter->decode($this->getType($field), $value);
     }
     return Record::createExisting($this, $data);
@@ -154,14 +154,14 @@ class SqlTable extends Table {
       foreach ($selection->joins as $join) {
         if ($join['source'] instanceof SqlTable) {
           if ($join['source']->owner !== $this->owner) {
-            throw new Exception(tr(
+            throw new \Exception(tr(
               'Unable to join SqlTable with table of different database'
             ));
           }
           $table = $join['source']->name;
         }
         else {
-          throw new Exception(tr(
+          throw new \Exception(tr(
             'Unable to join SqlTable with data source of type "%1"',
             get_class($join['source'])
           ));
