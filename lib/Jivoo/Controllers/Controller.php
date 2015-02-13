@@ -302,8 +302,7 @@ class Controller extends Module {
   protected function render($templateName = null) {
     if (!isset($templateName)) {
       list(, $caller) = debug_backtrace(false);
-      $class = get_class($this);
-      $class = str_replace($this->app->namespace . '\Controllers\\', '', $class);
+      $class = str_replace($this->app->namespace . '\Controllers\\', '', $caller['class']);
       $class = preg_replace('/Controller$/', '', $class);
       $templateName = '';
       if ($class != 'App') {
