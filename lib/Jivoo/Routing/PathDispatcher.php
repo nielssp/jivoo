@@ -53,15 +53,8 @@ class PathDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
-  public function getPath($path, $route) {
+  public function getPath($route, $path = null) {
     return $route['path'];
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function getLink($route) {
-    return $route['url'];
   }
 
   /**

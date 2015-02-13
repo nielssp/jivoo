@@ -84,9 +84,14 @@ class Routing extends LoadableModule {
   private $routes;
   
   /**
+   * @var string[] Paths;
+   */
+  private $paths;
+  
+  /**
    * @var array Root route and priority
    */
-  private $root = null;
+  private $root = array('priority' => 0);
   
   /**
    * @var mixed Error route
@@ -156,6 +161,16 @@ class Routing extends LoadableModule {
       $this->setRoot($this->config['root'], 10);
     }
 
+    $routesFile = $this->p('app', 'config/routes.php');
+    if (file_exists($routesFile)) {
+      $routes = $this->routes;
+      $this->app->attachEventHandler(
+        'afterLoadModules',
+        function() use($routes, $routesFile) {
+          $routes->load($routesFile);
+        }
+      );
+    }
     $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
   }
   
@@ -179,11 +194,13 @@ class Routing extends LoadableModule {
    * @param number $priority Priority of route.
    */
   public function setRoot($route, $priority = 9) {
+    if ($priority <= $this->root['priority'])
+      return;
     $route = $this->validateRoute($route);
     $route['priority'] = $priority;
     $this->root = $route;
     if (isset($route['path'])) {
-      if (count($this->request->path) < 1) {
+      if (count($this->request->path) === 0) {
         $this->request->path = $route['path'];
         $this->request->query = array_merge($route['query'], $this->request->query);
       }
@@ -192,17 +209,9 @@ class Routing extends LoadableModule {
       }
     }
     else {
-      if ($priority > $this->root['priority']) {
-        if (isset($route['controller'])) {
-          $this->addPath(
-            $route['controller'],
-            $route['action'], 0,
-            array($this, 'insertParameters'), array(array()), $priority
-          );
-        }
-        if (count($this->request->path) < 1) {
-          $this->setRoute($route, $priority);
-        }
+      $this->addPath($route, array(), 0, $priority);
+      if (count($this->request->path) === 0) {
+        $this->setRoute($route, $priority);
       }
     }
   }
@@ -253,30 +262,6 @@ class Routing extends LoadableModule {
       $result[] = $part;
     }
     return $result;
-  }
-
-  /**
-   * Get path associated with an action.
-   * @param string|Controller $controller Controller name or object.
-   * @param string $action Action name.
-   * @param mixed[] $parameters Parameters list.
-   * @throws InvalidRouteException If path was not found.
-   * @return string[] A path.
-   */
-  public function getPath($route) {
-    $route = $this->validate($route);
-    $arity = '(' . count($route['parameters']) . ')';
-    $routeString = $route['dispatcher']->fromRoute($route);
-    $path = null;
-    if (isset($this->paths[$routeString . $arity])) {
-      $path = $route['dispatcher']->getPath($this->paths[$routeString . $arity], $route);
-    }
-    else if (isset($this->paths[$routeString . '[*]'])) {
-      $path = $route['dispatcher']->getPath($this->paths[$routeString . '(*)'], $route);
-    }
-    if (!isset($path))
-      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
-    return $path;
   }
 
   /**
@@ -395,23 +380,9 @@ class Routing extends LoadableModule {
    * @return string A URL.
    */
   public function getUrl($route = null) {
-    $route = $this->validateRoute($route);
-    if (isset($route['url'])) {
-      return $route['url'];
-    }
-    if (isset($route['path'])) {
-      $link = $this->getLinkFromPath($route['path'], $route['query'], $route['fragment']);
-    }
-    else if (isset($route['controller']) AND isset($route['action'])) {
-      $link = $this->getLinkFromPath(
-        $this->getPath($route['controller'], $route['action'], $route['parameters']),
-        $route['query'],
-        $route['fragment']
-      );
-    }
-    else {
-      throw new InvalidRouteException(tr('Incomplete route'));
-    }
+    $link = $this->getLink($route);
+    if (strpos($link, '://') !== false)
+      return $link;
     return $this->request->domainName . $link;
   }
   
@@ -422,21 +393,22 @@ class Routing extends LoadableModule {
    * @return string A link.
    */
   public function getLink($route = null) {
-    $route = $this->validateRoute($route);
-    if (isset($route['url'])) {
-      return $route['url'];
+    $route = $this->validate($route);
+    $arity = '(' . count($route['parameters']) . ')';
+    $routeString = $route['dispatcher']->fromRoute($route);
+    $path = null;
+    if (isset($this->paths[$routeString . $arity])) {
+      $path = $route['dispatcher']->getPath($this->paths[$routeString . $arity]['pattern'], $route);
     }
-    if (isset($route['path'])) {
-      return $this->getLinkFromPath($route['path'], $route['query'], $route['fragment']);
+    else if (isset($this->paths[$routeString . '[*]'])) {
+      $path = $route['dispatcher']->getPath($this->paths[$routeString . '(*)']['pattern'], $route);
     }
-    if (isset($route['controller']) AND isset($route['action'])) {
-      return $this->getLinkFromPath(
-        $this->getPath($route['controller'], $route['action'], $route['parameters']),
-        $route['query'],
-        $route['fragment']
-      );
-    }
-    throw new InvalidRouteException(tr('Incomplete route'));
+    $path = $route['dispatcher']->getPath($route, $path);
+    if (!isset($path))
+      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
+    if (is_string($path))
+      return $path;
+    return $this->getLinkFromPath($path, $route['query'], $route['fragment']);
   }
   
   /**
@@ -591,7 +563,7 @@ class Routing extends LoadableModule {
     $arity = 0;
     foreach ($pattern as $part) {
       if ($part == '**' || $part == ':*') {
-        $arity = 'variadic';
+        $arity = '*';
         break;
       }
       else if ($part == '*') {
@@ -620,7 +592,7 @@ class Routing extends LoadableModule {
             $route['parameters'],
             array_slice($path, $j)
           );
-          $arity = 'variadic';
+          $arity = '*';
           break;
         }
         else if (!isset($path[$j])) {
@@ -653,50 +625,27 @@ class Routing extends LoadableModule {
         $this->selection = $route;
       }
     }
-    if (isset($route['controller']) AND isset($route['action'])) {
-      $this->addPath(
-        $route['controller'], $route['action'], $arity,
-        array($this, 'insertParameters'), array($pattern), $priority
-      );
-    }
+    $this->addPath($route, $pattern, $arity, $priority);
   }
 
   /**
-   * Add a path for a controller/action combination.
+   * Add association of route and path-pattern.
    * 
-   * This is done automatically
-   * with the use of {@see Routing::addRoute()}. The path function provided is
-   * called with a parameters-array as its first parameter and $additional as
-   * its second parameter. It is used when converting a route to a path. For an
-   * example of a path function see {@see Routing::insertParameters()}.
-   * 
-   * @param string|Controller $controller Controller name or object.
-   * @param string $action Action name.
-   * @param int|"Variadic" $arity Number of parameters or 'variadic' for arbitrary number.
-   * @param callback $pathFunction Path function used to compute path.
-   * @param mixed[] $additional Additional parameters, the second parameter for
-   * the path function.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param string[] $pattern A pattern array.
+   * @param int|string $arity Arity of pattern (integer or '*').
    * @param int $priority Priority of path.
-   * @return boolean True if path function added, false if a path function with
-   * a higher priority already exists for that controller and action.
+   * @return bool True if pattern added, false otherwise.
    */
-  public function addPath($controller, $action, $arity, $pathFunction,
-                          $additional = array(), $priority = 5) {
-    $controller = $this->controllerName($controller);
-    if (!isset($this->paths[$controller])) {
-      $this->paths[$controller] = array();
-    }
-    if (!isset($this->paths[$controller][$action])) {
-      $this->paths[$controller][$action] = array();
-    }
-    if (isset($this->paths[$controller][$action][$arity])) {
-      if ($priority <= $this->paths[$controller][$action][$arity]['priority']) {
+  public function addPath($route, $pattern, $arity, $priority = 5) {
+    $route = $this->validateRoute($route);
+    $key = $route['dispatcher']->fromRoute($route) . '(' . $arity . ')';
+    if (isset($this->paths[$key])) {
+      if ($priority <= $this->paths[$key]['priority'])
         return false;
-      }
     }
-    $this->paths[$controller][$action][$arity] = array(
-      'function' => $pathFunction,
-      'additional' => $additional,
+    $this->paths[$key] = array(
+      'pattern' => $pattern,
       'priority' => $priority
     );
     return true;
@@ -714,21 +663,12 @@ class Routing extends LoadableModule {
       return false;
     }
     $route = $this->validateRoute($route);
-    if ($priority > $this->selection['priority']) {
+    if (!isset($this->selection) or $priority > $this->selection['priority']) {
+      $this->selection = $route;
       $this->selection['priority'] = $priority;
-      $this->selection['route'] = $route;
       return true;
     }
     return false;
-  }
-  
-  /**
-   * Create routes as desbribed by the routes configuration file.
-   */
-  public function drawRoutes() {
-    foreach ($this->routes as $route) {
-      $route->draw($this);
-    }
   }
   
   /**
@@ -739,16 +679,12 @@ class Routing extends LoadableModule {
   public function findRoute() {
     $this->triggerEvent('beforeRender');
 
-    if (!isset($this->m->Controllers)) {
-      throw new ModuleNotFoundException(tr('Missing module: "%1"', 'Controllers'));
-    }
     
-    if (!isset($this->selection['route'])) {
+    if (!isset($this->selection)) {
       throw new InvalidRouteException(tr('No route selected'));
     }
     
-    $route = $this->selection['route'];
-    $this->followRoute($route); 
+    $this->followRoute($this->selection); 
   }
 
   /**
@@ -758,80 +694,37 @@ class Routing extends LoadableModule {
    */
   public function followRoute($route) {
     $route = $this->validateRoute($route);
-    if (isset($route['url']) OR isset($route['path'])) {
-      $this->redirect($route);
-    }
     
-    if ($this->request->path != array() AND $this->isCurrent($this->root['route'])) {
-      if (!isset($this->root['route']) OR !isset($this->root['route']['path'])
-          OR $this->request->path != $this->root['route']['path']) {
-        $this->redirectPath(array(), $this->request->query);
-      }
+    if ($this->request->path != array() and $this->isCurrent($this->root)) {
+      $this->redirectPath(array(), $this->request->query);
     }
     
     if (isset($route['query'])) {
       $this->request->query = array_merge($route['query'], $this->request->query);
     }
     
-    $this->selection['route'] = $route;
-
-    if (isset($route['controller'])) {
-      Logger::debug('Select action: ' . $route['controller'] . '::' . $route['action']);
-      $this->rendered = true;
-      $this->request->route = $route;
-      try {
-        $response = $this->callAction(
-          $route['controller'], $route['action'], $route['parameters']
-        );
-      }
-      catch (ResponseOverrideException $e) {
-        $response = $e->getResponse();
-      }
-      catch (NotFoundException $e) {
-        return $this->followroute($this->errorRoute);
-      }
-      $this->respond($response);
-    }
-    else {
-      throw new InvalidRouteException(tr('No controller selected'));
-    }
-  }
-
-  /**
-   * Calls an action in a controller.
-   * @param string $controllerName Controller name.
-   * @param string $action Action name.
-   * @param string[] $parameters Parameters for action.
-   * @throws InvalidRouteException If controller or action invalid.
-   * @throws InvalidResponseException If action did not return a valid response
-   * object.
-   * @return Response A respone object.
-   */
-  public function callAction($controllerName, $action, $parameters = array()) {
-    $controller = $this->m->Controllers->getController($controllerName);
-    if (!isset($controller))
-      throw new InvalidRouteException(tr('Invalid controller: %1', $controllerName));
-    if (!is_callable(array($controller, $action))) {
-      throw new InvalidRouteException(tr(
-        'Invalid action: %1',
-        $controllerName . '::' . $action
-      ));
-    }
-    $controller->before();
+    $this->selection = $route;
     
-    $this->triggerEvent('beforeCallAction', new CallActionEvent($this, $controller, $action, $parameters));
-    $response = call_user_func_array(array($controller, $action), $parameters);
-    if (is_string($response))
-      $response = new TextResponse(Http::OK, 'text', $response);
-    if (!($response instanceof Response)) {
-      throw new InvalidResponseException(tr(
-        'An invalid response was returned from the action %1',
-        $controllerName . '::' . $action
-      ));
+    $this->rendered = true;
+    $this->request->route = $route;
+    try {
+      $response = $route['dispatcher']->dispatch($route);
+      
+      if (is_string($response))
+        $response = new TextResponse(Http::OK, 'text', $response);
+      if (!($response instanceof Response)) {
+        throw new InvalidResponseException(tr(
+          'An invalid response was returned'
+        ));
+      }
     }
-    $this->triggerEvent('afterCallAction', new CallActionEvent($this, $controller, $action, $parameters, $response));
-    $controller->after($response);
-    return $response;
+    catch (ResponseOverrideException $e) {
+      $response = $e->getResponse();
+    }
+    catch (NotFoundException $e) {
+      return $this->followRoute($this->errorRoute);
+    }
+    $this->respond($response);
   }
 
   /**
@@ -889,13 +782,11 @@ class Routing extends LoadableModule {
   /**
    * Make sure that the current path matches the controller and action. If not,
    * redirect to the right path.
-   * @param string|Controller $controller Controller name or object.
-   * @param string $action Action name.
-   * @param mixed[] $parameters Action parameters.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
-  public function reroute($controller, $action, $parameters = array()) {
+  public function reroute($route = null) {
     $currentPath = $this->request->path;
-    $actionPath = $this->getPath($controller, $action, $parameters);
+    $path = $this->getLink($route);
     if ($currentPath != $actionPath AND is_array($actionPath)) {
       $this->redirectPath($actionPath, $this->request->query);
     }

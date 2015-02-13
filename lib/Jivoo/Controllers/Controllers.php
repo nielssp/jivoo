@@ -44,7 +44,7 @@ class Controllers extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing));
+    $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing, $this));
     if (is_dir($this->p('app', 'controllers'))) {
       $this->findControllers();
     }

@@ -7,6 +7,7 @@ namespace Jivoo\Controllers;
 
 use Jivoo\Routing\IDispatcher;
 use Jivoo\Routing\Routing;
+use Jivoo\Routing\InvalidResponseException;
 
 /**
  * Action based routing.
@@ -18,11 +19,18 @@ class ActionDispatcher implements IDispatcher {
   private $routing;
   
   /**
+   * @var Controllers Controllers module;
+   */
+  private $controllers;
+  
+  /**
    * Construct url dispatcher.
    * @param Routing $routing Routing module.
+   * @param Controllers $controllers Controllers module.
    */
-  public function __construct(Routing $routing) {
+  public function __construct(Routing $routing, Controllers $controllers) {
     $this->routing = $routing;
+    $this->controllers = $controllers;
   }
   
   /**
@@ -64,14 +72,7 @@ class ActionDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
-  public function getPath($path, $route) {
-    return null;
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function getLink($route) {
+  public function getPath($route, $path = null) {
     return null;
   }
 
@@ -79,6 +80,26 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function dispatch($route) {
-    return null;
+    $controller = $this->controllers->getController($route['controller']);
+    if (!isset($controller))
+      throw new InvalidRouteException(tr('Invalid controller: %1', $controllerName));
+    if (!is_callable(array($controller, $route['action']))) {
+      throw new InvalidRouteException(tr(
+        'Invalid action: %1',
+        $route['controller'] . '::' . $route['action']
+      ));
+    }
+    $controller->before();
+    $response = call_user_func_array(array($controller, $route['action']), $route['parameters']);
+    if (is_string($response))
+      $response = new TextResponse(Http::OK, 'text', $response);
+    if (!($response instanceof Response)) {
+      throw new InvalidResponseException(tr(
+        'An invalid response was returned from action: %1',
+        $route['controller'] . '::' . $route['action']
+      ));
+    }
+    $controller->after($response);
+    return $response;
   }
 }
