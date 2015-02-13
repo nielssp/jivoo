@@ -308,11 +308,11 @@ class Routing extends LoadableModule {
       return $this->request->path == $route['path'];
     }
     if (isset($route['controller']) and isset($route['action'])) {
-      return $this->selection['route']['controller'] == $route['controller']
+      return $this->selection['controller'] == $route['controller']
         and ($route['action'] == '*'
-          or $this->selection['route']['action'] == $route['action'])
+          or $this->selection['action'] == $route['action'])
         and ($route['parameters'] == '*'
-          or $this->selection['route']['parameters'] == $route['parameters']);
+          or $this->selection['parameters'] == $route['parameters']);
     }
     throw new InvalidRouteException(tr('Incomplete route'));
   }

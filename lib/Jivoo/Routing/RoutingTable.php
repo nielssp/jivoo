@@ -49,7 +49,7 @@ class RoutingTable {
    */
   public function root($route) {
     $this->routing->setRoot($route);
-    return $htis;
+    return $this;
   }
   
   /**

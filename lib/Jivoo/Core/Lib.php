@@ -83,9 +83,11 @@ class Lib {
       if ($path['namespace'] != '') {
         if (substr_compare($fileName, $path['namespace'], 0, $path['namespacelen']) !== 0)
           continue;
-        $fileName = substr($fileName, $path['namespacelen'] + 1);
+        $classPath = $path['root'] . '/' . substr($fileName, $path['namespacelen'] + 1) . '.php';
       }
-      $classPath = $path['root'] . '/' . $fileName . '.php';
+      else {
+        $classPath = $path['root'] . '/' . $fileName . '.php';
+      }
       if (file_exists($classPath)) {
         require $classPath;
         return true;
