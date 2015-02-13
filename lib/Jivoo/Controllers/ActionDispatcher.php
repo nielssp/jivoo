@@ -9,6 +9,7 @@ use Jivoo\Routing\IDispatcher;
 use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
+use Jivoo\Routing\InvalidRouteException;
 
 /**
  * Action based routing.
@@ -73,6 +74,18 @@ class ActionDispatcher implements IDispatcher {
    */
   public function fromRoute($route) {
     return $route['controller'] . '::' . $route['action'];
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function isCurrent($route) {
+    $selection = $this->routing->route;
+    return $selection['controller'] == $route['controller']
+      and ($route['action'] == '*'
+        or $selection['action'] == $route['action'])
+      and ($route['parameters'] == '*'
+        or $selection['parameters'] == $route['parameters']);
   }
   
   /**

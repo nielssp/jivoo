@@ -67,6 +67,7 @@ use Jivoo\Core\Logger;
  * which 'Setup' is a namespace, 'Database' is the controller and 'setup' is
  * the action. The resulting controller would be 'DatabaseSetupController'.
  * 
+ * @property-read Request $request Current request.
  * @property-read array|ILinkable|string|null $route The currently selected
  * route, contains the current controller, action and parameters, see {@see Routing}.
  * @property-read array|ILinkable|string|null $root The root route, see {@see Routing}.
@@ -181,6 +182,7 @@ class Routing extends LoadableModule {
    */
   public function __get($property) {
     switch ($property) {
+      case 'request':
       case 'dispatchers':
       case 'routes':
       case 'root':
@@ -197,6 +199,7 @@ class Routing extends LoadableModule {
    */
   public function __isset($property) {
     switch ($property) {
+      case 'request':
       case 'dispatchers':
       case 'routes':
       case 'root':
@@ -292,9 +295,7 @@ class Routing extends LoadableModule {
    */
   public function isCurrent($route = null, $defaultAction = 'index', $defaultParameters = array()) {
     $route = $this->validateRoute($route, $defaultAction, $defaultParameters);
-    if (isset($route['url'])) {
-      return false;
-    }
+    return $route['dispatcher']->isCurrent($route);
     if (isset($route['path'])) {
       if ($route['path'] == array()) {
         if ($this->request->path == array()) {

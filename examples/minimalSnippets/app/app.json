@@ -1,0 +1,14 @@
+{
+  "name": "Minimal Jivoo example application using snippets",
+  "namespace": "Minimal",
+  "version": "1.0",
+  "modules": [
+    "Routing",
+    "Assets",
+    "View",
+    "Snippets",
+    "Models",
+    "Content",
+    "Helpers"
+  ]
+}

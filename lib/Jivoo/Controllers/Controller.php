@@ -288,13 +288,7 @@ class Controller extends Module {
    * Render a template.
    * 
    * If $templateName is not set, the path of the template will be computed
-   * based on the name of the controller and the name of the action. Each level
-   * of inheritance will be an additional directory level. The AppController
-   * does not count, and will result in the root of the template directory. An
-   * example is {@see AuthenticationSetupController} which inherits from
-   * {@see SetupController}. If the action is 'setupRoot', the resulting
-   * template path is 'setup/authentication/setup-root.html'.
-   * {@see Utilities::camelCaseToDashes()} is used on each level.
+   * based on the name of the controller and the name of the action.
    * 
    * @param string $templateName Name of template to render.
    * @return ViewResponse A view response for template.
@@ -302,7 +296,7 @@ class Controller extends Module {
   protected function render($templateName = null) {
     if (!isset($templateName)) {
       list(, $caller) = debug_backtrace(false);
-      $class = str_replace($this->app->namespace . '\Controllers\\', '', $caller['class']);
+      $class = str_replace($this->app->n('Controllers\\'), '', $caller['class']);
       $class = preg_replace('/Controller$/', '', $class);
       $templateName = '';
       if ($class != 'App') {

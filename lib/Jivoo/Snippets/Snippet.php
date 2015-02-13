@@ -8,6 +8,8 @@ namespace Jivoo\Snippets;
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
 use Jivoo\Routing\NotFoundException;
+use Jivoo\Core\Utilities;
+use Jivoo\View\ViewResponse;
 
 /**
  * A loadable snippet.
@@ -16,7 +18,7 @@ class Snippet extends Module implements ISnippet {
   /**
    * @var string[] A list of other helpers needed by this helper.
   */
-  protected $helpers = array();
+  protected $helpers = array('Html');
   
   /**
    * @var string[] A list of models needed by this helper.
@@ -44,6 +46,11 @@ class Snippet extends Module implements ISnippet {
   private $modelObjects = array();
   
   /**
+   * @var int HTTP status code.
+   */
+  private $status = 200;
+  
+  /**
    * Construct snippet.
    */
   public final function __construct(App $app) {
@@ -51,6 +58,12 @@ class Snippet extends Module implements ISnippet {
     $this->inheritElements('helpers');
     $this->inheritElements('models');
     parent::__construct($app);
+    if (isset($this->m->Helpers)) {
+      $helperObjects = $this->m->Helpers->getHelpers($this->helpers);
+      foreach ($helperObjects as $name => $helper) {
+        $this->view->data->$name = $helper;
+      }
+    }
     
     $this->init();
   }
@@ -187,5 +200,23 @@ class Snippet extends Module implements ISnippet {
    */
   protected function invalid() {
     throw new NotFoundException(tr('Invalid request.'));
+  }
+
+  /**
+   * Render a template.
+   *
+   * If $templateName is not set, the path of the template will be computed
+   * based on the name of the snippet.
+   *
+   * @param string $templateName Name of template to render.
+   * @return ViewResponse A view response for template.
+   */
+  protected function render($templateName = null) {
+    if (!isset($templateName)) {
+      $class = str_replace($this->app->n('Snippets\\'), '', get_class($this));
+      $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), explode('\\', $class));
+      $templateName = implode('/', $dirs) . '.html';
+    }
+    return new ViewResponse($this->status, $this->view, $templateName);
   }
 }

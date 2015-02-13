@@ -53,6 +53,24 @@ class PathDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
+  public function isCurrent($route) {
+    $request = $this->routing->request;
+    $root = $this->request->root;
+    if ($route['path'] == array()) {
+      if ($request->path == array()) {
+        return true;
+      }
+      if (isset($root) and isset($root['path'])
+        and $request->path == $root['path']) {
+        return true;
+      }
+    }
+    return $request->path == $route['path'];
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   public function getPath($route, $path = null) {
     return $route['path'];
   }

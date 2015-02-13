@@ -54,6 +54,13 @@ class UrlDispatcher implements IDispatcher {
       return $url;
     return 'url:' . $url;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCurrent($route) {
+    return false;
+  }
   
   /**
    * {@inheritdoc}

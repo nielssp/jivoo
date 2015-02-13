@@ -37,6 +37,13 @@ interface IDispatcher {
   public function fromRoute($route);
   
   /**
+   * Check whether or not a route matches the current request.
+   * @param array $route Route array.
+   * @return bool True if current, false otherwise.
+   */
+  public function isCurrent($route);
+  
+  /**
    * Get path for route.
    * @param array $route Route array.
    * @param string[]|null $path Path pattern array or null if no associated path.

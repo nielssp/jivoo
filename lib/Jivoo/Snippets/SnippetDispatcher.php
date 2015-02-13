@@ -9,6 +9,7 @@ use Jivoo\Routing\IDispatcher;
 use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
+use Jivoo\Routing\InvalidRouteException;
 
 /**
  * Snippet based routing.
@@ -70,6 +71,16 @@ class SnippetDispatcher implements IDispatcher {
   public function fromRoute($route) {
     return $route['snippet'];
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCurrent($route) {
+    $selection = $this->routing->route;
+    return $selection['snippet'] == $route['snippet'] 
+      and ($route['parameters'] == '*'
+        or $selection['parameters'] == $route['parameters']);
+  }
   
   /**
    * {@inheritdoc}
@@ -86,7 +97,7 @@ class SnippetDispatcher implements IDispatcher {
   public function dispatch($route) {
     $snippet = $this->snippets->getSnippet($route['snippet']);
     if (!isset($snippet))
-      throw new InvalidRouteException(tr('Invalid controller: %1', $route['snippet']));
+      throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
     $response = $snippet($route['parameters']);
     if (is_string($response))
       $response = new TextResponse(Http::OK, 'text', $response);
