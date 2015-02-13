@@ -118,7 +118,9 @@ class DispatcherCollection {
       if (isset($this->dispatchers[$prefix])) {
         $route = $this->dispatchers[$prefix]->toRoute($routeString);
         $route['dispatcher'] = $this->dispatchers[$prefix];
-        return $this->validate($route);
+        $route = $this->validate($route);
+        $route['dispatcher']->validate($route);
+        return $route;
       }
     }
     throw new InvalidRouteException(tr('Unknown route prefix.'));

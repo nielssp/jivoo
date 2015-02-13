@@ -6,6 +6,7 @@
 namespace Jivoo\View;
 
 use Jivoo\Core\Utilities;
+use Jivoo\Routing\Response;
 
 /**
  * A response that renders a template.

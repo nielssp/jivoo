@@ -8,6 +8,7 @@ namespace Jivoo\Controllers;
 use Jivoo\Routing\IDispatcher;
 use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
+use Jivoo\Routing\Response;
 
 /**
  * Action based routing.
@@ -44,7 +45,12 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function validate(&$route) {
-    return isset($route['controller']) or isset($route['action']);
+    if (isset($route['controller']) or isset($route['action'])) {
+      if (!isset($route['parameters']))
+        $route['parameters'] = array();
+      return true;
+    }
+    return false;
   }
 
   /**

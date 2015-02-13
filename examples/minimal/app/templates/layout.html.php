@@ -11,7 +11,7 @@
 <p>Menu:</p>
 <ul>
 <li><?php echo $Html->link('Fronpage', null); ?></li>
-<li><?php echo $Html->link('Example page 1', 'Pages::view::example'); ?></li>
+<li><?php echo $Html->link('Example page 1', array('action:Pages::view', 'example')); ?></li>
 </ul>
 
 </body>

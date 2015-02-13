@@ -7,6 +7,9 @@ namespace Jivoo\Controllers;
 
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
+use Jivoo\Core\Utilities;
+use Jivoo\View\ViewResponse;
+use Jivoo\Routing\Response;
 
 /**
  * A controller, the C of MVC.
@@ -299,21 +302,15 @@ class Controller extends Module {
   protected function render($templateName = null) {
     if (!isset($templateName)) {
       list(, $caller) = debug_backtrace(false);
+      $class = get_class($this);
+      $class = str_replace($this->app->namespace . '\Controllers\\', '', $class);
+      $class = preg_replace('/Controller$/', '', $class);
       $templateName = '';
-//       $thisName = $this->name;
-      $thisName = preg_replace('/Controller$/', '', $caller['class']);
-      if ($thisName != 'App') {
-        $class = get_class($this);
-        $parent = get_parent_class($class);
-        while ($parent !== false AND $parent != 'Controller'
-          AND $parent != 'AppController') {
-          $name = str_replace($parent, '', $class);
-          $templateName = Utilities::camelCaseToDashes($name) . '/' . $templateName;
-          $class = $parent;
-          $parent = get_parent_class($class);
+      if ($class != 'App') {
+        $dirs = explode('\\', $class);
+        foreach ($dirs as $dir) {
+          $templateName .= Utilities::camelCaseToDashes($dir) . '/';
         }
-        $name = str_replace('Controller', '', $class);
-        $templateName = Utilities::camelCaseToDashes($name) . '/' . $templateName;
       }
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';

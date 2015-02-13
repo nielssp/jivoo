@@ -393,7 +393,7 @@ class Routing extends LoadableModule {
    * @return string A link.
    */
   public function getLink($route = null) {
-    $route = $this->validate($route);
+    $route = $this->validateRoute($route);
     $arity = '(' . count($route['parameters']) . ')';
     $routeString = $route['dispatcher']->fromRoute($route);
     $path = null;
