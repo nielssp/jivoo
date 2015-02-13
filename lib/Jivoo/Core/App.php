@@ -64,7 +64,7 @@ class App implements IEventSubject {
   /**
    * @var string Application namespace.
    */
-  private $namespace = '';
+  private $namespace = 'App';
 
   /**
    * @var string Minimum PHP version.
@@ -332,6 +332,19 @@ class App implements IEventSubject {
   }
   
   /**
+   * Prepend application namespace to a name.
+   * @param string $name Name.
+   * @return string Name.
+   */
+  public function n($name) {
+    if ($this->namespace == '')
+      return $name;
+    if ($name == '')
+      return $this->namespace;
+    return $this->namespace . '\\' . $name;
+  }
+  
+  /**
    * Get a module, or load it if not yet loaded (must be imported however).
    * @param string $name Name of module class.
    * @return LoadableModule Module object.
@@ -488,7 +501,7 @@ class App implements IEventSubject {
       return;
     }
     
-    Lib::import($this->p('app', 'lib'));
+    Lib::import($this->p('app', 'lib'), $this->namespace);
 
     $this->config = new AppConfig($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
@@ -558,7 +571,8 @@ class App implements IEventSubject {
     
     // Load application listeners
     foreach ($this->listenerNames as $listener) {
-      Lib::assumeSubclassOf($listener, 'AppListener');
+      $listener = $this->n($listener);
+      Lib::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
       $this->attachEventListener(new $listener($this));
     }
     

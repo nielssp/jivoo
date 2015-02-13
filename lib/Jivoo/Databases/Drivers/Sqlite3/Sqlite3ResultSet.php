@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Databases\Drivers\Sqlite3;
+
+use Jivoo\Databases\IResultSet;
+
 /**
  * Result set for SQLite3 database driver.
  */
@@ -17,7 +25,7 @@ class Sqlite3ResultSet implements IResultSet {
    * Construct result set.
    * @param SQLite3Result $result SQLITE3 result object.
    */
-  public function __construct(SQLite3Result $result) {
+  public function __construct(\SQLite3Result $result) {
     $this->result = $result;
     while ($row = $result->fetchArray(SQLITE3_BOTH)) {
       $this->allRows[] = $row;

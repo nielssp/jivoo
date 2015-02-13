@@ -46,6 +46,7 @@ class Controllers extends LoadableModule {
   protected function init() {
     $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing, $this));
     if (is_dir($this->p('app', 'controllers'))) {
+      Lib::import($this->p('app', 'controllers'), $this->app->n('Controllers'));
       $this->findControllers();
     }
   }
@@ -68,15 +69,10 @@ class Controllers extends LoadableModule {
           $split = explode('.', $file);
           if (isset($split[1]) and $split[1] == 'php') {
             if ($dir === '')
-              $class = $this->app->namespace . '\Controllers\\' . $split[0];
+              $class = $this->app->n('Controllers\\' . $split[0]);
             else
-              $class = $this->app->namespace . '\Controllers\\' . str_replace('/', '\\', $dir) . '\\' . $split[0];
-            require $this->p('app', 'controllers/' . $file);
-            if (Lib::classExists($class) and
-                 is_subclass_of($class, 'Jivoo\Controllers\Controller')) {
-              $name = str_replace('Controller', '', $split[0]);
-              $this->controllers[$name] = $class;
-            }
+              $class = $this->app->n('Controllers\\' . str_replace('/', '\\', $dir) . '\\' . $split[0]);
+            $this->controllers[$name] = $class;
           }
         }
       }

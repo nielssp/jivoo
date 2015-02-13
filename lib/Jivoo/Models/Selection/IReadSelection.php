@@ -1,8 +1,14 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Models\Selection;
+
 /**
  * A read selection.
  */
-interface IReadSelection extends IBasicSelection, IteratorAggregate {
+interface IReadSelection extends IBasicSelection, \IteratorAggregate {
   /**
    * Make a projection.
    * @param string|string[]|array $expression Expression, list of expressions

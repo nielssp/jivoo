@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Migrations;
+
+use Jivoo\Core\LoadableModule;
+
 /**
  * Schema and data migration module.
  */

@@ -1,4 +1,13 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Databases\Drivers\PdoMysql;
+
+use Jivoo\Databases\Common\MysqlTypeAdapter;
+use Jivoo\Databases\Common\PdoDatabase;
+
 /**
  * PDO MySQL database driver.
  */
@@ -16,12 +25,12 @@ class PdoMysqlDatabase extends PdoDatabase {
     }
     try {
       if (isset($options['password'])) {
-        $this->pdo = new PDO(
+        $this->pdo = new \PDO(
           'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
           $options['username'], $options['password']);
       }
       else {
-        $this->pdo = new PDO(
+        $this->pdo = new \PDO(
           'mysql:host=' . $options['server'] . ';dbname=' . $options['database'],
           $options['username']);
       }

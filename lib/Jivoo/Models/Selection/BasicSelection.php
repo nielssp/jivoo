@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Models\Selection;
+
+use Jivoo\Models\Model;
+
 /**
  * A basic selection. Base class for other selections.
  * @property-read array[] $orderBy List of arrays describing ordering.

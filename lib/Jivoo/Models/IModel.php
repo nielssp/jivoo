@@ -1,8 +1,14 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Models;
+
 /**
  * A more advanced extension of {@see IBasicRecord}.
  */
-interface IModel extends ISelection, IBasicModel {
+interface IModel extends Selection\ISelection, IBasicModel {
   /**
    * Get shcmea of model.
    * @return ISchema Schema for model.

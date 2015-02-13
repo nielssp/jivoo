@@ -6,6 +6,7 @@
 namespace Jivoo\Models;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Lib;
 
 /**
  * Models module, finds all models in application.
@@ -28,13 +29,13 @@ class Models extends LoadableModule {
   protected function init() {
     $modelsDir = $this->p('app', 'models');
     if (is_dir($modelsDir)) {
-      Lib::addIncludePath($modelsDir);
+      Lib::import($modelsDir, $this->app->n('Models'));
       $files = scandir($modelsDir);
       if ($files !== false) {
         foreach ($files as $file) {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
-            $this->addClass($split[0]);
+            $this->addClass($this->app->n('Models\\' . $split[0]));
           }
         }
       }

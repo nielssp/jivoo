@@ -30,7 +30,7 @@ class Generators extends LoadableModule {
       $controller = $this->m->Controllers->getController('Jivoo\Generators\Generator');
       $controller->autoRoute('index');
       $controller->autoRoute('configure');
-      $this->m->Routing->setRoot('Generator::index');
+      $this->m->Routing->setRoot('action:Generator::index');
       $this->view->addTemplateDir($this->p('templates'));
     }
   }

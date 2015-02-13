@@ -10,7 +10,7 @@ namespace Jivoo\Core;
  */
 class Lib {
   /**
-   * @var array List of paths (strings) to look for classes
+   * @var array List of paths to look for classes in.
    */
   private static $paths = array();
   
@@ -24,9 +24,15 @@ class Lib {
   /**
    * Add another library path.
    * @param string $path Path.
+   * @param string $namespace Root namespace of library.
    */
-  public static function import($path) {
-    self::$paths[] = $path;
+  public static function import($path, $namespace = '') {
+    $namespace = str_replace('\\', '/', $namespace);
+    self::$paths[] = array(
+      'root' => $path,
+      'namespace' => $namespace,
+      'namespacelen' => strlen($namespace)
+    );
   }
 
   /**
@@ -72,9 +78,14 @@ class Lib {
    * @return boolean True on success false on failure
    */
   public static function autoload($className) {
-    $className = str_replace('\\', '/', $className);
+    $fileName = str_replace('\\', '/', $className);
     foreach (self::$paths as $path) {
-      $classPath = $path . '/' . $className . '.php';
+      if ($path['namespace'] != '') {
+        if (substr_compare($fileName, $path['namespace'], 0, $path['namespacelen']) !== 0)
+          continue;
+        $fileName = substr($fileName, $path['namespacelen'] + 1);
+      }
+      $classPath = $path['root'] . '/' . $fileName . '.php';
       if (file_exists($classPath)) {
         require $classPath;
         return true;

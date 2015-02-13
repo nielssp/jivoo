@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Databases\Common;
+
+use Jivoo\Databases\IResultSet;
+
 /**
  * A PDO database result set.
  */
@@ -18,7 +26,7 @@ class PdoResultSet implements IResultSet {
    * Construct result set.
    * @param PDOStatement $result PDO statement.
    */
-  public function __construct(PDOStatement $result) {
+  public function __construct(\PDOStatement $result) {
     $this->pdoStatement = $result;
   }
 

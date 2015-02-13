@@ -1,4 +1,13 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Themes;
+
+use Jivoo\Extensions\ExtensionModel;
+use Jivoo\Models\DataType;
+
 /**
  * Model for theme information. Can be used as a singleton, use
  * {@see getInstance()} to get instance.
@@ -16,7 +25,7 @@ class ThemeModel extends ExtensionModel {
    */
   public function __construct($name = 'Theme') {
     parent::__construct($name);
-    $this->addField('screenshot', tr('Screenshot'), DataType::string());
+    $this->addField('screenshot', tr('Screenshot'), DataType::::string());
   }
   
   /**

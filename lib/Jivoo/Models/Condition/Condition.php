@@ -1,4 +1,10 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Models\Condition;
+
 /**
  * A condition for selecting records in a model.
  * @property-read array[] $clauses A list of clauses in the form of arrays of the format

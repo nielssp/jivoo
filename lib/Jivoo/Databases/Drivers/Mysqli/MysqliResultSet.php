@@ -1,4 +1,12 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Databases\Drivers\Mysqli;
+
+use Jivoo\Databases\IResultSet;
+
 /**
  * Result set for MySQLi driver.
  */
@@ -17,7 +25,7 @@ class MysqliResultSet implements IResultSet {
    * Construct result set.
    * @param mysqli_result $result MySQLi result object.
    */
-  public function __construct(mysqli_result $result) {
+  public function __construct(\mysqli_result $result) {
     $this->mysqliResult = $result;
   }
 

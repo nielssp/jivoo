@@ -1,4 +1,14 @@
 <?php
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Databases\Drivers\Sqlite3;
+
+use Jivoo\Databases\Common\SqlDatabase;
+use Jivoo\Databases\Common\SqliteTypeAdapter;
+use Jivoo\Databases\DatabaseQueryFailedException;
+
 /**
  * SQLite3 database driver.
  */
@@ -15,17 +25,17 @@ class Sqlite3Database extends SqlDatabase {
    * @throws DatabaseConnectionFailedException If connection fails.
    */
   public function init($options = array()) {
-    $this->setTypeAdapter(new  SqliteTypeAdapter($this));
+    $this->setTypeAdapter(new SqliteTypeAdapter($this));
     if (isset($options['tablePrefix']))
       $this->tablePrefix = $options['tablePrefix'];
     try {
-      $this->handle = new SQLite3($options['filename']);
+      $this->handle = new \SQLite3($options['filename']);
       $this->initTables($this->rawQuery('SELECT name FROM sqlite_master WHERE type = "table"'));
     }
     catch (DatabaseQueryFailedException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
     }
-    catch (Exception $exception) {
+    catch (\Exception $exception) {
       throw new DatabaseConnectionFailedException(
         tr('SQLite database does not exist and could not be created: %1',
           $options['filename']));
