@@ -9,7 +9,6 @@ use Jivoo\Models\IRecord;
 
 /**
  * An access control list.
- * @package Jivoo\AccessControl
  */
 interface IAcl {
   /**

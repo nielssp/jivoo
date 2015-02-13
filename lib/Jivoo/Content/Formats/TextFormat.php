@@ -9,7 +9,6 @@ use Jivoo\Content\IContentFormat;
 
 /**
  * Plaintext format.
- * @package Jivoo\Content\Formats
  */
 class TextFormat implements IContentFormat {
   /**

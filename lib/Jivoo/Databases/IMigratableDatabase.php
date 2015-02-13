@@ -1,7 +1,6 @@
 <?php
 /**
  * A database implementing migration methods.
- * @package Jivoo\Databases
  */
 interface IMigratableDatabase extends IDatabase, IMigratable {
   /**

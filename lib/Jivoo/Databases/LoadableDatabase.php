@@ -1,7 +1,6 @@
 <?php
 /**
  * A database driver that can be loaded by the {@see Databases} module.
- * @package Jivoo\Databases
  */
 abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   /**

@@ -1,7 +1,6 @@
 <?php
 /**
  * An update selection.
- * @package Jivoo\Models\Selection
  * @property-read array $sets An associative array of field names and values.
  */
 class UpdateSelection extends BasicSelection implements IUpdateSelection {

@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 /**
  * A module is part of an application.
- * @package Jivoo\Core
  */
 abstract class Module implements IEventSubject {
   /**

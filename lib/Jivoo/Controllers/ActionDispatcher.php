@@ -3,12 +3,12 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Routing;
+namespace Jivoo\Controllers;
 
 /**
- * Path-array based routing.
+ * Action based routing.
  */
-class PathDispatcher implements IDispatcher {
+class ActionDispatcher implements IDispatcher {
   /**
    * @var Routing Routing module.
    */
@@ -26,41 +26,41 @@ class PathDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function getPrefixes() {
-    return array('path');
+    return array('action');
   }
 
   /**
    * {@inheritdoc}
    */
   public function validate(&$route) {
-    return isset($route['path']);
+    return isset($route['controller']) or isset($route['action']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    return array('path' => explode('/', substr($routeString, 5)));
+    $split = explode('::', substr($routeString, 7));
+    $route = array(
+      'controller' => $split[0],
+      'action' => 'index',
+      'parmaters' => array()
+    );
+    if (isset($split[1]))
+      $route['action'] = $split[1];
+    return $route;
   }
 
   /**
    * {@inheritdoc}
    */
   public function fromRoute($route) {
-    return 'path:' . implode('/', $route['path']);
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function getLink($route) {
-    return $route['url'];
+    return $route['controller'] . '::' . $route['action'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function dispatch($route) {
-    return $this->routing->redirect($route);
   }
 }

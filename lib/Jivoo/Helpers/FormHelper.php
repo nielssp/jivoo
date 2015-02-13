@@ -7,7 +7,6 @@ namespace Jivoo\Helpers;
 
 /**
  * A helper for creating HTML forms
- * @package Jivoo\Helpers
  */
 class FormHelper extends Helper {
   /**
@@ -714,6 +713,5 @@ class FormHelper extends Helper {
 
 /**
  * Form helper exception.
- * @package Jivoo\Helpers
  */
 class FormHelperException extends \Exception { }

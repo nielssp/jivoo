@@ -9,7 +9,6 @@ use Jivoo\Helpers\Helper;
 
 /**
  * Installation and setup helper class.
- * @package Jivoo\Setup
  * @property bool $done The current state of the current setup action, e.g.
  * true if the setup is done, false otherwise.
  */

@@ -3,7 +3,6 @@
  * Model for extension information. Can be used as a singleton, use
  * {@see getInstance()} to get instance.
  * @see ExtensionInfo
- * @package Jivoo\Extensions
  */
 class ExtensionModel extends BasicModel {
   /**

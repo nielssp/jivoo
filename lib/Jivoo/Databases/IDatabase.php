@@ -1,7 +1,6 @@
 <?php
 /**
  * A database.
- * @package Jivoo\Databases
  */
 interface IDatabase {
   /**
@@ -47,24 +46,20 @@ interface IDatabase {
 
 /**
  * A database connection has failed.
- * @package Jivoo\Databases
  */
 class DatabaseConnectionFailedException extends Exception {}
 
 /**
  * A database selection has failed.
- * @package Jivoo\Databases
  */
 class DatabaseSelectFailedException extends Exception {}
 
 /**
  * A database query has failed.
- * @package Jivoo\Databases
  */
 class DatabaseQueryFailedException extends Exception {}
 
 /**
  * A table could not be found.
- * @package Jivoo\Databases
  */
 class TableNotFoundException extends Exception { }

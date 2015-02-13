@@ -7,7 +7,6 @@ namespace Jivoo\View;
 
 /**
  * A view extension.
- * @package Jivoo\View
  */
 interface IViewExtension {
   /**

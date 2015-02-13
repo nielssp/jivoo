@@ -7,7 +7,6 @@ namespace Jivoo\View;
 
 /**
  * Collection of view blocks.
- * @package Jivoo\View
  */
 class ViewBlocks {
   /**

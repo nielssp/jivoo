@@ -1,7 +1,6 @@
 <?php
 /**
  * Type adapter for MySQL database drivers.
- * @package Jivoo\Databases\Common
  */
 class MysqlTypeAdapter implements IMigrationTypeAdapter {
   /**

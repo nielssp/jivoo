@@ -9,7 +9,6 @@ use Jivoo\Assets\Assets;
 
 /**
  * Collection of scripts and stylesheets to be included into the template.
- * @package Jivoo\View
  */
 class ViewResources {
   /**

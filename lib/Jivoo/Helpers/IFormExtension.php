@@ -9,7 +9,6 @@ use Jivoo\View\IViewExtension;
 
 /**
  * A form extension, i.e. something that acts like a form field.
- * @package Jivoo\Helpers
  */
 interface IFormExtension extends IViewExtension {
   /**

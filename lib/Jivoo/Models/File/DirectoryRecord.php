@@ -1,7 +1,6 @@
 <?php
 /**
  * A directory record.
- * @package Jivoo\Models\File
  */
 class DirectoryRecord extends FileRecord {
   /**

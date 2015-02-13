@@ -10,7 +10,6 @@ use Jivoo\Core\Utilities;
 
 /**
  * Asset system.
- * @package Jivoo\Assets
  */
 class Assets extends LoadableModule {
   /**

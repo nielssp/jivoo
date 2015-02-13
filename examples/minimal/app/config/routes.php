@@ -1,8 +1,5 @@
 <?php
-use Jivoo\Routing\Route;
+$this->root('action:App::index');
+$this->error('action:App::notFound');
 
-return array(
-  Route::root('App::index'),
-  Route::error('App::notFound'),
-  Route::match('**', 'Pages::view'),
-);
+$this->match('**', 'action:Pages::view');

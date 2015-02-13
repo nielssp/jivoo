@@ -12,7 +12,6 @@ use Jivoo\AccessControl\AuthorizationRequest;
  * Authorize without the use of Access Control Lists. Calls the method
  * "authorize" in the current controller with the name of the action as a
  * parameter. The name of the method can be changed with the option "method".
- * @package Jivoo\AccessControl\Authorization
  */
 class CallbackAuthorization extends LoadableAuthorization {
   /**

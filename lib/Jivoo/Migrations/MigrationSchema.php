@@ -1,7 +1,6 @@
 <?php
 /**
  * A modifiable database schema for use with migrations.
- * @package Jivoo\Migrations 
  */
 class MigrationSchema implements IDatabaseSchema, IMigratable {
   /**

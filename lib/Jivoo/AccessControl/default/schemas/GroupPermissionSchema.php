@@ -1,6 +1,5 @@
 <?php
 /**
- * @package Jivoo\Authentication
  */
 class GroupPermissionSchema extends Schema {
   protected function createSchema() {

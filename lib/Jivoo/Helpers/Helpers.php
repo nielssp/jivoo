@@ -89,6 +89,5 @@ class Helpers extends LoadableModule {
 
 /**
  * Event sent before and after a helper has been loaded
- * @package Jivoo\Helpers
  */
 class LoadHelperEvent extends LoadEvent { }

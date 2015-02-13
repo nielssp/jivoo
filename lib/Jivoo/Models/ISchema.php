@@ -1,7 +1,6 @@
 <?php
 /**
  * Model schema.
- * @package Jivoo\Models
  */
 interface ISchema {
   /**

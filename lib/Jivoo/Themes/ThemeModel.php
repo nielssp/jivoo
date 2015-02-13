@@ -3,7 +3,6 @@
  * Model for theme information. Can be used as a singleton, use
  * {@see getInstance()} to get instance.
  * @see ThemeInfo
- * @package Jivoo\Themes
  */
 class ThemeModel extends ExtensionModel {
   /**

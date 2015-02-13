@@ -1,7 +1,6 @@
 <?php
 /**
  * An SQL database.
- * @package Jivoo\Databases\Common
  */
 interface ISqlDatabase extends IDatabase {
   /**

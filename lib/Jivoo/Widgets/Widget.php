@@ -1,7 +1,6 @@
 <?php
 /**
  * Widget base class
- * @package PeanutCMS\Widgets
  */
 abstract class Widget extends Module {
   protected $modules = array('Helpers', 'Models');

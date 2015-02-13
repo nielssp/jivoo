@@ -1,7 +1,6 @@
 <?php
 /**
  * A record associated with a {@see IModel}.
- * @package Jivoo\Models
  */
 class Record implements IRecord {
   /**

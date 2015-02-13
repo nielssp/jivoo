@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 /**
  * Subclasses of this class can be loaded by {@see App}.
- * @package Jivoo\Core
  */
 abstract class LoadableModule extends Module {
   

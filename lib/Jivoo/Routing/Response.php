@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * Base class for HTTP responses.
- * @package Jivoo\Routing
  * @property-read int $status HTTP status code.
  * @property-read string $type Response type.
  * @property-read string|null $cache Either 'public', 'private' or null.

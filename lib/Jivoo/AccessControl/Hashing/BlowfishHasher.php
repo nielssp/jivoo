@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl\Hashing;
 
 /**
  * A password hasher using Blowfish.
- * @package Jivoo\AccessControl\Hashing
  */
 class BlowfishHasher extends CryptHasher {
   protected $constant = 'CRYPT_BLOWFISH';

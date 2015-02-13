@@ -11,7 +11,6 @@
  * @property-read bool $unsigned Opposite of signed (integers only).
  * @property-read bool $autoIncrement Auto increment (integers only).
  * @property-read string $placeholder Placeholder of data type.
- * @package Jivoo\Models
  */
 class DataType {
   /** @var int Type: Integer. */

@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl;
 
 /**
  * A password hasher.
- * @package Jivoo\AccessControl
  */
 interface IPasswordHasher {
   /**

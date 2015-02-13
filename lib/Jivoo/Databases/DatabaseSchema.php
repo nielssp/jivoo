@@ -1,7 +1,6 @@
 <?php
 /**
  * A database schema.
- * @package Jivoo\Databases
  */
 class DatabaseSchema implements IDatabaseSchema {
   /**

@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl\Hashing;
 
 /**
  * A password hasher using SHA-512.
- * @package Jivoo\AccessControl\Hashing
  */
 class Sha512Hasher extends CryptHasher {
   protected $constant = 'CRYPT_SHA512';

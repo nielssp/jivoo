@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl;
 
 /**
  * Access control module for authentication and authorization.
- * @package Jivoo\AccessControl
  */
 class AccessControl extends LoadableModule {
   /**
@@ -65,6 +64,5 @@ class AccessControl extends LoadableModule {
 
 /**
  * Thrown when a hash type is unsupported.
- * @package Jivoo\AccessControl
  */
 class UnsupportedHashTypeException extends \Exception { }

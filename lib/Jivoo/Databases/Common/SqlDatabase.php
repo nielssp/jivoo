@@ -1,7 +1,6 @@
 <?php
 /**
  * A generic SQL database.
- * @package Jivoo\Databases\Common
  */
 abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   /**

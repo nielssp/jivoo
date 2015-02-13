@@ -2,7 +2,6 @@
 /**
  * An undecided selection. Will transform into a more specific selection based
  * on use.
- * @package Jivoo\Models\Selection
  */
 class Selection extends BasicSelection implements ISelection {
   /**

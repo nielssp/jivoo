@@ -7,7 +7,6 @@ namespace Jivoo\Content;
 
 /**
  * A content format.
- * @package Jivoo\Content
  */
 interface IContentFormat {
   /**

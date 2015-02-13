@@ -1,7 +1,6 @@
 <?php
 /**
  * PDO SQLite database driver.
- * @package Jivoo\Databases\Drivers\PdoSqlite
  */
 class PdoSqliteDatabase extends PdoDatabase {
   /**

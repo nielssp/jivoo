@@ -12,9 +12,12 @@ use Jivoo\Core\Utilities;
 /**
  * Controller module. Will automatically find controllers in the controllers
  * directory (and subdirectories). 
- * @package Jivoo\Controllers
  */
 class Controllers extends LoadableModule {
+  /**
+   * {@inheritdoc}
+   */
+  protected $modules = array('Routing');
   
   /**
    * @var array An associative array of controller names and associated class
@@ -41,6 +44,7 @@ class Controllers extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing));
     if (is_dir($this->p('app', 'controllers'))) {
       $this->findControllers();
     }

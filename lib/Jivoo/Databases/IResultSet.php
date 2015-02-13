@@ -1,7 +1,6 @@
 <?php
 /**
  * Represents the result of a database query.
- * @package Jivoo\Databases
  */
 interface IResultSet {
   /**

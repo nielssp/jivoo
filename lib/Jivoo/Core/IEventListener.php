@@ -8,7 +8,6 @@ namespace Jivoo\Core;
 /**
  * Object that handles multiple events. The implemented events are defined by
  * an associative array returned from the method getEventHandlers.
- * @package Jivoo\Core
  */
 interface IEventListener {
   /**

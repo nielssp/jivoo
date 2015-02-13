@@ -15,7 +15,6 @@ namespace Jivoo\Routing;
  * $this->session->flash->success = tr('Saved file.');
  * </code>
  * 
- * @package Jivoo\Routing
  */
 class FlashMap implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**

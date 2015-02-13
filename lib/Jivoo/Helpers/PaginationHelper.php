@@ -7,7 +7,6 @@ namespace Jivoo\Helpers;
 
 /**
  * Create pagination on an array or a {@see IReadSelection}.
- * @package Jivoo\Helpers
  */
 class PaginationHelper extends Helper {
   /**

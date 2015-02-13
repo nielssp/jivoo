@@ -12,7 +12,6 @@ use Jivoo\Models\IRecord;
 /**
  * A loadable authentication module. Subclasses should use the prefix
  * "Authentication".
- * @package Jivoo\AccessControl
  */
 abstract class LoadableAuthentication extends Module implements IAuthentication {
   /**

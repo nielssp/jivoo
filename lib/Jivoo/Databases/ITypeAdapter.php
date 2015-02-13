@@ -1,7 +1,6 @@
 <?php
 /**
  * Convert types from database to schema and vice versa.
- * @package Jivoo\Databases
  */
 interface ITypeAdapter {
   /**

@@ -11,7 +11,6 @@ use Jivoo\Models\Model;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
- * @package Jivoo\ActiveModels
  */
 abstract class ActiveModel extends Model implements IEventListener {
   /**
@@ -755,37 +754,31 @@ abstract class ActiveModel extends Model implements IEventListener {
 
 /**
  * A record class is invalid.
- * @package Jivoo\ActiveModels
  */
 class InvalidRecordClassException extends \Exception { } 
 
 /**
  * A data source was not found
- * @package Jivoo\ActiveModels
  */
 class DataSourceNotFoundException extends \Exception { }
 
 /**
  * An association is invalid.
- * @package Jivoo\ActiveModels
  */
 class InvalidAssociationException extends \Exception { }
 
 /**
  * A mixin is invalid.
- * @package Jivoo\ActiveModels
  */
 class InvalidMixinException extends \Exception { }
 
 /**
  * A data model is invalid.
- * @package Jivoo\ActiveModels
  */
 class InvalidModelException extends \Exception { }
 
 /**
  * Event data for an active model event.
- * @package Jivoo\ActiveModels
  */
 class ActiveModelEvent extends Event {
   /**

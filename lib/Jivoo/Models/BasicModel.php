@@ -1,7 +1,6 @@
 <?php
 /**
  * A basic model implementation.
- * @package Jivoo\Models
  */
 class BasicModel implements IBasicModel {
   

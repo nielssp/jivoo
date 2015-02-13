@@ -1,7 +1,6 @@
 <?php
 /**
  * An update selection.
- * @package Jivoo\Models\Selection
  */
 interface IUpdateSelection extends IBasicSelection {
   /**

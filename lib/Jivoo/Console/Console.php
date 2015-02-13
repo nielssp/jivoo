@@ -1,7 +1,6 @@
 <?php
 /**
  * Developer console module.
- * @package Jivoo\Console
  */
 class Console extends LoadableModule {
   /**

@@ -9,7 +9,6 @@ use Jivoo\Core\LoadableModule;
 
 /**
  * Models module, finds all models in application.
- * @package Jivoo\Models
  */
 class Models extends LoadableModule {
   

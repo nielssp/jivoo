@@ -9,7 +9,6 @@ use Jivoo\Core\LoadableModule;
 
 /**
  * Generators module for generating Jivoo applications.
- * @package Jivoo\Generators
  */
 class Generators extends LoadableModule {
   /**

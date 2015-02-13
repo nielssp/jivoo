@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 /**
  * A localization, e.g. translation strings and date formats.
- * @package Jivoo\Core
  * @property string $dateFormat Preferred date format.
  * @property string $timeFormat Preferred time format.
  * @property string $longFormat Preferred long format, can use special

@@ -9,7 +9,6 @@
 
 /**
  * Widget system module
- * @package Jivoo\Widgets
  */
 class Widgets extends LoadableModule {
   

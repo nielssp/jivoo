@@ -9,7 +9,6 @@ use Jivoo\Helpers\Helper;
 
 /**
  * Helper class for authentication and autorization.
- * @package Jivoo\AccessControl
  * @property IUserModel $userModel User model.
  * @property array|ILinkable|string|null $loginRoute Route for login page, ee
  * {@see Routing}.

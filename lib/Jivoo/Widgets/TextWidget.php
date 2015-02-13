@@ -1,7 +1,6 @@
 <?php
 /**
  * Simple text widget
- * @package PeanutCMS\Widgets
  */
 class TextWidget extends Widget {
   public function main($config) {

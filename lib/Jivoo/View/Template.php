@@ -7,7 +7,6 @@ namespace Jivoo\View;
 
 /**
  * Template system.
- * @package Jivoo\View
  * @method string link(array|ILinkable|string|null $route = null) Alias for
  * {@see Routing::getLink}. 
  * @method string url(array|ILinkable|string|null $route = null) Alias for
@@ -209,6 +208,5 @@ class Template {
 
 /**
  * When a template cannout be found.
- * @package Jivoo\View
  */
 class TemplateNotFoundException extends \Exception { }

@@ -1,7 +1,6 @@
 <?php
 /**
  * Base class for extension controllers.
- * @package Jivoo\Extensions
  */
 abstract class ExtensionController extends ExtensionModule {
   /**

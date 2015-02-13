@@ -1,7 +1,6 @@
 <?php
 /**
  * A read selection.
- * @package Jivoo\Models\Selection
  */
 interface IReadSelection extends IBasicSelection, IteratorAggregate {
   /**

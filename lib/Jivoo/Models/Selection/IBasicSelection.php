@@ -1,7 +1,6 @@
 <?php
 /**
  * The most basic selection.
- * @package Jivoo\Models\Selection
  */
 interface IBasicSelection extends ICondition {
   /**

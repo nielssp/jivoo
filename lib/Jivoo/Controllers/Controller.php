@@ -10,7 +10,6 @@ use Jivoo\Core\App;
 
 /**
  * A controller, the C of MVC.
- * @package Jivoo\Controllers
  */
 class Controller extends Module {
   /**

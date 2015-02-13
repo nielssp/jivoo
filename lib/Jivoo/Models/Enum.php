@@ -15,7 +15,6 @@
  * }
  * </code>
  * 
- * @package Jivoo\Models
  */
 abstract class Enum {
   /**
@@ -61,6 +60,5 @@ abstract class Enum {
 
 /**
  * For invalid enums.
- * @package Jivoo\Models
  */
 class InvalidEnumException extends Exception { }

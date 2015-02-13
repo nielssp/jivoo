@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * An iterator for {@see FlashMap}.
- * @package Jivoo\Routing
  */
 class FlashMapIterator implements \Iterator {
   /**

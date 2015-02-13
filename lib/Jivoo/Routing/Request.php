@@ -10,7 +10,6 @@ use Jivoo\Core\Utilities;
 
 /**
  * A class representing an HTTP request.
- * @package Jivoo\Routing
  * @property string[] $path The path relative to the application root as an array.
  * @property array $query The GET query as an associative array.
  * @property string $fragment The fragment.

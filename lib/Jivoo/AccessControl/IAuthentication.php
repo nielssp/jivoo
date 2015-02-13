@@ -9,7 +9,6 @@ use Jivoo\Models\IRecord;
 
 /**
  * A method of authentication.
- * @package Jivoo\AccessControl
  */
 interface IAuthentication {
   /**

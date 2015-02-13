@@ -14,7 +14,6 @@ use Jivoo\AccessControl\IPasswordHasher;
  * "password". If a field "remember" is set, a long-lived cookie will be
  * created. The names of the fields can be changed with options "username"
  * and "password".
- * @package Jivoo\AccessControl\Authentication
  */
 class FormAuthentication extends LoadableAuthentication {
   /**

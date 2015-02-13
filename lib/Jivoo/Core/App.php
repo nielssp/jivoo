@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 /**
  * Application class for initiating Jivoo applications.
- * @package Jivoo\Core
  * @property string $basePath Web base path.
  * @property-read PathDictionary $paths Paths.
  * @property-read string $name Application name.

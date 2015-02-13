@@ -11,7 +11,6 @@ use Jivoo\Routing\ILinkable;
 
 /**
  * An active record, see also {@see ActiveModel}.
- * @package Jivoo\ActiveModels
  */
 class ActiveRecord implements IRecord, IActionRecord, ILinkable {
   /**

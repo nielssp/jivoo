@@ -1,7 +1,6 @@
 <?php
 /**
  * Helper for listing database drivers.
- * @package Jivoo\Databases
  */
 class DatabaseDriversHelper extends Helper {
   /**

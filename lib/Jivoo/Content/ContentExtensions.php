@@ -7,7 +7,6 @@ namespace Jivoo\Content;
 
 /**
  * A collection of content extensions.
- * @package Jivoo\Content
  * @todo One style for both inline and block.
  */
 class ContentExtensions {

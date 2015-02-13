@@ -1,7 +1,6 @@
 <?php
 /**
  * The data type of {@see Enum}s.
- * @package Jivoo\Models
  * @property-read string[] $values Enum values.
  */
 class EnumDataType extends DataType {

@@ -1,7 +1,6 @@
 <?php
 /**
  * A custom validator rule.
- * @package Jivoo\Models\Validation
  * @property string $message The error message for the rule.
  */
 class ValidatorRule {

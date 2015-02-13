@@ -2,7 +2,6 @@
 /**
  * A generic form.
  * @TODO rename: FormBuilder ??
- * @package Jivoo\Models
  */
 class Form implements IBasicRecord, IBasicModel {
   

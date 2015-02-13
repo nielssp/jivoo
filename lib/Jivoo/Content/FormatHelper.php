@@ -10,7 +10,6 @@ use Jivoo\Models\Imodel;
 
 /**
  * Content format helper.
- * @package Jivoo\Content
  */
 class FormatHelper extends Helper {
   /**

@@ -13,7 +13,6 @@ namespace Jivoo\Routing;
  * 
  * @property-read string $id Session id.
  * @property-read FlashMap $flash Flash messages.
- * @package Jivoo\Routing
  */
 class SessionStorage implements \ArrayAccess {
   

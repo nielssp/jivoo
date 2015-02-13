@@ -11,7 +11,6 @@ use Jivoo\Core\Json;
 
 /**
  * JSON Helper.
- * @package Jivoo\Helpers
  */
 class JsonHelper extends Helper {
   /**

@@ -1,7 +1,6 @@
 <?php
 /**
  * A more advanced extension of {@see IBasicRecord}.
- * @package Jivoo\Models
  */
 interface IModel extends ISelection, IBasicModel {
   /**

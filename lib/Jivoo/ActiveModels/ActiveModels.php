@@ -10,7 +10,6 @@ use Jivoo\Core\Event;
 
 /**
  * Active record/model system.
- * @package Jivoo\ActiveModels
  */
 class ActiveModels extends LoadableModule {
 

@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl\Hashing;
 
 /**
  * A password hasher using MD5.
- * @package Jivoo\AccessControl\Hashing
  */
 class Md5Hasher extends CryptHasher {
   protected $constant = 'CRYPT_MD5';

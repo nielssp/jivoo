@@ -9,7 +9,6 @@ namespace Jivoo\ActiveModels;
  * Mixin for automatically updating time stamps on records when they are 
  * created and updated. Assumes existence of DateTime-fields "updated"
  * and "created".
- * @package Jivoo\ActiveModels
  */
 class TimestampsMixin extends ActiveModelMixin {
   /**

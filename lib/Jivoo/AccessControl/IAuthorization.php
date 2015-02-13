@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl;
 
 /**
  * A method of authorization.
- * @package Jivoo\AccessControl
  */
 interface IAuthorization {
   /**

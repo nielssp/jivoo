@@ -9,7 +9,6 @@ use Jivoo\Core\Utilities;
 
 /**
  * A response that renders a template.
- * @package Jivoo\View
  */
 class ViewResponse extends Response {
   /**

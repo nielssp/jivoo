@@ -1,7 +1,6 @@
 <?php
 /**
  * A base class for models.
- * @package Jivoo\Models
  */
 abstract class Model extends Module implements IModel {
   /**
@@ -400,6 +399,5 @@ abstract class Model extends Module implements IModel {
 
 /**
  * Thrown if primary key is invalid
- * @package Jivoo\Models
  */
 class InvalidPrimaryKeyException extends Exception { }

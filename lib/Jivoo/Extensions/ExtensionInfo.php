@@ -1,7 +1,6 @@
 <?php
 /**
  * Information about an extension.
- * @package Jivoo\Extensions
  * @property-read string $canonicalName Canonical (i.e. directory) name of
  * extension.
  * @property-read bool $enabled Whether or not extension is enabled..

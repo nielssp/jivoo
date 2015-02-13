@@ -1,7 +1,6 @@
 <?php
 /**
  * A condition for selecting rows in a database table
- * @package Jivoo\Models\Condition
  * @method ICondition and(Condition|string $clause, mixed $vars,... ) AND operator
  * @method ICondition or(Condition|string $clause, mixed $vars,... ) OR operator
  */

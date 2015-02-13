@@ -9,7 +9,6 @@ Lib::import('Jivoo/Administration/Filtering');
 
 /**
  * Administration module
- * @package Jivoo\Administration
  */
 class Administration extends LoadableModule {
   

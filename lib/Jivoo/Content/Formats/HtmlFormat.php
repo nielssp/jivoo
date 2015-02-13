@@ -9,7 +9,6 @@ use Jivoo\Content\IContentFormat;
 
 /**
  * Html format.
- * @package Jivoo\Content\Formats
  */
 class HtmlFormat implements IContentFormat {
   /**

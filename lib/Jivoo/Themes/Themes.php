@@ -1,7 +1,6 @@
 <?php
 /**
  * Theming module.
- * @package Jivoo\Themes
  */
 class Themes extends LoadableModule {
   /**
@@ -166,6 +165,5 @@ class Themes extends LoadableModule {
 
 /**
  * Thrown if a theme could not be found.
- * @package Jivoo\Themes
  */
 class ThemeNotFoundException extends Exception { }

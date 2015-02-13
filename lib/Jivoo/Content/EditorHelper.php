@@ -9,7 +9,6 @@ use Jivoo\Helpers\Helper;
 
 /**
  * Helper for editors.
- * @package Jivoo\Content
  */
 class EditorHelper extends Helper {
   /**

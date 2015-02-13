@@ -2,7 +2,6 @@
 /**
  * Information about a theme including custom properties in the "theme.json"
  * file.
- * @package Jivoo\Themes
  * @property-read string[] $extend List of parent themes.
  * @property-read string[] $zones List of enabled zones.
  */

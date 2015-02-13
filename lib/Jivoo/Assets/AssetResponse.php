@@ -10,7 +10,6 @@ use Jivoo\Routing\Response;
 
 /**
  * Responds with the content of an asset.
- * @package Jivoo\Assets
  */
 class AssetResponse extends Response {
   /**

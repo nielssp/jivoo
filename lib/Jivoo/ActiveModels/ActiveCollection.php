@@ -10,7 +10,6 @@ use Jivoo\Models\Model;
 /**
  * A special model representing an association collection as result from for
  * instance a many-to-many relationship between models.
- * @package Jivoo\ActiveModels
  */
 class ActiveCollection extends Model {
   /**

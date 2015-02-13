@@ -1,7 +1,6 @@
 <?php
 /**
  * Describes the format of data in a record
- * @package Jivoo\Models
  */
 interface IBasicModel {
   /**

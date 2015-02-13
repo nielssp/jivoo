@@ -1,7 +1,6 @@
 <?php
 /**
  * Extension system.
- * @package Jivoo\Extensions
  */
 class Extensions extends LoadableModule {
   /**
@@ -474,19 +473,16 @@ class Extensions extends LoadableModule {
 
 /**
  * Extension not found.
- * @package Jivoo\Extensions
  */
 class ExtensionNotFoundException extends Exception {}
 
 /**
  * Extension is invalid.
- * @package Jivoo\Extensions
  */
 class ExtensionInvalidException extends Exception {}
 
 /**
  * Event sent before and after an extension module has been loaded.
- * @package Jivoo\Extensions
  */
 class LoadExtensionEvent extends LoadEvent { }
 

@@ -1,7 +1,6 @@
 <?php
 /**
  * A read selection.
- * @package Jivoo\Models\Selection
  * @property-read int $offset Offset.
  * @proeprty-read array[] $joins List of arrays describing joings.
  * @property-read array[] $fields List of arrays describing fields.

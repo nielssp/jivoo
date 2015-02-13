@@ -1,7 +1,6 @@
 <?php
 /**
  * A basic selection. Base class for other selections.
- * @package Jivoo\Models\Selection
  * @property-read array[] $orderBy List of arrays describing ordering.
  * @property-read int|null $limit Row limit or null for no limit.
  * @property-read Condition $where Select condition.

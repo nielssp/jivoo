@@ -9,7 +9,6 @@ use Jivoo\Helpers\FormHelper;
 
 /**
  * A simple textarea-based editor for any format.
- * @package Jivoo\Content
  */
 class TextareaEditor implements IEditor {
   /**

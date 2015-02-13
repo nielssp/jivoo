@@ -12,7 +12,6 @@ use Jivoo\Models\IRecord;
  * Default modifiable access control list. Permissions are independent of user.
  * Can be used to dynamically set permissions in the controller. Default is
  * to deny everything.
- * @package Jivoo\AccessControl\Acl
  */
 class DefaultAcl extends LoadableAcl {
   /**

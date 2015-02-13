@@ -1,7 +1,6 @@
 <?php
 /**
  * A table in an SQL database.
- * @package Jivoo\Databases\Common
  */
 class SqlTable extends Table {
   /**

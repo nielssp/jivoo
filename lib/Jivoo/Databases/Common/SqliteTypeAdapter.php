@@ -1,7 +1,6 @@
 <?php
 /**
  * Type and migration adapter for SQLite database drivers.
- * @package Jivoo\Databases\Common
  * @todo Reimplement and document.
  */
 class SqliteTypeAdapter implements IMigrationTypeAdapter {

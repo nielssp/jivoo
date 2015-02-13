@@ -7,7 +7,6 @@ namespace Jivoo\Content;
 
 /**
  * A filter for active models to apply content format, encoding, and extensions.
- * @package Jivoo\Content
  */
 class ContentFilter {
   /**

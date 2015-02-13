@@ -1,7 +1,6 @@
 <?php
 /**
  * Result set for MySQLi driver.
- * @package Jivoo\Databases\Drivers\Mysqli
  */
 class MysqliResultSet implements IResultSet {
   /**

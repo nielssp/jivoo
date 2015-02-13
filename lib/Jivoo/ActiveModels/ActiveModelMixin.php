@@ -11,7 +11,6 @@ use Jivoo\Core\App;
 
 /**
  * A mixin for active models.
- * @package Jivoo\ActiveModels
  */
 abstract class ActiveModelMixin extends Module implements IEventListener {
   /**

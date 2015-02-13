@@ -1,7 +1,6 @@
 <?php
 /**
  * PDO MySQL database driver.
- * @package Jivoo\Databases\Drivers\PdoMysql
  */
 class PdoMysqlDatabase extends PdoDatabase {
   /**

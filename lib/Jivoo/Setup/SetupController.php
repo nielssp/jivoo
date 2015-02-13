@@ -9,7 +9,6 @@ use Jivoo\Controllers\Controller;
 
 /**
  * Base class for setup controllers.
- * @package Jivoo\Setup
  */
 class SetupController extends Controller {
   /**

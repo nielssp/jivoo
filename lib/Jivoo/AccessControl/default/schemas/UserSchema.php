@@ -1,6 +1,5 @@
 <?php
 /**
- * @package Jivoo\Authentication
  */
 class UserSchema extends Schema {
   protected function createSchema() {

@@ -1,7 +1,6 @@
 <?php
 /**
  * A file record.
- * @package Jivoo\Models\File
  * @property-read string $path File path.
  * @property-read string $name File name.
  * @property-read string $type Type. 'file' or 'directory'.

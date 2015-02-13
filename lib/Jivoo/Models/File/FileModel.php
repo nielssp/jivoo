@@ -1,7 +1,6 @@
 <?php
 /**
  * The file model.
- * @package Jivoo\Models\File
  */
 class FileModel extends BasicModel {
   /**

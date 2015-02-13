@@ -10,7 +10,6 @@ use Jivoo\Models\IRecord;
 
 /**
  * Represents a request for authorization
- * @package Jivoo\AccessControl
  * @property-read Controller $controller Target controller of authorization.
  * @property-read string $action Target action.
  * @property-read IRecord $user Record of requesting user.

@@ -10,7 +10,6 @@ use Jivoo\Core\App;
 
 /**
  * A helper for use in controllers and templates.
- * @package Jivoo\Helpers
  */
 abstract class Helper extends Module {
   /**

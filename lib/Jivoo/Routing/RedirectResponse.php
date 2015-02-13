@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * Not implemented.
- * @package Jivoo\Routing
  */
 class RedirectResponse extends Response {
 }

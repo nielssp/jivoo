@@ -1,7 +1,6 @@
 <?php
 /**
  * Schema and data migration module.
- * @package Jivoo\Migrations
  */
 class Migrations extends LoadableModule {
   /**

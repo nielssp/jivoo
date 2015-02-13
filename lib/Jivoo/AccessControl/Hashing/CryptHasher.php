@@ -10,7 +10,6 @@ use Jivoo\Core\Utilities;
 
 /**
  * A password hasher using the PHP {@see crypt} function.
- * @package Jivoo\AccessControl\Hashing
  */
 abstract class CryptHasher implements IPasswordHasher {
   /**

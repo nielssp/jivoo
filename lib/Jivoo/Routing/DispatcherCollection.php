@@ -28,6 +28,27 @@ class DispatcherCollection {
   }
   
   /**
+   * Get dispatcher for prefix.
+   * @param string $prefix Prefix.
+   * @throws \InvalidPropertyException If no dispatcher found.
+   * @return IDispatcher Dispatcher.
+   */
+  public function __get($prefix) {
+    if (isset($this->dispatchers[$prefix]))
+      return $this->dispatchers[$prefix];
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $prefix));
+  }
+  
+  /**
+   * Whether or not a dispatcher exists for the given prefix.
+   * @param string $prefix Prefix.
+   * @return bool True if dispatcher exists.
+   */
+  public function __isset($prefix) {
+    return isset($this->dispatchers[$prefix]);
+  }
+  
+  /**
    * Add a dispatcher object.
    * @param IDispatcher $dispatcher Dispatcher object.
    */
@@ -56,6 +77,13 @@ class DispatcherCollection {
     }
     if (!is_array($route))
       throw new InvalidRouteException(tr('Not a valid route, must be array or string'));
+    $parameters = array();
+    foreach ($route as $key => $value) {
+      if (is_int($key))
+        $parameters[] = $value;
+    }
+    if (!empty($parameters))
+      $route['parameters'] = $parameters;
     if (!isset($route['query']))
       $route['query'] = array();
     if (isset($route['mergeQuery']) and $route['mergeQuery'] == true)
@@ -70,8 +98,11 @@ class DispatcherCollection {
         break;
       }
     }
-    if (!isset($route['dispatcher']))
-      throw new InvalidRouteException(tr('No dispatcher found for route'));
+    if (!isset($route['dispatcher'])) {
+      if (!isset($this->routing->route))
+        throw new InvalidRouteException(tr('No dispatcher found for route'));
+      return $this->routing->route;
+    }
     return $route;
   }
   

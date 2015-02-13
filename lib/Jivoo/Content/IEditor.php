@@ -9,7 +9,6 @@ use Jivoo\Helpers\FormHelper;
 
 /**
  * An editor.
- * @package Jivoo\Content
  */
 interface IEditor {
   /**

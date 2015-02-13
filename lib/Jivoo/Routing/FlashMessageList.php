@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * A list of flash messages, i.e. {@see FlashMessage}.
- * @package Jivoo\Routing
  */
 class FlashMessageList implements \ArrayAccess, \Countable, \Iterator {
   /**

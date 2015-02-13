@@ -1,7 +1,6 @@
 <?php
 /**
  * A database table.
- * @package Jivoo\Databases
  */
 abstract class Table extends Model {
   /**

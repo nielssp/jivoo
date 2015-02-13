@@ -1,7 +1,6 @@
 <?php
 /**
  * A record validator.
- * @package Jivoo\Models\Validation
  */
 interface IValidator {
   /**

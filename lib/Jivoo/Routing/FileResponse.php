@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * Responds with the content of a file.
- * @package Jivoo\Routing
  */
 class FileResponse extends Response {
   /**

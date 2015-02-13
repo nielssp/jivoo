@@ -7,7 +7,6 @@ namespace Jivoo\Helpers;
 
 /**
  * HTML helper. Adds some useful methods when working with HTML views.
- * @package Jivoo\Helpers
  */
 class HtmlHelper extends Helper {
   /**

@@ -1,7 +1,6 @@
 <?php
 /**
  * A wrapper for another database driver.
- * @package Jivoo\Databases
  */
 class DatabaseConnection implements IDatabase {
   /**

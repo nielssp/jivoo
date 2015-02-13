@@ -7,7 +7,6 @@ namespace Jivoo\View;
 
 /**
  * Collection of view data for templates.
- * @package Jivoo\View
  */
 class ViewData implements \ArrayAccess {
   /**

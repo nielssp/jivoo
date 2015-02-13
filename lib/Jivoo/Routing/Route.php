@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * Used for configuring routes between paths and actions.
- * @package Jivoo\Routing
  * @property-read array|ILinkable|string|null $route A route, see {@see Routing}.
  * @property-read int $type Type of routing.
  */

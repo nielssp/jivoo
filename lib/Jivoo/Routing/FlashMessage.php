@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * A message to flash to the user.
- * @package Jivoo\Routing
  * @property-read string $message Message.
  * @property-read string $type Message type, e.g. 'error' or 'success'.
  */

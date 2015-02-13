@@ -1,7 +1,6 @@
 <?php
 /**
  * A record validator.
- * @package Jivoo\Models\Validation
  * @TODO Some information about $validator-array and use of validators here
  */
 class Validator implements IValidator {

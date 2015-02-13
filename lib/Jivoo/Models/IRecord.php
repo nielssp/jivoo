@@ -1,7 +1,6 @@
 <?php
 /**
  * Contains mutable data for a single record belonging to a model.
- * @package Jivoo\Models
  */
 interface IRecord extends IBasicRecord {
   /**

@@ -69,13 +69,9 @@ use Jivoo\Core\Logger;
  * 
  * @property-read array|ILinkable|string|null $route The currently selected
  * route, contains the current controller, action and parameters, see {@see Routing}.
+ * @property-read DispatcherCollection $dispatchers Collection of dispatchers.
  */
 class Routing extends LoadableModule {
-  
-  /**
-   * {@inheritdoc}
-   */
-  protected $modules = array('Controllers');
   
   /**
    * @var array Selected route and priority
@@ -192,6 +188,8 @@ class Routing extends LoadableModule {
    */
   public function __get($property) {
     switch ($property) {
+      case 'dispatchers':
+        return $this->$property;
       case 'route':
         return $this->selection['route'];
     }
@@ -453,81 +451,8 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If invalid route.
    * @return array A valid route array.
    */
-  public function validateRoute($route, $defaultAction = 'index', $defaultParameters = array()) {
-    if (!isset($route)) {
-      return array('path' => array(), 'query' => array(), 'fragment' => null);
-    }
-    if (is_string($route)) {
-      if (strpos($route, '/') !== false) {
-        return array('url' => $route);
-      }
-      $parts = explode('::', $route);
-      $route = array();
-      $i = 0;
-      while (isset($parts[$i]) and Utilities::isUpper($parts[$i][0])) {
-        if (!isset($route['controller'])) {
-          $route['controller'] = '';
-        }
-        $route['controller'] = $parts[$i] . $route['controller'];
-        $i++;
-      }
-      if (isset($parts[$i])) {
-        $route['action'] = $parts[$i];
-        $route['parameters'] = array();
-        for ($i++; $i < count($parts); $i++) {
-          $route['parameters'][] = $parts[$i];
-        }
-      }
-    }
-    else if (is_object($route) and $route instanceof ILinkable) {
-      return $this->validateRoute($route->getRoute());
-    }
-    if (!is_array($route)) {
-      throw new InvalidRouteException(tr('Not a valid route, must be array or string'));
-    }
-    if (isset($route['url'])) {
-      return $route;
-    }
-    if (!isset($route['query'])){
-      $route['query'] = array();
-    }
-    if (isset($route['mergeQuery']) and $route['mergeQuery'] == true) {
-      $route['query'] = array_merge($this->request->query, $route['query']);
-    }
-    if (!isset($route['fragment'])) {
-      $route['fragment'] = null;
-    }
-    if (isset($route['path'])) {
-      return $route;
-    }
-    $parameters = array();
-    foreach ($route as $key => $value) {
-      if (is_int($key))
-        $parameters[] = $value;
-    }
-    if (!empty($parameters))
-      $route['parameters'] = $parameters;
-    if (isset($route['controller'])) {
-      $route['controller'] = $this->controllerName($route['controller']);
-      if (!isset($route['action']) and isset($defaultAction)) {
-        $route['action'] = $defaultAction;
-      }
-      if (!isset($route['parameters']) and isset($defaultParameters)) {
-        $route['parameters'] = $defaultParameters;
-      }
-    }
-    else if (isset($this->selection['route']['controller'])) {
-      $route['controller'] = $this->selection['route']['controller'];
-      if (!isset($route['action'])) {
-        $route['action'] = $this->selection['route']['action'];
-      }
-      if (!isset($route['parameters'])) {
-        $route['parameters'] = $this->selection['route']['parameters'];
-      }
-    }
-    if (isset($route['parameters']) and is_array($route['parameters']))
-      $route['parameters'] = array_values($route['parameters']);
-    return $route;
+  public function validateRoute($route) {
+    return $this->dispatchers->validate($route);
   }
   
   /**
@@ -1053,25 +978,21 @@ class Routing extends LoadableModule {
 
 /**
  * Invalid route.
- * @package Jivoo\Routing
  */
 class InvalidRouteException extends \Exception { }
 
 /**
  * Invalid response.
- * @package Jivoo\Routing
  */
 class InvalidResponseException extends \Exception { }
 
 /**
  * Can be used in an action to send the client to the error page.
- * @package Jivoo\Routing
  */
 class NotFoundException extends \Exception { }
 
 /**
  * When thrown, the current response is replaced.
- * @package Jivoo\Routing
  */
 class ResponseOverrideException extends \Exception {
   /**
@@ -1098,7 +1019,6 @@ class ResponseOverrideException extends \Exception {
 
 /**
  * The event of calling an action.
- * @package Jivoo\Routing
  */
 class CallActionEvent extends Event {
   /**

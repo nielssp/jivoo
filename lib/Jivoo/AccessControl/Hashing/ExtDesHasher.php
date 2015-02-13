@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl\Hashing;
 
 /**
  * A password hasher using extended DES.
- * @package Jivoo\AccessControl\Hashing
  */
 class ExtDesHasher extends CryptHasher {
   protected $constant = 'CRYPT_EXT_DES';

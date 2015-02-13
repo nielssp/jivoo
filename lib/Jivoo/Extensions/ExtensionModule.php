@@ -1,7 +1,6 @@
 <?php
 /**
  * A module that can be loaded by an extension.
- * @package Jivoo\Extensions
  */
 abstract class ExtensionModule extends Module {
   /**

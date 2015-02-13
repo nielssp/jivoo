@@ -9,7 +9,6 @@ namespace Jivoo\Core;
  * A global event listener handling event at application and module level.
  * Subclasses can be attached to the application by adding their names to
  * the "listeners"-array in 'app.json'.
- * @package Jivoo\Core
  */
 abstract class AppListener extends Module implements IEventListener {
   /**

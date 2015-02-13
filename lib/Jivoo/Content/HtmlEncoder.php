@@ -8,7 +8,6 @@ namespace Jivoo\Content;
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
  * and automatically closing tags and stripping invalid HTML.
- * @package Jivoo\Content
  */
 class HtmlEncoder {
   /**

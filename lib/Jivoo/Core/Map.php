@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 /**
  * A collection of key/value pairs.
- * @package Jivoo\Core
  */
 class Map implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**

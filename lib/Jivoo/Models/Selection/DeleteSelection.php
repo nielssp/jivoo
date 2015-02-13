@@ -1,7 +1,6 @@
 <?php
 /**
  * A delete selection.
- * @package Jivoo\Models\Selection
  */
 class DeleteSelection extends BasicSelection implements IDeleteSelection {
   /**

@@ -9,7 +9,6 @@ use Jivoo\Controllers\Controller;
 
 /**
  * Controller for generators
- * @package Jivoo\Generators
  */
 class GeneratorController extends Controller {
   /**

@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 /**
  * A collection of paths.
- * @package Jivoo\Core
  */
 class PathMap extends Map {
   /**

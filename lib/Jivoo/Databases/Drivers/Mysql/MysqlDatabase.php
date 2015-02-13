@@ -1,7 +1,6 @@
 <?php
 /**
  * MySQL database driver.
- * @package Jivoo\Databases\Drivers\Mysql
  */
 class MysqlDatabase extends SqlDatabase {
   /**

@@ -7,7 +7,6 @@ namespace Jivoo\Routing;
 
 /**
  * An HTTP response containing text.
- * @package Jivoo\Routing
  */
 class TextResponse extends Response {
   /**

@@ -9,7 +9,6 @@ use Jivoo\Setup\SetupController;
 
 /**
  * Controller for setting up root user
- * @package Jivoo\AccessControl
  * @property-read HtmlHelper $Html Html helper
  * @property-read FormHelper $Form Form helper
  * @property-read ActiveModel $User User model

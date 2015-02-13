@@ -1,7 +1,6 @@
 <?php
 /**
  * Contains several links to actions.
- * @package Jivoo\Models
  */
 interface IActionRecord {
   /**

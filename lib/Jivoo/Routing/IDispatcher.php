@@ -37,6 +37,13 @@ interface IDispatcher {
   public function fromRoute($route);
   
   /**
+   * Get link from route
+   * @param array $route Route array.
+   * @return string|null Relative or absolute link or null.
+   */
+  public function getLink($route);
+  
+  /**
    * Respond to a route array.
    * @param array $route Route array.
    * @return Response|string Response object or content.

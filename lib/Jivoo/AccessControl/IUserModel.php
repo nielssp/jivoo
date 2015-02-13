@@ -10,7 +10,6 @@ use Jivoo\ActiveModels\ActiveRecord;
 
 /**
  * A model that can be used with {@see AuthHelper}.
- * @package Jivoo\AccessControl
  */
 interface IUserModel extends IModel {
   /**

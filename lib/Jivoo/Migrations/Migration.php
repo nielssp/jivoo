@@ -1,7 +1,6 @@
 <?php
 /**
  * Base class for migrations.
- * @package Jivoo\Migrations
  */
 abstract class Migration {
   /**

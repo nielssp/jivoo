@@ -3,7 +3,6 @@ Lib::import('Jivoo/Databases/Common');
 
 /**
  * Database module.
- * @package Jivoo\Databases
  */
 class Databases extends LoadableModule {
   /**
@@ -189,12 +188,10 @@ class Databases extends LoadableModule {
 
 /**
  * Invalid database configuration.
- * @package Jivoo\Databases
  */
 class DatabaseNotConfiguredException extends Exception { }
 
 /**
  * Unknown table schema.
- * @package Jivoo\Databases
  */
 class DatabaseMissingSchemaException extends Exception { }

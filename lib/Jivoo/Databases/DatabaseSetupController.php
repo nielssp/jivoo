@@ -1,7 +1,6 @@
 <?php
 /**
  * Controller for setting up database. 
- * @package Jivoo\Databases
  * @property-read HtmlHelper $Html Html helper.
  * @property-read FormHelper $Form Form helper.
  * @property-read DatabaseDriversHelper $DatabaseDrivers Database drivers helper.

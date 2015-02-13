@@ -1,7 +1,6 @@
 <?php
 /**
  * SQLite3 database driver.
- * @package Jivoo\Databases\Drivers\Sqlite3
  */
 class Sqlite3Database extends SqlDatabase {
   /**
