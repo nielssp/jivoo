@@ -67,7 +67,7 @@ class DispatcherCollection {
    */
   public function validate($route) {
     if (!isset($route)) {
-      $route = array('path' => array(), 'query' => array(), 'fragment' => null);
+      $route = $this->routing->root;
     }
     else if (is_string($route)) {
       $route = $this->toRoute($route);
@@ -99,6 +99,10 @@ class DispatcherCollection {
       }
     }
     if (!isset($route['dispatcher'])) {
+      if (isset($route[0])) {
+        array_shift($route['parameters']);
+        return array_merge($this->validate($route[0]), $route);
+      }
       if (!isset($this->routing->route))
         throw new InvalidRouteException(tr('No dispatcher found for route'));
       return $this->routing->route;

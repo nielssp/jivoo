@@ -61,7 +61,7 @@ class ActionDispatcher implements IDispatcher {
     $route = array(
       'controller' => $split[0],
       'action' => 'index',
-      'parmaters' => array()
+      'parameters' => array()
     );
     if (isset($split[1]))
       $route['action'] = $split[1];
@@ -79,7 +79,9 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function getPath($route, $path = null) {
-    return null;
+    if (!isset($path))
+      return null;
+    return $this->routing->insertParameters($route['parameters'], array($path));
   }
 
   /**

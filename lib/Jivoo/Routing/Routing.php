@@ -69,6 +69,8 @@ use Jivoo\Core\Logger;
  * 
  * @property-read array|ILinkable|string|null $route The currently selected
  * route, contains the current controller, action and parameters, see {@see Routing}.
+ * @property-read array|ILinkable|string|null $root The root route, see {@see Routing}.
+ * @property-read array|ILinkable|string|null $error The error route, see {@see Routing}.
  * @property-read DispatcherCollection $dispatchers Collection of dispatchers.
  * @property-read RoutingTable $routes Routing table.
  */
@@ -96,7 +98,7 @@ class Routing extends LoadableModule {
   /**
    * @var mixed Error route
    */
-  private $errorRoute = null;
+  private $error = null;
 
   /**
    * @var array Selected route and priority
@@ -181,11 +183,29 @@ class Routing extends LoadableModule {
     switch ($property) {
       case 'dispatchers':
       case 'routes':
+      case 'root':
+      case 'error':
         return $this->$property;
       case 'route':
         return $this->selection;
     }
     return parent::__get($property);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __isset($property) {
+    switch ($property) {
+      case 'dispatchers':
+      case 'routes':
+      case 'root':
+      case 'error':
+        return isset($this->$property);
+      case 'route':
+        return isset($this->selection);
+    }
+    return parent::__isset($property);
   }
   
   /**
@@ -221,7 +241,7 @@ class Routing extends LoadableModule {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function setError($route) {
-    $this->errorRoute = $route;
+    $this->error = $route;
     $this->setRoute($route, 1);
   }
 
@@ -394,14 +414,14 @@ class Routing extends LoadableModule {
    */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);
-    $arity = '(' . count($route['parameters']) . ')';
+    $arity = '[' . count($route['parameters']) . ']';
     $routeString = $route['dispatcher']->fromRoute($route);
     $path = null;
     if (isset($this->paths[$routeString . $arity])) {
-      $path = $route['dispatcher']->getPath($this->paths[$routeString . $arity]['pattern'], $route);
+      $path = $this->paths[$routeString . $arity]['pattern'];
     }
     else if (isset($this->paths[$routeString . '[*]'])) {
-      $path = $route['dispatcher']->getPath($this->paths[$routeString . '(*)']['pattern'], $route);
+      $path = $this->paths[$routeString . '[*]']['pattern'];
     }
     $path = $route['dispatcher']->getPath($route, $path);
     if (!isset($path))
@@ -639,7 +659,7 @@ class Routing extends LoadableModule {
    */
   public function addPath($route, $pattern, $arity, $priority = 5) {
     $route = $this->validateRoute($route);
-    $key = $route['dispatcher']->fromRoute($route) . '(' . $arity . ')';
+    $key = $route['dispatcher']->fromRoute($route) . '[' . $arity . ']';
     if (isset($this->paths[$key])) {
       if ($priority <= $this->paths[$key]['priority'])
         return false;
@@ -722,7 +742,7 @@ class Routing extends LoadableModule {
       $response = $e->getResponse();
     }
     catch (NotFoundException $e) {
-      return $this->followRoute($this->errorRoute);
+      return $this->followRoute($this->error);
     }
     $this->respond($response);
   }
