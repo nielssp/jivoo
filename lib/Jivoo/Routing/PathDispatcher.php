@@ -6,9 +6,9 @@
 namespace Jivoo\Routing;
 
 /**
- * URL based routing.
+ * Path-array based routing.
  */
-class UrlDispatcher implements IDispatcher {
+class PathDispatcher implements IDispatcher {
   /**
    * @var Routing Routing module.
    */
@@ -26,33 +26,28 @@ class UrlDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function getPrefixes() {
-    return array('http', 'https', 'url');
+    return array('path');
   }
 
   /**
    * {@inheritdoc}
    */
   public function validate(&$route) {
-    return isset($route['url']);
+    return isset($route['path']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    if (strncmp($routeString, 'url:', 4))
-      return array('url' => substr($routeString, 4));
-    return array('url' => $routeString);
+    return array('path' => explode('/', substr($routeString, 5)));
   }
 
   /**
    * {@inheritdoc}
    */
   public function fromRoute($route) {
-    $url = $route['url'];
-    if (preg_match('/^https?:/', $url) === 1)
-      return $url;
-    return 'url:' . $url;
+    return 'path:' . implode('/', $route['path']);
   }
 
   /**
