@@ -70,38 +70,38 @@ use Jivoo\Core\Logger;
  * @property-read array|ILinkable|string|null $route The currently selected
  * route, contains the current controller, action and parameters, see {@see Routing}.
  * @property-read DispatcherCollection $dispatchers Collection of dispatchers.
+ * @property-read RoutingTable $routes Routing table.
  */
 class Routing extends LoadableModule {
-  
-  /**
-   * @var array Selected route and priority
-   */
-  private $selection = array('route' => null, 'priority' => 0);
-  
   /**
    * @var DispatcherCollection Collection of dispatchers.
    */
-  private $dispatchers = null;
-
+  private $dispatchers;
+  
   /**
-   * @var array Linking paths to routes
+   * @var RoutingTable Table of routes;
    */
-  private $paths = array();
-
-  /**
-   * @var bool Whether or not the page has rendered yet
-   */
-  private $rendered = false;
+  private $routes;
   
   /**
    * @var array Root route and priority
    */
-  private $root = array('route' => null, 'priority' => 0);
+  private $root = null;
   
   /**
    * @var mixed Error route
    */
   private $errorRoute = null;
+
+  /**
+   * @var array Selected route and priority
+   */
+  private $selection = null;
+
+  /**
+   * @var bool Whether or not the page has rendered yet
+   */
+  private $rendered = false;
 
   /**
    * @var bool Use etags.
@@ -128,6 +128,8 @@ class Routing extends LoadableModule {
     $this->dispatchers = new DispatcherCollection($this);
     $this->dispatchers->add(new PathDispatcher($this));
     $this->dispatchers->add(new UrlDispatcher($this));
+    
+    $this->routes = new RoutingTable($this);
 
     // Determine if the current URL is correct
     if ($this->config['rewrite']) {
@@ -149,33 +151,7 @@ class Routing extends LoadableModule {
       array_shift($path);
       $this->request->path = $path;
     }
-    
-//     $path = explode('/', $this->config['index']['path']);
-//     $query = $this->config['index']->get('query', true);
-//     if (count($this->request->path) < 1) {
-//       $this->request->path = $path;
-//       $this->request->query = array_merge($query, $this->request->query);
-//     }
-//     else if ($path == $this->request->path) {
-//       $this->redirectPath(array(), $this->request->query);
-//     }
 
-    $routeFile = $this->p('app', 'config/routes.php');
-    if (file_exists($routeFile)) {
-      $routes = include $routeFile;
-      foreach ($routes as $route) {
-        if ($route->type == Route::TYPE_ROOT) {
-          $this->setRoot($route->route, 9);
-        }
-        else if ($route->type == Route::TYPE_ERROR) {
-          $this->setError($route->route);
-        }
-        else {
-          $route->draw($this);
-        }
-      }
-    }
-    
     if (isset($this->config['root'])) {
       $this->setRoot($this->config['root'], 10);
     }
@@ -189,9 +165,10 @@ class Routing extends LoadableModule {
   public function __get($property) {
     switch ($property) {
       case 'dispatchers':
+      case 'routes':
         return $this->$property;
       case 'route':
-        return $this->selection['route'];
+        return $this->selection;
     }
     return parent::__get($property);
   }
@@ -203,7 +180,8 @@ class Routing extends LoadableModule {
    */
   public function setRoot($route, $priority = 9) {
     $route = $this->validateRoute($route);
-    $this->root['route'] = $route;
+    $route['priority'] = $priority;
+    $this->root = $route;
     if (isset($route['path'])) {
       if (count($this->request->path) < 1) {
         $this->request->path = $route['path'];
@@ -237,36 +215,6 @@ class Routing extends LoadableModule {
     $this->errorRoute = $route;
     $this->setRoute($route, 1);
   }
-  
-  /**
-   * Get a controller name with or without suffix.
-   * @param string|Controller $controller Controller name or object.
-   * @param bool $withSuffix Whether or not to include 'Controller'-suffix.
-   * @return string Controller name.
-   */
-  protected function controllerName($controller, $withSuffix = false) {
-    if (is_object($controller)) {
-      $controller = get_class($controller);
-    }
-    $substr = substr($controller, -10);
-    if ($withSuffix AND $substr != 'Controller') {
-      return $controller . 'Controller';
-    }
-    else if (!$withSuffix AND $substr == 'Controller') {
-      return substr($controller, 0, -10);
-    }
-    else {
-      return $controller;
-    }
-  }
-
-  /**
-   * Get current request object.
-   * @return Request Current request.
-   */
-  public function getRequest() {
-    return $this->request;
-  }
 
   /**
    * Will replace **, :*, * and :n in path with parameters.
@@ -296,12 +244,6 @@ class Routing extends LoadableModule {
           $part = $parameters[$offset];
           unset($parameters[$offset]);
         }
-        else if ($var == 'controller') {
-          // ???
-        }
-        else if ($var == 'action') {
-          // ???
-        }
         else {
           throw new InvalidRouteException(tr(
             'Unknown pattern "%1" in route configuration', $part
@@ -321,28 +263,19 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If path was not found.
    * @return string[] A path.
    */
-  public function getPath($controller = null, $action = 'index',
-                          $parameters = array()) {
-    if (!isset($controller)) {
-      return null;
+  public function getPath($route) {
+    $route = $this->validate($route);
+    $arity = '(' . count($route['parameters']) . ')';
+    $routeString = $route['dispatcher']->fromRoute($route);
+    $path = null;
+    if (isset($this->paths[$routeString . $arity])) {
+      $path = $route['dispatcher']->getPath($this->paths[$routeString . $arity], $route);
     }
-    $arity = count($parameters);
-    $controller = $this->controllerName($controller);
-    $function = null;
-    $additional = null;
-    if (isset($this->paths[$controller][$action][$arity])) {
-      $function = $this->paths[$controller][$action][$arity]['function'];
-      $additional = $this->paths[$controller][$action][$arity]['additional'];
+    else if (isset($this->paths[$routeString . '[*]'])) {
+      $path = $route['dispatcher']->getPath($this->paths[$routeString . '(*)'], $route);
     }
-    else if (isset($this->paths[$controller][$action]['variadic'])) {
-      $function = $this->paths[$controller][$action]['variadic']['function'];
-      $additional = $this->paths[$controller][$action]['variadic']['additional'];
-    }
-    if (!isset($function))
-      throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action . '[' . $arity . ']'));
-    $path = call_user_func($function, $parameters, $additional);
     if (!isset($path))
-      throw new InvalidRouteException(tr('Could not find path for ' . $controller . '::' . $action . '[' . $arity . ']'));
+      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
     return $path;
   }
 
@@ -641,6 +574,7 @@ class Routing extends LoadableModule {
    */
   public function addRoute($pattern, $route, $priority = 5) {
     $route = $this->validateRoute($route);
+    $route['priority'] = $priority;
 
     $pattern = explode(' ', $pattern);
     $method = 'ANY';
@@ -705,14 +639,8 @@ class Routing extends LoadableModule {
           if (is_numeric($var)) {
             $route['parameters'][(int)$var] = $path[$j];
           }
-          else if ($var == 'controller') {
-            $route['controller'] = Utilities::dashesToCamelCase($path[$j]);
-          }
-          else if ($var == 'action') {
-            $route['action'] = lcfirst(Utilities::dashesToCamelCase($path[$j]));
-          }
           else {
-            throw new InvalidRouteException(tr('Unknown pattern "%1" in route configuration', $part));
+            $route['parameters'][$var] = $path[$j];
           }
           continue;
         }
@@ -720,11 +648,9 @@ class Routing extends LoadableModule {
         break;
       }
     }
-//     Logger::debug('Add route: ' . implode('/', $pattern) . ' -> ' . $route['controller'] . '::' . $route['action'] . '[' . $arity . ']');
     if ($isMatch) {
       if ($priority > $this->selection['priority']) { // or >= ??
-        $this->selection['priority'] = $priority;
-        $this->selection['route'] = $route;
+        $this->selection = $route;
       }
     }
     if (isset($route['controller']) AND isset($route['action'])) {
@@ -971,7 +897,7 @@ class Routing extends LoadableModule {
     $currentPath = $this->request->path;
     $actionPath = $this->getPath($controller, $action, $parameters);
     if ($currentPath != $actionPath AND is_array($actionPath)) {
-      $this->redirectPath($actionPath, $this->getRequest()->query);
+      $this->redirectPath($actionPath, $this->request->query);
     }
   }
 }

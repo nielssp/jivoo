@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Controllers;
 
+use Jivoo\Routing\IDispatcher;
+use Jivoo\Routing\Routing;
+
 /**
  * Action based routing.
  */
@@ -57,10 +60,25 @@ class ActionDispatcher implements IDispatcher {
   public function fromRoute($route) {
     return $route['controller'] . '::' . $route['action'];
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getPath($path, $route) {
+    return null;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getLink($route) {
+    return null;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function dispatch($route) {
+    return null;
   }
 }

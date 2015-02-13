@@ -53,6 +53,13 @@ class PathDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
+  public function getPath($path, $route) {
+    return $route['path'];
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   public function getLink($route) {
     return $route['url'];
   }
@@ -61,6 +68,6 @@ class PathDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function dispatch($route) {
-    return $this->routing->redirect($route);
+    return $this->routing->redirectPath($route['path']);
   }
 }

@@ -37,6 +37,14 @@ interface IDispatcher {
   public function fromRoute($route);
   
   /**
+   * Get path for route.
+   * @param string[] $path Path pattern array.
+   * @param array $route Route array.
+   * @return string[] Path.
+   */
+  public function getPath($path, $route);
+  
+  /**
    * Get link from route
    * @param array $route Route array.
    * @return string|null Relative or absolute link or null.
