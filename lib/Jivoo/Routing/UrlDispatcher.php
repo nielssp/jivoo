@@ -3,10 +3,7 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Routing\Dispatch;
-
-use Jivoo\Routing\IDispatcher;
-use Jivoo\Routing\Routing;
+namespace Jivoo\Routing;
 
 /**
  * Implements a type of route.
@@ -44,8 +41,8 @@ class UrlDispatcher implements IDispatcher {
    */
   public function toRoute($routeString) {
     if (strncmp($routeString, 'url:', 4))
-      return substr($routeString, 4);
-    return $routeString;
+      return array('url' => substr($routeString, 4));
+    return array('url' => $routeString);
   }
 
   /**

@@ -9,6 +9,7 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Event;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Logger;
+use Jivoo\Routing\Dispatch\UrlDispatcher;
 
 /**
  * Module for handling routes and HTTP requests.
@@ -81,6 +82,11 @@ class Routing extends LoadableModule {
    * @var array Selected route and priority
    */
   private $selection = array('route' => null, 'priority' => 0);
+  
+  /**
+   * @var DispatcherCollection Collection of dispatchers.
+   */
+  private $dispatchers = null;
 
   /**
    * @var array Linking paths to routes
@@ -123,6 +129,9 @@ class Routing extends LoadableModule {
     );
 
     $this->request = new Request($this->config['sessionPrefix'], $this->app->basePath);
+    
+    $this->dispatchers = new DispatcherCollection($this);
+    $this->dispatchers->add(new UrlDispatcher($this));
 
     // Determine if the current URL is correct
     if ($this->config['rewrite']) {
