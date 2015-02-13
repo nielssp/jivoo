@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Controllers;
+namespace Jivoo\Snippets;
 
 use Jivoo\Routing\IDispatcher;
 use Jivoo\Routing\Routing;
@@ -11,41 +11,41 @@ use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
 
 /**
- * Action based routing.
+ * Snippet based routing.
  */
-class ActionDispatcher implements IDispatcher {
+class SnippetDispatcher implements IDispatcher {
   /**
    * @var Routing Routing module.
    */
   private $routing;
   
   /**
-   * @var Controllers Controllers module;
+   * @var Snippet Snippets module;
    */
-  private $controllers;
+  private $snippets;
   
   /**
    * Construct url dispatcher.
    * @param Routing $routing Routing module.
-   * @param Controllers $controllers Controllers module.
+   * @param Snippets $snippets Snippets module.
    */
-  public function __construct(Routing $routing, Controllers $controllers) {
+  public function __construct(Routing $routing, Snippets $snippets) {
     $this->routing = $routing;
-    $this->controllers = $controllers;
+    $this->snippets = $snippets;;
   }
   
   /**
    * {@inheritdoc}
    */
   public function getPrefixes() {
-    return array('action');
+    return array('snippet');
   }
 
   /**
    * {@inheritdoc}
    */
   public function validate(&$route) {
-    if (isset($route['controller']) or isset($route['action'])) {
+    if (isset($route['snippet'])) {
       if (!isset($route['parameters']))
         $route['parameters'] = array();
       return true;
@@ -57,14 +57,10 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    $split = explode('::', substr($routeString, 7));
     $route = array(
-      'controller' => $split[0],
-      'action' => 'index',
+      'snippet' => substr($routeString, 8),
       'parameters' => array()
     );
-    if (isset($split[1]))
-      $route['action'] = $split[1];
     return $route;
   }
 
@@ -72,7 +68,7 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function fromRoute($route) {
-    return $route['controller'] . '::' . $route['action'];
+    return $route['snippet'];
   }
   
   /**
@@ -88,26 +84,18 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function dispatch($route) {
-    $controller = $this->controllers->getController($route['controller']);
-    if (!isset($controller))
-      throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
-    if (!is_callable(array($controller, $route['action']))) {
-      throw new InvalidRouteException(tr(
-        'Invalid action: %1',
-        $route['controller'] . '::' . $route['action']
-      ));
-    }
-    $controller->before();
-    $response = call_user_func_array(array($controller, $route['action']), $route['parameters']);
+    $snippet = $this->snippets->getSnippet($route['snippet']);
+    if (!isset($snippet))
+      throw new InvalidRouteException(tr('Invalid controller: %1', $route['snippet']));
+    $response = $snippet($route['parameters']);
     if (is_string($response))
       $response = new TextResponse(Http::OK, 'text', $response);
     if (!($response instanceof Response)) {
       throw new InvalidResponseException(tr(
-        'An invalid response was returned from action: %1',
-        $route['controller'] . '::' . $route['action']
+        'An invalid response was returned from snippet: %1',
+        $route['snippet']
       ));
     }
-    $controller->after($response);
     return $response;
   }
 }

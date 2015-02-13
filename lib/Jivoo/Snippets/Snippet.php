@@ -29,6 +29,11 @@ class Snippet extends Module implements ISnippet {
   protected $parameters = array();
   
   /**
+   * @var mixed[] Values of required parameters.
+   */
+  private $parameterValues = array();
+  
+  /**
    * @var Helper[] An associative array of helper names and objects.
   */
   private $helperObjects = array();
@@ -54,6 +59,29 @@ class Snippet extends Module implements ISnippet {
    * Snippet initialization, called by constructor.
    */
   protected function init() { }
+
+  /**
+   * Get an associated model, helper or data-value (in that order).
+   * @param string $name Name of model/helper or key for data-value.
+   * @return Model|Helper|mixed Associated value.
+   */
+  public function __get($name) {
+    if (isset($this->modelObjects[$name])) {
+      return $this->modelObjects[$name];
+    }
+    if (array_key_exists($name, $this->parameterValues))
+      return $this->parameterValues[$name];
+    return parent::__get($name);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function __isset($name) {
+    if (isset($this->modelObjects[$name]))
+      return true;
+    return isset($this->parameterValues[$name]);
+  }
 
   /**
    * Respond to a GET request.
@@ -102,6 +130,13 @@ class Snippet extends Module implements ISnippet {
    * {@inheritdoc}
    */
   public function __invoke($parameters = array()) {
+    $this->parameterValues = array();
+    foreach ($this->parameters as $offset => $name) {
+      if (isset($parameters[$name]) or isset($parameters[$offset]))
+        $this->parameterValues[$name] = $parameters[$name];
+      else
+        $this->parameterValues[$name] = null;
+    }
     if ($this->request->isGet())
       return $this->get();
     $name = get_class($this);
