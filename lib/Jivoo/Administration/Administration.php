@@ -1,25 +1,35 @@
 <?php
-// Module
-// Name           : Jivoo Administration GUI Toolkit module
-// Description    : Module for creating web application user interfaces
-// Author         : apakoh.dk
-// Dependencies   : Jivoo/View
-
-Lib::import('Jivoo/Administration/Filtering');
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\View;
 
 /**
- * Administration module
+ * Module for creating web application user interfaces.
+ * @property-read IconMenu $menu A global menu object.
  */
 class Administration extends LoadableModule {
+  /**
+   * {@inheritdoc}
+   */
+  protected $modules = array('View', 'Snippets');
   
-  protected $modules = array('View', 'Widgets');
-  
+  /**
+   * @var IconMenu Global menu.
+   */
   private $menu;
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->menu = new IconMenu(tr('Administration'));
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'menu':

@@ -194,6 +194,7 @@ class View extends LoadableModule {
       return $this->template->render($template, $data);
     arsort($this->templateDirs);
     $this->data->flash = $this->request->session->flash;
+    // TODO: Um, why instantiate on every render?
     $this->template = new Template($this);
     $result = $this->template->render($template, $data);
     $this->template = null;
