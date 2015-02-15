@@ -21,7 +21,7 @@ interface IDispatcher {
    * @return bool True if route understood by dispatcher. 
    */
   public function validate(&$route);
-  
+
   /**
    * Convert from a route string.
    * @param string $routeString Route string, e.g. 'prefix:ClassName'.

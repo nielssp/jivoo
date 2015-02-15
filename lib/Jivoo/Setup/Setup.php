@@ -38,7 +38,7 @@ class Setup extends LoadableModule {
     $this->app->detachEventHandler('afterLoadModule', array($this, 'runSetup'));
     if (isset($this->app->appConfig['setup'])) {
       foreach ($this->app->appConfig['setup'] as $route) {
-        $route = $this->m->Routing->validateActionRoute($route);
+        $route = $this->m->Routing->validateRoute($route);
         $controller = $route['controller'];
         $action = $route['action'];
         $name = $controller . '::' . $action;
@@ -94,7 +94,7 @@ class Setup extends LoadableModule {
    * @return bool True if setup has finished, false otherwise.
    */
   public function getState($route) {
-    $route = $this->m->Routing->validateActionRoute($route);
+    $route = $this->m->Routing->validateRoute($route);
     $controller = $route['controller'];
     $action = $route['action'];
     $name = $controller . '::' . $action;
@@ -107,7 +107,7 @@ class Setup extends LoadableModule {
    * @param bool $done Whether or not the setup has finished.
    */
   public function setState($route, $done) {
-    $route = $this->m->Routing->validateActionRoute($route);
+    $route = $this->m->Routing->validateRoute($route);
     $controller = $route['controller'];
     $action = $route['action'];
     $name = $controller . '::' . $action;

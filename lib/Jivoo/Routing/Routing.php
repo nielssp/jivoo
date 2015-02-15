@@ -296,26 +296,6 @@ class Routing extends LoadableModule {
   public function isCurrent($route = null, $defaultAction = 'index', $defaultParameters = array()) {
     $route = $this->validateRoute($route, $defaultAction, $defaultParameters);
     return $route['dispatcher']->isCurrent($route);
-    if (isset($route['path'])) {
-      if ($route['path'] == array()) {
-        if ($this->request->path == array()) {
-          return true;
-        }
-        if (isset($this->root['route']) and isset($this->root['route']['path'])
-          AND $this->request->path == $this->root['route']['path']) {
-          return true;
-        }
-      }
-      return $this->request->path == $route['path'];
-    }
-    if (isset($route['controller']) and isset($route['action'])) {
-      return $this->selection['controller'] == $route['controller']
-        and ($route['action'] == '*'
-          or $this->selection['action'] == $route['action'])
-        and ($route['parameters'] == '*'
-          or $this->selection['parameters'] == $route['parameters']);
-    }
-    throw new InvalidRouteException(tr('Incomplete route'));
   }
   
   /**
@@ -364,13 +344,6 @@ class Routing extends LoadableModule {
         return $this->w($this->app->entryScript . '/' . implode('/', $path) . $fragment);
       }
     }
-  }
-  
-  public function validateActionRoute($route) {
-    $route = $this->validateRoute($route);
-    if (!isset($route['controller']) or !isset($route['action']))
-      throw new InvalidRouteException(tr('Not a valid action route, must contain controller and action'));
-    return $route;
   }
   
   /**
@@ -474,7 +447,6 @@ class Routing extends LoadableModule {
       $query = $this->request->query;
     }
     $this->redirectPath($this->request->path, $query, false, $fragment);
-    $this->refresh($query, $fragment);
   }
   
   /**

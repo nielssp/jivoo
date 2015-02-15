@@ -40,7 +40,7 @@ class UrlDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    if (strncmp($routeString, 'url:', 4))
+    if (strncmp($routeString, 'url:', 4) === 0)
       return array('url' => substr($routeString, 4));
     return array('url' => $routeString);
   }
