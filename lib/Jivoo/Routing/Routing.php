@@ -606,9 +606,8 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Find the best route and execute action.
-   * @throws ModuleNotLoadedException If Controllers module is missing.
-   * @throws InvalidRouteException If no route selected or no controller selected.
+   * Find the best route and dispatch.
+   * @throws InvalidRouteException If no route selected.
    */
   public function findRoute() {
     $this->triggerEvent('beforeRender');
@@ -717,6 +716,7 @@ class Routing extends LoadableModule {
    * Make sure that the current path matches the controller and action. If not,
    * redirect to the right path.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @todo Reimplement
    */
   public function reroute($route = null) {
     $currentPath = $this->request->path;

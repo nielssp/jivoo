@@ -87,7 +87,7 @@ class RoutingTable {
    */
   public function match($pattern, $route, $priority = 5) {
     if (isset($this->nestStack[0]) and $this->nestStack[0] !== '') {
-      $pattern = $this->nestStack[0] . '/' . $pattern;
+      $pattern = $this->nestStack[0] . '/' . self::incrementParameters($pattern);
     }
     $this->routing->addRoute($pattern, $route, $priority);
     return $this;
@@ -114,7 +114,7 @@ class RoutingTable {
    */
   public function nest() {
     if (isset($this->nestStack[0]) and $this->nestStack[0] !== '') {
-      $this->pattern = $this->nestStack[0] . '/' . $this->pattern;
+      $this->pattern = $this->nestStack[0] . '/' . self::incrementParameters($this->pattern);
     }
     array_unshift($this->nestStack, $this->pattern);
     return $this;
@@ -127,5 +127,20 @@ class RoutingTable {
   public function end() {
     array_shift($this->nestStack);
     return $this;
+  }
+  
+  /**
+   * Increment numeric parameter-patterns.
+   * @param string $pattern Pattern.
+   * @return string Pattern.
+   */
+  public static function incrementParameters($pattern) {
+    return preg_replace_callback(
+      '/:(\d+)/',
+      function($matches) {
+        return ':' . ($matches[1] + 1);
+      },
+      $pattern
+    );
   }
 }
