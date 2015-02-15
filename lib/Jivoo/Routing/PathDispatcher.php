@@ -35,6 +35,13 @@ class PathDispatcher implements IDispatcher {
   public function validate(&$route) {
     return isset($route['path']);
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function autoRoute(RoutingTable $table, $route, $resource = false) {
+    return null;
+  }
 
   /**
    * {@inheritdoc}

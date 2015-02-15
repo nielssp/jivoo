@@ -21,7 +21,17 @@ interface IDispatcher {
    * @return bool True if route understood by dispatcher. 
    */
   public function validate(&$route);
-
+  
+  /**
+   * Perform automatic routing.
+   * @param RoutingTable $table Routing table.
+   * @param array $route Route array.
+   * @param bool $resource Whether to use resource rooting.
+   * @return string|null Pattern to use for nested routing or null if auto
+   * routing not possible. 
+   */
+  public function autoRoute(RoutingTable $table, $route, $resource = false);
+  
   /**
    * Convert from a route string.
    * @param string $routeString Route string, e.g. 'prefix:ClassName'.

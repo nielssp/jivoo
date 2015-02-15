@@ -10,6 +10,7 @@ use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
+use Jivoo\Routing\RoutingTable;
 
 /**
  * Snippet based routing.
@@ -57,6 +58,18 @@ class SnippetDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
+  public function autoRoute(RoutingTable $table, $route, $resource = false) {
+    $class = $route['snippet'];
+    $dirs = explode('\\', $class);
+    $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), $dirs);
+    $pattern = 'ANY ' . implode('/', $dirs);
+    $table->match($pattern, $route);
+    return $pattern;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function toRoute($routeString) {
     $route = array(
       'snippet' => substr($routeString, 8),
@@ -88,7 +101,7 @@ class SnippetDispatcher implements IDispatcher {
   public function getPath($route, $path = null) {
     if (!isset($path))
       return null;
-    return $this->routing->insertParameters($route['parameters'], array($path));
+    return Routing::insertParameters($route['parameters'], $path);
   }
 
   /**

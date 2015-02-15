@@ -10,6 +10,7 @@ use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
+use Jivoo\Routing\RoutingTable;
 
 /**
  * Action based routing.
@@ -57,6 +58,72 @@ class ActionDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
+  public function autoRoute(RoutingTable $table, $route, $resource = false) {
+    $controller = $route['controller'];
+    $dirs = explode('\\', $controller);
+    $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), $dirs);
+    $patternBase = implode('/', $dirs);
+    if ($resource) {
+      $table->match($patternBase, $controller . '::index');
+      $table->match($patternBase . '/add', $controller . '::add'); //C
+      $table->match($patternBase . '/:0', $controller . '::view'); //R
+      $table->match($patternBase . '/:0/edit', $controller . '::edit'); //U
+      $table->match($patternBase . '/:0/delete', $controller . '::delete'); //D
+      
+      $table->match('DELETE ' . $patternBase . '/:0', $controller . '::delete');
+      $table->match('PATCH ' . $patternBase . '/:0', $controller . '::edit');
+      $table->match('PUT ' . $patternBase . '/:0', $controller . '::edit');
+      $table->match('POST ' . $patternBase, $controller . '::add');
+      return $patternBase . '/:0';
+    }
+    else {
+      if (isset($route['action'])) {
+        $class = $this->controllers->getClass($controller);
+        if (!$class) {
+          throw new \Exception(tr('Invalid controller: %1', $controller));
+        }
+        $route = array(
+          'controller' => $controller,
+          'action' => $action
+        );
+        $reflect = new \ReflectionMethod($class, $action);
+        $required = $reflect->getNumberOfRequiredParameters();
+        $total = $reflect->getNumberOfParameters();
+        if (!empty($prefix) AND substr($prefix, -1) != '/') {
+          $prefix .= '/';
+        }
+        if ($action == 'index') {
+          $table->match($patternBase, $route);
+        }
+        $patternBase .= '/' . Utilities::camelCaseToDashes($action);
+        if ($required < 1) {
+          $table->match($patternBase, $route);
+        }
+        $path = $patternBase;
+        for ($i = 0; $i < $total; $i++) {
+          $path .= '/*';
+          if ($i <= $required) {
+            $table->match($path, $route);
+          }
+        }
+        return $patternBase;
+      }
+      else {
+        $actions = $this->controllers->getActions($controller);
+        if ($actions === false) {
+          throw new \Exception(tr('Invalid controller: %1', $controller));
+        }
+        foreach ($actions as $action) {
+          $this->autoRoute($controller, $action, $prefix);
+        }
+        return $patternBase;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function toRoute($routeString) {
     $split = explode('::', substr($routeString, 7));
     $route = array(
@@ -94,7 +161,7 @@ class ActionDispatcher implements IDispatcher {
   public function getPath($route, $path = null) {
     if (!isset($path))
       return null;
-    return $this->routing->insertParameters($route['parameters'], array($path));
+    return Routing::insertParameters($route['parameters'], $path);
   }
 
   /**

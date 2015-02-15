@@ -39,6 +39,13 @@ class UrlDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
+  public function autoRoute(RoutingTable $table, $route, $resource = false) {
+    return null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function toRoute($routeString) {
     if (strncmp($routeString, 'url:', 4) === 0)
       return array('url' => substr($routeString, 4));

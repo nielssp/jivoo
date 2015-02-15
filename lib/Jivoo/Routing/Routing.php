@@ -251,13 +251,10 @@ class Routing extends LoadableModule {
   /**
    * Will replace **, :*, * and :n in path with parameters.
    * @param mixed[] $parameters Parameters list.
-   * @param mixed[] $additional Additional parameters, one is used. The first
-   * one is used as a path-array (string[]).
-   * @throws InvalidRouteException If unknown pattern.
-   * @return mixed[] Resulting path.
+   * @param string[] $path Path array.
+   * @return string[] Resulting path.
    */
-  public function insertParameters($parameters, $additional) {
-    $path = $additional[0];
+  public static function insertParameters($parameters, $path) {
     $result = array();
     foreach ($path as $part) {
       if ($part == '**' || $part == ':*') {
@@ -277,9 +274,7 @@ class Routing extends LoadableModule {
           unset($parameters[$offset]);
         }
         else {
-          throw new InvalidRouteException(tr(
-            'Unknown pattern "%1" in route configuration', $part
-          ));
+          $part = $parameters[$var];
         }
       }
       $result[] = $part;
@@ -450,67 +445,13 @@ class Routing extends LoadableModule {
   }
   
   /**
-   * Automatically create routes for a controller.
-   * @param string $controller Controller name, e.g. 'Posts'.
-   * @param string $action Optional action name.
-   * @param string $prefix Prefix...
+   * Automatically create routes.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param bool $resource Whether to use resource routing.
    */
-  public function autoRoute($controller, $action = null, $prefix = '') {
-    if (isset($action)) {
-      $class = $this->m->Controllers->getClass($controller);
-      if (!$class) {
-        throw new \Exception(tr('Invalid controller: %1', $controller));
-      }
-      $route = array(
-        'controller' => $controller,
-        'action' => $action
-      );
-      $reflect = new \ReflectionMethod($class, $action);
-      $required = $reflect->getNumberOfRequiredParameters();
-      $total = $reflect->getNumberOfParameters();
-      if (!empty($prefix) AND substr($prefix, -1) != '/') {
-        $prefix .= '/';
-      }
-      $controller = '';
-      $paction = '';
-      if ($class != 'AppController') {
-        $parent = get_parent_class($class);
-        while ($parent !== false AND $parent != 'Controller'
-          AND $parent != 'AppController') {
-          $name = str_replace($parent, '', $class);
-          $controller = '/' . $this->m->Controllers->getControllerPath($name) . $controller;
-          $class = $parent;
-          $parent = get_parent_class($class);
-        }
-        $name = str_replace('Controller', '', $class);
-        $controller = $prefix . $this->m->Controllers->getControllerPath($name) . $controller;
-        $paction = '/';
-      }
-      
-      $paction .= Utilities::camelCaseToDashes($action);
-      if ($action == 'index') {
-        $this->addRoute($controller, $route);
-      }
-      $path = $controller . $paction;
-      if ($required < 1) {
-        $this->addRoute($path, $route);
-      }
-      for ($i = 0; $i < $total; $i++) {
-        $path .= '/*';
-        if ($i <= $required) {
-          $this->addRoute($path, $route);
-        }
-      }
-    }
-    else {
-      $actions = $this->m->Controllers->getActions($controller);
-      if ($actions === false) {
-        throw new \Exception(tr('Invalid controller: %1', $controller));
-      }
-      foreach ($actions as $action) {
-        $this->autoRoute($controller, $action, $prefix);
-      }
-    }
+  public function autoRoute($route, $resource = false) {
+    $route = $this->validateRoute($route);
+    $route['dispatcher']->autoRoute($this->routes, $route, $resource);
   }
   
   /**
@@ -541,7 +482,7 @@ class Routing extends LoadableModule {
     $route = $this->validateRoute($route);
     $route['priority'] = $priority;
 
-    $pattern = explode(' ', $pattern);
+    $pattern = explode(' ', $pattern, 2);
     $method = 'ANY';
     if (count($pattern) > 1) {
       $method = strtoupper($pattern[0]);
