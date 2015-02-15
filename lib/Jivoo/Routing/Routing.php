@@ -378,7 +378,30 @@ class Routing extends LoadableModule {
   /**
    * Get a link for a route (absolute path).
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @throws InvalidRouteException If incomplete route.
+   * @throws InvalidRouteException If no path found.
+   * @return string[] A path array.
+   */
+  public function getPath($route = null) {
+    $route = $this->validateRoute($route);
+    $arity = '[' . count($route['parameters']) . ']';
+    $routeString = $route['dispatcher']->fromRoute($route);
+    $path = null;
+    if (isset($this->paths[$routeString . $arity])) {
+      $path = $this->paths[$routeString . $arity]['pattern'];
+    }
+    else if (isset($this->paths[$routeString . '[*]'])) {
+      $path = $this->paths[$routeString . '[*]']['pattern'];
+    }
+    $path = $route['dispatcher']->getPath($route, $path);
+    if (!isset($path))
+      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
+    return $path;
+  }
+  
+  /**
+   * Get a link for a route (absolute path).
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @throws InvalidRouteException If no path found.
    * @return string A link.
    */
   public function getLink($route = null) {
@@ -716,13 +739,12 @@ class Routing extends LoadableModule {
    * Make sure that the current path matches the controller and action. If not,
    * redirect to the right path.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @todo Reimplement
    */
   public function reroute($route = null) {
     $currentPath = $this->request->path;
-    $path = $this->getLink($route);
-    if ($currentPath != $actionPath AND is_array($actionPath)) {
-      $this->redirectPath($actionPath, $this->request->query);
+    $path = $this->getPath($route);
+    if ($currentPath != $path) {
+      $this->redirectPath($path, $this->request->query);
     }
   }
 }
