@@ -49,6 +49,7 @@ class RoutingTable {
    * @return self Self.
    */
   public function auto($route, $options = array()) {
+    $route = $this->routing->validateRoute($route);
     $pattern = $route['dispatcher']->autoRoute($this, $route, false);
     if (!isset($pattern))
       throw new InvalidRouteException(tr('Auto routing not possible for route.'));
@@ -99,6 +100,7 @@ class RoutingTable {
    * @return self Self.
    */
   public function resource($route) {
+    $route = $this->routing->validateRoute($route);
     $pattern = $route['dispatcher']->autoRoute($this, $route, true);
     if (!isset($pattern))
       throw new InvalidRouteException(tr('Auto routing not possible for route.'));
@@ -108,15 +110,22 @@ class RoutingTable {
   
   /**
    * Nest resources.
+   * @return self Self.
    */
   public function nest() {
-    array_unshif($this->nestStack, $this->pattern);
+    if (isset($this->nestStack[0]) and $this->nestStack[0] !== '') {
+      $this->pattern = $this->nestStack[0] . '/' . $this->pattern;
+    }
+    array_unshift($this->nestStack, $this->pattern);
+    return $this;
   }
   
   /**
    * End nesting of resources.
+   * @return self Self.
    */
   public function end() {
     array_shift($this->nestStack);
+    return $this;
   }
 }

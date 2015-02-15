@@ -64,16 +64,16 @@ class ActionDispatcher implements IDispatcher {
     $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), $dirs);
     $patternBase = implode('/', $dirs);
     if ($resource) {
-      $table->match($patternBase, $controller . '::index');
-      $table->match($patternBase . '/add', $controller . '::add'); //C
-      $table->match($patternBase . '/:0', $controller . '::view'); //R
-      $table->match($patternBase . '/:0/edit', $controller . '::edit'); //U
-      $table->match($patternBase . '/:0/delete', $controller . '::delete'); //D
+      $table->match($patternBase, 'action:' . $controller . '::index');
+      $table->match($patternBase . '/add', 'action:' . $controller . '::add'); //C
+      $table->match($patternBase . '/:0', 'action:' . $controller . '::view'); //R
+      $table->match($patternBase . '/:0/edit', 'action:' . $controller . '::edit'); //U
+      $table->match($patternBase . '/:0/delete', 'action:' . $controller . '::delete'); //D
       
-      $table->match('DELETE ' . $patternBase . '/:0', $controller . '::delete');
-      $table->match('PATCH ' . $patternBase . '/:0', $controller . '::edit');
-      $table->match('PUT ' . $patternBase . '/:0', $controller . '::edit');
-      $table->match('POST ' . $patternBase, $controller . '::add');
+      $table->match('DELETE ' . $patternBase . '/:0', 'action:' . $controller . '::delete');
+      $table->match('PATCH ' . $patternBase . '/:0', 'action:' . $controller . '::edit');
+      $table->match('PUT ' . $patternBase . '/:0', 'action:' . $controller . '::edit');
+      $table->match('POST ' . $patternBase, 'action:' . $controller . '::add');
       return $patternBase . '/:0';
     }
     else {
