@@ -165,12 +165,12 @@ class Assets extends LoadableModule {
       }
       else {
         if (!$this->sorted) {
-          uasort($this->assetDirs, array('Utilities', 'prioritySorter'));
+          uasort($this->assetDirs, array('Jivoo\Core\Utilities', 'prioritySorter'));
           $this->sorted = true;
         }
         $path = $key;
         $key = null;
-        foreach ($this->assetDirs as $dir) {
+          foreach ($this->assetDirs as $dir) {
           if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
             $key = $dir['key'];
             $path = $dir['path'] . '/' . $path;

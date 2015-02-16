@@ -1,5 +1,5 @@
 <?php
-$this->extend('generator/layout.html');
+$this->extend('jivoo/generators/generator/layout.html');
 ?>
 <p><?php echo tr('Welcome to the Jivoo web application framework.')?></p>
 
@@ -11,5 +11,5 @@ $this->extend('generator/layout.html');
 <p><?php echo tr('Do you want Jivoo to generate a new application?')?></p>
 
 <p>
-<?php echo $Html->link(tr('Continue'), 'configure', array('class' => 'button')); ?>
+<?php echo $Html->link(tr('Continue'), 'action:configure', array('class' => 'button')); ?>
 </p>

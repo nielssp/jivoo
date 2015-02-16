@@ -178,8 +178,11 @@ class Controller extends Module {
    * @param string $action If set, the name of the single action to auto route.
    * @param string $prefix A prefix to use for all resulting paths.
    */
-  public function autoRoute($action = null, $prefix = '') {
-    $this->m->Routing->autoRoute($this->name, $action, $prefix);
+  public function autoRoute($action = null) {
+    $this->m->Routing->autoRoute(array(
+      'controller' => $this->name,
+      'action' => $action
+    ));
   }
 
   /**

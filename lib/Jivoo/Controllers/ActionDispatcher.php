@@ -11,6 +11,7 @@ use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
+use Jivoo\Core\Utilities;
 
 /**
  * Action based routing.
@@ -78,6 +79,7 @@ class ActionDispatcher implements IDispatcher {
     }
     else {
       if (isset($route['action'])) {
+        $action = $route['action'];
         $class = $this->controllers->getClass($controller);
         if (!$class) {
           throw new \Exception(tr('Invalid controller: %1', $controller));
@@ -127,12 +129,21 @@ class ActionDispatcher implements IDispatcher {
   public function toRoute($routeString) {
     $split = explode('::', substr($routeString, 7));
     $route = array(
-      'controller' => $split[0],
       'action' => 'index',
       'parameters' => array()
     );
-    if (isset($split[1]))
+    if (isset($split[1])) {
+      $route['controller'] = $split[0];
       $route['action'] = $split[1];
+    }
+    else if (ucfirst($split[0]) === $split[0]) {
+      $route['controller'] = $split[0];
+    }
+    else {
+      if (isset($this->routing->route['controller']))
+        $route['controller'] = $this->routing->route['controller'];
+      $route['action'] = $split[0];
+    }
     return $route;
   }
 

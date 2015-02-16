@@ -6,6 +6,7 @@
 namespace Jivoo\Generators;
 
 use Jivoo\Controllers\Controller;
+use Jivoo\Models\Form;
 
 /**
  * Controller for generators
@@ -32,14 +33,14 @@ class GeneratorController extends Controller {
   }
   
   private function getModules() {
-    $files = scandir(Jivoo\PATH . '/Jivoo');
+    $files = scandir(\Jivoo\PATH . '/Jivoo');
     $modules = array();
     if ($files !== false) {
       foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
-        $module = 'Jivoo/' . $file;
-        if (is_dir(Jivoo\PATH . '/' . $module)) {
+        $module = 'Jivoo\\' . $file;
+        if (file_exists(\Jivoo\PATH . '/Jivoo/' . $file . '/' . $file . '.php')) {
           $modules[] = $module;
         }
       }

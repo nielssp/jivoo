@@ -502,6 +502,8 @@ class App implements IEventSubject {
     }
     
     Lib::import($this->p('app', 'lib'), $this->namespace);
+    
+    $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
 
     $this->config = new AppConfig($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
@@ -563,7 +565,7 @@ class App implements IEventSubject {
         $segments = explode('\\', $module);
         $name = $segments[count($segments) - 1];
       }
-      $this->paths->$name = \Jivoo\PATH . '/' . str_replace('\\', '/', $module);
+      $this->paths->$module = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $module));
       $this->imports[$name] = $module;
       $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
     }

@@ -6,6 +6,7 @@
 namespace Jivoo\View;
 
 use Jivoo\Assets\Assets;
+use Jivoo\Core\Utilities;
 
 /**
  * Collection of scripts and stylesheets to be included into the template.

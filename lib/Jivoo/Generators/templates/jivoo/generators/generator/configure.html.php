@@ -1,5 +1,5 @@
 <?php
-$this->extend('generator/layout.html');
+$this->extend('jivoo/generators/generator/layout.html');
 ?>
 
 <?php echo $Form->formFor($configForm); ?>

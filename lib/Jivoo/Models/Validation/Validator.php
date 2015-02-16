@@ -6,6 +6,7 @@
 namespace Jivoo\Models\Validation;
 
 use Jivoo\Models\IBasicModel;
+use Jivoo\Models\IRecord;
 
 /**
  * A record validator.
