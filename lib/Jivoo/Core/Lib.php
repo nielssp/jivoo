@@ -64,6 +64,8 @@ class Lib {
    */
   public static function assumeSubclassOf($class, $parent) {
     if (!is_subclass_of($class, $parent)) {
+      if (is_object($class))
+        $class = get_class($class);
       throw new ClassInvalidException(tr(
         'Class "%1" should extend "%2"', $class, $parent
       ));

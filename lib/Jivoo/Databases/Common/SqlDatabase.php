@@ -8,6 +8,7 @@ namespace Jivoo\Databases\Common;
 use Jivoo\Databases\LoadableDatabase;
 use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Core\Utilities;
+use Jivoo\Models\DataType;
 
 /**
  * A generic SQL database.

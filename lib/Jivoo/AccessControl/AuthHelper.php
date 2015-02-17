@@ -6,6 +6,8 @@
 namespace Jivoo\AccessControl;
 
 use Jivoo\Helpers\Helper;
+use Jivoo\AccessControl\Acl\DefaultAcl;
+use Jivoo\Core\Lib;
 
 /**
  * Helper class for authentication and autorization.

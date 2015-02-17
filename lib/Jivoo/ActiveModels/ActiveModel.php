@@ -8,6 +8,15 @@ namespace Jivoo\ActiveModels;
 use Jivoo\Core\IEventListener;
 use Jivoo\Core\Event;
 use Jivoo\Models\Model;
+use Jivoo\Core\App;
+use Jivoo\Databases\Databases;
+use Jivoo\Core\Lib;
+use Jivoo\Models\InvalidPrimaryKeyException;
+use Jivoo\Core\ClassNotFoundException;
+use Jivoo\Models\ModelNotFoundException;
+use Jivoo\Models\Selection\UpdateSelection;
+use Jivoo\Models\Selection\DeleteSelection;
+use Jivoo\Models\Selection\ReadSelection;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.

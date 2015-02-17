@@ -6,6 +6,10 @@
 namespace Jivoo\Migrations;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Databases\Schema;
+use Jivoo\Models\DataType;
+use Jivoo\Core\Lib;
+use Jivoo\Core\Logger;
 
 /**
  * Schema and data migration module.
@@ -93,7 +97,7 @@ class Migrations extends LoadableModule {
     $migrationDir = $this->migrationDirs[$name];
     $migrations = array();
     if (is_dir($migrationDir)) {
-      Lib::addIncludePath($migrationDir);
+      Lib::import($migrationDir);
       $files = scandir($migrationDir);
       if ($files !== false) {
         foreach ($files as $file) {
@@ -113,7 +117,7 @@ class Migrations extends LoadableModule {
    */
   public function check($name) {
     $db = $this->m->Databases->$name->getConnection();
-    Lib::assumeSubclassOf($db, 'IMigratableDatabase');
+    Lib::assumeSubclassOf($db, 'Jivoo\Databases\IMigratableDatabase');
     if (!isset($db->SchemaRevision)) {
       // Create SchemaRevision table if it doesn't exist
       Logger::debug('Creating SchemaRevision table');
@@ -137,7 +141,7 @@ class Migrations extends LoadableModule {
             $refresh = false; 
           }
           Logger::debug('Initializing migration ' . $migration);
-          Lib::assumeSubclassOf($migration, 'Migration');
+          Lib::assumeSubclassOf($migration, 'Jivoo\Migrations\Migration');
           $object = new $migration($db, $migrationSchema);
           $key = $migration . $name;
           $this->migrations[$key] = array($db, $object);

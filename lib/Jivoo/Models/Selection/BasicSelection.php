@@ -6,6 +6,7 @@
 namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\Model;
+use Jivoo\Models\Condition\Condition;
 
 /**
  * A basic selection. Base class for other selections.

@@ -44,11 +44,11 @@ class Helpers extends LoadableModule {
   public function addHelper($class, $name = null) {
     if (!isset($name)) {
       $name = $class;
-      if (preg_match('/(?:[^\\\\]\\\\)*([^\\\\])+?(?:Helper)?/', $class, $matches) === 1) {
+      if (preg_match('/([^\\\\]+?)(?:Helper)?$/', $class, $matches) === 1) {
         $name = $matches[1];
       }
     }
-    $this->helperClasses[$name] = $name;
+    $this->helperClasses[$name] = $class;
   }
   
   /**
