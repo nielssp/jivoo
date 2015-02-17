@@ -7,6 +7,7 @@ namespace Jivoo\Databases;
 
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
+use Jivoo\Models\DataType;
 
 /**
  * A database driver that can be loaded by the {@see Databases} module.

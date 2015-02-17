@@ -6,6 +6,9 @@
 namespace Jivoo\Models;
 
 use Jivoo\Core\Module;
+use Jivoo\Models\Selection\UpdateSelection;
+use Jivoo\Models\Selection\DeleteSelection;
+use Jivoo\Models\Selection\ReadSelection;
 
 /**
  * A base class for models.

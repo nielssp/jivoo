@@ -6,6 +6,7 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Models\ISchema;
+use Jivoo\Models\DataType;
 
 /**
  * Represents a database table schema.

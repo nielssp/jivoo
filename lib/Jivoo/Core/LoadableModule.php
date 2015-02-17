@@ -28,7 +28,8 @@ abstract class LoadableModule extends Module {
    */
   public final function __construct(App $app) {
     parent::__construct($app);
-    $this->config = $this->config[get_class($this)];
+    $name = preg_replace('/.*?\\\\/', '', get_class($this));
+    $this->config = $this->config[$name];
     $this->init();
   }
 

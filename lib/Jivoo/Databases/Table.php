@@ -6,6 +6,8 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Models\Model;
+use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\ISchema;
 
 /**
  * A database table.

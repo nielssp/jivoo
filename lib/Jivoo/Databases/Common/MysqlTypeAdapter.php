@@ -6,6 +6,9 @@
 namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\IMigrationTypeAdapter;
+use Jivoo\Models\DataType;
+use Jivoo\Databases\Schema;
+use Jivoo\Core\Utilities;
 
 /**
  * Type adapter for MySQL database drivers.

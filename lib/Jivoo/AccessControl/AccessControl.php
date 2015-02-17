@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\AccessControl;
 
+use Jivoo\Core\LoadableModule;
+
 /**
  * Access control module for authentication and authorization.
  */
@@ -41,6 +43,8 @@ class AccessControl extends LoadableModule {
       catch (UnsupportedHashTypeException $e) { }
     }
     $this->hashers['Default'] = $this->hashers[$this->config['defaultHasher']];
+    
+    $this->m->Helpers->addHelper('Jivoo\AccessControl\AuthHelper');
   }
   
   /**

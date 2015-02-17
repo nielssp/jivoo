@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
+use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Core\Logger;
+
 /**
  * A generic PDO SQL database.
  */

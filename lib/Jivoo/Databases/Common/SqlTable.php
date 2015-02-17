@@ -7,6 +7,11 @@ namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\Table;
 use Jivoo\Core\App;
+use Jivoo\Models\ISchema;
+use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\Selection\UpdateSelection;
+use Jivoo\Models\Selection\DeleteSelection;
 
 /**
  * A table in an SQL database.

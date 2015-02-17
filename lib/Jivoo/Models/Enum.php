@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models;
 
+use Jivoo\Core\Lib;
+
 /**
  * Used for creating enum types.
  * 
@@ -40,8 +42,8 @@ abstract class Enum {
     if (!isset($class))
       $class = get_called_class();
     if (!isset(self::$values[$class])) {
-      Lib::assumeSubclassOf($class, 'Enum');
-      $ref = new ReflectionClass($class);
+      Lib::assumeSubclassOf($class, 'Jivoo\Models\Enum');
+      $ref = new \ReflectionClass($class);
       self::$values[$class] = array_flip($ref->getConstants());
       if (count(self::$values[$class]) < 1)
         throw new InvalidEnumException(tr('Enum type "%1" must contain at least one constant', $class));

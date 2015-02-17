@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Selection;
 
+use Jivoo\Models\IModel;
+
 /**
  * An undecided selection. Will transform into a more specific selection based
  * on use.

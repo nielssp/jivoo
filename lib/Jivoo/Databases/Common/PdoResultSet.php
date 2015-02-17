@@ -53,8 +53,7 @@ class PdoResultSet implements IResultSet {
     if (!empty($this->rows)) {
       return $this->rowFromAssoc(array_shift($this->rows));
     }
-    return $this->pdoStatement
-      ->fetch(PDO::FETCH_NUM);
+    return $this->pdoStatement->fetch(\PDO::FETCH_NUM);
   }
 
   /**
@@ -64,7 +63,6 @@ class PdoResultSet implements IResultSet {
     if (!empty($this->rows)) {
       return array_shift($this->rows);
     }
-    return $this->pdoStatement
-      ->fetch(PDO::FETCH_ASSOC);
+    return $this->pdoStatement->fetch(\PDO::FETCH_ASSOC);
   }
 }

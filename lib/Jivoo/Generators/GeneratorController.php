@@ -39,9 +39,8 @@ class GeneratorController extends Controller {
       foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
-        $module = 'Jivoo\\' . $file;
         if (file_exists(\Jivoo\PATH . '/Jivoo/' . $file . '/' . $file . '.php')) {
-          $modules[] = $module;
+          $modules[] = $file;
         }
       }
     }

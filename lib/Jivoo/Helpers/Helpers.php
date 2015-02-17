@@ -23,12 +23,32 @@ class Helpers extends LoadableModule {
    * @var Helper[] Associative array of loaded helpers
    */
   private $helpers = array();
+  
+  /**
+   * @var string[] Mapping of helper names and classes.
+   */
+  private $helperClasses = array();
 
   /**
    * {@inheritdoc}
    */
   protected function init() {
-//     Lib::addIncludePath($this->p('app', 'helpers'));
+    Lib::import($this->p('app', 'helpers'), $this->app->n('Helpers'));
+  }
+  
+  /**
+   * Add helper class.
+   * @param string $class Class name.
+   * @param string $name Helper name. Is derived from class name if null.
+   */
+  public function addHelper($class, $name = null) {
+    if (!isset($name)) {
+      $name = $class;
+      if (preg_match('/(?:[^\\\\]\\\\)*([^\\\\])+?(?:Helper)?/', $class, $matches) === 1) {
+        $name = $matches[1];
+      }
+    }
+    $this->helperClasses[$name] = $name;
   }
   
   /**
@@ -38,7 +58,13 @@ class Helpers extends LoadableModule {
    */
   public function getHelper($name) {
     if (!isset($this->helpers[$name])) {
-      $class = 'Jivoo\Helpers\\' . $name . 'Helper';
+      $class = $this->app->n('Helpers\\' . $name . 'Helper');
+      if (!Lib::classExists($class)) {
+        if (isset($this->helperClasses[$name]))
+          $class = $this->helperClasses[$name];
+        else
+          $class = 'Jivoo\Helpers\\' . $name . 'Helper';
+      }
       $this->triggerEvent('beforeLoadHelper', new LoadHelperEvent($this, $name));
       Lib::assumeSubclassOf($class, 'Jivoo\Helpers\Helper');
       $this->helpers[$name] = new $class($this->app);

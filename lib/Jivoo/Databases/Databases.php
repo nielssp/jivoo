@@ -6,6 +6,7 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Lib;
 
 /**
  * Database module.
@@ -52,14 +53,14 @@ class Databases extends LoadableModule {
   public function attachDatabase($name, $schemasDir = null) {
     $schemas = array();
     if (isset($schemasDir) and is_dir($schemasDir)) {
-      Lib::addIncludePath($schemasDir);
+      Lib::import($schemasDir, $this->app->n('Schemas'));
       $files = scandir($schemasDir);
       if ($files !== false) {
         foreach ($files as $file) {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
-            $class = $split[0];
-            Lib::assumeSubclassOf($class, 'Schema');
+            $class = $this->app->n('Schemas\\' . $split[0]);
+            Lib::assumeSubclassOf($class, 'Jivoo\Databases\Schema');
             $schemas[] = new $class();
           }
         }
@@ -129,10 +130,9 @@ class Databases extends LoadableModule {
         );
       }
     }
-    Lib::import('Jivoo/Databases/Drivers/' . $driver);
     try {
-      $class = $driver . 'Database';
-      Lib::assumeSubclassOf($class, 'LoadableDatabase');
+      $class = 'Jivoo\Databases\Drivers\\' . $driver  . '\\' . $driver . 'Database';
+      Lib::assumeSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
       $dbSchema = new DatabaseSchema();
       foreach ($schemas as $schema) {
         if (is_string($schema)) {

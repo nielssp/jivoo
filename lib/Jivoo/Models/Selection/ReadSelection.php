@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Selection;
 
+use Jivoo\Models\IModel;
+
 /**
  * A read selection.
  * @property-read int $offset Offset.
