@@ -15,6 +15,7 @@ namespace Jivoo\Core;
  * @property-read string $minPhpVersion Minimum PHP version.
  * @property-read string $environment Environment name.
  * @property-read AppConfig $config User configuration.
+ * @property-read bool $noAppConfig True if application configuration file missing.
  * @property-read array $appConfig Application configuration.
  * @property-read string $sessionPrefix Application session prefix.
  * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
@@ -25,6 +26,11 @@ class App implements IEventSubject {
    * @var array Application configuration.
    */
   private $appConfig = array();
+  
+  /**
+   * @var bool True if app config missing.
+   */
+  private $noAppConfig = false;
 
   /**
    * @var AppConfig User configuration.
@@ -169,6 +175,7 @@ class App implements IEventSubject {
     }
     else {
       Logger::error('Invalid application. "app.json" not found. Configuring default application.');
+      $this->noAppConfig = true;
     }
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
@@ -232,6 +239,7 @@ class App implements IEventSubject {
       case 'environment':
       case 'config':
       case 'appConfig':
+      case 'noAppConfig':
       case 'sessionPrefix':
       case 'basePath':
       case 'entryScript':

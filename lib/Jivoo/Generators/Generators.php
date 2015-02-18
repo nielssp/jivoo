@@ -26,8 +26,7 @@ class Generators extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
-    $config = $this->app->appConfig;
-    if (empty($config)) {
+    if ($this->app->noAppConfig) {
       $controller = $this->m->Controllers->getController('Jivoo\Generators\Generator');
       $controller->autoRoute('index');
       $controller->autoRoute('configure');
