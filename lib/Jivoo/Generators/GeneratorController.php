@@ -52,7 +52,7 @@ class GeneratorController extends Controller {
    * @return ViewResponse Response.
    */
   public function configure() {
-    $this->title = tr('Configure applciation');
+    $this->title = tr('Configure application');
     $this->configForm = new Form('App');
     $this->configForm->addString('name', tr('Application name'));
     $this->configForm->addString('version', tr('Version'));
