@@ -208,32 +208,6 @@ class Localization {
   }
 
   /**
-   * @var mixed[] List currently being inserted into a string by
-   * {@see replaceList}.
-   */
-  private $list = array();
-  
-  /**
-   * For use with {@see preg_replace_callback}.
-   * @param array $matches Regular expression matches.
-   * @return string Replacement.
-   */
-  public function replaceList($matches) {
-    $length = count($this->list);
-    $list = '';
-    for ($i = 0; $i < $length; $i++) {
-      $list .= $this->list[$i];
-      if ($i != ($length - 1)) {
-        if ($i == ($length - 2))
-          $list .= $matches[2];
-        else
-          $list .= $matches[1];
-      }
-    }
-    return $list;
-  }
-
-  /**
    * Replace placeholders in a translation string.
    * @param string $message Translation string.
    * @param mixed[] $values Replacement values.
@@ -244,10 +218,22 @@ class Localization {
     $i = 1;
     foreach ($values as $value) {
       if (is_array($value)) {
-        $this->list = $value;
         $message = preg_replace_callback(
           '/%' . $i . '\{(.*?)\}\{(.*?)\}/',
-          array($this, 'replaceList'),
+          function($matches) use($value) {
+            $length = count($value);
+            $list = '';
+            for ($i = 0; $i < $length; $i++) {
+              $list .= $value[$i];
+              if ($i != ($length - 1)) {
+                if ($i == ($length - 2))
+                  $list .= $matches[2];
+                else
+                  $list .= $matches[1];
+              }
+            }
+            return $list;
+          },
           $message
         );
       }
