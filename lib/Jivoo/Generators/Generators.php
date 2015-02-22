@@ -14,7 +14,7 @@ class Generators extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Controllers', 'Routing', 'View', 'Assets');
+  protected $modules = array('Snippets', 'Routing', 'View', 'Assets');
 
   /**
    * {@inheritdoc}
@@ -27,10 +27,9 @@ class Generators extends LoadableModule {
    */
   public function afterLoad() {
     if ($this->app->noAppConfig) {
-      $controller = $this->m->Controllers->getController('Jivoo\Generators\Generator');
-      $controller->autoRoute('index');
-      $controller->autoRoute('configure');
-      $this->m->Routing->setRoot('action:Jivoo\Generators\Generator::index');
+      $this->m->Routing->routes->root('snippet:Jivoo\Generators\Index');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Generators\Index');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Generators\Configure');
       $this->view->addTemplateDir($this->p('templates'));
     }
   }

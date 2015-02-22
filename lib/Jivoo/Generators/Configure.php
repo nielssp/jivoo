@@ -5,33 +5,16 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Generators;
 
-use Jivoo\Controllers\Controller;
-use Jivoo\Models\Form;
+use Jivoo\Snippets\Snippet;
 
 /**
- * Controller for generators
+ * Configure application.
  */
-class GeneratorController extends Controller {
+class Configure extends Snippet {
   /**
-   * {@inheritdoc}
+   * Get list of Jivoo modules.
+   * @return string Module names.
    */
-  protected $modules = array('Generators');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $helpers = array('Html', 'Form');
-  
-  /**
-   * Application generation frontpage.
-   * @return ViewResponse Response.
-   */
-  public function index() {
-    $this->title = tr('Generate application');
-    $this->appDir = $this->p('app');
-    return $this->render();
-  }
-  
   private function getModules() {
     $files = scandir(\Jivoo\PATH . '/Jivoo');
     $modules = array();
@@ -46,7 +29,7 @@ class GeneratorController extends Controller {
     }
     return $modules;
   }
-
+  
   /**
    * App config generation.
    * @return ViewResponse Response.
@@ -58,7 +41,7 @@ class GeneratorController extends Controller {
     $this->configForm->addString('version', tr('Version'));
     $this->availableModules = $this->getModules();
     if ($this->request->hasValidData('App')) {
-      
+  
     }
     else {
       $this->configForm->name = $this->app->name;

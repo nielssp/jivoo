@@ -81,7 +81,7 @@ class App implements IEventSubject {
    * @var string[] List of modules to load.
    */
   private $modules = array(
-    'Controllers', 'Routing', 'Assets',
+    'Snippets', 'Routing', 'Assets',
     'View', 'Models', 'Helpers', 'Generators'
   );
   
