@@ -34,7 +34,7 @@ class Configure extends Snippet {
    * App config generation.
    * @return ViewResponse Response.
    */
-  public function configure() {
+  public function get() {
     $this->title = tr('Configure application');
     $this->configForm = new Form('App');
     $this->configForm->addString('name', tr('Application name'));
