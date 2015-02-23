@@ -100,6 +100,12 @@ class Snippet extends Module implements ISnippet {
    * Called before invoking. 
    */
   public function before() { }
+  
+  /**
+   * Called after invoking.
+   * @param Response|string $response Respone object.
+   */
+  public function after($response) { }
 
   /**
    * Respond to a GET request.
@@ -157,22 +163,22 @@ class Snippet extends Module implements ISnippet {
     }
     $this->before();
     if ($this->request->isGet())
-      return $this->get();
+      return $this->after($this->get());
     $name = preg_replace('/^([^\\\\]+\\\\)*/', '', get_class($this));
     if (!$this->request->hasValidData($name))
-      return $this->get();
+      return $this->after($this->get());
     $data = $this->request->data[$name];
     switch ($this->request->method) {
       case 'POST':
-        return $this->post($data);
+        return $this->after($this->post($data));
       case 'PUT':
-        return $this->put($data);
+        return $this->after($this->put($data));
       case 'PATCH':
-        return $this->patch($data);
+        return $this->after($this->patch($data));
       case 'DELETE':
-        return $this->delete();
+        return $this->after($this->delete());
     }
-    return $this->invalid();
+    return $this->after($this->invalid());
   }
 
   /**

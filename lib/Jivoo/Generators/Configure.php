@@ -48,6 +48,7 @@ class Configure extends Snippet {
    * {@inheritdoc}
    */
   public function post($data) {
+    $this->configForm->addData($data);
     return $this->render();
   }
 
