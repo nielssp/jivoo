@@ -95,6 +95,11 @@ class Snippet extends Module implements ISnippet {
       return true;
     return isset($this->parameterValues[$name]);
   }
+  
+  /**
+   * Called before invoking. 
+   */
+  public function before() { }
 
   /**
    * Respond to a GET request.
@@ -150,9 +155,10 @@ class Snippet extends Module implements ISnippet {
       else
         $this->parameterValues[$name] = null;
     }
+    $this->before();
     if ($this->request->isGet())
       return $this->get();
-    $name = get_class($this);
+    $name = preg_replace('/^([^\\\\]+\\\\)*/', '', get_class($this));
     if (!$this->request->hasValidData($name))
       return $this->get();
     $data = $this->request->data[$name];

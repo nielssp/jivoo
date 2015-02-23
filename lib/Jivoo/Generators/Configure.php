@@ -6,11 +6,51 @@
 namespace Jivoo\Generators;
 
 use Jivoo\Snippets\Snippet;
+use Jivoo\Models\Form;
 
 /**
  * Configure application.
  */
 class Configure extends Snippet {
+  /**
+   * @var Form Configuration form.
+   */
+  private $configForm;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $helpers = array('Form');
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function before() {
+    parent::before();
+    $this->configForm = new Form('Configure');
+    $this->configForm->addString('name', tr('Application name'));
+    $this->configForm->addString('version', tr('Version'));
+
+    $this->view->data->availableModules = $this->getModules();
+    $this->view->data->configForm = $this->configForm;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function get() {
+    $this->configForm->name = $this->app->name;
+    $this->configForm->version = $this->app->version;
+    return $this->render();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function post($data) {
+    return $this->render();
+  }
+
   /**
    * Get list of Jivoo modules.
    * @return string Module names.
@@ -28,25 +68,5 @@ class Configure extends Snippet {
       }
     }
     return $modules;
-  }
-  
-  /**
-   * App config generation.
-   * @return ViewResponse Response.
-   */
-  public function get() {
-    $this->title = tr('Configure application');
-    $this->configForm = new Form('App');
-    $this->configForm->addString('name', tr('Application name'));
-    $this->configForm->addString('version', tr('Version'));
-    $this->availableModules = $this->getModules();
-    if ($this->request->hasValidData('App')) {
-  
-    }
-    else {
-      $this->configForm->name = $this->app->name;
-      $this->configForm->version = $this->app->version;
-    }
-    return $this->render();
   }
 }
