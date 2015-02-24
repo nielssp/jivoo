@@ -105,7 +105,9 @@ class Snippet extends Module implements ISnippet {
    * Called after invoking.
    * @param Response|string $response Respone object.
    */
-  public function after($response) { }
+  public function after($response) {
+    return $response;
+  }
 
   /**
    * Respond to a GET request.
