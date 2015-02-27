@@ -59,12 +59,14 @@ class Snippet extends Module implements ISnippet {
     $this->inheritElements('models');
     parent::__construct($app);
     if (isset($this->m->Helpers)) {
-      $helperObjects = $this->m->Helpers->getHelpers($this->helpers);
-      foreach ($helperObjects as $name => $helper) {
+      $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);
+      foreach ($this->helperObjects as $name => $helper) {
         $this->view->data->$name = $helper;
       }
     }
-    
+    if (isset($this->m->Models)) {
+      $this->modelObjects = $this->m->Models->getModels($this->models);
+    }
     $this->init();
   }
   
@@ -81,6 +83,9 @@ class Snippet extends Module implements ISnippet {
   public function __get($name) {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
+    }
+    if (isset($this->helperObjects[$name])) {
+      return $this->helperObjects[$name];
     }
     if (array_key_exists($name, $this->parameterValues))
       return $this->parameterValues[$name];
