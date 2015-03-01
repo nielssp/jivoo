@@ -33,6 +33,7 @@ class Configure extends Snippet {
 
     $this->view->data->availableModules = $this->getModules();
     $this->view->data->configForm = $this->configForm;
+    $this->view->data->title = tr('Configure application');
   }
 
   /**
