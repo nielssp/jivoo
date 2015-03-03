@@ -44,6 +44,10 @@ class Configure extends Snippet {
   public function get() {
     $this->configForm->name = $this->app->name;
     $this->configForm->version = $this->app->version;
+    $this->configForm->modules = array(
+      'Controllers', 'Snippets', 'Databases', 'Migrations', 'ActiveModels',
+      'Console', 'Generators'
+    );
     return $this->render();
   }
 
