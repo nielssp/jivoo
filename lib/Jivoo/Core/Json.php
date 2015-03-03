@@ -24,19 +24,44 @@ class Json {
     return json_encode($object);
   }
   
+  private static function printJson($object, $prefix = '') {
+    if (is_array($object)) {
+      if (empty($object))
+        return '[]';
+      if (array_diff_key($object, array_keys(array_keys($object)))) {
+        $pairs = array();
+        foreach ($object as $key => $value) {
+          $pairs[] = $prefix . '  ' . self::encode($key)
+            . ': ' . self::printJson($value, $prefix . '  ');
+        }
+        return '{' . PHP_EOL . implode(',' . PHP_EOL, $pairs) . PHP_EOL . $prefix . '}';
+      }
+      else {
+        $elements = array();
+        foreach ($object as $value) {
+          $elements[] = $prefix . '  ' . self::printJson($value, $prefix . '  ');
+        }
+        return '[' . PHP_EOL . implode(',' . PHP_EOL, $elements) . PHP_EOL . $prefix . ']';
+      }
+    }
+    else {
+      return self::encode($object);
+    }
+  }
+  
   /**
    * Pretty print a value as JSON.
    * @param mixed $object Any object.
-   * @throws \Exception If pretty printing not available.
    * @return string JSON.
    */
   public static function prettyPrint($object) {
-    if (!isset(self::$hasPrettyPrinting))
-      self::$hasPrettyPrinting = version_compare(PHP_VERSION, '5.4', '>=');
-    if (self::$hasPrettyPrinting)
-      return json_encode($object, JSON_PRETTY_PRINT);
-    else
-      throw new \Exception('not implemented');
+    return self::printJson($object);
+//     if (!isset(self::$hasPrettyPrinting))
+//       self::$hasPrettyPrinting = version_compare(PHP_VERSION, '5.4', '>=');
+//     if (self::$hasPrettyPrinting)
+//       return json_encode($object, JSON_PRETTY_PRINT);
+//     else
+//       return self::printJson($object);
   }
   
   /**

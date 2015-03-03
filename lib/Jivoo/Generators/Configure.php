@@ -8,6 +8,7 @@ namespace Jivoo\Generators;
 use Jivoo\Snippets\Snippet;
 use Jivoo\Models\Form;
 use Jivoo\Models\DataType;
+use Jivoo\Core\Json;
 
 /**
  * Configure application.
@@ -56,6 +57,12 @@ class Configure extends Snippet {
    */
   public function post($data) {
     $this->configForm->addData($data);
+    $appConfig = array(
+      'name' => $this->configForm->name,
+      'version' => $this->configForm->version,
+      'modules' => array_values($this->configForm->modules)
+    );
+    Json::prettyPrint($appConfig);
     return $this->render();
   }
 
