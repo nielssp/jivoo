@@ -113,6 +113,7 @@ class SnippetDispatcher implements IDispatcher {
     $snippet = $this->snippets->getSnippet($route['snippet']);
     if (!isset($snippet))
       throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
+    $snippet->enableLayout();
     $response = $snippet($route['parameters']);
     if (is_string($response))
       $response = new TextResponse($snippet->getStatus(), 'text', $response);

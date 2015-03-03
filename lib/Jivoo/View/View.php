@@ -170,6 +170,7 @@ class View extends LoadableModule {
    * @return string|null Absolute path to template or null if not found.
    */
   public function findTemplate($template) {
+    // TODO: Is this used? For absolute paths?
     if (file_exists($template))
       return $template;
     foreach ($this->templateDirs as $dir => $priority) {
@@ -191,12 +192,15 @@ class View extends LoadableModule {
    */
   public function findLayout($template) {
     $extension = Utilities::getFileExtension($template);
-    $dir = dirname($template);
+    $dir = $template;
     do {
-      $template = $this->findTemplate($dir . '/layout.' . $extension);
+      $dir = dirname($dir);
+      if ($dir === '.')
+        $template = $this->findTemplate('layout.' . $extension);
+      else
+        $template = $this->findTemplate($dir . '/layout.' . $extension);
       if (isset($template))
         return $template;
-      $dir = dirname($dir);
     } while ($dir != '.');
     return false;
   }

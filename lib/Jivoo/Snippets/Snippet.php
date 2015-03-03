@@ -51,6 +51,11 @@ class Snippet extends Module implements ISnippet {
   private $status = 200;
   
   /**
+   * @var bool Whether or not to render the layout.
+   */
+  private $enableLayout = false;
+  
+  /**
    * Construct snippet.
    */
   public final function __construct(App $app) {
@@ -222,6 +227,22 @@ class Snippet extends Module implements ISnippet {
   }
   
   /**
+   * Enable layout for snippet. Will be disabled automatically after next call
+   * to {@see render()}.
+   * @param string $enable Enable layout.
+   */
+  public function enableLayout($enable = true) {
+    $this->enableLayout = $enable;
+  }
+  
+  /**
+   * Disable layout for snippet.
+   */
+  public function disableLayout() {
+    $this->enableLayout = false;
+  }
+  
+  /**
    * Call when request is invalid.
    * @return Response|string A response object or content.
    */
@@ -244,6 +265,8 @@ class Snippet extends Module implements ISnippet {
       $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), explode('\\', $class));
       $templateName = implode('/', $dirs) . '.html';
     }
-    return $this->view->render($templateName);
+    $enableLayout = $this->enableLayout;
+    $this->disableLayout();
+    return $this->view->render($templateName, array(), $enableLayout);
   }
 }

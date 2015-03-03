@@ -1,7 +1,3 @@
-<?php
-$this->extend('layout.html');
-?>
-
 <h1>Hello, World!</h1>
 
 <p>This is a very simple example of a Jivoo application. Pages can be added to
