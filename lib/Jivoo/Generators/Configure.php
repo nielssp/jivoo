@@ -60,9 +60,17 @@ class Configure extends Snippet {
     $appConfig = array(
       'name' => $this->configForm->name,
       'version' => $this->configForm->version,
-      'modules' => array_values($this->configForm->modules)
+      'modules' => array_merge(
+        array('Assets', 'Helpers', 'Models', 'Routing', 'View'),
+        array_values($this->configForm->modules)
+      )
     );
-    Json::prettyPrint($appConfig);
+    mkdir($this->p('app', ''));
+    $file = fopen($this->p('app', 'app.json'), 'w');
+    if ($file) {
+      fwrite($file, Json::prettyPrint($appConfig));
+      fclose($file);
+    }
     return $this->render();
   }
 
