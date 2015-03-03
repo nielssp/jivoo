@@ -9,6 +9,7 @@ use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Models\DataType;
 use Jivoo\Databases\Schema;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Json;
 
 /**
  * Type adapter for MySQL database drivers.
@@ -47,6 +48,8 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::BINARY:
       case DataType::ENUM:
         return $this->db->quoteString($value);
+      case DataType::OBJECT:
+        return $this->db->quoteString(Json::encode($value));
     }
   }
 
@@ -71,6 +74,8 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case DataType::BINARY:
       case DataType::ENUM:
         return strval($value);
+      case DataType::OBJECT:
+        return Json::decode($value);
     }
   }
 
@@ -118,6 +123,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
         $column = "ENUM('" . implode("','", $type->values) . "')";
         break; 
       case DataType::TEXT:
+      case DataType::OBJECT:
       default:
         $column = 'TEXT';
         break;

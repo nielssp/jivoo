@@ -35,6 +35,8 @@ class DataType {
   const DATETIME = 7;
   /** @var int Type: Binary object. */
   const BINARY = 8;
+  /** @var int Type: Generic array/object, can be encoded as JSON. */
+  const OBJECT = 9;
   /** @var int Type: Enumerated type. */
   const ENUM = 0;
 
@@ -71,9 +73,10 @@ class DataType {
    * @param mixed $default Default value.
    * @param int $flags Integer flags.
    * @param int|null $length String length.
+   * @throws InvalidDataTypeException When type is invalid.
    */
   protected function __construct($type, $null = false, $default = null, $flags = 0, $length = null) {
-    if ($type < 0 or $type > 8)
+    if ($type < 0 or $type > 9)
       throw new InvalidDataTypeException(tr('%1 is not a valid type'), $type);
     $this->type = $type;
     $this->length = $length;
@@ -109,6 +112,7 @@ class DataType {
           case self::FLOAT: return '%f';
           case self::DATE: return '%date';
           case self::DATETIME: return '%d';
+          case self::OBJECT: return '%o';
         }
     }
     if ($this->type == self::STRING) {
@@ -188,6 +192,11 @@ class DataType {
     return $this->type == self::BINARY;
   }
 
+  /** @return bool Whether or not the type is array/object. */
+  public function isObject() {
+    return $this->type == self::OBJECT;
+  }
+
   /** @return bool Whether or not the type is enum */
   public function isEnum() {
     return $this->type == self::ENUM;
@@ -254,6 +263,7 @@ class DataType {
         return;
       case self::TEXT:
       case self::BINARY:
+      case self::OBJECT:
         return;
     }
   }
@@ -308,6 +318,8 @@ class DataType {
       case self::TEXT:
       case self::BINARY:
         return is_string($value);
+      case self::OBJECT:
+        return is_array($value);
     }
     return false;
   }
@@ -339,6 +351,12 @@ class DataType {
       case self::BINARY:
       case self::ENUM:
         return strval($value);
+      case self::OBJECT:
+        if (is_array($value))
+          return $value;
+        if (is_object($value))
+          return (array) $value;
+        return array($value);
     }
     return null;
   }
@@ -426,6 +444,16 @@ class DataType {
   }
   
   /**
+   * Create generic array/object type.
+   * @param bool $null Whether or not type is nullable.
+   * @param string $default Default value.
+   * @return DataType Type object.
+   */
+  public static function object($null = false, $default = null) {
+    return new self(self::OBJECT, $null, $default);
+  }
+  
+  /**
    * Create enumerated data type.
    * @param string[]|string $valuesOrClass Enum values as strings. Keys must be integers.
    * Or the name of a class extending {@see Enum}.
@@ -449,6 +477,8 @@ class DataType {
       return self::integer();
     if (is_float($value))
       return self::float();
+    if (is_array($value) or is_object($value))
+      return self::object();
     return self::text();
   }
   
@@ -489,6 +519,16 @@ class DataType {
       case 'bin':
       case 'binary':
         return self::binary();
+      case 'a':
+      case 'o':
+      case 'array':
+      case 'object':
+        return self::binary();
     }
   }
 }
+
+/**
+ * Thrown when data type is unknown.
+ */
+class InvalidDataTypeException extends \Exception { }

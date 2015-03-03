@@ -159,7 +159,7 @@ class Form implements IBasicRecord, IBasicModel {
    * @param bool $required Whether or not the field is required.
    */
   public function addString($field, $label = null, $required = true) {
-    $this->addField($field, 'string', $label, $required);
+    $this->addField($field, DataType::string(), $label, $required);
   }
 
   /**
@@ -169,7 +169,7 @@ class Form implements IBasicRecord, IBasicModel {
    * @param bool $required Whether or not the field is required.
    */
   public function addText($field, $label = null, $required = true) {
-    $this->addField($field, 'text', $label, $required);
+    $this->addField($field, DataType::text(), $label, $required);
   }
   
   /**

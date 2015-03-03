@@ -203,9 +203,11 @@ class FormHelper extends Helper {
    * @param string $field Field name
    * @return string Name.
    */
-  public function name($field) {
+  public function name($field, $value = null) {
     if (isset($this->name))
-      return $this->name . '[' . $field . ']';
+      $field = $this->name . '[' . $field . ']';
+    if (isset($value))
+      $field .= '[' . $value . ']';
     return $field;
   }
   
@@ -480,16 +482,23 @@ class FormHelper extends Helper {
   public function checkbox($field, $value, $attributes = array()) {
     $attributes = array_merge(array(
       'type' => 'checkbox',
-      'name' => $this->name($field),
+      'name' => $this->name($field, $value),
       'value' => $value,
       'id' => $this->id($field, $value)
     ), $attributes);
     $attributes['value'] = $value;
     $currentValue = $this->value($field);
-    if ($currentValue == $value) {
+    if (is_array($currentValue) and isset($currentValue[$value])) {
       $attributes['checked'] = 'checked';
     }
     return $this->element('input', $attributes);
+  }
+  
+  public function checkboxAndLabel($field, $value, $label = null, $attributes = array()) {
+    if (!isset($label))
+      $label = $value;
+    return $this->checkbox($field, $value, $attributes)
+      . $this->checkboxLabel($field, $value, $label);
   }
   
   /**

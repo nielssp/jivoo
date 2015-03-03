@@ -7,6 +7,7 @@ namespace Jivoo\Generators;
 
 use Jivoo\Snippets\Snippet;
 use Jivoo\Models\Form;
+use Jivoo\Models\DataType;
 
 /**
  * Configure application.
@@ -30,6 +31,7 @@ class Configure extends Snippet {
     $this->configForm = new Form('Configure');
     $this->configForm->addString('name', tr('Application name'));
     $this->configForm->addString('version', tr('Version'));
+    $this->configForm->addField('modules', DataType::object(), tr('Modules'));
 
     $this->view->data->availableModules = $this->getModules();
     $this->view->data->configForm = $this->configForm;

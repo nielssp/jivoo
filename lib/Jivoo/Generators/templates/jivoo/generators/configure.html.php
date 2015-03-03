@@ -23,44 +23,37 @@
 Assets, Helpers, Models, Routing, View
 </div>
 
-<?php 
-$moduleCheckbox = function($module, $checked = false) use($Form) {
-  return $Form->checkbox('modules', $module, $checked ? array('checked' => 'checked') : array())
-    . $Form->checkboxLabel('modules', $module, $module);
-}
-?>
-
 <div class="field">
 <label>Application logic</label>
-<?php echo $moduleCheckbox('Controllers'); ?>
-<?php echo $moduleCheckbox('Snippets'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Controllers'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Snippets'); ?>
 </div>
 
 <div class="field">
 <label>Database access</label>
-<?php echo $moduleCheckbox('Databases'); ?>
-<?php echo $moduleCheckbox('ActiveModels'); ?>
-<?php echo $moduleCheckbox('Migrations'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Databases'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'ActiveModels'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Migrations'); ?>
 </div>
 
 <div class="field">
 <label>Extensions</label>
-<?php echo $moduleCheckbox('Extensions'); ?>
-<?php echo $moduleCheckbox('Themes'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Extensions'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Themes'); ?>
 </div>
 
 <div class="field">
 <label>Application toolkits</label>
-<?php echo $moduleCheckbox('AccessControl'); ?>
-<?php echo $moduleCheckbox('Administration'); ?>
-<?php echo $moduleCheckbox('Content'); ?>
-<?php echo $moduleCheckbox('Setup'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'AccessControl'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Administration'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Content'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Setup'); ?>
 </div>
 
 <div class="field">
 <label>Development</label>
-<?php echo $moduleCheckbox('Console'); ?>
-<?php echo $moduleCheckbox('Generators'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Console'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Generators'); ?>
 </div>
 
 <?php echo $Form->submit(tr('Save'), array('name' => 'save', 'class' => 'primary')); ?>
