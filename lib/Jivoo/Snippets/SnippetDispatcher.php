@@ -11,6 +11,8 @@ use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
+use Jivoo\Routing\TextResponse;
+use Jivoo\Routing\Http;
 
 /**
  * Snippet based routing.
@@ -113,7 +115,7 @@ class SnippetDispatcher implements IDispatcher {
       throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
     $response = $snippet($route['parameters']);
     if (is_string($response))
-      $response = new TextResponse(Http::OK, 'text', $response);
+      $response = new TextResponse($snippet->getStatus(), 'text', $response);
     if (!($response instanceof Response)) {
       throw new InvalidResponseException(tr(
         'An invalid response was returned from snippet: %1',

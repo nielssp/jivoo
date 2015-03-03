@@ -214,6 +214,14 @@ class Snippet extends Module implements ISnippet {
   }
   
   /**
+   * Get HTTP status code.
+   * @return integer HTTP status code.
+   */
+  public function getStatus() {
+    return $this->status;
+  }
+  
+  /**
    * Call when request is invalid.
    * @return Response|string A response object or content.
    */
@@ -236,6 +244,6 @@ class Snippet extends Module implements ISnippet {
       $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), explode('\\', $class));
       $templateName = implode('/', $dirs) . '.html';
     }
-    return new ViewResponse($this->status, $this->view, $templateName);
+    return $this->view->render($templateName);
   }
 }
