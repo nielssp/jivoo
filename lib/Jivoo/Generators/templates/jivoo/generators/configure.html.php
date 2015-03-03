@@ -1,7 +1,3 @@
-<?php
-$this->extend('jivoo/generators/layout.html');
-?>
-
 <p>
 <?php echo tr('Choose a name for you application and select the modules that you want to use.')?>
 </p>

@@ -53,6 +53,11 @@ class Template {
   private $extend = null;
   
   /**
+   * @var string Name of layout template.
+   */
+  private $layout = null;
+  
+  /**
    * @var string[] Stack of embedded templates.
    */
   private $templateStack = array();
@@ -94,6 +99,14 @@ class Template {
   }
   
   /**
+   * Set layout.
+   * @param string $template Tempalte name.
+   */
+  public function layout($template) {
+    $this->layout = $template;
+  } 
+  
+  /**
    * Extend another template, i.e. set parent template.
    * @param string $template Template name.
    */
@@ -112,7 +125,7 @@ class Template {
     extract($this->view->data->toArray(), EXTR_SKIP);
     extract($this->view->data[$_template]->toArray(), EXTR_SKIP);
     $_file = $this->view->findTemplate($_template);
-    if ($_file === false) {
+    if (!isset($_file)) {
       throw new TemplateNotFoundException(tr('Template not found: %1', $_template));
     }
     array_unshift($this->templateStack, $_template);
@@ -123,9 +136,11 @@ class Template {
   /**
    * Render template.
    * @param string $template Template name.
+   * @param array $data Additional data for template.
+   * @param bool $withLayout Whether or not to render the layout.
    * @return string Rendered template, e.g. HTML code for HTML templates.
    */
-  public function render($template, $data = array()) {
+  public function render($template, $data = array(), $withLayout = true) {
     ob_start();
     $extend = $this->extend;
     $this->extend = null;
@@ -137,10 +152,17 @@ class Template {
       if (!$this->ignoreExtend) {
         $this->content .= ob_get_clean();
         $this->view->blocks->assign('content', $this->content);
-        return $this->render($template, $data);
+        return $this->render($template, $data, $withLayout);
       }
     }
     $this->extend = $extend;
+    if ($withLayout) {
+      if (!isset($this->layout))
+        $this->layout = $this->view->findLayout($template);
+      $this->content .= ob_get_clean();
+      $this->view->blocks->assign('content', $this->content);
+      return $this->render($this->layout, $data, false);
+    }
     return $this->content . ob_get_clean();
   }
   

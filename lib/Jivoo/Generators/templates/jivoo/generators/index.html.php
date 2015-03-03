@@ -1,6 +1,3 @@
-<?php
-$this->extend('jivoo/generators/layout.html');
-?>
 <p><?php echo tr('Welcome to the Jivoo web application framework.')?></p>
 
 <p><?php echo tr(

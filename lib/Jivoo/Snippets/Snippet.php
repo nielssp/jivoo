@@ -236,7 +236,7 @@ class Snippet extends Module implements ISnippet {
    * based on the name of the snippet.
    *
    * @param string $templateName Name of template to render.
-   * @return ViewResponse A view response for template.
+   * @return string Rendered template.
    */
   protected function render($templateName = null) {
     if (!isset($templateName)) {

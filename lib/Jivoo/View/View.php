@@ -6,6 +6,7 @@
 namespace Jivoo\View;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Utilities;
 
 /**
  * The view module.
@@ -165,8 +166,8 @@ class View extends LoadableModule {
   
   /**
    * Find template in available template directories.
-   * @param string $template Template.
-   * @return string|false $path Absolute path to template or false if not found.
+   * @param string $template Template name.
+   * @return string|null Absolute path to template or null if not found.
    */
   public function findTemplate($template) {
     if (file_exists($template))
@@ -180,6 +181,23 @@ class View extends LoadableModule {
         return $path;
       }
     }
+    return null;
+  }
+  
+  /**
+   * Find layout template for a template.
+   * @param string $template Template name.
+   * @return strin Absolute path to template.
+   */
+  public function findLayout($template) {
+    $extension = Utilities::getFileExtension($template);
+    $dir = dirname($template);
+    do {
+      $template = $this->findTemplate($dir . '/layout.' . $extension);
+      if (isset($template))
+        return $template;
+      $dir = dirname($dir);
+    } while ($dir != '.');
     return false;
   }
   
@@ -187,15 +205,16 @@ class View extends LoadableModule {
    * Render a template.
    * @param string $template Template name.
    * @param array $data Addtional data for template.
+   * @param bool $withLayout Whether or not to render the layout.
    * @return string Content of template.
    */
-  public function render($template, $data = array()) {
+  public function render($template, $data = array(), $withLayout = true) {
     if (isset($this->template))
-      return $this->template->render($template, $data);
+      return $this->template->render($template, $data, $withLayout);
     arsort($this->templateDirs);
     $this->data->flash = $this->request->session->flash;
     $this->template = new Template($this);
-    $result = $this->template->render($template, $data);
+    $result = $this->template->render($template, $data, $withLayout);
     $this->template = null;
     return $result;
   }
