@@ -58,25 +58,6 @@ class Models extends LoadableModule {
     $this->modelClasses[$class] = $class;
   }
   
-  /** 
-   * Add models needed by a controller or helper
-   * @param Controller|Helper $controller Controller or helper objects
-   */
-  public function addModels($controller) {
-    $models = $controller->getModelList();
-    foreach ($models as $name) {
-      $model = $this->getModel($name);
-      if ($model != null) {
-        $controller->addModel($name, $model);
-      }
-      else {
-        throw new ModelNotFoundException(tr(
-          'Model "%1" not found for %2', $name, get_class($controller)
-        ));
-      }
-    }
-  }
-  
   /**
    * Add/set model
    * @param string $name Model name

@@ -6,6 +6,7 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Helpers\Helper;
+use Jivoo\Core\Json;
 
 /**
  * Helper for listing database drivers.
@@ -30,13 +31,13 @@ class DatabaseDriversHelper extends Helper {
    * not found
    */
   public function checkDriver($driver) {
-    if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
+    if (!file_exists($this->p('Jivoo\Databases\Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
       return null;
     }
-    if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/driver.json'))) {
+    if (!file_exists($this->p('Jivoo\Databases\Databases', 'Drivers/' . $driver . '/driver.json'))) {
       return null;
     }
-    $info = Json::decodeFile($this->p('Databases', 'Drivers/' . $driver . '/driver.json'));
+    $info = Json::decodeFile($this->p('Jivoo\Databases\Databases', 'Drivers/' . $driver . '/driver.json'));
     if (!isset($info))
       return null;
     if (!isset($info['required']))
@@ -68,10 +69,10 @@ class DatabaseDriversHelper extends Helper {
    */
   public function listDrivers() {
     $drivers = array();
-    $files = scandir($this->p('Databases', 'Drivers'));
+    $files = scandir($this->p('Jivoo\Databases\Databases', 'Drivers'));
     if ($files !== false) {
       foreach ($files as $driver) {
-        if (is_dir($this->p('Databases', 'Drivers/' . $driver))) {
+        if (is_dir($this->p('Jivoo\Databases\Databases', 'Drivers/' . $driver))) {
           if ($driverInfo = $this->checkDriver($driver)) {
             $drivers[$driver] = $driverInfo;
           }

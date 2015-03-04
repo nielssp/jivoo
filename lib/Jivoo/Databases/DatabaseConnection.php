@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
+use Jivoo\Models\IModel;
+
 /**
  * A wrapper for another database driver.
  */

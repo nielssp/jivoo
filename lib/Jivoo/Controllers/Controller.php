@@ -65,7 +65,7 @@ class Controller extends Module {
     parent::__construct($app);
     $this->modelObjects = $this->m->Models->getModels($this->models);
     $helperObjects = $this->m->Helpers->getHelpers($this->helpers);
-    
+
     foreach ($helperObjects as $name => $helper) {
       $this->$name = $helper;
     }

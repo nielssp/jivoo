@@ -9,6 +9,7 @@ use Jivoo\Core\Module;
 use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\Selection\Selection;
 
 /**
  * A base class for models.

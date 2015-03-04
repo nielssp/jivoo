@@ -51,11 +51,6 @@ interface IDatabase {
 }
 
 /**
- * A database connection has failed.
- */
-class DatabaseConnectionFailedException extends \Exception {}
-
-/**
  * A database selection has failed.
  */
 class DatabaseSelectFailedException extends \Exception {}

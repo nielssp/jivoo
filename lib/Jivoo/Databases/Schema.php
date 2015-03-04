@@ -7,6 +7,8 @@ namespace Jivoo\Databases;
 
 use Jivoo\Models\ISchema;
 use Jivoo\Models\DataType;
+use Jivoo\Core\Lib;
+use Jivoo\Models\Validation\Validator;
 
 /**
  * Represents a database table schema.
@@ -42,7 +44,7 @@ class Schema implements ISchema {
     $className = get_class($this);
     if ($className != __CLASS__) {
       if (!isset($name)) {
-        $name = preg_replace('/Schema$/', '', $className);
+        $name = preg_replace('/Schema$/', '', Lib::getClassName($className));
       }
       if (defined($className . '::REVISION'))
         $this->_revision = constant($className . '::REVISION');

@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models;
 
+use Jivoo\Models\Validation\ValidatorField;
+
 /**
  * The data type of {@see Enum}s.
  * @property-read string[] $values Enum values.

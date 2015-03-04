@@ -34,6 +34,31 @@ class Lib {
       'namespacelen' => strlen($namespace)
     );
   }
+  
+  /**
+   * Get namespace part of a class name.
+   * @param string|object $className Class or object, e.g. 'Jivoo\Core\Lib'.
+   * @return string Namespace, e.g. 'Jivoo\Core'.
+   */
+  public static function getNamespace($className) {
+    if (is_object($className))
+      $className = get_class($className);
+    if (strpos($className, '\\') === false)
+      return '';
+    return preg_replace('\\\\[^\\\\]+$', '', $className);
+  }
+  
+  /**
+   * Get class name part of a qualified class name.
+   * @param string|object $className Class or object, e.g. 'Jivoo\Core\Lib'.
+   * @return string Class name, e.g. 'Lib'.
+   */
+  public static function getClassName($className) {
+    if (is_object($className))
+      $className = get_class($className);
+    $className = array_slice(explode('\\', $className), -1);
+    return $className[0];
+  }
 
   /**
    * Check if a class exists anywhere

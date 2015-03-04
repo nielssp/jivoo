@@ -57,9 +57,9 @@ class ActiveModels extends LoadableModule {
    * @return True if successfull, false if table not found.
    */
   public function addActiveModel($class) {
-    if (is_subclass_of($class, 'ActiveModel')) {
+    if (is_subclass_of($class, 'Jivoo\ActiveModels\ActiveModel')) {
       $model = new $class($this->app, $this->m->Databases);
-      $this->m->Models->setModel($class, $model);
+      $this->m->Models->setModel($model->getName(), $model);
       $this->models[$class] = $model;
       return true;
     }

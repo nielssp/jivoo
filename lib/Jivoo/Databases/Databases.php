@@ -123,6 +123,10 @@ class Databases extends LoadableModule {
     }
     $driver = $options['driver'];
     $driverInfo = $this->drivers->checkDriver($driver);
+    if (!isset($driverInfo))
+      throw new DatabaseConnectionFailedException(tr(
+        'Invalid database driver: %1', $driver
+      ));
     foreach ($driverInfo['requiredOptions'] as $option) {
       if (!isset($options[$option])) {
         throw new DatabaseNotConfiguredException(
@@ -191,6 +195,11 @@ class Databases extends LoadableModule {
       $connection->rollback();
   }
 }
+
+/**
+ * A database connection has failed.
+ */
+class DatabaseConnectionFailedException extends \Exception {}
 
 /**
  * Invalid database configuration.

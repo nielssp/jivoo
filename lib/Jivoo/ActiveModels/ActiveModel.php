@@ -17,6 +17,8 @@ use Jivoo\Models\ModelNotFoundException;
 use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Databases\TableNotFoundException;
+use Jivoo\Models\Validation\Validator;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -179,12 +181,12 @@ abstract class ActiveModel extends Model implements IEventListener {
     parent::__construct($app);
     $databaseName = $this->database;
     $database = $databases->$databaseName;
+    $this->name = Lib::getClassName(get_class($this));
     if (!isset($database))
       throw new DataSourceNotFoundException(tr(
         'Database "%1" not found in model %2', $this->database, $this->name
       ));
     $this->database = $database;
-    $this->name = get_class($this);
     if (!isset($this->table))
       $this->table = $this->name;
     $table = $this->table;
@@ -238,10 +240,10 @@ abstract class ActiveModel extends Model implements IEventListener {
         $mixin = $options;
         $options = array();
       }
-      $mixin .= 'Mixin';
+      $mixin = 'Jivoo\ActiveModels\\' . $mixin . 'Mixin';
       if (!Lib::classExists($mixin))
         throw new ClassNotFoundException(tr('Mixin class not found: %1', $mixin));
-      if (!is_subclass_of($mixin, 'ActiveModelMixin'))
+      if (!is_subclass_of($mixin, 'Jivoo\ActiveModels\ActiveModelMixin'))
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
       $mixin = new $mixin($this->app, $this, $options);
       $this->attachEventListener($mixin);
