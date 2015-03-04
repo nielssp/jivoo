@@ -15,7 +15,12 @@ class Setup extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Controllers', 'Routing', 'View', 'Assets');
+  protected static $loadAfter = array('Controllers', 'Snippets');
+  
+  /**
+   * {@inheritdoc}
+   */
+  protected $modules = array('Helpers', 'Routing');
   
   /**
    * @var string Name of current setup action.
@@ -26,31 +31,22 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->app->attachEventHandler('afterLoadModule', array($this, 'runSetup'));
+    $this->m->Helpers->addHelper('Jivoo\Setup\SetupHelper');
   }
 
   /**
-   * Run configured setups.
-   * @param LoadModuleEvent $event Event data.
-   * @throws \Exception If controller not found.
+   * {@inheritdoc}
    */
-  public function runSetup(LoadModuleEvent $event) {
-    $this->app->detachEventHandler('afterLoadModule', array($this, 'runSetup'));
+  public function afterLoad() {
     if (isset($this->app->appConfig['setup'])) {
       foreach ($this->app->appConfig['setup'] as $route) {
         $route = $this->m->Routing->validateRoute($route);
-        $controller = $route['controller'];
-        $action = $route['action'];
-        $name = $controller . '::' . $action;
+        $name = $route['dispatcher']->fromRoute($route);
         if (!isset($this->config[$name]) or $this->config[$name] !== true) {
           $this->current = $name;
-          $object = $this->m->Controllers->getController($controller);
-          if (!isset($object)) {
-            throw new \Exception(tr('Controller not found: %1', $controller));
-          }
-          $object->autoRoute($action);
-          $this->m->Routing->reroute($controller, $action);
           $this->view->addTemplateDir($this->p('templates'));
+          $this->m->Routing->routes->auto($route);
+//           $this->m->Routing->reroute($route);
           $this->m->Routing->followRoute($route);
         }
       }
@@ -95,9 +91,7 @@ class Setup extends LoadableModule {
    */
   public function getState($route) {
     $route = $this->m->Routing->validateRoute($route);
-    $controller = $route['controller'];
-    $action = $route['action'];
-    $name = $controller . '::' . $action;
+    $name = $route['dispatcher']->fromRoute($route);
     return isset($this->config[$name]) and $this->config[$name] === true;
   }
   
@@ -108,9 +102,7 @@ class Setup extends LoadableModule {
    */
   public function setState($route, $done) {
     $route = $this->m->Routing->validateRoute($route);
-    $controller = $route['controller'];
-    $action = $route['action'];
-    $name = $controller . '::' . $action;
+    $name = $route['dispatcher']->fromRoute($route);
     $this->config[$name] = $done;
   }
 }

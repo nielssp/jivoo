@@ -15,6 +15,11 @@ class Databases extends LoadableModule {
   /**
    * {@inheritdoc}
    */
+  protected static $loadAfter = array('Setup');
+  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Models', 'Helpers');
   
   /**

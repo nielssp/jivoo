@@ -60,10 +60,16 @@ class Helpers extends LoadableModule {
     if (!isset($this->helpers[$name])) {
       $class = $this->app->n('Helpers\\' . $name . 'Helper');
       if (!Lib::classExists($class)) {
-        if (isset($this->helperClasses[$name]))
+        if (isset($this->helperClasses[$name])) {
           $class = $this->helperClasses[$name];
-        else
+        }
+        else if (strpos($name, '\\') !== false) {
+          $class = $name . 'Helper';
+          $name = Lib::getClassName($name);
+        }
+        else {
           $class = 'Jivoo\Helpers\\' . $name . 'Helper';
+        }
       }
       $this->triggerEvent('beforeLoadHelper', new LoadHelperEvent($this, $name));
       Lib::assumeSubclassOf($class, 'Jivoo\Helpers\Helper');
@@ -80,8 +86,12 @@ class Helpers extends LoadableModule {
    */
   public function getHelpers($names) {
     $helpers = array();
-    foreach ($names as $name)
-      $helpers[$name] = $this->getHelper($name);
+    foreach ($names as $name) {
+      $helper = $this->getHelper($name);
+      if (strpos($name, '\\') !== false)
+        $name = Lib::getClassName($name);
+      $helpers[$name] = $helper;
+    }
     return $helpers;
   }
   

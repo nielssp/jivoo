@@ -379,9 +379,9 @@ class App implements IEventSubject {
       if (!isset($this->imports[$name]))
         throw new \Exception(tr('Module not imported: %1', $name));
       $module = $this->imports[$name];
-      if (isset($this->optionalDependencies[$name])) {
-        foreach ($this->optionalDependencies[$name] as $dependency) {
-          if (Lib::classExists($dependency))
+      if (isset($this->optionalDependencies[$module])) {
+        foreach ($this->optionalDependencies[$module] as $dependency) {
+          if (isset($this->imports[$dependency]))
             $this->getModule($dependency);
         }
       }

@@ -17,12 +17,13 @@ class DatabaseSetupController extends SetupController {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Html', 'Form', 'DatabaseDrivers');
+  protected $helpers = array('Html', 'Form', 'Jivoo\Databases\DatabaseDrivers');
 
   /**
    * {@inheritdoc}
    */
   public function before() {
+    $this->view->addTemplateDir($this->p('Jivoo\Databases\Databases', 'templates'));
     $this->config = $this->config['Databases']['default'];
     $this->config->defaults = array(
       'server' => 'localhost',

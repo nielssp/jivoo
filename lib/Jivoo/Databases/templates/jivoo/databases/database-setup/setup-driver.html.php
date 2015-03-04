@@ -1,6 +1,4 @@
-<?php
-$this->extend('setup/layout.html');
-?>
+<?php $this->layout('setup/layout.html'); ?>
 
 <?php echo $Form->formFor($setupForm); ?>
 

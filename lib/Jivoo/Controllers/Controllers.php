@@ -88,7 +88,7 @@ class Controllers extends LoadableModule {
     if (isset($this->controllers[$controller])) {
       return $this->controllers[$controller];
     }
-    return false;
+    return $controller . 'Controller';
   }
   
   /**
