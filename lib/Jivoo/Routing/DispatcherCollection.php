@@ -127,6 +127,11 @@ class DispatcherCollection {
         return $route;
       }
     }
+    $route = $this->routing->route;
+    if (is_array($route) and isset($route['dispatcher'])) {
+      $prefixes = $route['dispatcher']->getPrefixes();
+      return $this->toRoute($prefixes[0] . ':' . $routeString);
+    }
     throw new InvalidRouteException(tr('Unknown route prefix.'));
   }
   

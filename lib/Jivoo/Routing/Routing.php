@@ -514,6 +514,7 @@ class Routing extends LoadableModule {
     else {
       $pattern = $pattern[0];
     }
+    $pattern = trim($pattern, '/');
     $pattern = explode('/', $pattern);
     
     $path = $this->request->path;

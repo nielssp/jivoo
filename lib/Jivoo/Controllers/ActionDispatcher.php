@@ -62,7 +62,10 @@ class ActionDispatcher implements IDispatcher {
   public function autoRoute(RoutingTable $table, $route, $resource = false) {
     $controller = $route['controller'];
     $dirs = explode('\\', $controller);
-    $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), $dirs);
+    if ($dirs == array('App'))
+      $dirs = array();
+    else
+      $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), $dirs);
     $patternBase = implode('/', $dirs);
     if ($resource) {
       $table->match($patternBase, 'action:' . $controller . '::index');
