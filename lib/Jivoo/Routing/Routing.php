@@ -94,7 +94,7 @@ class Routing extends LoadableModule {
   /**
    * @var array Root route and priority
    */
-  private $root = array('priority' => 0);
+  private $root = null;
   
   /**
    * @var mixed Error route
@@ -217,7 +217,7 @@ class Routing extends LoadableModule {
    * @param number $priority Priority of route.
    */
   public function setRoot($route, $priority = 9) {
-    if ($priority <= $this->root['priority'])
+    if (isset($this->root) and $priority <= $this->root['priority'])
       return;
     $route = $this->validateRoute($route);
     $route['priority'] = $priority;
@@ -652,7 +652,8 @@ class Routing extends LoadableModule {
   public function followRoute($route) {
     $route = $this->validateRoute($route);
     
-    if ($this->request->path != array() and $this->isCurrent($this->root)) {
+    if ($this->request->path != array() and isset($this->root) and
+         $this->isCurrent($this->root)) {
       $this->redirectPath(array(), $this->request->query);
     }
     

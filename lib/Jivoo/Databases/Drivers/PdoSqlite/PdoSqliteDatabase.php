@@ -8,6 +8,8 @@ namespace Jivoo\Databases\Drivers\PdoSqlite;
 use Jivoo\Databases\Common\PdoDatabase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
 use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Databases\DatabaseConnectionFailedException;
+
 /**
  * PDO SQLite database driver.
  */
@@ -30,7 +32,7 @@ class PdoSqliteDatabase extends PdoDatabase {
       throw new DatabaseConnectionFailedException($exception->getMessage());
     }
     catch (\PDOException $exception) {
-      throw new DatabaseConnectionFailedException(
+      throw new DatabaseConnectionFailedException()(
         tr('SQLite database does not exist and could not be created: %1',
           $options['filename']));
     }

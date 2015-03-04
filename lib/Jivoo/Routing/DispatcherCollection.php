@@ -68,6 +68,8 @@ class DispatcherCollection {
   public function validate($route) {
     if (!isset($route)) {
       $route = $this->routing->root;
+      if (!isset($route))
+        $route = array('path' => array());
     }
     else if (is_string($route)) {
       $route = $this->toRoute($route);

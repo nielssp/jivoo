@@ -7,6 +7,8 @@ namespace Jivoo\Databases\Drivers\PdoMysql;
 
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Databases\Common\PdoDatabase;
+use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Databases\DatabaseConnectionFailedException;
 
 /**
  * PDO MySQL database driver.
@@ -38,7 +40,7 @@ class PdoMysqlDatabase extends PdoDatabase {
     catch (DatabaseQueryFailedException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
     }
-    catch (PDOException $exception) {
+    catch (\PDOException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
     }
   }

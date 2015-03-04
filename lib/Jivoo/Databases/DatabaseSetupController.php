@@ -6,6 +6,10 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Setup\SetupController;
+use Jivoo\Models\Form;
+use Jivoo\Core\Lib;
+use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\DatabaseSelectFailedException;
 
 /**
  * Controller for setting up database. 
@@ -105,9 +109,7 @@ class DatabaseSetupController extends SetupController {
       }
       else if ($this->setupForm->isValid()) {
         $driver = $this->driver['driver'];
-        $class = $driver . 'Database';
-        Lib::import('Jivoo/Databases/Common');
-        Lib::import('Jivoo/Databases/Drivers/' . $driver);
+        $class = 'Jivoo\Databases\Drivers\\' . $driver . '\\' . $driver . 'Database';
         try {
           new $class($this->app, new DatabaseSchema(), $this->request->data['setup']);
           $options = array_flip(
