@@ -66,10 +66,15 @@ class Configure extends Snippet {
       )
     );
     mkdir($this->p('app', ''));
+    mkdir($this->p('app', 'config'));
+    mkdir($this->p('app', 'config/environments'));
+    mkdir($this->p('user', ''));
+    mkdir($this->p('log', ''));
     $file = fopen($this->p('app', 'app.json'), 'w');
     if ($file) {
       fwrite($file, Json::prettyPrint($appConfig));
       fclose($file);
+      return $this->redirect(null);
     }
     return $this->render();
   }

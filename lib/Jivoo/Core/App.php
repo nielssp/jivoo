@@ -353,6 +353,22 @@ class App implements IEventSubject {
   }
   
   /**
+   * Add a module to the module load list.
+   * @param string $name Module name.
+   */
+  public function addModule($name) {
+    $this->modules[] = $name;
+  }
+  
+  /**
+   * Stop a module from loading.
+   * @param string $name Module name.
+   */
+  public function removeModule($name) {
+    $this->modules = array_diff($this->modules, array($name));
+  }
+  
+  /**
    * Get a module, or load it if not yet loaded (must be imported however).
    * @param string $name Name of module class.
    * @return LoadableModule Module object.
