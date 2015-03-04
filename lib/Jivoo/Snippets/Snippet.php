@@ -10,6 +10,7 @@ use Jivoo\Core\App;
 use Jivoo\Routing\NotFoundException;
 use Jivoo\Core\Utilities;
 use Jivoo\View\ViewResponse;
+use Jivoo\Core\Lib;
 
 /**
  * A loadable snippet.
@@ -176,7 +177,7 @@ class Snippet extends Module implements ISnippet {
     $this->before();
     if ($this->request->isGet())
       return $this->after($this->get());
-    $name = preg_replace('/^([^\\\\]+\\\\)*/', '', get_class($this));
+    $name = Lib::getClassName($this);
     if (!$this->request->hasValidData($name))
       return $this->after($this->get());
     $data = $this->request->data[$name];
