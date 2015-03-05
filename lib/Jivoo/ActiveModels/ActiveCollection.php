@@ -6,6 +6,11 @@
 namespace Jivoo\ActiveModels;
 
 use Jivoo\Models\Model;
+use Jivoo\Models\Selection\ISelection;
+use Jivoo\Models\Selection\UpdateSelection;
+use Jivoo\Models\Selection\DeleteSelection;
+use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\Selection\IBasicSelection;
 
 /**
  * A special model representing an association collection as result from for

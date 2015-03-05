@@ -1,9 +1,9 @@
-<?php echo $Form->formFor($post); ?>
+<?php echo $Form->formFor($comment); ?>
 
 <div class="field">
-<?php echo $Form->label('title'); ?>
-<?php echo $Form->text('title'); ?>
-<?php echo $Form->error('title'); ?>
+<?php echo $Form->label('author'); ?>
+<?php echo $Form->text('author'); ?>
+<?php echo $Form->error('author'); ?>
 </div>
 
 <div class="field">

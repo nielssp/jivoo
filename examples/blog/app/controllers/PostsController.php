@@ -25,6 +25,7 @@ class PostsController extends AppController {
     if ($this->request->hasValidData('Post')) {
       $this->post = $this->Post->create($this->request->data['Post']);
       if ($this->post->save()) {
+        $this->session->flash->success = tr('Post saved.');
         return $this->redirect($this->post);
       }
     }
@@ -40,10 +41,11 @@ class PostsController extends AppController {
     $this->post = $this->Post->find($postId);
     if (!$this->post)
       return $this->notFound();
-    $this->title = tr('edit post');
+    $this->title = tr('Edit post');
     if ($this->request->hasValidData('Post')) {
       $this->post->addData($this->request->data['Post']);
       if ($this->post->save()) {
+        $this->session->flash->success = tr('Post saved.');
         return $this->redirect($this->post);
       }
     }
@@ -58,6 +60,7 @@ class PostsController extends AppController {
       return $this->notFound();
     if ($this->request->hasValidData()) {
       $this->post->delete();
+      $this->session->flash->success = tr('Post deleted.');
       return $this->redirect('index');
     }
     return $this->redirect($this->post);

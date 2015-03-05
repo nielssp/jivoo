@@ -9,6 +9,10 @@ class Post extends ActiveModel {
   
   protected $mixins = array('Timestamps');
   
+  protected $hasMany = array(
+    'comments' => 'Comment'
+  );
+  
   protected $validate = array(
     'title' => array(
       'presence' => true,

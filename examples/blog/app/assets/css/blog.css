@@ -72,10 +72,10 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal; }
 
 a, a:link, a:visited, a:hover, a:active {
-  color: #04388e;
+  color: #2272cc;
   text-decoration: none; }
 a:hover, a:active {
-  color: #d81413;
+  color: #cc2222;
   text-decoration: underline; }
 
 p {
@@ -194,7 +194,9 @@ input[type=button]:hover,
 input[type=button]:active,
 input[type=submit]:hover,
 input[type=submit]:active {
-  background-color: #ddd; }
+  background-color: #ddd;
+  color: #2272cc;
+  border-color: #2272cc; }
 .button:active,
 button:active,
 input[type=button]:active,
@@ -229,7 +231,7 @@ textarea,
 select {
   padding: 5px 12px 5px;
   display: block;
-  border: 1px solid #ccc;
+  border: 1px solid #d9d9d9;
   font-size: 14px;
   background-color: #fff;
   box-shadow: inset 0 1px 2px #e6e6e6;
@@ -264,8 +266,8 @@ select {
   textarea:focus,
   select:focus {
     color: #222;
-    border: 1px solid #7799bb;
-    box-shadow: 0 0 3px #7799bb;
+    border: 1px solid #6da6e7;
+    box-shadow: 0 0 3px #6da6e7;
     outline: 0; }
 
 textarea {
@@ -288,5 +290,30 @@ form {
   form p {
     color: #444; }
 
-.fail {
-  color: #cc2222; }
+.flash {
+  background-color: #eee;
+  font-size: 0.9em;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid #2272CC;
+  box-shadow: 1px 2px 1px #e6e6e6; }
+  .flash.flash-info {
+    border-color: #cccc22; }
+    .flash.flash-info:before {
+      color: #cccc22; }
+  .flash.flash-error {
+    border-color: #cc2222; }
+    .flash.flash-error:before {
+      color: #cc2222; }
+  .flash.flash-warn {
+    border-color: #cc7222; }
+    .flash.flash-warn:before {
+      color: #cc7222; }
+  .flash.flash-success {
+    border-color: #50CC22; }
+    .flash.flash-success:before {
+      color: #50CC22; }
+  .flash.flash-question {
+    border-color: #2272CC; }
+    .flash.flash-question:before {
+      color: #2272CC; }
