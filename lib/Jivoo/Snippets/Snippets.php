@@ -15,8 +15,13 @@ class Snippets extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Routing', 'View');
+  protected $modules = array('Routing', 'View', 'Helpers');
 
+  /**
+   * @var ISnippet[] Snippet instances.
+   */
+  private $instances = array();
+  
   /**
    * {@inheritdoc}
    */
@@ -25,6 +30,7 @@ class Snippets extends LoadableModule {
     if (is_dir($this->p('app', 'snippets'))) {
       Lib::import($this->p('app', 'snippets'), $this->app->n('Snippets'));
     }
+    $this->m->Helpers->addHelper('Jivoo\Snippets\SnippetHelper');
   }
   
   /**
@@ -33,10 +39,13 @@ class Snippets extends LoadableModule {
    * @return ISnippet Snippet instance or null if not found.
    */
   public function getSnippet($name) {
-    if (!Lib::classExists($name))
-      $name = $this->app->n('Snippets\\' . $name);
-    Lib::assumeSubclassOf($name, 'Jivoo\Snippets\Snippet');
-    $instance = new $name($this->app);
-    return $instance;
+    if (!isset($this->instances[$name])) {
+      $class = $name;
+      if (!Lib::classExists($class))
+        $class = $this->app->n('Snippets\\' . $name);
+      Lib::assumeSubclassOf($class, 'Jivoo\Snippets\Snippet');
+      $this->instances[$name] = new $class($this->app);
+    }
+    return $this->instances[$name];
   }
 }

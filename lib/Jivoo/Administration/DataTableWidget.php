@@ -1,5 +1,15 @@
 <?php
-class DataTableWidget extends TraversableWidget {
+// Jivoo
+// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
+// Licensed under the MIT license.
+// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
+namespace Jivoo\Administration;
+
+/**
+ * An advanced data table snippet. Use {@see DataTableSettings} as a parameter
+ * to configure.
+ */
+class DataTable extends Snippet {
   protected $helpers = array('Html', 'Form', 'Pagination', 'Widget', 'Filtering');
   
   protected $options = array(

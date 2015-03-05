@@ -6,6 +6,7 @@
 namespace Jivoo\Extensions;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\LoadEvent;
 
 /**
  * Extension system.

@@ -37,7 +37,7 @@ if (isset($exception)) {
 ); ?></p>
 <p><?php echo tr('The exception was thrown from the following file:')?></p>
 <p><code><?php echo $file ?></code></p>
-<h2><?php echo tr('Stack Trace') ?></h2>
+<h2><?php echo tr('Stack trace') ?></h2>
 <table class="trace">
 <thead>
 <tr>
