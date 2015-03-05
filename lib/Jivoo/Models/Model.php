@@ -11,6 +11,7 @@ use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\Condition\Condition;
 
 /**
  * A base class for models.

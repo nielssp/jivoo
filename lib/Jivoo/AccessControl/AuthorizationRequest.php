@@ -6,13 +6,12 @@
 namespace Jivoo\AccessControl;
 
 use Jivoo\Controllers\Controller;
-use Jivoo\Models\IRecord;
 
 /**
  * Represents a request for authorization
  * @property-read Controller $controller Target controller of authorization.
  * @property-read string $action Target action.
- * @property-read IRecord $user Record of requesting user.
+ * @property-read mixed $user User data of requesting user.
  */
 class AuthorizationRequest {
   /**
@@ -26,7 +25,7 @@ class AuthorizationRequest {
   private $action;
   
   /**
-   * @var IRecord User record.
+   * @var mixed User data.
    */
   private $user;
   
@@ -34,9 +33,9 @@ class AuthorizationRequest {
    * Construct authorization request.
    * @param Controller $controller Target controller of authorization.
    * @param string $action Target action.
-   * @param IRecord $user Record of requesting user.
+   * @param mixed $user User data of requesting user.
    */
-  public function __construct(Controller $controller, $action, IRecord $user = null) {
+  public function __construct(Controller $controller, $action, $user = null) {
     $this->controller = $controller;
     $this->action = $action;
     $this->user = $user;

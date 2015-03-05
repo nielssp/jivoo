@@ -33,7 +33,8 @@ use Jivoo\Core\Lib;
  * passwords.
  * @property string $permissionPrefix Prefix for permissions when checking
  * access control lists.
- * @property-read ActiveRecord $user Current user if logged in.
+ * @property-read mixed $user User data of current user if logged in, otherwise
+ * null.
  * @property-write string|IAuthentication|string[]|IAuthentication[]|array[] $authentication
  * Add one or more access control lists. Can be the name of a class (without
  * 'Authentication'-suffix) or a list of names, see
@@ -55,7 +56,7 @@ class AuthHelper extends Helper {
   protected $modules = array('AccessControl');
 
   /**
-   * @var ActiveRecord Current user, if logged in. 
+   * @var mixed Current user, if logged in. 
    */
   private $user = null;
   
@@ -518,7 +519,7 @@ class AuthHelper extends Helper {
 
   /**
    * Get current user if logged in.
-   * @return ActiveRecord Record of current user, null if not logged in.
+   * @return mixed User data of current user, null if not logged in.
    */
   public function getUser() {
     if (!isset($this->user))
@@ -545,11 +546,11 @@ class AuthHelper extends Helper {
 
   /**
    * Create a session for user.
-   * @param ActiveRecord $user User to create session for.
+   * @param mixed $user User data to create session for.
    * @param string $cookie Whether or not to make the session long-lived, i.e.
    * remember the user for the next visit.
    */
-  public function createSession(ActiveRecord $user, $cookie = false) {
+  public function createSession($user, $cookie = false) {
     $this->user = $user;
     if ($cookie) {
       $validUntil = time() + $this->cookieLifeTime;

@@ -7,7 +7,6 @@ namespace Jivoo\AccessControl;
 
 use Jivoo\Core\App;
 use Jivoo\Core\Module;
-use Jivoo\Models\IRecord;
 
 /**
  * A loadable authentication module. Subclasses should use the prefix
@@ -39,7 +38,7 @@ abstract class LoadableAuthentication extends Module implements IAuthentication 
   /**
    * {@inheritdoc}
    */
-  public function deauthenticate(IRecord $user, IUserModel $userModel) { }
+  public function deauthenticate($user, IUserModel $userModel) { }
 
   /**
    * {@inheritdoc}

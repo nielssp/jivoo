@@ -17,4 +17,49 @@ class PostsController extends AppController {
     $this->title = $this->post->title;
     return $this->render();
   }
+  
+  public function add() {
+    if (!$this->Auth->isLoggedIn())
+      $this->Auth->authenticationError();
+    $this->title = tr('Add post');
+    if ($this->request->hasValidData('Post')) {
+      $this->post = $this->Post->create($this->request->data['Post']);
+      if ($this->post->save()) {
+        return $this->redirect($this->post);
+      }
+    }
+    else {
+      $this->post = $this->Post->create();
+    }
+    return $this->render('posts/edit.html');
+  }
+  
+  public function edit($postId) {
+    if (!$this->Auth->isLoggedIn())
+      $this->Auth->authenticationError();
+    $this->post = $this->Post->find($postId);
+    if (!$this->post)
+      return $this->notFound();
+    $this->title = tr('edit post');
+    if ($this->request->hasValidData('Post')) {
+      $this->post->addData($this->request->data['Post']);
+      if ($this->post->save()) {
+        return $this->redirect($this->post);
+      }
+    }
+    return $this->render('posts/edit.html');
+  }
+
+  public function delete($postId) {
+    if (!$this->Auth->isLoggedIn())
+      $this->Auth->authenticationError();
+    $this->post = $this->Post->find($postId);
+    if (!$this->post)
+      return $this->notFound();
+    if ($this->request->hasValidData()) {
+      $this->post->delete();
+      return $this->redirect('index');
+    }
+    return $this->redirect($this->post);
+  }
 }

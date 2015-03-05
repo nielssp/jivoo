@@ -49,6 +49,11 @@ class ActionDispatcher implements IDispatcher {
    */
   public function validate(&$route) {
     if (isset($route['controller']) or isset($route['action'])) {
+      if (!isset($route['controller'])) {
+        $current = $this->routing->route;
+        if (isset($current['controller']))
+          $route['controller'] = $current['controller'];
+      }
       if (!isset($route['parameters']))
         $route['parameters'] = array();
       return true;

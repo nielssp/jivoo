@@ -63,6 +63,11 @@ class Request {
   private $data;
   
   /**
+   * @var bool Whether or not POST data is available.
+   */
+  private $hasData = false;
+  
+  /**
    * @var array File upload data.
    */
   private $files;
@@ -140,7 +145,9 @@ class Request {
     $this->files = $_FILES;
     
     $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
-    if ($this->method == 'POST' AND isset($this->data['method'])) {
+    if ($this->method != 'GET')
+      $this->hasData = true;
+    if ($this->method == 'POST' and isset($this->data['method'])) {
       $method = strtoupper($this->data['method']);
       switch ($method) {
         case 'PUT':
@@ -242,10 +249,10 @@ class Request {
    * @return boolean True if valid, false otherwise.
    */
   public function hasValidData($key = null) {
-    if (!$this->isPost()) {
+    if (!$this->hasData) {
       return false;
     }
-    if (isset($key) AND !isset($this->data[$key])) {
+    if (isset($key) and !isset($this->data[$key])) {
       return false;
     }
     return $this->checkToken();

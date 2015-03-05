@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Validation;
 
+use Jivoo\Models\IRecord;
+
 /**
  * A custom validator rule.
  * @property string $message The error message for the rule.

@@ -25,7 +25,12 @@ echo 'My Blog';
 <nav>
 <ul>
 <li><?php echo $Html->link('Home', null); ?></li>
+<?php if ($Auth->isLoggedIn()): ?>
+<li><?php echo $Html->link('Add post', 'Posts::add'); ?></li>
+<li><?php echo $Html->link('Log out', 'App::logout'); ?></li>
+<?php else: ?>
 <li><?php echo $Html->link('Admin', 'App::login'); ?></li>
+<?php endif; ?>
 </ul>
 </nav>
 </header>

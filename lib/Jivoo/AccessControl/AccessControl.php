@@ -15,7 +15,7 @@ class AccessControl extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Routing', 'Helpers', 'Models');
+  protected $modules = array('Routing', 'Helpers');
   
   /**
    * @var string[] List of built-in hashing algorithms.
@@ -41,7 +41,7 @@ class AccessControl extends LoadableModule {
     foreach ($this->builtIn as $builtIn) {
       try {
         $passwordHasher = new $builtIn();
-        $this->hashers[Lib::getClassName($builtIn)] = $passwordHasher;
+        $this->hashers[$builtIn] = $passwordHasher;
         if (!isset($this->config['defaultHasher']))
           $this->config['defaultHasher'] = $builtIn;
       }

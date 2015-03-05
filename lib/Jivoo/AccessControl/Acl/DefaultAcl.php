@@ -6,7 +6,6 @@
 namespace Jivoo\AccessControl\Acl;
 
 use Jivoo\AccessControl\LoadableAcl;
-use Jivoo\Models\IRecord;
 
 /**
  * Default modifiable access control list. Permissions are independent of user.
@@ -27,7 +26,7 @@ class DefaultAcl extends LoadableAcl {
   /**
    * {@inheritdoc}
    */
-  public function hasPermission(IRecord $user = null, $permission) {
+  public function hasPermission($user = null, $permission) {
     if ($this->allow === true) {
       return !isset($this->deny[$permission]);
     }

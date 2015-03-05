@@ -5,8 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\AccessControl;
 
-use Jivoo\Models\IRecord;
-
 /**
  * A method of authentication.
  */
@@ -16,17 +14,17 @@ interface IAuthentication {
    * @param array $data Associative array of authentication data.
    * @param IUserModel $userModel User model to use for authentication.
    * @param IPasswordHasher $hasher Password hasher used for passwords.
-   * @return ActiveRecord|null An authenticated user or null if authentication
-   * not possible.
+   * @return mixed|null User data (e.g. an {@see Jivoo\Models\IBasicRecord})
+   * or null on failure.
    */
   public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher);
   
   /**
    * Deauthenticate a user.
-   * @param IRecord $user User record.
+   * @param mixed $userData User data.
    * @param IUserModel $userModel User model.
    */
-  public function deauthenticate(IRecord $user, IUserModel $userModel);
+  public function deauthenticate($userData, IUserModel $userModel);
   
   /**
    * Whether or not a cookie (for long-lived sessions) should be created based

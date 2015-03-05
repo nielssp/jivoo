@@ -25,8 +25,7 @@ class FormAuthentication extends LoadableAuthentication {
    * {@inheritdoc}
    */
   protected $options = array(
-    'username' => 'username',
-    'password' => 'password'
+    'username' => 'username'
   );
 
   /**
@@ -34,11 +33,12 @@ class FormAuthentication extends LoadableAuthentication {
    */
   public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher) {
     $this->cookie = isset($data['remember']);
-    $user = $userModel->where($this->options['username'] . ' = %s', $data['username'])
-      ->first();
-    if ($user) {
-      $passwordField = $this->options['password'];
-      if ($hasher->compare($data['password'], $user->$passwordField))
+    $idData = array();
+    $idData[$this->options['username']] = $data[$this->options['username']];
+    $user = $userModel->findUser($idData);
+    if (isset($user)) {
+      $password = $userModel->getPassword($user);
+      if ($hasher->compare($data['password'], $password))
         return $user;
     }
     return null;

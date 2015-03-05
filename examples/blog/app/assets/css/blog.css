@@ -287,3 +287,6 @@ form {
     display: inline; }
   form p {
     color: #444; }
+
+.fail {
+  color: #cc2222; }

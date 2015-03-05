@@ -2,6 +2,7 @@
 namespace Blog\Controllers;
 
 use Jivoo\Controllers\Controller;
+use Jivoo\AccessControl\SingleUserModel;
 
 class AppController extends Controller {
   
@@ -10,8 +11,13 @@ class AppController extends Controller {
   public function before() {
     $this->config->defaults = array(
       'username' => 'admin',
-      'password' => 'admin'
+      'password' => $this->Auth->passwordHasher->hash('admin')
     );
+    $this->Auth->userModel = new SingleUserModel(
+      $this->session, $this->config['username'], $this->config['password']
+    );
+    $this->Auth->authentication = 'Form';
+    $this->Auth->loginRoute = 'action:App::login';
   }
 
   public function login() {
@@ -29,6 +35,14 @@ class AppController extends Controller {
       }
     }
     return $this->render();
+  }
+  
+  public function logout() {
+    if (!$this->Auth->isLoggedIn()) {
+      $this->redirect(null);
+    }
+    $this->Auth->logOut();
+    $this->redirect();
   }
   
   public function notFound() {

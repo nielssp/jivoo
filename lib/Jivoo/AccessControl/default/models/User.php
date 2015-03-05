@@ -63,8 +63,18 @@ class User extends ActiveModel implements IUserModel {
     }
   }
   
-  public function createSession(ActiveRecord $user, $validUntil) {
-    $session = $user->sessions->create();
+  public function findUser(array $data) {
+    if (!isset($data['username']))
+      return null;
+    return $this->where('username = %s', $data['username'])->first();
+  }
+  
+  public function getPassword(ActiveRecord $user) {
+    return $user->password;
+  }
+  
+  public function createSession($userData, $validUntil) {
+    $session = $userData->sessions->create();
     $session->id = Utilities::randomString(32);
     $session->validUntil = $validUntil;
     $session->save();

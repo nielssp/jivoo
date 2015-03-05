@@ -5,17 +5,15 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\AccessControl;
 
-use Jivoo\Models\IRecord;
-
 /**
  * An access control list.
  */
 interface IAcl {
   /**
    * Check if a user has a permission.
-   * @param IRecord $user Record of yser
+   * @param mixed $user User data.
    * @param string $permission Permission string.
    * @return bool True if user has permission, false if not.
    */
-  public function hasPermission(IRecord $user = null, $permission);
+  public function hasPermission($user = null, $permission);
 }

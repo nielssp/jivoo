@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Validation;
 
+use Jivoo\Models\IRecord;
+
 /**
  * Validator for a single field.
  */
