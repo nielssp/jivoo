@@ -1,0 +1,25 @@
+{
+  "name": "Jivoo Blog Example",
+  "namespace": "Blog",
+  "version": "1.0",
+  "modules": [
+    "Assets",
+    "Helpers",
+    "Models",
+    "Routing",
+    "View",
+    "Controllers",
+    "Snippets",
+    "Databases",
+    "ActiveModels",
+    "Migrations",
+    "Setup",
+    "Console",
+    "AccessControl",
+    "Generators"
+  ],
+  "setup": [
+    "action:Jivoo\\Databases\\DatabaseSetup::selectDriver",
+    "action:Jivoo\\Databases\\DatabaseSetup::setupDriver"
+  ]
+}

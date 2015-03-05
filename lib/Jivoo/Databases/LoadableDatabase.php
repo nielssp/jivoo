@@ -138,6 +138,10 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
    */
   public function createTable(Schema $schema) {
     $this->migrationAdapter->createTable($schema);
+    $this->schema->addSchema($schema);
+    $table = $schema->getName();
+    $this->tableNames[] = $table; 
+    $this->tables[$table] = $this->getTable($table);
   }
 
   /**

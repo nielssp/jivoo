@@ -22,7 +22,7 @@ class Controller extends Module {
   /**
    * @var string[] A list of other helpers needed by this module.
   */
-  protected $helpers = array();
+  protected $helpers = array('Html');
   
   /**
    * @var string[] A list of models needed by this module.

@@ -19,6 +19,7 @@ use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Databases\TableNotFoundException;
 use Jivoo\Models\Validation\Validator;
+use Jivoo\Databases\ResultSetIterator;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.

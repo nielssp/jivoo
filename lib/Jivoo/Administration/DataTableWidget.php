@@ -12,6 +12,11 @@ namespace Jivoo\Administration;
 class DataTable extends Snippet {
   protected $helpers = array('Html', 'Form', 'Pagination', 'Widget', 'Filtering');
   
+  /**
+   * {@inheritdoc}
+   */
+  protected $parameters = array('settings');
+  
   protected $options = array(
     'model' => null,
     'selection' => null,

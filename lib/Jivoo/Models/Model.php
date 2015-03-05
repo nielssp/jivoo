@@ -10,6 +10,7 @@ use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Selection\IReadSelection;
 
 /**
  * A base class for models.

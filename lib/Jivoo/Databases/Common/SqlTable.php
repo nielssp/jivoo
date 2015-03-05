@@ -12,6 +12,7 @@ use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
+use Jivoo\Models\Record;
 
 /**
  * A table in an SQL database.

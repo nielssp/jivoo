@@ -6,11 +6,12 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Models\Model;
+use Jivoo\Models\IRecordIterator;
 
 /**
  * Iterator for {@see IResultSet} instances.
  */
-class ResultSetIterator implements \IRecordIterator {
+class ResultSetIterator implements IRecordIterator {
   /**
    * @var IResultSet Result set.
    */
