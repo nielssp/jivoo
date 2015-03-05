@@ -36,33 +36,55 @@ body {
       width: 932px; } }
 
 header {
-  color: #fff;
-  height: 48px;
-  line-height: 48px;
-  padding: 0 20px; }
+  color: #fff; }
+  @media screen and (min-width: 768px) {
+    header {
+      height: 48px; } }
   header .title {
-    font-size: 24px; }
+    height: 48px;
+    line-height: 48px;
+    font-size: 24px;
+    margin-left: 20px; }
     header .title, header .title:link, header .title:visited, header .title:hover, header .title:active {
       color: #fff;
       text-decoration: none; }
   header nav {
-    float: right; }
+    background-color: #eee; }
     header nav ul {
-      list-style-type: none; }
+      list-style-type: none;
+      margin: 0; }
       header nav ul li {
-        display: block;
-        float: left; }
+        display: block; }
+        @media screen and (min-width: 768px) {
+          header nav ul li {
+            float: left; } }
         header nav ul li a {
           display: block;
-          height: 48px;
-          padding: 0 20px; }
+          padding: 10px 20px; }
+          @media screen and (min-width: 768px) {
+            header nav ul li a {
+              padding: 0 20px;
+              height: 48px; } }
           header nav ul li a, header nav ul li a:link, header nav ul li a:visited, header nav ul li a:active {
-            color: #fff;
+            color: #444;
             text-decoration: none; }
+            @media screen and (min-width: 768px) {
+              header nav ul li a, header nav ul li a:link, header nav ul li a:visited, header nav ul li a:active {
+                color: #fff; } }
           header nav ul li a:hover {
-            color: #fff;
+            color: #2272cc;
             text-decoration: none;
-            background-color: #164B87; }
+            background-color: #ddd; }
+            @media screen and (min-width: 768px) {
+              header nav ul li a:hover {
+                color: #fff;
+                background-color: #164B87; } }
+    @media screen and (min-width: 768px) {
+      header nav {
+        background-color: transparent;
+        margin-right: 20px;
+        float: right;
+        line-height: 48px; } }
 
 #content {
   background-color: #fff;

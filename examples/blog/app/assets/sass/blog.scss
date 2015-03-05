@@ -54,12 +54,16 @@ body {
 
 header {
   color: #fff;
-  height: 48px;
-  line-height: 48px;
-  padding: 0 20px;
+
+  @media screen and (min-width: $sm) {
+    height: 48px;
+  }
 
   .title {
+    height: 48px;
+    line-height: 48px;
     font-size: 24px;
+    margin-left: 20px;
     &, &:link, &:visited, &:hover, &:active {
       color: #fff;
       text-decoration: none;
@@ -67,29 +71,46 @@ header {
   }
 
   nav {
-    float: right;
-
+    background-color: #eee;
     ul {
       list-style-type: none;
+      margin: 0;
       li {
         display: block;
-        float: left;
-
+        @media screen and (min-width: $sm) {
+          float: left;
+        }
         a {
           display: block;
-          height: 48px;
-          padding: 0 20px;
+          padding: 10px 20px;
+          @media screen and (min-width: $sm) {
+            padding: 0 20px;
+            height: 48px;
+          }
           &, &:link, &:visited, &:active {
-            color: #fff;
+            color: #444;
             text-decoration: none;
+            @media screen and (min-width: $sm) {
+              color: #fff;
+            }
           }
           &:hover {
-            color: #fff;
+            color: $color1;
             text-decoration: none;
-            background-color: #164B87;
+            background-color: #ddd;
+            @media screen and (min-width: $sm) {
+              color: #fff;
+              background-color: #164B87;
+            }
           }
         }
       }
+    }
+    @media screen and (min-width: $sm) {
+      background-color: transparent;
+      margin-right: 20px;
+      float: right;
+      line-height: 48px;
     }
   }
 }
