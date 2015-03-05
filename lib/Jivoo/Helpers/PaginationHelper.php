@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers;
 
+use Jivoo\Models\Selection\IReadSelection;
+
 /**
  * Create pagination on an array or a {@see IReadSelection}.
  */

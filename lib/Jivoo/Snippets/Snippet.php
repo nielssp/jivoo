@@ -32,6 +32,11 @@ class Snippet extends Module implements ISnippet {
   protected $parameters = array();
   
   /**
+   * @var string Data key.
+   */
+  protected $dataKey = null;
+  
+  /**
    * @var mixed[] Values of required parameters.
    */
   private $parameterValues = array();
@@ -64,6 +69,10 @@ class Snippet extends Module implements ISnippet {
     $this->inheritElements('helpers');
     $this->inheritElements('models');
     parent::__construct($app);
+    
+//     if (!isset($this->dataKey))
+//       $this->dataKey = Lib::getClassName($this);
+    
     if (isset($this->m->Helpers)) {
       $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);
       foreach ($this->helperObjects as $name => $helper) {
@@ -108,9 +117,13 @@ class Snippet extends Module implements ISnippet {
   }
   
   /**
-   * Called before invoking. 
+   * Called before invoking.
+   * @return Response|string|null If a response or a string is returned, snippet
+   * execution ends.
    */
-  public function before() { }
+  public function before() {
+    return null;
+  }
   
   /**
    * Called after invoking.
@@ -169,18 +182,24 @@ class Snippet extends Module implements ISnippet {
   public function __invoke($parameters = array()) {
     $this->parameterValues = array();
     foreach ($this->parameters as $offset => $name) {
-      if (isset($parameters[$name]) or isset($parameters[$offset]))
+      if (isset($parameters[$name]))
         $this->parameterValues[$name] = $parameters[$name];
+      else if (isset($parameters[$offset]))
+        $this->parameterValues[$name] = $parameters[$offset];
       else
         $this->parameterValues[$name] = null;
     }
-    $this->before();
+    $before = $this->before();
+    if (isset($before))
+      return $this->after($before);
     if ($this->request->isGet())
       return $this->after($this->get());
-    $name = Lib::getClassName($this);
-    if (!$this->request->hasValidData($name))
+    if (!$this->request->hasValidData($this->dataKey))
       return $this->after($this->get());
-    $data = $this->request->data[$name];
+    if (isset($this->dataKey))
+      $data = $this->request->data[$this->dataKey];
+    else
+      $data = $this->request->data;
     switch ($this->request->method) {
       case 'POST':
         return $this->after($this->post($data));

@@ -317,3 +317,28 @@ form {
     border-color: #2272CC; }
     .flash.flash-question:before {
       color: #2272CC; }
+
+.pagination {
+  text-align: center;
+  font-weight: normal;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 6px 0;
+  color: #555; }
+  .pagination .next, .pagination .prev {
+    font-weight: bold;
+    padding: 2px 4px; }
+  .pagination .next {
+    margin-left: 16px; }
+  .pagination .prev {
+    margin-right: 16px; }
+  .pagination .this {
+    background-color: #555;
+    color: #fff;
+    padding: 2px 4px; }
+  .pagination a, .pagination a:link, .pagination a:active, .pagination a:visited {
+    padding: 2px 4px; }
+
+.comments-pagination {
+  border: none; }

@@ -3,10 +3,13 @@ namespace Blog\Controllers;
 
 class PostsController extends AppController {
   
+  protected $helpers = array('Pagination', 'Snippet');
+  
   protected $models = array('Post');
   
   public function index() {
     $this->posts = $this->Post->orderByDescending('created');
+    $this->posts = $this->Pagination->paginate($this->posts, 5);
     return $this->render();
   }
 

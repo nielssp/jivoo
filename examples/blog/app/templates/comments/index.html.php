@@ -6,3 +6,5 @@
 </p>
 
 <?php endforeach; ?>
+
+<?php echo $this->embed('posts/pagination.html'); ?>

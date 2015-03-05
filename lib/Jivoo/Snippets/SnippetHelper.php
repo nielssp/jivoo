@@ -19,6 +19,7 @@ class SnippetHelper extends Helper {
   
   /**
    * Get snippet instance.
+   * @param string $snippet Snippet name.
    * @return ISnippet Snippet instance.
    */
   public function __get($snippet) {
@@ -27,9 +28,28 @@ class SnippetHelper extends Helper {
   
   /**
    * Invoke a snippet.
+   * @param string $snippet Snippet name.
+   * @param array $parameters Parameters.
    * @return Response|string Response or content.
    */
   public function __call($snippet, $parameters) {
-    return $this->m->Snippets->getSnippet($snippet)->__invoke($parameters);
+    try {
+      return $this->m->Snippets->getSnippet($snippet)->__invoke($parameters);
+    }
+    catch (NotFoundException $exception) {
+      return tr('Not found');
+    }
+  }
+  
+  /**
+   * Invoke snippet.
+   * @param string $snippet Snippet.
+   * @param mixed $parameters,... Parameters.
+   * @return Response|string Response or content.
+   */
+  public function __invoke($snippet) {
+    $parameters = func_get_args();
+    array_shift($parameters);
+    return $this->__call($snippet, $parameters);
   }
 }

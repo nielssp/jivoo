@@ -5,3 +5,5 @@
 <?php echo $post->content; ?>
 
 <?php endforeach; ?>
+
+<?php echo $this->embed('posts/pagination.html'); ?>

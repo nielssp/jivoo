@@ -15,3 +15,11 @@
 </p>
 <?php echo $Form->end(); ?>
 <?php endif; ?>
+
+<h2><?php echo tr('Comments'); ?></h2>
+
+<?php echo $Snippet('Comments\Index', $post->id); ?>
+
+<h2><?php echo tr('Leave a comment'); ?></h2>
+
+<?php echo $Snippet('Comments\Add', $post->id); ?>

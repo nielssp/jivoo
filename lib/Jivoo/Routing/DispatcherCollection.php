@@ -89,7 +89,7 @@ class DispatcherCollection {
     if (!isset($route['query']))
       $route['query'] = array();
     if (isset($route['mergeQuery']) and $route['mergeQuery'] == true)
-      $route['query'] = array_merge($this->request->query, $route['query']);
+      $route['query'] = array_merge($this->routing->request->query, $route['query']);
     if (!isset($route['fragment']))
       $route['fragment'] = null;
     if (isset($route['dispatcher']))
@@ -107,7 +107,12 @@ class DispatcherCollection {
       }
       if (!isset($this->routing->route))
         throw new InvalidRouteException(tr('No dispatcher found for route'));
-      return $this->routing->route;
+      $current = $this->routing->route;
+      if (isset($route['parameters']))
+        $current['parameters'] = $route['parameters'];
+      $current['query'] = $route['query'];
+      $current['fragment'] = $route['fragment'];
+      return $current;
     }
     return $route;
   }

@@ -370,3 +370,43 @@ form {
     }
   }
 }
+
+.pagination {
+  text-align: center;
+  font-weight: normal;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 6px 0;
+  color: #555;
+
+  .next, .prev {
+    font-weight: bold;
+    padding: 2px 4px;
+  }
+  .next {
+    margin-left: 16px;
+  }
+
+  .prev {
+    margin-right: 16px;
+  }
+
+  .this {
+    background-color: #555;
+    color: #fff;
+    padding: 2px 4px;
+  }
+
+  a {
+    &, &:link, &:active, &:visited {
+      padding: 2px 4px;
+    }
+    &:hover {
+    }
+  }
+}
+
+.comments-pagination {
+  border: none;
+}
