@@ -1,7 +1,3 @@
-<?php
-$this->extend('setup/layout.html');
-?>
-
 <?php echo $Form->form(); ?>
 
 <p><?php echo tr('%1 could not save the configuration to the following file:', $app['name']); ?></p>
