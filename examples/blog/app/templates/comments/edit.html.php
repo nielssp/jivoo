@@ -1,4 +1,4 @@
-<?php echo $Form->formFor($comment); ?>
+<?php echo $Form->formFor($comment, array('fragment' => 'comment', 'mergeQuery' => true)); ?>
 
 <div class="field">
 <?php echo $Form->label('author'); ?>
