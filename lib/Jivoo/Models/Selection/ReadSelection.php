@@ -6,6 +6,7 @@
 namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
+use Jivoo\Models\IRecord;
 
 /**
  * A read selection.

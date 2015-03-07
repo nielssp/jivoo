@@ -6,6 +6,7 @@
 namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
+use Jivoo\Models\IRecord;
 
 /**
  * An undecided selection. Will transform into a more specific selection based

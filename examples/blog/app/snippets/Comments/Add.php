@@ -32,7 +32,7 @@ class Add extends Snippet {
     );
     if ($comment->save()) {
       $this->session->flash->success = tr('Comment saved.');
-      return $this->redirect($this->post);
+      return $this->redirect($comment);
     }
     $this->view->data->comment = $comment;
     return $this->render('comments/edit.html');

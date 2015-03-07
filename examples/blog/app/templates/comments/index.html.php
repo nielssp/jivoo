@@ -1,7 +1,26 @@
 <ul class="comments">
 <?php foreach ($comments as $comment): ?>
 
-<li>
+<li id="comment<?php echo $comment->id; ?>">
+
+<?php if ($Auth->isLoggedIn()): ?>
+<?php echo $Form->form(array(
+  'controller' => 'Comments',
+  'action' => 'delete',
+  $comment->postId, $comment->id
+), array('method' => 'delete')); ?>
+<div class="admin">
+<?php echo $Html->link(tr('Edit'), array(
+  'controller' => 'Comments',
+  'action' => 'edit',
+  $comment->postId, $comment->id
+), array('class' => 'button')); ?>
+
+<?php echo $Form->submit(tr('Delete')); ?>
+</div>
+<?php echo $Form->end(); ?>
+<?php endif; ?>
+
 <div class="comment">
 <div class="author"><?php echo h($comment->author); ?></div>
 <div class="content">

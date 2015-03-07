@@ -436,6 +436,10 @@ form {
 .byline a:hover {
   color: #D81413; }
 
+.admin {
+  float: right;
+  font-size: 0.8em; }
+
 .comments {
   margin-left: 0; }
   .comments li {
