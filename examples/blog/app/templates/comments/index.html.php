@@ -40,4 +40,4 @@ echo '<time datetime="' . date('c', $comment->created)
 <?php endforeach; ?>
 </ul>
 
-<?php echo $this->embed('posts/pagination.html'); ?>
+<?php echo $this->embed('comments/pagination.html'); ?>
