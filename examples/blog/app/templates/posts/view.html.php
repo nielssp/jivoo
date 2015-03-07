@@ -20,9 +20,9 @@
 
 <div class="byline">
 <?php
-echo '<time datetime="' . date('c', $comment->created)
-      . '" title="' . ldate($comment->created) . '">'
-      . sdate($comment->created) . '</time>';
+echo '<time datetime="' . date('c', $post->created)
+      . '" title="' . ldate($post->created) . '">'
+      . sdate($post->created) . '</time>';
 ?>
 </div>
 
