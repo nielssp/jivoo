@@ -115,10 +115,88 @@ header {
   }
 }
 
-#content {
+#primary {
   background-color: #fff;
   padding: 20px;
 }
+
+#content {
+  @media screen and (min-width: $sm) {
+    float: left;
+    width: 100%;
+    margin-right: -200px;
+    padding-right: 200px;
+    overflow: hidden;
+  }
+}
+
+aside {
+  margin-bottom: 20px;
+  
+  .widget {
+    margin-bottom: 30px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    color: #444;
+  }
+  
+  .widget-title {
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #777;
+    text-transform: uppercase;
+  }
+  
+  .widget-content {
+    line-height: 20px;
+    border-radius: 5px;
+    
+    form {
+      margin: 0;
+    }
+    
+    ul, ol {
+      margin-bottom: 0;
+      margin-left: 15px;
+      list-style-type: none;
+      
+      li:first-child {
+        border: none;
+      }
+      
+      li {
+        padding: 2px 0;
+        border-top: 1px solid #ddd;
+      }
+      &.menu {
+        li {
+          padding: 0;
+          & > a {
+            display: block;
+            padding: 2px 0;
+          }
+        }
+      }
+    }
+
+    
+    & > ul {
+      margin-left: 0;
+    }
+  }
+  
+  @media screen and (min-width: $sm) {
+    clear: none;
+    float: right;
+    width: 180px;
+
+  }
+}
+
+footer {
+  clear: both;
+}
+
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
@@ -431,3 +509,116 @@ form {
 .comments-pagination {
   border: none;
 }
+
+.post {
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  
+  h1 {
+    a:link, a:active, a:visited {
+      text-decoration: none;
+      color: inherit;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: $linkHover;
+    }
+  }
+}
+
+
+.byline {
+  color: #777;
+  font-size: 0.8em;
+}
+
+.byline a:link,.byline a:active,.byline a:visited {
+  color: #777;
+  text-decoration: underline;
+}
+
+.byline a:hover {
+  color: #D81413;
+}
+
+
+.comments {
+  margin-left: 0;
+  
+  li {
+    list-style-type: none;
+    border-top: 1px solid #ddd;
+    padding: 20px 0;
+    
+    ul {
+      margin-left: 50px;
+    }
+    
+    li {
+      border: 0;
+      padding-bottom: 0;
+      font-size: 1em;
+    }
+    &:first-child {
+      border: none;
+    }
+    &.op {
+      .author {
+        .title {
+          background-color: $color1;
+          color: #fff;
+        }
+      }
+    }
+    &:target {
+      background-color: #ffe;
+    }
+  }
+  
+  .comment {
+    .author {
+      font-size: 1.1em;
+      margin-bottom: 5px;
+      font-weight: bold;
+
+      .title {
+        font-weight: normal;
+        font-size: 0.6em;
+        padding: 2px 5px;
+        border-radius: 3px;
+        margin-left: 10px;
+      }
+      .parent {
+        font-size: 0.8em;
+        font-weight: normal;
+        margin-left: 10px;
+        color: #777;
+      }
+    }
+
+    .content {
+      margin-bottom: 10px;
+
+      p {
+        margin-bottom: 0;
+        margin-top: 10px;
+
+        &:first-child {
+          margin: 0;
+        }
+      }
+    }
+
+    #comment {
+      margin-top: 20px;
+      h2 {
+        display: none;
+      }
+      input[name="cancel"] {
+        display: inline;
+      }
+    }
+  }
+}
+
+

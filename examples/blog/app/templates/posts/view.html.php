@@ -1,4 +1,16 @@
+<div class="post">
+
 <?php echo $post->content; ?>
+
+<div class="byline">
+<?php
+echo '<time datetime="' . date('c', $comment->created)
+      . '" title="' . ldate($comment->created) . '">'
+      . sdate($comment->created) . '</time>';
+?>
+</div>
+
+</div>
 
 <?php if ($Auth->isLoggedIn()): ?>
 <?php echo $Form->form(array(

@@ -7,7 +7,7 @@ use Jivoo\Models\Form;
 
 class AppController extends Controller {
   
-  protected $helpers = array('Auth', 'Form');
+  protected $helpers = array('Auth', 'Form', 'Snippet');
   
   public function before() {
     $this->config->defaults = array(

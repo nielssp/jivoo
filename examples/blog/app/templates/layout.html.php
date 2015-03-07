@@ -36,6 +36,7 @@ echo h($blogTitle);
 </nav>
 </header>
 
+<div id="primary">
 <div id="content">
 <?php if (isset($title)): ?>
 <h1><?php echo h($title); ?></h1>
@@ -46,6 +47,27 @@ echo h($blogTitle);
 <?php endforeach; ?>
 
 <?php echo $this->block('content'); ?>
+</div>
+
+<aside>
+
+<div class="widget">
+<div class="widget-title">Recent Posts</div>
+<div class="widget-content">
+<?php echo $Snippet('Sidebar\RecentPosts'); ?>
+</div>
+</div>
+
+<div class="widget">
+<div class="widget-title">Recent Comments</div>
+<div class="widget-content">
+<?php echo $Snippet('Sidebar\RecentComments'); ?>
+</div>
+</div>
+
+</aside>
+<footer>
+</footer>
 </div>
 
 </div>

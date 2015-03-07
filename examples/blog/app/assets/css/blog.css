@@ -72,7 +72,7 @@ header {
               header nav ul li a, header nav ul li a:link, header nav ul li a:visited, header nav ul li a:active {
                 color: #fff; } }
           header nav ul li a:hover {
-            color: #2272cc;
+            color: #2272CC;
             text-decoration: none;
             background-color: #ddd; }
             @media screen and (min-width: 768px) {
@@ -86,18 +86,68 @@ header {
         float: right;
         line-height: 48px; } }
 
-#content {
+#primary {
   background-color: #fff;
   padding: 20px; }
+
+@media screen and (min-width: 768px) {
+  #content {
+    float: left;
+    width: 100%;
+    margin-right: -200px;
+    padding-right: 200px;
+    overflow: hidden; } }
+
+aside {
+  margin-bottom: 20px; }
+  aside .widget {
+    margin-bottom: 30px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    color: #444; }
+  aside .widget-title {
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #777;
+    text-transform: uppercase; }
+  aside .widget-content {
+    line-height: 20px;
+    border-radius: 5px; }
+    aside .widget-content form {
+      margin: 0; }
+    aside .widget-content ul, aside .widget-content ol {
+      margin-bottom: 0;
+      margin-left: 15px;
+      list-style-type: none; }
+      aside .widget-content ul li:first-child, aside .widget-content ol li:first-child {
+        border: none; }
+      aside .widget-content ul li, aside .widget-content ol li {
+        padding: 2px 0;
+        border-top: 1px solid #ddd; }
+      aside .widget-content ul.menu li, aside .widget-content ol.menu li {
+        padding: 0; }
+        aside .widget-content ul.menu li > a, aside .widget-content ol.menu li > a {
+          display: block;
+          padding: 2px 0; }
+    aside .widget-content > ul {
+      margin-left: 0; }
+  @media screen and (min-width: 768px) {
+    aside {
+      clear: none;
+      float: right;
+      width: 180px; } }
+
+footer {
+  clear: both; }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal; }
 
 a, a:link, a:visited, a:hover, a:active {
-  color: #2272cc;
+  color: #2272CC;
   text-decoration: none; }
 a:hover, a:active {
-  color: #cc2222;
+  color: #CC2222;
   text-decoration: underline; }
 
 p {
@@ -217,8 +267,8 @@ input[type=button]:active,
 input[type=submit]:hover,
 input[type=submit]:active {
   background-color: #ddd;
-  color: #2272cc;
-  border-color: #2272cc; }
+  color: #2272CC;
+  border-color: #2272CC; }
 .button:active,
 button:active,
 input[type=button]:active,
@@ -364,3 +414,74 @@ form {
 
 .comments-pagination {
   border: none; }
+
+.post {
+  padding-bottom: 20px;
+  margin-bottom: 10px; }
+  .post h1 a:link, .post h1 a:active, .post h1 a:visited {
+    text-decoration: none;
+    color: inherit; }
+  .post h1 a:hover {
+    text-decoration: underline;
+    color: #CC2222; }
+
+.byline {
+  color: #777;
+  font-size: 0.8em; }
+
+.byline a:link, .byline a:active, .byline a:visited {
+  color: #777;
+  text-decoration: underline; }
+
+.byline a:hover {
+  color: #D81413; }
+
+.comments {
+  margin-left: 0; }
+  .comments li {
+    list-style-type: none;
+    border-top: 1px solid #ddd;
+    padding: 20px 0; }
+    .comments li ul {
+      margin-left: 50px; }
+    .comments li li {
+      border: 0;
+      padding-bottom: 0;
+      font-size: 1em; }
+    .comments li:first-child {
+      border: none; }
+    .comments li.op .author .title {
+      background-color: #2272CC;
+      color: #fff; }
+    .comments li:target {
+      background-color: #ffe; }
+  .comments .comment .author {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    font-weight: bold; }
+    .comments .comment .author .title {
+      font-weight: normal;
+      font-size: 0.6em;
+      padding: 2px 5px;
+      border-radius: 3px;
+      margin-left: 10px; }
+    .comments .comment .author .parent {
+      font-size: 0.8em;
+      font-weight: normal;
+      margin-left: 10px;
+      color: #777; }
+  .comments .comment .content {
+    margin-bottom: 10px; }
+    .comments .comment .content p {
+      margin-bottom: 0;
+      margin-top: 10px; }
+      .comments .comment .content p:first-child {
+        margin: 0; }
+  .comments .comment #comment {
+    margin-top: 20px; }
+    .comments .comment #comment h2 {
+      display: none; }
+    .comments .comment #comment input[name="cancel"] {
+      display: inline; }
+
+/*# sourceMappingURL=blog.css.map */
