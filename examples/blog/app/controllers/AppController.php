@@ -11,7 +11,7 @@ class AppController extends Controller {
   
   public function before() {
     $this->config->defaults = array(
-      'title' => 'My Blog',
+      'title' => tr('My Blog'),
       'username' => 'admin',
       'password' => $this->Auth->passwordHasher->hash('admin')
     );

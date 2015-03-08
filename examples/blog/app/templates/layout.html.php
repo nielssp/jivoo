@@ -24,13 +24,13 @@ echo h($blogTitle);
 
 <nav>
 <ul>
-<li><?php echo $Html->link('Home', null); ?></li>
+<li><?php echo $Html->link(tr('Home'), null); ?></li>
 <?php if ($Auth->isLoggedIn()): ?>
-<li><?php echo $Html->link('Add post', 'Posts::add'); ?></li>
-<li><?php echo $Html->link('Settings', 'App::settings'); ?></li>
-<li><?php echo $Html->link('Log out', 'App::logout'); ?></li>
+<li><?php echo $Html->link(tr('Add post'), 'Posts::add'); ?></li>
+<li><?php echo $Html->link(tr('Settings'), 'App::settings'); ?></li>
+<li><?php echo $Html->link(tr('Log out'), 'App::logout'); ?></li>
 <?php else: ?>
-<li><?php echo $Html->link('Admin', 'App::login'); ?></li>
+<li><?php echo $Html->link(tr('Admin'), 'App::login'); ?></li>
 <?php endif; ?>
 </ul>
 </nav>
@@ -52,14 +52,14 @@ echo h($blogTitle);
 <aside>
 
 <div class="widget">
-<div class="widget-title">Recent Posts</div>
+<div class="widget-title"><?php echo tr('Recent Posts'); ?></div>
 <div class="widget-content">
 <?php echo $Snippet('Sidebar\RecentPosts'); ?>
 </div>
 </div>
 
 <div class="widget">
-<div class="widget-title">Recent Comments</div>
+<div class="widget-title"><?php echo tr('Recent Comments'); ?></div>
 <div class="widget-content">
 <?php echo $Snippet('Sidebar\RecentComments'); ?>
 </div>
