@@ -163,7 +163,8 @@ class Databases extends LoadableModule {
     }
     catch (DatabaseConnectionFailedException $exception) {
       throw new DatabaseConnectionFailedException(
-        tr('Database connection failed: %1', $exception->getMessage())
+        tr('Database connection failed (%1): %2', $driver, $exception->getMessage()),
+        0, $exception
       );
     }
   }

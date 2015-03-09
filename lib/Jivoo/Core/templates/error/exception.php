@@ -81,6 +81,23 @@ null
 </tbody>
 </table>
 
+<?php $previous = $exception->getPrevious(); ?>
+<?php while (isset($previous)): ?>
+
+<h2><?php echo tr('Caused by'); ?></h2>
+
+<p><?php echo tr(
+  '%1 in file %2 on line %3:',
+  '<strong>' . get_class($previous) . '</strong>',
+  '<em title="' . $previous->getFile() . '">' . basename($previous->getFile()) . '</em>',
+  '<strong>' . $previous->getLine() . '</strong>'
+); ?>
+
+<?php echo $previous->getMessage(); ?></p>
+
+<?php $previous = $previous->getPrevious(); ?>
+<?php endwhile; ?>
+
 <h2><?php echo tr('System'); ?></h2>
 
 <table class="trace">
