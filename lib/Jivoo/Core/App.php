@@ -82,7 +82,7 @@ class App implements IEventSubject {
    */
   private $modules = array(
     'Snippets', 'Routing', 'Assets',
-    'View', 'Models', 'Helpers', 'Generators'
+    'View', 'Models', 'Helpers', 'Console'
   );
   
   /**

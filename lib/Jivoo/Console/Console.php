@@ -14,11 +14,23 @@ class Console extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array();
+  protected $modules = array('Snippets', 'Routing', 'View', 'Assets');
 
   /**
    * {@inheritdoc}
    */
   protected function init() {
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function afterLoad() {
+    if ($this->app->noAppConfig) {
+      $this->m->Routing->routes->root('snippet:Jivoo\Console\Index');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Console\Index');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Console\Configure');
+      $this->view->addTemplateDir($this->p('templates'));
+    }
   }
 }
