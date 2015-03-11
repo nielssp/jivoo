@@ -33,6 +33,9 @@ class Console extends LoadableModule {
       $this->view->addTemplateDir($this->p('templates'));
     }
     if ($this->config->get('enable', false) === true) {
+      $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/js/console.js');
+      $this->view->resources->provide('jivoo-console.js', $asset);
+      $this->view->resources->import('jivoo-console.js');
     }
   }
 }
