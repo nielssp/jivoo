@@ -169,9 +169,9 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
   }
   
   /**
-   * Update a configuration key
-   * @param string $key The configuration key to access
-   * @param mixed $value The variable to associate with the key. Could be a string/array/object etc.
+   * Update a configuration key.
+   * @param string $key The configuration key to access.
+   * @param mixed $value The variable to associate with the key. Could be a string/array/object etc..
    */
   public function set($key, $value) {
     if (isset($this->emptySubset))
@@ -254,20 +254,32 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
   }
   
   /**
-   * Return the value of a configuration key
-   * @param string $key Configuration key
-   * @param bool $arrayOnly Only return arrays
-   * @return mixed The content of the configuration key or false if key
-   * doesn't exist
+   * Retreive value of a configuration key. Returns the default value if
+   * the key is not found or if the type of the found value does not match the
+   * type of the defuault value.
+   * @param string $key Configuration key.
+   * @param string $default Default value.
+   * @return mixed Content of configuration key.
    */
-  public function get($key = '', $arrayOnly = false) {
-    if (!isset($this->data[$key])) {
-      return $arrayOnly ? array() : false;
+  public function get($key, $default = null) {
+    if (isset($this->virtual[$key])) {
+      $value = $this->virtual[$key];
     }
-    if ($arrayOnly && !is_array($this->data[$key])) {
-      return array();
+    else if (isset($this->data[$key])) {
+      $value = $this->data[$key];
     }
-    return $this->data[$key];
+    else {
+      if (isset($default))
+        $this->set($key, $default);
+      return $default;
+    }
+    if (isset($default)) {
+      if (gettype($default) !== gettype($value)) {
+        $this->set($key, $default);
+        return $default;
+      }
+    }
+    return $value;
   }
   
   /**

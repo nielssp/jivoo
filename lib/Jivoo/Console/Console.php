@@ -32,5 +32,7 @@ class Console extends LoadableModule {
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Configure');
       $this->view->addTemplateDir($this->p('templates'));
     }
+    if ($this->config->get('enable', false) === true) {
+    }
   }
 }
