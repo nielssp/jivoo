@@ -68,6 +68,8 @@ class Configure extends Snippet {
     mkdir($this->p('app', ''));
     mkdir($this->p('app', 'config'));
     mkdir($this->p('app', 'config/environments'));
+    $this->installFile('Core', 'config/environments/development.php');
+    $this->installFile('Core', 'config/environments/production.php');
     mkdir($this->p('user', ''));
     mkdir($this->p('log', ''));
     $file = fopen($this->p('app', 'app.json'), 'w');
@@ -77,6 +79,18 @@ class Configure extends Snippet {
       return $this->redirect(null);
     }
     return $this->render();
+  }
+  
+  /**
+   * Install a file from a modules default-directory into the app-directory. 
+   * @param string $module Module name.
+   * @param string $file Relative file path.
+   */
+  private function installFile($module, $file) {
+    copy(
+      \Jivoo\PATH . '/Jivoo/' . $module . '/default/' . $file,
+      $this->p('app', $file)
+    );
   }
 
   /**
