@@ -32,7 +32,7 @@ class PdoSqliteDatabase extends PdoDatabase {
       throw new DatabaseConnectionFailedException($exception->getMessage());
     }
     catch (\PDOException $exception) {
-      throw new DatabaseConnectionFailedException()(
+      throw new DatabaseConnectionFailedException(
         tr('SQLite database does not exist and could not be created: %1',
           $options['filename']));
     }
