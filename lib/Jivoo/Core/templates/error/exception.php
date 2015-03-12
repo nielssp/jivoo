@@ -38,48 +38,8 @@ if (isset($exception)) {
 <p><?php echo tr('The exception was thrown from the following file:')?></p>
 <p><code><?php echo $file ?></code></p>
 <h2><?php echo tr('Stack trace') ?></h2>
-<table class="trace">
-<thead>
-<tr>
-<th><?php echo tr('File') ?></th>
-<th><?php echo tr('Class') ?></th>
-<th><?php echo tr('Function') ?></th>
-<th><?php echo tr('Arguments') ?></th>
-</tr>
-</thead>
-<tbody>
-<?php foreach ($exception->getTrace() as $i => $trace): ?>
-<tr class="<?php echo (($i % 2 == 0) ? 'even' : 'odd') ?>">
-<td>
-<span title="<?php echo (isset($trace['file']) ? $trace['file'] : '') ?>">
-<?php echo (isset($trace['file']) ? basename($trace['file']) : '') ?>
-<?php echo (isset($trace['line']) ? ' : ' . $trace['line'] : '') ?>
-</span></td>
-<td><?php echo (isset($trace['class']) ? $trace['class'] : '') ?></td>
-<td><?php echo (isset($trace['function']) ? $trace['function'] : '') ?></td>
-<td>
-<?php if (isset($trace['args'])): ?>
-<?php foreach ($trace['args'] as $j => $arg): ?>
-<span title="<?php
-if (is_scalar($arg)) {
-  echo h($arg);
-}
-else if (is_object($arg)) {
-  echo get_class($arg);
-}
-else if (is_array($arg)) {
-  echo count($arg);
-}
-?>"><?php echo gettype($arg) ?>
-</span><?php echo ($j < count($trace['args']) - 1 ? ', ' : '') ?>
-<?php endforeach; ?>
-<?php else: ?>
-null
-<?php endif; ?>
-</td></tr>
-<?php endforeach; ?>
-</tbody>
-</table>
+<?php $trace = $exception->getTrace(); ?>
+<?php include dirname(__FILE__) . '/stack.php'; ?>
 
 <?php $previous = $exception->getPrevious(); ?>
 <?php while (isset($previous)): ?>
@@ -94,6 +54,9 @@ null
 ); ?>
 
 <?php echo $previous->getMessage(); ?></p>
+
+<?php $trace = $previous->getTrace(); ?>
+<?php include dirname(__FILE__) . '/stack.php'; ?>
 
 <?php $previous = $previous->getPrevious(); ?>
 <?php endwhile; ?>
