@@ -35,7 +35,10 @@ class Console extends LoadableModule {
     if ($this->config->get('enable', false) === true) {
       $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/js/console.js');
       $this->view->resources->provide('jivoo-console.js', $asset);
+      $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/css/console.css');
+      $this->view->resources->provide('jivoo-console.css', $asset);
       $this->view->resources->import('jivoo-console.js');
+      $this->view->resources->import('jivoo-console.css');
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
