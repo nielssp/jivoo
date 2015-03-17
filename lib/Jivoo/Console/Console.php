@@ -6,6 +6,8 @@
 namespace Jivoo\Console;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Json;
+use Jivoo\Core\Logger;
 
 /**
  * Developer console module.
@@ -39,6 +41,13 @@ class Console extends LoadableModule {
       $this->view->resources->provide('jivoo-console.css', $asset);
       $this->view->resources->import('jivoo-console.js');
       $this->view->resources->import('jivoo-console.css');
+      
+      $this->view->blocks->append(
+        'meta',
+        '<script type="text/javascript">var jivooLog = '
+          . Json::encode(Logger::getLog())
+          . ';</script>'
+      );
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
