@@ -7,6 +7,7 @@ namespace Jivoo\ActiveModels;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Event;
+use Jivoo\Routing\RenderEvent;
 
 /**
  * Active record/model system.
@@ -33,14 +34,14 @@ class ActiveModels extends LoadableModule {
     foreach ($classes as $class) {
       $this->addActiveModel($class);
     }
-    $this->m->Routing->attachEventHandler('beforeRender', array($this, 'installModels'));
+    $this->m->Routing->attachEventHandler('beforeFollowRoute', array($this, 'installModels'));
   }
 
   /**
    * Installs new models.
    * @param Event Empty event.
    */
-  public function installModels(Event $event) {
+  public function installModels(RenderEvent $event) {
     foreach ($this->models as $name => $model) {
       if ($model instanceof ActiveModel
         and !(isset($this->config['installed'][$name])

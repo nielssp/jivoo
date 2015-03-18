@@ -8,6 +8,7 @@ namespace Jivoo\Console;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Json;
 use Jivoo\Core\Logger;
+use Jivoo\Routing\RenderEvent;
 
 /**
  * Developer console module.
@@ -42,12 +43,16 @@ class Console extends LoadableModule {
       $this->view->resources->import('jivoo-console.js');
       $this->view->resources->import('jivoo-console.css');
       
-      $this->view->blocks->append(
-        'meta',
-        '<script type="text/javascript">var jivooLog = '
+      $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) {
+        if ($event->response->type === 'text/html') {
+          $body = $event->body;
+          $extraVars = '<script type="text/javascript">var jivooLog = '
           . Json::encode(Logger::getLog())
-          . ';</script>'
-      );
+          . ';</script>' . PHP_EOL;
+          $event->body = substr_replace($body, $extraVars, strripos($body, '</body'), 0);
+          $event->overrideBody = true;
+        }
+      });
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');

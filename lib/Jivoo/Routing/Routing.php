@@ -634,9 +634,6 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If no route selected.
    */
   public function findRoute() {
-    $this->triggerEvent('beforeRender');
-
-    
     if (!isset($this->selection)) {
       throw new InvalidRouteException(tr('No route selected'));
     }
@@ -651,6 +648,8 @@ class Routing extends LoadableModule {
    */
   public function followRoute($route) {
     $route = $this->validateRoute($route);
+    $event = new RenderEvent($this, $route);
+    $this->triggerEvent('beforeFollowRoute', $event);
     
     if ($this->request->path != array() and isset($this->root) and
          $this->isCurrent($this->root)) {
@@ -682,6 +681,8 @@ class Routing extends LoadableModule {
     catch (NotFoundException $e) {
       return $this->followRoute($this->error);
     }
+    $event->response = $response;
+    $this->triggerEvent('afterFollowRoute', $event);
     $this->respond($response);
   }
 
@@ -692,6 +693,8 @@ class Routing extends LoadableModule {
   public function respond(Response $response) {
     if (headers_sent($file, $line))
       throw new \Exception(tr('Headers already sent in %1 on line %2', $file, $line));
+    $event = new RenderEvent($this, $this->selection, $response);
+    $this->triggerEvent('beforeRender', $event);
     Http::setStatus($response->status);
     Http::setContentType($response->type);
     if (isset($response->modified)) {
@@ -722,6 +725,10 @@ class Routing extends LoadableModule {
       }
     }
     $body = $response->body;
+    $event->body = $body;
+    $this->triggerEvent('afterRender', $event);
+    if ($event->overrideBody)
+      $body = $event->body;
     if (function_exists('bzcompress') and $this->request->acceptsEncoding('bzip2')) {
       header('Content-Encoding: bzip2');
       echo bzcompress($body);
@@ -733,7 +740,6 @@ class Routing extends LoadableModule {
     else {
       echo $body;
     }
-    $this->triggerEvent('afterRender');
     $this->app->stop();
   }
 
@@ -789,6 +795,45 @@ class ResponseOverrideException extends \Exception {
    */
   function getResponse() {
     return $this->response;
+  }
+}
+
+/**
+ * The event of rendering a page.
+ */
+class RenderEvent extends Event {
+  /**
+   * @var array|ILinkable|string|null $route The route being followed, see {@see Routing}.
+   */
+  public $route;
+  
+  /**
+   * @var Response|null The rendered response if any.
+   */
+  public $response;
+  
+  /**
+   * @var string|null The response body if any.
+   */
+  public $body;
+  
+  /**
+   * @var bool Set to true to override response body.
+   */
+  public $overrideBody = false;
+  
+  /**
+   * Construct render event.
+   * @param object $sender Sender object.
+   * @param array|ILinkable|string|null $route The route being followed, see {@see Routing}.
+   * @param Response|null The rendered response if any.
+   * @param string|null The response body if any.
+   */
+  public function __construct($sender, $route, Response $response = null, $body = null) {
+    parent::__construct($sender);
+    $this->route = $route;
+    $this->response = $response;
+    $this->body = $body;
   }
 }
 
