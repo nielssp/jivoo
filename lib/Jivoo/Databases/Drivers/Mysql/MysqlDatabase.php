@@ -7,9 +7,13 @@ namespace Jivoo\Databases\Drivers\Mysql;
 
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
+use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Core\Logger;
 
 /**
  * MySQL database driver.
+ * @deprecated Use {@see MysqliDatabase} or {@see PdoMysqlDatabase} instead,
+ * if available.
  */
 class MysqlDatabase extends SqlDatabase {
   /**
@@ -37,12 +41,12 @@ class MysqlDatabase extends SqlDatabase {
     if (!mysql_select_db($options['database'], $this->handle)) {
       throw new DatabaseSelectFailedException(mysql_error());
     }
-    try {
-      $this->initTables($this->rawQuery('SHOW TABLES'));
-    }
-    catch (DatabaseQueryFailedException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage());
-    }
+//     try {
+//       $this->initTables($this->rawQuery('SHOW TABLES'));
+//     }
+//     catch (DatabaseQueryFailedException $exception) {
+//       throw new DatabaseConnectionFailedException($exception->getMessage());
+//     }
   }
 
   /**

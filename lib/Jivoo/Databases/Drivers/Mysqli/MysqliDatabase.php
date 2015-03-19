@@ -7,6 +7,7 @@ namespace Jivoo\Databases\Drivers\Mysqli;
 
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
+use Jivoo\Core\Logger;
 
 /**
  * MySQLi database driver.
@@ -29,17 +30,17 @@ class MysqliDatabase extends SqlDatabase {
     if (isset($options['tablePrefix'])) {
       $this->tablePrefix = $options['tablePrefix'];
     }
-    $this->handle = new mysqli($options['server'], $options['username'],
+    $this->handle = new \mysqli($options['server'], $options['username'],
       $options['password'], $options['database']);
     if ($this->handle->connect_error) {
       throw new DatabaseConnectionFailedException($this->handle->connect_error);
     }
-    try {
-      $this->initTables($this->rawQuery('SHOW TABLES'));
-    }
-    catch (DatabaseQueryFailedException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage());
-    }
+//     try {
+//       $this->initTables($this->rawQuery('SHOW TABLES'));
+//     }
+//     catch (DatabaseQueryFailedException $exception) {
+//       throw new DatabaseConnectionFailedException($exception->getMessage());
+//     }
   }
 
   /**
