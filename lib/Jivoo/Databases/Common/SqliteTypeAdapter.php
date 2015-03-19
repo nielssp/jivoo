@@ -6,19 +6,30 @@
 namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\IMigrationTypeAdapter;
+use Jivoo\Databases\Schema;
+use Jivoo\Models\DataType;
+use Jivoo\Core\Utilities;
 
 /**
  * Type and migration adapter for SQLite database drivers.
- * @todo Reimplement and document.
  */
 class SqliteTypeAdapter implements IMigrationTypeAdapter {
-
+  /**
+   * @var SqlDatabase Database.
+   */
   private $db;
 
+  /**
+   * Construct type adapter.
+   * @param SqlDatabase $db Database.
+   */
   public function __construct(SqlDatabase $db) {
     $this->db = $db;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function encode(DataType $type, $value) {
     $value = $type->convert($value);
     switch ($type->type) {
@@ -34,9 +45,14 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case DataType::BINARY:
       case DataType::ENUM:
         return $this->db->quoteString($value);
+      case DataType::OBJECT:
+        return $this->db->quoteString(Json::encode($value));
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function decode(DataType $type, $value) {
     if (!isset($value))
       return null;
@@ -54,15 +70,18 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case DataType::STRING:
       case DataType::ENUM:
         return strval($value);
+      case DataType::OBJECT:
+        return Json::decode($value);
     }
   }
 
   /**
    * Convert a schema type to an SQLite type
-   * @param DataType $type
-   * @return string SQLite type
+   * @param DataType $type Type.
+   * @param bool $isPrimaryKey True if primary key.
+   * @return string SQLite type.
    */
-  public function convertType(DataType $type, $isPrimaryKey = false) {
+  public function fromDataType(DataType $type, $isPrimaryKey = false) {
     $primaryKey = '';
     if ($isPrimaryKey)
       $primaryKey = ' PRIMARY KEY';
@@ -99,6 +118,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
         break;
       case DataType::TEXT:
       case DataType::ENUM:
+      case DataType::OBJECT:
       default:
         $column = 'TEXT';
         break;
@@ -111,11 +131,41 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $column .= $this->db->escapeQuery(' DEFAULT ?', $type->default);
     return $column;
   }
+  
+  /**
+   * Convert output of PRAGMA to DataType.
+   * @param array $row Row result.
+   * @throws \Exception If type unsupported.
+   * @return DataType The type.
+   */
+  private function toDataType($row) {
+    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? */i', $row['type'], $matches);
+    $actualType = strtolower($matches[1]);
+    $length = isset($matches[3]) ? $matches[3] : 0;
+    $null = (isset($row['notnull']) and $row['notnull'] != '1');
+    $default = null;
+    if (isset($row['dflt_value']))
+      $default = stripslashes(preg_replace('/^\'|\'$/', '', $row['dflt_value']));
+    switch ($actualType) {
+      case 'integer':
+        return DataType::integer(DataType::BIG, $null, intval($default));
+      case 'real':
+        return DataType::float($null, floatval($default));
+      case 'text':
+        return DataType::text($null, $default);
+      case 'blob':
+        return DataType::binary($null, $default);
+    }
+    throw new \Exception(tr(
+      'Unsupported SQLite type for column: %1', $row['name']
+    ));
+  }
 
   /**
-   * Convert a MySQL type to a DataType
-   * @param string $type MySQL type
-   * @return array A 3-tuple of type name, length and unsigned
+   * Compare output of PRAGMA with a data type.
+   * @param array $row Row result.
+   * @param DataType $type Type.
+   * @return boolean True if matching types.
    */
   public function checkType($row, DataType $type) {
     preg_match('/ *([^ (]+) *(\(([0-9]+)\))? */i', $row['type'], $matches);
@@ -177,29 +227,21 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     return true;
   }
 
-  public function checkSchema($table, ISchema $schema) {
+  /**
+   * {@inheritdoc}
+   */
+  public function getTableSchema($table) {
     $result = $this->db->rawQuery('PRAGMA table_info("' . $this->db->tableName($table) . '")');
-    $columns = array();
+    $schema = new Schema($table);
     $primaryKey = array();
     while ($row = $result->fetchAssoc()) {
       $column = $row['name'];
       if (isset($row['pk']) and $row['pk'] == '1')
         $primaryKey[] = $column;
-      if (isset($schema->$column))
-        $columns[$column] = $this->checkType($row, $schema->$column) ? 'ok' : 'alter';
-      else
-        $columns[$column] = 'delete';
+      $schema->addField($column, $this->toDataType($row));
     }
-    foreach ($schema->getFields() as $field) {
-      if (!isset($columns[$field]))
-        $columns[$field] = 'add';
-    }
+    $schema->setPrimaryKey($primaryKey);
     $result = $this->db->rawQuery('PRAGMA index_list("' . $this->db->tableName($table) . '")');
-    $actualIndexes = array();
-    $actualIndexes['PRIMARY'] = array(
-      'columns' => $primaryKey,
-      'unique' => true
-    );
     while ($row = $result->fetchAssoc()) {
       $index = $row['name'];
       $unique = $row['unique'] == 1;
@@ -210,42 +252,48 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       if ($count == 0)
         continue;
       $columnResult = $this->db->rawQuery('PRAGMA index_info("' . $index . '")');
-      $indexFields = array();
+      $columns = array();
       while ($row = $columnResult->fetchAssoc()) {
-        $indexFields[] = $row['name'];
+        $columns[] = $row['name'];
       }
-      $actualIndexes[$name] = array(
-        'columns' => $indexFields,
-        'unique' => $unique
-      );
-    }
-    $expectedIndexes = $schema->getIndexes();
-    $allIndexes = array_unique(array_merge(
-      array_keys($actualIndexes), array_keys($expectedIndexes)
-    ));
-    $indexes = array();
-    foreach ($allIndexes as $index) {
-      if (!isset($actualIndexes[$index]))
-        $indexes[$index] = 'add';
-      else if (!isset($expectedIndexes[$index]))
-        $indexes[$index] = 'delete';
-      else if ($actualIndexes[$index] != $expectedIndexes[$index])
-        $indexes[$index] = 'alter';
+      if ($unique)
+        $schema->addUnique($name, $columns);
       else
-        $indexes[$index] = 'ok';
+        $schema->addIndex($name, $columns);
     }
-    return array(
-      'columns' => $columns,
-      'indexes' => $indexes
-    );
+    return $schema;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function tableExists($table) {
     $result = $this->db->rawQuery(
       'PRAGMA table_info("' . $this->db->tableName($table) . '")');
     return $result->hasRows();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getTables() {
+    $prefix = $this->db->tableName('');
+    $prefixLength = strlen($prefix);
+    $result = $this->db->rawQuery('SELECT name FROM sqlite_master WHERE type = "table"');
+    $tables = array();
+    while ($row = $result->fetchRow()) {
+      $name = $row[0];
+      if (substr($name, 0, $prefixLength) == $prefix) {
+        $name = substr($name, $prefixLength);
+        $tables[] = Utilities::underscoresToCamelCase($name);
+      }
+    }
+    return $tables;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function createTable(Schema $schema) {
     $sql = 'CREATE TABLE "' . $this->db->tableName($schema->getName()) . '" (';
     $columns = $schema->getFields();
@@ -261,7 +309,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
         $first = false;
       }
       $sql .= $column;
-      $sql .= ' ' . $this->convertType($type, $singlePrimary and $primaryKey[0] == $column);
+      $sql .= ' ' . $this->fromDataType($type, $singlePrimary and $primaryKey[0] == $column);
     }
     if (!$singlePrimary) {
       $sql .= ', PRIMARY KEY (' . implode(', ', $schema->getPrimaryKey()) . ')';
@@ -285,29 +333,54 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function renameTable($table, $newName) {
+    throw new \Exception('Not implemented');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function dropTable($table) {
     $sql = 'DROP TABLE "' . $this->db->tableName($table) . '"';
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addColumn($table, $column, DataType $type) {
     $sql = 'ALTER TABLE "' . $this->db->tableName($table) . '" ADD ' . $column;
-    $sql .= ' ' . $this->convertType($type);
+    $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function deleteColumn($table, $column) {
     throw new \Exception(tr('Not implemented'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function alterColumn($table, $column, DataType $type) {
     throw new \Exception(tr('Not implemented'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function renameColumn($table, $column, $newName) {
     throw new \Exception(tr('Not implemented'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function createIndex($table, $index, $options = array()) {
     $sql = 'CREATE';
     if ($options['unique']) {
@@ -321,12 +394,18 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function deleteIndex($table, $index) {
     $sql = 'DROP INDEX "';
     $sql .= $this->db->tableName($table) . '_' . $index . '"';
     $this->db->rawQuery($sql);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function alterIndex($table, $index, $options = array()) {
     $this->deleteIndex($table, $index);
     $this->createIndex($table, $index, $options);

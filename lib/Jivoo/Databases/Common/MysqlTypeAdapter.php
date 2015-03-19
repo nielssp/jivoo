@@ -80,9 +80,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   }
 
   /**
-   * Convert a schema type to a MySQL type
-   * @param DataType $type
-   * @return string MySQL type
+   * Convert a schema type to a MySQL type.
+   * @param DataType $type Type.
+   * @return string MySQL type.
    */
   private function fromDataType(DataType $type) {
     $autoIncrement = '';

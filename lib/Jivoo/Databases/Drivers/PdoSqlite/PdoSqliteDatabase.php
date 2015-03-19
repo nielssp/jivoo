@@ -26,7 +26,6 @@ class PdoSqliteDatabase extends PdoDatabase {
       $this->tablePrefix = $options['tablePrefix'];
     try {
       $this->pdo = new \PDO('sqlite:' . $options['filename']);
-      $this->initTables($this->rawQuery('SELECT name FROM sqlite_master WHERE type = "table"'));
     }
     catch (DatabaseQueryFailedException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());

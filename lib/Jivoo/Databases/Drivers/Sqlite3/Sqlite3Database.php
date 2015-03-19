@@ -8,6 +8,7 @@ namespace Jivoo\Databases\Drivers\Sqlite3;
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
 use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Core\Logger;
 
 /**
  * SQLite3 database driver.
@@ -30,7 +31,6 @@ class Sqlite3Database extends SqlDatabase {
       $this->tablePrefix = $options['tablePrefix'];
     try {
       $this->handle = new \SQLite3($options['filename']);
-      $this->initTables($this->rawQuery('SELECT name FROM sqlite_master WHERE type = "table"'));
     }
     catch (DatabaseQueryFailedException $exception) {
       throw new DatabaseConnectionFailedException($exception->getMessage());
