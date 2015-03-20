@@ -7,6 +7,7 @@ namespace Jivoo\Extensions;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadEvent;
+use Jivoo\Core\Map;
 
 /**
  * Extension system.
@@ -79,10 +80,11 @@ class Extensions extends LoadableModule {
       'disableBuggy' => true
     );
     
-    if (!isset($this->config['import']))
-      $this->config['import'] = $this->app->appConfig['extensions']; 
     
-    $this->importList = $this->config['import']->getArray();
+    if (isset($this->app->appConfig['extensions']))
+      $this->importList = $this->app->appConfig['extensions'];
+    
+    $this->importList = $this->config->get('import', $this->importList);
     
     $appExtensions = $this->p('app', 'extensions');
     if (is_dir($appExtensions)) {

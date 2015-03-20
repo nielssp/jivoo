@@ -16,7 +16,8 @@
     "Setup",
     "Console",
     "AccessControl",
-    "Console"
+    "Console",
+    "Extensions"
   ],
   "setup": [
     "action:Jivoo\\Databases\\DatabaseSetup::selectDriver",
