@@ -56,6 +56,8 @@ class Console extends LoadableModule {
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
+
+      $this->view->addTemplateDir($this->p('templates'));
     }
   }
 }
