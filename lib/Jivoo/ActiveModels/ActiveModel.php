@@ -228,12 +228,8 @@ abstract class ActiveModel extends Model implements IEventListener {
         $this->defaults[$field] = $type->default;
     }
 
-    if (isset($this->record)) {
-      if (!class_exists($this->record) or !is_subclass_of($this->record, 'ActiveRecord'))
-        throw new InvalidRecordClassException(tr(
-          'Record class %1 must exist and extend %2', $this->record, 'ActiveRecord'
-        ));
-    }
+    if (isset($this->record))
+      Lib::assumeSubclassOf($this->record, 'Jivoo\ActiveModels\ActiveRecord');
     
     $this->attachEventListener($this);
     foreach ($this->mixins as $mixin => $options) {
