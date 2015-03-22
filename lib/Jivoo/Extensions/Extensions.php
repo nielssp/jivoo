@@ -8,6 +8,9 @@ namespace Jivoo\Extensions;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadEvent;
 use Jivoo\Core\Map;
+use Jivoo\Core\Json;
+use Jivoo\Core\Lib;
+use Jivoo\Core\Logger;
 
 /**
  * Extension system.
@@ -140,7 +143,7 @@ class Extensions extends LoadableModule {
       $module = $veInfo['module'];
       $template = $veInfo['template'];
       $hook = isset($veInfo['hook']) ? $veInfo['hook'] : null;
-      Lib::assumeSubclassOf($module, 'IViewExtension');
+//       Lib::assumeSubclassOf($module, 'Jivoo\View\IViewExtension');
       $this->loadList[$module] = $info;
       $this->viewExtensions[$module] = array(
         'template' => $template,
@@ -227,7 +230,7 @@ class Extensions extends LoadableModule {
         $extensionInfo = $this->getInfo($extension);
         if (!isset($extensionInfo))
           throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
-        Lib::addIncludePath($extensionInfo->p($this->app, ''));
+        Lib::import($extensionInfo->p($this->app, ''));
         foreach ($this->featureHandlers as $tuple) {
           list($feature, $handler) = $tuple;
           if (isset($extensionInfo->$feature))
@@ -268,7 +271,7 @@ class Extensions extends LoadableModule {
       if (!isset($this->loadList[$name]))
         throw new ExtensionNotFoundException(tr('Extension not in load list: "%1"', $name));
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
-      Lib::assumeSubclassOf($name, 'ExtensionModule');
+      Lib::assumeSubclassOf($name, 'Jivoo\Extensions\ExtensionModule');
       $info = $this->loadList[$name];
       $this->e->$name = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
       $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e->$name));

@@ -1,4 +1,8 @@
 <?php
+use Jivoo\Content\IContentFormat;
+use Jivoo\Extensions\ExtensionModule;
+use Jivoo\Content\TextareaEditor;
+
 class MarkdownFormat extends ExtensionModule implements IContentFormat {
   
   protected $modules = array('Content');
