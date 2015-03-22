@@ -89,8 +89,11 @@ class Models extends LoadableModule {
    */
   public function getModels($names) {
     $models = array();
-    foreach ($names as $name)
+    foreach ($names as $name) {
       $models[$name] = $this->getModel($name);
+      if (!isset($models[$name]))
+        throw new ModelNotFoundException(tr('Model "%1" not found', $name));
+    }
     return $models;
   }
 
