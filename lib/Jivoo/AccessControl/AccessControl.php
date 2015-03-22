@@ -38,16 +38,19 @@ class AccessControl extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    $defaultHasher = $this->config->get('defaultHasher');
     foreach ($this->builtIn as $builtIn) {
       try {
         $passwordHasher = new $builtIn();
         $this->hashers[$builtIn] = $passwordHasher;
-        if (!isset($this->config['defaultHasher']))
+        if (!isset($defaultHasher) or !isset($this->hashers[$defaultHasher])) {
+          $defaultHasher = $builtIn;
           $this->config['defaultHasher'] = $builtIn;
+        }
       }
       catch (UnsupportedHashTypeException $e) { }
     }
-    $this->hashers['Default'] = $this->hashers[$this->config['defaultHasher']];
+    $this->hashers['Default'] = $this->hashers[$defaultHasher];
     
     $this->m->Helpers->addHelper('Jivoo\AccessControl\AuthHelper');
   }

@@ -63,14 +63,17 @@ class Controllers extends LoadableModule {
           continue;
         }
         if (is_dir($this->p('app', 'controllers/' . $dir . '/' . $file))) {
-          $this->findControllers($dir . '/' . $file);
+          if ($dir === '')
+            $this->findControllers($file);
+          else
+            $this->findControllers($dir . '/' . $file);
         }
         else {
           $split = explode('.', $file);
           if (isset($split[1]) and $split[1] == 'php') {
             $name = $split[0];
             if ($dir != '')
-              $name = str_replace('/', '\\', $dir) . $name;
+              $name = str_replace('/', '\\', $dir) . '\\' . $name;
             $class = $this->app->n('Controllers\\' . $name);
             $this->controllers[preg_replace('/Controller$/', '', $name)] = $class;
           }

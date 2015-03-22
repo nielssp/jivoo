@@ -6,6 +6,8 @@
 namespace Jivoo\Themes;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Core\Json;
+use Jivoo\Core\Logger;
 
 /**
  * Theming module.

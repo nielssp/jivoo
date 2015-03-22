@@ -6,6 +6,8 @@
 namespace Jivoo\Extensions;
 
 use Jivoo\Models\IBasicRecord;
+use Jivoo\Assets\Assets;
+use Jivoo\Core\App;
 
 /**
  * Information about an extension.

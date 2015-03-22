@@ -6,6 +6,7 @@
 namespace Jivoo\Administration;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Administration\Menu\IconMenu;
 
 /**
  * Module for creating web application user interfaces.
