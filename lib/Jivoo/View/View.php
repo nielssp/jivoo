@@ -230,15 +230,7 @@ class View extends LoadableModule {
    * @return string Content of template.
    */
   public function renderOnly($template, $data = array()) {
-    if (isset($this->template))
-      return $this->template->render($template, $data);
-    arsort($this->templateDirs);
-    $this->data->flash = $this->request->session->flash;
-    $this->template = new Template($this);
-    $this->template->ignoreExtend(true);
-    $result = $this->template->render($template, $data);
-    $this->template = null;
-    return $result;
+    return $this->render($template, $data, false);
   }
   
 }
