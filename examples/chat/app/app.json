@@ -1,0 +1,14 @@
+{
+  "name": "Jivoo chat application",
+  "namespace": "Chat",
+  "version": "1.0",
+  "modules": [
+    "Routing",
+    "Assets",
+    "View",
+    "Snippets",
+    "Models",
+    "Content",
+    "Helpers"
+  ]
+}
