@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\Routing\TextResponse;
+use Jivoo\Routing\Http;
+
 /**
  * JSON encoding and decoding.
  * @TODO Fallback when json php extension is missing.
@@ -24,6 +27,21 @@ class Json {
     return json_encode($object);
   }
   
+  /**
+   * Create a response object containing a JSON encoded object.
+   * @param mixed $object Any object.
+   * @return \Jivoo\Routing\TextResponse Response object.
+   */
+  public static function encodeResponse($object) {
+    return new TextResponse(Http::OK, 'application/json', self::encode($object));
+  }
+  
+  /**
+   * JSON pretty printer.
+   * @param mixed $object Object/array/value.
+   * @param string $prefix Prefix for line, i.e. indentation.
+   * @return string Pretty printed JSON.
+   */
   private static function printJson($object, $prefix = '') {
     if (is_array($object)) {
       if (empty($object))

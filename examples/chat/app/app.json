@@ -6,9 +6,22 @@
     "Routing",
     "Assets",
     "View",
+    "Controllers",
     "Snippets",
     "Models",
     "Content",
-    "Helpers"
+    "Helpers",
+    "Extensions",
+    "Databases",
+    "ActiveModels",
+    "Migrations",
+    "Setup"
+  ],
+  "extensions": [
+    "jquery"
+  ],
+  "setup": [
+    "action:Jivoo\\Databases\\DatabaseSetup::selectDriver",
+    "action:Jivoo\\Databases\\DatabaseSetup::setupDriver"
   ]
 }

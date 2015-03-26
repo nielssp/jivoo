@@ -7,6 +7,7 @@ namespace Jivoo\Snippets;
 
 use Jivoo\Helpers\Helper;
 use Jivoo\Routing\Response;
+use Jivoo\Routing\NotFoundException;
 
 /**
  * Find and embed snippets.
