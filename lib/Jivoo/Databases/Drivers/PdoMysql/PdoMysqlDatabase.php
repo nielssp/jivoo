@@ -37,11 +37,8 @@ class PdoMysqlDatabase extends PdoDatabase {
           $options['username']);
       }
     }
-    catch (DatabaseQueryFailedException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage());
-    }
     catch (\PDOException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage());
+      throw new DatabaseConnectionFailedException($exception->getMessage(), 0, $exception);
     }
   }
 }

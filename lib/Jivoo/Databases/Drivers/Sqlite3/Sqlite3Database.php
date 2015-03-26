@@ -9,6 +9,7 @@ use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
 use Jivoo\Databases\DatabaseQueryFailedException;
 use Jivoo\Core\Logger;
+use Jivoo\Databases\DatabaseConnectionFailedException;
 
 /**
  * SQLite3 database driver.
@@ -32,13 +33,12 @@ class Sqlite3Database extends SqlDatabase {
     try {
       $this->handle = new \SQLite3($options['filename']);
     }
-    catch (DatabaseQueryFailedException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage());
-    }
     catch (\Exception $exception) {
       throw new DatabaseConnectionFailedException(
         tr('SQLite database does not exist and could not be created: %1',
-          $options['filename']));
+          $options['filename']),
+        0, $exception
+      );
     }
   }
 
