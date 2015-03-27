@@ -8,6 +8,7 @@ namespace Jivoo\Databases\Drivers\Mysqli;
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Core\Logger;
+use Jivoo\Databases\DatabaseConnectionFailedException;
 
 /**
  * MySQLi database driver.

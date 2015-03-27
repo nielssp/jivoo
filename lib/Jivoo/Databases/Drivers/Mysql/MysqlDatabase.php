@@ -9,6 +9,8 @@ use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Databases\DatabaseQueryFailedException;
 use Jivoo\Core\Logger;
+use Jivoo\Databases\DatabaseSelectFailedException;
+use Jivoo\Databases\DatabaseConnectionFailedException;
 
 /**
  * MySQL database driver.

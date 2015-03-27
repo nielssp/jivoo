@@ -11,6 +11,9 @@ namespace Jivoo\Routing;
 class Http {
 
   const OK = 200;
+  const CREATED = 201;
+  const ACCEPTED = 202;
+  const NO_CONTENT = 204;
   const MULTIPLE_CHOICES = 300;
   const MOVED_PERMANENTLY = 301;
   const FOUND = 302;
@@ -77,6 +80,12 @@ class Http {
     switch ($status) {
       case 200:
         return 'OK';
+      case 201:
+        return 'Created';
+      case 202:
+        return 'Accepted';
+      case 204:
+        return 'No Content';
       case 300:
         return 'Multiple Choices';
       case 301:
