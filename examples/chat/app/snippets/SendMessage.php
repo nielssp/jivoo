@@ -17,6 +17,12 @@ class SendMessage extends Snippet {
     $message = $this->Message->create(
       $data, array('message')
     );
+    if (preg_match('/^\/name (.+)/i', $message->message, $matches) === 1) {
+      $this->session['name'] = trim($matches[1]);
+      return Json::encodeResponse('success');
+    }
+    if (isset($this->session['name']))
+      $message->author = $this->session['name'];
     if ($message->save()) {
       return Json::encodeResponse('success');
     }

@@ -1,6 +1,7 @@
 $(function() {
   $('#chat-log').each(function() {
-    var $log = $(this);
+    var log = this;
+    var $log = $(log);
     var url = $log.data('server');
     var poller = function() {
       $.ajax({
@@ -9,12 +10,34 @@ $(function() {
         dataType: 'json',
         success: function(response) {
           if (response !== undefined) {
+            var currentScroll = $log.scrollTop();
+            var scrollHeight = log.scrollHeight - $log.innerHeight(); 
             var lastMessage = 0;
             for (var i = 0; i < response.length; i++) {
               lastMessage = response[i].id;
-              $log.append('<div class="message">' + response[i].message + '</div>')
+              var $message = $('<div class="message">');
+              var $author = $('<span class="message-author">');
+              if (response[i].author === null) {
+                $author.text('anonymous');
+                $message.addClass('message-anonymous');
+              }
+              else {
+                var name = response[i].author;
+                var hash = 0;
+                for (var j = 0, len = name.length; j < len; j++)
+                  hash += name.charCodeAt(j);
+                var hue = hash % 360;
+                $author.css('color', 'hsl(' + hue + ', 60%, 50%)');
+                $author.text(response[i].author);
+              }
+              var $text = $('<span class="message-text">');
+              $text.text(response[i].message);
+              $message.append($author).append($text);
+              $log.append($message);
             }
             url = $log.data('server') + '?lastMessage=' + lastMessage;
+            if (currentScroll >= scrollHeight)
+              $log.scrollTop(log.scrollHeight - $log.innerHeight());
           }
           var interval = setInterval(function() {
             clearInterval(interval);
@@ -26,6 +49,10 @@ $(function() {
       });
     };
     poller();
+  });
+  
+  $('#change-name').click(function() {
+    $('#Message_message').focus().val('/name ');
   });
   
   $('#Message').submit(function() {
@@ -43,6 +70,7 @@ $(function() {
       data: data,
       success: function(response) {
         $('#Message input').prop('disabled', false);
+        $('#Message_message').focus()
         if (response === 'success') {
           $('#Message_message').val('');
         }
@@ -50,4 +78,6 @@ $(function() {
     })
     return false;
   });
+  
+  $('#Message_message').focus();
 });
