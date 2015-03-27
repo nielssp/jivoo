@@ -7,6 +7,7 @@ namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
 use Jivoo\Models\IRecord;
+use Jivoo\Models\Condition\Condition;
 
 /**
  * A read selection.
