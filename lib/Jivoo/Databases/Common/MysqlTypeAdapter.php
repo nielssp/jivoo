@@ -35,8 +35,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     $value = $type->convert($value);
     switch ($type->type) {
       case DataType::INTEGER:
+        return intval($value);
       case DataType::FLOAT:
-        return $value;
+        return floatval($value);
       case DataType::BOOLEAN:
         return $value ? 1 : 0;
       case DataType::DATE:
