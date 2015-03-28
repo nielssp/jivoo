@@ -42,13 +42,11 @@ $(function() {
       console.log('Connection opened');
     });
     source.addEventListener('error', function(e) {
-      console.log('Error');
-      console.log(e);
       if (e.readyState == EventSource.CLOSED) {
         console.log('Connection closed');
       }
     });
-  };
+  });
   
   $('#change-name').click(function() {
     $('#Message_message').focus().val('/name ');
