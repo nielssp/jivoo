@@ -1,4 +1,4 @@
-<?php echo $Form->formFor($message, 'SendMessage'); ?>
+<?php echo $Form->formFor($message, 'SendMessage', array('autocomplete' => 'off')); ?>
 
 <p>
 <?php echo $Form->text('message', array('placeholder' => tr('Send a message'))); ?>
