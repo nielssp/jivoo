@@ -378,8 +378,14 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
 //     if (!is_writable($this->file)) {
 //       return false;
 //     }
-    if (!is_dir(dirname($this->file)))
-      return false;
+    $dir = dirname($this->file);
+    if (!is_dir($dir)) {
+      if (!file_exists($dir)) {
+        if (!mkdir($dir)) {
+          return false;
+        }
+      }
+    }
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
       return false;
