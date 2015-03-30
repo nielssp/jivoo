@@ -62,6 +62,11 @@ class Snippet extends Module implements ISnippet {
   private $enableLayout = false;
   
   /**
+   * @var array Data for template.
+   */
+  protected $viewData = array();
+  
+  /**
    * Construct snippet.
    */
   public final function __construct(App $app) {
@@ -287,6 +292,6 @@ class Snippet extends Module implements ISnippet {
     }
     $enableLayout = $this->enableLayout;
     $this->disableLayout();
-    return $this->view->render($templateName, array(), $enableLayout);
+    return $this->view->render($templateName, $this->viewData, $enableLayout);
   }
 }

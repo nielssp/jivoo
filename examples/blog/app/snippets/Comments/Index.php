@@ -19,7 +19,7 @@ class Index extends Snippet {
     
     $comments = $this->Pagination->paginate($comments);
 
-    $this->view->data->comments = $comments;
+    $this->viewData['comments'] = $comments;
 
     return $this->render();
   }
