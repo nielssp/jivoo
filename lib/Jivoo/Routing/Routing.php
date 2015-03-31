@@ -119,7 +119,7 @@ class Routing extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $events = array('beforeRender', 'afterRender', 'beforeRedirect', 'beforeCallAction', 'afterCallAction');
+  protected $events = array('beforeLoadRoutes', 'afterLoadRoutes', 'beforeFindRoute', 'beforeRender', 'afterRender', 'beforeRedirect', 'beforeCallAction', 'afterCallAction');
 
   /**
    * {@inheritdoc}
@@ -164,16 +164,7 @@ class Routing extends LoadableModule {
       $this->setRoot($this->config['root'], 10);
     }
 
-    $routesFile = $this->p('app', 'config/routes.php');
-    if (file_exists($routesFile)) {
-      $routes = $this->routes;
-      $this->app->attachEventHandler(
-        'afterLoadModules',
-        function() use($routes, $routesFile) {
-          $routes->load($routesFile);
-        }
-      );
-    }
+    $this->app->attachEventHandler('afterLoadModules', array($this, 'loadRoutes'));
     $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
   }
   
@@ -209,6 +200,19 @@ class Routing extends LoadableModule {
         return isset($this->selection);
     }
     return parent::__isset($property);
+  }
+  
+  /**
+   * Load routes from routing configuration file.
+   */
+  public function loadRoutes() {
+    $this->triggerEvent('beforeLoadRoutes');
+    $routesFile = $this->p('app', 'config/routes.php');
+    if (file_exists($routesFile)) {
+      $routes = $this->routes;
+      $routes->load($routesFile);
+    }
+    $this->triggerEvent('afterLoadRoutes');
   }
   
   /**
@@ -634,6 +638,8 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If no route selected.
    */
   public function findRoute() {
+    $this->triggerEvent('beforeFindRoute');
+
     if (!isset($this->selection)) {
       throw new InvalidRouteException(tr('No route selected'));
     }
