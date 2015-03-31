@@ -6,7 +6,7 @@
 namespace Jivoo\Content;
 
 use Jivoo\Helpers\Helper;
-use Jivoo\Models\Imodel;
+use Jivoo\Models\IModel;
 
 /**
  * Content format helper.

@@ -6,12 +6,21 @@
 namespace Jivoo\Content;
 
 use Jivoo\Core\LoadableModule;
+use Jivoo\Models\IModel;
+use Jivoo\Models\IBasicModel;
+use Jivoo\Models\IBasicRecord;
+use Jivoo\ActiveModels\ActiveModel;
 
 /**
  * Content editing and presentation module.
  * @property-read ContentExtensions $extensions Collection of content extensions.
  */
 class Content extends LoadableModule {
+  /**
+   * {@inheritdoc}
+   */
+  protected $modules = array('Helpers');
+
   /**
    * @var IContentFormat[] Formats.
    */
@@ -46,6 +55,9 @@ class Content extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    $this->m->Helpers->addHelper('Jivoo\Content\EditorHelper');
+    $this->m->Helpers->addHelper('Jivoo\Content\FormatHelper');
+    
     $this->extensions = new ContentExtensions();
     
     $this->addFormat(new Formats\HtmlFormat());

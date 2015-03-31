@@ -6,6 +6,7 @@
 namespace Jivoo\Content;
 
 use Jivoo\Helpers\Helper;
+use Jivoo\ActiveModels\ActiveModel;
 
 /**
  * Helper for editors.
