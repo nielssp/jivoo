@@ -124,7 +124,8 @@ class ActionDispatcher implements IDispatcher {
           throw new \Exception(tr('Invalid controller: %1', $controller));
         }
         foreach ($actions as $action) {
-          $this->autoRoute($controller, $action, $prefix);
+          $route['action'] = $action;
+          $this->autoRoute($table, $route, false);
         }
         return $patternBase;
       }
@@ -137,7 +138,6 @@ class ActionDispatcher implements IDispatcher {
   public function toRoute($routeString) {
     $split = explode('::', substr($routeString, 7));
     $route = array(
-      'action' => 'index',
       'parameters' => array()
     );
     if (isset($split[1])) {

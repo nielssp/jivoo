@@ -7,6 +7,7 @@ namespace Jivoo\Content;
 
 use Jivoo\Helpers\Helper;
 use Jivoo\Models\IModel;
+use Jivoo\Models\IBasicRecord;
 
 /**
  * Content format helper.

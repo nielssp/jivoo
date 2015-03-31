@@ -124,8 +124,8 @@ class Controllers extends LoadableModule {
     if (isset($this->controllers[$controller])) {
       if (!isset($this->actions[$controller])) {
         $class = $this->controllers[$controller];
-        $reflection = new ReflectionClass($class);
-        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+        $reflection = new \ReflectionClass($class);
+        $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
         $this->actions[$controller] = array();
         foreach ($methods as $method) {
           if ($method->class == $class) {

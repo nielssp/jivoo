@@ -75,7 +75,7 @@ class DispatcherCollection {
       $route = $this->toRoute($route);
     }
     else if (is_object($route) and $route instanceof ILinkable) {
-      $route = $route->getRoute();
+      return $this->validate($route->getRoute());
     }
     if (!is_array($route))
       throw new InvalidRouteException(tr('Not a valid route, must be array or string'));
