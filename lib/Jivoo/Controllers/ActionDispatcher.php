@@ -54,6 +54,8 @@ class ActionDispatcher implements IDispatcher {
         if (isset($current['controller']))
           $route['controller'] = $current['controller'];
       }
+      if (!isset($route['action']))
+        $route['action'] = 'index';
       if (!isset($route['parameters']))
         $route['parameters'] = array();
       return true;
@@ -167,6 +169,8 @@ class ActionDispatcher implements IDispatcher {
    */
   public function isCurrent($route) {
     $selection = $this->routing->route;
+    if (!isset($selection['controller']))
+      return false;
     return $selection['controller'] == $route['controller']
       and ($route['action'] == '*'
         or $selection['action'] == $route['action'])

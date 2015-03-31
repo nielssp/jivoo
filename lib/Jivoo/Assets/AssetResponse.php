@@ -7,6 +7,7 @@ namespace Jivoo\Assets;
 
 use Jivoo\Core\Utilities;
 use Jivoo\Routing\Response;
+use Jivoo\Routing\Http;
 
 /**
  * Responds with the content of an asset.

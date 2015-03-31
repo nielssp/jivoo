@@ -6,6 +6,7 @@
 namespace Jivoo\Routing;
 
 use Jivoo\Core\AppListener;
+use Jivoo\Core\Lib;
 
 /**
  * 
@@ -24,20 +25,25 @@ class AppDispatcher extends AppListener implements IDispatcher {
   private $route = null;
   private $priority = 7;
   
+  protected $prefix;
+  
   /**
    * 
    */
   public function beforeLoadRoutes() {
+    if (!isset($this->prefix))
+      $this->prefix = Lib::getClassName($this);
     $this->m->Routing->dispatchers->add($this);
   }
   
   protected function setRoute($route, $priority = 7) {
+    $route['AppDispatcher'] = get_class($this);
     $this->route = $route;
     $this->priority = $priority;
   }
   
   public function checkPath($path) {
-    
+    return false;
   }
   
   /**
@@ -45,7 +51,7 @@ class AppDispatcher extends AppListener implements IDispatcher {
    */
   public function getPrefixes() {
     return array(
-      get_class($this)
+      $this->prefix
     );
   }
 
@@ -82,7 +88,7 @@ class AppDispatcher extends AppListener implements IDispatcher {
    * {@inheritdoc}
    */
   public function fromRoute($route) {
-    return get_class($this) . ':';
+    return $this->prefix . ':';
   }
 
   /**
@@ -98,11 +104,16 @@ class AppDispatcher extends AppListener implements IDispatcher {
   public function getPath($route, $path = null) {
     
   }
+  
+  public function transform($rotue) {
+    return null;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function dispatch($route) {
-    
+    $route = $this->m->Routing->dispatchers->validate($this->transform($route));
+    return $route['dispatcher']->dispatch($route);
   }
 }
