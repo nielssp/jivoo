@@ -21,6 +21,8 @@ abstract class AppListener extends Module implements IEventListener {
    * @param App $app Associated application.
    */
   public final function __construct(App $app) {
+    $this->inheritElements('modules');
+    $this->inheritElements('handlers');
     parent::__construct($app);
   }
   

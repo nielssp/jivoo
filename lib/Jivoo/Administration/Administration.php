@@ -16,7 +16,7 @@ class Administration extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('View', 'Snippets');
+  protected $modules = array('Helpers', 'View', 'Snippets');
   
   /**
    * @var IconMenu Global menu.
@@ -28,6 +28,7 @@ class Administration extends LoadableModule {
    */
   protected function init() {
     $this->menu = new IconMenu(tr('Administration'));
+    $this->m->Helpers->addHelper('Jivoo\Administration\AdminHelper');
   }
 
   /**

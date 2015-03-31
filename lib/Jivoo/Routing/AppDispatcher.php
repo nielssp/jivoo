@@ -42,6 +42,10 @@ class AppDispatcher extends AppListener implements IDispatcher {
     $this->priority = $priority;
   }
   
+  protected function addPath($path) {
+    
+  }
+  
   public function checkPath($path) {
     return false;
   }
