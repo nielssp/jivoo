@@ -5,9 +5,11 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Administration\Menu;
 
-class IconMenuWidget extends Widget {
+use Jivoo\Snippets\Snippet;
+
+class IconMenuWidget extends Snippet {
   
-  protected $helpers = array('Widget', 'Icon');
+  protected $helpers = array('Icon');
   
   protected $options = array(
     'menu' => array(),
@@ -15,10 +17,13 @@ class IconMenuWidget extends Widget {
     'defaultParameters' => '*'
   );
   
-  public function main($options) {
+  private $menu;
+  
+  public function get() {
+    $options = $this->options;
     $this->menu = $options['menu'];
     if (!isset($this->menu))
       $this->menu = array();
-    return $this->fetch();
+    return $this->render('widgets/icon-menu.html');
   }
 }

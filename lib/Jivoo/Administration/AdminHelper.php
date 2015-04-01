@@ -11,10 +11,10 @@ class AdminHelper extends Helper {
   
   protected $modules = array('Assets', 'View', 'Administration');
   
-  protected $helpers = array('Html', 'Widget');
+  protected $helpers = array('Html', 'Snippet');
   
   public function menu($menu = 'main') {
-    return $this->Widget->widget('IconMenu', array(
+    return $this->Snippet->__call('Jivoo\Administration\Menu\IconMenuWidget', array(
       'menu' => $this->m->Administration->menu[$menu],
     ));
   }

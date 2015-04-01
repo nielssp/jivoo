@@ -29,6 +29,9 @@ class Administration extends LoadableModule {
   protected function init() {
     $this->menu = new IconMenu(tr('Administration'));
     $this->m->Helpers->addHelper('Jivoo\Administration\AdminHelper');
+    $this->m->Helpers->addHelper('Jivoo\Administration\ContentAdminHelper');
+    $this->m->Helpers->addHelper('Jivoo\Administration\Menu\IconHelper');
+    $this->m->Helpers->addHelper('Jivoo\Administration\Filtering\FilteringHelper');
   }
 
   /**

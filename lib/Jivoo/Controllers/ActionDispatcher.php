@@ -54,8 +54,6 @@ class ActionDispatcher implements IDispatcher {
         if (isset($current['controller']))
           $route['controller'] = $current['controller'];
       }
-      if (!isset($route['action']))
-        $route['action'] = 'index';
       if (!isset($route['parameters']))
         $route['parameters'] = array();
       return true;
@@ -161,6 +159,8 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function fromRoute($route) {
+    if (!isset($route['action']))
+      $route['action'] = 'index';
     return $route['controller'] . '::' . $route['action'];
   }
   
@@ -168,6 +168,8 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function isCurrent($route) {
+    if (!isset($route['action']))
+      $route['action'] = 'index';
     $selection = $this->routing->route;
     if (!isset($selection['controller']))
       return false;
@@ -194,6 +196,8 @@ class ActionDispatcher implements IDispatcher {
     $controller = $this->controllers->getController($route['controller']);
     if (!isset($controller))
       throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
+    if (!isset($route['action']))
+      $route['action'] = 'index';
     if (!is_callable(array($controller, $route['action']))) {
       throw new InvalidRouteException(tr(
         'Invalid action: %1',
