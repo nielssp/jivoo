@@ -5,7 +5,7 @@ $this->import('jquery.js', 'widgets/data-table.js');
 <div class="toolbar">
 <?php echo $Form->form(array(), array(
   'method' => 'get',
-  'id' => $options['id'] . 'filter',
+  'id' => $id . 'filter',
 )); ?>
 
 <?php echo $Form->hidden('sortBy', array('value' => $sortBy)); ?>
@@ -15,7 +15,7 @@ $this->import('jquery.js', 'widgets/data-table.js');
 
 <?php echo $Icon->button(tr('Search'), 'search'); ?>
 
-<?php if (count($options['filters']) == 0): ?>
+<?php if (count($filters) == 0): ?>
 <button>Reset</button>
 <?php else: ?>
 <div class="dropdown">
@@ -25,7 +25,7 @@ $this->import('jquery.js', 'widgets/data-table.js');
   'query' => array('filter' => null),
   'mergeQuery' => true
 )); ?></li>
-<?php foreach ($options['filters'] as $label => $filter): ?>
+<?php foreach ($filters as $label => $filter): ?>
 <li><?php echo $Html->link(h($label), array(
   'query' => array('filter' => $filter),
   'mergeQuery' => true
@@ -44,15 +44,15 @@ $this->import('jquery.js', 'widgets/data-table.js');
 
 <div class="table-operations">
 
-<?php if (isset($options['addRoute'])): ?>
-<?php echo $Icon->link(h('Add'), $options['addRoute'], 'plus', null, array('class' => 'button')); ?>
+<?php if (isset($addRoute)): ?>
+<?php echo $Icon->link(h('Add'), $addRoute, 'plus', null, array('class' => 'button')); ?>
 <?php endif; ?>
 
-<?php if (count($options['bulkActions']) > 0): ?>
+<?php if (count($bulkActions) > 0): ?>
 <div class="dropdown dropdown-actions">
 <a href="#"><?php echo tr('With selection'); ?></a>
 <ul>
-<?php foreach($options['bulkActions'] as $bulkAction): ?>
+<?php foreach($bulkActions as $bulkAction): ?>
 <li><?php echo $Icon->button(h($bulkAction->label), $bulkAction->icon, array(
   'data' => array(
     'action' => $this->link($this->mergeRoutes($bulkAction->route, array('?'))),

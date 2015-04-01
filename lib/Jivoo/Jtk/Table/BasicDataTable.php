@@ -31,7 +31,7 @@ class BasicDataTable extends JtkSnippet {
     'rowHandler' => null,
   );
   
-  protected $autoSetters = array('model', 'records', 'id', 'itemsPerPage');
+  protected $autoSetters = array('model', 'records', 'id', 'itemsPerPage', 'primaryColumn');
   
   protected function init() {
     $this->viewData['rowHandler'] = array($this, 'handle');
