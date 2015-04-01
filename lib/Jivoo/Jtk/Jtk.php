@@ -6,7 +6,6 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Administration\Menu\IconMenu;
 use Jivoo\Core\Lib;
 
 /**
@@ -19,19 +18,24 @@ class Jtk extends LoadableModule {
    */
   protected $modules = array('Helpers');
   
-  /**
-   * @var IconMenu Global menu.
+  /*
+   * @var string[]
    */
-  private $menu;
-  
   private $tools = array();
+  
+  /**
+   * @var JtkSnippet[]
+   */
+  private $toolInstances = array();
 
   /**
    * {@inheritdoc}
    */
   protected function init() {
-    $this->menu = new IconMenu(tr('Administration'));
     $this->m->Helpers->addHelper('Jivoo\Jtk\JtkHelper');
+    $this->m->Helpers->addHelper('Jivoo\Jtk\IconHelper');
+    
+    $this->addTool('Jivoo\Jtk\Form\FormField');
   }
   
   /**
@@ -44,15 +48,21 @@ class Jtk extends LoadableModule {
       $name = Lib::getClassName($class);
     $this->tools[$name] = $class;
   }
-
+  
   /**
-   * {@inheritdoc}
+   * 
+   * @param string $name
+   * @return JtkSnippet
    */
-  public function __get($property) {
-    switch ($property) {
-      case 'menu':
-        return $this->$property;
+  public function getTool($name) {
+    if (isset($this->toolInstances[$name]))
+      return $this->toolInstances[$name];
+    if (isset ($this->tools[$name])) {
+      $class = $this->tools[$name];
+      Lib::assumeSubclassOf($class, 'Jivoo\Jtk\JtkSnippet');
+      $this->toolInstances[$name] = new $class($this->app);
+      return $this->toolInstances[$name];
     }
-    return parent::__get($property);
+    return null;
   }
 }

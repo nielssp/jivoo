@@ -32,14 +32,14 @@ class DataTableRow extends JtkSnippet {
     'class' => null
   );
   
-  public function main($options) {
+  public function get() {
     if (isset($options['removeActions'])) {
       $options['actions'] = array_diff_key(
         $options['actions'],
         array_flip($options['removeActions'])
       );
     }
-    return $this->fetch($options);
+    return $this->render();
   }
 }
 

@@ -22,7 +22,7 @@ class JtkSnippet extends Snippet {
   protected $defaultOptions = array();
 
   public function before() {
-    $this->options = array_merge($this->defaultOptions, $this->options);
+    $this->viewData['options'] = array_merge($this->defaultOptions, $this->options);
     return null;
   }
 }

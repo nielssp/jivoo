@@ -33,7 +33,6 @@ class Themes extends LoadableModule {
    */
   protected function init() {
     $this->m->Extensions->addKind('themes', 'theme');
-    $this->load($this->zone('main'));
   }
   
   /**
