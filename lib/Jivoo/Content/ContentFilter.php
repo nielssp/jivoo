@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Content;
 
+use Jivoo\ActiveModels\ActiveModelEvent;
+
 /**
  * A filter for active models to apply content format, encoding, and extensions.
  */

@@ -11,6 +11,8 @@ use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\IBasicSelection;
+use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\Selection\Selection;
 
 /**
  * A special model representing an association collection as result from for

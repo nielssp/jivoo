@@ -10,6 +10,7 @@ use Jivoo\Core\App;
 use Jivoo\Core\Utilities;
 use Jivoo\View\ViewResponse;
 use Jivoo\Routing\Response;
+use Jivoo\Core\Lib;
 
 /**
  * A controller, the C of MVC.
@@ -70,7 +71,7 @@ class Controller extends Module {
       $this->$name = $helper;
     }
     
-    $this->name = preg_replace('/Controller$/', '', get_class($this));
+    $this->name = preg_replace('/Controller$/', '', Lib::getClassName($this));
 
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
@@ -125,55 +126,6 @@ class Controller extends Module {
   }
   
   /**
-   * Create a route to an action for auto routing.
-   * @param string $action Action name.
-   * @param string $prefix Prefix for the resulting path.
-   * @throws \Exception If action does not exist.
-   */
-  private function createRoute($action, $prefix = '') {
-    if (!in_array($action, $this->actions)) {
-      throw new \Exception(tr('Invalid action "%1"', $action));
-    }
-    $reflect = new ReflectionMethod(get_class($this), $action);
-    $required = $reflect->getNumberOfRequiredParameters();
-    $total = $reflect->getNumberOfParameters();
-    if (!empty($prefix) AND substr($prefix, -1) != '/') {
-      $prefix .= '/';
-    }
-    $controller = '';
-    $paction = '';
-    $class = get_class($this);
-    if ($class != 'AppController') {
-      $parent = get_parent_class($class);
-      while ($parent !== false AND $parent != 'Controller'
-        AND $parent != 'AppController') {
-        $name = str_replace($parent, '', $class);
-        $controller = '/' . Utilities::camelCaseToDashes($name) . $controller;
-        $class = $parent;
-        $parent = get_parent_class($class);
-      }
-      $name = str_replace('Controller', '', $class);
-      $controller = $prefix . Utilities::camelCaseToDashes($name) . $controller;
-      $paction = '/';
-    }
-    
-    $paction .= Utilities::camelCaseToDashes($action);
-    if ($action == 'index') {
-      $this->addRoute($controller, $action);
-    }
-    $path = $controller . $paction;
-    if ($required < 1) {
-      $this->addRoute($path, $action);
-    }
-    for ($i = 0; $i < $total; $i++) {
-      $path .= '/*';
-      if ($i <= $required) {
-        $this->addRoute($path, $action);
-      }
-    }
-  }
-
-  /**
    * Automatically route a single or all actions in this controller.
    * @param string $action If set, the name of the single action to auto route.
    * @param string $prefix A prefix to use for all resulting paths.
@@ -221,8 +173,11 @@ class Controller extends Module {
    */
   protected function reroute() {
     list(, $caller) = debug_backtrace(false);
-    $this->m->Routing
-      ->reroute($this->name, $caller['function'], $caller['args']);
+    $this->m->Routing->reroute(array(
+      'controller' => $this->name,
+      'action' => $caller['function'],
+      'parameters' => $caller['args']
+    ));
   }
 
   /**
@@ -259,7 +214,11 @@ class Controller extends Module {
    * @return Response Response.
    */
   protected function embed($controller, $action, $parameters = array()) {
-    return $this->m->Routing->callAction($controller, $action, $parameters);
+    $this->m->Routing->dispatchers->action->dispatch(array(
+      'controller' => $controller,
+      'action' => $action,
+      'parameters' => $parameters
+    ));
   }
 
   /**
