@@ -194,6 +194,7 @@ class Snippet extends Module implements ISnippet {
       else
         $this->parameterValues[$name] = null;
     }
+    $this->viewData = array();
     $before = $this->before();
     if (isset($before))
       return $this->after($before);

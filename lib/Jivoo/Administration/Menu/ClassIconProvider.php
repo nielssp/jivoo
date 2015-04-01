@@ -8,11 +8,15 @@ namespace Jivoo\Administration\Menu;
 class ClassIconProvider implements IIconProvider {
   private $classPrefix;
   
+  protected $mapping = array();
+  
   public function __construct($classPrefix = 'icon-') {
     $this->classPrefix = $classPrefix;
   }
   
   public function getIcon($icon, $size = 16) {
+    if (isset($this->mapping[$icon]))
+      $icon = $this->mapping[$icon];
     return '<span class="' . $this->classPrefix . $icon . '"></span>';
   }
 }

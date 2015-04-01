@@ -16,6 +16,6 @@ class AssetIconProvider implements IIconProvider {
   
   public function getIcon($icon, $size = 16) {
     $file = $this->assets->getAsset($this->dir . '/' . $icon . '.png');
-    return '<img src="' . $file . '" alt="' . $icon . '" />';
+    return '<img src="' . $file . '" alt="' . $icon . '" width="' . $size .'" height="' . $size .'" />';
   }
 }
