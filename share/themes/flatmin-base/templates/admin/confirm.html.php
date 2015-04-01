@@ -1,5 +1,3 @@
-<?php $this->extend('admin/layout.html'); ?>
-
 <?php echo $Form->form(); ?>
 
 <p><?php echo $confirmation; ?></p>

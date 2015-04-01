@@ -100,11 +100,19 @@ class Template {
   
   /**
    * Set layout.
-   * @param string $template Tempalte name.
+   * @param string|null|false $template Template name. Use null for default, or
+   * false for no layout.
    */
   public function layout($template) {
     $this->layout = $template;
-  } 
+  }
+
+  /**
+   * Disable layout.
+   */
+  public function disableLayout() {
+    $this->layout = false;
+  }
   
   /**
    * Extend another template, i.e. set parent template.
@@ -156,7 +164,8 @@ class Template {
       }
     }
     $this->extend = $extend;
-    if ($withLayout) {
+    if ($withLayout and $this->layout !== false) {
+      // TODO maybe check for '<!DOCTYPE' in content?
       if (!isset($this->layout))
         $this->layout = $this->view->findLayout($template);
       $this->content .= ob_get_clean();
