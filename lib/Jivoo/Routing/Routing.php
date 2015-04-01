@@ -82,32 +82,37 @@ class Routing extends LoadableModule {
   private $dispatchers;
   
   /**
-   * @var RoutingTable Table of routes;
+   * @var RoutingTable Table of routes.
    */
   private $routes;
   
   /**
-   * @var string[] Paths;
+   * @var string[] Paths.
    */
-  private $paths;
+  private $paths = array();
   
   /**
-   * @var array Root route and priority
+   * @var callback[] Custom path functions.
+   */
+  private $pathFunctions = array();
+  
+  /**
+   * @var array Root route and priority.
    */
   private $root = null;
   
   /**
-   * @var mixed Error route
+   * @var mixed Error route.
    */
   private $error = null;
 
   /**
-   * @var array Selected route and priority
+   * @var array Selected route and priority.
    */
   private $selection = null;
 
   /**
-   * @var bool Whether or not the page has rendered yet
+   * @var bool Whether or not the page has rendered yet.
    */
   private $rendered = false;
 
@@ -380,6 +385,38 @@ class Routing extends LoadableModule {
   }
   
   /**
+   * Get path for a validated route.
+   * @param array $route Route array.
+   * @return string[] A path array.
+   */
+  private function getPathValidated($route) {
+    if (isset($route['parameters']))
+      $arity = '[' . count($route['parameters']) . ']';
+    else
+      $arity = '[0]';
+    $routeString = $route['dispatcher']->fromRoute($route);
+    $path = null;
+    $function = null;
+    if (isset($this->paths[$routeString . $arity])) {
+      $path = $this->paths[$routeString . $arity]['pattern'];
+      if (isset($this->paths[$routeString . $arity]['function']))
+        $function = $this->paths[$routeString . $arity]['function'];
+    }
+    else if (isset($this->paths[$routeString . '[*]'])) {
+      $path = $this->paths[$routeString . '[*]']['pattern'];
+      if (isset($this->paths[$routeString . '[*]']['function']))
+        $function = $this->paths[$routeString . '[*]']['function'];
+    }
+    if (isset($function))
+      $path = $function($route, $path);
+    else
+      $path = $route['dispatcher']->getPath($route, $path);
+    if (!isset($path))
+      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
+    return $path;
+  }
+  
+  /**
    * Get a link for a route (absolute path).
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If no path found.
@@ -387,19 +424,7 @@ class Routing extends LoadableModule {
    */
   public function getPath($route = null) {
     $route = $this->validateRoute($route);
-    $arity = '[' . count($route['parameters']) . ']';
-    $routeString = $route['dispatcher']->fromRoute($route);
-    $path = null;
-    if (isset($this->paths[$routeString . $arity])) {
-      $path = $this->paths[$routeString . $arity]['pattern'];
-    }
-    else if (isset($this->paths[$routeString . '[*]'])) {
-      $path = $this->paths[$routeString . '[*]']['pattern'];
-    }
-    $path = $route['dispatcher']->getPath($route, $path);
-    if (!isset($path))
-      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
-    return $path;
+    return $this->getPathValidated($route);
   }
   
   /**
@@ -410,21 +435,7 @@ class Routing extends LoadableModule {
    */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);
-    if (isset($route['parameters']))
-      $arity = '[' . count($route['parameters']) . ']';
-    else
-      $arity = '[0]';
-    $routeString = $route['dispatcher']->fromRoute($route);
-    $path = null;
-    if (isset($this->paths[$routeString . $arity])) {
-      $path = $this->paths[$routeString . $arity]['pattern'];
-    }
-    else if (isset($this->paths[$routeString . '[*]'])) {
-      $path = $this->paths[$routeString . '[*]']['pattern'];
-    }
-    $path = $route['dispatcher']->getPath($route, $path);
-    if (!isset($path))
-      throw new InvalidRouteException(tr('Could not find path for ' . $routeString . $arity));
+    $path = $this->getPathValidated($route);
     if (is_string($path))
       return $path;
     return $this->getLinkFromPath($path, $route['query'], $route['fragment']);
@@ -595,7 +606,6 @@ class Routing extends LoadableModule {
 
   /**
    * Add association of route and path-pattern.
-   * 
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param string[] $pattern A pattern array.
    * @param int|string $arity Arity of pattern (integer or '*').
@@ -611,6 +621,33 @@ class Routing extends LoadableModule {
     }
     $this->paths[$key] = array(
       'pattern' => $pattern,
+      'priority' => $priority
+    );
+    return true;
+  }
+  
+  /**
+   * Add association of route and path-function, i.e. override the dispatcher
+   * path function (see {@see IDispatcher::getPath()}) with a custom one.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param callback $function Path function.
+   * @param int|string $arity Arity of route, i.e. number of parameters (integer or '*').
+   * @param int $priority Priority of path function.
+   * @return bool True if pattern function added, false otherwise.
+   */
+  public function addPathFunction($route, $function, $arity, $priority = 5) {
+    $route = $this->validateRoute($route);;
+    $key = $route['dispatcher']->fromRoute($route) . '[' . $arity . ']';
+    if (isset($this->paths[$key])) {
+      if ($priority <= $this->paths[$key]['priority'])
+        return false;
+      $this->paths[$key]['priority'] = $priority;
+      $this->paths[$key]['function'] = $function;
+      return true;
+    }
+    $this->paths[$key] = array(
+      'pattern' => array(),
+      'function' => $function,
       'priority' => $priority
     );
     return true;
