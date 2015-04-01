@@ -343,6 +343,7 @@ class FormHelper extends Helper {
    */
   public function label($field, $label = null, $attributes = array()) {
     if (!isset($label) ) {
+      $label = '';
       if (isset($this->model))
         $label = $this->model->getLabel($field);
     }

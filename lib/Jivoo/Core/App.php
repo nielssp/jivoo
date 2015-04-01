@@ -195,7 +195,10 @@ class App implements IEventSubject {
     // SCRIPT_NAME returns /PeanutCMS/index.php/admin./something instead of expected
     // /app/index.php
     $script = explode('/', $_SERVER['SCRIPT_NAME']);
-    while ($script[count($script) - 1] != $entryScript) {
+    while (count($script) > 0) {
+      if ($script[count($script) - 1] == $entryScript) {
+        break;
+      }
       array_pop($script);
     }
     $this->basePath = dirname(implode('/', $script));

@@ -11,18 +11,18 @@ use Jivoo\Snippets\Snippet;
  * A toolkit snippet.
  */
 class JtkSnippet extends Snippet {
-  /**
-   * {@inheritdoc}
-   */
-  protected $parameters = array('options');
-  
-  /**
-   * @var array Default options.
-   */
-  protected $defaultOptions = array();
 
-  public function before() {
-    $this->viewData['options'] = array_merge($this->defaultOptions, $this->options);
-    return null;
+  protected $autoSetters = array();
+  
+  public function __call($method, $parameters) {
+    if (in_array($method, $this->autoSetters)) {
+      $this->viewData[$method] = $parameters[0];
+      return $this;
+    }
+    return parent::__call($method, $parameters);
+  }
+  
+  public function __toString() {
+    return $this();
   }
 }

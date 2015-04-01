@@ -36,6 +36,8 @@ class Jtk extends LoadableModule {
     $this->m->Helpers->addHelper('Jivoo\Jtk\IconHelper');
     
     $this->addTool('Jivoo\Jtk\Form\FormField');
+    $this->addTool('Jivoo\Jtk\Table\BasicDataTable');
+    $this->addTool('Jivoo\Jtk\Table\DataTableRow');
   }
   
   /**
@@ -55,13 +57,12 @@ class Jtk extends LoadableModule {
    * @return JtkSnippet
    */
   public function getTool($name) {
-    if (isset($this->toolInstances[$name]))
-      return $this->toolInstances[$name];
+//     if (isset($this->toolInstances[$name]))
+//       return $this->toolInstances[$name];
     if (isset ($this->tools[$name])) {
       $class = $this->tools[$name];
       Lib::assumeSubclassOf($class, 'Jivoo\Jtk\JtkSnippet');
-      $this->toolInstances[$name] = new $class($this->app);
-      return $this->toolInstances[$name];
+      return new $class($this->app);
     }
     return null;
   }

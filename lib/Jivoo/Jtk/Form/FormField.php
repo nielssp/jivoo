@@ -11,17 +11,20 @@ use Jivoo\Jtk\JtkSnippet;
  * A single form field.
  */
 class FormField extends JtkSnippet {
-  
   protected $helpers = array('Form');
   
-  protected $defaultOptions = array(
+  protected $viewData = array(
     'field' => null,
     'label' => null,
-    'attributes' => array()
+    'labelAttributes' => array(),
   );
   
-  public function get() {
-    return $this->render();
+  protected $autoSetters = array('field');
+  
+  public function label($label, $attributes = array()) {
+    $this->viewData['label'] = $label;
+    $this->viewData['labelAttributes'] = $attributes;
+    return $this;
   }
 }
 

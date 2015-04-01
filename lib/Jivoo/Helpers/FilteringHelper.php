@@ -3,9 +3,13 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Administration\Filtering;
+namespace Jivoo\Helpers;
 
-use Jivoo\Helpers\Helper;
+use Jivoo\Models\Selection\IBasicSelection;
+use Jivoo\Helpers\Filtering\SelectionFilterVisitor;
+use Jivoo\Helpers\Filtering\FilterParser;
+use Jivoo\Helpers\Filtering\FilterScanner;
+use Jivoo\Helpers\Filtering\RecordFilterVisitor;
 
 // missing features:
 //    "status=(draft|published)"  ... must be only one set of parentheses, and only OR's

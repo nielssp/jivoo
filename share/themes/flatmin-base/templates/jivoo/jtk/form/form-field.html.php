@@ -1,5 +1,5 @@
 <?php $this->import('admin/theme.css'); ?>
 <div class="field">
-<?php echo $Form->label($options['field'], $options['label']); ?>
-<?php echo $Form->text($options['field']); ?>
+<?php echo $Form->label($field, $label, $labelAttributes); ?>
+<?php echo $Form->text($field); ?>
 </div>
