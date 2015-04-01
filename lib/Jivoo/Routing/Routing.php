@@ -410,7 +410,10 @@ class Routing extends LoadableModule {
    */
   public function getLink($route = null) {
     $route = $this->validateRoute($route);
-    $arity = '[' . count($route['parameters']) . ']';
+    if (isset($route['parameters']))
+      $arity = '[' . count($route['parameters']) . ']';
+    else
+      $arity = '[0]';
     $routeString = $route['dispatcher']->fromRoute($route);
     $path = null;
     if (isset($this->paths[$routeString . $arity])) {

@@ -62,7 +62,7 @@ class PathDispatcher implements IDispatcher {
    */
   public function isCurrent($route) {
     $request = $this->routing->request;
-    $root = $this->request->root;
+    $root = $this->routing->root;
     if ($route['path'] == array()) {
       if ($request->path == array()) {
         return true;
