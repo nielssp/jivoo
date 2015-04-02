@@ -18,7 +18,7 @@ class Jtk extends LoadableModule {
    */
   protected $modules = array('Helpers');
   
-  /*
+  /**
    * @var string[]
    */
   private $tools = array();

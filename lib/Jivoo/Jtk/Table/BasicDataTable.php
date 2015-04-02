@@ -106,13 +106,9 @@ class BasicDataTable extends JtkSnippet {
       if (!isset($this->viewData['labels'][$column]))
         $this->viewData['labels'][$column] = $model->getLabel($column);
     }
-    $actions = $this->viewData['actions'];
-    $primaryColumn = $this->viewData['primaryColumn'];
     
-    $sortBy = $this->viewData['defaultSortBy'];
-    $sortOptions = $this->viewData['sortOptions'];
-    if (!isset($sortOptions)) {
-      $sortOptions = $this->viewData['columns'];
+    if (!isset($this->viewData['sortOptions'])) {
+      $this->viewData['sortOptions'] = $this->viewData['columns'];
     }
     else {
       foreach ($sortOptions as $column) {
@@ -120,24 +116,25 @@ class BasicDataTable extends JtkSnippet {
           $this->viewData['labels'][$column] = $model->getLabel($column);
       }
     }
-    $labels = $this->viewData['labels'];
-    if (!isset($primaryColumn))
-      $primaryColumn = $columns[0];
+    if (!isset($this->viewData['primaryColumn']))
+      $this->viewData['primaryColumn'] = $columns[0];
     
     
     $records = $this->Filtering->apply($records);
-    
+
+    $sortBy = $this->viewData['defaultSortBy'];
     if (!isset($sortBy))
       $sortBy = $sortOptions[0];
-    $primaryAction = $this->viewData['primaryAction'];
     if (isset($this->request->query['sortBy'])) {
       if ($model->hasField($this->request->query['sortBy'])) {
         $sortBy = $this->request->query['sortBy'];
       }
     }
+    $this->viewData['sortBy'] = $sortBy;
     $descending = $this->viewData['defaultDescending'];
     if (isset($this->request->query['order']))
       $descending = ($this->request->query['order'] == 'desc');
+    $this->viewData['descending'] = $descending;
     if (isset($sortBy)) {
       $records = $records;
       usort($records, array($this, 'compareRecords'));
