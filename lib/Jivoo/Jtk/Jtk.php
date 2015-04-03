@@ -34,6 +34,7 @@ class Jtk extends LoadableModule {
   protected function init() {
     $this->m->Helpers->addHelper('Jivoo\Jtk\JtkHelper');
     $this->m->Helpers->addHelper('Jivoo\Jtk\IconHelper');
+    $this->m->Helpers->addHelper('Jivoo\Jtk\ContentAdminHelper');
     
     $this->addTool('Jivoo\Jtk\Form\FormField');
     $this->addTool('Jivoo\Jtk\Table\BasicDataTable');

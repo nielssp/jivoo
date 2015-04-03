@@ -25,7 +25,6 @@ $this->import(
 <header>
 <a href="#" class="toggle-menu"></a>
 <h1><?php echo $app['name']; ?></h1>
-<?php echo $Admin->menu('shortcuts'); ?>
 
 <ul class="account">
 <li><?php echo $Icon->link(h($user->username), 'Admin', 'user'); ?></li>
@@ -45,7 +44,10 @@ $this->import(
 
 <nav>
 
-<?php echo $Admin->menu(); ?>
+<?php
+echo $Snippet->__call('Jivoo\Administration\Menu\IconMenuWidget', array(
+  'menu' => array(),
+)); ?>
 
 </nav>
 
