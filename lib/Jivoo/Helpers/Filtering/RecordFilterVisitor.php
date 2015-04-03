@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers\Filtering;
 
+use Jivoo\Models\IBasicRecord;
+
 class RecordFilterVisitor extends FilterVisitor {
 
   private $record;

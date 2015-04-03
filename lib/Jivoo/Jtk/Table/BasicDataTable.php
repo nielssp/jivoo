@@ -8,6 +8,7 @@ namespace Jivoo\Jtk\Table;
 use Jivoo\Jtk\JtkSnippet;
 use Jivoo\Routing\ILinkable;
 use Jivoo\Models\DataType;
+use Jivoo\Models\IBasicModel;
 
 class BasicDataTable extends JtkSnippet {
   protected $helpers = array('Jtk', 'Form', 'Pagination', 'Filtering');
@@ -97,9 +98,10 @@ class BasicDataTable extends JtkSnippet {
   
   public function get() {
     $model = $this->viewData['model'];
+    assume($model instanceof IBasicModel);
     $records = $this->viewData['records'];
-    if (isset($options['columns']))
-      $columns = $options['columns'];
+    if (isset($this->viewData['columns']))
+      $columns = $this->viewData['columns'];
     else
       $columns = $model->getFields();
     foreach ($columns as $column) {

@@ -57,8 +57,8 @@ class FileRecord implements IBasicRecord {
    * @param FileModel $model Model.
    * @param string $path File path.
    */
-  public function __construct(FileModel $model, $path) {
-    $this->model = $model;
+  public function __construct($path) {
+    $this->model = FileModel::getInstance();
     $this->path = $path;
     $this->name = basename($path);
   }
