@@ -40,9 +40,9 @@ class DirectoryRecord extends FileRecord {
       if ($file[0] != '.') {
         $path = $this->path . '/' . $file;
         if (is_dir($path))
-          $records[] = new DirectoryRecord($this->getModel(), $path);
+          $records[] = new DirectoryRecord($path);
         else
-          $records[] = new FileRecord($this->getModel(), $path);
+          $records[] = new FileRecord($path);
       }
     }
     return $records;
