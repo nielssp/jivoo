@@ -1,7 +1,6 @@
 .project
 *.swp
 /apigen
-/index.php
 doc/
 *~
 .buildpath
@@ -12,5 +11,4 @@ doc/
 user/*/config.php
 user/*/db.sqlite3
 public/*/index.php
-
 tests/_output/*
