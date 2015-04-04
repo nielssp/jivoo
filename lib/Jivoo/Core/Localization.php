@@ -78,7 +78,7 @@ class Localization {
           $this->$property
         );
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -98,7 +98,7 @@ class Localization {
         $this->$property = $value;
         return;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -126,7 +126,7 @@ class Localization {
       case 'weekDay':
         return isset($this->$property);
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
