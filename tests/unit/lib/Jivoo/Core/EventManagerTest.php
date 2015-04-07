@@ -29,4 +29,23 @@ class EventManagerTest extends \Codeception\TestCase\Test {
     $em2->detachHandler(get_class($subject1) . '.someEvent', $c);
     $this->assertTrue($em2->trigger(get_class($subject1) . '.someEvent'));
   }
+  
+  public function testListener() {
+    $subject1 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject2 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $em1 = new EventManager($subject1);
+    $em2 = new EventManager($subject2, $em1);
+    $l = $this->getMockBuilder('Jivoo\Core\IEventListener')
+      ->setMethods(array('getEventHandlers', 'someEvent'))
+      ->getMock();
+    $l->method('getEventHandlers')
+      ->wilLReturn(array(get_class($subject2) . '.someEvent'));
+    $l->expects($this->once())
+      ->method('someEvent')
+      ->willReturn(false);
+    $em1->attachListener($l);
+    $this->assertFalse($em2->trigger('someEvent'));
+    $em1->detachListener($l);
+    $this->assertTrue($em2->trigger('someEvent'));
+  }
 }
