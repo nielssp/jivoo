@@ -372,6 +372,24 @@ class App implements IEventSubject {
   }
   
   /**
+   * Import module.
+   * @param string $module Module name.
+   */
+  public function import($module) {
+    if (strpos($module, '\\') === false) {
+      $name = $module;
+      $module = 'Jivoo\\' . $name . '\\' . $name;
+    }
+    else {
+      $segments = explode('\\', $module);
+      $name = $segments[count($segments) - 1];
+    }
+    $this->paths->$module = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $module));
+    $this->imports[$name] = $module;
+    $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
+  }
+  
+  /**
    * Get a module, or load it if not yet loaded (must be imported however).
    * @param string $name Name of module class.
    * @return LoadableModule Module object.
@@ -584,17 +602,7 @@ class App implements IEventSubject {
     // Import modules
     $this->triggerEvent('beforeImportModules');
     foreach ($this->modules as $module) {
-      if (strpos($module, '\\') === false) {
-        $name = $module;
-        $module = 'Jivoo\\' . $name . '\\' . $name;
-      }
-      else {
-        $segments = explode('\\', $module);
-        $name = $segments[count($segments) - 1];
-      }
-      $this->paths->$module = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $module));
-      $this->imports[$name] = $module;
-      $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
+      $this->import($module);
     }
     $this->triggerEvent('afterImportModules');
     

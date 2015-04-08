@@ -33,7 +33,9 @@ use Jivoo\Core\Utilities;
  * @method bool isEmpty(string $block) Alias for {@see ViewBlocks::isEmpty}.
  * @method provide(string $resource, string $location, string[] $dependencies = array(), string $condition = null)
  *  Alias for {@see ViewResources::provide}.
- * @method import(string $resource) Alias for {@see ViewResources::import}.
+ * @method import(string $resource, string $resources,...) Alias for {@see ViewResources::import}.
+ * @method openFrame() Alias for {@see ViewResources::openFrame}.
+ * @method closeFrame() Alias for {@see ViewResources::closeFrame}.
  * @method importConditional(string $resource, string $condition)
  *  Alias for {@see ViewResources::importConditional}.
  * @method string resourceBlock() Alias for {@see ViewResources::resourceBlock}.
@@ -102,9 +104,9 @@ class View extends LoadableModule {
       $this->blocks,
       array('icon', 'meta', 'relation', 'block', 'isEmpty')
     );
-    $this->addFunctions(
-      $this->resources,
-      array('provide', 'import', 'resourceBlock', 'importConditional')
+    $this->addFunctions($this->resources, 
+      array('provide', 'import', 'resourceBlock', 'importConditional', 
+        'openFrame', 'closeFrame')
     );
     $this->addFunctions(
       $this->extensions,

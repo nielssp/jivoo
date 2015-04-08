@@ -132,6 +132,7 @@ class Routing extends LoadableModule {
   protected function init() {
     // Set default settings
     $this->config->defaults = array(
+      'reroute' => true,
       'rewrite' => false,
       'sessionPrefix' => $this->app->sessionPrefix,
     );
@@ -145,24 +146,26 @@ class Routing extends LoadableModule {
     $this->routes = new RoutingTable($this);
 
     // Determine if the current URL is correct
-    if ($this->config['rewrite']) {
-      if (isset($this->request->path[0]) AND $this->request->path[0] == $this->app->entryScript) {;
-        if (count($this->request->path) <= 1) {
-          $this->redirectPath(array(), $this->request->query);
+    if ($this->config['reroute']) {
+      if ($this->config['rewrite']) {
+        if (isset($this->request->path[0]) AND $this->request->path[0] == $this->app->entryScript) {;
+          if (count($this->request->path) <= 1) {
+            $this->redirectPath(array(), $this->request->query);
+          }
+          else {
+            $this->request->path = array_slice($this->request->path, 1);
+            $this->redirectPath($this->request->path, $this->request->query);
+          }
         }
-        else {
-          $this->request->path = array_slice($this->request->path, 1);
+      }
+      else {
+        if (!isset($this->request->path[0]) OR $this->request->path[0] != $this->app->entryScript) {
           $this->redirectPath($this->request->path, $this->request->query);
         }
+        $path = $this->request->path;
+        array_shift($path);
+        $this->request->path = $path;
       }
-    }
-    else {
-      if (!isset($this->request->path[0]) OR $this->request->path[0] != $this->app->entryScript) {
-        $this->redirectPath($this->request->path, $this->request->query);
-      }
-      $path = $this->request->path;
-      array_shift($path);
-      $this->request->path = $path;
     }
 
     if (isset($this->config['root'])) {

@@ -24,7 +24,9 @@ namespace Jivoo\View;
  * @method bool isEmpty(string $block) Alias for {@see ViewBlocks::isEmpty}.
  * @method provide(string $resource, string $location, string[] $dependencies = array(), string $condition = null)
  *  Alias for {@see ViewResources::provide}.
- * @method import(string $resource) Alias for {@see ViewResources::import}.
+ * @method import(string $resource, string $resources,...) Alias for {@see ViewResources::import}.
+ * @method openFrame() Alias for {@see ViewResources::openFrame}.
+ * @method closeFrame() Alias for {@see ViewResources::closeFrame}.
  * @method importConditional(string $resource, string $condition)
  *  Alias for {@see ViewResources::importConditional}.
  * @method string resourceBlock() Alias for {@see ViewResources::resourceBlock}.
@@ -160,7 +162,10 @@ class Template {
       if (!$this->ignoreExtend) {
         $this->content .= ob_get_clean();
         $this->view->blocks->assign('content', $this->content);
-        return $this->render($template, $data, $withLayout);
+        $this->openFrame();
+        $content = $this->render($template, $data, $withLayout);
+        $this->closeFrame();
+        return $content;
       }
     }
     $this->extend = $extend;
@@ -170,6 +175,7 @@ class Template {
         $this->layout = $this->view->findLayout($template);
       $this->content .= ob_get_clean();
       $this->view->blocks->assign('content', $this->content);
+      $this->openFrame();
       return $this->render($this->layout, $data, false);
     }
     return $this->content . ob_get_clean();

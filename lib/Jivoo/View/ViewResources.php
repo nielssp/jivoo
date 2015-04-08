@@ -18,17 +18,31 @@ class ViewResources {
   private $providers = array();
   
   /**
-   * @var array Script and style imports.
+   * @var string[] Script and style import blocks.
    */
-  private $imports = array(
-    'script' => array(),
-    'style' => array()
+  private $blocks = array(
+    'script' => '',
+    'style' => ''
+  );
+
+  /**
+   * @var bool[] Associative array of emitted resources.
+   */
+  private $emitted = array();
+  
+  /**
+   * @var string[][] Import frame stack. Each frame is an associative array
+   * with keys 'script' and 'style', mapped to lists of script and style
+   * imports. 
+   */
+  private $importFrames = array(
+    0 => array(),
   );
   
   /**
-   * @var bool[] Associative array of imported resources.
+   * @var int Index of current frame.
    */
-  private $imported = array();
+  private $framePointer = 0;
   
   /**
    * @var Assets Assets module.
@@ -92,6 +106,8 @@ class ViewResources {
       default:
         throw new \Exception(tr('Unknown type of resource: "%1"', $type));
     }
+    if (!isset($location))
+      $location = 'resource-is-missing/' . $resource;
 //     if (!isset($location))
 //       throw new \Exception(tr('Resource not found: "%1"', $resource));
     return array(
@@ -128,100 +144,92 @@ class ViewResources {
       return;
     $resInfo = $this->find($resource);
     $resInfo['condition'] = $condition;
-    if (empty($resInfo['dependencies'])) {
-      array_unshift($this->imports[$resInfo['type']], $resInfo);
-    }
-    else {
-      foreach ($resInfo['dependencies'] as $dependency)
-        $this->import($dependency);
-      array_push($this->imports[$resInfo['type']], $resInfo);
-    }
-    $this->imported[$resource] = true;
+    $this->providers[$resource] = $resInfo;
+    $this->import($resource);
   }
-  
-  /**
-   * Push resource on import stack.
-   * @param string $resource Resource name.
-   */
-  private function push($resource) {
-    if (isset($this->imported[$resource]))
-      return;
-    $resInfo = $this->find($resource);
-    foreach ($resInfo['dependencies'] as $dependency)
-      $this->unshift($dependency);
-    array_push($this->imports[$resInfo['type']], $resInfo);
-    $this->imported[$resource] = true;
-  }
-  
-  /**
-   * Unshift a resource to import queue.
-   * @param string $resource Resource name.
-   */
-  private function unshift($resource) {
-    if (isset($this->imported[$resource]))
-      return;
-    $resInfo = $this->find($resource);
-    if (empty($resInfo['dependencies'])) {
-      array_unshift($this->imports[$resInfo['type']], $resInfo); 
-    }
-    else {
-      foreach ($resInfo['dependencies'] as $dependency)
-        $this->unshift($dependency);
-      array_push($this->imports[$resInfo['type']], $resInfo);
-    }
-    $this->imported[$resource] = true;
-  }
-  
+
   /**
    * Import a resource and its dependencies.
    * @param string $resource Resource name.
+   * @param string $resources,... Additional resources to import.
    */
   public function import($resource) {
     if (is_array($resource)) {
-      if (count($resource) == 0) {
-        return;
-      }
-      else if (count($resource) == 1) {
-        $resource = $resource[0];
-      }
-      else {
-        $dependencies = $resource;
-        $resource = array_pop($dependencies);
-        $this->import($dependencies);
-        return $this->push($resource);
-      }
+      $args = $resource;
     }
     else {
       $args = func_get_args();
-      if (count($args) > 1)
-        return $this->import($args);
     }
-    return $this->unshift($resource);
+    foreach ($args as $resource)
+      $this->importFrames[$this->framePointer][] = $resource;
   }
   
+  /**
+   * Open a new resource frame on top of the current one.
+   */
+  public function openFrame() {
+    $this->framePointer++;
+    $this->importFrames[$this->framePointer] = array();
+  }
+  
+  /**
+   * Close the top resource frame.
+   */
+  public function closeFrame() {
+    if ($this->framePointer < 1)
+      return;
+    $this->framePointer--;
+    $frame = array_pop($this->importFrames);
+    $this->importFrames[$this->framePointer] = array_merge(
+      $frame,
+      $this->importFrames[$this->framePointer]
+    );
+  }
+  
+  /**
+   * Emit HTML for a resource.
+   * @param string $resource Resource identifier.
+   */
+  private function emitResource($resource) {
+    if ($this->emitted[$resource])
+      return;
+    $resInfo = $this->find($resource);
+    if (!empty($resInfo['dependencies'])) {
+      foreach ($resInfo['dependencies'] as $dependency)
+        $this->emitResource($dependency);
+    }
+    $html = '';
+      if (isset($resInfo['condition']))
+        $html .= '<!--[if (' . $resInfo['condition'] . ')]>' . PHP_EOL;
+    if ($resInfo['type'] == 'script') {
+      $html .= '<script type="text/javascript" src="'
+        . h($resInfo['location']) . '"></script>' . PHP_EOL;
+    }
+    else if ($resInfo['type'] == 'style') {
+      $html .= '<link rel="stylesheet" type="text/css" href="'
+        . h($resInfo['location']) . '" />' . PHP_EOL;
+    }
+    if (isset($resInfo['condition']))
+      $html .= '<![endif]-->' . PHP_EOL;
+    $this->blocks[$resInfo['type']] .= $html;
+    $this->emitted[$resource] = true;
+  }
+
   /**
    * Output resource block.
    * @return string Resource block HTML.
    */
   public function resourceBlock() {
-    $block = '';
-    foreach ($this->imports['style'] as $resource) {
-      if (isset($resource['condition']))
-        $block .= '<!--[if (' . $resource['condition'] . ')]>' . PHP_EOL;
-      $block .= '<link rel="stylesheet" type="text/css" href="'
-        . h($resource['location']) . '" />' . PHP_EOL;
-      if (isset($resource['condition']))
-        $block .= '<![endif]-->' . PHP_EOL;
-    }
-    $block .= PHP_EOL;
-    foreach ($this->imports['script'] as $resource) {
-      if (isset($resource['condition']))
-        $block .= '<!--[if (' . $resource['condition'] . ')]>' . PHP_EOL;
-      $block .= '<script type="text/javascript" src="'
-        . h($resource['location']) . '"></script>' . PHP_EOL;
-      if (isset($resource['condition']))
-        $block .= '<![endif]-->' . PHP_EOL;
-    }
+    while ($this->framePointer > 0)
+      $this->closeFrame();
+    $this->emitted = array();
+    $this->blocks = array(
+      'script' => '',
+      'style' => '',
+    );
+    foreach ($this->importFrames[$this->framePointer] as $resource)
+      $this->emitResource($resource);
+    $block = $this->blocks['style'] . PHP_EOL . $this->blocks['script'];
     return $block;
   }
 }
