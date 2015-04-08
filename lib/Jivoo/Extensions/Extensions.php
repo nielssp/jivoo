@@ -54,6 +54,12 @@ class Extensions extends LoadableModule {
   private $importList = array();
   
   /**
+   * @var bool[] Maps extension names to a boolean: true if extension imported,
+   * false if it is currently being imported.
+   */
+  private $imported = array();
+  
+  /**
    * @var ExtensionInfo[] Associative array mapping extension module names to
    * extension information.
    */
@@ -227,15 +233,7 @@ class Extensions extends LoadableModule {
     $this->triggerEvent('beforeImportExtensions');
     foreach ($this->importList as $extension) {
       try {
-        $extensionInfo = $this->getInfo($extension);
-        if (!isset($extensionInfo))
-          throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
-        Lib::import($extensionInfo->p($this->app, ''));
-        foreach ($this->featureHandlers as $tuple) {
-          list($feature, $handler) = $tuple;
-          if (isset($extensionInfo->$feature))
-            call_user_func($handler, $extensionInfo);
-        }
+        $this->import($extension);
       }
       catch (Exception $e) {
         if ($this->config['disableBuggy']) {
@@ -256,6 +254,26 @@ class Extensions extends LoadableModule {
       $this->getModule($name);
     }
     $this->triggerEvent('afterLoadExtensions');
+  }
+  
+  /**
+   * Import a single extension.
+   * @param string $extension Extension name.
+   */
+  public function import($extension) {
+    if (isset($this->imported[$extension]))
+      return;
+    $this->imported[$extension] = false;
+    $extensionInfo = $this->getInfo($extension);
+    if (!isset($extensionInfo))
+      throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
+    Lib::import($extensionInfo->p($this->app, ''));
+    foreach ($this->featureHandlers as $tuple) {
+      list($feature, $handler) = $tuple;
+      if (isset($extensionInfo->$feature))
+        call_user_func($handler, $extensionInfo);
+    }
+    $this->imported[$extension] = true;
   }
   
   /**
