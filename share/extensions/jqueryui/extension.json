@@ -1,0 +1,29 @@
+{
+  "name": "jQuery UI",
+  "version": "1.11.4",
+  "website": "http://jqueryui.com",
+  "category": "JavaScript",
+  "dependencies": {
+    "extensions": [
+      "jquery >=1.6"
+    ]
+  },
+  "resources": {
+    "jquery-ui.css": {
+      "file": "jquery-ui.min.css"
+    },
+    "jquery-ui.structure.css": {
+      "file": "jquery-ui.structure.min.css",
+      "dependencies": ["jquery-ui.css"]
+    },
+    "jquery-ui.theme.css": {
+      "file": "jquery-ui.theme.min.css",
+      "dependencies": ["jquery-ui.css"]
+    },
+    "jquery-ui.js": {
+      "file": "jquery-ui.min.js",
+      "dependencies": ["jquery.js", "jquery-ui.css"]
+    }
+  }
+}
+
