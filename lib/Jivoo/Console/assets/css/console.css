@@ -1,4 +1,4 @@
-#jivoo-console-bar {
+#jivoo-console .jivoo-devbar {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -10,10 +10,8 @@
   color: #fff;
   font-weight: bold;
   text-align: left;
-  cursor: pointer;
-}
-
-#jivoo-console-log {
+  cursor: pointer; }
+#jivoo-console #jivoo-console-log {
   position: fixed;
   bottom: 30px;
   left: 0px;
@@ -25,13 +23,8 @@
   font-size: 13px;
   color: #fff;
   font-weight: normal;
-  text-align: left;
-}
-
-.jivoo-console-log-entry {
-  padding: 2px 10px;
-}
-
-.jivoo-console-log-entry:hover {
-	background-color: #333;
-}
+  text-align: left; }
+  #jivoo-console #jivoo-console-log .jivoo-console-log-entry {
+    padding: 2px 10px; }
+  #jivoo-console #jivoo-console-log .jivoo-console-log-entry:hover {
+    background-color: #333; }

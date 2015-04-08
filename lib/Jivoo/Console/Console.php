@@ -36,32 +36,30 @@ class Console extends LoadableModule {
       $this->view->addTemplateDir($this->p('templates'));
     }
     if ($this->config->get('enable', false) === true) {
+      $this->view->addTemplateDir($this->p('templates'));
+
       $this->m->Extensions->import('jquery');
       $this->m->Extensions->import('jqueryui');
       $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/js/console.js');
-      $this->view->resources->provide('jivoo-console.js', $asset);
+      $this->view->resources->provide('jivoo-console.js', $asset, array('jquery.js', 'jquery-ui.js'));
       $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/css/console.css');
       $this->view->resources->provide('jivoo-console.css', $asset);
-      $this->view->resources->import('jquery.js');
-      $this->view->resources->import('jquery-ui.js');
-      $this->view->resources->import('jivoo-console.js');
-      $this->view->resources->import('jivoo-console.css');
       
-      $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) {
+      $devbar = $this->view->renderOnly('jivoo/console/devbar.html');
+      
+      $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) use($devbar) {
         if ($event->response->type === 'text/html') {
           $body = $event->body;
           $extraVars = '<script type="text/javascript">var jivooLog = '
           . Json::encode(Logger::getLog())
           . ';</script>' . PHP_EOL;
-          $event->body = substr_replace($body, $extraVars, strripos($body, '</body'), 0);
+          $event->body = substr_replace($body, $devbar . $extraVars, strripos($body, '</body'), 0);
           $event->overrideBody = true;
         }
       });
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
-
-      $this->view->addTemplateDir($this->p('templates'));
     }
   }
 }
