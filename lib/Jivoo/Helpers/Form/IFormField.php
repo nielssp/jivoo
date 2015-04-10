@@ -29,7 +29,10 @@ interface IFormField {
   
   /**
    * Render the field.
+   * @param mixed $value Field value or null if empty.
+   * @param string $name Field name or null if empty.
+   * @param string $id Field id or null if empty.
    * @return string HTML.
    */
-  public function render();
+  public function render($value = null, $name = null, $id = null);
 }
