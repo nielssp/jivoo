@@ -191,7 +191,7 @@ class ViewResources {
    * @param string $resource Resource identifier.
    */
   private function emitResource($resource) {
-    if ($this->emitted[$resource])
+    if (isset($this->emitted[$resource]))
       return;
     $resInfo = $this->find($resource);
     if (!empty($resInfo['dependencies'])) {
