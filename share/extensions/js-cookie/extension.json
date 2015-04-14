@@ -1,0 +1,11 @@
+{
+  "name": "JavaScript Cookie",
+  "version": "1.5.0-pre",
+  "website": "https://github.com/js-cookie/js-cookie",
+  "category": "JavaScript",
+  "resources": {
+    "js.cookie.js": {
+      "file": "js.cookie.js"
+    }
+  }
+}
