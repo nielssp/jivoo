@@ -40,8 +40,9 @@ class Console extends LoadableModule {
 
       $this->m->Extensions->import('jquery');
       $this->m->Extensions->import('jqueryui');
+      $this->m->Extensions->import('js-cookie');
       $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/js/console.js');
-      $this->view->resources->provide('jivoo-console.js', $asset, array('jquery.js', 'jquery-ui.js'));
+      $this->view->resources->provide('jivoo-console.js', $asset, array('jquery.js', 'jquery-ui.js', 'js.cookie.js'));
       $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/css/console.css');
       $this->view->resources->provide('jivoo-console.css', $asset);
       
