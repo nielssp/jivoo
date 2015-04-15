@@ -3,8 +3,7 @@ $this->import('jivoo-console.js');
 $this->import('jivoo-console.css');
 ?>
 
-<div id="jivoo-console">
-<div class="jivoo-devbar">
+<div id="jivoo-devbar">
 <div class="jivoo-devbar-handle">Jivoo Devbar</div>
 <a href="#" class="jivoo-devbar-system">
 System
@@ -13,5 +12,4 @@ System
 Log
 <span class="jivoo-devbar-count jivoo-devbar-log-count">0</span>
 </a>
-</div>
 </div>
