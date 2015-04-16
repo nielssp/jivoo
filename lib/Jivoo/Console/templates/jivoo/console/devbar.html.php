@@ -12,4 +12,6 @@ System
 Log
 <span class="jivoo-devbar-count jivoo-devbar-log-count">0</span>
 </a>
+<div class="ui-resizable-handle ui-resizable-e">
+</div>
 </div>

@@ -6,25 +6,32 @@
   border: 1px solid #C1BDB3;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   font-family: "Open Sans", sans-serif;
-  font-size: 13px;
+  font-size: 0;
   color: #333;
   white-space: nowrap;
   overflow: hidden;
   font-weight: normal;
   text-align: left;
+  .ui-resizable-handle {
+    background-color: #E0DFDA;
+    border-left: 1px solid #C1BDB3;
+    right: 0;
+    width: 5px;
+  }
   .jivoo-devbar-handle {
     color: #2272CC;
     padding: 4px 8px;
     font-weight: bold;
-    float: left;
+    display: inline-block;
     cursor: move;
+    font-size: 13px;
   }
   a {
+    font-size: 13px;
     text-decoration: none;
     color: #333;
     padding: 4px 8px;
-    display: block;
-    float: left;
+    display: inline-block;
 
     &:hover {
       background-color: #DCDAD5;
