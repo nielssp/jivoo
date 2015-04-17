@@ -63,4 +63,12 @@ class Console extends LoadableModule {
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
     }
   }
+  
+  /**
+   * Add a tool to the developer toolbar.
+   * @param ITool $tool A tool object.
+   */
+  public function addTool($tool) {
+    
+  }
 }
