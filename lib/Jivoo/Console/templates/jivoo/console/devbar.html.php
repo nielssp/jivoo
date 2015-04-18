@@ -5,13 +5,16 @@ $this->import('jivoo-console.css');
 
 <div id="jivoo-devbar">
 <div class="jivoo-devbar-handle">Jivoo Devbar</div>
-<a href="#" class="jivoo-devbar-system">
+<ul class="jivoo-devbar-tools">
+<li><a href="#" class="jivoo-devbar-system">
 System
-</a>
-<a href="#" class="jivoo-devbar-log">
+</a></li>
+<li><a href="#" class="jivoo-devbar-log">
 Log
 <span class="jivoo-devbar-count jivoo-devbar-log-count">0</span>
-</a>
+</a></li>
+</ul>
+<a href="#" class="jivoo-devbar-more">&raquo;</a>
 <div class="ui-resizable-handle ui-resizable-e">
 </div>
 </div>

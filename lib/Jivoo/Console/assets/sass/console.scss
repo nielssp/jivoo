@@ -18,6 +18,20 @@
     right: 0;
     width: 5px;
   }
+  .jivoo-devbar-more {
+    display: inline-block;
+    background-color: #ECEBE8;
+    text-decoration: none;
+    color: #333;
+    position: absolute;
+    font-size: 13px;
+    right: 5px;
+    float: right;
+    padding: 4px 6px;
+    &:hover {
+      background-color: #DCDAD5;
+    }
+  }
   .jivoo-devbar-handle {
     color: #2272CC;
     padding: 4px 8px;
@@ -26,24 +40,34 @@
     cursor: move;
     font-size: 13px;
   }
-  a {
-    font-size: 13px;
-    text-decoration: none;
-    color: #333;
-    padding: 4px 8px;
+  .jivoo-devbar-tools {
     display: inline-block;
+    margin: 0;
+    padding: 0;
+    li {
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      a {
+        text-decoration: none;
+        color: #333;
+        padding: 4px 8px;
+        font-size: 13px;
+        display: block;
 
-    &:hover {
-      background-color: #DCDAD5;
-    }
+        &:hover {
+          background-color: #DCDAD5;
+        }
 
-    .jivoo-devbar-count {
-      color: #979180;
-      &:before {
-        content: '(';
-      }
-      &:after {
-        content: ')';
+        .jivoo-devbar-count {
+          color: #979180;
+          &:before {
+            content: '(';
+          }
+          &:after {
+            content: ')';
+          }
+        }
       }
     }
   }

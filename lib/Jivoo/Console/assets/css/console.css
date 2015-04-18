@@ -16,6 +16,18 @@
     border-left: 1px solid #C1BDB3;
     right: 0;
     width: 5px; }
+  #jivoo-devbar .jivoo-devbar-more {
+    display: inline-block;
+    background-color: #ECEBE8;
+    text-decoration: none;
+    color: #333;
+    position: absolute;
+    font-size: 13px;
+    right: 5px;
+    float: right;
+    padding: 4px 6px; }
+    #jivoo-devbar .jivoo-devbar-more:hover {
+      background-color: #DCDAD5; }
   #jivoo-devbar .jivoo-devbar-handle {
     color: #2272CC;
     padding: 4px 8px;
@@ -23,20 +35,28 @@
     display: inline-block;
     cursor: move;
     font-size: 13px; }
-  #jivoo-devbar a {
-    font-size: 13px;
-    text-decoration: none;
-    color: #333;
-    padding: 4px 8px;
-    display: inline-block; }
-    #jivoo-devbar a:hover {
-      background-color: #DCDAD5; }
-    #jivoo-devbar a .jivoo-devbar-count {
-      color: #979180; }
-      #jivoo-devbar a .jivoo-devbar-count:before {
-        content: '('; }
-      #jivoo-devbar a .jivoo-devbar-count:after {
-        content: ')'; }
+  #jivoo-devbar .jivoo-devbar-tools {
+    display: inline-block;
+    margin: 0;
+    padding: 0; }
+    #jivoo-devbar .jivoo-devbar-tools li {
+      margin: 0;
+      padding: 0;
+      display: inline-block; }
+      #jivoo-devbar .jivoo-devbar-tools li a {
+        text-decoration: none;
+        color: #333;
+        padding: 4px 8px;
+        font-size: 13px;
+        display: block; }
+        #jivoo-devbar .jivoo-devbar-tools li a:hover {
+          background-color: #DCDAD5; }
+        #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count {
+          color: #979180; }
+          #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count:before {
+            content: '('; }
+          #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count:after {
+            content: ')'; }
 
 #jivoo-console-log {
   width: 100%;
@@ -52,3 +72,5 @@
     padding: 2px 10px; }
   #jivoo-console-log .jivoo-console-log-entry:hover {
     background-color: #333; }
+
+/*# sourceMappingURL=console.css.map */
