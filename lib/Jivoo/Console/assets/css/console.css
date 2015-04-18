@@ -17,14 +17,14 @@
     right: 0;
     width: 5px; }
   #jivoo-devbar .jivoo-devbar-more {
-    display: inline-block;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 5px;
     background-color: #ECEBE8;
     text-decoration: none;
     color: #333;
-    position: absolute;
     font-size: 13px;
-    right: 5px;
-    float: right;
     padding: 4px 6px; }
     #jivoo-devbar .jivoo-devbar-more:hover {
       background-color: #DCDAD5; }
