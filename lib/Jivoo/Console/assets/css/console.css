@@ -8,7 +8,6 @@
   font-size: 0;
   color: #333;
   white-space: nowrap;
-  overflow: hidden;
   font-weight: normal;
   text-align: left; }
   #jivoo-devbar .ui-resizable-handle {
@@ -35,28 +34,47 @@
     display: inline-block;
     cursor: move;
     font-size: 13px; }
-  #jivoo-devbar .jivoo-devbar-tools {
-    display: inline-block;
+  #jivoo-devbar .jivoo-devbar-tools,
+  #jivoo-devbar .jivoo-devbar-tools-more {
     margin: 0;
     padding: 0; }
-    #jivoo-devbar .jivoo-devbar-tools li {
+    #jivoo-devbar .jivoo-devbar-tools li,
+    #jivoo-devbar .jivoo-devbar-tools-more li {
       margin: 0;
       padding: 0;
-      display: inline-block; }
-      #jivoo-devbar .jivoo-devbar-tools li a {
+      display: block; }
+      #jivoo-devbar .jivoo-devbar-tools li a,
+      #jivoo-devbar .jivoo-devbar-tools-more li a {
         text-decoration: none;
         color: #333;
         padding: 4px 8px;
         font-size: 13px;
         display: block; }
-        #jivoo-devbar .jivoo-devbar-tools li a:hover {
+        #jivoo-devbar .jivoo-devbar-tools li a:hover,
+        #jivoo-devbar .jivoo-devbar-tools-more li a:hover {
           background-color: #DCDAD5; }
-        #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count {
+        #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count,
+        #jivoo-devbar .jivoo-devbar-tools-more li a .jivoo-devbar-count {
           color: #979180; }
-          #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count:before {
+          #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count:before,
+          #jivoo-devbar .jivoo-devbar-tools-more li a .jivoo-devbar-count:before {
             content: '('; }
-          #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count:after {
+          #jivoo-devbar .jivoo-devbar-tools li a .jivoo-devbar-count:after,
+          #jivoo-devbar .jivoo-devbar-tools-more li a .jivoo-devbar-count:after {
             content: ')'; }
+  #jivoo-devbar .jivoo-devbar-tools-more {
+    display: block;
+    position: absolute;
+    background-color: #ECEBE8;
+    border: 1px solid #C1BDB3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
+    color: #333; }
+  #jivoo-devbar .jivoo-devbar-tools {
+    display: inline-block; }
+    #jivoo-devbar .jivoo-devbar-tools li {
+      display: inline-block; }
 
 #jivoo-console-log {
   width: 100%;

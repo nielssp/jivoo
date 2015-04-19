@@ -9,7 +9,6 @@
   font-size: 0;
   color: #333;
   white-space: nowrap;
-  overflow: hidden;
   font-weight: normal;
   text-align: left;
   .ui-resizable-handle {
@@ -40,14 +39,14 @@
     cursor: move;
     font-size: 13px;
   }
-  .jivoo-devbar-tools {
-    display: inline-block;
+  .jivoo-devbar-tools,
+  .jivoo-devbar-tools-more {
     margin: 0;
     padding: 0;
     li {
       margin: 0;
       padding: 0;
-      display: inline-block;
+      display: block;
       a {
         text-decoration: none;
         color: #333;
@@ -58,7 +57,6 @@
         &:hover {
           background-color: #DCDAD5;
         }
-
         .jivoo-devbar-count {
           color: #979180;
           &:before {
@@ -69,6 +67,22 @@
           }
         }
       }
+    }
+  }
+  .jivoo-devbar-tools-more {
+    display: block;
+    position: absolute;
+    background-color: #ECEBE8;
+    border: 1px solid #C1BDB3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
+    color: #333;
+  }
+  .jivoo-devbar-tools {
+    display: inline-block;
+    li {
+      display: inline-block;
     }
   }
 }
