@@ -12,6 +12,35 @@
   text-align: left;
 }
 
+.jivoo-frame {
+  padding: 5px;
+  font-size: 13px;
+  .jivoo-frame-close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 3px 6px;
+    cursor: pointer;
+    &:hover {
+      background-color: #E0DFDA;
+    }
+  }
+  .jivoo-frame-title {
+    margin-bottom: 5px;
+    cursor: move;
+  }
+  .jivoo-frame-content {
+    border: 1px solid #C1BDB3;
+    background-color: #fff;
+    padding: 5px;
+    position: absolute;
+    bottom: 5px;
+    top: 25px;
+    left: 5px;
+    right: 5px;
+  }
+}
+
 #jivoo-devbar {
   font-size: 0;
   white-space: nowrap;
