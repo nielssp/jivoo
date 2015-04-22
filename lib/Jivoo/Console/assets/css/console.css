@@ -11,11 +11,12 @@
   text-align: left; }
 
 .jivoo-frame {
-  padding: 0 5px 5px 5px;
   font-size: 13px; }
   .jivoo-frame .jivoo-frame-close {
+    margin-right: 5px;
     float: right;
     padding: 5px 10px;
+    font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     color: #979180; }
@@ -23,6 +24,8 @@
       color: #333;
       background-color: #E0DFDA; }
   .jivoo-frame .jivoo-frame-title {
+    font-size: 12px;
+    margin-left: 5px;
     padding: 5px;
     text-align: center;
     cursor: move; }
@@ -32,9 +35,33 @@
     padding: 5px;
     position: absolute;
     bottom: 5px;
-    top: 25px;
+    top: 27px;
     left: 5px;
     right: 5px; }
+  .jivoo-frame .ui-resizable-e {
+    right: 0;
+    width: 5px; }
+  .jivoo-frame .ui-resizable-w {
+    left: 0;
+    width: 5px; }
+  .jivoo-frame .ui-resizable-s {
+    bottom: 0;
+    height: 5px; }
+  .jivoo-frame .ui-resizable-n {
+    top: 0;
+    height: 5px; }
+  .jivoo-frame .ui-resizable-se {
+    bottom: 0;
+    right: 0; }
+  .jivoo-frame .ui-resizable-sw {
+    bottom: 0;
+    left: 0; }
+  .jivoo-frame .ui-resizable-ne {
+    top: 0;
+    right: 0; }
+  .jivoo-frame .ui-resizable-nw {
+    top: 0;
+    left: 0; }
 
 #jivoo-devbar {
   font-size: 0;

@@ -13,11 +13,12 @@
 }
 
 .jivoo-frame {
-  padding: 0 5px 5px 5px;
   font-size: 13px;
   .jivoo-frame-close {
+    margin-right: 5px;
     float: right;
     padding: 5px 10px;
+    font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     color: #979180;
@@ -27,6 +28,8 @@
     }
   }
   .jivoo-frame-title {
+    font-size: 12px;
+    margin-left: 5px;
     padding: 5px;
     text-align: center;
     cursor: move;
@@ -37,9 +40,41 @@
     padding: 5px;
     position: absolute;
     bottom: 5px;
-    top: 25px;
+    top: 27px;
     left: 5px;
     right: 5px;
+  }
+  .ui-resizable-e {
+    right: 0;
+    width: 5px;
+  }
+  .ui-resizable-w {
+    left: 0;
+    width: 5px;
+  }
+  .ui-resizable-s {
+    bottom: 0;
+    height: 5px;
+  }
+  .ui-resizable-n {
+    top: 0;
+    height: 5px;
+  }
+  .ui-resizable-se {
+    bottom: 0;
+    right: 0;
+  }
+  .ui-resizable-sw {
+    bottom: 0;
+    left: 0;
+  }
+  .ui-resizable-ne {
+    top: 0;
+    right: 0;
+  }
+  .ui-resizable-nw {
+    top: 0;
+    left: 0;
   }
 }
 
