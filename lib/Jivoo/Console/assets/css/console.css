@@ -11,18 +11,20 @@
   text-align: left; }
 
 .jivoo-frame {
-  padding: 5px;
+  padding: 0 5px 5px 5px;
   font-size: 13px; }
   .jivoo-frame .jivoo-frame-close {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    padding: 3px 6px;
-    cursor: pointer; }
+    float: right;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #979180; }
     .jivoo-frame .jivoo-frame-close:hover {
+      color: #333;
       background-color: #E0DFDA; }
   .jivoo-frame .jivoo-frame-title {
-    margin-bottom: 5px;
+    padding: 5px;
+    text-align: center;
     cursor: move; }
   .jivoo-frame .jivoo-frame-content {
     border: 1px solid #C1BDB3;
