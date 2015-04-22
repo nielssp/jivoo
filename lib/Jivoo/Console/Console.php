@@ -22,6 +22,16 @@ class Console extends LoadableModule {
   /**
    * {@inheritdoc}
    */
+  protected $events = array('beforeOutputVariables');
+  
+  /**
+   * @var mixed[] Associative array of variables and values.
+   */
+  private $variables = array();
+  
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
   }
   
@@ -48,12 +58,13 @@ class Console extends LoadableModule {
       
       $devbar = $this->view->renderOnly('jivoo/console/devbar.html');
       
-      $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) use($devbar) {
+      $self = $this; // pre 5.4
+      $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) use($devbar, $self) {
         if ($event->response->type === 'text/html') {
           $body = $event->body;
-          $extraVars = '<script type="text/javascript">var jivooLog = '
-          . Json::encode(Logger::getLog())
-          . ';</script>' . PHP_EOL;
+          $self->setVariable('jivooLog', Logger::getLog());
+          $extraVars = '<script type="text/javascript">'
+            . $self->outputVariables() . '</script>' . PHP_EOL;
           $event->body = substr_replace($body, $devbar . $extraVars, strripos($body, '</body'), 0);
           $event->overrideBody = true;
         }
@@ -62,6 +73,39 @@ class Console extends LoadableModule {
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
     }
+  }
+  
+  /**
+   * Output variables to JavaScript.
+   * @return string JavaScript variable assignments.
+   */
+  public function outputVariables() {
+    $this->triggerEvent('beforeOutputVariables');
+    $output = '';
+    foreach ($this->variables as $variable => $value) {
+      $output .= 'var ' . $variable . ' = ' . Json::encode($value) . ';';
+    }
+    return $output;
+  }
+  
+  /**
+   * Add a variable to the global JavaScript namespace. 
+   * @param string $variable Variable name.
+   * @param mixed $value Value, will be JSON encoded.
+   */
+  public function setVariable($variable, $value) {
+    $this->variables[$variable] = $value;
+  }
+  
+  /**
+   * Get value of a variable previously set using {@see setVariable}.
+   * @param string $variable Variable name.
+   * @return mixed Value of variable.
+   */
+  public function getVariable($variable) {
+    if (isset($this->variables[$variable]))
+      return $this->variables[$variable];
+    return null;
   }
   
   /**
