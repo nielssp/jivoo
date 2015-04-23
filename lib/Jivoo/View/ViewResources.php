@@ -217,9 +217,15 @@ class ViewResources {
 
   /**
    * Output resource block.
+   * @param string[]|string Type(s) of resources to output, e.g. 'script',
+   * 'style'. 
    * @return string Resource block HTML.
    */
-  public function resourceBlock() {
+  public function resourceBlock($types = null) {
+    if (!isset($types))
+      $types = array('style', 'script');
+    if (!is_array($types))
+      $types = func_get_args();
     while ($this->framePointer > 0)
       $this->closeFrame();
     $this->emitted = array();
@@ -227,9 +233,12 @@ class ViewResources {
       'script' => '',
       'style' => '',
     );
-    foreach ($this->importFrames[$this->framePointer] as $resource)
+    foreach ($this->importFrames[$this->framePointer] as $resource) {
       $this->emitResource($resource);
-    $block = $this->blocks['style'] . PHP_EOL . $this->blocks['script'];
+    }
+    $block = '';
+    foreach ($types as $type)
+      $block .= $this->blocks[$type] . PHP_EOL;
     return $block;
   }
 }

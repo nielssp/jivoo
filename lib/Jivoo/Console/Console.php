@@ -30,6 +30,11 @@ class Console extends LoadableModule {
   private $variables = array();
   
   /**
+   * @var mixed[] Associative array of tool names and routes.
+   */
+  private $tools = array();
+  
+  /**
    * {@inheritdoc}
    */
   protected function init() {
@@ -109,10 +114,11 @@ class Console extends LoadableModule {
   }
   
   /**
-   * Add a tool to the developer toolbar.
-   * @param ITool $tool A tool object.
+   * Add an Ajax-based tool to the developer toolbar.
+   * @param string $name Name of tool.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
-  public function addTool($tool) {
-    
+  public function addTool($name, $route) {
+    $this->tools[$name] = $route;
   }
 }
