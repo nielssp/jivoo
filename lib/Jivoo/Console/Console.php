@@ -30,7 +30,7 @@ class Console extends LoadableModule {
   private $variables = array();
   
   /**
-   * @var mixed[] Associative array of tool names and routes.
+   * @var mixed[] Associative array of tool ids and settings.
    */
   private $tools = array();
   
@@ -69,7 +69,9 @@ class Console extends LoadableModule {
           $body = $event->body;
           $self->setVariable('jivooLog', Logger::getLog());
           $extraVars = '<script type="text/javascript">'
-            . $self->outputVariables() . '</script>' . PHP_EOL;
+            . $self->outputVariables()
+            . $self->outputTools()
+            . '</script>' . PHP_EOL;
           $event->body = substr_replace($body, $devbar . $extraVars, strripos($body, '</body'), 0);
           $event->overrideBody = true;
         }
@@ -77,6 +79,8 @@ class Console extends LoadableModule {
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
+      
+      $this->addTool('dashboard', tr('Dashboard'), 'snippet:Jivoo\Console\Dashboard', false);
     }
   }
   
@@ -115,10 +119,39 @@ class Console extends LoadableModule {
   
   /**
    * Add an Ajax-based tool to the developer toolbar.
+   * @param string $id A unique tool id.
    * @param string $name Name of tool.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param bool $ajax Whether or not to use Ajax. If false, then a simple
+   * link is created instead.
    */
-  public function addTool($name, $route) {
-    $this->tools[$name] = $route;
+  public function addTool($id, $name, $route, $ajax = true) {
+    $this->tools[$id] = array(
+      'name' => $name,
+      'route' => $route,
+      'ajax' => $ajax
+    );
+  }
+  
+  /**
+   * Output tool creation JavaScript.
+   * @return string JavaScript.
+   */
+  public function outputTools() {
+    $output .= 'if (typeof jivooDevbar !== "object") {';
+    $output .= 'console.error("Jivoo Devbar not found!");';
+    $output .= '} else {';
+    foreach ($this->tools as $id => $tool) {
+      if ($tool['ajax'])
+        $output .= 'jivooDevbar.addAjaxTool(';
+      else
+        $output .= 'jivooDevbar.addLinkTool(';
+      $output .= Json::encode($id) . ', ';
+      $output .= Json::encode($tool['name']) . ', ';
+      $link = $this->m->Routing->getLink($tool['route']);
+      $output .= Json::encode($link) . ');';
+    }
+    $output .= '}';
+    return $output;
   }
 }
