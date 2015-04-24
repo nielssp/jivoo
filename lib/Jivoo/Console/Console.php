@@ -138,14 +138,16 @@ class Console extends LoadableModule {
    * @return string JavaScript.
    */
   public function outputTools() {
-    $output .= 'if (typeof jivooDevbar !== "object") {';
-    $output .= 'console.error("Jivoo Devbar not found!");';
+    $output .= 'if (typeof JIVOO !== "object") {';
+    $output .= 'console.error("Jivoo module not found!");';
+    $output .= '} else if (typeof JIVOO.devbar !== "object") {';
+    $output .= 'console.error("Jivoo Devbar module not found!");';
     $output .= '} else {';
     foreach ($this->tools as $id => $tool) {
       if ($tool['ajax'])
-        $output .= 'jivooDevbar.addAjaxTool(';
+        $output .= 'JIVOO.devbar.addAjaxTool(';
       else
-        $output .= 'jivooDevbar.addLinkTool(';
+        $output .= 'JIVOO.devbar.addLinkTool(';
       $output .= Json::encode($id) . ', ';
       $output .= Json::encode($tool['name']) . ', ';
       $link = $this->m->Routing->getLink($tool['route']);
