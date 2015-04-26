@@ -1,4 +1,10 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400|Source+Code+Pro:400,700");
+.jivoo-frame, .jivoo-frame *,
+#jivoo-devbar,
+#jivoo-devbar * {
+  font-weight: normal;
+  text-align: left; }
+
 .jivoo-frame,
 #jivoo-devbar {
   position: fixed;
@@ -6,9 +12,7 @@
   border: 1px solid #C1BDB3;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   font-family: "Open Sans", sans-serif;
-  color: #333;
-  font-weight: normal;
-  text-align: left; }
+  color: #333; }
 
 .jivoo-frame {
   font-size: 13px; }
@@ -145,5 +149,3 @@
       border: none; }
   .jivoo-console-log > .jivoo-console-log-entry:hover {
     background-color: #f1f1f1; }
-
-/*# sourceMappingURL=console.css.map */
