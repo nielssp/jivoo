@@ -67,12 +67,15 @@ class Console extends LoadableModule {
       $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) use($devbar, $self) {
         if ($event->response->type === 'text/html') {
           $body = $event->body;
+          $pos = strripos($body, '</body');
+          if ($pos === false)
+            return;
           $self->setVariable('jivooLog', Logger::getLog());
           $extraVars = '<script type="text/javascript">'
             . $self->outputVariables()
             . $self->outputTools()
             . '</script>' . PHP_EOL;
-          $event->body = substr_replace($body, $devbar . $extraVars, strripos($body, '</body'), 0);
+          $event->body = substr_replace($body, $devbar . $extraVars, $pos, 0);
           $event->overrideBody = true;
         }
       });
@@ -80,7 +83,7 @@ class Console extends LoadableModule {
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
       
-      $this->addTool('dashboard', tr('Dashboard'), 'snippet:Jivoo\Console\Dashboard', false);
+      $this->addTool('dashboard', tr('System'), 'snippet:Jivoo\Console\Dashboard', true);
     }
   }
   

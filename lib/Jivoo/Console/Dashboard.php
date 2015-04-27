@@ -29,6 +29,7 @@ class Dashboard extends Snippet {
    * {@inheritdoc}
    */
   public function get() {
+    $this->disableLayout();
     return $this->render();
   }
 }
