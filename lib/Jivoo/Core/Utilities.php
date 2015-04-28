@@ -134,10 +134,11 @@ class Utilities {
    * @param string $string String.
    * @param int $start Start index.
    * @param int $length Length of substring.
+   * @param bool $mb Whether to use mb_substr if available.
    * @return string Returns the extracted part of string; or FALSE on failure, or an empty string.
    */
-  public static function substr($string, $start, $length = NULL) {
-    if (function_exists('mb_substr')) {
+  public static function substr($string, $start, $length = null, $mb = true) {
+    if ($mb and function_exists('mb_substr')) {
       return mb_substr($string, $start, $length, 'UTF-8');
     }
     else {
@@ -163,11 +164,8 @@ class Utilities {
    * @return string Content type, 'text/plain' if unknown.
    */
   public static function getContentType($fileName) {
-    $fileExt = strtolower($fileName);
-    if (strpos($fileExt, '.') !== false) {
-      $segments = explode('.', $fileExt);
-      $fileExt = $segments[count($segments) - 1];
-    }
+    $array = explode('.', $fileName);
+    $fileExt = strtolower(array_pop($array));
     switch ($fileExt) {
       case 'htm':
         $fileExt = 'html';
@@ -207,7 +205,7 @@ class Utilities {
       case 'text/html':
         return 'html';
       case 'text/plain':
-        return 'text';
+        return 'txt';
       case 'text/css':
         return 'css';
       case 'text/javascript':
@@ -232,43 +230,13 @@ class Utilities {
     }
     return null;
   }
-
-  /**
-   * Sort an array of IGroupables
-   * @param IGroupable[] $objects An array of IGroupables
-   * @return boolean True if successful, false if empty array or not an array  
-   */
-  public static function groupObjects(&$objects) {
-    if (!is_array($objects) OR count($objects) < 1) {
-      return false;
-    }
-    uasort($objects, array('Utilities', 'groupSorter'));
-    return true;
-  }
-
-  /**
-   * Compare two IGroupable-objects
-   * @param IGroupable $a First
-   * @param IGroupable $b Second
-   * @return int Difference
-   */
-  public static function groupSorter(IGroupable $a, IGroupable $b) {
-    $groupA = $a->getGroup();
-    $groupB = $b->getGroup();
-    if (is_numeric($groupA) AND is_numeric($groupB)) {
-      return $groupA - $groupB;
-    }
-    else {
-      return strcmp($groupA, $groupB);
-    }
-  }
   
   /**
-   * Comparison function for use with usort() and uasort()
-   * @depracted Is this still used anywhere?
-   * @param array $a First
-   * @param array $b Second
-   * @return int difference
+   * Comparison function for use with usort() and uasort() to sort
+   * associative arrays with a 'priority'-key.
+   * @param array $a First.
+   * @param array $b Second.
+   * @return int Difference.
    */
   public static function prioritySorter($a, $b) {
     return $b['priority'] - $a['priority'];
