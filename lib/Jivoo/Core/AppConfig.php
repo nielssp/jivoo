@@ -84,7 +84,7 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
             $this->data = Json::decode($content);
             break;
           default:
-            throw new UnsupportedConfigurationFormat(
+            throw new UnsupportedConfigurationFormatException(
               tr('Unsupported file format: "%1"', $this->type)
             );
         }
