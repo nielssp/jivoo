@@ -7,9 +7,10 @@ namespace Jivoo\Jtk\Menu;
 
 /**
  * A menu item.
- * @property string $label Item label.
  */
-abstract class MenuItem {  
+abstract class MenuItem {
+  private $properties = array();
+  
   public function __get($property) {
     if (isset($this->properties[$property]))
       return $this->properties[$property];

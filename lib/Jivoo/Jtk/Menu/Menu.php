@@ -9,7 +9,7 @@ namespace Jivoo\Jtk\Menu;
  * A menu.
  * @property string $icon Icon path or name.
  */
-class Menu extends LabelMenuItem implements \Traversable, \ArrayAccess {
+class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \ArrayAccess {
   
   private $items = array();
 
@@ -31,7 +31,10 @@ class Menu extends LabelMenuItem implements \Traversable, \ArrayAccess {
       }
     }
     else {
-      $this->items[$id] = $item;
+      if (isset($id))
+        $this->items[$id] = $item;
+      else
+        $this->items[] = $item;
     }
   }
 
@@ -42,6 +45,7 @@ class Menu extends LabelMenuItem implements \Traversable, \ArrayAccess {
    */
   public function prepend($item, $id = null) {
     if (is_array($item)) {
+      $item = array_reverse($item, true);
       foreach ($item as $id => $it) {
         if (!is_string($id))
           $id = null;
@@ -82,14 +86,33 @@ class Menu extends LabelMenuItem implements \Traversable, \ArrayAccess {
     }
   }
   
+  public function remove($id) {
+    if (isset($this->items[$id]))
+      unset($this->items[$id]);
+  }
+  
+  public function removeOffset($offset) {
+    array_splice($this->items, $offset, 1);
+  }
+  
+  public function itemAt($offset) {
+    $slice = array_slice($this->items, $offset, 1);
+    return $slice[0];
+  }
+  
   public function getOffset($id) {
+    if (!isset($this->items[$id]))
+      return null;
     $keys = array_keys($this->items);
     $n = count($keys);
+    $result = null;
     foreach ($keys as $offset => $key) {
-      if ($key === $id)
-        return $offset;
+      if ($key === $id) {
+        $result = $offset;
+        break;
+      }
     }
-    return null;
+    return $result;
   }
   
   public function appendMenu($label, $id = null) {
@@ -144,5 +167,34 @@ class Menu extends LabelMenuItem implements \Traversable, \ArrayAccess {
     $action = new MenuAction($label, $route, $icon);
     $this->insert($offset, $action, $id);
     return $action;
+  }
+  
+  public function offsetGet($id) {
+    if (isset($this->items[$id]))
+      return $this->items[$id];
+    return null;
+  }
+  
+  public function offsetSet($id, $item) {
+    if (isset($id) and isset($this->items[$id]))
+      $this->items[$id] = $item;
+    else
+      $this->append($item, $id);
+  }
+  
+  public function offsetUnset($id) {
+    $this->remove($id);
+  }
+  
+  public function offsetExists($id) {
+    return isset($this->items[$id]);
+  }
+  
+  public function getIterator() {
+    return new \ArrayIterator($this->items);
+  }
+  
+  public function count() {
+    return count($this->items);
   }
 }
