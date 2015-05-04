@@ -64,6 +64,13 @@ abstract class CryptHasher implements IPasswordHasher {
    * {@inheritdoc}
    */
   public function compare($password, $hash) {
-    return crypt($password, $hash) === $hash;
+    $actual = crypt($password, $hash);
+    if (strlen($actual) != strlen($hash))
+      return false;
+    $res = $hash ^ $actual;
+    $ret = 0;
+    for ($i = strlen($res) - 1; $i >= 0; $i--)
+      $ret |= ord($res[$i]);
+    return $ret === 0;
   }
 }
