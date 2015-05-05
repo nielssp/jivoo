@@ -13,7 +13,14 @@ use Jivoo\Routing\ILinkable;
  * @property string $icon Icon path or name.
  */
 class MenuAction extends LabelMenuItem implements ILinkable {
-  
+  /**
+   * Construct menu action.
+   * @param string $label Label.
+   * @param string|array|ILinkable|null $route A route, see
+   * {@see Jivoo\Routing\Routing}.
+   * @param string $icon Optional icon path or name, see
+   * {@see Jivoo\Jtk\IconHelper}.
+   */
   public function __construct($label, $route = null, $icon = null) {
     parent::__construct($label);
     $this->route = $route;

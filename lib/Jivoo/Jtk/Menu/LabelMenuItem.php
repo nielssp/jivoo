@@ -10,6 +10,10 @@ namespace Jivoo\Jtk\Menu;
  * @property string $label Item label.
  */
 abstract class LabelMenuItem extends MenuItem {
+  /**
+   * Construct labelled menu item.
+   * @param string $label Label.
+   */
   public function __construct($label) {
     $this->label = $label;
   }
