@@ -24,6 +24,7 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
   public function __construct($label, $icon = null) {
     parent::__construct($label);
     $this->icon = $icon;
+    $this->route = 'null:';
   }
   /**
    * Append one or more menu items.
