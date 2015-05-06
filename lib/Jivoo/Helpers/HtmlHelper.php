@@ -66,10 +66,11 @@ class HtmlHelper extends Helper {
   public function link($label, $route = null, $attributes = array()) {
     try {
       $url = $this->m->Routing->getLink($route);
-      if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route)) {
+      if ($url != '')
+        $attributes['href'] = $url;
+      if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
         $attributes['class'] = 'current';
-      }
-      return '<a href="' . h($url) . '"' . $this->addAttributes($attributes) .
+      return '<a' . $this->addAttributes($attributes) .
              '>' . $label . '</a>';
     }
     catch (InvalidRouteException $e) {
