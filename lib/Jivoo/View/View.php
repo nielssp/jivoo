@@ -20,8 +20,7 @@ use Jivoo\Core\Utilities;
  * {@see Routing::getLink}. 
  * @method string url(array|ILinkable|string|null $route = null) Alias for
  * {@see Routing::getUrl}. 
- * @method bool isCurrent(array|ILinkable|string|null $route = null,
- *       string $defaultAction = 'index', array $defaultParameters = array())
+ * @method bool isCurrent(array|ILinkable|string|null $route = null)
  *  Alias for {@see Routing::isCurrent}.
  * @method array mergeRoutes(array|ILinkable|string|null $route = null,
  *       array $mergeWith = array()) Alias for {@see Routing::mergeRoutes}.

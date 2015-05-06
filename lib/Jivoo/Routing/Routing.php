@@ -300,8 +300,8 @@ class Routing extends LoadableModule {
    * @throws InvalidRouteException If route is not valid.
    * @return boolean True if current route, false otherwise.
    */
-  public function isCurrent($route = null, $defaultAction = 'index', $defaultParameters = array()) {
-    $route = $this->validateRoute($route, $defaultAction, $defaultParameters);
+  public function isCurrent($route = null) {
+    $route = $this->validateRoute($route);
     return $route['dispatcher']->isCurrent($route);
   }
   

@@ -39,6 +39,7 @@ class Jtk extends LoadableModule {
     $this->addTool('Jivoo\Jtk\Form\FormField');
     $this->addTool('Jivoo\Jtk\Table\BasicDataTable');
     $this->addTool('Jivoo\Jtk\Table\DataTableRow');
+    $this->addTool('Jivoo\Jtk\Menu\IconMenu');
   }
   
   /**

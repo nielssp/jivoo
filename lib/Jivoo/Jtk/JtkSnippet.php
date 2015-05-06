@@ -11,6 +11,7 @@ use Jivoo\Snippets\Snippet;
  * A toolkit snippet.
  */
 class JtkSnippet extends Snippet {
+  protected $helpers = array('Jtk');
 
   protected $autoSetters = array();
   
