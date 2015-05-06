@@ -196,10 +196,11 @@ class View extends LoadableModule {
     do {
       $dir = dirname($dir);
       if ($dir === '.')
-        $template = $this->findTemplate('layout.' . $extension);
+        $template = 'layout.' . $extension;
       else
-        $template = $this->findTemplate($dir . '/layout.' . $extension);
-      if (isset($template))
+        $template = $dir . '/layout.' . $extension;
+      $file = $this->findTemplate($template);
+      if (isset($file))
         return $template;
     } while ($dir != '.');
     return false;

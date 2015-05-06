@@ -13,8 +13,8 @@ if ($current) echo ' class="current"'; ?>>
 <span class="count"><?php echo $item->badge; ?></span>
 <?php endif; ?>
 </a>
-<?php if ($item instanceof Menu): ?>
-<?php echo $Jtk->IconMenu->menu($item); ?>
+<?php if ($item instanceof Jivoo\Jtk\Menu\Menu): ?>
+<?php $m = $Jtk->IconMenu->menu($item); echo $m(); ?>
 <?php endif; ?>
 </li>
 <?php endforeach; ?>

@@ -39,15 +39,13 @@ $this->import(
 </li>
 </ul>
 
+<?php $menu = $Jtk->IconMenu->menu($shortcutsMenu); echo $menu(); ?>
 
 </header>
 
 <nav>
 
-<?php
-echo $Snippet->__call('Jivoo\Administration\Menu\IconMenuWidget', array(
-  'menu' => array(),
-)); ?>
+<?php $menu = $Jtk->IconMenu->menu($mainMenu); echo $menu(); ?>
 
 </nav>
 
