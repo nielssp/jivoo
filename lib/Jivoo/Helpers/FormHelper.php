@@ -206,7 +206,7 @@ class FormHelper extends Helper {
   public function name($field, $value = null) {
     if (isset($this->name))
       $field = $this->name . '[' . $field . ']';
-    if (isset($value))
+    if (isset($value) and !is_bool($value))
       $field .= '[' . $value . ']';
     return $field;
   }
@@ -489,7 +489,11 @@ class FormHelper extends Helper {
     ), $attributes);
     $attributes['value'] = $value;
     $currentValue = $this->value($field);
-    if (is_array($currentValue) and (isset($currentValue[$value])
+    if (is_bool($value)) {
+      if ($currentValue)
+        $attributes['checked'] = 'checked';
+    }
+    else if (is_array($currentValue) and (isset($currentValue[$value])
       or array_search($value, $currentValue) !== false)) {
       $attributes['checked'] = 'checked';
     }

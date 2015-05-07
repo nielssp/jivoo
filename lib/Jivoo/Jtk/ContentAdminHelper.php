@@ -6,6 +6,7 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Helpers\Helper;
+use Jivoo\Models\IModel;
 
 class ContentAdminHelper extends Helper {
 
