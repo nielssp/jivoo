@@ -18,5 +18,7 @@ class IconMenu extends JtkSnippet {
   );
   
   protected $autoSetters = array('menu');
+  
+  protected $objectType = 'Jivoo\Jtk\Menu\Menu';
 }
 
