@@ -14,11 +14,6 @@ class DataTableRow extends JtkSnippet {
   protected $viewData = array(
     'id' => null,
     'cells' => array(),
-  );
-  
-  protected $options = array(
-    'id' => '',
-    'cells' => array(),
     'columns' => array(),
     'labels' => array(),
     'primaryColumn' => null,

@@ -16,8 +16,10 @@ class JtkHelper extends Helper {
   
   protected $helpers = array('Snippet');
   
-  public function __get($tool) {
-    $tool = $this->m->Jtk->getTool($tool);
+  public function __get($toolName) {
+    $tool = $this->m->Jtk->getTool($toolName);
+    if (!isset($tool))
+      throw new \Exception(tr('Tool not found: %1', $toolName));
     return $tool;
   }
   
