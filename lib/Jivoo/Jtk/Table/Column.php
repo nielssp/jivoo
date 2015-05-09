@@ -14,7 +14,7 @@ class Column extends JtkObject {
   public function __construct($label, $cellRenderer = null) {
     $this->label = $label;
     $this->cellRenderer = $cellRenderer;
-    if (!isset($this->cellRenderer) {
+    if (!isset($this->cellRenderer)) {
       $this->cellRenderer = array($this, 'defaultCellRenderer');
     }
   }
