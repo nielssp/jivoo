@@ -82,7 +82,7 @@ class Lib {
   /**
    * Check whether or not $class extends $parent, and throw an exception if
    * it does not
-   * @param string $class Class name
+   * @param string|object $class Class name or object.
    * @param string $parent Expected parent class of $class
    * @throws ClassInvalidException if $class does not extend $parent
    * @throws ClassNotFoundException if $class does not exist
