@@ -10,8 +10,9 @@ use Jivoo\Jtk\JtkCollection;
 
 /**
  * A data table.
- * @property IModel $model Model.
+ * @property Jivoo\Models\IBasicModel $model Model.
  * @property JtkCollection $columns Collection of {@see Column}s.
+ * @property JtkCollection $sortOptions Collection of {@see Column}s.
  * @property JtkCollection $filters Collection of {@see Filter}s.
  * @property JtkCollection $actions Collection of row {@see Action}s.
  * @property JtkCollection $bulkActions Collection of bulk {@see Action}s.
@@ -20,85 +21,41 @@ class DataTable extends JtkObject {
   
   public function __construct() {
     $this->columns = new JtkCollection('Jivoo\Jtk\Table\Column');
+    $this->sortOptions = new JtkCollection('Jivoo\Jtk\Table\Column');
     $this->filters = new JtkCollection('Jivoo\Jtk\Table\Filter');
     $this->actions = new JtkCollection('Jivoo\Jtk\Table\Action');
     $this->bulkActions = new JtkCollection('Jivoo\Jtk\Table\Action');
   }
   
   /**
-   * Create a column and append it.
-   * @param string $label Column label.
-   * @param string $id Optional id.
-   * @return Column Column.
+   * Automatically add columns from model.
+   * @param string $field Field name.
+   * @param string $fields,... Additional fields.
    */
-  public function appendColumn($label, $id = null) {
-    $column = new Column($label);
-    $this->columns->append($column, $id);
-    return $column;
+  public function autoColumns($field) {
+    assume(isset($this->model), tr('No model set'));
+    $fields = func_get_args();
+    foreach ($fields as $field) {
+      $this->columns->append(
+        new Column($this->model->getLabel($field)),
+        $field
+      );
+    }
   }
 
   /**
-   * Create a column and prepend it.
-   * @param string $label Column label.
-   * @param string $id Optional id.
-   * @return Column Column.
+   * Automatically add sort options from model.
+   * @param string $field Field name.
+   * @param string $fields,... Additional fields.
    */
-  public function prependColumn($label, $id = null) {
-    $column = new Column($label);
-    $this->columns->prepend($column, $id);
-    return $column;
-  }
-
-  /**
-   * Create a column and insert it.
-   * @param int $offset Offset.
-   * @param string $label Column label.
-   * @param string $id Optional id.
-   * @return Column Column.
-   */
-  public function insertColumn($offset, $label, $id = null) {
-    $column = new Column($label);
-    $this->columns->insert($offset, $column, $id);
-    return $column;
-  }
-  
-  /**
-   * Create a filter and append it.
-   * @param string $label Filter label.
-   * @param string $filter Filter query string.
-   * @param string $id Optional id.
-   * @return Column Column.
-   */
-  public function appendFilter($label, $filter, $id = null) {
-    $filter = new Filter($label, $filter);
-    $this->columns->append($filter, $id);
-    return $filter;
-  }
-
-  /**
-   * Create a column and prepend it.
-   * @param string $label Filter label.
-   * @param string $filter Filter query string.
-   * @param string $id Optional id.
-   * @return Filter Filter.
-   */
-  public function prependFilter($label, $filter, $id = null) {
-    $filter = new Filter($label, $filter);
-    $this->columns->prepend($filter, $id);
-    return $filter;
-  }
-
-  /**
-   * Create a filter and insert it.
-   * @param int $offset Offset.
-   * @param string $label Filter label.
-   * @param string $filter Filter query string.
-   * @param string $id Optional id.
-   * @return Filter Filter.
-   */
-  public function insertFilter($offset, $label, $filter, $id = null) {
-    $filter = new Filter($label, $filter);
-    $this->columns->insert($offset, $filter, $id);
-    return $filter;
+  public function autoSortOptions($field) {
+    assume(isset($this->model), tr('No model set'));
+    $fields = func_get_args();
+    foreach ($fields as $field) {
+      $this->sortOptions->append(
+        new Column($this->model->getLabel($field)),
+        $field
+      );
+    }
   }
 }

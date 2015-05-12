@@ -5,13 +5,14 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Jtk\Table;
 
+use Jivoo\Models\IBasicRecord;
 /**
  * Table row action.
  * @property string $label Action label.
  * @property string|array|ILinkable|null $route A route, see {@see Routing}.
  * @property string $icon Icon path or name.
  * @property array $data Optional data.
- * @property string $method Http method.
+ * @property string $method Http method, e.g. 'get' or 'post'.
  * @property string $confirmation Optional confirmation dialog text.
  */
 class Action extends JtkObject {
@@ -19,5 +20,11 @@ class Action extends JtkObject {
     $this->label = $label;
     $this->route = $route;
     $this->icon = $icon;
+    $this->data = array();
+    $this->method = 'get';
+  }
+  
+  public function getRoute(IBasicRecord $record) {
+    
   }
 }

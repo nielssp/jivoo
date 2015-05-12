@@ -104,6 +104,89 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
   }
   
   /**
+   * Create new object (if $type is set and is constructable) and append it.
+   * @param mixed $args,... Constructor parameters for class. 
+   * @return JtkObject The object.
+   */
+  public function appendNew() {
+    $args = func_get_args();
+    $ref  = new ReflectionClass($this->type);
+    $object = $ref->newInstanceArgs($args);
+    $this->append($object);
+    return $object;
+  }
+
+  /**
+   * Create new object (if $type is set and is constructable) and prepend it.
+   * @param mixed $args,... Constructor parameters for class.
+   * @return JtkObject The object.
+   */
+  public function prependNew() {
+    $args = func_get_args();
+    $ref  = new ReflectionClass($this->type);
+    $object = $ref->newInstanceArgs($args);
+    $this->prepend($object);
+    return $object;
+  }
+
+  /**
+   * Create new object (if $type is set and is constructable) and insert it.
+   * @param int $offset The offset to insert the objects at.
+   * @param mixed $args,... Constructor parameters for class.
+   * @return JtkObject The object.
+   */
+  public function insertNew($offset) {
+    $args = func_get_args();
+    $ref  = new ReflectionClass($this->type);
+    $object = $ref->newInstanceArgs(array_slice($args, 1));
+    $this->insert($offset, $object);
+    return $object;
+  }
+
+  /**
+   * Create new named object (if $type is set and is constructable) and append it.
+   * @param string $id Id for object.
+   * @param mixed $args,... Constructor parameters for class.
+   * @return JtkObject The object.
+   */
+  public function appendNewId($id) {
+    $args = func_get_args();
+    $ref  = new ReflectionClass($this->type);
+    $object = $ref->newInstanceArgs($args);
+    $this->append($object, $id);
+    return $object;
+  }
+  
+  /**
+   * Create new named object (if $type is set and is constructable) and prepend it.
+   * @param string $id Id for object.
+   * @param mixed $args,... Constructor parameters for class.
+   * @return JtkObject The object.
+   */
+  public function prependNewId($id) {
+    $args = func_get_args();
+    $ref  = new ReflectionClass($this->type);
+    $object = $ref->newInstanceArgs($args);
+    $this->prepend($object, $id);
+    return $object;
+  }
+  
+  /**
+   * Create new named object (if $type is set and is constructable) and insert it.
+   * @param int $offset The offset to insert the objects at.
+   * @param string $id Id for object.
+   * @param mixed $args,... Constructor parameters for class.
+   * @return JtkObject The object.
+   */
+  public function insertNewId($offset, $id) {
+    $args = func_get_args();
+    $ref  = new ReflectionClass($this->type);
+    $object = $ref->newInstanceArgs(array_slice($args, 1));
+    $this->insert($offset, $object, $id);
+    return $object;
+  }
+  
+  /**
    * Remove the object with the specified id. 
    * @param string $id Object id.
    */

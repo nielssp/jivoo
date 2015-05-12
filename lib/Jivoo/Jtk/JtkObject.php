@@ -54,4 +54,21 @@ abstract class JtkObject {
       unset($this->properties[$property]);
   }
   
+  /**
+   * Call a property setter for chaining (of the form "setProperty(value)"
+   * where "property" is the property).
+   * @param string $method Method name.
+   * @param mixed[] $parameters Parameters.
+   * @throws \InvalidMethodException If method undefined. 
+   * @return self Self.
+   */
+  public function __call($method, $parameters) {
+    if (isset($parameters[0]) and preg_match('/^set([A-Z].*)$/', $method, $matches)) {
+      $property = $matches[1];
+      $this->properties[$property] = $parameters[0];
+      return $this;
+    }
+    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
+  }
+  
 }
