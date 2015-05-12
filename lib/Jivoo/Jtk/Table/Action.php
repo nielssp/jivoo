@@ -6,6 +6,8 @@
 namespace Jivoo\Jtk\Table;
 
 use Jivoo\Models\IBasicRecord;
+use Jivoo\Jtk\JtkObject;
+
 /**
  * Table row action.
  * @property string $label Action label.

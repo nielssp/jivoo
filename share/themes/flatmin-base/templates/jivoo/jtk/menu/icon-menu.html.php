@@ -1,5 +1,5 @@
 <ul>
-<?php foreach ($menu as $item): ?>
+<?php foreach ($object as $item): ?>
 <?php
 $current = $this->isCurrent($item->route);
 ?>
@@ -21,7 +21,7 @@ if ($current) echo ' class="current"'; ?>>
 <?php endif; ?>
 </a>
 <?php if ($item instanceof Jivoo\Jtk\Menu\Menu): ?>
-<?php $m = $Jtk->IconMenu->menu($item); echo $m(); ?>
+<?php echo $Jtk->IconMenu($item); ?>
 <?php endif; ?>
 </li>
 <?php endforeach; ?>

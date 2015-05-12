@@ -20,7 +20,7 @@ class JtkHelper extends Helper {
     $tool = $this->m->Jtk->getTool($toolName);
     if (!isset($tool))
       throw new \Exception(tr('Tool not found: %1', $toolName));
-    return $tool;
+    return new PartialJtkSnippet($tool, $tool->getObject());
   }
   
   public function __call($tool, $parameters) {

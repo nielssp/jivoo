@@ -58,4 +58,8 @@ class DataTable extends JtkObject {
       );
     }
   }
+  
+  public function eachRow($callable) {
+    
+  }
 }

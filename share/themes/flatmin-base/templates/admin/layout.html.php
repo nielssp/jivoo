@@ -39,13 +39,13 @@ $this->import(
 </li>
 </ul>
 
-<?php $menu = $Jtk->IconMenu->menu($shortcutsMenu); echo $menu(); ?>
+<?php echo $Jtk->IconMenu($shortcutsMenu); ?>
 
 </header>
 
 <nav>
 
-<?php $menu = $Jtk->IconMenu->menu($mainMenu); echo $menu(); ?>
+<?php echo $Jtk->IconMenu($mainMenu); ?>
 
 </nav>
 

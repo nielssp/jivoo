@@ -7,6 +7,7 @@ namespace Jivoo\Jtk\Table;
 
 use Jivoo\Models\IBasicRecord;
 use Jivoo\Models\IBasicModel;
+use Jivoo\Jtk\JtkObject;
 
 /**
  * Column.

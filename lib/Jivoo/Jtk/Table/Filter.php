@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Jtk\Table;
 
+use Jivoo\Jtk\JtkObject;
+
 /**
  * Table row filter.
  * @property string $label Filter label.

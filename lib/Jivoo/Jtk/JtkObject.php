@@ -10,7 +10,7 @@ namespace Jivoo\Jtk;
  * All JTK objects can be extended with custom properties
  * using the magic getters and setters.
  */
-abstract class JtkObject {
+class JtkObject {
   /**
    * @var array Properties.
    */

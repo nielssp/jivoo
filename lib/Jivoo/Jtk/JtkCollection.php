@@ -110,7 +110,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
    */
   public function appendNew() {
     $args = func_get_args();
-    $ref  = new ReflectionClass($this->type);
+    $ref  = new \ReflectionClass($this->type);
     $object = $ref->newInstanceArgs($args);
     $this->append($object);
     return $object;
@@ -123,7 +123,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
    */
   public function prependNew() {
     $args = func_get_args();
-    $ref  = new ReflectionClass($this->type);
+    $ref  = new \ReflectionClass($this->type);
     $object = $ref->newInstanceArgs($args);
     $this->prepend($object);
     return $object;
@@ -137,7 +137,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
    */
   public function insertNew($offset) {
     $args = func_get_args();
-    $ref  = new ReflectionClass($this->type);
+    $ref  = new \ReflectionClass($this->type);
     $object = $ref->newInstanceArgs(array_slice($args, 1));
     $this->insert($offset, $object);
     return $object;
@@ -151,7 +151,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
    */
   public function appendNewId($id) {
     $args = func_get_args();
-    $ref  = new ReflectionClass($this->type);
+    $ref  = new \ReflectionClass($this->type);
     $object = $ref->newInstanceArgs($args);
     $this->append($object, $id);
     return $object;
@@ -165,7 +165,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
    */
   public function prependNewId($id) {
     $args = func_get_args();
-    $ref  = new ReflectionClass($this->type);
+    $ref  = new \ReflectionClass($this->type);
     $object = $ref->newInstanceArgs($args);
     $this->prepend($object, $id);
     return $object;
@@ -180,7 +180,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
    */
   public function insertNewId($offset, $id) {
     $args = func_get_args();
-    $ref  = new ReflectionClass($this->type);
+    $ref  = new \ReflectionClass($this->type);
     $object = $ref->newInstanceArgs(array_slice($args, 1));
     $this->insert($offset, $object, $id);
     return $object;

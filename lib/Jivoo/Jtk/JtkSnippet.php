@@ -6,24 +6,38 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Snippets\Snippet;
+use Jivoo\Core\Lib;
 
 /**
  * A toolkit snippet.
  */
 class JtkSnippet extends Snippet {
   protected $helpers = array('Jtk');
-
-  protected $autoSetters = array();
   
-  public function __call($method, $parameters) {
-    if (in_array($method, $this->autoSetters)) {
-      $this->viewData[$method] = $parameters[0];
-      return $this;
-    }
-    return parent::__call($method, $parameters);
+  protected $parameters = array('object');
+  
+  protected $objectType = 'Jivoo\Jtk\JtkObject';
+  
+  public function getObject() {
+    $args = func_get_args();
+    $ref  = new \ReflectionClass($this->objectType);
+    return $ref->newInstanceArgs($args);
   }
   
-  public function __toString() {
-    return $this();
+  /**
+   * {@inheritdoc}
+   */
+  public function __invoke($parameters = array()) {
+    $object = null;
+    if (isset($parameters['object']))
+      $object = $parameters['object'];
+    else if (isset($parameters[0]))
+      $object = $parameters[0];
+    if (isset($object))
+      Lib::assumeSubclassOf($object, $this->objectType);
+    else
+      throw new \Exception(tr('JTK object is null'));
+    $this->viewData['object'] = $object;
+    return parent::__invoke($parameters);
   }
 }
