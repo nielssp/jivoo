@@ -6,6 +6,7 @@
 namespace Jivoo\Extensions;
 
 use Jivoo\Models\BasicModel;
+use Jivoo\Models\DataType;
 
 /**
  * Model for extension information. Can be used as a singleton, use

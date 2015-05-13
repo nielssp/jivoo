@@ -5,8 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Extensions;
 
+use Jivoo\Core\Utilities;
+use Jivoo\View\ViewResponse;
+
 /**
  * Base class for extension controllers.
+ * @todo Replace with snippet or something
  */
 abstract class ExtensionController extends ExtensionModule {
   /**
@@ -121,6 +125,6 @@ abstract class ExtensionController extends ExtensionModule {
     $this->view->addTemplateDir($this->p(''), 4);
     if (!isset($templateName))
       $templateName = Utilities::camelCaseToDashes(get_class($this)) . '.html';
-    return new ViewResponse($this->status, $this->view, $templateName);
+    return $this->view->renderOnly($templateName);
   }
 }

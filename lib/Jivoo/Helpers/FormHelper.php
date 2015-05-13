@@ -6,6 +6,7 @@
 namespace Jivoo\Helpers;
 
 use Jivoo\Models\IBasicRecord;
+use Jivoo\Models\Selection\IReadSelection;
 
 /**
  * A helper for creating HTML forms

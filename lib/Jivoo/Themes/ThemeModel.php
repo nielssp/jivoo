@@ -25,7 +25,7 @@ class ThemeModel extends ExtensionModel {
    */
   public function __construct($name = 'Theme') {
     parent::__construct($name);
-    $this->addField('screenshot', tr('Screenshot'), DataType::::string());
+    $this->addField('screenshot', tr('Screenshot'), DataType::string());
   }
   
   /**
