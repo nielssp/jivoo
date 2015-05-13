@@ -7,24 +7,35 @@ namespace Jivoo\Jtk\Table;
 
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Jtk\JtkCollection;
+use Jivoo\Models\IBasicRecord;
 
 /**
  * A data table.
  * @property Jivoo\Models\IBasicModel $model Model.
+ * @property IBasicSelection|IBasicRecord[] $selection Content of table. If
+ * $model is a {@see Jivoo\Models\IModel}  
  * @property JtkCollection $columns Collection of {@see Column}s.
  * @property JtkCollection $sortOptions Collection of {@see Column}s.
  * @property JtkCollection $filters Collection of {@see Filter}s.
  * @property JtkCollection $actions Collection of row {@see Action}s.
  * @property JtkCollection $bulkActions Collection of bulk {@see Action}s.
+ * @property int $rowsPerPage Number of rows to display per page.
+ * @property string $id Optional HTML id for table.
+ * @property Column $sortBy A reference to the column used for sorting.
+ * @property callable $rowHandler A function to call on each row before
+ * rendering.
  */
 class DataTable extends JtkObject {
   
   public function __construct() {
+    $this->records = array();
     $this->columns = new JtkCollection('Jivoo\Jtk\Table\Column');
     $this->sortOptions = new JtkCollection('Jivoo\Jtk\Table\Column');
     $this->filters = new JtkCollection('Jivoo\Jtk\Table\Filter');
     $this->actions = new JtkCollection('Jivoo\Jtk\Table\Action');
     $this->bulkActions = new JtkCollection('Jivoo\Jtk\Table\Action');
+    $this->rowsPerPage = 10;
+    $this->id = '';
   }
   
   /**
@@ -37,7 +48,7 @@ class DataTable extends JtkObject {
     $fields = func_get_args();
     foreach ($fields as $field) {
       $this->columns->append(
-        new Column($this->model->getLabel($field)),
+        new Column($this->model->getLabel($field), $field),
         $field
       );
     }
@@ -53,13 +64,23 @@ class DataTable extends JtkObject {
     $fields = func_get_args();
     foreach ($fields as $field) {
       $this->sortOptions->append(
-        new Column($this->model->getLabel($field)),
+        new Column($this->model->getLabel($field), $field),
         $field
       );
     }
   }
   
   public function eachRow($callable) {
-    
+    $this->rowHandler = $callable;
+  }
+  
+  public function createRow(IBasicRecord $record) {
+    $row = new Row($this);
+    $row->record = $record;
+    foreach ($row->cells as $cell)
+      $cell->value = $cell->column->render($this, $record);
+    if (isset($this->rowHandler))
+      call_user_func($this->rowHandler, $row);
+    return $row;
   }
 }

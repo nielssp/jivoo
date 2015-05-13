@@ -8,6 +8,7 @@ namespace Jivoo\Jtk\Table;
 use Jivoo\Models\IBasicRecord;
 use Jivoo\Models\IBasicModel;
 use Jivoo\Jtk\JtkObject;
+use Jivoo\Models\DataType;
 
 /**
  * Column.
@@ -15,6 +16,7 @@ use Jivoo\Jtk\JtkObject;
  * @property string $field Model field name.
  * @property bool $primary Whether or not column is primary.
  * @property bool $default Whether or not column is default sort option.
+ * @property bool $selected Whether or not column is the selected sort option.
  * @property bool $descending If the default sorting is descending.
  * @property callable $cellRenderer Cell renderer with parameters
  * ({@see IBasicRecord} $record, {@see IBasicModel} $model) and return type
@@ -26,6 +28,7 @@ class Column extends JtkObject {
     $this->field = $field;
     $this->primary = false;
     $this->default = false;
+    $this->selected = false;
     $this->descending = false;
     $this->cellRenderer = $cellRenderer;
     if (!isset($this->cellRenderer)) {
@@ -36,6 +39,10 @@ class Column extends JtkObject {
   public function setDefault($descending = false) {
     $this->default = true;
     $this->descending = $descending;
+  }
+  
+  public function render(DataTable $table, IBasicRecord $record) {
+    return call_user_func($this->cellRenderer, $table, $record);
   }
 
   public function defaultCellRenderer(DataTable $table, IBasicRecord $record) {

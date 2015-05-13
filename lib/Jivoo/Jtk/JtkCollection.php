@@ -152,7 +152,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
   public function appendNewId($id) {
     $args = func_get_args();
     $ref  = new \ReflectionClass($this->type);
-    $object = $ref->newInstanceArgs($args);
+    $object = $ref->newInstanceArgs(array_slice($args, 1));
     $this->append($object, $id);
     return $object;
   }
@@ -166,7 +166,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
   public function prependNewId($id) {
     $args = func_get_args();
     $ref  = new \ReflectionClass($this->type);
-    $object = $ref->newInstanceArgs($args);
+    $object = $ref->newInstanceArgs(array_slice($args, 1));
     $this->prepend($object, $id);
     return $object;
   }
@@ -181,10 +181,36 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
   public function insertNewId($offset, $id) {
     $args = func_get_args();
     $ref  = new \ReflectionClass($this->type);
-    $object = $ref->newInstanceArgs(array_slice($args, 1));
+    $object = $ref->newInstanceArgs(array_slice($args, 2));
     $this->insert($offset, $object, $id);
     return $object;
   }
+  
+  /**
+   * Whether or not a object exists in this collection.
+   * @param JtkObject $object Object to search for.
+   * @return bool True if object in collection.
+   */
+  public function contains(JtkObject $object) {
+    foreach ($this->items as $item) {
+      if ($object === $item)
+        return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Find the first object for which the predicate returns true.
+   * @param callable $predicate Predicate function.
+   * @return JtkObject The object or null if not found.
+   */
+  public function find($predicate) {
+    foreach ($this->items as $item) {
+      if ($predicate($item))
+        return $item;
+    }
+    return null;
+  }  
   
   /**
    * Remove the object with the specified id. 

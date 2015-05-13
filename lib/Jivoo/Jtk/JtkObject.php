@@ -64,7 +64,7 @@ class JtkObject {
    */
   public function __call($method, $parameters) {
     if (isset($parameters[0]) and preg_match('/^set([A-Z].*)$/', $method, $matches)) {
-      $property = $matches[1];
+      $property = lcfirst($matches[1]);
       $this->properties[$property] = $parameters[0];
       return $this;
     }

@@ -5,17 +5,17 @@ $this->import('jquery.js', 'widgets/data-table.js');
 <div class="toolbar">
 <?php echo $Form->form(array(), array(
   'method' => 'get',
-  'id' => $id . 'filter',
+  'id' => $object->id . 'filter',
 )); ?>
 
-<?php echo $Form->hidden('sortBy', array('value' => $sortBy)); ?>
-<?php echo $Form->hidden('order', array('value' => $descending ? 'desc' : 'asc')); ?>
+<?php echo $Form->hidden('sortBy', array('value' => $object->sortBy)); ?>
+<?php echo $Form->hidden('order', array('value' => $object->sortBy->descending ? 'desc' : 'asc')); ?>
 
 <?php echo $Form->text('filter', array('placeholder' => tr('Filter'))); ?>
 
 <?php echo $Icon->button(tr('Search'), 'search'); ?>
 
-<?php if (count($filters) == 0): ?>
+<?php if (count($object->filters) == 0): ?>
 <button>Reset</button>
 <?php else: ?>
 <div class="dropdown">
@@ -25,9 +25,9 @@ $this->import('jquery.js', 'widgets/data-table.js');
   'query' => array('filter' => null),
   'mergeQuery' => true
 )); ?></li>
-<?php foreach ($filters as $label => $filter): ?>
-<li><?php echo $Html->link(h($label), array(
-  'query' => array('filter' => $filter),
+<?php foreach ($object->filters as $filter): ?>
+<li><?php echo $Html->link(h($filter->label), array(
+  'query' => array('filter' => $filter->filter),
   'mergeQuery' => true
 )); ?></li>
 <?php endforeach; ?>
@@ -44,21 +44,21 @@ $this->import('jquery.js', 'widgets/data-table.js');
 
 <div class="table-operations">
 
-<?php if (isset($addRoute)): ?>
-<?php echo $Icon->link(h('Add'), $addRoute, 'plus', null, array('class' => 'button')); ?>
+<?php if (isset($object->addRoute)): ?>
+<?php echo $Icon->link(h('Add'), $object->addRoute, 'plus', null, array('class' => 'button')); ?>
 <?php endif; ?>
 
-<?php if (count($bulkActions) > 0): ?>
+<?php if (count($object->bulkActions) > 0): ?>
 <div class="dropdown dropdown-actions">
 <a href="#"><?php echo tr('With selection'); ?></a>
 <ul>
-<?php foreach($bulkActions as $bulkAction): ?>
-<li><?php echo $Icon->button(h($bulkAction->label), $bulkAction->icon, array(
+<?php foreach($object->bulkActions as $action): ?>
+<li><?php echo $Icon->button(h($action->label), $action->icon, array(
   'data' => array(
-    'action' => $this->link($this->mergeRoutes($bulkAction->route, array('?'))),
-    'method' => $bulkAction->method,
-    'data' => json_encode($bulkAction->data),
-    'confirm' => $bulkAction->confirmation
+    'action' => $this->link($this->mergeRoutes($action->route, array('?'))),
+    'method' => $action->method,
+    'data' => json_encode($action->data),
+    'confirm' => $action->confirmation
   )
 )); ?></li>
 <?php endforeach; ?>
@@ -66,26 +66,26 @@ $this->import('jquery.js', 'widgets/data-table.js');
 </div>
 <?php endif; ?>
 
-<?php if (count($sortOptions) > 0): ?>
+<?php if (count($object->sortOptions) > 0): ?>
 
 <div class="dropdown">
 <a href="#"><?php echo tr('Sort by'); ?></a>
 <ul>
-<?php foreach ($sortOptions as $column): ?>
-<?php if ($sortBy == $column and $descending): ?>
+<?php foreach ($object->sortOptions as $column): ?>
+<?php if ($column->selected and $column->descending): ?>
 <li class="selected selected-desc"><?php echo $Html->link(
-  $labels[$column],
+  $column->label,
   array('query' => array('order' => 'asc'), 'mergeQuery' => true)
 ); ?></li>
-<?php elseif ($sortBy == $column and !$descending): ?>
+<?php elseif ($column->selected and !$column->descending): ?>
 <li class="selected selected-asc"><?php echo $Html->link(
-  $labels[$column],
+  $column->label,
   array('query' => array('order' => 'desc'), 'mergeQuery' => true)
 ); ?></li>
 <?php else: ?>
 <li><?php echo $Html->link(
-  $labels[$column],
-  array('query' => array('sortBy' => $column, 'order' => 'asc'), 'mergeQuery' => true)
+  $column->label,
+  array('query' => array('sortBy' => $column->field, 'order' => 'asc'), 'mergeQuery' => true)
 ); ?></li>
 <?php endif; ?>
 <?php endforeach; ?>
@@ -94,7 +94,7 @@ $this->import('jquery.js', 'widgets/data-table.js');
 <?php endif; ?>
 </div>
 
-<?php echo $this->embed('widgets/data-table-pagination.html', array('Pagination' => $Pagination)); ?>
+<?php echo $this->embed('jivoo/jtk/table/pagination.html', array('Pagination' => $Pagination)); ?>
 
 <table>
 <thead>
@@ -102,36 +102,39 @@ $this->import('jquery.js', 'widgets/data-table.js');
 <th class="selection" scope="col">
 <label><input type="checkbox" /></label>
 </th>
-<?php foreach ($columns as $column): ?>
+<?php foreach ($object->columns as $column): ?>
 
 <th<?php
-if ($column == $primaryColumn)
+if ($column->primary)
   echo ' class="primary"';
 else
   echo ' class="non-essential"';
 ?>
  scope="col">
-<?php if (in_array($column, $sortOptions)): ?>
-<?php if ($sortBy == $column and $descending): ?>
+<?php $sortOption = $object->sortOptions->find(function($b) use($column) {
+  return $b->field === $column->field;
+}); ?>
+<?php if (isset($sortOption)): ?>
+<?php if ($sortOption->selected and $sortOption->descending): ?>
 <?php echo $Html->link(
-  $labels[$column],
+  $column->label,
   array('query' => array('order' => 'asc'), 'mergeQuery' => true),
   array('class' => 'selected-desc')
 ); ?>
-<?php elseif ($sortBy == $column and !$descending): ?>
+<?php elseif ($sortOption->selected and !$sortOption->descending): ?>
 <?php echo $Html->link(
-  $labels[$column],
+  $column->label,
   array('query' => array('order' => 'desc'), 'mergeQuery' => true),
   array('class' => 'selected-asc')
 ); ?>
 <?php else: ?>
 <?php echo $Html->link(
-  $labels[$column],
-  array('query' => array('sortBy' => $column, 'order' => 'asc'), 'mergeQuery' => true)
+  $column->label,
+  array('query' => array('sortBy' => $column->field, 'order' => 'asc'), 'mergeQuery' => true)
 ); ?>
 <?php endif; ?>
 <?php else: ?>
-<?php echo $labels[$column]; ?>
+<?php echo h($column->label); ?>
 <?php endif; ?>
 </th>
 <?php endforeach; ?>
@@ -140,8 +143,15 @@ else
 </thead>
 <tbody>
 
-<?php foreach ($records as $record): ?>
-<?php echo $rowHandler($record); ?>
+<?php foreach ($object as $row): ?>
+<?php echo $this->embed('jivoo/jtk/table/row.html', array('row' => $row)); ?>
+<?php endforeach; ?>
+
+<?php foreach ($object->selection as $record): ?>
+<?php echo $this->embed(
+  'jivoo/jtk/table/row.html',
+  array('row' => $object->createRow($record))
+); ?>
 <?php endforeach; ?>
 
 </tbody>
@@ -150,15 +160,15 @@ else
 <th class="selection" scope="col">
 <label><input type="checkbox" /></label>
 </th>
-<?php foreach ($columns as $column): ?>
+<?php foreach ($object->columns as $column): ?>
 <th<?php
-if ($column == $primaryColumn)
+if ($column->primary)
   echo ' class="primary"';
 else
   echo ' class="non-essential"';
 ?>
  scope="col">
-<?php echo h($labels[$column]); ?>
+<?php echo h($column->label); ?>
 </th>
 <?php endforeach; ?>
 <th class="actions non-essential" scope="col"><?php echo tr('Actions'); ?></th>
@@ -171,6 +181,6 @@ else
 <a href="#" class="select-all">(Select all <?php echo $Pagination->getCount(); ?> items)</a>
 </div>
 
-<?php echo $this->embed('widgets/data-table-pagination.html', array('Pagination' => $Pagination)); ?>
+<?php echo $this->embed('jivoo/jtk/table/pagination.html', array('Pagination' => $Pagination)); ?>
 
 </div>
