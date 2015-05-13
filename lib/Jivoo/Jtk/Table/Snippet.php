@@ -40,6 +40,8 @@ class Snippet extends JtkSnippet {
     if ($o->model instanceof IModel) {
       if (!($o->selection instanceof IBasicSelection))
         $o->selection = $o->model;
+      if (!isset($o->primaryKey))
+        $o->primaryKey = $o->model->getAiPrimaryKey(); // TODO: more general?
     }
     if (count($o->columns) == 0) {
       foreach ($o->model->getFields() as $field)

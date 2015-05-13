@@ -14,6 +14,7 @@ use Jivoo\Models\IBasicRecord;
  * @property Jivoo\Models\IBasicModel $model Model.
  * @property IBasicSelection|IBasicRecord[] $selection Content of table. If
  * $model is a {@see Jivoo\Models\IModel}  
+ * @property string $primaryKey Name of primary key field.
  * @property JtkCollection $columns Collection of {@see Column}s.
  * @property JtkCollection $sortOptions Collection of {@see Column}s.
  * @property JtkCollection $filters Collection of {@see Filter}s.
@@ -77,6 +78,10 @@ class DataTable extends JtkObject {
   public function createRow(IBasicRecord $record) {
     $row = new Row($this);
     $row->record = $record;
+    if (isset($this->primaryKey)) {
+      $field = $this->primaryKey;
+      $row->id = $record->$field;
+    }
     foreach ($row->cells as $cell)
       $cell->value = $cell->column->render($this, $record);
     if (isset($this->rowHandler))
