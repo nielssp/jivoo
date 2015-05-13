@@ -13,6 +13,7 @@ use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
+use Jivoo\Core\Json;
 
 /**
  * Snippet based routing.
@@ -73,10 +74,17 @@ class SnippetDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
+    if (preg_match('/^snippet:([a-z0-9_\\\\]+)(\[.*\])?$/i', $routeString, $matches) !== 1)
+      throw new InvalidRouteException(tr('Invalid route string for snippet dispatcher'));
     $route = array(
-      'snippet' => substr($routeString, 8),
       'parameters' => array()
     );
+    if (isset($matches[2])) {
+      $route['parameters'] = Json::decode($matches[2]);
+      if (!is_array($route['parameters']))
+        throw new InvalidRouteException(tr('Invalid JSON parameters in route string'));
+    }
+    $route['snippet'] = $matches[1];
     return $route;
   }
 

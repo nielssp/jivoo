@@ -12,6 +12,7 @@ use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Json;
 
 /**
  * Action based routing.
@@ -136,21 +137,27 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    $split = explode('::', substr($routeString, 7));
+    if (preg_match('/^action:(?:([a-z0-9_\\\\]+)::)?([a-z0-9_\\\\]+)(\[.*\])?$/i', $routeString, $matches) !== 1)
+      throw new InvalidRouteException(tr('Invalid route string for action dispatcher'));
     $route = array(
       'parameters' => array()
     );
-    if (isset($split[1])) {
-      $route['controller'] = $split[0];
-      $route['action'] = $split[1];
+    if (isset($matches[3])) {
+      $route['parameters'] = Json::decode($matches[3]);
+      if (!is_array($route['parameters']))
+        throw new InvalidRouteException(tr('Invalid JSON parameters in route string'));
     }
-    else if (ucfirst($split[0]) === $split[0]) {
-      $route['controller'] = $split[0];
+    if ($matches[1] != '') {
+      $route['controller'] = $matches[1];
+      $route['action'] = $matches[2];
+    }
+    else if (ucfirst($matches[2]) === $matches[2]) {
+      $route['controller'] = $matches[2];
     }
     else {
       if (isset($this->routing->route['controller']))
         $route['controller'] = $this->routing->route['controller'];
-      $route['action'] = $split[0];
+      $route['action'] = $matches[2];
     }
     return $route;
   }
