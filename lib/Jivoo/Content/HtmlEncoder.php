@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Content;
 
+use Jivoo\Core\Utilities;
+
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
  * and automatically closing tags and stripping invalid HTML.
