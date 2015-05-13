@@ -9,6 +9,7 @@ use Jivoo\Jtk\JtkSnippet;
 use Jivoo\Models\IBasicModel;
 use Jivoo\Models\Selection\IBasicSelection;
 use Jivoo\Models\IModel;
+use Jivoo\Models\IBasicRecord;
 
 /**
  * A data table snippet.
