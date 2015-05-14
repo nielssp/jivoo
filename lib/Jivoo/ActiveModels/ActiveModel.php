@@ -646,7 +646,6 @@ abstract class ActiveModel extends Model implements IEventListener {
         $key = $association['otherKey'];
         if (!isset($record->$key))
           return null;
-        // TODO fetch lazy record instead
         return $association['model']->find($record->$key);
       case 'hasOne':
         $key = $association['thisKey'];
