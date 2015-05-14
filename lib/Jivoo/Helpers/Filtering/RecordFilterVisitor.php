@@ -49,9 +49,9 @@ class RecordFilterVisitor extends FilterVisitor {
       case '>=':
         return $this->record->$field >= $node->right;
       case '>':
-        return $this->record->$field < $node->right;
-      case '<':
         return $this->record->$field > $node->right;
+      case '<':
+        return $this->record->$field < $node->right;
       case 'contains':
         return stripos($this->record->$field, $node->right) !== false;
     }
