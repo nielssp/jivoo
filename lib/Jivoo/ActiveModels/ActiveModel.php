@@ -287,7 +287,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   public function createExisting($data = array()) {
     if (isset($data[$this->primaryKey])) {
       $id = $data[$this->primaryKey];
-      if (isset($this->cache[$id]))
+      if (array_key_exists($id, $this->cache))
         return $this->cache[$id];
     }
     $data = $this->source->createExisting($data)->getData();
@@ -550,9 +550,12 @@ abstract class ActiveModel extends Model implements IEventListener {
    * {@inheritdoc}
    */
   public function find($id) {
-    if (isset($this->cache[$id]))
+    if (array_key_exists($id, $this->cache))
       return $this->cache[$id];
-    return $this->where($this->primaryKey . ' = ?', $id)->first();
+    $record = $this->where($this->primaryKey . ' = ?', $id)->first();
+    if (!isset($record))
+      $this->cache[$id] = null;
+    return $record;
   }
 
   /**
