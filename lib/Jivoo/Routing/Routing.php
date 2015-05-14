@@ -712,6 +712,8 @@ class Routing extends LoadableModule {
     
     $this->selection = $route;
     
+    Logger::debug(tr('Dispatch: %1', $route['dispatcher']->fromRoute($route)));
+    
     $this->rendered = true;
     $this->request->route = $route;
     try {

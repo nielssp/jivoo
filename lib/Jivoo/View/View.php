@@ -188,7 +188,7 @@ class View extends LoadableModule {
   /**
    * Find layout template for a template.
    * @param string $template Template name.
-   * @return strin Absolute path to template.
+   * @return string|null Absolute path to template or null if not found.
    */
   public function findLayout($template) {
     $extension = Utilities::getFileExtension($template);
@@ -203,7 +203,7 @@ class View extends LoadableModule {
       if (isset($file))
         return $template;
     } while ($dir != '.');
-    return false;
+    return null;
   }
   
   /**

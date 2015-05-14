@@ -92,7 +92,7 @@ class SnippetDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function fromRoute($route) {
-    return $route['snippet'];
+    return 'snippet:' . $route['snippet'];
   }
 
   /**

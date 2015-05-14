@@ -5,6 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View;
 
+use Jivoo\Core\Logger;
 /**
  * Template system.
  * @method string link(array|ILinkable|string|null $route = null) Alias for
@@ -172,10 +173,12 @@ class Template {
       // TODO maybe check for '<!DOCTYPE' in content?
       if (!isset($this->layout))
         $this->layout = $this->view->findLayout($template);
-      $this->content .= ob_get_clean();
-      $this->view->blocks->assign('content', $this->content);
-      $this->openFrame();
-      return $this->render($this->layout, $data, false);
+      if (isset($this->layout)) {
+        $this->content .= ob_get_clean();
+        $this->view->blocks->assign('content', $this->content);
+        $this->openFrame();
+        return $this->render($this->layout, $data, false);
+      }
     }
     return $this->content . ob_get_clean();
   }

@@ -20,25 +20,52 @@ abstract class AppRouter extends AppListener {
   /**
    * {@inheritdoc}
    */
-  protected $handlers = array('Jivoo\Routing\Routing.beforeLoadRoutes');
+  protected $handlers = array(
+    'Jivoo\Routing\Routing.beforeLoadRoutes',
+    'Jivoo\Routing\Routing.afterLoadRoutes'
+  );
 
+  /**
+   * @var bool Whether or not to load routes before the application routes.
+   */
+  protected $beforeConfig = false;
+  
   /**
    *
    */
-  private $route = null;
-
-  /**
-   *
-   */
-  private $priority = 7;
+  protected $priority = 7;
   
   /**
    * 
    */
   public function beforeLoadRoutes() {
-    $this->createRoutes($this->m->Routing->routes);
-    if ($this->checkPath($this->request->path)) {
-      
+    if ($this->beforeConfig) {
+      $this->createRoutes($this->m->Routing->routes);
+      $current = $this->m->Routing->route;
+      if (is_array($current) and isset($current['priority'])) {
+        if ($current['priority'] > $this->priority)
+          return;
+      }
+      if ($this->checkPath($this->request->path)) {
+        
+      }
+    }
+  }
+
+  /**
+   *
+   */
+  public function afterLoadRoutes() {
+    if (!$this->beforeConfig) {
+      $this->createRoutes($this->m->Routing->routes);
+      $current = $this->m->Routing->route;
+      if (is_array($current) and isset($current['priority'])) {
+        if ($current['priority'] > $this->priority)
+          return;
+      }
+      if ($this->checkPath($this->request->path)) {
+        
+      }
     }
   }
 
@@ -64,14 +91,18 @@ abstract class AppRouter extends AppListener {
   /**
    *
    */
-  protected function reroute($route, $arity, $priority = 7) {
+  protected function reroute($route, $arity, $priority = null) {
+    if (!isset($priority))
+      $priority = $this->priority;
     $this->m->Routing->addPathFunction($route, array($this, 'getPath'), $arity, $priority);
   }
 
   /**
    *
    */
-  protected function setRoute($route, $priority = 7) {
+  protected function setRoute($route, $priority = null) {
+    if (!isset($priority))
+      $priority = $this->priority;
     $this->m->Routing->setRoute($route, $priority);
   }
 }

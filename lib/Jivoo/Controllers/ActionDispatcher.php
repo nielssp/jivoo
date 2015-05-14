@@ -168,7 +168,7 @@ class ActionDispatcher implements IDispatcher {
   public function fromRoute($route) {
     if (!isset($route['action']))
       $route['action'] = 'index';
-    return $route['controller'] . '::' . $route['action'];
+    return 'action:' . $route['controller'] . '::' . $route['action'];
   }
   
   /**

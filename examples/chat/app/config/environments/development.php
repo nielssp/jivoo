@@ -9,4 +9,7 @@ return array(
   'Extensions' => array(
     'disableBuggy' => false
   ),
+  'Console' => array(
+    'enable' => true
+  )
 );

@@ -15,7 +15,8 @@
     "Databases",
     "ActiveModels",
     "Migrations",
-    "Setup"
+    "Setup",
+    "Console"
   ],
   "extensions": [
     "jquery"
