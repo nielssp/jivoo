@@ -20,18 +20,20 @@ $this->import('jquery.js', 'widgets/data-table.js');
 <?php else: ?>
 <div class="dropdown">
 <a href="#">View</a>
-<ul>
-<li><?php echo $Html->link(tr('All'), array(
+<?php
+$menu = $Jtk->Menu;
+$menu->appendAction(tr('All'))->setRoute(array(
   'query' => array('filter' => null),
   'mergeQuery' => true
-)); ?></li>
-<?php foreach ($object->filters as $filter): ?>
-<li><?php echo $Html->link(h($filter->label), array(
-  'query' => array('filter' => $filter->filter),
-  'mergeQuery' => true
-)); ?></li>
-<?php endforeach; ?>
-</ul>
+));
+foreach ($object->filters as $filter) {
+  $menu->appendAction(h($filter->label))->setRoute(array(
+    'query' => array('filter' => $filter->filter),
+    'mergeQuery' => true
+  ));
+}
+echo $menu();
+?>
 </div>
 
 <?php endif; ?>
