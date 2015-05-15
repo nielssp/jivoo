@@ -23,7 +23,7 @@ if ($current) echo ' class="current"'; ?>>
 <span class="count"><?php echo $item->badge; ?></span>
 <?php endif; ?>
 </a>
-<?php if ($item instanceof Jivoo\Jtk\Menu\Menu): ?>
+<?php if ($item->isMenu()): ?>
 <?php echo $Jtk->Menu($item); ?>
 <?php endif; ?>
 </li>

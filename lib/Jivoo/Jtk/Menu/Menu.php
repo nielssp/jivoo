@@ -26,6 +26,14 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
     $this->icon = $icon;
     $this->route = 'null:';
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isMenu() {
+    return true;
+  }
+  
   /**
    * Append one or more menu items.
    * @param MenuItem|MenuItem[] $item Menu item or array of menu items with

@@ -33,4 +33,11 @@ class MenuAction extends LabelMenuItem implements ILinkable {
   public function getRoute() {
     return $this->route;
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function isAction() {
+    return true;
+  }
 }

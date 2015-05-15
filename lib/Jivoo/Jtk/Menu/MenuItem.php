@@ -20,4 +20,18 @@ abstract class MenuItem extends JtkObject {
   public function isSeparator() {
     return false;
   }
+  /**
+   * Whether or not this is a menu.
+   * @return boolean True if menu.
+   */
+  public function isMenu() {
+    return false;
+  }
+  /**
+   * Whether or not this is an action.
+   * @return boolean True if action.
+   */
+  public function isAction() {
+    return false;
+  }
 }
