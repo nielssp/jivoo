@@ -20,7 +20,7 @@ class CommentsController extends AppController {
       return $this->notFound();
 
     $comment = $post->comments->find($commentId);
-    if (!comment)
+    if (!$comment)
       return $this->redirect($post);
 
     $position = $post->comments

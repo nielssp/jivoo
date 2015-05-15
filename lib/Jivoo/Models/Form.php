@@ -47,8 +47,10 @@ class Form implements IBasicRecord, IBasicModel {
   public function __construct($name, $data = array()) {
     $this->name = $name;
     $this->data = $data;
-    foreach ($this->data as $field => $value)
-      $this->addField($field); 
+    foreach ($this->data as $field => $value) {
+      $this->addField($field, DataType::detectType($value));
+      $this->data[$field] = $value;
+    } 
     $this->validator = new Validator($this);
   }
 
