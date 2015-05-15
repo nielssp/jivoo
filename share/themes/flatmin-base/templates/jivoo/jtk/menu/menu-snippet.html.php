@@ -21,7 +21,7 @@ if ($current) echo ' class="current"'; ?>>
 <?php endif; ?>
 </a>
 <?php if ($item instanceof Jivoo\Jtk\Menu\Menu): ?>
-<?php echo $Jtk->IconMenu($item); ?>
+<?php echo $Jtk->Menu($item); ?>
 <?php endif; ?>
 </li>
 <?php endforeach; ?>

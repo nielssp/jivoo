@@ -8,7 +8,6 @@ namespace Jivoo\Jtk\Table;
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Jtk\JtkCollection;
 use Jivoo\Models\IBasicRecord;
-use Jivoo\Administration\DataTable;
 
 /**
  * A single tablle cell.

@@ -14,7 +14,7 @@ use Jivoo\Models\IBasicRecord;
 /**
  * A data table snippet.
  */
-class Snippet extends JtkSnippet {
+class DataTableSnippet extends JtkSnippet {
   protected $helpers = array('Icon', 'Filtering', 'Pagination');
   
   protected $objectType = 'Jivoo\Jtk\Table\DataTable';

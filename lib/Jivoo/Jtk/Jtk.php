@@ -36,21 +36,21 @@ class Jtk extends LoadableModule {
     $this->m->Helpers->addHelper('Jivoo\Jtk\IconHelper');
     $this->m->Helpers->addHelper('Jivoo\Jtk\ContentAdminHelper');
     
-    $this->addTool('Jivoo\Jtk\Form\FormField');
-    $this->addTool('Jivoo\Jtk\Table\BasicDataTable');
-    $this->addTool('Jivoo\Jtk\Table\Snippet', 'DataTable');
-    $this->addTool('Jivoo\Jtk\Menu\IconMenu');
+    $this->addTool('Jivoo\Jtk\Table\DataTable');
+    $this->addTool('Jivoo\Jtk\Menu\Menu');
   }
   
   /**
    * Add a tool snippet.
-   * @param string $class Class name.
-   * @param string $name Optional tool name.
+   * @param string $class JtkObject class name.
+   * @param string $snippetClass Optional name of snippet class. Default is
+   * $class . 'Snippet'.
    */
-  public function addTool($class, $name = null) {
-    if (!isset($name))
-      $name = Lib::getClassName($class);
-    $this->tools[$name] = $class;
+  public function addTool($class, $snippetClass = null) {
+    $name = Lib::getClassName($class);
+    if (!isset($snippetClass))
+      $snippetClass = $class . 'Snippet';
+    $this->tools[$name] = $snippetClass;
   }
   
   /**

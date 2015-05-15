@@ -10,8 +10,8 @@ use Jivoo\Jtk\JtkSnippet;
 /**
  * A recursive icon menu snippet.
  */
-class IconMenu extends JtkSnippet {
-  protected $helpers = array('Icon');
+class MenuSnippet extends JtkSnippet {
+  protected $helpers = array('Icon', 'Jtk');
   
   protected $objectType = 'Jivoo\Jtk\Menu\Menu';
 }
