@@ -1,5 +1,8 @@
 <ul>
 <?php foreach ($object as $item): ?>
+<?php if ($item->isSeparator()): ?>
+<li class="separator"><hr /></li>
+<?php else: ?>
 <?php
 $current = $this->isCurrent($item->route);
 ?>
@@ -24,5 +27,6 @@ if ($current) echo ' class="current"'; ?>>
 <?php echo $Jtk->Menu($item); ?>
 <?php endif; ?>
 </li>
+<?php endif; ?>
 <?php endforeach; ?>
 </ul>

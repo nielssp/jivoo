@@ -85,7 +85,7 @@ class FileRecord implements IBasicRecord {
           $this->created = filectime($this->path);
         return $this->created;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**

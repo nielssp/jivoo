@@ -13,4 +13,11 @@ use Jivoo\Jtk\JtkObject;
  * label, icon, shortcut key, etc., using the magic getters and setters.
  */
 abstract class MenuItem extends JtkObject {
+  /**
+   * Whether or not this is a separator.
+   * @return boolean True if separator.
+   */
+  public function isSeparator() {
+    return false;
+  }
 }

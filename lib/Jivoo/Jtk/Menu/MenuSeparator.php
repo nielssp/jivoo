@@ -9,4 +9,10 @@ namespace Jivoo\Jtk\Menu;
  * A line separating menu items.
  */
 class MenuSeparator extends MenuItem {
+  /**
+   * {@inheritdoc}
+   */
+  public function isSeparator() {
+    return true;
+  }
 }
