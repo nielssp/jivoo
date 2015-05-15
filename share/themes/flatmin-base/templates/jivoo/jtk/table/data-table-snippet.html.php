@@ -22,16 +22,9 @@ $this->import('jquery.js', 'widgets/data-table.js');
 <a href="#">View</a>
 <?php
 $menu = $Jtk->Menu;
-$menu->appendAction(tr('All'))->setRoute(array(
-  'query' => array('filter' => null),
-  'mergeQuery' => true
-));
-foreach ($object->filters as $filter) {
-  $menu->appendAction(h($filter->label))->setRoute(array(
-    'query' => array('filter' => $filter->filter),
-    'mergeQuery' => true
-  ));
-}
+$object->filters->prependNew(tr('All'), '');
+foreach ($object->filters as $filter)
+  $menu->appendAction(h($filter->label))->setRoute($filter);
 echo $menu();
 ?>
 </div>
