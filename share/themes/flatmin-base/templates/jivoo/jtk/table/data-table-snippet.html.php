@@ -1,5 +1,5 @@
 <?php
-$this->import('jquery.js', 'widgets/data-table.js');
+$this->import('jquery.js', 'jivoo/jtk/data-table.js');
 ?>
 <div class="data-table">
 <div class="toolbar">
