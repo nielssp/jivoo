@@ -14,7 +14,7 @@ abstract class LabelMenuItem extends MenuItem {
    * Construct labelled menu item.
    * @param string $label Label.
    */
-  public function __construct($label) {
+  public function __construct($label = null) {
     $this->label = $label;
   }
 }

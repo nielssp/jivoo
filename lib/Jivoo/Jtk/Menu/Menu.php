@@ -21,7 +21,7 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
    * @param string $icon Optional icon path or name, see
    * {@see Jivoo\Jtk\IconHelper}.
    */
-  public function __construct($label, $icon = null) {
+  public function __construct($label = null, $icon = null) {
     parent::__construct($label);
     $this->icon = $icon;
     $this->route = 'null:';
