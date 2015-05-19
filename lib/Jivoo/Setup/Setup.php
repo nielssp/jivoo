@@ -9,7 +9,7 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadModuleEvent;
 
 /**
- * Installation and setup system..
+ * Installation, setup, maintenance, update and recovery system..
  */
 class Setup extends LoadableModule {
   /**
@@ -26,6 +26,8 @@ class Setup extends LoadableModule {
    * @var string Name of current setup action.
    */
   private $current = null;
+  
+  private $installers = array();
 
   /**
    * {@inheritdoc}
@@ -51,6 +53,16 @@ class Setup extends LoadableModule {
         }
       }
     }
+  }
+  
+  public function getInstaller($class) {
+    if (!isst($this->installers[$class])) {
+      $snippet = $this->m->Snippets->getSnippet($class);
+      assume($snippet instanceof InstallerSnippet);
+      $snippet->setup();
+      $this->installers[$class] = $snippet;
+    }
+    return $this->installers[$class];
   }
 
   /**

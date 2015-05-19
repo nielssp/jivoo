@@ -240,7 +240,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
   }
   
   /**
-   * Get offset of the object the specified id.
+   * Get offset of the object with the specified id.
    * @param string $id Object id.
    * @return int|null The offset or null if id is undefined.
    */
