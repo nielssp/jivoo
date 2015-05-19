@@ -21,6 +21,16 @@ class Utilities {
     return str_replace('\\', '/', $path);
 //     return str_replace('\\', '/', realpath($path));
   }
+
+  /**
+   * Convert a real path from Windows-style to UNIX-style. Uses
+   * {@see realpath) to look up the path.
+   * @param string $path Windows-style path.
+   * @return string UNIX-style path.
+   */
+  public static function convertRealPath($path) {
+    return str_replace('\\', '/', realpath($path));
+  }
   
   /**
    * Convert a CamelCase class-name to a lowercase dash-separated name. E.g.

@@ -7,6 +7,8 @@ namespace Jivoo\Assets;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Utilities;
+use Jivoo\Routing\TextResponse;
+use Jivoo\Routing\Http;
 
 /**
  * Asset system.
@@ -46,7 +48,7 @@ class Assets extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->docRoot = Utilities::convertPath($_SERVER['DOCUMENT_ROOT']);
+    $this->docRoot = Utilities::convertRealPath($_SERVER['DOCUMENT_ROOT']);
     $this->docRootLength = strlen($this->docRoot);
     
     $this->addAssetDir('Core', 'assets');
@@ -54,12 +56,16 @@ class Assets extends LoadableModule {
     if (isset($this->request->path[1]) AND $this->request->path[0] == 'assets') {
       $path = $this->request->path;
       array_shift($path);
+      if ($path == array('js', 'app.js'))
+        $this->returnAppJs();
+      if ($path == array('css', 'app.css'))
+        $this->returnAppCss();
       $filename = explode('.', $path[(count($path) - 1)]);
       if (count($filename) > 1 AND !empty($filename[0])) {
         $extension = strtolower(array_pop($filename));
         if (!in_array($extension, $this->extensionBlacklist)) {
           if (!$this->returnAsset($this->p('app', 'assets/' . implode('/', $path)))) {
-            $key = array_shift($path);
+            $key = $this->getPathKey(array_shift($path));
             $file = $this->p($key, implode('/', $path));
             $this->returnAsset($file);
           }
@@ -69,12 +75,12 @@ class Assets extends LoadableModule {
   }
 
   private function minifyJs($js) {
-    // TODO add javascript minification
+    // TODO add javascript minification + caching
     return $js;
   }
 
   private function minifyCss($css) {
-    // TODO add CSS minification
+    // TODO add CSS minification + caching
     return $css;
   }
 
@@ -88,6 +94,7 @@ class Assets extends LoadableModule {
       foreach ($files as $file) {
         $path = $this->p('app', 'assets/js/' . $file);
         if (is_file($path)) {
+          $text .= '//' . $file . PHP_EOL;
           $text .= $this->minifyJs(file_get_contents($path)) . PHP_EOL;
         }
       }
@@ -144,7 +151,25 @@ class Assets extends LoadableModule {
       'priority' => $priority
     );
   }
-
+  
+  /**
+   * Convert a path key to an asset key (converts backslashes to dashes).
+   * @param string $key Path key.
+   * @return string Asset key.
+   */
+  public function getAssetKey($key) {
+    return str_replace('\\', '-', $key);
+  }
+  
+  /**
+   * Convert an asset key to a path key (converts dashes to backslashes).
+   * @param string $key Asset key.
+   * @return string Path key.
+   */
+  public function getPathKey($key) {
+    return str_replace('-', '\\', $key);
+  }
+  
   /**
    * Get a link to an asset
    * @param string $key Path key or path if second parameter undefined
@@ -180,12 +205,12 @@ class Assets extends LoadableModule {
           return null;
       }
     }
-    $p = $this->p($key, $path);
+    $p = Utilities::convertRealPath($this->p($key, $path));
     if (strncmp($p, $this->docRoot, $this->docRootLength) == 0)
       return substr($p, $this->docRootLength);
     else
       return $this->m->Routing->getLinkFromPath(
-        array_merge(array('assets', $key), explode('/', $path))
+        array_merge(array('assets', $this->getAssetKey($key)), explode('/', $path))
       );
   }
 }
