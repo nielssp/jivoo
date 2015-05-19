@@ -24,6 +24,14 @@ class ViewResources {
     'script' => '',
     'style' => ''
   );
+  
+  /**
+   * @var (string|null)[] Script and style import conditions.
+   */
+  private $resCondition = array(
+    'script' => null,
+    'style' => null
+  );
 
   /**
    * @var bool[] Associative array of emitted resources.
@@ -199,8 +207,18 @@ class ViewResources {
         $this->emitResource($dependency);
     }
     $html = '';
-      if (isset($resInfo['condition']))
+    if (isset($resInfo['condition'])) {
+      if ($this->resCondition[$resInfo['type']] !== $resInfo['condition']) {
+        if (isset($this->resCondition[$resInfo['type']]))
+          $html .= '<![endif]-->' . PHP_EOL;
+        $this->resCondition[$resInfo['type']] = $resInfo['condition'];
         $html .= '<!--[if (' . $resInfo['condition'] . ')]>' . PHP_EOL;
+      }
+    }
+    else if (isset($this->resCondition[$resInfo['type']])) {
+      $html .= '<![endif]-->' . PHP_EOL;
+      $this->resCondition[$resInfo['type']] = null;
+    }
     if ($resInfo['type'] == 'script') {
       $html .= '<script type="text/javascript" src="'
         . h($resInfo['location']) . '"></script>' . PHP_EOL;
@@ -209,8 +227,6 @@ class ViewResources {
       $html .= '<link rel="stylesheet" type="text/css" href="'
         . h($resInfo['location']) . '" />' . PHP_EOL;
     }
-    if (isset($resInfo['condition']))
-      $html .= '<![endif]-->' . PHP_EOL;
     $this->blocks[$resInfo['type']] .= $html;
     $this->emitted[$resource] = true;
   }
@@ -233,12 +249,21 @@ class ViewResources {
       'script' => '',
       'style' => '',
     );
+    $this->resCondition = array(
+      'script' => null,
+      'style' => null,
+    );
     foreach ($this->importFrames[$this->framePointer] as $resource) {
       $this->emitResource($resource);
     }
     $block = '';
-    foreach ($types as $type)
+    foreach ($types as $type) {
       $block .= $this->blocks[$type] . PHP_EOL;
+      if (isset($this->resCondition[$type])) {
+        $block .= '<![endif]-->' . PHP_EOL;
+        $this->resCondition[$type] = null;
+      }
+    }
     return $block;
   }
 }
