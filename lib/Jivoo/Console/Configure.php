@@ -47,7 +47,7 @@ class Configure extends Snippet {
     $this->configForm->version = $this->app->version;
     $this->configForm->modules = array(
       'Controllers', 'Snippets', 'Databases', 'Migrations', 'ActiveModels',
-      'Console', 'Generators'
+      'Jtk', 'Console', 'Generators'
     );
     return $this->render();
   }

@@ -80,12 +80,12 @@ class DatabaseSetupController extends SetupController {
    */
   public function setupDriver() {
     if (!isset($this->config['driver']))
-      return $this->Setup->setState('DatabaseSetup::selectDriver', false);
+      return $this->Setup->setState('selectDriver', false);
     $this->driver = $this->DatabaseDrivers->checkDriver($this->config['driver']);
     if (!isset($this->driver) or $this->driver['isAvailable'] !== true) {
       unset($this->config['driver']);
       if ($this->config->save())
-        return $this->Setup->setState('DatabaseSetup::selectDriver', false);
+        return $this->Setup->setState('selectDriver', false);
       else
         return $this->saveConfig();
     }
@@ -103,7 +103,7 @@ class DatabaseSetupController extends SetupController {
       if (isset($this->request->data['cancel'])) {
         unset($this->config['driver']);
         if ($this->config->save())
-          return $this->Setup->setState('DatabaseSetup::selectDriver', false);
+          return $this->Setup->setState('selectDriver', false);
         else
           return $this->saveConfig();
       }
