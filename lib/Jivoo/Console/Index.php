@@ -11,4 +11,10 @@ use Jivoo\Snippets\Snippet;
  * Snippet presented when application configuration is missing.
  */
 class Index extends Snippet {
+  protected $helpers = array('Jtk');
+  
+  public function get() {
+    $this->viewData['appDir'] = $this->p('app', '');
+    return $this->render();
+  }
 }

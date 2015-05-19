@@ -42,8 +42,8 @@ abstract class Module implements IEventSubject {
   protected $session = null;
 
   /**
-   * @var View|null Current view if available (provided by
-   * {@see View} if loaded at time of initialization)
+   * @var \Jivoo\View\View|null Current view if available (provided by
+   * {@see \Jivoo\View\View} if loaded at time of initialization)
    */
   protected $view = null;
   
@@ -103,8 +103,8 @@ abstract class Module implements IEventSubject {
    * @throws InvalidPropertyException If property is not defined.
    */
   public function __isset($property) {
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
-    return false;
+    $value = $this->__get($property);
+    return isset($value);
   }
 
   /**
@@ -113,7 +113,7 @@ abstract class Module implements IEventSubject {
    * @throws InvalidPropertyException If property is not defined.
    */
   public function __unset($property) {
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    $this->__set($property, null);
   }
 
   /**

@@ -28,6 +28,25 @@ class App implements IEventSubject {
   private $appConfig = array();
   
   /**
+   * @var array Default application configuration.
+   */
+  private $defaultAppConfig = array(
+    'name' => 'Jivoo Application',
+    'version' => '0.0.0',
+    'namespace' => 'App',
+    'minPhpVersion' => '5.3.0',
+    'modules' => array(
+      'Snippets', 'Routing', 'Assets',
+      'View', 'Models', 'Helpers', 'Extensions',
+      'Themes', 'Jtk', 'Console'
+    ),
+    'listeners' => array(),
+    'defaultLanguage' => 'en',
+    'sessionPrefix' => '',
+    'defaultConfig' => array()
+  );
+  
+  /**
    * @var bool True if app config missing.
    */
   private $noAppConfig = false;
@@ -60,30 +79,27 @@ class App implements IEventSubject {
   /**
    * @var string Application name.
    */
-  private $name = 'Jivoo Application';
+  private $name;
 
   /**
    * @var string Application version.
    */
-  private $version = '0.0.0';
+  private $version;
   
   /**
    * @var string Application namespace.
    */
-  private $namespace = 'App';
+  private $namespace;
 
   /**
    * @var string Minimum PHP version.
    */
-  private $minPhpVersion = '5.3.0';
+  private $minPhpVersion;
 
   /**
    * @var string[] List of modules to load.
    */
-  private $modules = array(
-    'Snippets', 'Routing', 'Assets',
-    'View', 'Models', 'Helpers', 'Extensions', 'Console'
-  );
+  private $modules;
   
   /**
    * @var string[] List of application listener names.
@@ -172,10 +188,12 @@ class App implements IEventSubject {
       $appConfig = Json::decodeFile($appFile);
       if (!isset($appConfig))
         throw new \Exception('Invalid application. "app.json" invalid.');
+      $appConfig = array_merge($this->defaultAppConfig, $appConfig);
     }
     else {
       Logger::error('Invalid application. "app.json" not found. Configuring default application.');
       $this->noAppConfig = true;
+      $appConfig = $this->defaultAppConfig;
     }
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
@@ -204,24 +222,14 @@ class App implements IEventSubject {
     $this->basePath = dirname(implode('/', $script));
     // END work-around
     
-    if (isset($appConfig['name']))
-      $this->name = $appConfig['name'];
-    if (isset($appConfig['version']))
-      $this->version = $appConfig['version'];
-    if (isset($appConfig['namespace']))
-      $this->namespace = $appConfig['namespace'];
-    if (isset($appConfig['minPhpVersion']))
-      $this->minPhpVersion = $appConfig['minPhpVersion'];
-    if (isset($appConfig['modules']))
-      $this->modules = $appConfig['modules'];
-    if (!isset($appConfig['defaultLanguage']))
-      $this->appConfig['defaultLanguage'] = 'en';
-    if (isset($appConfig['sessionPrefix']))
-      $this->sessionPrefix = $appConfig['sessionPrefix'];
-    if (isset($appConfig['listeners']))
-      $this->listenerNames = $appConfig['listeners'];
-    if (isset($appConfig['defaultConfig']))
-      $this->defaultConfig = $appConfig['defaultConfig'];
+    $this->name = $appConfig['name'];
+    $this->version = $appConfig['version'];
+    $this->namespace = $appConfig['namespace'];
+    $this->minPhpVersion = $appConfig['minPhpVersion'];
+    $this->modules = $appConfig['modules'];
+    $this->sessionPrefix = $appConfig['sessionPrefix'];
+    $this->listenerNames = $appConfig['listeners'];
+    $this->defaultConfig = $appConfig['defaultConfig'];
 
     $this->config = new AppConfig();
   }

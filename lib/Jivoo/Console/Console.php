@@ -17,7 +17,7 @@ class Console extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Snippets', 'Routing', 'View', 'Assets', 'Extensions');
+  protected $modules = array('Snippets', 'Routing', 'View', 'Assets', 'Extensions', 'Jtk');
 
   /**
    * {@inheritdoc}
@@ -48,6 +48,7 @@ class Console extends LoadableModule {
       $this->m->Routing->routes->root('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Configure');
+      $this->m->Themes->load('flatmin-base');
       $this->view->addTemplateDir($this->p('templates'));
     }
     if ($this->config->get('enable', false) === true) {

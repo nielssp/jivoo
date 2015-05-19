@@ -48,6 +48,11 @@ class Assets extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    $this->config->defaults = array(
+      'minifyJs' => true,
+      'minifyCss' => true,
+    );
+    
     $this->docRoot = Utilities::convertRealPath($_SERVER['DOCUMENT_ROOT']);
     $this->docRootLength = strlen($this->docRoot);
     

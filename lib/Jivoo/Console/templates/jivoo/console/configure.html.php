@@ -45,7 +45,7 @@ Assets, Helpers, Models, Routing, View
 <div class="field">
 <label>Application toolkits</label>
 <?php echo $Form->checkboxAndLabel('modules', 'AccessControl'); ?>
-<?php echo $Form->checkboxAndLabel('modules', 'Administration'); ?>
+<?php echo $Form->checkboxAndLabel('modules', 'Jtk'); ?>
 <?php echo $Form->checkboxAndLabel('modules', 'Content'); ?>
 <?php echo $Form->checkboxAndLabel('modules', 'Setup'); ?>
 </div>
@@ -53,7 +53,6 @@ Assets, Helpers, Models, Routing, View
 <div class="field">
 <label>Development</label>
 <?php echo $Form->checkboxAndLabel('modules', 'Console'); ?>
-<?php echo $Form->checkboxAndLabel('modules', 'Generators'); ?>
 </div>
 
 <?php echo $Form->submit(tr('Save'), array('name' => 'save', 'class' => 'primary')); ?>

@@ -65,6 +65,11 @@ class Template {
   private $templateStack = array();
   
   /**
+   * @var bool Whether current template is the layout.
+   */
+  private $isLayout = false;
+  
+  /**
    * @var bool Whether or not to ignore extends.
    */
   private $ignoreExtend = false;
@@ -101,6 +106,14 @@ class Template {
   }
   
   /**
+   * Whether the current template is the layout.
+   * @return boolean True if layout.
+   */
+  public function isLayout() {
+    return $this->isLayout;
+  }
+  
+  /**
    * Set layout.
    * @param string|null|false $template Template name. Use null for default, or
    * false for no layout.
@@ -120,7 +133,7 @@ class Template {
    * Extend another template, i.e. set parent template.
    * @param string $template Template name.
    */
-  protected function extend($template) {
+  public function extend($template) {
     $this->extend = $template;
   }
   
@@ -177,7 +190,10 @@ class Template {
         $this->content .= ob_get_clean();
         $this->view->blocks->assign('content', $this->content);
         $this->openFrame();
-        return $this->render($this->layout, $data, false);
+        $this->isLayout = true;
+        $content = $this->render($this->layout, $data, false);
+        $this->isLayout = false;
+        return $content;
       }
     }
     return $this->content . ob_get_clean();

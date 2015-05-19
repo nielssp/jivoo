@@ -34,4 +34,13 @@ class JtkHelper extends Helper {
   public function setTheme($theme) {
     $this->m->Themes->load($theme);
   }
+  
+  public function layout($layout = 'default') {
+    if (isset($this->view->template)) {
+      if ($this->view->template->isLayout())
+        $this->view->template->extend('jivoo/jtk/layout/' . $layout . '.html');
+      else
+        $this->view->template->layout('jivoo/jtk/layout/' . $layout . '.html');
+    }
+  }
 }

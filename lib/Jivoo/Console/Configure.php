@@ -22,7 +22,7 @@ class Configure extends Snippet {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Form');
+  protected $helpers = array('Form', 'Jtk');
   
   /**
    * {@inheritdoc}
