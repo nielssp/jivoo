@@ -32,22 +32,24 @@ $this->import('core.css');
 </div>
 <?php endforeach; ?>
 
-<?php echo $Form->form(null); ?>
+<?php echo $Form->begin(); ?>
+
+<?php echo $Form->hidden('install'); ?>
 
 <?php echo $this->block('content'); ?>
 
-<div>
-<?php
-if ($enableBack)
-  echo $Form->submit(tr('Back'), array('name' => 'back'));
-else
-  echo $Form->submit(tr('Back'), array('disabled' => 'disabled'));
-?>
+<div class="install-buttons">
 <?php
 if ($enableNext)
   echo $Form->submit(tr('Next'), array('name' => 'next', 'class' => 'primary'));
 else
   echo $Form->submit(tr('Next'), array('disabled' => 'disabled', 'class' => 'primary'));
+?>
+<?php
+if ($enableBack)
+  echo $Form->submit(tr('Back'), array('name' => 'back'));
+else
+  echo $Form->submit(tr('Back'), array('disabled' => 'disabled'));
 ?>
 </div>
 

@@ -21,8 +21,8 @@ class DatabaseInstaller extends InstallerSnippet {
    */
   protected $helpers = array('Html', 'Form', 'Jivoo\Databases\DatabaseDrivers');
 
-  public function setup() {
-    $this->appendStep('select', true);
+  protected function setup() {
+    $this->appendStep('select');
     $this->appendStep('configure', true);
   }
   
@@ -44,28 +44,24 @@ class DatabaseInstaller extends InstallerSnippet {
    */
   public function select($data) {
     if (isset($this->config['driver']))
-      return $this->done();
-    if (isset($data)) {
-//       foreach ($this->drivers as $driver) {
-//         if ($driver['isAvailable'] and isset($this->request->data[$driver['driver']])) {
-//           $this->config['driver'] = $driver['driver'];
-//           $this->saveConfig();
-//         }
-//       }
-      $this->next();
-    }
-    $this->viewData['title'] = tr('Welcome to %1', $this->app->name);
+      return $this->next();
+    $this->viewData['title'] = tr('Select database driver');
     $this->viewData['drivers'] = $this->DatabaseDrivers->listDrivers();
+    $this->viewData['enableNext'] = false;
+    if (isset($data)) {
+      foreach ($this->viewData['drivers'] as $driver) {
+        if ($driver['isAvailable'] and isset($data[$driver['driver']])) {
+          $this->config['driver'] = $driver['driver'];
+          return $this->saveConfig();
+        }
+      }
+    }
     return $this->render();
-  }
-  
-  public function doSelect() {
   }
   
   public function undoSelect() {
     unset($this->config['driver']);
-    $this->saveConfig();
-    $this->undone();
+    return $this->saveConfig();
   }
 
   /**
@@ -86,68 +82,56 @@ class DatabaseInstaller extends InstallerSnippet {
    * Action for configuring database driver.
    */
   public function configure($data) {
-    if (isset($data))
-      return $this->next();
-//     if (!isset($this->config['driver']))
-//       return $this->Setup->setState('selectDriver', false);
-//     $this->driver = $this->DatabaseDrivers->checkDriver($this->config['driver']);
-//     if (!isset($this->driver) or $this->driver['isAvailable'] !== true) {
-//       unset($this->config['driver']);
-//       if ($this->config->save())
-//         return $this->Setup->setState('selectDriver', false);
-//       else
-//         return $this->saveConfig();
-//     }
-//     $this->title = tr('Welcome to %1', $this->app->name);
-//     $this->setupForm = new Form('setup');
-//     $this->exception = null;
-//     foreach ($this->driver['requiredOptions'] as $option) {
-//       $this->setupForm->addString($option, $this->getOptionLabel($option));
-//     }
-//     foreach ($this->driver['optionalOptions'] as $option) {
-//       $this->setupForm->addString($option, $this->getOptionLabel($option), false);
-//     }
-//     if ($this->request->hasValidData()) {
-//       $this->setupForm->addData($this->request->data['setup']);
-//       if (isset($this->request->data['cancel'])) {
-//         unset($this->config['driver']);
-//         if ($this->config->save())
-//           return $this->Setup->setState('selectDriver', false);
-//         else
-//           return $this->saveConfig();
-//       }
-//       else if ($this->setupForm->isValid()) {
-//         $driver = $this->driver['driver'];
-//         $class = 'Jivoo\Databases\Drivers\\' . $driver . '\\' . $driver . 'Database';
-//         try {
-//           new $class($this->app, new DatabaseSchema(), $this->request->data['setup']);
-//           $options = array_flip(
-//             array_merge($this->driver['requiredOptions'],
-//               $this->driver['optionalOptions']
-//             )
-//           );
-//           foreach ($this->request->data['setup'] as $key => $value) {
-//             if (isset($options[$key])) {
-//               $this->config[$key] = $value;
-//             }
-//           }
-//           unset($this->config['migration']);
-//           if ($this->config->save())
-//             return $this->Setup->done();
-//           else
-//             return $this->saveConfig();
-//         }
-//         catch (DatabaseConnectionFailedException $exception) {
-//           $this->exception = $exception;
-//         }
-//         catch (DatabaseSelectFailedException $exception) {
-//           $this->exception = $exception;
-//         }
-//       }
-//     }
-//     else {
-//       $this->setupForm->addData($this->config->getArray());
-//     }
+    if (!isset($this->config['driver']))
+      return $this->back();
+    $driver = $this->DatabaseDrivers->checkDriver($this->config['driver']);
+    if (!isset($driver) or $driver['isAvailable'] !== true) {
+      unset($this->config['driver']);
+      if ($this->config->save())
+        return $this->back();
+      else
+        return $this->saveConfig();
+    }
+    $this->viewData['title'] = tr('Configure %1', $driver['name']);
+    $this->viewData['exception'] = null;
+    foreach ($driver['requiredOptions'] as $option) {
+      $this->form->addString($option, $this->getOptionLabel($option));
+    }
+    foreach ($driver['optionalOptions'] as $option) {
+      $this->form->addString($option, $this->getOptionLabel($option), false);
+    }
+    if (isset($data)) {
+      $this->form->addData($data);
+      if ($this->form->isValid()) {
+        $class = 'Jivoo\Databases\Drivers\\' . $driver['driver'] . '\\' . $driver['driver'] . 'Database';
+        try {
+          new $class($this->app, new DatabaseSchema(), $data);
+          $options = array_flip(
+            array_merge(
+              $driver['requiredOptions'],
+              $driver['optionalOptions']
+            )
+          );
+          foreach ($data as $key => $value) {
+            if (isset($options[$key])) {
+              $this->config[$key] = $value;
+            }
+          }
+          unset($this->config['migration']);
+          return $this->saveConfigAndContinue();
+        }
+        catch (DatabaseConnectionFailedException $exception) {
+          $this->viewData['exception'] = $exception;
+        }
+        catch (DatabaseSelectFailedException $exception) {
+          $this->viewData['exception'] = $exception;
+        }
+      }
+    }
+    else {
+      $this->form->addData($this->config->getArray());
+    }
+    $this->viewData['driver'] = $driver;
     return $this->render();
   }
 }

@@ -147,7 +147,7 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
     if (isset($this->emptySubset))
       $this->createTrueSubset();
     $config = new AppConfig();
-    if (!isset($this->data[$key])) {
+    if (!isset($this->data[$key]) or !is_array($this->data[$key])) {
       $config->data = null;
       $config->emptySubset = $key;
     }

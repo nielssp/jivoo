@@ -51,6 +51,8 @@ class FormHelper extends Helper {
    * @var mixed Value of current select-element.
    */
   private $selectValue = null;
+  
+  private $startTag = null;
 
   /**
    * Begin a form. End it with {@see end()}.
@@ -110,7 +112,12 @@ class FormHelper extends Helper {
       else
         $this->data = array();
     }
+    $this->startTag = $html;
     return $html;
+  }
+  
+  public function begin() {
+    return $this->startTag;
   }
 
   /**

@@ -16,7 +16,7 @@ foreach ($drivers as $driver) :
 <td>
 <?php echo $Form->submit(
   tr('Select %1', $driver['name']),
-  array('name' => $driver['driver'])
+  array('name' => $Form->name($driver['driver']), 'class' => 'primary')
 ); ?>
 </td>
 <?php else : ?>

@@ -8,6 +8,7 @@ namespace Jivoo\Setup;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadModuleEvent;
 use Jivoo\Routing\TextResponse;
+use Jivoo\Core\Lib;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -42,24 +43,16 @@ class Setup extends LoadableModule {
    */
   public function afterLoad() {
     if (isset($this->app->appConfig['install'])) {
-      $installer = $this->getInstaller($this->app->appConfig['install']);
-      $this->view->addTemplateDir($this->p('templates'));
-      $response = $installer();
-      if (is_string($response))
-        $response = new TextResponse($installer->getStatus(), 'text/html', $response);
-      $this->m->Routing->respond($response);
-    }
-    if (isset($this->app->appConfig['setup'])) {
-      foreach ($this->app->appConfig['setup'] as $route) {
-        $route = $this->m->Routing->validateRoute($route);
-        $name = $route['dispatcher']->fromRoute($route);
-        if (!isset($this->config[$name]) or $this->config[$name] !== true) {
-          $this->current = $name;
-          $this->view->addTemplateDir($this->p('templates'));
-          $this->m->Routing->routes->auto($route);
-//           $this->m->Routing->reroute($route);
-          $this->m->Routing->followRoute($route);
-        }
+      $installer = $this->app->appConfig['install'];
+      if (!Lib::classExists($installer))
+        $installer = $this->app->n('Snippets\\' . $installer);
+      if (!$this->config[$installer]->get('done', false)) {
+        $snippet = $this->getInstaller($this->app->appConfig['install']);
+        $this->view->addTemplateDir($this->p('templates'));
+        $response = $snippet();
+        if (is_string($response))
+          $response = new TextResponse($snippet->getStatus(), 'text/html', $response);
+        $this->m->Routing->respond($response);
       }
     }
   }

@@ -46,3 +46,11 @@ table.trace {
     display: table-cell;
   }
 }
+
+.install-buttons {
+  text-align: right;
+  .primary {
+    float: right;
+    margin-left: 0.5em;
+  }
+}

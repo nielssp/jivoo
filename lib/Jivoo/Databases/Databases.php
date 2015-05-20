@@ -124,9 +124,13 @@ class Databases extends LoadableModule {
           tr('Database "%1" not configured', $name)
         );
       }
-      $options = $this->config[$name];
+      $options = $this->config->getSubset($name);
     }
-    $driver = $options['driver'];
+    $driver = $options->get('driver', null);
+    if (!isset($driver))
+      throw new DatabaseConnectionFailedException(tr(
+        'Database driver not set'
+      ));
     $driverInfo = $this->drivers->checkDriver($driver);
     if (!isset($driverInfo))
       throw new DatabaseConnectionFailedException(tr(
