@@ -34,9 +34,7 @@ abstract class InstallerSnippet extends Snippet {
     if (isset($this->current->previous)) {
       $this->view->data->enableBack = $this->current->previous->isUndoable();
     }
-    if (isset($this->current->next)) {
-      $this->view->data->enableNext = true;
-    }
+    $this->view->data->enableNext = true;
   }
 
   abstract protected function setup();
@@ -48,7 +46,7 @@ abstract class InstallerSnippet extends Snippet {
   public function appendStep($name, $undoable = false) {
     assume(is_callable(array($this, $name)));
     $undo = array($this, 'undo' . ucfirst($name));
-    if (!is_callable($undo)) {
+    if (!method_exists ($this, $undo[1])) {
       if ($undoable)
         $undo = array($this, 'back');
       else
@@ -99,6 +97,9 @@ abstract class InstallerSnippet extends Snippet {
       if (isset($this->parent)) {
         return $this->parent->next();
       }
+      else {
+        $this->installConfig['done'] = true;
+      }
     }
     else {
       $this->installConfig['current'] = $this->current->next->name;
@@ -131,11 +132,7 @@ abstract class InstallerSnippet extends Snippet {
       return $this->current->__invoke($this->request->data);
     }
     else if (isset($this->request->data['back'])) {
-      $previous = $this->current->previous;
-      if (isset($previous) and $previous->isUndoable()) {
-        $this->current = $previous;
-        return $previous->undo();
-      }
+      return $this->current->__invoke($this->request->data);
     }
     return $this->get();
   }
@@ -214,7 +211,7 @@ class SubInstallerStep {
   
   public function undo() {
     if ($this->undoable)
-      return $installer->getLast()->undo();
+      return $this->installer->getLast()->undo();
   }
   
   public function isUndoable() {
