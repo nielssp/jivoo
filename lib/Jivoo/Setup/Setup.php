@@ -7,6 +7,7 @@ namespace Jivoo\Setup;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadModuleEvent;
+use Jivoo\Routing\TextResponse;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -40,6 +41,14 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
+    if (isset($this->app->appConfig['install'])) {
+      $installer = $this->getInstaller($this->app->appConfig['install']);
+      $this->view->addTemplateDir($this->p('templates'));
+      $response = $installer();
+      if (is_string($response))
+        $response = new TextResponse($installer->getStatus(), 'text/html', $response);
+      $this->m->Routing->respond($response);
+    }
     if (isset($this->app->appConfig['setup'])) {
       foreach ($this->app->appConfig['setup'] as $route) {
         $route = $this->m->Routing->validateRoute($route);
@@ -56,10 +65,9 @@ class Setup extends LoadableModule {
   }
   
   public function getInstaller($class) {
-    if (!isst($this->installers[$class])) {
+    if (!isset($this->installers[$class])) {
       $snippet = $this->m->Snippets->getSnippet($class);
       assume($snippet instanceof InstallerSnippet);
-      $snippet->setup();
       $this->installers[$class] = $snippet;
     }
     return $this->installers[$class];

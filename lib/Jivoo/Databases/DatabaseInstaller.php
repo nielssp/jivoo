@@ -10,6 +10,7 @@ use Jivoo\Models\Form;
 use Jivoo\Core\Lib;
 use Jivoo\Databases\DatabaseConnectionFailedException;
 use Jivoo\Databases\DatabaseSelectFailedException;
+use Jivoo\Setup\InstallerSnippet;
 
 /**
  * Controller for setting up database. 
@@ -24,7 +25,9 @@ class DatabaseInstaller extends InstallerSnippet {
     $this->addStep('select');
     $this->addStep('configure');
     
-    $this->setInit('select');
+    $this->connect(null, 'select');
+    $this->connect('select', 'configure');
+    $this->connect('configure', null);
   }
   
   /**
@@ -45,24 +48,26 @@ class DatabaseInstaller extends InstallerSnippet {
    */
   public function select() {
     if (isset($this->config['driver']))
-      return $this->Setup->done();
+      return $this->done();
     $this->title = tr('Welcome to %1', $this->app->name);
     $this->drivers = $this->DatabaseDrivers->listDrivers();
-    if ($this->request->hasValidData()) {
-      foreach ($this->drivers as $driver) {
-        if ($driver['isAvailable'] and
-             isset($this->request->data[$driver['driver']])) {
-          $this->config['driver'] = $driver['driver'];
-          if ($this->config->save()) {
-            return $this->Setup->done();
-          }
-          else {
-            return $this->saveConfig();
-          }
-        }
+    return $this->render();
+  }
+  
+  public function doSelect() {
+    foreach ($this->drivers as $driver) {
+      if ($driver['isAvailable'] and isset($this->request->data[$driver['driver']])) {
+        $this->config['driver'] = $driver['driver'];
+        $this->saveConfig();
+        $this->done();
       }
     }
-    return $this->render();
+  }
+  
+  public function undoSelect() {
+    unset($this->config['driver']);
+    $this->saveConfig();
+    $this->undone();
   }
 
   /**

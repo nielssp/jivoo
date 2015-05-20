@@ -32,7 +32,16 @@ $this->import('core.css');
 </div>
 <?php endforeach; ?>
 
+<?php echo $Form->form(null); ?>
+
 <?php echo $this->block('content'); ?>
+
+<div>
+<?php echo $Form->submit(tr('Back'), array('name' => 'back')); ?>
+<?php echo $Form->submit(tr('Next'), array('name' => 'next', 'class' => 'primary')); ?>
+</div>
+
+<?php echo $Form->end(); ?>
 
 </div>
 

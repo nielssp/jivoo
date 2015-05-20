@@ -262,10 +262,8 @@ class Controller extends Module {
       $class = preg_replace('/Controller$/', '', $class);
       $templateName = '';
       if ($class != 'App') {
-        $dirs = explode('\\', $class);
-        foreach ($dirs as $dir) {
-          $templateName .= Utilities::camelCaseToDashes($dir) . '/';
-        }
+        $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), explode('\\', $class));
+        $templateName = implode('/', $dirs) . '/';
       }
       $templateName .= Utilities::camelCaseToDashes($caller['function'])
         . '.html';
