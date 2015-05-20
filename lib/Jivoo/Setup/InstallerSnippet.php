@@ -14,109 +14,127 @@ abstract class InstallerSnippet extends Snippet {
   
   private $steps = array();
   
-  private $connections = array();
+  private $current = null;
 
   private $installConfig;
   
-  private $action = null;
-  
-  private $first = null;
-  
-  private $last = null;
+  private $parent = null;
   
   protected function init() {
+    $this->enableLayout();
     $installer = get_class($this);
     $this->installConfig = $this->config['Setup'][$installer];
     $this->setup();
+    if (!isset($this->installConfig['current'])) {
+      $head = array_keys(array_slice($this->steps, 0, 1));
+      $this->installConfig['current'] = $head[0];
+    }
+    $this->current = $this->steps[$this->installConfig['current']];
+
+    if (isset($this->current->previous)) {
+      $this->view->data->enableBack = $this->current->previous->isUndoable();
+    }
+    if (isset($this->current->next)) {
+      $this->view->data->enableNext = true;
+    }
   }
+
+  abstract protected function setup();
   
   public function getSteps() {
     return $this->steps;
   }
   
-  public function addStep($name) {
+  public function appendStep($name, $undoable = false) {
     assume(is_callable(array($this, $name)));
-    $this->steps[$name] = array($this, $name);
+    $undo = array($this, 'undo' . ucfirst($name));
+    if (!is_callable($undo)) {
+      if ($undoable)
+        $undo = array($this, 'back');
+      else
+        $undo = null;
+    }
+    $step = new InstallerStep(array($this, $name), $undo);
+    $step->name = $name;
+    $last = $this->getLast();
+    if (isset($last)) {
+      $step->previous = $this->getLast();
+      $last->next = $step;
+    }
+    $this->steps[$name] = $step;
   }
     
-  public function addInstaller($class, $name = null) {
+  public function appendInstaller($class, $name = null) {
     if (!isset($name))
       $name = $class;
     $snippet = $this->m->Setup->getInstaller($class);
-    $this->steps[$name] = $snippet;
+    $snippet->parent = $this;
+    $step = new SubInstallerStep($snippet);
+    $step->name = $name;
+    $last = $this->getLast();
+    if (isset($last)) {
+      $step->previous = $this->getLast();
+      $last->next = $step;
+    }
+    $this->steps[$name] = $step;
+  }
+  
+  public function getFirst() {
+    $slice = array_values(array_slice($this->steps, 0, 1));
+    return $slice[0];
+  }
+
+  public function getLast() {
+    $slice = array_values(array_slice($this->steps, -1, 1));
+    return $slice[0];
   }
 
   public function remove($name) {
     if (isset($this->steps[$name]))
       unset($this->steps[$name]);
   }
-
-  abstract protected function setup();
   
-  public function done() {
-    return $this->refresh();
-  }
-
-  public function undone() {
-    return $this->refresh();
-  }
-  
-  public function next($step1, $step2) {
-    if (!isset($step1)) {
-      $this->first = $step2;
-      return;
-    }
-    if (!isset($step2)) {
-      $this->last = $step1;
-      return;
-    }
-    if (!isset($this->connections[$step1]))
-      $this->connections[$step1] = array();
-    $this->connections[$step1]['next'] = $step2;
-  }
-  
-  public function back($step1, $step2) {
-    if (!isset($step1) or !isset($step2))
-      return;
-    if (!isset($this->connections[$step1]))
-      $this->connections[$step1] = array();
-    $this->connections[$step1]['back'] = $step2;
-    
-  }
-  
-  public function connect($step1, $step2) {
-    $this->next($step1, $step2);
-    $this->back($step2, $step1);
-  }
-  
-  public function handle($action) {
-    if ($action == 'do')
-      $this->done();
-    else if ($action == 'undo')
-      $this->undone();
-  }
-  
-  public function get($action = null, $current = null) {
-    if (!isset($current)) {
-      $current = $this->first;
-      if (isset($this->installConfig['current'])) {
-        $current = $this->installConfig['current'];
+  public function next() {
+    if (!isset($this->current->next)) {
+      if (isset($this->parent)) {
+        return $this->parent->next();
       }
     }
-    $this->enableLayout();
-    return call_user_func($this->steps[$current], $action);
+    else {
+      $this->installConfig['current'] = $this->current->next->name;
+    }
+    return $this->refresh();
+  }
+  
+  public function back() {
+    if (!isset($this->current->previous)) {
+      if (isset($this->parent)) {
+        return $this->parent->back();
+      }
+    }
+    else {
+      $this->installConfig['current'] = $this->current->previous->name;
+    }
+    return $this->refresh();
+  }
+  
+  public function jump($step) {
+    return $this->refresh();
+  }
+  
+  public function get() {
+    return $this->current->__invoke(null);
   }
   
   public function post() {
-    if (isset($this->request->data['next']))
-      return $this->get('do');
+    if (isset($this->request->data['next'])) {
+      return $this->current->__invoke($this->request->data);
+    }
     else if (isset($this->request->data['back'])) {
-      if (isset($this->installConfig['current'])) {
-        $current = $this->installConfig['current'];
-        if (isset($this->connections[$current]) and
-            isset($this->connections[$current]['back'])) {
-          return $this->get('undo', $this->connections[$current]['back']);
-        }
+      $previous = $this->current->previous;
+      if (isset($previous) and $previous->isUndoable()) {
+        $this->current = $previous;
+        return $previous->undo();
       }
     }
     return $this->get();
@@ -134,5 +152,72 @@ abstract class InstallerSnippet extends Snippet {
       $templateName .= Utilities::camelCaseToDashes($caller['function']) . '.html';
     }
     return parent::render($templateName);
+  }
+}
+
+
+class InstallerStep {
+  public $name = null;
+  public $next = null;
+  public $previous = null;
+  
+  private $do;
+  private $undo;
+  
+  public function __construct($do, $undo = null) {
+    $this->do = $do;
+    $this->undo = $undo;
+  }
+
+  public function __invoke($data) {
+    if (isset($data['next'])) {
+      return call_user_func($this->do, $data);
+    }
+    else if (isset($data['back'])) {
+      if (isset($this->previous) and $this->previous->isUndoable()) {
+        return $this->previous->undo();
+      }
+    }
+    return call_user_func($this->do, null);
+  }
+
+  public function undo() {
+    return call_user_func($this->undo);
+  }
+  
+  public function isUndoable() {
+    return isset($this->undo);
+  }
+  
+  public function isLast() {
+    return !isset($this->next);
+  }
+
+  public function isFirst() {
+    return !isset($this->previous);
+  }
+}
+
+class SubInstallerStep {
+  private $installer;
+  private $undoable = false;
+  public function __construct(InstallerSnippet $installer) {
+    $this->installer = $installer;
+    $last = $installer->getLast();
+    if (isset($last))
+      $this->undoable = $last->isUndoable();
+  }
+  
+  public function __invoke($data) {
+    return $this->installer->__invoke();
+  }
+  
+  public function undo() {
+    if ($this->undoable)
+      return $installer->getLast()->undo();
+  }
+  
+  public function isUndoable() {
+    return $this->undoable;
   }
 }

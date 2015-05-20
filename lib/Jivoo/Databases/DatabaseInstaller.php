@@ -22,12 +22,8 @@ class DatabaseInstaller extends InstallerSnippet {
   protected $helpers = array('Html', 'Form', 'Jivoo\Databases\DatabaseDrivers');
 
   public function setup() {
-    $this->addStep('select');
-    $this->addStep('configure');
-    
-    $this->connect(null, 'select');
-    $this->connect('select', 'configure');
-    $this->connect('configure', null);
+    $this->appendStep('select');
+    $this->appendStep('configure');
   }
   
   /**
@@ -49,8 +45,8 @@ class DatabaseInstaller extends InstallerSnippet {
   public function select() {
     if (isset($this->config['driver']))
       return $this->done();
-    $this->title = tr('Welcome to %1', $this->app->name);
-    $this->drivers = $this->DatabaseDrivers->listDrivers();
+    $this->viewData['title'] = tr('Welcome to %1', $this->app->name);
+    $this->viewData['drivers'] = $this->DatabaseDrivers->listDrivers();
     return $this->render();
   }
   
