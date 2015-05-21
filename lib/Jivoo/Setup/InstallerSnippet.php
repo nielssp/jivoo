@@ -191,9 +191,10 @@ abstract class InstallerSnippet extends Snippet {
   
   public function runAsync(IAsyncTask $task) {
     if ($this->request->hasValidData() and $this->request->isAjax()) {
-      for ($i = 0; $i < 2048; $i++)
-        echo 'x';
-      echo PHP_EOL;
+      header("Content-Type: text/event-stream");
+      header("Cache-Control: no-cache");
+      header("Access-Control-Allow-Origin: *");
+      echo ":" . str_repeat(" ", 5000) . "\n"; // 2 kB padding for IE
       ob_flush();
       flush();
       $id = 0;

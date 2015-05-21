@@ -1,5 +1,5 @@
 <?php 
-$this->import('chat-client.js');
+$this->import('eventsource.js', 'chat-client.js');
 ?>
 <?php echo $Snippet->ChatLog(); ?>
 

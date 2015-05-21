@@ -5,8 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Snippets;
 
-use Jivoo\Routing\TextResponse;
-use Jivoo\Routing\Http;
+use Jivoo\Routing\EventSource;
 
 /**
  * Used for pushing data to the client side using Server-Sent Events.
@@ -25,6 +24,11 @@ abstract class EventSourceSnippet extends Snippet {
   protected $retry = 1000;
   
   /**
+   * @var EventSource
+   */
+  private $source = null;
+  
+  /**
    * Update code, e.g. check for state changes. Use {@see trigger()} to send
    * data to the client.
    */
@@ -38,24 +42,18 @@ abstract class EventSourceSnippet extends Snippet {
    */
   public function trigger($data, $id = null, $event = null) {
     if (isset($event))
-      echo 'event: ' . $event . PHP_EOL;
-    if (isset($id))
-      echo 'id: ' . $id . PHP_EOL;
-    echo 'data: ' . $data . PHP_EOL;
-    echo PHP_EOL;
-    ob_flush();
-    flush();
+      $this->source->trigger($event, $data, $id);
+    else
+      $this->source->send($data, $id);
   }
   
   /**
    * {@inheritdoc}
    */
   public function before() {
-    header('Content-Type: text/event-stream');
-    header('Cache-Control: no-cache');
-    echo 'retry: ' . $this->retry . PHP_EOL . PHP_EOL;
-    ob_flush();
-    flush();
+    $this->source = new EventSource();
+    $this->source->retry =  $this->retry;
+    $this->source->start();
   }
   
   /**
@@ -74,6 +72,6 @@ abstract class EventSourceSnippet extends Snippet {
         break;
     }
     $this->after(null);
-    exit;
+    $this->source->stop();
   }
 }

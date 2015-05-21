@@ -93,7 +93,10 @@ class Extensions extends LoadableModule {
     if (isset($this->app->appConfig['extensions']))
       $this->importList = $this->app->appConfig['extensions'];
     
-    $this->importList = $this->config->get('import', $this->importList);
+    $this->importList = array_merge(
+      $this->importList,
+      $this->config->get('import', array())
+    );
     
     $appExtensions = $this->p('app', 'extensions');
     if (is_dir($appExtensions)) {

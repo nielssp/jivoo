@@ -18,7 +18,8 @@
     "Setup"
   ],
   "extensions": [
-    "jquery"
+    "jquery",
+    "eventsource"
   ],
   "setup": [
     "action:Jivoo\\Databases\\DatabaseSetup::selectDriver",
