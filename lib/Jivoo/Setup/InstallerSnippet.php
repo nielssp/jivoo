@@ -8,6 +8,8 @@ namespace Jivoo\Setup;
 use Jivoo\Snippets\Snippet;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\Form;
+use Jivoo\Routing\ResponseOverrideException;
+use Jivoo\Routing\TextResponse;
 
 abstract class InstallerSnippet extends Snippet {
   
@@ -187,6 +189,32 @@ abstract class InstallerSnippet extends Snippet {
     return call_user_func($current->do, $data);
   }
   
+  public function runAsync(IAsyncTask $task) {
+    if ($this->request->hasValidData() and $this->request->isAjax()) {
+      for ($i = 0; $i < 2048; $i++)
+        echo 'x';
+      echo PHP_EOL;
+      ob_flush();
+      flush();
+      $id = 0;
+      echo 'id: ' . $id++ . ' status: Loading...' . PHP_EOL;
+      ob_flush();
+      flush();
+      sleep(1);
+      echo 'id: ' . $id++ . ' status: Loading more...' . PHP_EOL;
+      ob_flush();
+      flush();
+      sleep(1);
+      echo 'id: ' . $id++ . ' status: Done!';
+      exit;
+    }
+    $this->view->resources->provide(
+      'setup/async.js',
+      $this->m->Assets->getAsset('Jivoo\Setup\Setup', 'assets/js/setup/async.js')
+    );
+    $this->view->resources->import('setup/async.js');
+  }
+  
   public function saveConfig() {
     if ($this->config->save())
       return $this->refresh();
@@ -221,6 +249,22 @@ abstract class InstallerSnippet extends Snippet {
     $this->Form->formFor($this->form, null);
     return parent::render($templateName);
   }
+}
+
+
+class TaskScheduler {
+  public function status($status) {
+    
+  }
+  public function progress($progress) {
+    
+  }
+}
+
+interface IAsyncTask {
+  public function resume($state);
+  public function suspend();
+  public function run();
 }
 
 

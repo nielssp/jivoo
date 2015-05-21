@@ -30,14 +30,14 @@ abstract class Module implements IEventSubject {
   protected $config = null;
 
   /**
-   * @var Request|null The Request object if available (provided by
-   * {@see Routing} if loaded at time of initialization).
+   * @var \Jivoo\Routing\Request|null The Request object if available (provided by
+   * {@see \Jivoo\Routing\Routing} if loaded at time of initialization).
    */
   protected $request = null;
 
   /**
-   * @var SessionStorage|null Session storage object if available (provided by
-   * {@see Routing} if loaded at time of initialization)
+   * @var \Jivoo\Routing\SessionStorage|null Session storage object if available (provided by
+   * {@see \Jivoo\Routing\Routing} if loaded at time of initialization)
    */
   protected $session = null;
 

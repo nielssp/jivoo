@@ -38,6 +38,9 @@ $this->import('core.css');
 
 <?php echo $this->block('content'); ?>
 
+<div id="install-status">
+</div>
+
 <div class="install-buttons">
 <?php
 if ($enableNext)
