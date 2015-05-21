@@ -16,13 +16,11 @@
     "ActiveModels",
     "Migrations",
     "Setup",
+    "Jtk",
     "Console"
   ],
   "extensions": [
     "jquery"
   ],
-  "setup": [
-    "action:Jivoo\\Databases\\DatabaseSetup::selectDriver",
-    "action:Jivoo\\Databases\\DatabaseSetup::setupDriver"
-  ]
+  "install": "Jivoo\\Databases\\DatabaseInstaller"
 }

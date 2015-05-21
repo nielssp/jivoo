@@ -191,7 +191,7 @@ abstract class InstallerSnippet extends Snippet {
   
   public function runAsync(IAsyncTask $task) {
     if ($this->request->hasValidData()) {
-      $taskConfig = $this->installConfig->getSubset(get_class($task));
+      $taskConfig = $this->installConfig->getSubset('async')->getSubset($this->current->name);
       $state = $taskConfig->get('state', array());
       $task->resume($state);
       if ($this->request->isAjax()) {

@@ -25,17 +25,14 @@ class Setup extends LoadableModule {
   protected $modules = array('Helpers', 'Routing');
   
   /**
-   * @var string Name of current setup action.
+   * @var InstallerSnippet[] Installers.
    */
-  private $current = null;
-  
   private $installers = array();
 
   /**
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Helpers->addHelper('Jivoo\Setup\SetupHelper');
   }
 
   /**
@@ -64,58 +61,5 @@ class Setup extends LoadableModule {
       $this->installers[$class] = $snippet;
     }
     return $this->installers[$class];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get($property) {
-    switch ($property) {
-      case 'current':
-        return $this->$property;
-      case 'currentState':
-        if (isset($this->current)) {
-          return isset($this->config[$this->current]) and
-                 $this->config[$this->current] === true;
-        }
-        return false;
-    }
-    return parnet::__get($property);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __set($property, $value) {
-    switch ($property) {
-      case 'currentState':
-        if (isset($this->current)) {
-          $this->config[$this->current] = $value;
-        }
-        return;
-    }
-    return parent::__set($property, $value);
-  }
-  
-  /**
-   * Get state of a setup action.
-   * @param array|ILinkable|string|null $route Setup route, see {@see Routing}.
-   * @return bool True if setup has finished, false otherwise.
-   */
-  public function getState($route) {
-    $route = $this->m->Routing->validateRoute($route);
-    $name = $route['dispatcher']->fromRoute($route);
-    return isset($this->config[$name]) and $this->config[$name] === true;
-  }
-  
-  /**
-   * Set state of a setup action.
-   * @param array|ILinkable|string|null $route Setup route, see {@see Routing}.
-   * @param bool $done Whether or not the setup has finished.
-   */
-  public function setState($route, $done) {
-    $route = $this->m->Routing->validateRoute($route);
-    $name = $route['dispatcher']->fromRoute($route);
-    $this->config[$name] = $done;
   }
 }
