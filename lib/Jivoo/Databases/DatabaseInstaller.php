@@ -93,7 +93,6 @@ class DatabaseInstaller extends InstallerSnippet {
         return $this->saveConfig();
     }
     $this->viewData['title'] = tr('Configure %1', $driver['name']);
-    $this->viewData['exception'] = null;
     foreach ($driver['requiredOptions'] as $option) {
       $this->form->addString($option, $this->getOptionLabel($option));
     }
@@ -121,10 +120,14 @@ class DatabaseInstaller extends InstallerSnippet {
           return $this->saveConfigAndContinue();
         }
         catch (DatabaseConnectionFailedException $exception) {
-          $this->viewData['exception'] = $exception;
+          $this->session->flash->error = tr(
+            'An error occured: %1', $exception->getMessage()
+          );
         }
         catch (DatabaseSelectFailedException $exception) {
-          $this->viewData['exception'] = $exception;
+          $this->session->flash->error = tr(
+            'An error occured: %1', $exception->getMessage()
+          );
         }
       }
     }

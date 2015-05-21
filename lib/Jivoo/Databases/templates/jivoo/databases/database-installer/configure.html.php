@@ -7,12 +7,6 @@
 ?>
 <?php echo tr('The following information is required.'); ?>
 </p>
-<?php if (isset($exception)) : ?>
-<div class="flash flash-error">
-<?php echo tr('An error occured:'); ?> 
-<?php echo $exception->getMessage(); ?>
-</div>
-<?php endif; ?>
 
 <?php foreach ($form->getFields() as $field) : ?>
 <div class="field<?php echo $Form->ifRequired($field, ' field-required'); ?>">
