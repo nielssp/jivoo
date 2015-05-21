@@ -190,13 +190,21 @@ abstract class InstallerSnippet extends Snippet {
   public function saveConfig() {
     if ($this->config->save())
       return $this->refresh();
+    $this->viewData['title'] = tr('Unable to save configuration file');
+    $this->viewData['file'] = $this->config->file;
+    $this->viewData['exists'] = file_exists($this->viewData['file']);
+    if ($this->viewData['exists']) {
+      $perms = fileperms($this->viewData['file']);
+      $this->viewData['mode'] = sprintf('%o', $perms & 0777);
+    }
+    $this->viewData['data'] = '<?php' . PHP_EOL . 'return ' . $this->app->config->prettyPrint() . ';';
     return $this->render('setup/save-config.html');
   }
   
   public function saveConfigAndContinue() {
     if ($this->config->save())
       return $this->next();
-    return $this->render('setup/save-config.html');
+    return $this->saveConfig();
   }
   
   /**

@@ -14,7 +14,7 @@ $this->import('core.css');
 <?php echo $this->resourceBlock(); ?>
 
 </head>
-<body>
+<body class="narrow">
 
 <header>
 <h1><?php echo $app['name']; ?></h1>

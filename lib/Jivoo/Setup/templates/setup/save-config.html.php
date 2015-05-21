@@ -1,5 +1,3 @@
-<?php echo $Form->form(); ?>
-
 <p><?php echo tr('%1 could not save the configuration to the following file:', $app['name']); ?></p>
 <p><code><?php echo $file; ?></code></p>
 <?php if ($exists): ?>
@@ -15,6 +13,3 @@
 <p>
 <textarea style="height:150px;"><?php echo h($data); ?></textarea>
 </p>
-<?php echo $Form->submit(tr('Cancel'), array('class' => 'primary')); ?>
-
-<?php echo $Form->end(); ?>
