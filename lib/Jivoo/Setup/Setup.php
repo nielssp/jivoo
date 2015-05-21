@@ -9,6 +9,8 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadModuleEvent;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Lib;
+use Jivoo\Routing\InvalidResponseException;
+use Jivoo\Routing\Response;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -44,6 +46,12 @@ class Setup extends LoadableModule {
         $response = $snippet();
         if (is_string($response))
           $response = new TextResponse($snippet->getStatus(), 'text/html', $response);
+        if (!($response instanceof Response)) {
+          throw new InvalidResponseException(tr(
+            'An invalid response was returned from installer: %1',
+            $installer
+          ));
+        }
         $this->m->Routing->respond($response);
       }
     }
