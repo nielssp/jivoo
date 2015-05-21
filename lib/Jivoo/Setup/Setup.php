@@ -17,12 +17,7 @@ class Setup extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected static $loadAfter = array('Controllers', 'Snippets');
-  
-  /**
-   * {@inheritdoc}
-   */
-  protected $modules = array('Helpers', 'Routing');
+  protected $modules = array('Helpers', 'Routing', 'Snippets', 'View');
   
   /**
    * @var InstallerSnippet[] Installers.
