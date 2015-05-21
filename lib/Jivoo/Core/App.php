@@ -14,7 +14,7 @@ namespace Jivoo\Core;
  * @property-read string $namespace Application namespace.
  * @property-read string $minPhpVersion Minimum PHP version.
  * @property-read string $environment Environment name.
- * @property-read AppConfig $config User configuration.
+ * @property-read Config $config User configuration.
  * @property-read bool $noAppConfig True if application configuration file missing.
  * @property-read array $appConfig Application configuration.
  * @property-read string $sessionPrefix Application session prefix.
@@ -52,7 +52,7 @@ class App implements IEventSubject {
   private $noAppConfig = false;
 
   /**
-   * @var AppConfig User configuration.
+   * @var Config User configuration.
    */
   private $config = null;
   
@@ -231,7 +231,7 @@ class App implements IEventSubject {
     $this->listenerNames = $appConfig['listeners'];
     $this->defaultConfig = $appConfig['defaultConfig'];
 
-    $this->config = new AppConfig();
+    $this->config = new Config();
   }
 
   /**
@@ -558,7 +558,7 @@ class App implements IEventSubject {
     
     $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
 
-    $this->config = new AppConfig($this->p('user', 'config.php'));
+    $this->config = new Config($this->p('user', 'config.php'));
     $this->config->setVirtual('app', $this->appConfig);
 
     $environmentConfigFile = $this

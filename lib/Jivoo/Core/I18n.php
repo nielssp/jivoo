@@ -11,7 +11,7 @@ namespace Jivoo\Core;
  */
 class I18n {
   /**
-   * @var AppConfig Configuration.
+   * @var Config Configuration.
    */
   private static $config = null;
 
@@ -22,12 +22,12 @@ class I18n {
   
   /**
    * Configure I18n system with a configuration.
-   * @param AppConfig $config Configuration.
+   * @param Config $config Configuration.
    * @param string $location Path of language directory.
    * @throws I18nException If language file does not return an instance of
    * {@see Localization}.
    */
-  public static function setup(AppConfig $config, $location) {
+  public static function setup(Config $config, $location) {
     self::$config = $config;
     if (!date_default_timezone_set(self::$config['timeZone'])) {
       date_default_timezone_set('UTC');

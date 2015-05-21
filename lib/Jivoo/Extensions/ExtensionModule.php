@@ -7,7 +7,7 @@ namespace Jivoo\Extensions;
 
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
-use Jivoo\Core\AppConfig;
+use Jivoo\Core\Config;
 
 /**
  * A module that can be loaded by an extension.
@@ -37,9 +37,9 @@ abstract class ExtensionModule extends Module {
    * Construct extension module.
    * @param App $app Associated application.
    * @param ExtensionInfo $info Extension information.
-   * @param AppConfig $config Extension configuration.
+   * @param Config $config Extension configuration.
    */
-  public final function __construct(App $app, ExtensionInfo $info, AppConfig $config) {
+  public final function __construct(App $app, ExtensionInfo $info, Config $config) {
     parent::__construct($app);
     $this->e = $this->m->Extensions->getModules($this->extensions);
     $this->config = $config;

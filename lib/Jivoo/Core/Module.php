@@ -25,7 +25,7 @@ abstract class Module implements IEventSubject {
   protected $m;
 
   /**
-   * @var AppConfig Module configuration.
+   * @var Config Module configuration.
    */
   protected $config = null;
 
@@ -36,7 +36,7 @@ abstract class Module implements IEventSubject {
   protected $request = null;
 
   /**
-   * @var \Jivoo\Routing\SessionStorage|null Session storage object if available (provided by
+   * @var \Jivoo\Routing\Session|null Session storage object if available (provided by
    * {@see \Jivoo\Routing\Routing} if loaded at time of initialization)
    */
   protected $session = null;

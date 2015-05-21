@@ -2,7 +2,7 @@
 
 namespace Jivoo\Core;
 
-class AppConfigTest extends \Codeception\TestCase\Test {
+class ConfigTest extends \Codeception\TestCase\Test {
 
   /**
    *

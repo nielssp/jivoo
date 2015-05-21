@@ -40,7 +40,7 @@ class Themes extends LoadableModule {
    * @param string $zone Zone name, e.g. "frontend", "admin", etc.
    * @throws ThemeNotFoundException If no theme could be found for the
    * sepcified zone.
-   * @return AppConfig
+   * @return Config
    */
   public function zone($zone) {
     if (!isset($this->config[$zone])) {

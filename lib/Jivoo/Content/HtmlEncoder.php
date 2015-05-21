@@ -6,6 +6,7 @@
 namespace Jivoo\Content;
 
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Config;
 
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
@@ -64,13 +65,13 @@ class HtmlEncoder {
 
   /**
    * Construct encoder.
-   * @param AppConfig $config Encoder configuration, accepted configuration keys
+   * @param Config $config Encoder configuration, accepted configuration keys
    * are 'allow' and 'xhtml'. 'xhtml' is expected to be a boolean, see 
    * {@see Encoder::setXhtml()}. 'allow' is expected to be an associative array of
    * allowed tags and additional options, see {@see Encoder::setAllowed()} for
    * array format.
    */
-  public function __construct(AppConfig $config = NULl) {
+  public function __construct(Config $config = NULl) {
     if (isset($config)) {
       if (isset($config['allow'])) {
         $this->allow = $config['allow'];

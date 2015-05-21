@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\AccessControl;
 
-use Jivoo\Routing\SessionStorage;
+use Jivoo\Routing\Session;
 use Jivoo\Core\Utilities;
 
 /**
@@ -14,7 +14,7 @@ use Jivoo\Core\Utilities;
  */
 class SingleUserModel implements IUserModel {
   /**
-   * @var SessionStorage Used for storing session data.
+   * @var Session Used for storing session data.
    */
   private $session;
   
@@ -30,11 +30,11 @@ class SingleUserModel implements IUserModel {
 
   /**
    * Construct single-user model.
-   * @param SessionStorage Used for storing session data.
+   * @param Session Used for storing session data.
    * @param string $username Username.
    * @param string $password Password hash.
    */
-  public function __construct(SessionStorage $session, $username, $password) {
+  public function __construct(Session $session, $username, $password) {
     $this->session = $session;
     $this->username = $username;
     $this->password = $password;

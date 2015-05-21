@@ -6,7 +6,7 @@
 namespace Jivoo\Routing;
 
 /**
- * Session storage access.
+ * Session key-value store.
  *
  * Implements ArrayAccess, so the []-operator can be used
  * to get and set session values.
@@ -14,7 +14,7 @@ namespace Jivoo\Routing;
  * @property-read string $id Session id.
  * @property-read FlashMap $flash Flash messages.
  */
-class SessionStorage implements \ArrayAccess {
+class Session implements \ArrayAccess {
   
   /**
    * @var bool Whether or not session is open.

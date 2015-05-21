@@ -11,11 +11,11 @@ namespace Jivoo\Core;
  * Implements ArrayAccess, so the []-operator can be used
  * to get and set configuration values.
  * @property-read string $file File name of configuration file.
- * @property-read AppConfig $parent Get parent configuration
+ * @property-read Config $parent Get parent configuration
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
  */
-class AppConfig implements \ArrayAccess, \IteratorAggregate {
+class Config implements \ArrayAccess, \IteratorAggregate {
   
   private $emptySubset = null;
   
@@ -45,12 +45,12 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
   private $updated = false;
 
   /**
-   * @var AppConfig|null Root configuration
+   * @var Config|null Root configuration
    */
   private $root = null;
   
   /**
-   * @var AppConfig|null Parent configuration
+   * @var Config|null Parent configuration
    */
   private $parent = null;
   
@@ -139,14 +139,14 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
   }
   
   /**
-   * Get a subset AppConfig.
+   * Get a subset Config.
    * @param string $key Key.
-   * @return AppConfig A subset.
+   * @return Config A subset.
    */
   public function getSubset($key) {
     if (isset($this->emptySubset))
       $this->createTrueSubset();
-    $config = new AppConfig();
+    $config = new Config();
     if (!isset($this->data[$key]) or !is_array($this->data[$key])) {
       $config->data = null;
       $config->emptySubset = $key;
@@ -312,7 +312,7 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
       foreach ($data as $key => $value) {
         $php .= $prefix . '  ' . var_export($key, true) . ' => ';
         if (is_array($value)) {
-          $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+          $php .= Config::phpPrettyPrint($value, $prefix . '  ');
         }
         else {
           $php .= var_export($value, true);
@@ -324,7 +324,7 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
       foreach ($data as $value) {
         $php .= $prefix . '  ';
         if (is_array($value)) {
-          $php .= AppConfig::phpPrettyPrint($value, $prefix . '  ');
+          $php .= Config::phpPrettyPrint($value, $prefix . '  ');
         }
         else {
           $php .= var_export($value, true);
@@ -359,7 +359,7 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
     if ($this->root !== $this) {
       return $this->root->prettyPrint();
     }
-    return AppConfig::phpPrettyPrint($this->data);
+    return Config::phpPrettyPrint($this->data);
   }
 
   /**
@@ -389,8 +389,12 @@ class AppConfig implements \ArrayAccess, \IteratorAggregate {
     $filePointer = fopen($this->file, 'w');
     if (!$filePointer)
       return false;
-    $data = AppConfig::phpPrettyPrint($this->data);
-    fwrite($filePointer, '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL);
+    if (flock($filePointer, LOCK_EX)) {
+      $data = Config::phpPrettyPrint($this->data);
+      fwrite($filePointer, '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL);
+      fflush($filePointer);
+      flock($filePointer, LOCK_UN);
+    }
     fclose($filePointer);
 
 //     opcache_invalidate($this->file);

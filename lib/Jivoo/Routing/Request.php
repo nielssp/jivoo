@@ -17,7 +17,7 @@ use Jivoo\Core\Utilities;
  * @property-read array $data POST data as an associative array.
  * @property-read array $files File upload data.
  * @property-read Cookies $cookies Cookie access object.
- * @property-read SessionStorage $session Session storage access object.
+ * @property-read Sessione $session Session storage access object.
  * @property-read string|null $ip The remote address or null if not set.
  * @property-read string|null $url The request uri or null if not set.
  * @property-read string|null $referer HTTP referer or null if not set.
@@ -48,7 +48,7 @@ class Request {
   private $cookies;
 
   /**
-   * @var SessionStorage Session object.
+   * @var Session Session object.
    */
   private $session;
 
@@ -177,7 +177,7 @@ class Request {
     }
 
     $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
-    $this->session = new SessionStorage($sessionPrefix, $this->ip);
+    $this->session = new Session($sessionPrefix, $this->ip);
   }
 
   /**

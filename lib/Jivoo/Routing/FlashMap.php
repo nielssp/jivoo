@@ -18,7 +18,7 @@ namespace Jivoo\Routing;
  */
 class FlashMap implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**
-   * @var SessionStorage Session variables.
+   * @var Session Session variables.
    */
   private $session;
   
@@ -29,9 +29,9 @@ class FlashMap implements \IteratorAggregate, \ArrayAccess, \Countable {
   
   /**
    * Construct collection.
-   * @param SessionStorage $session Session storage.
+   * @param Session $session Session storage.
    */
-  public function __construct(SessionStorage $session) {
+  public function __construct(Session $session) {
     $this->session = $session;
     if (!is_array($this->session['flash']))
       $this->session['flash'] = array();
