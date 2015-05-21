@@ -157,6 +157,8 @@ abstract class InstallerSnippet extends Snippet {
     $current = $this->current;
     if (isset($current->installer))
       return $current->installer->__invoke();
+    if (isset($current->previous) and !$current->previous->isUndoable())
+      $this->viewData['enableBack'] = false;
     return call_user_func($current->do);
   }
   
