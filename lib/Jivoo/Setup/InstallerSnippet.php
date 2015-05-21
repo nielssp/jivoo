@@ -272,40 +272,6 @@ abstract class InstallerSnippet extends Snippet {
   }
 }
 
-interface IAsyncTask {
-  public function resume($state);
-  public function suspend();
-  public function isDone();
-  public function getStatus();
-  public function getProgress();
-  public function run();
-}
-
-abstract class AsyncTask implements IAsyncTask {
-  private $status = null;
-  private $progress = null;
-  
-  public function getStatus() {
-    $status = $this->status;
-    $this->status = null;
-    return $status;
-  }
-  
-  public function getProgress() {
-    $progress = $this->progress;
-    $this->progress = null;
-    return $progress;
-  }
-  
-  protected function status($status) {
-    $this->status = $status;
-  }
-  
-  protected function progress($progress) {
-    $this->progress = $progress;
-  }
-}
-
 class InstallerStep {
   public $name = null;
   public $next = null;
