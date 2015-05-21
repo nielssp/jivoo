@@ -5,7 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Setup\SetupController;
 use Jivoo\Models\Form;
 use Jivoo\Core\Lib;
 use Jivoo\Databases\DatabaseConnectionFailedException;

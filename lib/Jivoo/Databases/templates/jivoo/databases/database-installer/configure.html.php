@@ -5,7 +5,7 @@
   'You have selected the %1 database driver.',
   '<strong>' . $driver['name'] . '</strong>');
 ?>
-<?php echo tr('The following information is required.'); ?>
+ <?php echo tr('The following information is required.'); ?>
 </p>
 
 <?php foreach ($form->getFields() as $field) : ?>

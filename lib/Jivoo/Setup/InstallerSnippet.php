@@ -109,12 +109,18 @@ abstract class InstallerSnippet extends Snippet {
       unset($this->steps[$name]);
   }
   
+  public function end() {
+    $this->installConfig['done'] = true;
+    if (isset($this->parent))
+      return $this->parent->next();
+    return $this->refresh();
+  }
+  
   public function next() {
     if (!isset($this->current->next)) {
       $this->installConfig['done'] = true;
-      if (isset($this->parent)) {
+      if (isset($this->parent))
         return $this->parent->next();
-      }
     }
     else {
       $this->installConfig['current'] = $this->current->next->name;
