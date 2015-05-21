@@ -190,30 +190,50 @@ abstract class InstallerSnippet extends Snippet {
   }
   
   public function runAsync(IAsyncTask $task) {
-    if ($this->request->hasValidData() and $this->request->isAjax()) {
-      header("Content-Type: text/event-stream");
-      header("Cache-Control: no-cache");
-      header("Access-Control-Allow-Origin: *");
-      echo ":" . str_repeat(" ", 5000) . "\n"; // 2 kB padding for IE
-      ob_flush();
-      flush();
-      $id = 0;
-      echo 'id: ' . $id++ . ' status: Loading...' . PHP_EOL;
-      ob_flush();
-      flush();
-      sleep(1);
-      echo 'id: ' . $id++ . ' status: Loading more...' . PHP_EOL;
-      ob_flush();
-      flush();
-      sleep(1);
-      echo 'id: ' . $id++ . ' status: Done!';
-      exit;
+    if ($this->request->hasValidData()) {
+      $taskConfig = $this->installConfig->getSubset(get_class($task));
+      $state = $taskConfig->get('state', array());
+      $task->resume($state);
+      if ($this->request->isAjax()) {
+        $max = 1;
+        $start = $_SERVER['REQUEST_TIME'];
+        $end = $start + $max;
+        header('Content-Type: text/plain');
+        header('Cache-Control: no-cache');
+        if ($task->isDone()) {
+          echo "done:\n";
+          exit;
+        }
+        while (true) {
+          $task->run();
+          $status = $task->getStatus();
+          if (isset($status))
+            echo 'status: ' . $status . "\n";
+          $progress = $task->getProgress();
+          if (isset($progress))
+            echo 'progress: ' . intval($progress) . "\n";
+          if ($task->isDone()) {
+            echo "done:\n";
+            break;
+          }
+          if (time() >= $end)
+            break;
+          ob_flush();
+          flush();
+        }
+        $state = $task->suspend();
+        $taskConfig['state'] = $state;
+        exit;
+      }
+      if ($task->isDone())
+        return true;
     }
     $this->view->resources->provide(
       'setup/async.js',
       $this->m->Assets->getAsset('Jivoo\Setup\Setup', 'assets/js/setup/async.js')
     );
     $this->view->resources->import('setup/async.js');
+    return false;
   }
   
   public function saveConfig() {
@@ -252,22 +272,39 @@ abstract class InstallerSnippet extends Snippet {
   }
 }
 
-
-class TaskScheduler {
-  public function status($status) {
-    
-  }
-  public function progress($progress) {
-    
-  }
-}
-
 interface IAsyncTask {
   public function resume($state);
   public function suspend();
+  public function isDone();
+  public function getStatus();
+  public function getProgress();
   public function run();
 }
 
+abstract class AsyncTask implements IAsyncTask {
+  private $status = null;
+  private $progress = null;
+  
+  public function getStatus() {
+    $status = $this->status;
+    $this->status = null;
+    return $status;
+  }
+  
+  public function getProgress() {
+    $progress = $this->progress;
+    $this->progress = null;
+    return $progress;
+  }
+  
+  protected function status($status) {
+    $this->status = $status;
+  }
+  
+  protected function progress($progress) {
+    $this->progress = $progress;
+  }
+}
 
 class InstallerStep {
   public $name = null;
