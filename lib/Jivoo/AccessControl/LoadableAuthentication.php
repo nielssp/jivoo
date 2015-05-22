@@ -50,7 +50,7 @@ abstract class LoadableAuthentication extends Module implements IAuthentication 
   /**
    * {@inheritdoc}
    */
-  public function isStateLess() {
+  public function isStateless() {
     return false;
   }
 }

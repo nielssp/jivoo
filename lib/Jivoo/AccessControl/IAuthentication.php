@@ -37,5 +37,5 @@ interface IAuthentication {
    * Whether or not this method of authentication is stateless.
    * @return bool True if stateless, false otherwise.
    */
-  public function isStateLess();
+  public function isStateless();
 }

@@ -138,7 +138,7 @@ class AuthHelper extends Helper {
   /**
    * @var IAuthentication[] Associative array of stateless authentication methods.
    */
-  private $stateLessAuthenticationMethods = array();
+  private $statelessAuthenticationMethods = array();
 
   /**
    * @var IAuthorization[] Associative array of authorization methods.
@@ -314,8 +314,8 @@ class AuthHelper extends Helper {
    */
   public function addAuthentication(IAuthentication $authentication) {
     $this->authenticationMethods[] = $authentication;
-    if ($authentication->isStateLess())
-      $this->stateLessAuthenticationMethods[] = $authentication;
+    if ($authentication->isStateless())
+      $this->statelessAuthenticationMethods[] = $authentication;
   }
   
   /**
@@ -359,7 +359,7 @@ class AuthHelper extends Helper {
     return isset($this->user)
       or $this->checkSession()
       or $this->checkCookie()
-      or $this->checkStateLess();
+      or $this->checkStateless();
   }
   
   /**
@@ -505,8 +505,8 @@ class AuthHelper extends Helper {
    * Check stateless authentication methods if any.
    * @return boolean True if logged in, false otherwise.
    */
-  public function checkStateLess() {
-    foreach ($this->stateLessAuthenticationMethods as $method) {
+  public function checkStateless() {
+    foreach ($this->statelessAuthenticationMethods as $method) {
       $user = $method->authenticate($this->request->data, $this->userModel, 
         $this->passwordHasher);
       if ($user != null) {
