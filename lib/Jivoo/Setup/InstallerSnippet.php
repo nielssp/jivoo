@@ -121,7 +121,7 @@ abstract class InstallerSnippet extends Snippet {
     else {
       $this->installConfig['current'] = $this->current->next->name;
     }
-    return $this->refresh();
+    return $this->saveConfig();
   }
   
   public function back() {
@@ -133,7 +133,7 @@ abstract class InstallerSnippet extends Snippet {
     else {
       $this->installConfig['current'] = $this->current->previous->name;
     }
-    return $this->refresh();
+    return $this->saveConfig();
   }
   
   private function setCurrent($step) {

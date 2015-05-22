@@ -456,6 +456,9 @@ class Routing extends LoadableModule {
   public function redirectPath($path = null, $query = null, $moved = true,
     $fragment = null, $rewrite = false) {
     $status = $moved ? Http::MOVED_PERMANENTLY : Http::SEE_OTHER;
+    $this->triggerEvent('beforeRedirect', new RedirectEvent(
+      $this, array('path' => $path, 'query' => $query, 'fragment' => $fragment), $moved
+    ));
     Http::redirect($status, $this->getLinkFromPath($path, $query, $fragment));
   }
 
