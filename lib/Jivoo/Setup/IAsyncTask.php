@@ -6,7 +6,7 @@
 namespace Jivoo\Setup;
 
 interface IAsyncTask {
-  public function resume($state);
+  public function resume(array $state);
   public function suspend();
   public function isDone();
   public function getStatus();

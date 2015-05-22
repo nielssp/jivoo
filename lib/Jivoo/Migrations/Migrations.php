@@ -71,9 +71,6 @@ class Migrations extends LoadableModule {
     else if (isset($this->m->Databases->default)) {
       $this->attachDatabase('default', $this->p('app', 'schemas/migrations'));
     }
-
-    $this->run();
-    $this->afterRun();
   }
 
   public function attachDatabase($name, $migrationDir) {
@@ -122,7 +119,7 @@ class Migrations extends LoadableModule {
       // Create SchemaRevision table if it doesn't exist
       Logger::debug('Creating SchemaRevision table');
       $db->createTable($this->schema);
-      foreach ($this->getMigrations() as $migration) 
+      foreach ($this->getMigrations($name) as $migration) 
         $db->SchemaRevision->insert(array('revision' => $migration));
     }
     else {

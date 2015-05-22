@@ -1,7 +1,31 @@
 <?php $this->layout('setup/layout.html'); ?>
 
 
-<p><?php echo tr(
-  'Something is supposed to happen.'
-); ?>
+<?php echo $Form->form(null); ?>
+
+
+<?php if (!isset($existing)): ?>
+<p>
+<?php echo tr('An existing installation has been found.'); ?>
+ <?php echo tr('Would you like to use the existing data and upgrade tables if necessary?'); ?>
+</p>
+
+<p>
+<?php echo $Form->submit(tr('Migrate existing tables'), array('name' => 'migrate')); ?>
+</p>
+
+<p>
+<?php echo tr('Or, would you like to delete all existing tables?'); ?>
+</p>
+
+<?php else: ?>
+
+<p>
+<?php echo tr('The following tables already exist in the database: %1{, }{, and }', $existing)?>
+ <?php echo tr('Would you like to delete them?'); ?>
+</p>
+<?php endif; ?>
+
+<p>
+<?php echo $Form->submit(tr('Clean install'), array('name' => 'clean')); ?>
 </p>

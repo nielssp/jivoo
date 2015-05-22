@@ -11,29 +11,54 @@ use Jivoo\Setup\AsyncTask;
 class MigrationInstaller extends InstallerSnippet {
   protected function setup() {
     $this->appendStep('check');
+    $this->appendStep('clean');
     $this->appendStep('create');
     $this->appendStep('migrate');
   }
   
   public function before() {
     $this->view->addTemplateDir($this->p('Jivoo\Migrations\Migrations', 'templates'));
+    
+    $this->app->getModule('Migrations');
   }
   
   public function check($data) {
     // if schema_revision exists
-    if (isset($data)) {
-      if (isset($data['migrate']))
-        return $this->jump('migrate');
-      if (isset($data['clean']))
-        return $this->jump('clean');
-      return $this->next();
+    $this->viewData['enableNext'] = false;
+    $this->viewData['title'] = tr('Existing data detected');
+    $db = $this->m->Databases->default->getConnection();
+    if (isset($db->SchemaRevision)) {
+      if (isset($data)) {
+        if (isset($data['migrate']))
+          return $this->jump('migrate');
+        else if (isset($data['clean']))
+          return $this->jump('clean');
+      }
     }
-    // else
-//     return $this->jump('create');
+    else {
+      $existing = array();
+      $schema = $db->getSchema();
+      foreach ($schema->getTables() as $table) {
+        if (isset($db->$table))
+          $existing[] = $table;
+      }
+      if (count($existing) == 0)
+        return $this->jump('create');
+      else if (isset($data) and isset($data['clean']))
+        return $this->jump('clean');
+      $this->viewData['existing'] = $existing;
+    }
     return $this->render();
   }
   
   public function clean($data) {
+    foreach ($dbs as $db) {
+      foreach ($schema->getTables() as $table) {
+        if (isset($db->$table)) {
+          $db->dropTable($table);
+        }
+      }
+    }
     return $this->next();
   }
 
@@ -58,7 +83,7 @@ class CreateTask extends AsyncTask {
   
   }
   
-  public function resume($data) {
+  public function resume(array $data) {
     
   }
   
@@ -67,7 +92,7 @@ class CreateTask extends AsyncTask {
   }
   
   public function run() {
-    
+    $this->status(tr('Creating table "%1"...', $table));
   }
 }
 
@@ -77,7 +102,7 @@ class MigrateTask extends AsyncTask {
   
   }
   
-  public function resume($data) {
+  public function resume(array $data) {
     
   }
   
@@ -86,6 +111,6 @@ class MigrateTask extends AsyncTask {
   }
   
   public function run() {
-    
+    $this->status(tr('Running migration "%1"...', $migration));
   }
 }
