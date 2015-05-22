@@ -77,6 +77,10 @@ class Config implements \ArrayAccess, \IteratorAggregate {
             $content = file_get_contents($this->file);
             $content = str_replace('<?php', '', $content);
             $this->data = eval($content);
+            if (!is_array($this->data)) {
+              Logger::warning(tr('Invalid configuration file: %1', $configFile));
+              $this->data = array();
+            }
 //         $this->data = include $configFile;
             break;
           case 'json':

@@ -11,6 +11,7 @@ use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Lib;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
+use Jivoo\Core\Config;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -36,6 +37,17 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
+    $lockFile = $this->p('user', 'lock.php');
+    if (file_exists($lockFile)) {
+      $lock = new Config($lockFile);
+      if ($lock->get('enable', false)) {
+        $this->view->addTemplateDir($this->p('templates'));
+        $this->m->Routing->customDispatch(
+          array($this->view, 'render'),
+          'setup/maintenance.html'
+        );
+      }
+    }
     if (isset($this->app->appConfig['install'])) {
       $installer = $this->app->appConfig['install'];
       if (!Lib::classExists($installer))
@@ -43,16 +55,15 @@ class Setup extends LoadableModule {
       if (!$this->config[$installer]->get('done', false)) {
         $snippet = $this->getInstaller($this->app->appConfig['install']);
         $this->view->addTemplateDir($this->p('templates'));
-        $response = $snippet();
-        if (is_string($response))
-          $response = new TextResponse($snippet->getStatus(), 'text/html', $response);
-        if (!($response instanceof Response)) {
-          throw new InvalidResponseException(tr(
-            'An invalid response was returned from installer: %1',
-            $installer
-          ));
+        try {
+          $this->m->Routing->customDispatch($snippet);
         }
-        $this->m->Routing->respond($response);
+        catch (InvalidResponseException $e) {
+          throw new InvalidResponseException(tr(
+            'An invalid response was returned from installer step: %1',
+            $snippet->getCurrentStep()
+          ), null, $e);
+        }
       }
     }
   }

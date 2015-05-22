@@ -148,6 +148,12 @@ abstract class InstallerSnippet extends Snippet {
     $this->installConfig['current'] = $this->current->name;
   }
   
+  public function getCurrentStep() {
+    if (isset($this->current->installer))
+      return $this->current->installer->getCurrentStep();
+    return get_class($this) . '::' . $this->current->name;
+  }
+  
   public function jump($step) {
     $this->setCurrent($step);
     return $this->refresh();
