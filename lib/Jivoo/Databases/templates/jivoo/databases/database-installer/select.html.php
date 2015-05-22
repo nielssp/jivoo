@@ -1,5 +1,7 @@
 <?php $this->layout('setup/layout.html'); ?>
 
+<?php echo $Form->form(null); ?>
+
 <p><?php echo tr('Please select your desired database driver from the list below.'); ?></p>
 
 <table>

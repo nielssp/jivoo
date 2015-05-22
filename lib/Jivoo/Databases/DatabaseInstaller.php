@@ -92,25 +92,26 @@ class DatabaseInstaller extends InstallerSnippet {
         return $this->saveConfig();
     }
     $this->viewData['title'] = tr('Configure %1', $driver['name']);
+    $form = new Form('driver');
     foreach ($driver['requiredOptions'] as $option) {
-      $this->form->addString($option, $this->getOptionLabel($option));
+      $form->addString($option, $this->getOptionLabel($option));
     }
     foreach ($driver['optionalOptions'] as $option) {
-      $this->form->addString($option, $this->getOptionLabel($option), false);
+      $form->addString($option, $this->getOptionLabel($option), false);
     }
     if (isset($data)) {
-      $this->form->addData($data);
-      if ($this->form->isValid()) {
+      $form->addData($data['driver']);
+      if ($form->isValid()) {
         $class = 'Jivoo\Databases\Drivers\\' . $driver['driver'] . '\\' . $driver['driver'] . 'Database';
         try {
-          new $class($this->app, new DatabaseSchema(), $data);
+          new $class($this->app, new DatabaseSchema(), $form->getData());
           $options = array_flip(
             array_merge(
               $driver['requiredOptions'],
               $driver['optionalOptions']
             )
           );
-          foreach ($data as $key => $value) {
+          foreach ($form->getData() as $key => $value) {
             if (isset($options[$key])) {
               $this->config[$key] = $value;
             }
@@ -131,9 +132,10 @@ class DatabaseInstaller extends InstallerSnippet {
       }
     }
     else {
-      $this->form->addData($this->config->getArray());
+      $form->addData($this->config->getArray());
     }
     $this->viewData['driver'] = $driver;
+    $this->viewData['form'] = $form;
     return $this->render();
   }
 }

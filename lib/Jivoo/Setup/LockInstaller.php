@@ -16,6 +16,7 @@ class LockInstaller extends InstallerSnippet {
   }
 
   public function configure($data) {
+    $this->viewData['title'] = tr('Configure maintenance user');
     return $this->render();
   }
 }

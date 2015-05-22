@@ -25,13 +25,7 @@ abstract class InstallerSnippet extends Snippet {
 
   private $installConfig;
   
-  protected $dataKey = 'install';
-  
-  protected $form;
-  
   protected function init() {
-    $this->form = new Form('install');
-    $this->viewData['form'] = $this->form;
     $this->enableLayout();
     $installer = get_class($this);
     $this->installConfig = $this->config['Setup'][$installer];
@@ -281,7 +275,6 @@ abstract class InstallerSnippet extends Snippet {
       $templateName = implode('/', $dirs) . '/';
       $templateName .= Utilities::camelCaseToDashes($caller['function']) . '.html';
     }
-    $this->Form->formFor($this->form, null);
     return parent::render($templateName);
   }
 }

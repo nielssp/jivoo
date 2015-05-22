@@ -1,5 +1,6 @@
 <?php $this->layout('setup/layout.html'); ?>
 
+<?php echo $Form->formFor($form, null); ?>
 
 <p><?php echo tr(
   'You have selected the %1 database driver.',

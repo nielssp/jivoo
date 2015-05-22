@@ -165,6 +165,14 @@ class FormHelper extends Helper {
   }
   
   /**
+   * Whether or not a form is open.
+   * @return boolean True if open.
+   */
+  public function isOpen() {
+    return !empty($this->stack);
+  }
+  
+  /**
    * Create a hidden token.
    * @see Request::createHiddenToken()
    * @return string HTML for a hidden element containing an access token.

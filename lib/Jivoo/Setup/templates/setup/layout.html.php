@@ -32,14 +32,15 @@ $this->import('core.css');
 </div>
 <?php endforeach; ?>
 
-<?php echo $Form->begin(); ?>
-
-<?php echo $Form->hidden('install'); ?>
-
 <?php echo $this->block('content'); ?>
 
 <div id="install-status">
 </div>
+
+<?php
+if (!$Form->isOpen())
+  echo $Form->form(null);
+?>
 
 <div class="install-buttons">
 <?php
