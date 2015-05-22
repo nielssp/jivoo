@@ -356,10 +356,11 @@ class AuthHelper extends Helper {
    * @return boolean True if user logged in.
    */
   public function isLoggedIn() {
-    return isset($this->user)
+    return isset($this->userModel)
+      and (isset($this->user)
       or $this->checkSession()
       or $this->checkCookie()
-      or $this->checkStateless();
+      or $this->checkStateless());
   }
   
   /**

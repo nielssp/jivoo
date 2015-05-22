@@ -69,7 +69,7 @@ class SingleUserModel implements IUserModel {
    * {@inheritdoc}
    */
   public function openSession($sessionId) {
-    if ($this->session['user_session'] == $sessionId)
+    if ($this->session['user_session'] === $sessionId)
       return array('username' => $this->username);
     return null;
   }

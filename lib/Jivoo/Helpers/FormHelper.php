@@ -349,6 +349,30 @@ class FormHelper extends Helper {
       return $output;
     return '';
   }
+  
+  /**
+   * Output a labelled field with an optional description.
+   * @param string $field Field name.
+   * @param string $type Field type, can be any of 'text', 'password', 'date',
+   * 'time', 'dateTime', or 'file'.
+   * @param string $label Label, default is to look up the label in the model.
+   * @param string $description Optional description;
+   * @param array $attributes Addtional element attributes for the field.
+   */
+  public function standardField($field, $type = 'text', $label = null, $description = '', $attributes = array()) {
+    if ($this->isRequired($field))
+      $divAttributes = array('class' => 'field field-required');
+    else
+      $divAttributes = array('class' => 'field');
+    $description = $this->error($field, $description);
+    return $this->element(
+      'div',
+      $divAttributes,
+      $this->label($field, $label) . PHP_EOL
+        . $this->$type($field, $attributes) . PHP_EOL
+        . $description
+    );
+  }
 
   /**
    * Output a label element.

@@ -26,6 +26,7 @@ class MigrationInstaller extends InstallerSnippet {
         return $this->jump('migrate');
       if (isset($data['clean']))
         return $this->jump('clean');
+      return $this->next();
     }
     // else
 //     return $this->jump('create');

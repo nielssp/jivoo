@@ -79,14 +79,34 @@ class Setup extends LoadableModule {
     }
   }
   
+  public function getLock() {
+    return $this->lock;
+  }
+  
+  public function lock($username = null, $passwordHash = null) {
+    $this->lock['enable'] = true;
+    if (isset($username) and isset($passwordHash)) {
+      $this->lock['username'] = $username;
+      $this->lock['password'] = $passwordHash;
+    }
+    return $this->lock->save();
+  }
+  
+  public function unlock($deleteCredentials = true) {
+    $this->lock['enable'] = false;
+    if ($deleteCredentials) {
+      unset($this->lock['username']);
+      unset($this->lock['password']);
+    }
+    return $this->lock->save();
+  }
+  
   public function getAuth() {
     if (!isset($this->authHelper)) {
       $this->authHelper = new AuthHelper($this->app);
       $this->authHelper->sessionPrefix = 'setup_auth_';
       $this->authHelper->cookiePrefix = 'setup_auth_';
-      $this->authHelper->userModel = new SingleUserModel(
-        $this->session, 'test', $this->authHelper->passwordHasher->hash('test')
-      );
+      $this->authHelper->userModel = new MaintenanceUserModel($this->lock);
       $this->authHelper->authentication = 'Form';
     }
     return $this->authHelper;

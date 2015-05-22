@@ -11,7 +11,8 @@ namespace Jivoo\Core;
  * Implements ArrayAccess, so the []-operator can be used
  * to get and set configuration values.
  * @property-read string $file File name of configuration file.
- * @property-read Config $parent Get parent configuration
+ * @property-read Config $parent Get parent configuration.
+ * @property-read Config $root Get root configuration.
  * @property-write array $defaults Set default key-value pairs
  * @property-write array $override Set override key-value pairs 
  */
@@ -119,6 +120,7 @@ class Config implements \ArrayAccess, \IteratorAggregate {
       case 'file':
         return $this->root->file;
       case 'parent':
+      case 'root':
         return $this->$property;
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
@@ -139,7 +141,7 @@ class Config implements \ArrayAccess, \IteratorAggregate {
         $this->setMultiple(is_array($value) ? $value : array());
         return;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

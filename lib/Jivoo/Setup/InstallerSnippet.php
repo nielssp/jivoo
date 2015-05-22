@@ -10,6 +10,7 @@ use Jivoo\Core\Utilities;
 use Jivoo\Models\Form;
 use Jivoo\Routing\ResponseOverrideException;
 use Jivoo\Routing\TextResponse;
+use Jivoo\Core\Config;
 
 abstract class InstallerSnippet extends Snippet {
   
@@ -36,9 +37,6 @@ abstract class InstallerSnippet extends Snippet {
     }
     $this->current = $this->steps[$this->installConfig['current']];
 
-    if (isset($this->current->previous)) {
-      $this->view->data->enableBack = $this->current->previous->isUndoable();
-    }
     $this->view->data->enableNext = true;
   }
 
@@ -90,12 +88,16 @@ abstract class InstallerSnippet extends Snippet {
   
   public function getFirst() {
     $slice = array_values(array_slice($this->steps, 0, 1));
-    return $slice[0];
+    if (isset($slice[0]))
+      return $slice[0];
+    return null;
   }
 
   public function getLast() {
     $slice = array_values(array_slice($this->steps, -1, 1));
-    return $slice[0];
+    if (isset($slice[0]))
+      return $slice[0];
+    return null;
   }
 
   public function remove($name) {
@@ -153,13 +155,22 @@ abstract class InstallerSnippet extends Snippet {
     return $this->refresh();
   }
   
+  private function isUndoable() {
+    if (isset($this->current->previous)) {
+      return $this->current->previous->isUndoable();
+    }
+    else if (isset($this->parent)) {
+      return $this->parent->isUndoable();
+    }
+    return false;
+  }
+  
   public function get() {
     $current = $this->current;
     if (isset($current->installer))
       return $current->installer->__invoke();
-    if (isset($current->previous) and !$current->previous->isUndoable())
-      $this->viewData['enableBack'] = false;
-    return call_user_func($current->do);
+    $this->viewData['enableBack'] = $this->isUndoable();
+    return call_user_func($current->do, null);
   }
   
   private function undoStep(InstallerStep $step) {
@@ -184,7 +195,7 @@ abstract class InstallerSnippet extends Snippet {
     else if (isset($this->parent)) {
       return $this->parent->tryBack();
     }
-    return call_user_func($current->do);
+    return call_user_func($current->do, null);
   }
   
   public function post($data) {
@@ -194,6 +205,7 @@ abstract class InstallerSnippet extends Snippet {
     if (isset($this->request->data['back'])) {
       return $this->tryBack();
     }
+    $this->viewData['enableBack'] = $this->isUndoable();
     return call_user_func($current->do, $data);
   }
   
@@ -244,24 +256,28 @@ abstract class InstallerSnippet extends Snippet {
     return false;
   }
   
-  public function saveConfig() {
-    if ($this->config->save())
+  public function saveConfig(Config $config = null) {
+    if (!isset($config))
+      $config = $this->config;
+    if ($config->save())
       return $this->refresh();
     $this->viewData['title'] = tr('Unable to save configuration file');
-    $this->viewData['file'] = $this->config->file;
+    $this->viewData['file'] = $config->file;
     $this->viewData['exists'] = file_exists($this->viewData['file']);
     if ($this->viewData['exists']) {
       $perms = fileperms($this->viewData['file']);
       $this->viewData['mode'] = sprintf('%o', $perms & 0777);
     }
-    $this->viewData['data'] = '<?php' . PHP_EOL . 'return ' . $this->app->config->prettyPrint() . ';';
+    $this->viewData['data'] = '<?php' . PHP_EOL . 'return ' . $config->root->prettyPrint() . ';';
     return $this->render('setup/save-config.html');
   }
   
-  public function saveConfigAndContinue() {
-    if ($this->config->save())
+  public function saveConfigAndContinue(Config $config = null) {
+    if (!isset($config))
+      $config = $this->config;
+    if ($config->save())
       return $this->next();
-    return $this->saveConfig();
+    return $this->saveConfig($config);
   }
   
   /**
