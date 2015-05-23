@@ -92,7 +92,8 @@ class View extends LoadableModule {
     $this->blocks = new ViewBlocks($this);
     
     $this->data->app = $this->app->appConfig;
-    
+
+    $this->addTemplateDir($this->p('Core', 'templates'), 4);
     $this->addTemplateDir($this->p('app', 'templates'));
 
     $this->addFunction('link', array($this->m->Routing, 'getLink'));

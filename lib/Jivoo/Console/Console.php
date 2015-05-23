@@ -49,17 +49,15 @@ class Console extends LoadableModule {
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Configure');
       $this->m->Themes->load('flatmin-base');
-      $this->view->addTemplateDir($this->p('templates'));
     }
     if ($this->config->get('enable', false) === true) {
-      $this->view->addTemplateDir($this->p('templates'));
 
       $this->m->Extensions->import('jquery');
       $this->m->Extensions->import('jqueryui');
       $this->m->Extensions->import('js-cookie');
-      $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/js/console.js');
+      $asset = $this->m->Assets->getAsset('js/console.js');
       $this->view->resources->provide('jivoo-console.js', $asset, array('jquery.js', 'jquery-ui.js', 'js.cookie.js'));
-      $asset = $this->m->Assets->getAsset('Jivoo\Console\Console', 'assets/css/console.css');
+      $asset = $this->m->Assets->getAsset('css/console.css');
       $this->view->resources->provide('jivoo-console.css', $asset);
       
       $devbar = $this->view->renderOnly('jivoo/console/devbar.html');

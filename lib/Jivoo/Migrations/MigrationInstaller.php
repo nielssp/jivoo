@@ -24,8 +24,6 @@ class MigrationInstaller extends InstallerSnippet {
   }
   
   public function before() {
-    $this->view->addTemplateDir($this->p('Jivoo\Migrations\Migrations', 'templates'));
-    
     $this->app->getModule('Migrations');
     
     $name = $this->dbName;

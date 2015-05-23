@@ -248,10 +248,6 @@ abstract class InstallerSnippet extends Snippet {
       if ($task->isDone())
         return true;
     }
-    $this->view->resources->provide(
-      'setup/async.js',
-      $this->m->Assets->getAsset('Jivoo\Setup\Setup', 'assets/js/setup/async.js')
-    );
     $this->view->resources->import('setup/async.js');
     return false;
   }

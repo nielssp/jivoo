@@ -29,7 +29,6 @@ class DatabaseInstaller extends InstallerSnippet {
    * {@inheritdoc}
    */
   public function before() {
-    $this->view->addTemplateDir($this->p('Jivoo\Databases\Databases', 'templates'));
     $this->config = $this->config['Databases']['default'];
     $this->config->defaults = array(
       'server' => 'localhost',

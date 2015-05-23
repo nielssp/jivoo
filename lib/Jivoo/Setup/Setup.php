@@ -41,7 +41,6 @@ class Setup extends LoadableModule {
     if ($this->lock->get('enable', false)) {
       $auth = $this->getAuth();
       if (!$auth->isLoggedIn()) {
-        $this->view->addTemplateDir($this->p('templates'));
         if ($this->request->path === array('setup')) {
           $login = $this->m->Snippets->getSnippet('Jivoo\Setup\Login');
           $login->enableLayout();
@@ -65,7 +64,6 @@ class Setup extends LoadableModule {
         $installer = $this->app->n('Snippets\\' . $installer);
       if (!$this->config[$installer]->get('done', false)) {
         $snippet = $this->getInstaller($this->app->appConfig['install']);
-        $this->view->addTemplateDir($this->p('templates'));
         try {
           $this->m->Routing->customDispatch($snippet);
         }
