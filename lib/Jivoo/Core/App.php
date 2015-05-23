@@ -387,12 +387,17 @@ class App implements IEventSubject {
     if (strpos($module, '\\') === false) {
       $name = $module;
       $module = 'Jivoo\\' . $name . '\\' . $name;
+      $pathName = $name;
     }
     else {
       $segments = explode('\\', $module);
-      $name = $segments[count($segments) - 1];
+      $name = array_pop($segments);
+      if ($segments == array('Jivoo', $name))
+        $pathName = $name;
+      else
+        $pathName = $module;
     }
-    $this->paths->$module = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $module));
+    $this->paths->$pathName = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $module));
     $this->imports[$name] = $module;
     $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
   }
