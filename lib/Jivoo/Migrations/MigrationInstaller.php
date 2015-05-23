@@ -7,27 +7,36 @@ namespace Jivoo\Migrations;
 
 use Jivoo\Setup\InstallerSnippet;
 use Jivoo\Setup\AsyncTask;
+use Jivoo\Databases\IMigratableDatabase;
 
 class MigrationInstaller extends InstallerSnippet {
+  
+  private $dbName = 'default'; // TODO: set this somewhere
+  
+  private $db = null; 
+  
   protected function setup() {
     $this->appendStep('check');
     $this->appendStep('clean');
-    $this->appendStep('create');
+    $this->appendStep('initialize');
     $this->appendStep('migrate');
+    $this->appendStep('create');
   }
   
   public function before() {
     $this->view->addTemplateDir($this->p('Jivoo\Migrations\Migrations', 'templates'));
     
     $this->app->getModule('Migrations');
+    
+    $name = $this->dbName;
+    $this->db = $this->m->Databases->$name->getConnection();
   }
   
   public function check($data) {
     // if schema_revision exists
     $this->viewData['enableNext'] = false;
     $this->viewData['title'] = tr('Existing data detected');
-    $db = $this->m->Databases->default->getConnection();
-    if (isset($db->SchemaRevision)) {
+    if ($this->m->Migrations->isInitialized($this->dbName)) {
       if (isset($data)) {
         if (isset($data['migrate']))
           return $this->jump('migrate');
@@ -36,14 +45,16 @@ class MigrationInstaller extends InstallerSnippet {
       }
     }
     else {
+      if ($this->m->Migrations->isClean($this->dbName))
+        return $this->jump('initialize');
       $existing = array();
-      $schema = $db->getSchema();
+      $schema = $this->db->getSchema();
       foreach ($schema->getTables() as $table) {
-        if (isset($db->$table))
+        if (isset($this->db->$table))
           $existing[] = $table;
       }
       if (count($existing) == 0)
-        return $this->jump('create');
+        return $this->jump('initialize');
       else if (isset($data) and isset($data['clean']))
         return $this->jump('clean');
       $this->viewData['existing'] = $existing;
@@ -52,65 +63,100 @@ class MigrationInstaller extends InstallerSnippet {
   }
   
   public function clean($data) {
-    foreach ($dbs as $db) {
-      foreach ($schema->getTables() as $table) {
-        if (isset($db->$table)) {
-          $db->dropTable($table);
-        }
-      }
-    }
+    $this->m->Migrations->clean($this->dbName);
     return $this->next();
   }
-
-  public function create($data) {
-    $task = new CreateTask();
-    if ($this->runAsync($task))
-      return $this->end();
-    return $this->render();
+  
+  public function initialize($data) {
+    $this->m->Migrations->initialize($this->dbName);
+    return $this->jump('create');
   }
 
   public function migrate($data) {
-    $task = new MigrateTask();
+    $this->viewData['title'] = tr('Migrating database');
+    $task = new MigrateTask($this->m->Migrations, $this->dbName);
     if ($this->runAsync($task))
-      return $this->end();
+      return $this->next();
+    return $this->render();
+  }
+
+  public function create($data) {
+    $this->viewData['title'] = tr('Creating tables');
+    $task = new CreateTask($this->db);
+    if ($this->runAsync($task))
+      return $this->next();
     return $this->render();
   }
 }
 
 class CreateTask extends AsyncTask {
-
-  public function suspend() {
+  private $db;
+  private $schema;
   
+  private $tables = array();
+  
+  public function __construct(IMigratableDatabase $db) {
+    $this->db = $db;
+    $this->schema = $db->getSchema();
+  }
+  
+  public function suspend() {
+    return array('tables' => $this->tables);
   }
   
   public function resume(array $data) {
-    
+    if (isset($data['tables'])) {
+      $this->tables = $data['tables'];
+    }
+    else {
+      $this->tables = $this->schema->getTables();
+    }
   }
   
   public function isDone() {
-    return true;
+    return count($this->tables) == 0;
   }
   
   public function run() {
-    $this->status(tr('Creating table "%1"...', $table));
+    $table = array_shift($this->tables);
+    if (!isset($this->db->$table)) {
+      $this->status(tr('Creating table "%1"...', $table));
+      $this->db->createTable($this->schema->getSchema($table));
+    }
   }
 }
 
 class MigrateTask extends AsyncTask {
 
-  public function suspend() {
+  private $migrations;
+  private $name;
+  private $missing = array();
   
+  public function __construct(Migrations $migrations, $dbName) {
+    $this->migrations = $migrations;
+    $this->name = $dbName;
+  }
+  
+  public function suspend() {
+    return array('missing' => $this->missing);
   }
   
   public function resume(array $data) {
-    
+    if (isset($data['waiting'])) {
+      $this->missing = $data['missing'];
+    }
+    else {
+      $this->missing = $this->migrations->check($this->name);
+    } 
   }
   
   public function isDone() {
-    return true;
+    return count($this->missing) == 0;
   }
   
   public function run() {
+    $migration = array_shift($this->missing);
     $this->status(tr('Running migration "%1"...', $migration));
+    $this->migrations->run($this->name, $migration);
   }
 }

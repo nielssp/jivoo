@@ -10,6 +10,7 @@ use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Lib;
 use Jivoo\Core\Logger;
+use Jivoo\Databases\IMigratableDatabase;
 
 /**
  * Schema and data migration module.
@@ -21,25 +22,19 @@ class Migrations extends LoadableModule {
   protected $modules = array('Databases');
   
   /**
+   * @var IMigratableDatabase[] Database connections.
+   */
+  private $connections = array();
+  
+  /**
    * @var Schema Table schema for SchemaRevision-table.
    */
   private $schema;
   
   /**
-   * @var Migration[] Associative array of migration names and objects that need to run.
-   */
-  private $migrations = array();
-  
-  /**
    * @var MigrationSchema[] Array of schemas.
    */
   private $migrationSchemas = array();
-
-  /**
-   * @var IMigratableDatabase[] Associative array of names and databases
-   * to check.
-   */
-  private $checkList = array();
 
   /**
    * @var string[] Associative array of database names and migration dirs.
@@ -72,17 +67,82 @@ class Migrations extends LoadableModule {
       $this->attachDatabase('default', $this->p('app', 'schemas/migrations'));
     }
   }
+  
+  /**
+   * Get an attached database.
+   * @param string $name Database name.
+   * @throws \Exception If the database is not attached.
+   * @return IMigratableDatabase Database/
+   */
+  public function getDatabase($name) {
+    if (isset($this->connections[$name]))
+      return $this->connections[$name];
+    throw new \Exception(tr('"%1 is not a migratable database', $name));
+  }
 
+  /**
+   * Attach a database for migrations.
+   * @param string $name Database name.
+   * @param string $migrationDir Location of migrations.
+   */
   public function attachDatabase($name, $migrationDir) {
+    $db = $this->m->Databases->$name->getConnection();
+    assume($db instanceof IMigratableDatabase);
     $this->migrationDirs[$name] = $migrationDir;
-    if ($this->config['indicator'] == 'version') {
-      if ($this->app->version != $this->config['versions'][$name])
-        $this->check($name);
+    $this->connections[$name] = $db;
+  }
+  
+  /**
+   * Whether or not the SchemaRevision table has been created.
+   * @param string $name Database name.
+   * @return bool True if initialized, false otherwise.
+   */
+  public function isInitialized($name) {
+    return isset($this->getDatabase($name)->SchemaRevision);
+  }
+  
+  /**
+   * Whether or not a database contains (conflicting) tables already.
+   * @param string $name Database name.
+   * @return bool True if conflicting tables found.
+   */
+  public function isClean($name) {
+    $db = $this->getDatabase($name);
+    if (isset($db->SchemaRevision))
+      return false;
+    $schema = $db->getSchema();
+    foreach ($schema->getTables() as $table) {
+      if (isset($db->$table))
+        return false;
     }
-    else if ($this->config['indicator'] == 'mtime') {
-      if ($this->config['mtimes'][$name] != filemtime($this->migrationDirs[$name] . '/.'))
-        $this->check($name);
+    return true;
+  }
+  
+  /**
+   * Remove all tables of a database including the SchemaRevision table.
+   * @param string $name Database name.
+   */
+  public function clean($name) {
+    $db = $this->getDatabase($name);
+    if (isset($db->SchemaRevision))
+      $db->dropTable('SchemaRevision');
+    $schema = $db->getSchema();
+    foreach ($schema->getTables() as $table) {
+      if (isset($db->$table))
+        $db->dropTable($table);
     }
+  }
+  
+  /**
+   * Initialize a database for migrations by creating the SChemaRevision table.
+   * @param string $name Database name.
+   */
+  public function initialize($name) {
+    $db = $this->getDatabase($name);
+    Logger::debug('Creating SchemaRevision table for ' . $name);
+    $db->createTable($this->schema);
+    foreach ($this->getMigrations($name) as $migration) 
+      $db->SchemaRevision->insert(array('revision' => $migration));
   }
 
   /**
@@ -105,93 +165,61 @@ class Migrations extends LoadableModule {
         }
       }
     }
+    sort($migrations);
     return $migrations;
   }
 
   /**
    * Check a database for schema changes and initialize neccessary migrations.
    * @param string $name Database name.
+   * @return string[] Names of migrations that need to run.
    */
   public function check($name) {
-    $db = $this->m->Databases->$name->getConnection();
-    Lib::assumeSubclassOf($db, 'Jivoo\Databases\IMigratableDatabase');
-    if (!isset($db->SchemaRevision)) {
-      // Create SchemaRevision table if it doesn't exist
-      Logger::debug('Creating SchemaRevision table');
-      $db->createTable($this->schema);
-      foreach ($this->getMigrations($name) as $migration) 
-        $db->SchemaRevision->insert(array('revision' => $migration));
+    $db = $this->getDatabase($name);
+    $db->SchemaRevision->setSchema($this->schema);
+    // Schedule necessary migrations
+    $currentState = array();
+    foreach ($db->SchemaRevision->select('revision') as $row)
+      $currentState[$row['revision']] = true;
+    $migrations = $this->getMigrations($name);
+    $missing = array();
+    foreach ($migrations as $migration) {
+      if (!isset($currentState[$migration]))
+        $missing[] = $migration;
     }
-    else {
-      $db->SchemaRevision->setSchema($this->schema);
-      // Schedule necessary migrations
-      $currentState = array();
-      foreach ($db->SchemaRevision->select('revision') as $row)
-        $currentState[$row['revision']] = true;
-      $refresh = true;
-      $migrations = $this->getMigrations($name);
-      $migrationSchema = null;
-      foreach ($migrations as $migration) {
-        if (!isset($currentState[$migration])) {
-          if ($refresh) {
-            $migrationSchema = new MigrationSchema($db);
-            $refresh = false; 
-          }
-          Logger::debug('Initializing migration ' . $migration);
-          Lib::assumeSubclassOf($migration, 'Jivoo\Migrations\Migration');
-          $object = new $migration($db, $migrationSchema);
-          $key = $migration . $name;
-          $this->migrations[$key] = array($db, $object);
-        }
-      }
-      if (isset($migrationSchema))
-        $this->migrationSchemas[] = $migrationSchema;
-    }
-    
-    // Create missing tables
-    $this->checkList[$name] = $db;
+    return $missing;
   }
   
   /**
-   * Attempt to run migrations.
+   * Run a migration on a database. Will attempt to revert if migration fails.
+   * @param string $dbName Name of database.
+   * @param string $migrationName Name of migration.
+   * @throws Exception If migration fails.
    */
-  public function run() {
-    ksort($this->migrations);
-    $log = array();
-    foreach ($this->migrations as $tuple) {
-      list($db, $migration) = $tuple;
-      try {
-        $migration->up();
-        $db->SchemaRevision->insert(array('revision' => get_class($migration)));
-      }
-      catch (Exception $e) {
-        $migration->revert();
-        throw $e;
-      }
-    }
-    $this->migrations = array();
-  }
+  public function run($dbName, $migrationName) {
+    $db = $this->getDatabase($dbName);
+    Logger::debug('Initializing migration ' . $migrationName);
+    Lib::assumeSubclassOf($migration, 'Jivoo\Migrations\Migration');
 
-  /**
-   * Finalizes migration schemas and creates missing tables. Updates indicators.
-   */
-  public function afterRun() {
-    foreach ($this->migrationSchemas as $migrationSchema) {
-      $migrationSchema->finalize();
+    // The migration schema keeps track of the state of the database
+    if (!isset($this->migrationSchemas[$dbName]))
+      $this->migrationSchemas[$dbName] = new MigrationSchema($db);
+    $migrationSchema = $this->migrationSchemas[$dbName]; 
+
+    $migration = new $migrationName($db, $migrationSchema);
+    try {
+      $migration->up();
+      $db->SchemaRevision->insert(array('revision' => $migrationName));
     }
-    foreach ($this->checkList as $name => $db) {
-      $schema = $db->getSchema();
-      foreach ($schema->getTables() as $table) {
-        if (!isset($db->$table)) {
-          Logger::debug('Missing table "' . $table . '": creating it...');
-          $db->createTable($schema->getSchema($table));
-        }
-      }
-      if ($this->config['indicator'] == 'version')
-        $this->config['versions'][$name] = $this->app->version;
-      else if ($this->config['indicator'] == 'mtime')
-        $this->config['mtimes'][$name] = filemtime($this->migrationDirs[$name] . '/.');
+    catch (\Exception $e) {
+      $migration->revert();
+      throw $e;
     }
-    $this->checkList = array();
+  }
+  
+  public function finalize($name) {
+    if (isset($this->migrationSchemas[$name]))
+      $this->migrationSchemas[$name]->finalize();
+    // TODO: Indicators and stuff perhaps? filemtime()
   }
 }

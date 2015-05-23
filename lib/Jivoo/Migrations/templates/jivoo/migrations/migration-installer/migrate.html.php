@@ -2,6 +2,6 @@
 
 
 <p><?php echo tr(
-  'The neccessary tables are being created.'
+  'The database is being migrated.'
 ); ?>
 </p>

@@ -142,7 +142,7 @@ class Console extends LoadableModule {
    * @return string JavaScript.
    */
   public function outputTools() {
-    $output .= 'if (typeof JIVOO !== "object") {';
+    $output = 'if (typeof JIVOO !== "object") {';
     $output .= 'console.error("Jivoo module not found!");';
     $output .= '} else if (typeof JIVOO.devbar !== "object") {';
     $output .= 'console.error("Jivoo Devbar module not found!");';

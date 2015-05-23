@@ -21,8 +21,8 @@
 <?php else: ?>
 
 <p>
-<?php echo tr('The following tables already exist in the database: %1{, }{, and }', $existing)?>
- <?php echo tr('Would you like to delete them?'); ?>
+<?php echo tr('The following tables already exist in the database: %1{, }{, and }.', $existing)?>
+ <?php echo tr('Would you like to delete them and do a clean install?'); ?>
 </p>
 <?php endif; ?>
 
