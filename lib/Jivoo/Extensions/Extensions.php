@@ -116,6 +116,7 @@ class Extensions extends LoadableModule {
     $this->app->attachEventHandler('afterLoadModules', array($this, 'run'));
     
     $this->attachFeature('load', array($this, 'handleLoad'));
+    $this->attachFeature('include', array($this, 'handleInclude'));
     $this->attachFeature('resources', array($this, 'handleResources'));
     $this->attachFeature('viewExtensions', array($this, 'handleViewExtensions'));
     
@@ -141,6 +142,15 @@ class Extensions extends LoadableModule {
     foreach ($info->load as $name) {
       $this->loadList[$name] = $info;
     }
+  }
+
+  /**
+   * Handle "include" feature.
+   * @param ExtensionInfo $info Extension information.
+   */
+  public function handleInclude(ExtensionInfo $info) {
+    foreach ($info->include as $file)
+      include $info->p($this->app, $file);
   }
   
   /**
