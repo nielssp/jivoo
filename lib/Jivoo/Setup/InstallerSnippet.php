@@ -11,6 +11,7 @@ use Jivoo\Models\Form;
 use Jivoo\Routing\ResponseOverrideException;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Config;
+use Jivoo\Core\Logger;
 
 abstract class InstallerSnippet extends Snippet {
   
@@ -225,7 +226,14 @@ abstract class InstallerSnippet extends Snippet {
           exit;
         }
         while (true) {
-          $task->run();
+          try {
+            $task->run();
+          }
+          catch (\Exception $e) {
+            Logger::logException($e);
+            echo 'error: ' . $e->getMessage() . "\n";
+            break;
+          }
           $status = $task->getStatus();
           if (isset($status))
             echo 'status: ' . $status . "\n";
