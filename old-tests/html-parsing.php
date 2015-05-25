@@ -28,17 +28,17 @@ $test = <<<'END'
   <div class="byline">
     <span j:tr>Posted on <span j:outerText="fdate($post->created)">date</span></span>
     |
-    <!-- {$comments = $post->comments->where('status = %CommentStatus', 'approved').count()} -->
-    <a href="#" j:if="$comments == 0" j:href="mergeRoutes($post, array('fragment' => 'comment'))" j:tr>
+    <!-- {$comments = $post->comments->where('status = %CommentStatus', 'approved')->count()} -->
+    <a href="#" j:if="$comments == 0" j:href="$this->mergeRoutes($post, array('fragment' => 'comment'))" j:tr>
       Leave a comment
     </a>
-    <a href="#" j:else j:href="mergeRoutes($post, array('fragment' => 'comments'))" j:tn="%1 comment">
+    <a href="#" j:else j:href="$this->mergeRoutes($post, array('fragment' => 'comments'))" j:tn="%1 comment">
       <span j:outerText="$comments">0</span> comments
     </a>
   </div>
 </div>
 <div class="pagination">
-  <a href="#" j:if="!$Pagination->isLast()" j:href="$Paginmation->nextLink()" j:tr>&#8592; Older posts</a>
+  <a href="#" j:if="!$Pagination->isLast()" j:href="$Pagination->nextLink()" j:tr>&#8592; Older posts</a>
   <div href="#" j:if="!$Pagination->isFirst()" class="right">
     <a j:href="$Paginmation->prevLink()" j:tr>Newer posts &#8594;</a>
   </div>
