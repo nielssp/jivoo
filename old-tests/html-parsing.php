@@ -396,7 +396,7 @@ class transformers {
     $foreachNode->append($node);
   }
   static function _href(HtmlNode $node, $value) {
-    $node->setAttribute('href', new PhpNode($value));
+    $node->setAttribute('href', new PhpNode('$this->link(' . $value . ')'));
   }
   static function _text(HtmlNode $node, $value) {
     self::_innertext($node, $value);
