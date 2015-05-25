@@ -6,73 +6,373 @@ include '../share/extensions/simplehtmldom/simple_html_dom.php';
 
 $test = <<<'END'
 <div>
-  <!--{$posts = $Post->where('id > 5')}-->
-  <div j:if="$true">
-    <div class=test j:outertext=$post>test</div>
-    <div j:tr j:if="$Auth->isLoggedIn()">
-    Welcome back, <span j:outerText="$Auth->user->name">User<span>this is insignificant</span></span>!
-    </div>
-    <div j:tr>
-    A more <span class="test" j:tr>advanced</span> <span j:outertext=$noun>example</span>
-    </div>
+<div class="pagination" j:if="!$Pagination->isFirst()">
+  <a j:if="!$Pagination->isLast()" href="#" j:href="$Paginmation->nextLink()" j:tr>
+    &#8592; Older posts
+  </a>
+  <div class="right">
+    <a href="#" j:href="$Paginmation->prevLink()" j:tr>
+      Newer posts &#8594;
+    </a>
   </div>
+</div>
+<div class="post" j:foreach="$posts as $post">
+  <h1>
+    <a href="#" j:href="$post" j:text="$post->title">
+      Title goes here
+    </a>
+  </h1>
+  <div j:outertext="$Format->html($post, 'content')">
+    Content goes here
+  </div>
+  <div class="byline">
+    <span j:tr>Posted on <span j:outerText="fdate($post->created)">date</span></span>
+    |
+    <!-- {$comments = $post->comments->where('status = %CommentStatus', 'approved').count()} -->
+    <a href="#" j:if="$comments == 0" j:href="mergeRoutes($post, array('fragment' => 'comment'))" j:tr>
+      Leave a comment
+    </a>
+    <a href="#" j:if="$comments != 0" j:href="mergeRoutes($post, array('fragment' => 'comments'))" j:tn="%1 comment">
+      <span j:outerText="$comments">0</span> comments
+    </a>
+  </div>
+</div>
+<div class="pagination">
+  <a href="#" j:if="!$Pagination->isLast()" j:href="$Paginmation->nextLink()" j:tr>&#8592; Older posts</a>
+  <div href="#" j:if="!$Pagination->isFirst()" class="right">
+    <a j:href="$Paginmation->prevLink()" j:tr>Newer posts &#8594;</a>
+  </div>
+</div>
+  
 </div>
 END;
 
-class Node {
-  public $type = 'html';
-  public $text = '';
-  public function __construct($type, $text) {
-    $this->type = $type;
-    $this->text = $text;
-  }
-
-  public static function html($html) {
-    return new Node('html', $html);
+abstract class TemplateNode {
+  private $transformations = array();
+  
+  /**
+   * @var InternalNode
+   */
+  protected $parent = null;
+  
+  protected $next = null;
+  
+  protected $prev = null;
+  
+  public function __construct() { }
+  
+  public function __get($property) {
+    switch ($property) {
+      case 'transformations':
+      case 'parent':
+      case 'next':
+      case 'prev':
+        return $this->$property;
+    }
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
-  public static function php($php) {
-    return new Node('php', $php);
+  public function detach() {
+    assume(isset($this->parent));
+    $this->parent->remove($this);
   }
   
-  public static function phpE($php) {
-    return new Node('phpe', $php);
+  public function replaceWith(TemplateNode $node) {
+    assume(isset($this->parent));
+    $this->parent->replace($this, $node);
+  }
+  
+  public function addTransformation($transformation, $value = null) {
+    $this->transformations[$transformation] = $value;
   }
 }
 
-class Functions {
-  static function _outertext($html, $content, $value) {
-    return array('outer', array(Node::phpE($value)));
+class PhpNode extends TemplateNode {
+  private $code = '';
+  private $statement = false;
+  
+  public function __construct($code, $statement = false) {
+    parent::__construct();
+    $this->code = $code;
+    $this->statement = $statement;
   }
-  static function _innertext($html, $content, $value) {
-    return array('inner', array(Node::phpE($value)));
+  
+  public function __get($property) {
+    switch ($property) {
+      case 'code':
+      case 'statement':
+        return $this->$property;
+    }
+    return parent::__get($property);
   }
-  static function _if($html, $content, $value) {
-    $splits = explode("\0", $html->outertext);
-    return array('outer', array_merge(
-      array(Node::php('if (' . $value . '):')),
-      array(Node::html($splits[0])),
-      $content,
-      array(Node::html($splits[1])),
-      array(Node::php('endif'))
-    ));
+  
+  public function __toString() {
+    if ($this->statement) {
+      $code = trim($this->code);
+      $last = substr($code, -1);
+      $semi = '';
+      if ($last != ';' and $last != ':')
+        $semi = ';';
+      return '<?php ' . $this->code . $semi . ' ?>' . "\n";
+    }
+    else {
+      return '<?php echo ' . $this->code . '; ?>' . "\n";
+    }
   }
-  static function _tr($html, $content, $value) {
+}
+
+class IfNode extends TemplateNode {
+  private $condition = '';
+  private $then;
+  private $else;
+  
+  public function __construct($condition, TemplateNode $then = null) {
+    parent::__construct();
+    $this->then = new InternalNode();
+    $this->else = new InternalNode();
+    if (isset($then))
+      $this->then->append($then);
+  }
+  
+  public function __get($property) {
+    switch ($property) {
+      case 'then':
+      case 'else':
+        return $this->$property;
+    }
+    return parent::__get($property);
+  }
+  
+  public function __toString() {
+    $code = '<?php if (' . $this->condition . '): ?>' . "\n";
+    $code .= $this->then->__toString();
+    if (count($this->else) > 0) {
+      $code .= '<?php else: ?>' . "\n";
+      $code .= $this->else->__toString();
+    }
+    $code .= '<?php endif; ?>' . "\n";
+    return $code;
+  }
+}
+
+class InternalNode extends TemplateNode implements Countable {
+  protected $content = array();
+  
+  public function count() {
+    return count($content);
+  }
+  
+  public function append(TemplateNode $node) {
+    assume(!isset($node->parent));
+    $node->parent = $this;
+    if ($this->content !== array()) {
+      $node->prev = array_slice($this->content, -1)[0];
+      $node->prev->next = $node;
+    }
+    $this->content[] = $node;
+  }
+  
+  public function prepend(TemplateNode $node) {
+    assume(!isset($node->parent));
+    $node->parent = $this;
+    if ($this->content !== array()) {
+      $node->next = $this->content[0];
+      $node->next->prev = $node;
+    }
+    $this->content = array_merge(array($node), $this->content);
+  }
+  
+  public function remove(TemplateNode $node) {
+    assume($node->parent === $this);
+    $this->content = array_diff($this->content, array($node));
+    $node->parent = null;
+    if (isset($node->next))
+      $node->next->prev = $node->prev;
+    if (isset($node->prev))
+      $node->prev->next = $node->next;
+    $node->next = null;
+    $node->prev = null;
+  }
+
+  public function replace(TemplateNode $node, TemplateNode $replacement) {
+    assume($node->parent === $this);
+    assume(!isset($replacement->parent));
+    $offset = array_search($node, $this->content, true);
+    $this->content[$offset] = $replacement;
+    $node->parent = null;
+    if (isset($node->next)) {
+      $node->next->prev = $replacement;
+      $replacement->next = $node->next;
+    }
+    if (isset($node->prev)) {
+      $node->prev->next = $replacement;
+      $replacement->prev = $node->prev;
+    }
+    $node->next = null;
+    $node->prev = null;
+  }
+  
+  public function clear() {
+    foreach ($this->content as $node) {
+      $node->parent = null;
+      $node->next = null;
+      $node->prev = null;
+    }
+    $this->content = array();
+  }
+  
+  public function getChildren() {
+    return $this->content;
+  }
+  
+  public function __toString() {
+    $output = '';
+    foreach ($this->content as $node)
+      $output .= $node->__toString();
+    return $output;
+  }
+}
+
+class ForeachNode extends InternalNode {
+  private $foreach;
+
+  public function __construct($foreach) {
+    parent::__construct();
+    $this->foreach = $foreach;
+  }
+
+  public function __toString() {
+    $code = '<?php foreach (' . $this->foreach . '): ?>' . "\n";
+    $code .= parent::__toString();
+    $code .= '<?php endforeach; ?>' . "\n";
+    return $code;
+  }
+}
+
+class TextNode extends TemplateNode {
+  private $text;
+
+  public function __construct($text) {
+    parent::__construct();
+    $this->text = $text;
+  }
+
+  public function __toString() {
+    return $this->text;
+  }
+}
+
+class HtmlNode extends InternalNode {
+  private $tag = '';
+  private $attributes = array();
+  private $selfClosing = false;
+  
+  public function __construct($tag) {
+    parent::__construct();
+    $this->tag = $tag;
+  }
+  
+  public function setAttribute($attribute, TemplateNode $value = null) {
+    $this->attributes[$attribute] = $value;
+  }
+  
+  public function hasAttribute($attribute) {
+    return array_key_exists($attribute, $this->attributes);
+  }
+  
+  public function getAttribute($attribute) {
+    if (isset($this->attributes[$attribute]))
+      return $this->attributes[$attribute];
+    return null;
+  }
+  
+  public function removeAttribute($attribute) {
+    if (isset($this->attributes[$attribute]))
+      unset($htis->attributes[$attribute]);
+  }
+  
+  public function __toString() {
+    $output = '<' . $this->tag;
+    foreach ($this->attributes as $name => $value) {
+      $output .= ' ' . $name;
+      if (isset($value))
+        $output .= '="' . $value . '"';
+    }
+    if (count($this->content) == 0 and $this->selfClosing)
+      return $output . ' />';
+    $output .= '>';
+    $output .= parent::__toString();
+    $output .= '</' . $this->tag . '>';
+    return $output;
+  }
+}
+
+class transformers {
+  static function _outertext(HtmlNode $node, $value) {
+    $node->replaceWith(new PhpNode($value));
+  }
+  static function _innertext(HtmlNode $node, $value) {
+    $node->clear()->append(new PhpNode($value));
+  }
+  static function _if(HtmlNode $node, $value) {
+    if (!isset($value)) {
+      if ($node->prev instanceof IfNode) {
+        $ifNode = $node->prev;
+        $node->detach();
+        $ifNode->then->append($node);
+        return;
+      }
+      throw new Exception('todo');
+    }
+    $ifNode = new IfNode($value);
+    $node->replaceWith($ifNode);
+    $ifNode->then->append($node);
+  }
+  static function _else(HtmlNode $node, $value) {
+    if ($node->prev instanceof IfNode) {
+      $ifNode = $node->prev;
+      $node->detach();
+      $ifNode->else->append($node);
+      return;
+    }
+    throw new Exception('todo');
+  }
+  static function _foreach(HtmlNode $node, $value) {
+    if (!isset($value)) {
+      if ($node->prev instanceof ForeachNode) {
+        $foreachNode = $node->prev;
+        $node->detach();
+        $foreachNode->append($node);
+        return;
+      }
+      throw new Exception('todo');
+    }
+    $foreachNode = new ForeachNode($value);
+    $node->replaceWith($foreachNode);
+    $foreachNode->append($node);
+  }
+  static function _href(HtmlNode $node, $value) {
+    $node->setAttribute('href', new PhpNode($value));
+  }
+  static function _text(HtmlNode $node, $value) {
+    self::_innertext($node, $value);
+  }
+  static function _tr(HtmlNode $node, $value) {
     $translate = '';
     $num = 1;
     $params = array();
     $before = array();
-    foreach ($content as $node) {
-      if ($node->type == 'html') {
-        $translate .= $node->text;
+    foreach ($node->getChildren() as $child) {
+      if ($child instanceof TextNode) {
+        $translate .= $child ->__toString();
       }
-      else if ($node->type == 'phpe') {
+      else if ($child instanceof PhpNode and !$child->statement) {
         $translate .= '%' . $num;
-        $params[] = $node->text;
+        $params[] = $child->code;
         $num++;
       }
       else {
-        $before[] = $node;
+        throw new Exception('not implemented');
       }
     }
     if (count($params) == 0)
@@ -80,43 +380,51 @@ class Functions {
     else
       $params = ', ' . implode(', ', $params);
     $translate = trim($translate);
-    return array('inner', array_merge($before, array(Node::phpE('tr(' . var_export($translate, true) . $params . ')'))));
+    $node->clear();
+    $phpNode = new PhpNode('tr(' . var_export($translate, true) . $params . ')');
+    $node->append($phpNode);
   }
 }
 
-function handleTag($html) {
-  $content = convert($html);
-  $html->innertext = "\0";
-  foreach ($html->attr as $name => $value) {
-    if ($name[0] == 'j' and $name[1] == ':') {
-      $html->removeAttribute($name);
-      $name = '_' . substr($name, 2);
-      $output = Functions::$name($html, $content, $value);
-      if ($output[0] == 'outer')
-        return $output[1];
-      else if ($output[0] == 'inner')
-        $content = $output[1];
-    }
-  }
-  $splits = explode("\0", $html->outertext);
-  return array_merge(array(Node::html($splits[0])), $content, array(Node::html($splits[1])));
-}
 
 function convert($html) {
-  $output = array();
+  $output = new HtmlNode($html->tag);
+  foreach ($html->attr as $name => $value) {
+    if ($name[0] == 'j' and $name[1] == ':')
+      $output->addTransformation(substr($name, 2), $value);
+    else {
+//       if (preg_match('/^ *\{(.*)\} *$/', $value, $matches) === 1)
+//         $output->setAttribute($name, new PhpNode($value));
+//       else
+        $output->setAttribute($name, new TextNode($value));
+    }
+  }
   foreach ($html->nodes as $node) {
     if ($node->tag === 'text')
-      $output[] = Node::html($node->innertext);
+      $output->append(new TextNode($node->innertext));
     else if ($node->tag === 'comment') {
       if (preg_match('/^<!-- *\{(.*)\} *-->$/', $node->innertext, $matches) === 1) {
-        $output[] = Node::php($matches[1]); 
+        $output->append(new PhpNode($matches[1], true));
       }
     }
     else {
-      $output = array_merge($output, handleTag($node));
+      $output->append(convert($node));
     }
   }
   return $output;
+}
+
+function transform(TemplateNode $node) {
+  if ($node instanceof InternalNode) {
+    foreach ($node->getChildren() as $child)
+      transform($child);
+  }
+  foreach ($node->transformations as $transformation => $value) {
+    $transformation = '_' . $transformation;
+    transformers::$transformation($node, $value);
+    if (!isset($node->parent))
+      return;
+  }
 }
 
 
@@ -124,25 +432,11 @@ $html = str_get_html($test);
 
 $converted = convert($html->firstChild());
 
-$phpTemplate = '';
+$root = new InternalNode();
+$root->append($converted);
 
-foreach ($converted as $node) {
-  if ($node->type == 'php') {
-    $php = trim($node->text);
-    $last = substr($php, -1);
-    $semi = '';
-    if ($last != ';' and $last != ':')
-      $semi = ';';
-    $phpTemplate .= '<?php ' . $node->text . $semi . ' ?>' . "\n";
-  }
-  else if ($node->type == 'phpe')
-    $phpTemplate .= '<?php echo ' . $node->text . '; ?>' . "\n";
-  else {
-    $text = $node->text;
-    if (substr($text, -1) == ' ')
-      $text .= "\n";
-    $phpTemplate .= $text;
-  }
-}
+transform($root);
 
-var_dump($phpTemplate);
+echo '<pre>';
+echo h($root->__toString());
+echo '</pre>';
