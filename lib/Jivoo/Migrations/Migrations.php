@@ -199,7 +199,7 @@ class Migrations extends LoadableModule {
   public function run($dbName, $migrationName) {
     $db = $this->getDatabase($dbName);
     Logger::debug('Initializing migration ' . $migrationName);
-    Lib::assumeSubclassOf($migration, 'Jivoo\Migrations\Migration');
+    Lib::assumeSubclassOf($migrationName, 'Jivoo\Migrations\Migration');
 
     // The migration schema keeps track of the state of the database
     if (!isset($this->migrationSchemas[$dbName]))

@@ -140,7 +140,8 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    * @return DataType The type.
    */
   private function toDataType($row) {
-    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? */i', $row['type'], $matches);
+    if (preg_match('/ *([^ (]+) *(\(([0-9]+)\))? */i', $row['type'], $matches) !== 1)
+      throw new \Exception(tr('Cannot read type "%1" for column: %2', $row['type'], $row['name']));
     $actualType = strtolower($matches[1]);
     $length = isset($matches[3]) ? $matches[3] : 0;
     $null = (isset($row['notnull']) and $row['notnull'] != '1');
