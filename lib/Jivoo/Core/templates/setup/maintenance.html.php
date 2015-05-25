@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Down for maintenance</title>
+<title><?php echo tr('Down for maintenance'); ?></title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
