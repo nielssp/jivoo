@@ -32,7 +32,7 @@ $test = <<<'END'
     <a href="#" j:if="$comments == 0" j:href="mergeRoutes($post, array('fragment' => 'comment'))" j:tr>
       Leave a comment
     </a>
-    <a href="#" j:if="$comments != 0" j:href="mergeRoutes($post, array('fragment' => 'comments'))" j:tn="%1 comment">
+    <a href="#" j:else j:href="mergeRoutes($post, array('fragment' => 'comments'))" j:tn="%1 comment">
       <span j:outerText="$comments">0</span> comments
     </a>
   </div>
@@ -70,6 +70,10 @@ abstract class TemplateNode {
         return $this->$property;
     }
     throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  public function __isset($property) {
+    return $this->__get($property) !== null;
   }
   
   public function detach() {
@@ -128,6 +132,7 @@ class IfNode extends TemplateNode {
   
   public function __construct($condition, TemplateNode $then = null) {
     parent::__construct();
+    $this->condition = $condition;
     $this->then = new InternalNode();
     $this->else = new InternalNode();
     if (isset($then))
@@ -159,7 +164,7 @@ class InternalNode extends TemplateNode implements Countable {
   protected $content = array();
   
   public function count() {
-    return count($content);
+    return count($this->content);
   }
   
   public function append(TemplateNode $node) {
@@ -170,6 +175,7 @@ class InternalNode extends TemplateNode implements Countable {
       $node->prev->next = $node;
     }
     $this->content[] = $node;
+    return $this;
   }
   
   public function prepend(TemplateNode $node) {
@@ -180,6 +186,7 @@ class InternalNode extends TemplateNode implements Countable {
       $node->next->prev = $node;
     }
     $this->content = array_merge(array($node), $this->content);
+    return $this;
   }
   
   public function remove(TemplateNode $node) {
@@ -192,6 +199,7 @@ class InternalNode extends TemplateNode implements Countable {
       $node->prev->next = $node->next;
     $node->next = null;
     $node->prev = null;
+    return $this;
   }
 
   public function replace(TemplateNode $node, TemplateNode $replacement) {
@@ -210,6 +218,7 @@ class InternalNode extends TemplateNode implements Countable {
     }
     $node->next = null;
     $node->prev = null;
+    return $this;
   }
   
   public function clear() {
@@ -219,6 +228,7 @@ class InternalNode extends TemplateNode implements Countable {
       $node->prev = null;
     }
     $this->content = array();
+    return $this;
   }
   
   public function getChildren() {
@@ -256,9 +266,22 @@ class TextNode extends TemplateNode {
     parent::__construct();
     $this->text = $text;
   }
+  
+  public function __get($property) {
+    switch ($property) {
+      case 'text':
+        return $this->$property;
+    }
+    return parent::__get($property);
+  }
 
   public function __toString() {
-    return $this->text;
+    $text = $this->text;
+    if ($text[0] == ' ')
+      $text = "\n" . ltrim($text);
+    if (substr($text, -1) == ' ')
+      $text = rtrim($text) . "\n"; 
+    return $text;
   }
 }
 
@@ -316,12 +339,23 @@ class transformers {
   }
   static function _if(HtmlNode $node, $value) {
     if (!isset($value)) {
-      if ($node->prev instanceof IfNode) {
-        $ifNode = $node->prev;
-        $node->detach();
-        $ifNode->then->append($node);
-        return;
-      }
+      $prev = $node->prev;
+      $between = array();
+      do {
+        if ($prev instanceof IfNode) {
+          assume(count($prev->else) == 0);
+          $between = array_reverse($between);
+          foreach ($between as $betweenNode) {
+            $betweenNode->detach();
+            $prev->then->append($betweenNode);
+          }
+          $node->detach();
+          $prev->then->append($node);
+          return;
+        }
+        $between[] = $prev;
+        $prev = $prev->prev;
+      } while (isset($prev));
       throw new Exception('todo');
     }
     $ifNode = new IfNode($value);
@@ -329,12 +363,22 @@ class transformers {
     $ifNode->then->append($node);
   }
   static function _else(HtmlNode $node, $value) {
-    if ($node->prev instanceof IfNode) {
-      $ifNode = $node->prev;
-      $node->detach();
-      $ifNode->else->append($node);
-      return;
-    }
+    $prev = $node->prev;
+    $between = array();
+    do {
+      if ($prev instanceof IfNode) {
+        $between = array_reverse($between);
+        foreach ($between as $betweenNode) {
+          $betweenNode->detach();
+          $prev->then->append($betweenNode);
+        }
+        $node->detach();
+        $prev->else->append($node);
+        return;
+      }
+      $between[] = $prev;
+      $prev = $prev->prev;
+    } while (isset($prev));
     throw new Exception('todo');
   }
   static function _foreach(HtmlNode $node, $value) {
@@ -364,7 +408,7 @@ class transformers {
     $before = array();
     foreach ($node->getChildren() as $child) {
       if ($child instanceof TextNode) {
-        $translate .= $child ->__toString();
+        $translate .= $child ->text;
       }
       else if ($child instanceof PhpNode and !$child->statement) {
         $translate .= '%' . $num;
@@ -384,14 +428,44 @@ class transformers {
     $phpNode = new PhpNode('tr(' . var_export($translate, true) . $params . ')');
     $node->append($phpNode);
   }
+  static function _tn(HtmlNode $node, $value) {
+    $translate = '';
+    $num = 1;
+    $params = array();
+    $before = array();
+    foreach ($node->getChildren() as $child) {
+      if ($child instanceof TextNode) {
+        $translate .= $child ->text;
+      }
+      else if ($child instanceof PhpNode and !$child->statement) {
+        $translate .= '%' . $num;
+        $params[] = $child->code;
+        $num++;
+      }
+      else {
+        throw new Exception('not implemented');
+      }
+    }
+    if (count($params) == 0)
+      $params = '';
+    else
+      $params = ', ' . implode(', ', $params);
+    $translate = trim($translate);
+    $node->clear();
+    $phpNode = new PhpNode('tn(' . var_export($translate, true) . ', ' . var_export($value, true) . $params . ')');
+    $node->append($phpNode);
+  }
 }
 
 
 function convert($html) {
   $output = new HtmlNode($html->tag);
   foreach ($html->attr as $name => $value) {
-    if ($name[0] == 'j' and $name[1] == ':')
+    if ($name[0] == 'j' and $name[1] == ':') {
+      if ($value === true)
+        $value = null;
       $output->addTransformation(substr($name, 2), $value);
+    }
     else {
 //       if (preg_match('/^ *\{(.*)\} *$/', $value, $matches) === 1)
 //         $output->setAttribute($name, new PhpNode($value));
