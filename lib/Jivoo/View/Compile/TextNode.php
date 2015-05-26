@@ -26,7 +26,7 @@ class TextNode extends TemplateNode {
     if (trim($text) == '')
       return "\n";
     if ($text[0] == ' ')
-      $text = "\n" . ltrim($text);
+      $text = "\n " . ltrim($text);
     if (substr($text, -1) == ' ')
       $text = rtrim($text) . "\n";
     return $text;
