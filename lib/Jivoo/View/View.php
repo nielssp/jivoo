@@ -7,6 +7,7 @@ namespace Jivoo\View;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Utilities;
+use Jivoo\View\Compile\TemplateCompiler;
 
 /**
  * The view module.
@@ -83,6 +84,16 @@ class View extends LoadableModule {
   private $templateDirs = array();
   
   /**
+   * @var TemplateCompiler Template compiler if enabled.
+   */
+  private $compiler = null;
+  
+  /**
+   * @var bool Whether or not to automatically compile templates.
+   */
+  private $autoCompile = false;
+  
+  /**
    * {@inheritdoc}
    */
   protected function init() {
@@ -90,6 +101,11 @@ class View extends LoadableModule {
     $this->extensions = new ViewExtensions($this);
     $this->data = new ViewData();
     $this->blocks = new ViewBlocks($this);
+    
+    if ($this->config->get('compileTemplates', false)) {
+      $this->compiler = new TemplateCompiler();
+      $this->autoCompile = true;
+    }
     
     $this->data->app = $this->app->appConfig;
 
@@ -169,6 +185,23 @@ class View extends LoadableModule {
   }
   
   /**
+   * Compile an HTML template.
+   * @param string $template Absolute path to template.
+   * @return string Absolute path to compiled template.
+   */
+  public function compileTemplate($template) {
+    $this->app->getModule('Extensions')->import('simplehtmldom');
+    $compiled = $template . '.php';
+    $file = fopen($compiled, 'w');
+    if ($file) {
+      fwrite($file, $this->compiler->compile($template));
+      fclose($file);
+      return $compiled;
+    }
+    return null;
+  }
+  
+  /**
    * Find template in available template directories.
    * @param string $template Template name.
    * @return string|null Absolute path to template or null if not found.
@@ -179,6 +212,13 @@ class View extends LoadableModule {
     foreach ($this->templateDirs as $dir => $priority) {
       if (substr($dir, -1, 1) != '/') {
         $dir .= '/';
+      }
+      if ($this->autoCompile) {
+        if (file_exists($dir . $template)) {
+          if (Utilities::getFileExtension($template) === 'html') {
+            return $this->compileTemplate($dir . $template);
+          }
+        }
       }
       $path = $dir . $template . '.php';
       if (file_exists($path)) {

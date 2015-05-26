@@ -149,8 +149,13 @@ class Extensions extends LoadableModule {
    * @param ExtensionInfo $info Extension information.
    */
   public function handleInclude(ExtensionInfo $info) {
-    foreach ($info->include as $file)
-      include $info->p($this->app, $file);
+    if (is_string($info->include)) {
+      require $info->p($this->app, $info->include);
+    }
+    else {
+      foreach ($info->include as $file)
+        require $info->p($this->app, $file);
+    }
   }
   
   /**

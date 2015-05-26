@@ -12,4 +12,7 @@ return array(
   'Console' => array(
     'enable' => true
   ),
+  'View' => array(
+    'compileTemplates' => true
+  )
 );
