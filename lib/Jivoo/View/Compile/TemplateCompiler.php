@@ -22,7 +22,8 @@ class TemplateCompiler {
   }
   
   public function compile($template) {
-    $dom = file_get_html($template);
+    $dom = new \simple_html_dom();
+    $dom->load_file($template);
     
     $root = new InternalNode();
     
