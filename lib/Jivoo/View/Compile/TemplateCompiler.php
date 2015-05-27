@@ -44,7 +44,7 @@ class TemplateCompiler {
   
   public function convert($node) {
     if ($node->tag === 'text' or $node->tag === 'unknown')
-      return new TextNode($node->innertext);
+      return new TextNode($node->innertext . "\n");
     else if ($node->tag === 'comment') {
       if (preg_match('/^<!-- *\{(.*)\} *-->$/', $node->innertext, $matches) === 1) {
         return new PhpNode($matches[1], true);

@@ -186,19 +186,21 @@ class View extends LoadableModule {
   
   /**
    * Compile an HTML template.
+   * @param string $dir Template dir.
    * @param string $template Absolute path to template.
    * @return string Absolute path to compiled template.
    */
-  public function compileTemplate($template) {
+  public function compileTemplate($dir, $template) {
     $this->app->getModule('Extensions')->import('simplehtmldom');
-    $compiled = $template . '.php';
+    $source = $dir . $template;
+    $compiled = $dir . 'compiled/' . $template . '.php';
     $file = fopen($compiled, 'w');
     if ($file) {
-      fwrite($file, $this->compiler->compile($template));
+      fwrite($file, $this->compiler->compile($source));
       fclose($file);
       return $compiled;
     }
-    return null;
+    throw new \Exception(tr('Could not compile template: %1', $source));
   }
   
   /**
@@ -216,7 +218,7 @@ class View extends LoadableModule {
       if ($this->autoCompile) {
         if (file_exists($dir . $template)) {
           if (Utilities::getFileExtension($template) === 'html') {
-            return $this->compileTemplate($dir . $template);
+            return $this->compileTemplate($dir, $template);
           }
         }
       }

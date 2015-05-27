@@ -12,7 +12,8 @@ class DefaultMacros {
       'main', 'embed', 'block', 'layout', 'nolayout', 'extend',
       'if', 'else', 'foreach',
       'tr', 'tn',
-      'href', 'src'
+      'href',
+      'src', 'alt'
     );
     $macros = array();
     foreach ($functions as $function)
@@ -21,6 +22,12 @@ class DefaultMacros {
         '_' . $function
       );
     return $macros;
+  }
+  
+  static function __callstatic($attribute, $params) {
+    $attribute = ltrim($attribute, '_');
+    if (isset($params[1]))
+      $params[0]->setAttribute($attribute, new PhpNode($params[1]));
   }
 
   static function _outerhtml(HtmlNode $node, $value) {
@@ -118,10 +125,13 @@ class DefaultMacros {
     $foreachNode->append($node);
   }
   static function _href(HtmlNode $node, $value) {
+    if ($node->hasAttribute('class')) {
+      
+    }
+    else {
+      $node->setAttribute('class', new PhpNode('if ($this->isCurrent(' . $value . ')) echo \'current\';', true));
+    }
     $node->setAttribute('href', new PhpNode('$this->link(' . $value . ')'));
-  }
-  static function _src(HtmlNode $node, $value) {
-    $node->setAttribute('src', new PhpNode('$this->link(' . $value . ')'));
   }
   static function _tr(HtmlNode $node, $value) {
     $translate = '';

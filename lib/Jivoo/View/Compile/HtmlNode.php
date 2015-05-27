@@ -6,6 +6,19 @@
 namespace Jivoo\View\Compile;
 
 class HtmlNode extends InternalNode {
+  /**
+   * HTML5 tags that should not be closed.
+   *
+   * Source: http://xahlee.info/js/html5_non-closing_tag.html
+   * @var array Associative array of lowercase tag-names and true-values.
+   */
+  private static $selfClosingTags = array('area' => true, 'base' => true,
+    'br' => true, 'col' => true, 'command' => true, 'embed' => true,
+    'hr' => true, 'img' => true, 'input' => true, 'keygen' => true,
+    'link' => true, 'meta' => true, 'param' => true, 'source' => true,
+    'track' => true, 'wbr' => true
+  );
+  
   private $tag = '';
   private $attributes = array();
   private $selfClosing = false;
@@ -13,6 +26,7 @@ class HtmlNode extends InternalNode {
   public function __construct($tag) {
     parent::__construct();
     $this->tag = $tag;
+    $this->selfClosing = isset(self::$selfClosingTags[$tag]);
   }
 
   public function setAttribute($attribute, TemplateNode $value = null) {
