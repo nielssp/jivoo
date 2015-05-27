@@ -64,7 +64,7 @@ abstract class BasicSelection implements IBasicSelection {
     if (isset($this->$property)) {
       return $this->$property;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**

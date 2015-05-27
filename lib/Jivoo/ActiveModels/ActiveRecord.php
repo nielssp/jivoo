@@ -111,12 +111,14 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
    * @param string $class Name of custom record class.
    * @return ActiveREcord A record.
    */
-  public static function createExisting(ActiveModel $model, $data = array(), $class = null) {
+  public static function createExisting(ActiveModel $model, $data = array(), $virtual = array(), $class = null) {
     if (isset($class))
       $record = new $class($model, $data);
     else
       $record = new ActiveRecord($model, $data);
     $record->updatedData = array();
+    foreach ($virtual as $field => $value)
+      $record->virtualData[$field] = $value;
     $model->addToCache($record);
     $model->triggerEvent('afterLoad', new ActiveModelEvent($record));
     return $record;
@@ -150,6 +152,13 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
    */
   public function getData() {
     return $this->data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVirtualData() {
+    return $this->virtualData;
   }
 
   /**

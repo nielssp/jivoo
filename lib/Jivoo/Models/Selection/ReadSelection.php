@@ -8,12 +8,14 @@ namespace Jivoo\Models\Selection;
 use Jivoo\Models\IModel;
 use Jivoo\Models\IRecord;
 use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\DataType;
 
 /**
  * A read selection.
  * @property-read int $offset Offset.
  * @proeprty-read array[] $joins List of arrays describing joings.
  * @property-read array[] $fields List of arrays describing fields.
+ * @property-read array[] $additionalFields List of arrays describing fields.
  */
 class ReadSelection extends BasicSelection implements IReadSelection {
 
@@ -53,6 +55,20 @@ class ReadSelection extends BasicSelection implements IReadSelection {
   protected $fields = array();
 
   /**
+   * List of arrays describing columns.
+   *
+   * Each array is of the following format:
+   * <code>
+   * array(
+   *   'expression' => ..., // Expression (string)
+   *   'alias' => ... // Alias (string|null)
+   * )
+   * </code>
+   * @var array[]
+   */
+  protected $additionalFields = array();
+
+  /**
    * {@inheritdoc}
    */
   public function select($expression, $alias = null) {
@@ -82,6 +98,18 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     $result = $this->model->readCustom($this);
     $this->fields = array();
     return $result;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function with($field, $expression, DataType $type = null) {
+    $this->additionalFields[$field] = array(
+      'alias' => $field,
+      'expression' => $expression,
+      'type' => $type
+    );
+    return $this;
   }
 
   /**

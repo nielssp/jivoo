@@ -284,14 +284,15 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($data = array()) {
+  public function createExisting($data = array(), ReadSelection $selection) {
     if (isset($data[$this->primaryKey])) {
       $id = $data[$this->primaryKey];
       if (array_key_exists($id, $this->cache))
         return $this->cache[$id];
     }
-    $data = $this->source->createExisting($data)->getData();
-    return ActiveRecord::createExisting($this, $data, $this->record);
+    $record = $this->source->createExisting($data, $selection);
+    return ActiveRecord::createExisting($this, $record->getData(), 
+      $record->getVirtualData(), $this->record);
   }
 
   /**
@@ -597,7 +598,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     $resultSet = $this->source->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return $this->createExisting($resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc(), $selection);
   }
 
   /**
@@ -607,7 +608,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     $resultSet = $this->source->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return $this->createExisting($resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc(), $selection);
   }
 
   /**
@@ -615,7 +616,7 @@ abstract class ActiveModel extends Model implements IEventListener {
    */
   public function read(ReadSelection $selection) {
     $resultSet = $this->source->readSelection($selection);
-    return new ResultSetIterator($this, $resultSet);
+    return new ResultSetIterator($this, $resultSet, $selection);
   }
 
   /**

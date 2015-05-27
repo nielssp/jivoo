@@ -35,7 +35,7 @@ interface IRecord extends IBasicRecord {
 
   /** @return IModel Associated model */
 //   public function getModel();
-  
+
   /**
    * Add data to record.
    * @param array $data Associative array of field names and values.
@@ -44,6 +44,12 @@ interface IRecord extends IBasicRecord {
    * ignored.
    */
   public function addData($data, $allowedFields = null);
+
+  /**
+   * Get virtual data.
+   * @return array Associative array of data.
+   */
+  public function getVirtualData();
   
   /**
    * Save record.

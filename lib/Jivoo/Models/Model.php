@@ -32,10 +32,22 @@ abstract class Model extends Module implements IModel {
   /**
    * Create a record for existing data.
    * @param array $data Associative array of record data.
+   * @param ReadSelection $selection The selection that led to the creation of
+   * this record.
    * @return Record A record.
    */
-  public function createExisting($data = array()) {
-    return Record::createExisting($this, $data);
+  public function createExisting($data = array(), ReadSelection $selection) {
+    $additonal = $selection->additionalFields;
+    if (empty($additonal))
+      return Record::createExisting($this, $data, array());
+    $virtual = array();
+    foreach ($raw as $field => $value) {
+      if (isset($addtional[$field])) {
+        $virtual[$field] = $value;
+        unset($data[$field]);
+      }
+    }
+    return Record::createExisting($this, $data, $virtual);
   }
 
   /**
@@ -358,6 +370,14 @@ abstract class Model extends Module implements IModel {
   public function select($expression, $alias = null) {
     $select = new ReadSelection($this);
     return $select->select($expression, $alias);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function with($field, $expression, DataType $type = null) {
+    $select = new ReadSelection($this);
+    return $select->with($field, $expression, $type);
   }
 
   /**

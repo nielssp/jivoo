@@ -70,15 +70,27 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($data = array()) {
+  public function createExisting($raw = array(), ReadSelection $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
-    foreach ($data as $field => $value) {
-      $type = $this->getType($field);
-      if (!isset($type))
-        throw new \Exception(tr('Schema %1 does not contain field %2', $this->getName(), $field));
-      $data[$field] = $typeAdapter->decode($this->getType($field), $value);
+    $additional = $selection->additionalFields;
+    $data = array();
+    $virtual = array();
+    foreach ($raw as $field => $value) {
+      if (isset($additional[$field])) {
+        if (isset($additional[$field]['type']))
+          $value = $typeAdapter->decode($additional[$field]['type'], $value);
+        $virtual[$field] = $value;
+      }
+      else {
+        $type = $this->getType($field);
+        if (!isset($type))
+          throw new \Exception(tr(
+            'Schema %1 does not contain field %2', $this->getName(), $field
+          ));
+        $data[$field] = $typeAdapter->decode($this->getType($field), $value);
+      }
     }
-    return Record::createExisting($this, $data);
+    return Record::createExisting($this, $data, $virtual);
   }
 
   /**
@@ -137,6 +149,11 @@ class SqlTable extends Table {
     }
     else {
       $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
+    }
+    if (!empty($selection->additionalFields)) {
+      $fields = $selection->additionalFields;
+      array_walk($fields, array($this, 'getColumnList'));
+      $sqlString .= ', ' . implode(', ', $fields);
     }
     $sqlString .= ' FROM ' . $this->owner->quoteTableName($this->name);
     if (!empty($selection->sources)) {

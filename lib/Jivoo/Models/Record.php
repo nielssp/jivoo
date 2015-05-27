@@ -13,6 +13,11 @@ class Record implements IRecord {
    * @var array Associative array of record data.
    */
   private $data = array();
+
+  /**
+   * @var array Associative array of virtual record data.
+   */
+  private $virtual = array();
   
   /**
    * @var array Associative array of unsaved data.
@@ -71,9 +76,10 @@ class Record implements IRecord {
    * @param array $data Associative array of record data.
    * @return Record An existing record.
    */
-  public static function createExisting(IModel $model, $data = array()) {
+  public static function createExisting(IModel $model, $data = array(), $virtual = array()) {
     $record = new Record($model, $data);
     $record->updatedData = array();
+    $record->virtual = $virtual;
     return $record;
   }
   
@@ -108,13 +114,22 @@ class Record implements IRecord {
   public function getData() {
     return $this->data;
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getVirtualData() {
+    return $this->virtual;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function __get($field) {
+    if (array_key_exists($field, $this->virtual))
+      return $this->virtual[$field];
     if (!array_key_exists($field, $this->data))
-      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
     return $this->data[$field];
   }
 
@@ -123,7 +138,7 @@ class Record implements IRecord {
    */
   public function __set($field, $value) {
     if (!array_key_exists($field, $this->data))
-      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
     $this->data[$field] = $value;
     $this->updatedData[$field] = $value;
     $this->saved = false;
@@ -133,8 +148,10 @@ class Record implements IRecord {
    * {@inheritdoc}
    */
   public function __isset($field) {
+    if (array_key_exists($field, $this->virtual))
+      return isset($this->virtual[$field]);
     if (!array_key_exists($field, $this->data))
-      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
     return isset($this->data[$field]);
   }
 
@@ -143,7 +160,7 @@ class Record implements IRecord {
    */
   public function __unset($field) {
     if (!array_key_exists($field, $this->data))
-      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
     $this->data[$field] = null;
     $this->updatedData[$field] = null;
     $this->saved = false;

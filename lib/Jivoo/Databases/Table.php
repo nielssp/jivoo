@@ -34,7 +34,7 @@ abstract class Table extends Model {
     $resultSet = $this->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return $this->createExisting($resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc(), $selection);
   }
 
   /**
@@ -44,7 +44,7 @@ abstract class Table extends Model {
     $resultSet = $this->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
-    return $this->createExisting($resultSet->fetchAssoc());
+    return $this->createExisting($resultSet->fetchAssoc(), $selection);
   }
 
   /**
@@ -52,7 +52,7 @@ abstract class Table extends Model {
    */
   public function read(ReadSelection $selection) {
     $resultSet = $this->readSelection($selection);
-    return new ResultSetIterator($this, $resultSet);
+    return new ResultSetIterator($this, $resultSet, $selection);
   }
 
   /**

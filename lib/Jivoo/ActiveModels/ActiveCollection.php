@@ -223,8 +223,8 @@ class ActiveCollection extends Model {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($data = array()) {
-    return $this->other->createExisting($data, $allowedFields);
+  public function createExisting($data = array(), ReadSelection $selection) {
+    return $this->other->createExisting($data, $selection);
   }
 
   /**

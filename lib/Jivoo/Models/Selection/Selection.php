@@ -7,6 +7,7 @@ namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
 use Jivoo\Models\IRecord;
+use Jivoo\Models\DataType;
 
 /**
  * An undecided selection. Will transform into a more specific selection based
@@ -59,6 +60,13 @@ class Selection extends BasicSelection implements ISelection {
    */
   public function select($column, $alias = null) {
     return $this->copyBasicAttr(new ReadSelection($this->model))->select($column, $alias);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function with($field, $expression, DataType $type = null) {
+    return $this->copyBasicAttr(new ReadSelection($this->model))->with($field, $expression, $type);
   }
 
   /**

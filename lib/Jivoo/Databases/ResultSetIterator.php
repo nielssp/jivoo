@@ -7,6 +7,7 @@ namespace Jivoo\Databases;
 
 use Jivoo\Models\Model;
 use Jivoo\Models\IRecordIterator;
+use Jivoo\Models\Selection\ReadSelection;
 
 /**
  * Iterator for {@see IResultSet} instances.
@@ -21,6 +22,11 @@ class ResultSetIterator implements IRecordIterator {
    * @var Model Model.
    */
   private $model;
+  
+  /**
+   * @var ReadSelection Selection.
+   */
+  private $selection;
 
   /**
    * @var int Index.
@@ -36,12 +42,14 @@ class ResultSetIterator implements IRecordIterator {
    * Construct iterator.
    * @param Model $model Model.
    * @param IResultSet $resultSet Result set.
+   * @param ReadSelection $selection The selection that created this result set.
    */
-  public function __construct(Model $model, IResultSet $resultSet) {
+  public function __construct(Model $model, IResultSet $resultSet, ReadSelection $selection) {
     $this->model = $model;
+    $this->selection = $selection;
     $this->resultSet = $resultSet;
     if ($this->resultSet->hasRows())
-      $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc());
+      $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc(), $selection);
   }
 
   /**
@@ -71,7 +79,7 @@ class ResultSetIterator implements IRecordIterator {
    */
   public function next() {
     if ($this->resultSet->hasRows())
-      $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc());
+      $this->array[] = $this->model->createExisting($this->resultSet->fetchAssoc(), $this->selection);
     $this->position++;
   }
 

@@ -6,6 +6,7 @@
 namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
+use Jivoo\Models\DataType;
 
 /**
  * A read selection.
@@ -21,11 +22,13 @@ interface IReadSelection extends IBasicSelection, \IteratorAggregate {
   public function select($expression, $alias = null);
   
   /**
-   * @param string|array[] $field Virtual field name (alias) or associative array of field names and expressions
-   * @param string $expression Expression to calculate
+   * Append an extra virtual field to the returned records.
+   * @param string $alias Name of new field.
+   * @param string $expression Expression for field, e.g. 'COUNT(*)'.
+   * @param DataType|null $type Optional type of field.
    * @return IReadSelection A read selection.
    */
-  //public function with($field, $expression = null);
+  public function with($field, $expression, DataType $type = null);
   
   /**
    * Group by one or more columns.
