@@ -292,6 +292,7 @@ abstract class Model extends Module implements IModel {
       case 'or':
         return call_user_func_array(array(new Selection($this), 'orWhere'), $args);
     }
+    parent::__call($method, $args);
   }
 
   /**
