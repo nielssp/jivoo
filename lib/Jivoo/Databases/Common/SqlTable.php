@@ -149,11 +149,11 @@ class SqlTable extends Table {
     }
     else {
       $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
-    }
-    if (!empty($selection->additionalFields)) {
-      $fields = $selection->additionalFields;
-      array_walk($fields, array($this, 'getColumnList'));
-      $sqlString .= ', ' . implode(', ', $fields);
+      if (!empty($selection->additionalFields)) {
+        $fields = $selection->additionalFields;
+        array_walk($fields, array($this, 'getColumnList'));
+        $sqlString .= ', ' . implode(', ', $fields);
+      }
     }
     $sqlString .= ' FROM ' . $this->owner->quoteTableName($this->name);
     if (!empty($selection->sources)) {
@@ -175,20 +175,21 @@ class SqlTable extends Table {
     }
     if (!empty($selection->joins)) {
       foreach ($selection->joins as $join) {
-        if ($join['source'] instanceof SqlTable) {
-          if ($join['source']->owner !== $this->owner) {
-            throw new \Exception(tr(
-              'Unable to join SqlTable with table of different database'
-            ));
-          }
-          $table = $join['source']->name;
-        }
-        else {
+        $joinSource = $join['source']->asInstanceOf('Jivoo\Databases\Common\SqlTable');
+        if (!isset($joinSource)) {
           throw new \Exception(tr(
             'Unable to join SqlTable with data source of type "%1"',
             get_class($join['source'])
           ));
         }
+
+        if ($joinSource->owner !== $this->owner) {
+          throw new \Exception(tr(
+            'Unable to join SqlTable with table of different database'
+          ));
+        }
+        $table = $joinSource->name;
+
         $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->quoteTableName($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];

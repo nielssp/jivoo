@@ -24,7 +24,7 @@ class PaginationHelper extends Helper {
   /**
    * @var int Total number of items.
    */
-  private $count = 0;
+  private $count = null;
 
   /**
    * @var int Total number of pages.
@@ -61,10 +61,12 @@ class PaginationHelper extends Helper {
   public function paginate($select, $itemsPerPage = 5) {
     assume($itemsPerPage > 0);
     $this->limit = $itemsPerPage;
-    if ($select instanceof IReadSelection)
-      $this->count = $select->count();
-    else
-      $this->count = count($select);
+    if (!isset($this->count)) {
+      if ($select instanceof IReadSelection)
+        $this->count = $select->count();
+      else
+        $this->count = count($select);
+    }
     $this->pages = max(ceil($this->count / $this->limit), 1);
     
     if (isset($this->request->query['page'])) {
@@ -94,6 +96,14 @@ class PaginationHelper extends Helper {
     }
   }
 
+  /**
+   * Manually set total number of items.
+   * @param int $count Number of items.
+   */
+  public function setCount($count) {
+    $this->count = $count;
+  }
+  
   /**
    * Get total number of items.
    * @return int Number of items.

@@ -89,6 +89,15 @@ abstract class Model extends Module implements IModel {
     }
     return $this->where($condition);
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function asInstanceOf($class) {
+    if ($this instanceof $class)
+      return $this;
+    return null;
+  }
 
   /**
    * {@inheritdoc}

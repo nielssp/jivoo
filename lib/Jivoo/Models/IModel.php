@@ -52,6 +52,13 @@ interface IModel extends Selection\ISelection, IBasicModel {
    * @return IRecord|null A single matching record or null if it doesn't exist.
    */
   public function find($primary);
+
+  /**
+   * Convert model to another type (for the purpose of joining).
+   * @param string $class Name of model class to convert to.
+   * @return IModel|null New instance or null if not possible.
+   */
+  public function asInstanceOf($class);
   
   /**
    * Create a record.

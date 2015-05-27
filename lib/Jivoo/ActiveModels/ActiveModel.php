@@ -296,6 +296,15 @@ abstract class ActiveModel extends Model implements IEventListener {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function asInstanceOf($class) {
+    if ($this->source instanceof $class)
+      return $this->source;
+    return parent::asInstanceOf($class);
+  }
+
+  /**
    * Add record to model cache.
    * @param ActiveRecord $record Record.
    */
