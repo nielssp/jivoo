@@ -122,6 +122,10 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
+    if (isset($this->groupBy)) {
+      $columns = array_merge($this->groupBy['columns'], $columns);
+      $condition = where($this->groupBy['condition'])->and($condition);
+    }
     $this->groupBy = array('columns' => $columns, 'condition' => $condition,);
     return $this;
   }
