@@ -6,7 +6,7 @@
 namespace Jivoo\View\Compile;
 
 abstract class TemplateNode {
-  private $transformations = array();
+  private $macros = array();
 
   /**
    * @var InternalNode
@@ -21,7 +21,7 @@ abstract class TemplateNode {
 
   public function __get($property) {
     switch ($property) {
-      case 'transformations':
+      case 'macros':
       case 'parent':
       case 'next':
       case 'prev':
@@ -37,14 +37,31 @@ abstract class TemplateNode {
   public function detach() {
     assume(isset($this->parent));
     $this->parent->remove($this);
+    return $this;
+  }
+  
+  public function before(TemplateNode $node) {
+    assume(isset($this->parent));
+    $this->parent->insert($node, $this);
+    return $this;
+  }
+  
+  public function after(TemplateNode $node) {
+    assume(isset($this->parent));
+    if (isset($this->next))
+      $this->next->before($node);
+    else
+      $this->parent->prepend($node);
+    return $this;
   }
 
   public function replaceWith(TemplateNode $node) {
     assume(isset($this->parent));
     $this->parent->replace($this, $node);
+    return $node;
   }
 
-  public function addTransformation($transformation, $value = null) {
-    $this->transformations[$transformation] = $value;
+  public function addMacro($macro, $value = null) {
+    $this->macros[$macro] = $value;
   }
 }

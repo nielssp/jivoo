@@ -47,6 +47,20 @@ class InternalNode extends TemplateNode implements \Countable {
     $node->prev = null;
     return $this;
   }
+  
+  public function insert(TemplateNode $node, TemplateNode $next) {
+    assume($next->parent === $this);
+    assume(!isset($node->parent));
+    $offset = array_search($next, $this->content, true);
+    array_splice($this->content, $offset, 0, array($node));
+    $node->parent = $this;
+    $node->next = $next;
+    $node->prev = $next->prev;
+    $next->prev = $node;
+    if (isset($node->prev))
+      $node->prev->next = $node;
+    return $this;
+  }
 
   public function replace(TemplateNode $node, TemplateNode $replacement) {
     assume($node->parent === $this);

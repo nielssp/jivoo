@@ -11,6 +11,8 @@ class PhpNode extends TemplateNode {
 
   public function __construct($code, $statement = false) {
     parent::__construct();
+    if (!$statement)
+      $code = rtrim(trim($code), ';');
     $this->code = $code;
     $this->statement = $statement;
   }

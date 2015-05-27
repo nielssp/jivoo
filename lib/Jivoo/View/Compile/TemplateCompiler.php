@@ -10,15 +10,15 @@ namespace Jivoo\View\Compile;
  */
 class TemplateCompiler {
   
-  private $transformations = array();
+  private $macros = array();
   
-  public function __construct($defaultTransformations = true) {
-    if ($defaultTransformations)
-      $this->transformations = DefaultTransformations::getTransformations();
+  public function __construct($defaultMacros = true) {
+    if ($defaultMacros)
+      $this->macros = DefaultMacros::getMacros();
   }
   
-  public function addTransformation($name, $transformer) {
-    $this->transformations[strtolower($name)] = $transformer;
+  public function addMacro($name, $function) {
+    $this->macros[strtolower($name)] = $function;
   }
   
   public function compile($template) {
@@ -51,7 +51,7 @@ class TemplateCompiler {
         if ($name[0] == 'j' and $name[1] == ':') {
           if ($value === true)
             $value = null;
-          $output->addTransformation(substr($name, 2), $value);
+          $output->addMacro(substr($name, 2), $value);
         }
         else {
           $output->setAttribute($name, new TextNode($value));
@@ -68,10 +68,10 @@ class TemplateCompiler {
       foreach ($node->getChildren() as $child)
         $this->transform($child);
     }
-    foreach ($node->transformations as $transformation => $value) {
-      if (!isset($this->transformations[$transformation]))
-        throw new \Exception(tr('Undefined transformation: %1', $transformation));
-      $this->transformations[$transformation]($node, $value);
+    foreach ($node->macros as $macro => $value) {
+      if (!isset($this->macros[$macro]))
+        throw new \Exception(tr('Undefined macro: %1', $macro));
+      $this->macros[$macro]($node, $value);
       if (!isset($node->parent))
         return;
     }

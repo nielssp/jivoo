@@ -5,30 +5,57 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
-class DefaultTransformations {
-  
-  public static function getTransformations() {
+class DefaultMacros {
+  public static function getMacros() {
     $functions = array(
-      'outertext', 'innertext', 'text', 'if', 'else', 'foreach',
-      'href', 'tr', 'tn' 
+      'outerhtml', 'innerhtml', 'outertext', 'innertext', 'html', 'text',
+      'embed', 'block', 'layout', 'nolayout', 'extend',
+      'if', 'else', 'foreach',
+      'tr', 'tn',
+      'href', 'src'
     );
-    $transformations = array();
+    $macros = array();
     foreach ($functions as $function)
-      $transformations[$function] = array(
-        'Jivoo\View\Compile\DefaultTransformations',
+      $macros[$function] = array(
+        'Jivoo\View\Compile\DefaultMacros',
         '_' . $function
       );
-    return $transformations;
+    return $macros;
+  }
+
+  static function _outerhtml(HtmlNode $node, $value) {
+    $node->replaceWith(new PhpNode($value));
+  }
+  static function _innerhtml(HtmlNode $node, $value) {
+    $node->clear()->append(new PhpNode($value));
   }
   
   static function _outertext(HtmlNode $node, $value) {
-    $node->replaceWith(new PhpNode($value));
+    $node->replaceWith(new PhpNode('h(' . $value . ')'));
   }
   static function _innertext(HtmlNode $node, $value) {
-    $node->clear()->append(new PhpNode($value));
+    $node->clear()->append(new PhpNode('h(' . $value . ')'));
+  }
+  static function _html(HtmlNode $node, $value) {
+    self::_innerhtml($node, $value);
   }
   static function _text(HtmlNode $node, $value) {
     self::_innertext($node, $value);
+  }
+  static function _embed(HtmlNode $node, $value) {
+    $node->replaceWith(new PhpNode('$this->embed(' . var_export($value, true) . ')'));
+  }
+  static function _block(HtmlNode $node, $value) {
+    $node->replaceWith(new PhpNode('$this->block(' . var_export($value, true) . ')'));
+  }
+  static function _layout(HtmlNode $node, $value) {
+    $node->before(new PhpNode('$this->layout(' . var_export($value, true) . ')', true));
+  }
+  static function _nolayout(HtmlNode $node, $value) {
+    $node->before(new PhpNode('$this->disableLayout()', true));
+  }
+  static function _extend(HtmlNode $node, $value) {
+    $node->before(new PhpNode('$this->extend(' . var_export($value, true) . ')', true));
   }
   static function _if(HtmlNode $node, $value) {
     if (!isset($value)) {
@@ -90,6 +117,9 @@ class DefaultTransformations {
   }
   static function _href(HtmlNode $node, $value) {
     $node->setAttribute('href', new PhpNode('$this->link(' . $value . ')'));
+  }
+  static function _src(HtmlNode $node, $value) {
+    $node->setAttribute('src', new PhpNode('$this->link(' . $value . ')'));
   }
   static function _tr(HtmlNode $node, $value) {
     $translate = '';
