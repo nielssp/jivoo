@@ -27,9 +27,15 @@ class TemplateCompiler {
     
     $root = new InternalNode();
     
-    foreach ($dom->find('*') as $html) {
-      $root->append($this->convert($html));
-    } 
+    $main = $dom->find('[j:main]', 0);
+    if (isset($main)) {
+      $root->append($this->convert($main));
+    }
+    else {
+      foreach ($dom->find('*') as $html) {
+        $root->append($this->convert($html));
+      } 
+    }
     
     $this->transform($root);
     

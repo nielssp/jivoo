@@ -9,7 +9,7 @@ class DefaultMacros {
   public static function getMacros() {
     $functions = array(
       'outerhtml', 'innerhtml', 'outertext', 'innertext', 'html', 'text',
-      'embed', 'block', 'layout', 'nolayout', 'extend',
+      'main', 'embed', 'block', 'layout', 'nolayout', 'extend',
       'if', 'else', 'foreach',
       'tr', 'tn',
       'href', 'src'
@@ -41,6 +41,8 @@ class DefaultMacros {
   }
   static function _text(HtmlNode $node, $value) {
     self::_innertext($node, $value);
+  }
+  static function _main(HtmlNode $node, $value) {
   }
   static function _embed(HtmlNode $node, $value) {
     $node->replaceWith(new PhpNode('$this->embed(' . var_export($value, true) . ')'));
