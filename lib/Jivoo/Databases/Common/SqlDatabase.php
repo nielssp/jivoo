@@ -142,8 +142,8 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
    * Placeholders (see also {@see DataType::fromPlaceHolder()}:
    * <code>
    * ? // Any scalar value.
-   * %true // Boolean true
-   * %false // Boolean false
+   * true // Boolean true
+   * false // Boolean false
    * {AnyTableName} // A table name
    * %i %int %integer // An integer value
    * %f %float // A floating point value
