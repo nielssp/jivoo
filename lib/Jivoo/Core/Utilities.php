@@ -152,7 +152,7 @@ class Utilities {
       return mb_substr($string, $start, $length, 'UTF-8');
     }
     else {
-      return join('', array_slice(
+      return implode('', array_slice(
         preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY), $start, $length
       ));
     }
