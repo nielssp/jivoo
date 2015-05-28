@@ -124,7 +124,9 @@ class Routing extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $events = array('beforeLoadRoutes', 'afterLoadRoutes', 'beforeFindRoute', 'beforeRender', 'afterRender', 'beforeRedirect', 'beforeCallAction', 'afterCallAction');
+  protected $events = array('beforeLoadRoutes', 'afterLoadRoutes', 
+    'beforeFindRoute', 'beforeRender', 'afterRender', 'beforeRedirect', 
+    'beforeDispatch', 'afterDispatch');
 
   /**
    * {@inheritdoc}
@@ -716,7 +718,9 @@ class Routing extends LoadableModule {
     $this->selection = $route;
     
     Logger::debug(tr('Dispatch: %1', $route['dispatcher']->fromRoute($route)));
-    
+
+    $event->route = $route;
+    $this->triggerEvent('beforeDispatch', $event);
     $this->rendered = true;
     $this->request->route = $route;
     try {
@@ -738,6 +742,7 @@ class Routing extends LoadableModule {
       return $this->followRoute($this->error);
     }
     $event->response = $response;
+    $this->triggerEvent('afterDispatch', $event);
     $this->triggerEvent('afterFollowRoute', $event);
     $this->respond($response);
   }
