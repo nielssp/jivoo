@@ -46,9 +46,7 @@ class Migrations extends LoadableModule {
    */
   protected function init() {
     $this->config->defaults = array(
-      'force' => false,
-      'indicator' => 'version',
-      'versions' => array(),
+      'automigrate' => false,
       'mtimes' => array()
     );
     
@@ -90,6 +88,19 @@ class Migrations extends LoadableModule {
     assume($db instanceof IMigratableDatabase);
     $this->migrationDirs[$name] = $migrationDir;
     $this->connections[$name] = $db;
+    if ($this->config['automigrate']) {
+      $mtime = filemtime($this->migrationDirs[$name] . '/.');
+      if (!isset($this->config['mtimes'][$name]) or $this->config['mtimes'][$name] != $mtime) {
+        // TODO: trigger MigrationUpdater
+        $migrations = $this->check($name);
+        foreach ($migrations as $migration) {
+          $this->run($name, $migration);
+        }
+        $this->finalize($name);
+        $this->config['mtimes'][$name] = $mtime;
+        $this->m->Routing->refresh();
+      }
+    }
   }
   
   /**

@@ -14,5 +14,8 @@ return array(
   ),
   'View' => array(
     'compileTemplates' => true
+  ),
+  'Migrations' => array(
+    'automigrate' => true
   )
 );

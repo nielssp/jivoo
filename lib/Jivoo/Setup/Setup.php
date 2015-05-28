@@ -75,6 +75,11 @@ class Setup extends LoadableModule {
         }
       }
     }
+    if (isset($this->app->appConfig['update'])) {
+      if ($this->config->get('version', $this->app->version) !== $this->app->version) {
+        $installer = $this->app->appConfig['update'];
+      }
+    }
   }
   
   public function getLock() {
