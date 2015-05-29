@@ -214,11 +214,12 @@ class Controller extends Module {
    * @return Response Response.
    */
   protected function embed($controller, $action, $parameters = array()) {
-    $this->m->Routing->dispatchers->action->dispatch(array(
+    $dispatch = $this->m->Routing->dispatchers->action->createDispatch(array(
       'controller' => $controller,
       'action' => $action,
       'parameters' => $parameters
     ));
+    $response = $dispatch();
   }
 
   /**

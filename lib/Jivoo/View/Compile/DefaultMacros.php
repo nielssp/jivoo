@@ -12,8 +12,9 @@ class DefaultMacros {
       'main', 'embed', 'block', 'layout', 'nolayout', 'extend',
       'if', 'else', 'foreach',
       'tr', 'tn',
-      'href',
-      'src', 'alt'
+      'href', 'datetime',
+      // attributes
+      'src', 'alt', 'title'
     );
     $macros = array();
     foreach ($functions as $function)
@@ -123,6 +124,9 @@ class DefaultMacros {
     $foreachNode = new ForeachNode($value);
     $node->replaceWith($foreachNode);
     $foreachNode->append($node);
+  }
+  static function _datetime(HtmlNode $node, $value) {
+    $node->setAttribute('datetime', new PhpNode('date(\'c\', ' . $value . ')'));
   }
   static function _href(HtmlNode $node, $value) {
     if ($node->hasAttribute('class')) {
