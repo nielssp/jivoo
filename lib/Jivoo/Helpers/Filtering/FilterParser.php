@@ -163,17 +163,23 @@ class FilterParser {
   private function parseTerm() {
     if ($this->accept('(')) {
       $node = $this->parseFilter();
-      $this->expect(')');
+      $this->accept(')');
       return $node;
     }
-    $this->expect();
+    if (!$this->accept())
+      return new StringNode('');
     $field = $this->currentToken[1];
     if ($this->isComparisonOperator()) {
-      $this->expect();
+      if (!$this->accept())
+        return new StringNode($field);
       $comparison = $this->currentToken[0];
       if ($this->accept('(')) {
         $node = new FilterNode();
-        $this->expect();
+        if (!$this->accept()) {
+          $node->children[] = new StringNode($field);
+          $node->children[] = new StringNode($comparison);
+          return $node;
+        }
         $node->children[] = new ComparisonNode($field, $comparison, $this->currentToken[1]);
         while ($this->nextToken != null && !$this->is(')')) {
           $operator = 'and';
@@ -181,15 +187,19 @@ class FilterParser {
             $operator = 'or';
           else
             $this->accept('&');
-          $this->expect();
+          if (!$this->accept()) {
+            $node->children[] = new StringNode($operator);
+            return $node;
+          }
           $child = new ComparisonNode($field, $comparison, $this->currentToken[1]);
           $child->operator = $operator;
           $node->children[] = $child;
         }
-        $this->expect(')');
+        $this->accept(')');
         return $node;
       }
-      $this->expect();
+      if (!$this->accept())
+        return new FilterNode(new StringNode($field), new StringNode($comparison));
       return new ComparisonNode($field, $comparison, $this->currentToken[1]);
     }
     return new StringNode($field);

@@ -10,15 +10,19 @@ use Jivoo\Models\IBasicRecord;
 class RecordFilterVisitor extends FilterVisitor {
 
   private $record;
+  private $model;
   private $primary;
 
   public function __construct($Filtering, IBasicRecord $record = null) {
     $this->primary = $Filtering->primary;
     $this->record = $record;
+    if (isset($record))
+      $this->model = $record->getModel();
   }
   
   public function setRecord(IBasicRecord $record) {
     $this->record = $record;
+    $this->model = $record->getModel();
   }
 
   protected function visitFilter(FilterNode $node) {
@@ -37,21 +41,24 @@ class RecordFilterVisitor extends FilterVisitor {
     return !$this->visit($node->child);
   }
   protected function visitComparison(ComparisonNode $node) {
-    /// @TODO check for existence of column. AND TYPE
     $field = $node->left;
+    if (!$this->model->hasField($field))
+      return false;
+    $type = $this->model->getType($field);
+    $right = $type->convert($node->right);
     switch ($node->comparison) {
       case '=':
-        return $this->record->$field == $node->right;
+        return $this->record->$field == $right;
       case '!=':
-        return $this->record->$field != $node->right;
+        return $this->record->$field != $right;
       case '<=':
-        return $this->record->$field <= $node->right;
+        return $this->record->$field <= $right;
       case '>=':
-        return $this->record->$field >= $node->right;
+        return $this->record->$field >= $right;
       case '>':
-        return $this->record->$field > $node->right;
+        return $this->record->$field > $right;
       case '<':
-        return $this->record->$field < $node->right;
+        return $this->record->$field < $right;
       case 'contains':
         return stripos($this->record->$field, $node->right) !== false;
     }

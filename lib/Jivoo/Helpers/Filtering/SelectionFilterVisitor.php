@@ -6,15 +6,20 @@
 namespace Jivoo\Helpers\Filtering;
 
 use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\Condition\NotCondition;
+use Jivoo\Models\IBasicModel;
 
 class SelectionFilterVisitor extends FilterVisitor {
 
   private $Filtering;
   private $primary;
+  
+  private $model;
 
-  public function __construct($Filtering) {
+  public function __construct($Filtering, IBasicModel $model) {
     $this->Filtering = $Filtering;
     $this->primary = $this->Filtering->primary;
+    $this->model = $model;
   }
 
   protected function visitFilter(FilterNode $node) {
@@ -34,6 +39,11 @@ class SelectionFilterVisitor extends FilterVisitor {
   }
   protected function visitComparison(ComparisonNode $node) {
     /// @TODO check for existence of column. AND TYPE
+    if (!$this->model->hasField($node->left))
+      return new Condition('false');
+    $type = $this->model->getType($node->left);
+    $right = $type->convert($node->right);
+    $placeholder = $type->placeholder;
     switch ($node->comparison) {
       case '=':
       case '!=':
@@ -41,10 +51,11 @@ class SelectionFilterVisitor extends FilterVisitor {
       case '>=':
       case '>':
       case '<':
-        return new Condition($node->left . ' ' . $node->comparison . ' ?', $node->right);
+        return new Condition($node->left . ' ' . $node->comparison . ' ' . $placeholder, $right);
       case 'contains':
-        return new Condition($node->left . ' LIKE %s', '%' . $node->right . '%');
+        return new Condition($node->left . ' LIKE %s', '%' . Condition::escapeLike($right) . '%');
     }
+    return new Condition('false');
   }
   protected function visitString(StringNode $node) {
     if (count($this->primary) == 0)

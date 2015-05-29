@@ -50,7 +50,7 @@ class DataTableSnippet extends JtkSnippet {
       $o->columns->objectAt(0)->primary = true;
     }
     
-    $o->selection = $this->Filtering->apply($o->selection);
+    $o->selection = $this->Filtering->apply($o->selection, $o->model);
     
     if (count($o->sortOptions) == 0)
       $o->sortOptions = $o->columns;

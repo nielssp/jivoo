@@ -13,6 +13,7 @@ use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Record;
+use Jivoo\Models\Condition\NotCondition;
 
 /**
  * A table in an SQL database.

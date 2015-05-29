@@ -10,6 +10,7 @@ use Jivoo\Helpers\Filtering\SelectionFilterVisitor;
 use Jivoo\Helpers\Filtering\FilterParser;
 use Jivoo\Helpers\Filtering\FilterScanner;
 use Jivoo\Helpers\Filtering\RecordFilterVisitor;
+use Jivoo\Models\IBasicModel;
 
 // missing features:
 //    "status=(draft|published)"  ... must be only one set of parentheses, and only OR's
@@ -59,9 +60,10 @@ class FilteringHelper extends Helper {
   /**
    * 
    * @param IBasicSelection|IBasicRecord[] $selection
+   * @param IBasicModel $model Model.
    * @return unknown|Condition
    */
-  public function apply($selection) {
+  public function apply($selection, IBasicModel $model) {
     if (!isset($this->query) or empty($this->query))
       return $selection;
     if (!isset($this->scanner))
@@ -73,7 +75,7 @@ class FilteringHelper extends Helper {
       return $selection;
     $root = $this->parser->parse($tokens);
     if ($selection instanceof IBasicSelection) {
-      $visitor = new SelectionFilterVisitor($this);
+      $visitor = new SelectionFilterVisitor($this, $model);
       $selection = $selection->where($visitor->visit($root));
       return $selection;
     }
