@@ -9,20 +9,14 @@ use Jivoo\Controllers\Controller;
 
 /**
  * Represents a request for authorization
- * @property-read Controller $controller Target controller of authorization.
- * @property-read string $action Target action.
+ * @property-read array|ILinkable|string|null $route A route, see {@see Routing}.
  * @property-read mixed $user User data of requesting user.
  */
 class AuthorizationRequest {
   /**
-   * @var Controller Controller.
+   * @var array|ILinkable|string|null $route A route, see {@see Routing}.
    */
-  private $controller;
-  
-  /**
-   * @var string Name of action.
-   */
-  private $action;
+  private $route;
   
   /**
    * @var mixed User data.
@@ -31,13 +25,11 @@ class AuthorizationRequest {
   
   /**
    * Construct authorization request.
-   * @param Controller $controller Target controller of authorization.
-   * @param string $action Target action.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param mixed $user User data of requesting user.
    */
-  public function __construct(Controller $controller, $action, $user = null) {
-    $this->controller = $controller;
-    $this->action = $action;
+  public function __construct($route, $user = null) {
+    $this->route = $route;
     $this->user = $user;
   }
   
@@ -49,8 +41,7 @@ class AuthorizationRequest {
    */
   public function __get($property) {
     switch ($property) {
-      case 'controller':
-      case 'action':
+      case 'route':
       case 'user':
         return $this->$property;
     }

@@ -720,40 +720,37 @@ class Routing extends LoadableModule {
     Logger::debug(tr('Dispatch: %1', $route['dispatcher']->fromRoute($route)));
 
     $event->route = $route;
-    $this->triggerEvent('beforeDispatch', $event);
-    $this->rendered = true;
+    $this->triggerEvent('beforeCreateDispatch', $event);
     $this->request->route = $route;
+    $dispatch = $route['dispatcher']->createDispatch($route);
+    
+    $this->triggerEvent('afterCreateDispatch', $event);
+
+    $this->triggerEvent('beforeDispatch', $event);
     try {
-      $response = $route['dispatcher']->dispatch($route);
-      
-      if (is_string($response))
-        $response = new TextResponse(Http::OK, 'text', $response);
-      if (!($response instanceof Response)) {
-        $routeString = $route['dispatcher']->fromRoute($route);
-        throw new InvalidResponseException(tr(
-          'An invalid response was returned for: %1', $routeString
-        ));
-      }
+      $response = $this->dispatch($dispatch);
     }
-    catch (ResponseOverrideException $e) {
-      $response = $e->getResponse();
-    }
-    catch (NotFoundException $e) {
-      return $this->followRoute($this->error);
+    catch (InvalidResponseException $e) {
+      $routeString = $route['dispatcher']->fromRoute($route);
+      throw new InvalidResponseException(tr(
+        'An invalid response was returned for: %1', $routeString
+      ), null, $e);
     }
     $event->response = $response;
+    $this->rendered = true;
     $this->triggerEvent('afterDispatch', $event);
-    $this->triggerEvent('afterFollowRoute', $event);
     $this->respond($response);
   }
   
   /**
-   * Use a custom dispatch function.
-   * @param callable $function Custom dispatch function.
+   * Create a response from a dispatch function.
+   * @param callable $function Dispatch function returning a {@see Response} or
+   * a string.
    * @param mixed $args,... Additional parameters for function.
    * @throws InvalidResponseException If response is invalid.
+   * @return Response Response object.
    */
-  public function customDispatch($function) {
+  public function dispatch($function) {
     $args = func_get_args();
     array_shift($args);
     try {
@@ -769,10 +766,10 @@ class Routing extends LoadableModule {
       $response = new TextResponse(Http::OK, 'text', $response);
     if (!($response instanceof Response)) {
       throw new InvalidResponseException(tr(
-        'An invalid response was returned'
+        'An invalid response was returned from a dispatch function'
       ));
     }
-    $this->respond($response);
+    return $response;
   }
 
   /**

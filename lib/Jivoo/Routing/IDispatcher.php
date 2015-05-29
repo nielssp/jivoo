@@ -62,9 +62,10 @@ interface IDispatcher {
   public function getPath($route, $path = null);
   
   /**
-   * Respond to a route array.
+   * Create a dispatch function based on a validated route array.
    * @param array $route Route array.
-   * @return Response|string Response object or content.
+   * @return callable Dispatch function that returns a {@see Respone} object or
+   * a string.
    */
-  public function dispatch($route);
+  public function createDispatch($route);
 }

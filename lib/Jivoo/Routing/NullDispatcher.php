@@ -61,7 +61,7 @@ class NulLDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
-  public function dispatch($route) {
+  public function createDispatch($route) {
     throw new InvalidRouteException(tr('Trying to dispatch null route.'));
   }
 }

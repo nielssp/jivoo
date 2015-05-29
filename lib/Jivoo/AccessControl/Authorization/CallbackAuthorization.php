@@ -7,11 +7,13 @@ namespace Jivoo\AccessControl\Authorization;
 
 use Jivoo\AccessControl\LoadableAuthorization;
 use Jivoo\AccessControl\AuthorizationRequest;
+use Jivoo\Controllers\ActionDispatcher;
+use Jivoo\Snippets\SnippetDispatcher;
 
 /**
  * Authorize without the use of Access Control Lists. Calls the method
- * "authorize" in the current controller with the name of the action as a
- * parameter. The name of the method can be changed with the option "method".
+ * "authorize" in the current controller or snippet with the name of the action
+ * as a parameter. The name of the method can be changed with the option "method".
  */
 class CallbackAuthorization extends LoadableAuthorization {
   /**
@@ -25,9 +27,19 @@ class CallbackAuthorization extends LoadableAuthorization {
    * {@inheritdoc}
    */
   public function authorize(AuthorizationRequest $authRequest) {
-    return call_user_func(
-      array($authRequest->controller, $this->options['method']),
-      $authRequest->action
-    );
+    $route = $authRequest->route;
+    if ($route['dispatcher'] instanceof ActionDispatcher) {
+      $controller = $this->m->Controllers->getController($route['controller']);
+      return call_user_func(
+        array($controller, $this->options['method']),
+        $route['action']
+      );
+    }
+    else if ($route['dispatcher'] instanceof SnippetDispatcher) {
+      $snippet = $this->m->Snippets->getSnippet($route['snippet']);
+      return call_user_func(
+        array($snippet, $this->options['method'])
+      );
+    }
   }
 }

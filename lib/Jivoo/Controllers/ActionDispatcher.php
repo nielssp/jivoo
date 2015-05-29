@@ -199,7 +199,7 @@ class ActionDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
-  public function dispatch($route) {
+  public function createDispatch($route) {
     $controller = $this->controllers->getController($route['controller']);
     if (!isset($controller))
       throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
@@ -211,17 +211,13 @@ class ActionDispatcher implements IDispatcher {
         $route['controller'] . '::' . $route['action']
       ));
     }
-    $controller->before();
-    $response = call_user_func_array(array($controller, $route['action']), $route['parameters']);
-    if (is_string($response))
-      $response = new TextResponse(Http::OK, 'text', $response);
-    if (!($response instanceof Response)) {
-      throw new InvalidResponseException(tr(
-        'An invalid response was returned from action: %1',
-        $route['controller'] . '::' . $route['action']
-      ));
-    }
-    $controller->after($response);
-    return $response;
+    return function() use($controller, $route) {
+      $controller->before();
+      $response = call_user_func_array(array(
+        $controller, $route['action']), $route['parameters']
+      );
+      $controller->after($response);
+      return $response;
+    };
   }
 }

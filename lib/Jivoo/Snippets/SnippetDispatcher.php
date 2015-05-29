@@ -25,7 +25,7 @@ class SnippetDispatcher implements IDispatcher {
   private $routing;
   
   /**
-   * @var Snippet Snippets module;
+   * @var Snippets Snippets module;
    */
   private $snippets;
   
@@ -117,20 +117,16 @@ class SnippetDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
-  public function dispatch($route) {
+  public function createDispatch($route) {
     $snippet = $this->snippets->getSnippet($route['snippet']);
     if (!isset($snippet))
       throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
-    $snippet->enableLayout();
-    $response = $snippet($route['parameters']);
-    if (is_string($response))
-      $response = new TextResponse($snippet->getStatus(), 'text/html', $response);
-    if (!($response instanceof Response)) {
-      throw new InvalidResponseException(tr(
-        'An invalid response was returned from snippet: %1',
-        $route['snippet']
-      ));
-    }
-    return $response;
+    return function() use($snippet, $route) {
+      $snippet->enableLayout();
+      $response = $snippet($route['parameters']);
+      if (is_string($response))
+        $response = new TextResponse($snippet->getStatus(), 'text/html', $response);
+      return $response;
+    };
   }
 }

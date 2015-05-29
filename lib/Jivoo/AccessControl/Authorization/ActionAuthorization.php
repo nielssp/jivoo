@@ -7,6 +7,7 @@ namespace Jivoo\AccessControl\Authorization;
 
 use Jivoo\AccessControl\LoadableAuthorization;
 use Jivoo\AccessControl\AuthorizationRequest;
+use Jivoo\Controllers\ActionDispatcher;
 
 /**
  * Authorize based on name of controller and action, e.g. checks permission
@@ -18,9 +19,13 @@ class ActionAuthorization extends LoadableAuthorization {
    * {@inheritdoc}
    */
   public function authorize(AuthorizationRequest $authRequest) {
-    \Jivoo\Core\Logger::debug('authorize ' . $authRequest->controller->getName() . '.' . $authRequest->action);
-    return $this->Auth->hasPermission(
-      $authRequest->controller->getName() . '.' . $authRequest->action
-    );
+    $route = $authRequest->route; 
+    if ($route['dispatcher'] instanceof ActionDispatcher) {
+      $controller = $this->m->Controllers->getController($route['controller']);
+      \Jivoo\Core\Logger::debug('authorize ' . $controller->getName() . '.' . $route['action']);
+      return $this->Auth->hasPermission(
+        $controller->getName() . '.' . $route['action']
+      );
+    }
   }
 }

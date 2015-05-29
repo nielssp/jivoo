@@ -85,7 +85,9 @@ class PathDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
-  public function dispatch($route) {
-    return $this->routing->redirectPath($route['path']);
+  public function createDispatch($route) {
+    return function() use($route) {
+      return $this->routing->redirectPath($route['path']);
+    };
   }
 }

@@ -8,6 +8,7 @@ namespace Jivoo\AccessControl;
 use Jivoo\Helpers\Helper;
 use Jivoo\AccessControl\Acl\DefaultAcl;
 use Jivoo\Core\Lib;
+use Jivoo\Routing\RenderEvent;
 
 /**
  * Helper class for authentication and autorization.
@@ -441,10 +442,10 @@ class AuthHelper extends Helper {
    * Check user authorization for an action. 
    * @param CallActionEvent $event The action event.
    */
-  public function checkAuthorization(CallActionEvent $event) {
+  public function checkAuthorization(RenderEvent $event) {
     if (empty($this->authorizationMethods))
       return;
-    $authRequest = new AuthorizationRequest($event->controller, $event->action, $this->user);
+    $authRequest = new AuthorizationRequest($event->route, $this->user);
     foreach ($this->authorizationMethods as $method) {
       if ($method->authorize($authRequest))
         return;
