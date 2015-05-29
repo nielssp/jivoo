@@ -6,6 +6,8 @@
 namespace Jivoo\Migrations;
 
 use Jivoo\Databases\IMigratableDatabase;
+use Jivoo\Databases\Schema;
+use Jivoo\Models\DataType;
 
 /**
  * Base class for migrations.
