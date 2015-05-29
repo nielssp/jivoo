@@ -44,12 +44,15 @@ class Setup extends LoadableModule {
         if ($this->request->path === array('setup')) {
           $login = $this->m->Snippets->getSnippet('Jivoo\Setup\Login');
           $login->enableLayout();
-          $this->m->Routing->customDispatch($login, array($auth));
+          $response = $this->m->Routing->dispatch($login, array($auth));
         }
-        $this->m->Routing->customDispatch(
-          array($this->view, 'render'),
-          'setup/maintenance.html'
-        );
+        else {
+          $response = $this->m->Routing->dispatch(
+            array($this->view, 'render'),
+            'setup/maintenance.html'
+          );
+        }
+        $this->m->routing->respond($response);
       }
     }
   }
@@ -65,7 +68,9 @@ class Setup extends LoadableModule {
       if (!$this->config[$installer]->get('done', false)) {
         $snippet = $this->getInstaller($this->app->appConfig['install']);
         try {
-          $this->m->Routing->customDispatch($snippet);
+          $this->m->Routing->respond(
+            $this->m->Routing->dispatch($snippet)
+          );
         }
         catch (InvalidResponseException $e) {
           throw new InvalidResponseException(tr(
