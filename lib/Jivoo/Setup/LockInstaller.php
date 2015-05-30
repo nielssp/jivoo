@@ -37,7 +37,6 @@ class LockInstaller extends InstallerSnippet {
           $auth = $this->m->Setup->getAuth();
           $password = $auth->passwordHasher->hash($form->password);
           $this->m->Setup->lock($form->username, $password);
-          $auth->login($form->getData());
           return $this->next(); 
         }
       }

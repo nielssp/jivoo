@@ -52,7 +52,7 @@ class Setup extends LoadableModule {
             'setup/maintenance.html'
           );
         }
-        $this->m->routing->respond($response);
+        $this->m->Routing->respond($response);
       }
     }
   }
@@ -91,11 +91,19 @@ class Setup extends LoadableModule {
     return $this->lock;
   }
   
-  public function lock($username = null, $passwordHash = null) {
+  public function isLocked() {
+    return $this->lock->get('enable', false);
+  }
+  
+  public function lock($username = null, $passwordHash = null, $authenticated = true) {
     $this->lock['enable'] = true;
     if (isset($username) and isset($passwordHash)) {
       $this->lock['username'] = $username;
       $this->lock['password'] = $passwordHash;
+      if ($authenticated) {
+        $auth = $this->getAuth();
+        $auth->createSession(array('user' => $username));
+      }
     }
     return $this->lock->save();
   }
