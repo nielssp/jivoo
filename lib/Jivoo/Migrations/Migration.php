@@ -65,7 +65,7 @@ abstract class Migration {
       $this->db->createTable($schema);
       $this->schema->createTable($schema);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -79,7 +79,7 @@ abstract class Migration {
       $this->db->dropTable($table); 
       $this->schema->dropTable($table);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -95,7 +95,7 @@ abstract class Migration {
       $this->db->addColumn($table, $column, $type);
       $this->schema->addColumn($table, $column, $type); 
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -110,7 +110,7 @@ abstract class Migration {
       $this->db->deleteColumn($table, $column);
       $this->schema->deleteColumn($table, $column);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -126,7 +126,7 @@ abstract class Migration {
       $this->db->alterColumn($table, $column, $type);
       $this->schema->alterColumn($table, $column, $type); 
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -142,7 +142,7 @@ abstract class Migration {
       $this->db->renameColumn($table, $column, $newName);
       $this->schema->renameColumn($table, $column, $newName);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -159,7 +159,7 @@ abstract class Migration {
       $this->db->createIndex($table, $index, $options);
       $this->schema->createIndex($table, $index, $options);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -174,7 +174,7 @@ abstract class Migration {
       $this->db->deleteIndex($table, $index);
       $this->schema->deleteIndex($table, $index, $options); 
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }
@@ -192,7 +192,7 @@ abstract class Migration {
       $this->alterIndex($table, $index, $options); 
       $this->schema->alterIndex($table, $index, $options);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;
     }
   }

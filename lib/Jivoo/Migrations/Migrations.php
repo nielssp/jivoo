@@ -224,7 +224,7 @@ class Migrations extends LoadableModule {
     }
     catch (\Exception $e) {
       $migration->revert();
-      throw $e;
+      throw new \Exception(tr('Migration failed: ' . $migrationName), null, $e);
     }
   }
   
