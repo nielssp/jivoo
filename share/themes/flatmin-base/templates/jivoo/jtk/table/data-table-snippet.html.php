@@ -172,11 +172,6 @@ else
 </tfoot>
 </table>
 
-<div class="table-operations">
-<span class="selection-count">0</span> items selected
-<a href="#" class="select-all">(Select all <?php echo $Pagination->getCount(); ?> items)</a>
-</div>
-
 <?php echo $this->embed('jivoo/jtk/table/pagination.html', array('Pagination' => $Pagination)); ?>
 
 <div class="table-settings-box">
@@ -201,6 +196,11 @@ else
 </div>
 <?php echo $Form->submit(tr('Save')); ?>
 <?php echo $Form->end(); ?>
+</div>
+
+<div class="table-selection">
+<span class="selection-count">0</span> items selected
+<a href="#" class="select-all">(Select all <?php echo $Pagination->getCount(); ?> items)</a>
 </div>
 
 </div>

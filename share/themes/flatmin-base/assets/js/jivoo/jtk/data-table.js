@@ -13,11 +13,17 @@ $(function() {
         $table.find('th input[type=checkbox]').prop('checked', true);
       else
         $table.find('th input[type=checkbox]').prop('checked', false);
-      $('.table-operations .selection-count').html(selection);
+      $('.table-selection .selection-count').html(selection);
+      if (selection > 0) {
+        $('.table-selection').fadeIn(100);
+      }
+      else {
+        $('.table-selection').fadeOut(100);
+      }
       if (selection == max && selection != itemCount) {
-        $('.table-operations .select-all').show().click(function() {
-          $('.table-operations .selection-count').html(itemCount);
-          $('.table-operations .select-all').hide();
+        $('.table-selection .select-all').show().click(function() {
+          $('.table-selection .selection-count').html(itemCount);
+          $('.table-selection .select-all').hide();
           allSelected = true;
           return false;
         });

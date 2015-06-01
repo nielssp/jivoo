@@ -83,6 +83,35 @@
   }
 }
 
+.table-selection {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  background-color: #ffe;
+  border-top: 1px solid darken($mainBg, 10%);
+  padding: 8px;
+  z-index: 1001;
+
+  @media screen and (min-width: $xs) {
+    left: 32px;
+  }
+  @media screen and (min-width: $md) {
+    left: 220px;
+  }  
+}
+
+body.menu-open {
+  .table-selection {
+    left: 220px;
+    @media screen and (max-width: $md - 1) {
+      right: -220px;
+    }
+  }
+}
+
 .table-settings-box {
   color: $subMenuFg;
   background-color: $subMenuBg;

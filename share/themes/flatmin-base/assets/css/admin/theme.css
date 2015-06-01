@@ -1142,6 +1142,30 @@ nav {
 .table-operations .select-all {
   display: none; }
 
+.table-selection {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  background-color: #ffe;
+  border-top: 1px solid #e6e6e6;
+  padding: 8px;
+  z-index: 1001; }
+  @media screen and (min-width: 480px) {
+    .table-selection {
+      left: 32px; } }
+  @media screen and (min-width: 1010px) {
+    .table-selection {
+      left: 220px; } }
+
+body.menu-open .table-selection {
+  left: 220px; }
+  @media screen and (max-width: 1009px) {
+    body.menu-open .table-selection {
+      right: -220px; } }
+
 .table-settings-box {
   color: #333333;
   background-color: #f7f7f7;
