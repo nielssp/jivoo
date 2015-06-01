@@ -91,7 +91,8 @@ echo $menu();
 
 <?php echo $this->embed('jivoo/jtk/table/pagination.html', array('Pagination' => $Pagination)); ?>
 
-<table>
+<table<?php if (isset($object->density))
+  echo ' class="density-' . $object->density . '"'; ?>>
 <thead>
 <tr>
 <th class="selection" scope="col">
@@ -177,5 +178,29 @@ else
 </div>
 
 <?php echo $this->embed('jivoo/jtk/table/pagination.html', array('Pagination' => $Pagination)); ?>
+
+<div class="table-settings-box">
+<?php echo $Form->formFor($tableSettings); ?>
+<div class="field">
+<?php echo $Form->label('perPage', tr('Rows per page')); ?>
+<?php echo $Form->selectOf('perPage', array(
+  '5' => '5',
+  '10' => '10',
+  '20' => '20',
+  '50' => '50',
+  '100' => '100'
+)); ?>
+</div>
+<div class="field">
+<?php echo $Form->label('density', tr('Row density')); ?>
+<?php echo $Form->selectOf('density', array(
+  'high' => tr('Compact'),
+  'medium' => tr('Cozy'),
+  'low' => tr('Comfortable'),
+)); ?>
+</div>
+<?php echo $Form->submit(tr('Save')); ?>
+<?php echo $Form->end(); ?>
+</div>
 
 </div>

@@ -10,6 +10,8 @@ use Jivoo\Models\IBasicModel;
 use Jivoo\Models\Selection\IBasicSelection;
 use Jivoo\Models\IModel;
 use Jivoo\Models\IBasicRecord;
+use Jivoo\Models\Form;
+use Jivoo\Models\DataType;
 
 /**
  * A data table snippet.
@@ -33,6 +35,35 @@ class DataTableSnippet extends JtkSnippet {
         return $a->$field - $b->$field;
       return strcmp($a->$field, $b->$field);
     }
+  }
+  
+  public function before() {
+    parent::before();
+    if (isset($this->request->cookies['data-table-per-page']))
+      $this->object->rowsPerPage = intval($this->request->cookies['data-table-per-page']);
+    if (isset($this->request->cookies['data-table-density']))
+      $this->object->density = $this->request->cookies['data-table-density'];
+    else
+      $this->object->density = 'medium';
+
+    $tableSettings = new Form('tableSettings');
+    $tableSettings->addField('perPage', DataType::integer(DataType::UNSIGNED));
+    $tableSettings->__set('perPage', $this->object->rowsPerPage);
+    $tableSettings->addField('density', DataType::enum(array('low', 'medium', 'high')));
+    $tableSettings->__set('density', $this->object->density);
+    $this->viewData['tableSettings'] = $tableSettings;
+  }
+  
+  public function post($data) {
+    if (isset($data['tableSettings'])) {
+      $this->viewData['tableSettings']->addData($data['tableSettings']);
+      if ($this->viewData['tableSettings']->isValid()) {
+        $this->request->cookies['data-table-per-page'] = $this->viewData['tableSettings']->perPage;
+        $this->request->cookies['data-table-density'] = $this->viewData['tableSettings']->density;
+        $this->refresh();
+      }
+    }
+    return $this->get();
   }
   
   public function get() {

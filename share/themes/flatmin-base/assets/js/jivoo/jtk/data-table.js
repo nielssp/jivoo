@@ -108,8 +108,13 @@ $(function() {
     
     
     // TABLE SETTINGS
+    var $tableSettings = $dataTable.find('.table-settings-box');
     $dataTable.find('.table-settings').click(function() {
-      alert('settings');
+      var position = $(this).offset();
+      $tableSettings.css('right', $(document).width() - position.left - $(this).width());
+      $tableSettings.css('top', position.top + $(this).height());
+      $tableSettings.toggle(200);
+      return false;
     });
     
     

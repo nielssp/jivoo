@@ -105,6 +105,14 @@ class PaginationHelper extends Helper {
   }
   
   /**
+   * Get number of items per page.
+   * @return int Items per page.
+   */
+  public function getItemsPerPage() {
+    return $this->limit;
+  }
+  
+  /**
    * Get total number of items.
    * @return int Number of items.
    */

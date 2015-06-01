@@ -83,6 +83,42 @@
   }
 }
 
+.table-settings-box {
+  color: $subMenuFg;
+  background-color: $subMenuBg;
+  width: 240px;
+  box-shadow: 0px 2px 4px darken($subMenuBg, 30%);
+  position: absolute;
+  padding: 12px;
+  display: none;
+  font-size: 0.9em;
+  
+  form {
+    margin: 0
+  }
+
+  .field {
+    margin-left: 0;
+    margin-bottom: 0;
+    label:first-child {
+      float: none;
+      width: auto;
+      margin-left: 0;
+    }
+    input[type=text],
+    input[type=email],
+    input[type=password],
+    input[type=date],
+    input[type=time],
+    input[type=datetime],
+    textarea,
+    select {
+      width: 100%;
+      margin: 0 0 6px 0;
+    }
+  }
+}
+
 .pagination {
   text-align: center;
   margin-left: 8px;
@@ -116,5 +152,16 @@
 .data-table {
   table {
     clear: right;
+
+    &.density-low {
+      @include table-density(12px);
+    }
+    &.density-medium {
+      @include table-density(9px);
+    }
+    &.density-high {
+      @include table-density(6px);
+    }
   }
 }
+

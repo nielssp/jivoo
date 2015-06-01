@@ -1142,6 +1142,35 @@ nav {
 .table-operations .select-all {
   display: none; }
 
+.table-settings-box {
+  color: #333333;
+  background-color: #f7f7f7;
+  width: 240px;
+  box-shadow: 0px 2px 4px #ababab;
+  position: absolute;
+  padding: 12px;
+  display: none;
+  font-size: 0.9em; }
+  .table-settings-box form {
+    margin: 0; }
+  .table-settings-box .field {
+    margin-left: 0;
+    margin-bottom: 0; }
+    .table-settings-box .field label:first-child {
+      float: none;
+      width: auto;
+      margin-left: 0; }
+    .table-settings-box .field input[type=text],
+    .table-settings-box .field input[type=email],
+    .table-settings-box .field input[type=password],
+    .table-settings-box .field input[type=date],
+    .table-settings-box .field input[type=time],
+    .table-settings-box .field input[type=datetime],
+    .table-settings-box .field textarea,
+    .table-settings-box .field select {
+      width: 100%;
+      margin: 0 0 6px 0; }
+
 .pagination {
   text-align: center;
   margin-left: 8px;
@@ -1170,6 +1199,30 @@ nav {
 
 .data-table table {
   clear: right; }
+  .data-table table.density-low td, .data-table table.density-low th {
+    padding: 12px 8px; }
+  .data-table table.density-low thead th a, .data-table table.density-low thead th a:link, .data-table table.density-low thead th a:visited, .data-table table.density-low thead th label, .data-table table.density-low thead th label:link, .data-table table.density-low thead th label:visited, .data-table table.density-low tfoot th a, .data-table table.density-low tfoot th a:link, .data-table table.density-low tfoot th a:visited, .data-table table.density-low tfoot th label, .data-table table.density-low tfoot th label:link, .data-table table.density-low tfoot th label:visited {
+    padding: 12px 8px;
+    margin: -12px -8px; }
+  .data-table table.density-low .selection label {
+    padding: 12px 0 12px 8px;
+    margin: -12px -8px; }
+  .data-table table.density-medium td, .data-table table.density-medium th {
+    padding: 9px 8px; }
+  .data-table table.density-medium thead th a, .data-table table.density-medium thead th a:link, .data-table table.density-medium thead th a:visited, .data-table table.density-medium thead th label, .data-table table.density-medium thead th label:link, .data-table table.density-medium thead th label:visited, .data-table table.density-medium tfoot th a, .data-table table.density-medium tfoot th a:link, .data-table table.density-medium tfoot th a:visited, .data-table table.density-medium tfoot th label, .data-table table.density-medium tfoot th label:link, .data-table table.density-medium tfoot th label:visited {
+    padding: 9px 8px;
+    margin: -9px -8px; }
+  .data-table table.density-medium .selection label {
+    padding: 9px 0 9px 8px;
+    margin: -9px -8px; }
+  .data-table table.density-high td, .data-table table.density-high th {
+    padding: 6px 8px; }
+  .data-table table.density-high thead th a, .data-table table.density-high thead th a:link, .data-table table.density-high thead th a:visited, .data-table table.density-high thead th label, .data-table table.density-high thead th label:link, .data-table table.density-high thead th label:visited, .data-table table.density-high tfoot th a, .data-table table.density-high tfoot th a:link, .data-table table.density-high tfoot th a:visited, .data-table table.density-high tfoot th label, .data-table table.density-high tfoot th label:link, .data-table table.density-high tfoot th label:visited {
+    padding: 6px 8px;
+    margin: -6px -8px; }
+  .data-table table.density-high .selection label {
+    padding: 6px 0 6px 8px;
+    margin: -6px -8px; }
 
 #login {
   overflow-y: auto;
