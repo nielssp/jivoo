@@ -29,7 +29,7 @@ $(function() {
         });
       }
       else {
-        $('.table-operations .select-all').hide();
+        $('.table-selection .select-all').hide();
       }
     };
     updateCounter();
