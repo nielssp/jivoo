@@ -78,9 +78,6 @@
       float: right;
     }
   }
-  .select-all {
-    display: none;
-  }
 }
 
 .table-selection {
@@ -101,6 +98,9 @@
   @media screen and (min-width: $md) {
     left: 220px;
   }  
+  .select-all {
+    display: none;
+  }
 }
 
 body.menu-open {

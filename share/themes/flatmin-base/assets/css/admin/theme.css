@@ -1139,8 +1139,6 @@ nav {
     float: left; }
     .table-operations + .pagination {
       float: right; } }
-.table-operations .select-all {
-  display: none; }
 
 .table-selection {
   display: none;
@@ -1159,6 +1157,8 @@ nav {
   @media screen and (min-width: 1010px) {
     .table-selection {
       left: 220px; } }
+  .table-selection .select-all {
+    display: none; }
 
 body.menu-open .table-selection {
   left: 220px; }
