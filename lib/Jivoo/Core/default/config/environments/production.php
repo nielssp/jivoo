@@ -5,4 +5,7 @@ return array(
     'logLevel' => Jivoo\Core\Logger::ERROR,
     'createCrashReports' => true,
   ),
+  'Extensions' => array(
+    'disableBuggy' => true
+  ),
 );

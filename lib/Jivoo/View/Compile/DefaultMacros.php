@@ -86,7 +86,7 @@ class DefaultMacros {
         $between[] = $prev;
         $prev = $prev->prev;
       } while (isset($prev));
-      throw new Exception('todo');
+      throw new \Exception('todo');
     }
     $ifNode = new IfNode($value);
     $node->replaceWith($ifNode);
@@ -109,7 +109,7 @@ class DefaultMacros {
       $between[] = $prev;
       $prev = $prev->prev;
     } while (isset($prev));
-    throw new Exception('todo');
+    throw new \Exception('todo');
   }
   static function _foreach(HtmlNode $node, $value) {
     if (!isset($value)) {
@@ -119,7 +119,7 @@ class DefaultMacros {
         $foreachNode->append($node);
         return;
       }
-      throw new Exception('todo');
+      throw new \Exception('todo');
     }
     $foreachNode = new ForeachNode($value);
     $node->replaceWith($foreachNode);
@@ -152,7 +152,7 @@ class DefaultMacros {
         $num++;
       }
       else {
-        throw new Exception('not implemented');
+        throw new \Exception('not implemented');
       }
     }
     if (count($params) == 0)
@@ -179,7 +179,7 @@ class DefaultMacros {
         $num++;
       }
       else {
-        throw new Exception('not implemented');
+        throw new \Exception('not implemented');
       }
     }
     if (count($params) == 0)

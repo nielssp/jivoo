@@ -490,7 +490,7 @@ class App implements IEventSubject {
       else
         include $custom;
     }
-    catch (Exception $e) { }
+    catch (\Exception $e) { }
     if (!isset($custom))
       include \Jivoo\PATH . '/Jivoo/Core/templates/error/exception.php';
   }
@@ -534,7 +534,7 @@ class App implements IEventSubject {
         else
           include $custom;
       }
-      catch (Exception $e) { }
+      catch (\Exception $e) { }
       if (!isset($custom))
         include \Jivoo\PATH . '/Jivoo/Core/templates/error/error.php';
       $this->stop();

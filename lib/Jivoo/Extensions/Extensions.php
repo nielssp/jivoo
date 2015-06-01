@@ -253,7 +253,7 @@ class Extensions extends LoadableModule {
       try {
         $this->import($extension);
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         if ($this->config['disableBuggy']) {
           $this->disable($extension);
           Logger::error(tr('Extension "%1" disabled, caused by:', $extension));
@@ -269,7 +269,19 @@ class Extensions extends LoadableModule {
     // Load extension modules
     $this->triggerEvent('beforeLoadExtensions');
     foreach ($this->loadList as $name => $info) {
-      $this->getModule($name);
+      try {
+        $this->getModule($name);
+      }
+      catch (\Exception $e) {
+        if ($this->config['disableBuggy']) {
+          $this->disable($info->canonicalName);
+          Logger::error(tr('Extension "%1" disabled, caused by:', $info->canonicalName));
+          Logger::logException($e);
+        }
+        else {
+          throw $e;
+        }
+      }
     }
     $this->triggerEvent('afterLoadExtensions');
   }
