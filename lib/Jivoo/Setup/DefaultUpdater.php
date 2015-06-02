@@ -15,8 +15,7 @@ class DefaultUpdater extends InstallerSnippet {
   }
   
   public function welcome($data = null) {
-    $lock = $this->m->Setup->getLock();
-    if (!$lock->get('enable', false)) {
+    if (!$this->m->Setup->isLocked()) {
       if (!$this->m->Setup->lock())
         throw new \Exception(tr('Update required. Could not enter maintenance mode.'));
       return $this->refresh();
