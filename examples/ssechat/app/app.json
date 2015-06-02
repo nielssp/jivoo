@@ -4,6 +4,7 @@
   "version": "1.0",
   "modules": [
     "Routing",
+    "AccessControl",
     "Assets",
     "View",
     "Controllers",
@@ -21,5 +22,6 @@
     "jquery",
     "eventsource"
   ],
-  "install": "Jivoo\\Databases\\DatabaseInstaller"
+  "install": "Jivoo\\Setup\\DefaultInstaller",
+  "update": "Jivoo\\Setup\\DefaultUpdater"
 }

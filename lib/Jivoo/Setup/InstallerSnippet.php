@@ -30,7 +30,10 @@ abstract class InstallerSnippet extends Snippet {
   protected function init() {
     $this->enableLayout();
     $installer = get_class($this);
-    $this->installConfig = $this->config['Setup'][$installer];
+  }
+  
+  public function setConfig(Config $config) {
+    $this->installConfig = $config;
     $this->setup();
     if (!isset($this->installConfig['current']) or !isset($this->steps[$this->installConfig['current']])) {
       $head = array_keys(array_slice($this->steps, 0, 1));
@@ -118,6 +121,7 @@ abstract class InstallerSnippet extends Snippet {
       $this->installConfig['done'] = true;
       if (isset($this->parent))
         return $this->parent->next();
+      $this->app->config['Setup']['version'] = $this->app->version;
     }
     else {
       $this->installConfig['current'] = $this->current->next->name;

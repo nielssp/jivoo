@@ -11,9 +11,9 @@ use Jivoo\Databases\IMigratableDatabase;
 
 class MigrationUpdater extends InstallerSnippet {
   
-  private $dbName = 'default'; // TODO: set this somewhere
+  protected $dbName = 'default'; // TODO: set this somewhere
   
-  private $db = null; 
+  protected $db = null; 
   
   protected function setup() {
     $this->appendStep('migrate');

@@ -66,7 +66,7 @@ class Setup extends LoadableModule {
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       if (!$this->config[$installer]->get('done', false)) {
-        $snippet = $this->getInstaller($this->app->appConfig['install']);
+        $snippet = $this->getInstaller($installer);
         try {
           $this->m->Routing->respond(
             $this->m->Routing->dispatch($snippet)
@@ -83,6 +83,26 @@ class Setup extends LoadableModule {
     if (isset($this->app->appConfig['update'])) {
       if ($this->config->get('version', $this->app->version) !== $this->app->version) {
         $installer = $this->app->appConfig['update'];
+        if (!Lib::classExists($installer))
+          $installer = $this->app->n('Snippets\\' . $installer);
+        $config = $this->config['updates'][$this->app->version][$installer];
+        if ($config->get('done', false)) {
+          $this->config['version'] = $this->app->version;
+        }
+        else {
+          $snippet = $this->getInstaller($installer, $config);
+          try {
+            $this->m->Routing->respond(
+              $this->m->Routing->dispatch($snippet)
+            );
+          }
+          catch (InvalidResponseException $e) {
+            throw new InvalidResponseException(tr(
+              'An invalid response was returned from updater step: %1',
+              $snippet->getCurrentStep()
+            ), null, $e);
+          }
+        }
       }
     }
   }
@@ -128,10 +148,13 @@ class Setup extends LoadableModule {
     return $this->authHelper;
   }
   
-  public function getInstaller($class) {
+  public function getInstaller($class, $config = null) {
     if (!isset($this->installers[$class])) {
+      if (!isset($config))
+        $config = $this->config[$class];
       $snippet = $this->m->Snippets->getSnippet($class);
       assume($snippet instanceof InstallerSnippet);
+      $snippet->setConfig($config);
       $this->installers[$class] = $snippet;
     }
     return $this->installers[$class];

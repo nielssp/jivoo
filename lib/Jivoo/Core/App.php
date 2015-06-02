@@ -453,6 +453,15 @@ class App implements IEventSubject {
   public function hasModule($name) {
     return isset($this->m->$name);
   }
+  
+  /**
+   * Whether or not a module will be loaded.
+   * @param string $name Module name.
+   * @return bool True if on import list, false otherwise.
+   */
+  public function hasImport($name) {
+    return isset($this->imports[$name]);
+  }
 
   /**
    * Call a method in a module immediately if the module has been loaded, or
