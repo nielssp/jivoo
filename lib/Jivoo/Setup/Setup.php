@@ -49,7 +49,7 @@ class Setup extends LoadableModule {
         else {
           $response = $this->m->Routing->dispatch(
             array($this->view, 'render'),
-            'setup/maintenance.html'
+            'jivoo/setup/maintenance.html'
           );
         }
         $this->m->Routing->respond($response);

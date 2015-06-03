@@ -1,4 +1,4 @@
-<?php $this->layout('setup/layout.html'); ?>
+<?php $this->layout('jivoo/setup/layout.html'); ?>
 
 <?php echo $Form->form(null); ?>
 

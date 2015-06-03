@@ -74,7 +74,6 @@ class Config implements \ArrayAccess, \IteratorAggregate {
       if (file_exists($configFile)) {
         switch ($this->type) {
           case 'php':
-            /** @TODO Temporary work-around for opcode caching */
             $content = file_get_contents($this->file);
             $content = str_replace('<?php', '', $content);
             $this->data = eval($content);

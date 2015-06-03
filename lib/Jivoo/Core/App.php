@@ -509,7 +509,6 @@ class App implements IEventSubject {
    * @param \Exception $exception The exception.
    */
   public function handleError(\Exception $exception) {
-    /** @todo attempt to create error report */
     if ($this->config['core']['createCrashReports']) {
       $hash = substr(md5($exception->__toString()), 0, 10);
       $name = date('Y-m-d') . '_crash_' . $hash . '.html';

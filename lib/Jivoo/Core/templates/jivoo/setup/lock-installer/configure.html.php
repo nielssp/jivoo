@@ -1,5 +1,3 @@
-<?php $this->layout('setup/layout.html'); ?>
-
 <?php echo $Form->formFor($form, null); ?>
 
 <p>

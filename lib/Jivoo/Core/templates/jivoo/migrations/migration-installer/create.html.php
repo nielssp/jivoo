@@ -1,4 +1,4 @@
-<?php $this->layout('setup/layout.html'); ?>
+<?php $this->layout('jivoo/setup/layout.html'); ?>
 
 
 <p><?php echo tr(
