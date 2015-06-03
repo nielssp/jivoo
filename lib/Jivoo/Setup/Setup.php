@@ -32,6 +32,8 @@ class Setup extends LoadableModule {
   private $authHelper = null;
   
   private $lock = null;
+  
+  private $active = false;
 
   /**
    * {@inheritdoc}
@@ -68,6 +70,7 @@ class Setup extends LoadableModule {
       if (!$this->config[$installer]->get('done', false)) {
         $snippet = $this->getInstaller($installer);
         try {
+          $this->active = true;
           $this->m->Routing->respond(
             $this->m->Routing->dispatch($snippet)
           );
@@ -92,6 +95,7 @@ class Setup extends LoadableModule {
         else {
           $snippet = $this->getInstaller($installer, $config);
           try {
+            $this->active = true;
             $this->m->Routing->respond(
               $this->m->Routing->dispatch($snippet)
             );
@@ -105,6 +109,30 @@ class Setup extends LoadableModule {
         }
       }
     }
+    if (isset($this->config['current']['install'])) {
+      $installer = $this->config['current']->get('install', null);
+      if (!Lib::classExists($installer))
+        $installer = $this->app->n('Snippets\\' . $installer);
+      $config = $this->config['current'][$installer];
+      if ($config->get('done', false)) {
+        unset($this->config['current']);
+      }
+      else {
+        $snippet = $this->getInstaller($installer, $config);
+        try {
+          $this->active = true;
+          $this->m->Routing->respond(
+            $this->m->Routing->dispatch($snippet)
+          );
+        }
+        catch (InvalidResponseException $e) {
+          throw new InvalidResponseException(tr(
+            'An invalid response was returned from installer step: %1',
+            $snippet->getCurrentStep()
+          ), null, $e);
+        }
+      }
+    }
   }
   
   public function getLock() {
@@ -113,6 +141,21 @@ class Setup extends LoadableModule {
   
   public function isLocked() {
     return $this->lock->get('enable', false);
+  }
+  
+  public function isActive() {
+    return $this->active;
+  }
+  
+  public function trigger($installerClass) {
+    if (!Lib::classExists($installerClass))
+      $installerClass = $this->app->n('Snippets\\' . $installerClass);
+    $this->getInstaller($installerClass);
+    unset($this->config['current']);
+    $this->config['current']['install'] = $installerClass;
+    if (!$this->config->save())
+      throw new \Exception(tr('Could not start installer, config could not be saved.'));
+    $this->m->Routing->refresh();
   }
   
   public function lock($username = null, $passwordHash = null, $authenticated = true) {

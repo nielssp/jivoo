@@ -29,8 +29,10 @@ class MigrationUpdater extends InstallerSnippet {
   public function migrate($data) {
     $this->viewData['title'] = tr('Migrating database');
     $task = new MigrateTask($this->m->Migrations, $this->dbName);
-    if ($this->runAsync($task))
+    if ($this->runAsync($task)) {
+      $this->m->Migrations->finalize($this->dbName);
       return $this->next();
+    }
     return $this->render();
   }
 }

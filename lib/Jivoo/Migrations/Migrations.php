@@ -89,16 +89,11 @@ class Migrations extends LoadableModule {
     $this->migrationDirs[$name] = $migrationDir;
     $this->connections[$name] = $db;
     if ($this->config['automigrate']) {
-      $mtime = filemtime($this->migrationDirs[$name] . '/.');
-      if (!isset($this->config['mtimes'][$name]) or $this->config['mtimes'][$name] != $mtime) {
-        // TODO: trigger MigrationUpdater
-        $migrations = $this->check($name);
-        foreach ($migrations as $migration) {
-          $this->run($name, $migration);
+      if (!$this->m->Setup->isActive()) {
+        $mtime = filemtime($this->migrationDirs[$name] . '/.');
+        if (!isset($this->config['mtimes'][$name]) or $this->config['mtimes'][$name] != $mtime) {
+          $this->m->Setup->trigger('Jivoo\Migrations\MigrationUpdater');
         }
-        $this->finalize($name);
-        $this->config['mtimes'][$name] = $mtime;
-        $this->m->Routing->refresh();
       }
     }
   }
@@ -231,6 +226,7 @@ class Migrations extends LoadableModule {
   public function finalize($name) {
     if (isset($this->migrationSchemas[$name]))
       $this->migrationSchemas[$name]->finalize();
-    // TODO: Indicators and stuff perhaps? filemtime()
+    $mtime = filemtime($this->migrationDirs[$name] . '/.');
+    $this->config['mtimes'][$name] = $mtime;
   }
 }
