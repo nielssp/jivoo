@@ -7,6 +7,7 @@ namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
 use Jivoo\Models\DataType;
+use Jivoo\Models\IBasicModel;
 
 /**
  * A read selection.
@@ -14,8 +15,8 @@ use Jivoo\Models\DataType;
 interface IReadSelection extends IBasicSelection, \IteratorAggregate {
   /**
    * Make a projection.
-   * @param string|string[]|array $expression Expression, list of expressions
-   * or array of expressions and aliases
+   * @param string|string[]|array $expression Expression or array of expressions
+   * and aliases
    * @param string $alias Alias.
    * @return array[] List of associative arrays
    */
@@ -29,6 +30,16 @@ interface IReadSelection extends IBasicSelection, \IteratorAggregate {
    * @return IReadSelection A read selection.
    */
   public function with($field, $expression, DataType $type = null);
+
+  /**
+   * Append an extra virtual field (with a record as the value) to the returned
+   * records.
+   * @param string $alias Name of new field, expects the associated model to be
+   * aliased with the same name.
+   * @param IBasicModel $model Model of associated record.
+   * @return IReadSelection A read selection.
+   */
+  public function withRecord($field, IBasicModel $model);
   
   /**
    * Group by one or more columns.

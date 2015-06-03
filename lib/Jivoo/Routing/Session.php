@@ -68,7 +68,7 @@ class Session implements \ArrayAccess {
       case 'flash':
         return $this->flash;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

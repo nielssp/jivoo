@@ -76,11 +76,27 @@ class SqlTable extends Table {
     $additional = $selection->additionalFields;
     $data = array();
     $virtual = array();
+    $subrecords = array();
     foreach ($raw as $field => $value) {
       if (isset($additional[$field])) {
         if (isset($additional[$field]['type']))
           $value = $typeAdapter->decode($additional[$field]['type'], $value);
-        $virtual[$field] = $value;
+        if (isset($additional[$field]['record'])) {
+          $record = $additional[$field]['record'];
+          if (!isset($subrecords[$record])) {
+            $subrecords[$record] = array(
+              'model' => $additional[$field]['model'],
+              'null' => true,
+              'data' => array()
+            );
+          }
+          $subrecords[$record]['data'][$additional[$field]['recordField']] = $value;
+          if (isset($value))
+            $subrecords[$record]['null'] = false;
+        }
+        else {
+          $virtual[$field] = $value;
+        }
       }
       else {
         $type = $this->getType($field);
@@ -89,6 +105,14 @@ class SqlTable extends Table {
             'Schema %1 does not contain field %2', $this->getName(), $field
           ));
         $data[$field] = $typeAdapter->decode($this->getType($field), $value);
+      }
+    }
+    foreach ($subrecords as $field => $record) {
+      if ($record['null']) {
+        $virtual[$field] = null;
+      }
+      else {
+        $virtual[$field] = Record::createExisting($record['model'], $record['data']);
       }
     }
     return Record::createExisting($this, $data, $virtual);

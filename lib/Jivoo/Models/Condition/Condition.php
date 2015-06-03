@@ -39,7 +39,7 @@ class Condition implements ICondition {
     if (isset($this->$property)) {
       return $this->$property;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -52,7 +52,7 @@ class Condition implements ICondition {
       case 'or':
         return call_user_func_array(array($this, 'orWhere'), $args);
     }
-    throw new InvalidMethodException(tr('Invalid method: %1', $method));
+    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
   /**

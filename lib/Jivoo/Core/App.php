@@ -231,7 +231,12 @@ class App implements IEventSubject {
     $this->listenerNames = $appConfig['listeners'];
     $this->defaultConfig = $appConfig['defaultConfig'];
 
-    $this->config = new Config();
+    Lib::import($this->p('app', 'lib'), $this->namespace);
+    
+    $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
+
+    $this->config = new Config($this->p('user', 'config.php'));
+    $this->config->setVirtual('app', $this->appConfig);
   }
 
   /**
@@ -258,7 +263,7 @@ class App implements IEventSubject {
       case 'eventManager':
         return $this->e;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -273,7 +278,7 @@ class App implements IEventSubject {
         $this->$property = $value;
         return;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**
@@ -566,13 +571,6 @@ class App implements IEventSubject {
       echo 'You should update PHP or contact your hosting provider. ';
       return;
     }
-    
-    Lib::import($this->p('app', 'lib'), $this->namespace);
-    
-    $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
-
-    $this->config = new Config($this->p('user', 'config.php'));
-    $this->config->setVirtual('app', $this->appConfig);
 
     $environmentConfigFile = $this
       ->p('app', 'config/environments/' . $environment . '.php');

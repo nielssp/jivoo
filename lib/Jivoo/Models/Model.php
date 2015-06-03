@@ -41,10 +41,34 @@ abstract class Model extends Module implements IModel {
     if (empty($additonal))
       return Record::createExisting($this, $data, array());
     $virtual = array();
+    $subrecords = array();
     foreach ($raw as $field => $value) {
       if (isset($addtional[$field])) {
-        $virtual[$field] = $value;
+        if (isset($additional[$field]['record'])) {
+          $record = $additional[$field]['record'];
+          if (!isset($subrecords[$record])) {
+            $subrecords[$record] = array(
+              'model' => $additional[$field]['model'],
+              'null' => true,
+              'data' => array()
+            );
+          }
+          $subrecords[$record]['data'][$additional[$field]['recordField']] = $value;
+          if (isset($value))
+            $subrecords[$record]['null'] = false;
+        }
+        else {
+          $virtual[$field] = $value;
+        }
         unset($data[$field]);
+      }
+    }
+    foreach ($subrecords as $field => $record) {
+      if ($record['null']) {
+        $virtual[$field] = null;
+      }
+      else {
+        $virtual[$field] = Record::createExisting($record['model'], $record['data']);
       }
     }
     return Record::createExisting($this, $data, $virtual);
@@ -388,6 +412,14 @@ abstract class Model extends Module implements IModel {
   public function with($field, $expression, DataType $type = null) {
     $select = new ReadSelection($this);
     return $select->with($field, $expression, $type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function withRecord($field, IBasicModel $Model) {
+    $select = new ReadSelection($this);
+    return $select->withRecord($field, $model);
   }
 
   /**

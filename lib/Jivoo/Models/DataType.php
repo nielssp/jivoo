@@ -133,7 +133,7 @@ class DataType {
           return !$this->signed;
       }
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**

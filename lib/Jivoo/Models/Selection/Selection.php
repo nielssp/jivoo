@@ -8,6 +8,7 @@ namespace Jivoo\Models\Selection;
 use Jivoo\Models\IModel;
 use Jivoo\Models\IRecord;
 use Jivoo\Models\DataType;
+use Jivoo\Models\IBasicModel;
 
 /**
  * An undecided selection. Will transform into a more specific selection based
@@ -67,6 +68,13 @@ class Selection extends BasicSelection implements ISelection {
    */
   public function with($field, $expression, DataType $type = null) {
     return $this->copyBasicAttr(new ReadSelection($this->model))->with($field, $expression, $type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function withRecord($field, IBasicModel $model) {
+    return $this->copyBasicAttr(new ReadSelection($this->model))->withRecord($field, $model);
   }
 
   /**

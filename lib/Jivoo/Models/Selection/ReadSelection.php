@@ -9,6 +9,7 @@ use Jivoo\Models\IModel;
 use Jivoo\Models\IRecord;
 use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\DataType;
+use Jivoo\Models\IBasicModel;
 
 /**
  * A read selection.
@@ -60,8 +61,11 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * Each array is of the following format:
    * <code>
    * array(
+   *   'alias' => ... // Alias (string)
    *   'expression' => ..., // Expression (string)
-   *   'alias' => ... // Alias (string|null)
+   *   'type' => ... // Type (DataType|null)
+   *   'model' => ... // Model (IBasicModel|null)
+   *   'record' => ... // Record field (string|null)
    * )
    * </code>
    * @var array[]
@@ -109,6 +113,24 @@ class ReadSelection extends BasicSelection implements IReadSelection {
       'expression' => $expression,
       'type' => $type
     );
+    return $this;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function withRecord($field, IBasicModel $model) {
+    foreach ($model->getFields() as $modelField) {
+      $alias = $field . '_' . $modelField;
+      $this->additionalFields[$alias] = array(
+        'alias' => $alias,
+        'expression' => $field . '.' . $modelField,
+        'type' => $model->getType($modelField),
+        'model' => $model,
+        'record' => $field,
+        'recordField' => $modelField
+      );
+    }
     return $this;
   }
 

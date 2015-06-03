@@ -122,7 +122,7 @@ class Config implements \ArrayAccess, \IteratorAggregate {
       case 'root':
         return $this->$property;
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**
