@@ -22,6 +22,13 @@ interface ISchema {
    * @return bool True if it does, false otherwise.
    */
   public function __isset($field);
+  
+  /**
+   * Make a copy of this schema with a neew name.
+   * @param string $newName New name.
+   * @return Schema New schema.
+   */
+  public function copy($newName);
 
   /**
    * Get name of schema.

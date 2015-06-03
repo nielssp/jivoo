@@ -172,7 +172,7 @@ abstract class Migration {
   protected function deleteIndex($table, $index) {
     try {
       $this->db->deleteIndex($table, $index);
-      $this->schema->deleteIndex($table, $index, $options); 
+      $this->schema->deleteIndex($table, $index); 
     }
     catch (\Exception $e) {
       if (!$this->ignoreExceptions) throw $e;

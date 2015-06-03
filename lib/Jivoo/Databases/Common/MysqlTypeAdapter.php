@@ -291,7 +291,9 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function renameTable($table, $newName) {
-    throw new \Exception('Not implemented');
+    $sql = 'RENAME TABLE `' . $this->db->tableName($table) . '` TO `';
+    $sql .= $this->db->tableName($newName) . '`';
+    $this->db->rawQuery($sql);
   }
 
   /**

@@ -93,6 +93,15 @@ class Schema implements ISchema {
       unset($this->_fields[$field]);
     }
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function copy($newName) {
+    $new = clone $this;
+    $new->_name = $newName;
+    return $new;
+  }
 
   /**
    * Add an unsigned auto increment integer.

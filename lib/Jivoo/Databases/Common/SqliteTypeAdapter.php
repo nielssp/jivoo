@@ -274,6 +274,21 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    */
   public function renameTable($table, $newName) {
     throw new \Exception('Not implemented');
+    try {
+      $current = $this->db->getSchema()->getSchema($table);
+      $this->db->beginTransaction();
+      $newSchema = $current->copy($newName);
+      $this->createTable($newSchema);
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($newSchema->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $this->db->rawQuery($sql);
+      $this->dropTable($table);
+      $this->db->commit();
+    }
+    catch (\Exception $e) {
+      $this->db->rollback();
+      throw $e;
+    }
   }
 
   /**
@@ -297,21 +312,92 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function deleteColumn($table, $column) {
-    throw new \Exception(tr('Not implemented'));
+    try {
+      $current = $this->db->getSchema()->getSchema($table);
+      $this->db->beginTransaction();
+      $temp = $current->copy($table . '_MigrationBackup');
+      $this->createTable($temp);
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($temp->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $this->db->rawQuery($sql);
+      $this->dropTable($table);
+      $newSchema = $current->copy($table);
+      unset($newSchema->$column);
+      $this->createTable($newSchema);
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($table);
+      $sql .= ' SELECT ' . implode(', ', $newSchema->getFields()) . ' FROM ' . $this->db->quoteTableName($temp->getName());
+      $this->db->rawQuery($sql);
+      $this->dropTable($temp->getName());
+      $this->db->commit();
+    }
+    catch (\Exception $e) {
+      $this->db->rollback();
+      throw $e;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function alterColumn($table, $column, DataType $type) {
-    throw new \Exception(tr('Not implemented'));
+    try {
+      $current = $this->db->getSchema()->getSchema($table);
+      $this->db->beginTransaction();
+      $temp = $current->copy($table . '_MigrationBackup');
+      $this->createTable($temp);
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($temp->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $this->db->rawQuery($sql);
+      $this->dropTable($table);
+      $newSchema = $current->copy($table);
+      $newSchema->$column = $type;
+      $this->createTable($newSchema);
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($table);
+      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($temp->getName());
+      $this->db->rawQuery($sql);
+      $this->dropTable($temp->getName());
+      $this->db->commit();
+    }
+    catch (\Exception $e) {
+      $this->db->rollback();
+      throw $e;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function renameColumn($table, $column, $newName) {
-    throw new \Exception(tr('Not implemented'));
+    try {
+      $current = $this->db->getSchema()->getSchema($table);
+      $this->db->beginTransaction();
+      $temp = $current->copy($table . '_MigrationBackup');
+      $this->createTable($temp);
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($temp->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $this->db->rawQuery($sql);
+      $this->dropTable($table);
+      $newSchema = $current->copy($table);
+      $type = $newSchema->$column;
+      unset($newSchema->$column);
+      $newSchema->$newName = $type;
+      $this->createTable($newSchema);
+      $columns = array();
+      foreach ($temp->getFields() as $field) {
+        if ($field != $column)
+          $columns[] = $field;
+      }
+      $columns[] = $column;
+      $sql = 'INSERT INTO ' . $this->db->quoteTableName($table);
+      $sql .= ' SELECT ' . implode(', ', $columns) . ' FROM ' . $this->db->quoteTableName($temp->getName());
+      $this->db->rawQuery($sql);
+      $this->dropTable($temp->getName());
+      $this->db->commit();
+    }
+    catch (\Exception $e) {
+      $this->db->rollback();
+      throw $e;
+    }
   }
 
   /**
@@ -343,7 +429,15 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function alterIndex($table, $index, $options = array()) {
-    $this->deleteIndex($table, $index);
-    $this->createIndex($table, $index, $options);
+    try {
+      $this->db->beginTransaction();
+      $this->deleteIndex($table, $index);
+      $this->createIndex($table, $index, $options);
+      $this->db->commit();
+    }
+    catch (\Exception $e) {
+      $this->db->rollback();
+      throw $e;
+    }
   }
 }
