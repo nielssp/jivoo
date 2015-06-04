@@ -15,7 +15,6 @@ class Dashboard extends Snippet {
    * {@inheritdoc}
    */
   public function before() {
-    parent::before();
     $this->view->data->title = tr('Jivoo Console');
     $this->view->data->app = $this->app->appConfig;
     $this->view->data->entryScript = realpath($this->app->entryScript);
@@ -23,6 +22,7 @@ class Dashboard extends Snippet {
     $this->view->data->appDir = realpath($this->p('app', ''));
     $this->view->data->environment = $this->app->environment;
     $this->view->data->shareDir = realpath($this->p('share', ''));
+    return null;
   }
 
   /**

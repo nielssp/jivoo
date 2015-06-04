@@ -235,28 +235,39 @@ class Record implements IRecord {
   }
 
   /**
-   * {@inheritdoc}
+   * Determine if a field is set.
+   * @param string $field Field name.
+   * @return bool True if not null, false otherwise.
+   * @throws InvalidPropertyException If the field does not exist.
    */
   public function offsetExists($field) {
     return $this->__isset($field);
   }
 
   /**
-   * {@inheritdoc}
+   * Get value of a field.
+   * @param string $field Field name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If the field does not exist.
    */
   public function offsetGet($field) {
     return $this->__get($field);
   }
 
   /**
-   * {@inheritdoc}
+   * Set value of a field.
+   * @param string $field Field name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If the field does not exist.
    */
   public function offsetSet($field, $value) {
     $this->__set($field, $value);
   }
 
   /**
-   * {@inheritdoc}
+   * Set a field value to null.
+   * @param string $field Field name.
+   * @throws InvalidPropertyException If the field does not exist.
    */
   public function offsetUnset($field) {
     $this->__unset($field);

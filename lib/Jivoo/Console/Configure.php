@@ -28,7 +28,6 @@ class Configure extends Snippet {
    * {@inheritdoc}
    */
   public function before() {
-    parent::before();
     $this->configForm = new Form('Configure');
     $this->configForm->addString('name', tr('Application name'));
     $this->configForm->addString('version', tr('Version'));
@@ -37,6 +36,7 @@ class Configure extends Snippet {
     $this->view->data->availableModules = $this->getModules();
     $this->view->data->configForm = $this->configForm;
     $this->view->data->title = tr('Configure application');
+    return null;
   }
 
   /**
