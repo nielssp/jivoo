@@ -23,13 +23,16 @@ class SelectionFilterVisitor extends FilterVisitor {
   }
 
   protected function visitFilter(FilterNode $node) {
+    if (count($node->children) == 0)
+      return new Condition('false');
     $condition = new Condition();
     foreach ($node->children as $child) {
+      $cond = $this->visit($child);
       if ($child->operator == 'or') {
-        $condition->orWhere($this->visit($child));
+        $condition->orWhere($cond);
       }
       else {
-        $condition->andWhere($this->visit($child));
+        $condition->andWhere($cond);
       }
     }
     return $condition;
