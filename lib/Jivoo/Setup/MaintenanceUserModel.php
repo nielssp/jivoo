@@ -10,7 +10,7 @@ use Jivoo\Core\Config;
 use Jivoo\AccessControl\IUserModel;
 
 /**
- * @todo
+ * User model for the maintenance user
  */
 class MaintenanceUserModel implements IUserModel {
   /**
@@ -19,6 +19,8 @@ class MaintenanceUserModel implements IUserModel {
   private $lock;
 
   /**
+   * Construct model.
+   * @param Config $lock Maintenance lock.
    */
   public function __construct(Config $lock) {
     $this->lock = $lock;
@@ -35,6 +37,8 @@ class MaintenanceUserModel implements IUserModel {
   
   /**
    * Get password.
+   * @param array $userData User data.
+   * @return string Password hash.
    */
   public function getPassword($userData) {
     return $this->lock->get('password');

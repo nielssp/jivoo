@@ -15,13 +15,27 @@ namespace Jivoo\Routing;
  * @todo document
  */
 class EventSource {
-  
+  /**
+   * @var int
+   */
   private $lastId = 0;
-  
+
+  /**
+   * @var int
+   */
   private $retry = 1000;
-  
+
+  /**
+   * @var int
+   */
   private $padding = 2000;
-  
+
+  /**
+   * Get value of a property.
+   * @param string $property Property name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property is not defined.
+   */
   public function __get($property) {
     switch ($property) {
       case 'lastId':
@@ -31,7 +45,13 @@ class EventSource {
     }
     throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
-  
+
+  /**
+   * Set value of a property.
+   * @param string $property Property name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If property is not defined.
+   */
   public function __set($property, $value) {
     switch ($property) {
       case 'lastId':
@@ -43,15 +63,25 @@ class EventSource {
     throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
+  /**
+   * Output a line.
+   * @param string $line Line.
+   */
   private function putLine($line = '') {
     echo $line . "\n";
   }
   
+  /**
+   * Flush output buffers.
+   */
   private function flush() {
     ob_flush();
     flush();
   }
   
+  /**
+   * Start event source. Sends headers, padding and retry delay.
+   */
   public function start() {
     header('Content-Type: text/event-stream');
     header('Cache-Control: no-cache');
@@ -68,10 +98,18 @@ class EventSource {
     $this->flush();
   }
   
+  /**
+   * Stop event source and program execution.
+   */
   public function stop() {
     exit;
   }
 
+  /**
+   * Send a message to the client (without event name).
+   * @param string $data Data.
+   * @param string $id Optional id.
+   */
   public function send($data, $id = null) {
     if (!isset($id))
       $id = $this->lastId++;
@@ -81,6 +119,12 @@ class EventSource {
     $this->flush();
   }
   
+  /**
+   * Trigger an event.
+   * @param string $event Event name.
+   * @param string $data Event data.
+   * @param string $id Optional id.
+   */
   public function trigger($event, $data, $id = null) {
     if (!isset($id))
       $id = $this->lastId++;

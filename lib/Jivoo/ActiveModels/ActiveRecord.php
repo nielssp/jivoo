@@ -108,8 +108,9 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
    * Create an existing record.
    * @param ActiveModel $model Associated model.
    * @param array $data Associative array of record data.
+   * @param array $virtual Associative array of virtual record data.
    * @param string $class Name of custom record class.
-   * @return ActiveREcord A record.
+   * @return ActiveRecord A record.
    */
   public static function createExisting(ActiveModel $model, $data = array(), $virtual = array(), $class = null) {
     if (isset($class))

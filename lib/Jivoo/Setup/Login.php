@@ -7,12 +7,23 @@ namespace Jivoo\Setup;
 
 use Jivoo\Snippets\Snippet;
 
+/**
+ * Log in using the maintenance user.
+ */
 class Login extends Snippet {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $parameters = array('Auth');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Form');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function post($data) {
     if ($this->Auth->logIn())
       return $this->redirect(null);
@@ -20,7 +31,10 @@ class Login extends Snippet {
       $this->session->flash->error = tr('Incorrect username and/or password.');
     return $this->get();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function get() {
     $this->viewData['title'] = 'Log in';
     $this->viewData['enableNext'] = true;

@@ -8,18 +8,35 @@ namespace Jivoo\Setup;
 use Jivoo\Models\Form;
 use Jivoo\Models\DataType;
 
+/**
+ * Attempts to install the lock file and enter maintenance mode.
+ *
+ */
 class LockInstaller extends InstallerSnippet {
+  /**
+   * {@inheritdoc}
+   */
   protected function setup() {
     $this->appendStep('check');
     $this->appendStep('configure');
   }
 
+  /**
+   * Checks if the lock is already in place and enabled.
+   * @param string $data POST data if any.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
   public function check($data = null) {
     if ($this->m->Setup->getLock()->get('enable', false))
       return $this->end();
     return $this->next();
   }
 
+  /**
+   * Set up maintenance user and install lock.
+   * @param string $data POST data if any.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
   public function configure($data = null) {
     $this->viewData['title'] = tr('Configure maintenance user');
     $form = new Form('user');

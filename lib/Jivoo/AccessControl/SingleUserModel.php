@@ -50,7 +50,9 @@ class SingleUserModel implements IUserModel {
   }
   
   /**
-   * Get password.
+   * Get password for user.
+   * @param array $userData User data.
+   * @return string Passowrd hash.
    */
   public function getPassword($userData) {
     return $this->password;

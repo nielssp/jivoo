@@ -13,25 +13,53 @@ use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Config;
 use Jivoo\Core\Logger;
 
+/**
+ * An installer. Consists of a number of steps (implemented as methods) and 
+ * subinstallers.
+ */
 abstract class InstallerSnippet extends Snippet {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Setup');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Form');
   
+  /**
+   * @var InstallerStep[] Steps.
+   */
   private $steps = array();
   
+  /**
+   * @var InstallerStep Current step.
+   */
   private $current = null;
   
+  /**
+   * @var InstallerSnippe Parent installer.
+   */
   private $parent = null;
 
+  /**
+   * @var Config Installer state.
+   */
   private $installConfig;
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init() {
     $this->enableLayout();
     $installer = get_class($this);
   }
   
+  /**
+   * Set installer state.
+   * @param Config $config State.
+   */
   public function setConfig(Config $config) {
     $this->installConfig = $config;
     $this->setup();
@@ -44,12 +72,26 @@ abstract class InstallerSnippet extends Snippet {
     $this->view->data->enableNext = true;
   }
 
+  /**
+   * Use this method to set up steps and subinstallers using {@see appendStep()}
+   * and {@see appendInstaller()}.
+   */
   abstract protected function setup();
   
+  /**
+   * Get steps.
+   * @return InstallerStep[] Installer steps.
+   */
   public function getSteps() {
     return $this->steps;
   }
   
+  /**
+   * Append a step. If the name of the step is 'step' and a method with the
+   * name 'undoStep' exists, $undoable is set to true.
+   * @param string $name Name of step and method.
+   * @param string $undoable Whether or not step is undoable.
+   */
   public function appendStep($name, $undoable = false) {
     assume(is_callable(array($this, $name)));
     $undo = array($this, 'undo' . ucfirst($name));
@@ -70,7 +112,12 @@ abstract class InstallerSnippet extends Snippet {
     }
     $this->steps[$name] = $step;
   }
-    
+  
+  /**
+   * Append a subinstaller.
+   * @param string $class Installer class.
+   * @param string $name Optional name for step.
+   */
   public function appendInstaller($class, $name = null) {
     if (!isset($name))
       $name = $class;
@@ -90,6 +137,10 @@ abstract class InstallerSnippet extends Snippet {
     $this->steps[$name] = $step;
   }
   
+  /**
+   * Get first step.
+   * @return InstallerStep|null First step if not empty.
+   */
   public function getFirst() {
     $slice = array_values(array_slice($this->steps, 0, 1));
     if (isset($slice[0]))
@@ -97,6 +148,10 @@ abstract class InstallerSnippet extends Snippet {
     return null;
   }
 
+  /**
+   * Get last step.
+   * @return InstallerStep|null Last step if not empty.
+   */
   public function getLast() {
     $slice = array_values(array_slice($this->steps, -1, 1));
     if (isset($slice[0]))
@@ -104,11 +159,18 @@ abstract class InstallerSnippet extends Snippet {
     return null;
   }
 
+  /**
+   * Remove a step.
+   * @param string $name Step name.
+   */
   public function remove($name) {
     if (isset($this->steps[$name]))
       unset($this->steps[$name]);
   }
   
+  /**
+   * Exit installer.
+   */
   public function end() {
     $this->installConfig['done'] = true;
     if (isset($this->parent))
@@ -116,6 +178,10 @@ abstract class InstallerSnippet extends Snippet {
     return $this->refresh();
   }
   
+  /**
+   * Go to next step.
+   * @return bool False if state could not be updated.
+   */
   public function next() {
     if (!isset($this->current->next)) {
       $this->installConfig['done'] = true;
@@ -128,7 +194,11 @@ abstract class InstallerSnippet extends Snippet {
     }
     return $this->saveConfig();
   }
-  
+
+  /**
+   * Go to previous step.
+   * @return bool False if state could not be updated.
+   */
   public function back() {
     if (!isset($this->current->previous)) {
       if (isset($this->parent)) {
@@ -141,6 +211,10 @@ abstract class InstallerSnippet extends Snippet {
     return $this->saveConfig();
   }
   
+  /**
+   * Set current step.
+   * @param string $step Step name.
+   */
   private function setCurrent($step) {
     if ($step instanceof InstallerStep)
       $this->current = $step;
@@ -149,17 +223,29 @@ abstract class InstallerSnippet extends Snippet {
     $this->installConfig['current'] = $this->current->name;
   }
   
+  /**
+   * Get current step name with class name.
+   * @return string Class and step name.
+   */
   public function getCurrentStep() {
     if (isset($this->current->installer))
       return $this->current->installer->getCurrentStep();
     return get_class($this) . '::' . $this->current->name;
   }
   
+  /**
+   * Go to another step.
+   * @param string $step Step name.
+   */
   public function jump($step) {
     $this->setCurrent($step);
     return $this->refresh();
   }
   
+  /**
+   * If undo is possible.
+   * @return bool True if undoable.
+   */
   private function isUndoable() {
     if (isset($this->current->previous)) {
       return $this->current->previous->isUndoable();
@@ -170,6 +256,9 @@ abstract class InstallerSnippet extends Snippet {
     return false;
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function get() {
     $current = $this->current;
     if (isset($current->installer))
@@ -178,6 +267,11 @@ abstract class InstallerSnippet extends Snippet {
     return call_user_func($current->do, null);
   }
   
+  /**
+   * Perform undo.
+   * @param InstallerStep $step Step.
+   * @return mixed
+   */
   private function undoStep(InstallerStep $step) {
     $this->setCurrent($step);
     if (isset($step->installer)) {
@@ -190,6 +284,10 @@ abstract class InstallerSnippet extends Snippet {
     return call_user_func($step->undo);
   }
   
+  /**
+   * Try to go back.
+   * @return mixed
+   */
   private function tryBack() {
     $current = $this->current;
     if (isset($current->previous)) {
@@ -202,7 +300,10 @@ abstract class InstallerSnippet extends Snippet {
     }
     return call_user_func($current->do, null);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function post($data) {
     $current = $this->current;
     if (isset($current->installer))
@@ -214,6 +315,11 @@ abstract class InstallerSnippet extends Snippet {
     return call_user_func($current->do, $data);
   }
   
+  /**
+   * Run asynchronous task.
+   * @param IAsyncTask $task Task object.
+   * @return bool True if task is done. 
+   */
   public function runAsync(IAsyncTask $task) {
     if ($this->request->hasValidData()) {
       $taskConfig = $this->installConfig->getSubset('async')->getSubset($this->current->name);
@@ -264,6 +370,11 @@ abstract class InstallerSnippet extends Snippet {
     return false;
   }
   
+  /**
+   * Attempt to save configuration, then refresh.
+   * @param Config $config Configuration.
+   * @return string Response.
+   */
   public function saveConfig(Config $config = null) {
     if (!isset($config))
       $config = $this->config;
@@ -279,7 +390,12 @@ abstract class InstallerSnippet extends Snippet {
     $this->viewData['data'] = '<?php' . PHP_EOL . 'return ' . $config->root->prettyPrint() . ';';
     return $this->render('setup/save-config.html');
   }
-  
+
+  /**
+   * Attempt to save configuration, then go to next step.
+   * @param Config $config Configuration.
+   * @return string Response.
+   */
   public function saveConfigAndContinue(Config $config = null) {
     if (!isset($config))
       $config = $this->config;
@@ -303,23 +419,60 @@ abstract class InstallerSnippet extends Snippet {
   }
 }
 
+/**
+ * An installer step.
+ */
 class InstallerStep {
+  /**
+   * @var string Name of step.
+   */
   public $name = null;
+  
+  /**
+   * @var InstallerStep Next step.
+   */
   public $next = null;
+
+  /**
+   * @var InstallerStep Previous step.
+   */
   public $previous = null;
 
+  /**
+   * @var InstallerSnippet Installer.
+   */
   public $installer = null;
+  
+  /**
+   * @var callable Do function.
+   */
   public $do = null;
+
+  /**
+   * @var callable Undo function.
+   */
   public $undo = null;
   
+  /**
+   * Whether or not step is undoable.
+   * @return bool True if undoable.
+   */
   public function isUndoable() {
     return isset($this->undo);
   }
   
+  /**
+   * Whether or not this is the last step.
+   * @return bool True if last.
+   */
   public function isLast() {
     return !isset($this->next);
   }
 
+  /**
+   * Whether or not this is the first step.
+   * @return bool True if first.
+   */
   public function isFirst() {
     return !isset($this->previous);
   }
