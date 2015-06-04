@@ -5,11 +5,32 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+/**
+ * An if statement node.
+ * @property-read InternalNode $then "then" nodes.
+ * @property-read InternalNode $else "else" nodes.
+ */
 class IfNode extends TemplateNode {
+  /**
+   * @var string Expression.
+   */
   private $condition = '';
+  
+  /**
+   * @var InternalNode "then" nodes.
+   */
   private $then;
+  
+  /**
+   * @var InternalNode "else" nodes.
+   */
   private $else;
 
+  /**
+   * Construct if statement.
+   * @param string $condition Conditional expression.
+   * @param TemplateNode $then True output.
+   */
   public function __construct($condition, TemplateNode $then = null) {
     parent::__construct();
     $this->condition = $condition;
@@ -19,6 +40,9 @@ class IfNode extends TemplateNode {
       $this->then->append($then);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'then':
@@ -28,6 +52,9 @@ class IfNode extends TemplateNode {
     return parent::__get($property);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     $code = '<?php if (' . $this->condition . '): ?>' . "\n";
     $code .= $this->then->__toString();

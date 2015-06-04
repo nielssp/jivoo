@@ -17,6 +17,7 @@ use Jivoo\View\Compile\TemplateCompiler;
  * @property-read Template|null $template Template system if it has been
  * initialized.
  * @property-read ViewBlocks $blocks View blocks.
+ * @property-read TemplateCompiler|null $compiler The template compiler if enabled. 
  * @method string link(array|ILinkable|string|null $route = null) Alias for
  * {@see Routing::getLink}. 
  * @method string url(array|ILinkable|string|null $route = null) Alias for
@@ -142,6 +143,7 @@ class View extends LoadableModule {
       case 'resources':
       case 'template':
       case 'extensions':
+      case 'compiler':
         return $this->$property;
     }
     return parent::__get($property);

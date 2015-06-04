@@ -5,13 +5,27 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+/**
+ * An internal node that contains other nodes.
+ */
 class InternalNode extends TemplateNode implements \Countable {
+  /**
+   * @var TemplateNode[] Children.
+   */
   protected $content = array();
 
+  /**
+   * {@inheritdoc}
+   */
   public function count() {
     return count($this->content);
   }
 
+  /**
+   * Append a node.
+   * @param TemplateNode $node Node.
+   * @return self Self.
+   */
   public function append(TemplateNode $node) {
     assume(!isset($node->parent));
     $node->parent = $this;
@@ -24,6 +38,11 @@ class InternalNode extends TemplateNode implements \Countable {
     return $this;
   }
 
+  /**
+   * Prepend a node.
+   * @param TemplateNode $node Node.
+   * @return self Self.
+   */
   public function prepend(TemplateNode $node) {
     assume(!isset($node->parent));
     $node->parent = $this;
@@ -35,6 +54,11 @@ class InternalNode extends TemplateNode implements \Countable {
     return $this;
   }
 
+  /**
+   * Remove a node.
+   * @param TemplateNode $node Node.
+   * @return self Self.
+   */
   public function remove(TemplateNode $node) {
     assume($node->parent === $this);
     $this->content = array_diff($this->content, array($node));
@@ -47,7 +71,13 @@ class InternalNode extends TemplateNode implements \Countable {
     $node->prev = null;
     return $this;
   }
-  
+
+  /**
+   * Insert a node before another node.
+   * @param TemplateNode $node Node to insert.
+   * @param TemplateNode $next Next node.
+   * @return self Self.
+   */
   public function insert(TemplateNode $node, TemplateNode $next) {
     assume($next->parent === $this);
     assume(!isset($node->parent));
@@ -62,6 +92,12 @@ class InternalNode extends TemplateNode implements \Countable {
     return $this;
   }
 
+  /**
+   * Replace a node with another node.
+   * @param TemplateNode $node Node to replace.
+   * @param TemplateNode $next Replacement node.
+   * @return self Self.
+   */
   public function replace(TemplateNode $node, TemplateNode $replacement) {
     assume($node->parent === $this);
     assume(!isset($replacement->parent));
@@ -81,6 +117,10 @@ class InternalNode extends TemplateNode implements \Countable {
     return $this;
   }
 
+  /**
+   * Remove all children.
+   * @return self Self.
+   */
   public function clear() {
     foreach ($this->content as $node) {
       $node->parent = null;
@@ -91,10 +131,17 @@ class InternalNode extends TemplateNode implements \Countable {
     return $this;
   }
 
+  /**
+   * Get children.
+   * @return TemplateNode[] Array of children.
+   */
   public function getChildren() {
     return $this->content;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     $output = '';
     foreach ($this->content as $node)

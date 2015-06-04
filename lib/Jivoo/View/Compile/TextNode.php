@@ -5,14 +5,27 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+/**
+ * A text node.
+ */
 class TextNode extends TemplateNode {
+  /**
+   * @var string Text.
+   */
   private $text;
 
+  /**
+   * Construct text node.
+   * @param string $text Text.
+   */
   public function __construct($text) {
     parent::__construct();
     $this->text = $text;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'text':
@@ -21,6 +34,9 @@ class TextNode extends TemplateNode {
     return parent::__get($property);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     $text = $this->text;
     if (trim($text) == '')

@@ -9,18 +9,37 @@ namespace Jivoo\View\Compile;
  * Converts HTML templates to PHP templates.
  */
 class TemplateCompiler {
-  
+  /**
+   * @var callable[] Map of macro functions.
+   */
   private $macros = array();
   
+  /**
+   * Construct compiler.
+   * @param bool $defaultMacros Whether to add default macros provided by
+   * {@see DefaultMacros}.
+   */
   public function __construct($defaultMacros = true) {
     if ($defaultMacros)
       $this->macros = DefaultMacros::getMacros();
   }
   
+  /**
+   * Add a macro.
+   * @param string $name Lowercase macro name.
+   * @param callable $function A function accepting two parameters: the target
+   * {@see HtmlNode}, and the value of the macro attribute (string or null).
+   */
   public function addMacro($name, $function) {
     $this->macros[strtolower($name)] = $function;
   }
   
+  /**
+   * Compile a template file by reading it, converting the DOM using
+   * {@see convert()}, then applying macros using {@see transform()}.
+   * @param string $template Template file path.
+   * @return string PHP template content. 
+   */
   public function compile($template) {
     $dom = new \simple_html_dom();
     $dom->load_file($template);
@@ -42,7 +61,12 @@ class TemplateCompiler {
     return $root->__toString();
   }
   
-  public function convert($node) {
+  /**
+   * Convert HTML DOM to a template node.
+   * @param \simple_html_dom_node $node DOM node.
+   * @return TemplateNode Template node.
+   */
+  public function convert(\simple_html_dom_node $node) {
     if ($node->tag === 'text' or $node->tag === 'unknown')
       return new TextNode($node->innertext . "\n");
     else if ($node->tag === 'comment') {
@@ -69,6 +93,11 @@ class TemplateCompiler {
     }
   }
   
+  /**
+   * Apply macros to a template node.
+   * @param TemplateNode $node Node.
+   * @throws \Exception If unknown macro.
+   */
   public function transform(TemplateNode $node) {
     if ($node instanceof InternalNode) {
       foreach ($node->getChildren() as $child)
