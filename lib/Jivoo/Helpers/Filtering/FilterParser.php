@@ -5,76 +5,61 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers\Filtering;
 
-/*
-unichar     ::= any unicode character
-stringchar  ::= unichar - ('"' | '\')
-wordchar    ::= stringchar - (" " | "=" | "(" | ")" | "!" | "&" | "|" | "<" | ">")
-reserved    ::= not | and | or
+use Jivoo\Helpers\Filtering\Ast\StringNode;
+use Jivoo\Helpers\Filtering\Ast\FilterNode;
+use Jivoo\Helpers\Filtering\Ast\ComparisonNode;
+use Jivoo\Helpers\Filtering\Ast\NotTermNode;
 
-string      ::= '"' {stringchar | escape} '"'
-              | word
-word        ::= ((wordchar | escape) {wordchar | escape}) - reserved
-escape      ::= "\" unichar
-
-filter      ::= [notterm {[operator] notterm}]
-notterm     ::= [not] term
-term        ::= "(" filter ")"
-              | string comparison string
-              | string comparison "(" string {[operator] string} ")"
-              | string
-operator    ::= and | or
-comparison  ::= "=" | "<" | ">" | "<=" | ">=" | "contains" | "on" | "at" | "in"
-
-not         ::= "!" | "not"
-and         ::= "&" | "and"
-or          ::= "|" | "or"
-*/
-abstract class Node {
-  public $operator = '';
-}
-
-class FilterNode extends Node {
-  public $children = array();
-
-  public function __construct() {
-    $this->children = func_get_args();
-  }
-}
-
-class NotTermNode extends Node {
-  public $child;
-
-  public function __construct(Node $child) {
-    $this->child = $child;
-  }
-}
-
-class StringNode extends Node {
-  public $value = '';
-
-  public function __construct($value) {
-    $this->value = $value;
-  }
-}
-
-class ComparisonNode extends Node {
-  public $left = '';
-  public $comparison = '';
-  public $right = '';
-
-  public function __construct($left, $comparison, $right) {
-    $this->left = $left;
-    $this->comparison = $comparison;
-    $this->right = $right;
-  }
-}
-
+/**
+ * A parser for filters.
+ * 
+ * Based on the following context-free grammar:
+ * <code>
+ * unichar     ::= any unicode character
+ * stringchar  ::= unichar - ('"' | '\')
+ * wordchar    ::= stringchar - (" " | "=" | "(" | ")" | "!" | "&" | "|" | "<" | ">")
+ * reserved    ::= not | and | or
+ * 
+ * string      ::= '"' {stringchar | escape} '"'
+ *               | word
+ * word        ::= ((wordchar | escape) {wordchar | escape}) - reserved
+ * escape      ::= "\" unichar
+ * 
+ * filter      ::= [notterm {[operator] notterm}]
+ * notterm     ::= [not] term
+ * term        ::= "(" filter ")"
+ *               | string comparison string
+ *               | string comparison "(" string {[operator] string} ")"
+ *               | string
+ * operator    ::= and | or
+ * comparison  ::= "=" | "<" | ">" | "<=" | ">=" | "contains" | "on" | "at" | "in"
+ * 
+ * not         ::= "!" | "not"
+ * and         ::= "&" | "and"
+ * or          ::= "|" | "or"
+ * </code>
+ */
 class FilterParser {
-
+  /**
+   * @var array[] Tokens.
+   */
   private $tokens = array();
+  
+  /**
+   * @var array Current token of the form array(type, value).
+   */
   private $currentToken = null;
+  
+  /**
+   * @var array Next token.
+   */
   private $nextToken = null;
   
+  /**
+   * Parse a list of tokens.
+   * @param array[] $tokens List of tokens as produced by {@see FilterScanner}.
+   * @return \Jivoo\Helpers\Filtering\Ast\Node Abstract syntax tree.
+   */
   public function parse($tokens) {
     $this->tokens = $tokens;
     if (isset($tokens[0])) {
@@ -87,16 +72,30 @@ class FilterParser {
     return $this->parseFilter();
   }
   
+  /**
+   * Check type of next token.
+   * @param string $type Expected type.
+   * @return bool True if type matches.
+   */
   private function is($type) {
     return $this->nextToken != null and $this->nextToken[0] == $type;
   }
   
+  /**
+   * Whether next token is a comparison operator.
+   * @return bool True if comparison operator.
+   */
   private function isComparisonOperator() {
     $type = $this->nextToken[0];
     return $this->nextToken != null and $type != 'string' and $type != '!' and
            $type != '&' and $type != '|' and $type != '(' and $type != ')';
   }
   
+  /**
+   * Accept a token.
+   * @param string $type Optional token type.
+   * @return bool True if successful.
+   */
   private function accept($type = null) {
     if ($this->nextToken != null and ($type == null or $this->is($type))) {
       $this->pop();
@@ -105,15 +104,10 @@ class FilterParser {
     return false;
   }
   
-  private function expect($type = null) {
-    if ($this->accept($type)) {
-      return $this->currentToken;
-    }
-    throw new \Exception(
-      'Parse error: Unexpected token "' . $this->nextToken[0]
-      . '" expected "' . $type . '"');
-  }
-  
+  /**
+   * Pop a token.
+   * @return array Token.
+   */
   private function pop() {
     $this->currentToken = array_shift($this->tokens);
     if (isset($this->tokens[0])) {
@@ -125,6 +119,10 @@ class FilterParser {
     return $this->currentToken;
   }
   
+  /**
+   * Parse a filter.
+   * @return \Jivoo\Helpers\Filtering\Ast\Node AST node.
+   */
   private function parseFilter() {
     $node = new FilterNode();
     if ($this->nextToken != null) {
@@ -153,13 +151,21 @@ class FilterParser {
     return $node;
   }
   
+  /**
+   * Parse a not term.
+   * @return \Jivoo\Helpers\Filtering\Ast\Node AST node.
+   */
   private function parseNotTerm() {
     if ($this->accept('!')) {
       return new NotTermNode($this->parseTerm());
     }
     return $this->parseTerm();
   }
-  
+
+  /**
+   * Parse a term.
+   * @return \Jivoo\Helpers\Filtering\Ast\Node AST node.
+   */
   private function parseTerm() {
     if ($this->accept('(')) {
       $node = $this->parseFilter();
@@ -205,3 +211,4 @@ class FilterParser {
     return new StringNode($field);
   }
 }
+

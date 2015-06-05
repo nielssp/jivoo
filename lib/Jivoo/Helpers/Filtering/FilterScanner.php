@@ -5,14 +5,30 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers\Filtering;
 
+/**
+ * A scanner for filters.
+ */
 class FilterScanner {
-
+  /**
+   * @var string[] Input characters.
+   */
   private $input = array();
 
+  /**
+   * @var string Current character.
+   */
   private $current = null;
 
+  /**
+   * @var string Reserved characters.
+   */
   private static $reserved = '= ()!<>&|"';
 
+  /**
+   * Convert an input string to a list of tokens.
+   * @param string $input Filter string.
+   * @return array[] List of tokens.
+   */
   public function scan($input) {
     $this->input = str_split($input);
     $this->pop();
@@ -23,19 +39,35 @@ class FilterScanner {
     return $tokens;
   }
 
+  /**
+   * Get equals operator.
+   * @return string Equals oeprator.
+   */
   public static function getEqualsOperator() {
     return self::$reserved[0];
   }
 
+  /**
+   * Pop a character.
+   * @return string Character.
+   */
   private function pop() {
     $this->current = array_shift($this->input);
     return $this->current;
   }
 
+  /**
+   * Whether current character is a space.
+   * @return bool True if space.
+   */
   private function isSpace() {
     return $this->current == ' ';
   }
 
+  /**
+   * Scan a string.
+   * @return array Token.
+   */
   private function scanString() {
     $value = '';
     $this->pop();
@@ -54,6 +86,10 @@ class FilterScanner {
     return array('string', $value);
   }
 
+  /**
+   * Scan a word or operator.
+   * @return array Token.
+   */
   private function scanWord() {
     $value = '';
     while ($this->current != null and
@@ -88,6 +124,10 @@ class FilterScanner {
     return array('string', $value);
   }
 
+  /**
+   * Scan next token.
+   * @return array Token.
+   */
   private function scanNext() {
     while ($this->isSpace()) {
       $this->pop();

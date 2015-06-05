@@ -8,20 +8,46 @@ namespace Jivoo\Helpers\Filtering;
 use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\Condition\NotCondition;
 use Jivoo\Models\IBasicModel;
+use Jivoo\Helpers\FilteringHelper;
+use Jivoo\Helpers\Filtering\Ast\FilterNode;
+use Jivoo\Helpers\Filtering\Ast\NotTermNode;
+use Jivoo\Helpers\Filtering\Ast\ComparisonNode;
+use Jivoo\Helpers\Filtering\Ast\StringNode;
 
+/**
+ * A visitor that applies a filter to a model and produces a {@see Condition} for
+ * use with selections.
+ */
 class SelectionFilterVisitor extends FilterVisitor {
-
+  /**
+   * @var FilteringHelper Filtering helper.
+   */
   private $Filtering;
+  
+  /**
+   * @var string[] Priamry columns.
+   */
   private $primary;
   
+  /**
+   * @var IBasicModel Model.
+   */
   private $model;
 
-  public function __construct($Filtering, IBasicModel $model) {
+  /**
+   * Construct visitor.
+   * @param FilteringHelper $Filtering Filtering helper.
+   * @param IBasicModel $model Model.
+   */
+  public function __construct(FilteringHelper $Filtering, IBasicModel $model) {
     $this->Filtering = $Filtering;
     $this->primary = $this->Filtering->primary;
     $this->model = $model;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function visitFilter(FilterNode $node) {
     if (count($node->children) == 0)
       return new Condition('false');
@@ -37,11 +63,18 @@ class SelectionFilterVisitor extends FilterVisitor {
     }
     return $condition;
   }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function visitNotTerm(NotTermNode $node) {
     return new NotCondition($this->visit($node->child));
   }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function visitComparison(ComparisonNode $node) {
-    /// @TODO check for existence of column. AND TYPE
     if (!$this->model->hasField($node->left))
       return new Condition('false');
     $type = $this->model->getType($node->left);
@@ -60,6 +93,10 @@ class SelectionFilterVisitor extends FilterVisitor {
     }
     return new Condition('false');
   }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function visitString(StringNode $node) {
     if (count($this->primary) == 0)
       return new Condition('false');
