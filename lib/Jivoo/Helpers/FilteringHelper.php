@@ -12,23 +12,30 @@ use Jivoo\Helpers\Filtering\FilterScanner;
 use Jivoo\Helpers\Filtering\RecordFilterVisitor;
 use Jivoo\Models\IBasicModel;
 
-// missing features:
-//    "status=(draft|published)"  ... must be only one set of parentheses, and only OR's
-//    "status!=published"
-//    "title CONTAINS foo"
-//    "created = 2014"    ... automatic interval from 2014-01-01 00:00:00 to 2014-12-31 23:59:59
-//    "created > 2014-01-02 AND created BEFORE 2014-02-04"   ... aliases (date/created)?
-//    "created IN july"
-//    ON/IN/AT/!=/=/</>/<=/>=/BEFORE/AFTER
-//    custom strtotime-function probably necessary.. should create intervals based on precission of input
-
+/**
+ * Helper for filtering selections or arrays of records based on a query string.
+ * @property-read string $query The search query.
+ * @property-read string[] $primary Primary fields.
+ */
 class FilteringHelper extends Helper {
-
+  /**
+   * @var FilterScanner Scanner.
+   */
   private $scanner = null;
+  
+  /**
+   * @var FilterPaser Parser.
+   */
   private $parser = null;
   
+  /**
+   * @var string[] Primary fields.
+   */
   private $primary = array();
   
+  /**
+   * {@inheritdoc}
+   */
   public function __get($property) {
     switch ($property) {
       case 'query':
@@ -38,7 +45,10 @@ class FilteringHelper extends Helper {
     }
     return parent::__get($property);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function __isset($property) {
     switch ($property) {
       case 'query':
@@ -49,19 +59,27 @@ class FilteringHelper extends Helper {
     return parent::__isset($property);
   }
   
+  /**
+   * Add primary field.
+   * @param string $column Field name.
+   */
   public function addPrimary($column) {
     $this->primary[] = $column;
   }
   
+  /**
+   * Remove primary field.
+   * @param string $column Field nane.
+   */
   public function removePrimary($column) {
     $this->primary = array_diff($this->primary, array($column));
   }
 
   /**
-   * 
-   * @param IBasicSelection|IBasicRecord[] $selection
+   * Apply filtering to a selection or an array of records.
+   * @param IBasicSelection|IBasicRecord[] $selection Selection or array of records.
    * @param IBasicModel $model Model.
-   * @return unknown|Condition
+   * @return IBasicSelection[]IBasicRecord[] Filtered selection or array of records.
    */
   public function apply($selection, IBasicModel $model) {
     if (!isset($this->query) or empty($this->query))
