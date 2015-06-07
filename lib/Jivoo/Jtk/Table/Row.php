@@ -17,7 +17,10 @@ use Jivoo\Models\IBasicRecord;
  * @property JtkCollection $actions Available row actions.
  */
 class Row extends JtkObject {
-  
+  /**
+   * Construct row.
+   * @param DataTable $table Associated table.
+   */
   public function __construct(DataTable $table) {
     $this->table = $table;
     $this->cells = new JtkCollection('Jivoo\Jtk\Table\Cell');

@@ -6,6 +6,7 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Core\Lib;
+
 /**
  * An ordered collection of other JTK objects.
  */

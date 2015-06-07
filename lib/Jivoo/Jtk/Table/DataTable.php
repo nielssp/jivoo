@@ -27,7 +27,9 @@ use Jivoo\Models\IBasicRecord;
  * rendering.
  */
 class DataTable extends JtkObject {
-  
+  /**
+   * Construct data table.
+   */
   public function __construct() {
     $this->records = array();
     $this->columns = new JtkCollection('Jivoo\Jtk\Table\Column');
@@ -71,10 +73,20 @@ class DataTable extends JtkObject {
     }
   }
   
+  /**
+   * Set function to be called before rendereing each row.
+   * @param callable $callable Function that accepts one parameter of type
+   * {@see Row}.
+   */
   public function eachRow($callable) {
     $this->rowHandler = $callable;
   }
   
+  /**
+   * Create a row based on a record.
+   * @param IBasicRecord $record Record.
+   * @return Row Resulting row.
+   */
   public function createRow(IBasicRecord $record) {
     $row = new Row($this);
     $row->record = $record;

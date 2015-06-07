@@ -11,8 +11,14 @@ use Jivoo\Jtk\JtkSnippet;
  * A recursive icon menu snippet.
  */
 class MenuSnippet extends JtkSnippet {
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Icon', 'Jtk');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $objectType = 'Jivoo\Jtk\Menu\Menu';
 }
 

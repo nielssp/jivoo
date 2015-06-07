@@ -16,7 +16,12 @@ use Jivoo\Models\IBasicRecord;
  * @property string $value Cell value.
  */
 class Cell extends JtkObject {
-  
+  /**
+   * Constract table cell.
+   * @param Row $row Associated row.
+   * @param Column $column Associated column.
+   * @param string $value Cell value.
+   */
   public function __construct(Row $row, Column $column, $value = '') {
     $this->row = $row;
     $this->column = $column;

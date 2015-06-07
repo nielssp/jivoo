@@ -14,11 +14,19 @@ use Jivoo\Routing\ILinkable;
  * @property string $filter Filter query string.
  */
 class Filter extends JtkObject implements ILinkable {
+  /**
+   * Construct filter. 
+   * @param string $label Filter label.
+   * @param string $filter Filter query string/
+   */
   public function __construct($label, $filter) {
     $this->label = $label;
     $this->filter = $filter;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function getRoute() {
     return array(
       'query' => array('filter' => $this->filter),

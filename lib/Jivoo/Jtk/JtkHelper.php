@@ -11,11 +11,23 @@ use Jivoo\Helpers\Helper;
  * Jivoo toolkit helper.
  */
 class JtkHelper extends Helper {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Jtk', 'Themes');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Snippet');
-  
+
+  /**
+   * Get a JTK tool.
+   * @param string $toolName Tool name.
+   * @return PartialJtkSnippet A partial JTK snippet that can be used to
+   * configure the tool before outputting.
+   * @throws \Exception If tool not found.
+   */
   public function __get($toolName) {
     $tool = $this->m->Jtk->getTool($toolName);
     if (!isset($tool))
@@ -23,6 +35,13 @@ class JtkHelper extends Helper {
     return new PartialJtkSnippet($tool, $tool->getObject());
   }
   
+  /**
+   * Get and invoke a JTK tool.
+   * @param string $tool Tool name.
+   * @param mixed $param Parameters for tool.
+   * @return string HTML source for tool.
+   * @throws \Exception If tool not found.
+   */
   public function __call($tool, $parameters) {
     $tool = $this->m->Jtk->getTool($tool);
     if (isset($tool)) {
@@ -31,10 +50,19 @@ class JtkHelper extends Helper {
     throw new \InvalidMethodException(tr('Invalid method: %1', $tool));
   }
   
+  /**
+   * Set the JTK theme.
+   * @param string $theme Theme name.
+   * @todo This doesn't make much sense.
+   */
   public function setTheme($theme) {
     $this->m->Themes->load($theme);
   }
   
+  /**
+   * Apply or extend a JTK layout.
+   * @param string $layout Layout name.
+   */
   public function layout($layout = 'default') {
     if (isset($this->view->template)) {
       if ($this->view->template->isLayout())

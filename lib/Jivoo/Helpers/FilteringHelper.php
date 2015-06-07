@@ -79,7 +79,7 @@ class FilteringHelper extends Helper {
    * Apply filtering to a selection or an array of records.
    * @param IBasicSelection|IBasicRecord[] $selection Selection or array of records.
    * @param IBasicModel $model Model.
-   * @return IBasicSelection[]IBasicRecord[] Filtered selection or array of records.
+   * @return IBasicSelection|IBasicRecord[] Filtered selection or array of records.
    */
   public function apply($selection, IBasicModel $model) {
     if (!isset($this->query) or empty($this->query))

@@ -8,10 +8,18 @@ namespace Jivoo\Jtk\Notifications;
 use Jivoo\Snippets\CometSnippet;
 use Jivoo\Core\Json;
 
+/**
+ * A comet server for JTK notifications.
+ */
 class NotificatonServer extends CometSnippet {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $refreshRate = 1.0;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function update() {
     $this->session->open();
     if (isset($this->session['jtk-notifications'])) {

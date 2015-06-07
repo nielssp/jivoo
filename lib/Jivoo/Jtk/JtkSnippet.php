@@ -12,12 +12,25 @@ use Jivoo\Core\Lib;
  * A toolkit snippet.
  */
 class JtkSnippet extends Snippet {
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Jtk');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $parameters = array('object');
   
+  /**
+   * @var string Class name for associated settings object.
+   */
   protected $objectType = 'Jivoo\Jtk\JtkObject';
   
+  /**
+   * Get associated JTK settings object.
+   * @return JtkObject JTK settings object.
+   */
   public function getObject() {
     $args = func_get_args();
     $ref  = new \ReflectionClass($this->objectType);

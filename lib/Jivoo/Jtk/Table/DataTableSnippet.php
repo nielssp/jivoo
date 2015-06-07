@@ -17,10 +17,24 @@ use Jivoo\Models\DataType;
  * A data table snippet.
  */
 class DataTableSnippet extends JtkSnippet {
+  /**
+   * {@inheritdoc}
+   */
   protected $helpers = array('Icon', 'Filtering', 'Pagination', 'Form');
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected $objectType = 'Jivoo\Jtk\Table\DataTable';
   
+  /**
+   * Compare two records based on the chosen sorting.
+   * @param IBasicRecord $a First record.
+   * @param IBasicRecord $b Second record.
+   * @return int The order of the two rows. I.e. 0 if they are equal, a
+   * positive integer if the first record should come after the second record,
+   * or a negative integer otherwise.
+   */
   public function compareRecords(IBasicRecord $a, IBasicRecord $b) {
     $field = $this->object->sortBy->field;
     if ($a->$field == $b->$field)
@@ -36,7 +50,10 @@ class DataTableSnippet extends JtkSnippet {
       return strcmp($a->$field, $b->$field);
     }
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function before() {
     parent::before();
     if (isset($this->request->cookies['data-table-per-page']))
@@ -53,7 +70,10 @@ class DataTableSnippet extends JtkSnippet {
     $tableSettings->__set('density', $this->object->density);
     $this->viewData['tableSettings'] = $tableSettings;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function post($data) {
     if (isset($data['tableSettings'])) {
       $this->viewData['tableSettings']->addData($data['tableSettings']);
@@ -65,7 +85,10 @@ class DataTableSnippet extends JtkSnippet {
     }
     return $this->get();
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function get() {
     $o = $this->object;
     assume($o->model instanceof IBasicModel);

@@ -54,9 +54,9 @@ class Jtk extends LoadableModule {
   }
   
   /**
-   * 
-   * @param string $name
-   * @return JtkSnippet
+   * Get a JTK tool/snippet.
+   * @param string $name Tool name.
+   * @return JtkSnippet Snippet object for tool.
    */
   public function getTool($name) {
 //     if (isset($this->toolInstances[$name]))
