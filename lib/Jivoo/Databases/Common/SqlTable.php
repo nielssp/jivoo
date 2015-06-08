@@ -168,7 +168,7 @@ class SqlTable extends Table {
   public function countSelection(ReadSelection $selection) {
     if (isset($selection->groupBy)) {
       $result = $this->owner->rawQuery(
-        'SELECT COUNT(*) FROM (' . $this->convertReadSelection($selection) . ') AS _selection_count'
+        'SELECT COUNT(*) FROM (' . $this->convertReadSelection($selection, '1') . ') AS _selection_count'
       );
       $row = $result->fetchAssoc();
       return $row['COUNT(*)'];
@@ -191,9 +191,12 @@ class SqlTable extends Table {
    * @param ReadSelection $selection Read selection.
    * @return string SQL query.
    */
-  private function convertReadSelection(ReadSelection $selection) {
+  private function convertReadSelection(ReadSelection $selection, $projection = null) {
     $sqlString = 'SELECT ';
-    if (!empty($selection->fields)) {
+    if (isset($projection)) {
+      $sqlString .= $projection;
+    }
+    else if (!empty($selection->fields)) {
       $fields = $selection->fields;
       array_walk($fields, array($this, 'getColumnList'));
       $sqlString .= implode(', ', $fields);
