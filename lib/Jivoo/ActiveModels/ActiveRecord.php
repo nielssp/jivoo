@@ -118,8 +118,12 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     else
       $record = new ActiveRecord($model, $data);
     $record->updatedData = array();
-    foreach ($virtual as $field => $value)
-      $record->virtualData[$field] = $value;
+    foreach ($virtual as $field => $value) {
+      if (isset($record->associations[$field]))
+        $record->associationObjects[$field] = $value;
+      else
+        $record->virtualData[$field] = $value;
+    }
     $model->addToCache($record);
     $model->triggerEvent('afterLoad', new ActiveModelEvent($record));
     return $record;

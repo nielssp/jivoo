@@ -64,6 +64,15 @@ class EnumDataType extends DataType {
   /**
    * {@inheritdoc}
    */
+  public function __toString() {
+    if (!isset($this->class))
+      return 'Enum(' . implode(', ', $this->values) . ')';
+    return $this->class;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function createValidationRules(ValidatorField $validator) {
     $validator = $validator->ruleDataType;
     if (!$this->null)

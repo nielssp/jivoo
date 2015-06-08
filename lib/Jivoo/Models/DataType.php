@@ -151,6 +151,34 @@ class DataType {
    */
   public function __toString() {
     switch ($this->type) {
+      case self::INTEGER:
+        $s = '';
+        if ($this->autoIncrement)
+          $s .= 'Auto ';
+        if ($this->unsigned)
+          $s .= 'Unsigned ';
+        else
+          $s .= 'Signed ';
+        switch ($this->size) {
+          case self::BIG:
+            $s .= 'Big ';
+            break;
+          case self::SMALL:
+            $s .= 'Small ';
+            break;
+          case self::TINY:
+            $s .= 'Tiny ';
+            break;
+        }
+        return $s . 'Integer';
+      case self::STRING:
+        return 'String(' . $this->length . ')';
+      case self::TEXT: return 'Text';
+      case self::BOOLEAN: return 'Boolean';
+      case self::FLOAT: return 'Float';
+      case self::DATE: return 'Date';
+      case self::DATETIME: return 'Date/Time';
+      case self::OBJECT: return 'Object';
     }
   }
 

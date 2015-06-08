@@ -30,6 +30,14 @@ interface IModel extends Selection\ISelection, IBasicModel {
   public function getValidator();
 
   /**
+   * Determine if the field is virtual. Virtual fields are not allowed in
+   * selections.
+   * @param string $field Field name.
+   * @return bool True if virtual.
+   */
+  public function isVirtual($field);
+
+  /**
    * Make a selection that selects a single record.
    * @param IRecord $record A record.
    * @return ISelection A selection.

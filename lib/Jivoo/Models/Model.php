@@ -21,6 +21,11 @@ abstract class Model extends Module implements IModel {
    * @var string|null The auto increment primary key.
    */
   private $aiPrimaryKey = null;
+  
+  /**
+   * @var DataType[] Types of virtual fields introduced by selections.
+   */
+  private $virtualFields = array();
 
   /**
    * {@inheritdoc}
@@ -72,6 +77,37 @@ abstract class Model extends Module implements IModel {
       }
     }
     return Record::createExisting($this, $data, $virtual);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isVirtual($field) {
+    return !isset($this->getSchema()->$field);
+  }
+  
+  /**
+   * Add a temporary virtual field.
+   * @param string $field Field name.
+   * @param DataType $type Type.
+   */
+  public function addVirtual($field, DataType $type = null) {
+    $this->virtualFields[$field] = $type;
+  }
+  
+  /**
+   * Remove a virtual field.
+   * @param string $field Field name.
+   */
+  public function removeVirtual($field) {
+    unset($this->virtualFields[$field]);
+  }
+  
+  /**
+   * Remove all virtual fields.
+   */
+  public function clearVirtual() {
+    $this->virtualFields = array();
   }
 
   /**
@@ -284,6 +320,8 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function getFields() {
+    if (!empty($this->virtualFields))
+      return array_merge($this->getSchema()->getFields(), array_keys($this->virtualFields));
     return $this->getSchema()->getFields();
   }
 
@@ -291,6 +329,8 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function getType($field) {
+    if (array_key_exists($field, $this->virtualFields))
+      return $this->virtualFields[$field];
     return $this->getSchema()->$field;
   }
 
@@ -305,6 +345,8 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function hasField($field) {
+    if (array_key_exists($field, $this->virtualFields))
+      return true;
     return isset($this->getSchema()->$field);
   }
 

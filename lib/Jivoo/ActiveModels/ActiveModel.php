@@ -20,6 +20,10 @@ use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Databases\TableNotFoundException;
 use Jivoo\Models\Validation\Validator;
 use Jivoo\Databases\ResultSetIterator;
+use Jivoo\Models\DataType;
+use Jivoo\Models\Selection\BasicSelection;
+use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Selection\IReadSelection;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -249,14 +253,14 @@ abstract class ActiveModel extends Model implements IEventListener {
 
     $this->database->$table = $this;
   }
-  
+
   /**
-   * Add a virtual field to model.
-   * @param string $field Name of field.
+   * {@inheritdoc}
    */
-  public function addVirtual($field) {
+  public function addVirtual($field, DataType $type = null) {
     $this->fields[] = $field;
     $this->virtualFields[] = $field;
+    parent::addVirtual($field, $type);
   }
   
   /**
@@ -640,6 +644,47 @@ abstract class ActiveModel extends Model implements IEventListener {
    */
   public function insert($data) {
     return $this->source->insert($data);
+  }
+
+  /**
+   * Join with and return an associated record (associated using "belongsTo" or
+   * "hasOne").
+   * @param string $association Name of association.
+   * @param IReadSelection $selection Optional selection.
+   * @return IReadSelection Resulting selection.
+   */
+  public function withAssociated($association, IReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new Selection($this);
+    if (!isset($this->associations))
+      $this->createAssociations();
+    if (!isset($this->associations[$association]))
+      throw new InvalidAssociationException(tr('Unknown association: %1', $association));
+    $field = $association;
+    $association = $this->associations[$field];
+    $model = $association['model'];
+    if ($association['type'] == 'belongsTo') {
+      $key = $association['otherKey'];
+      $id = $model->getAiPrimaryKey();
+      $selection = $selection->leftJoin(
+        $association['model'],
+        $field .  '.' . $id . ' = {' . $this->name . '}.' . $key,
+        $field
+      );
+    }
+    else if ($association['type'] == 'hasOne') {
+      $key = $association['thisKey'];
+      $id = $this->primaryKey;
+      $selection = $selection->leftJoin(
+        $association['model'],
+        $field .  '.' . $key . ' = {' . $this->name . '}.' . $id,
+        $field
+      );
+    }
+    else {
+      throw new InvalidAssociationException(tr('Association must be of type "belongsTo" or "hasOne"'));
+    }
+    return $selection->withRecord($field, $model);
   }
 
   /**

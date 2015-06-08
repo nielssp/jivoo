@@ -89,7 +89,8 @@ abstract class BasicSelection implements IBasicSelection {
         return $this;
     }
     if (is_callable(array($this->model, $method))) {
-      return call_user_func(array($this->model, $method), $this);
+      array_push($args, $this);
+      return call_user_func_array(array($this->model, $method), $args);
     }
     throw new \InvalidMethodException(tr('Invalid method: %1', $method));
   }

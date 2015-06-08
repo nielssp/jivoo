@@ -41,7 +41,7 @@ interface IBasicModel {
    * @return bool True if the field exists, false otherwise.
    */
   public function hasField($field);
-
+  
   /**
    * Determine if the field is required.
    * @param string $field Field name.

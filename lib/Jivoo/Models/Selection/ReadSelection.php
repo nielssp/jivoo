@@ -113,6 +113,7 @@ class ReadSelection extends BasicSelection implements IReadSelection {
       'expression' => $expression,
       'type' => $type
     );
+    $this->model->addVirtual($field, $type);
     return $this;
   }
   
@@ -121,6 +122,8 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    */
   public function withRecord($field, IBasicModel $model) {
     foreach ($model->getFields() as $modelField) {
+      if ($model->isVirtual($modelField))
+        continue;
       $alias = $field . '_' . $modelField;
       $this->additionalFields[$alias] = array(
         'alias' => $alias,
