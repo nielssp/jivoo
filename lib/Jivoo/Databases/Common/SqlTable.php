@@ -189,6 +189,7 @@ class SqlTable extends Table {
   /**
    * Convert a read selection to an SQL query.
    * @param ReadSelection $selection Read selection.
+   * @param string|null $projection Projection override.
    * @return string SQL query.
    */
   private function convertReadSelection(ReadSelection $selection, $projection = null) {
