@@ -14,12 +14,27 @@ use Jivoo\Models\IBasicModel;
 /**
  * A read selection.
  * @property-read int $offset Offset.
+ * @proeprty-read array $groupBy An array describing grouping.
  * @proeprty-read array[] $joins List of arrays describing joings.
  * @property-read array[] $fields List of arrays describing fields.
  * @property-read array[] $additionalFields List of arrays describing fields.
  */
 class ReadSelection extends BasicSelection implements IReadSelection {
 
+  /**
+   * An arrays describing grouping.
+   * 
+   * Each array is of the following format:
+   * <code>
+   * array(
+   *   'columns' => ... // List of columns
+   *   'condition' => ... // Join condition ({@see Condition})
+   * )
+   * </code>
+   * @var array
+   */
+  protected $groupBy = null;
+  
   /**
    * @var int Offset
    */
