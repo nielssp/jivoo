@@ -117,7 +117,7 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     $value = $this->vars[$this->varCount];
     $this->varCount++;
     $type = null;
-    if ($matches[3] == 'm' || $matches[3] == 'model') {
+    if (isset($matches[3]) and ($matches[3] == 'm' or $matches[3] == 'model')) {
       if (!is_string($value)) {
         assume($value instanceof IBasicModel);
         $value = $value->getName();
