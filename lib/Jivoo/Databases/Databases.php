@@ -205,18 +205,3 @@ class Databases extends LoadableModule {
       $connection->rollback();
   }
 }
-
-/**
- * A database connection has failed.
- */
-class DatabaseConnectionFailedException extends \Exception {}
-
-/**
- * Invalid database configuration.
- */
-class DatabaseNotConfiguredException extends \Exception { }
-
-/**
- * Unknown table schema.
- */
-class DatabaseMissingSchemaException extends \Exception { }

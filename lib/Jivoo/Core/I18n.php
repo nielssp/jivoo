@@ -226,8 +226,3 @@ class I18n {
     return $date;
   }
 }
-
-/**
- * Thrown when language is invalid.
- */
-class I18nException extends \Exception { }

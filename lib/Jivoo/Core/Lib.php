@@ -45,7 +45,7 @@ class Lib {
       $className = get_class($className);
     if (strpos($className, '\\') === false)
       return '';
-    return preg_replace('\\\\[^\\\\]+$', '', $className);
+    return preg_replace('/\\\\[^\\\\]+$/', '', $className);
   }
   
   /**
@@ -100,41 +100,51 @@ class Lib {
   } 
   
   /**
-   * Auto loader
-   * @param string $className Name of class
-   * @throws ClassNotFoundException if class not found (and Lib::$throwExceptions
-   * is true)
-   * @return boolean True on success false on failure
+   * Attempt to load a file from the known library paths.
+   * @param string $file File name.
+   * @return boolean True if loaded, false otherwise.
    */
-  public static function autoload($className) {
-    $fileName = str_replace('\\', '/', $className);
+  private static function loadFile($file) {
     foreach (self::$paths as $path) {
       if ($path['namespace'] != '') {
-        if (substr_compare($fileName, $path['namespace'], 0, $path['namespacelen']) !== 0)
+        if (substr_compare($file, $path['namespace'], 0, $path['namespacelen']) !== 0)
           continue;
-        $classPath = $path['root'] . '/' . substr($fileName, $path['namespacelen'] + 1) . '.php';
+        $classPath = $path['root'] . '/' . substr($file, $path['namespacelen'] + 1);
       }
       else {
-        $classPath = $path['root'] . '/' . $fileName . '.php';
+        $classPath = $path['root'] . '/' . $file;
       }
       if (file_exists($classPath)) {
         require $classPath;
         return true;
       }
     }
+    return false;
+  }
+  
+  /**
+   * Auto loader
+   * @param string $className Name of class
+   * @throws ClassNotFoundException if class not found (and {@see $throwExceptions}
+   * is true)
+   * @return boolean True on success false on failure
+   */
+  public static function autoload($className) {
+    if (substr_compare($className, 'Exception', -9) === 0) {
+      $fileName = str_replace('\\', '/', self::getNamespace($className)) . '/exceptions.php';
+      if (self::loadFile($fileName)) {
+        if (self::$throwExceptions and !class_exists($className, false)) {
+          throw new ClassNotFoundException(tr('Class not found: "%1"', $className));
+        }
+        return true;
+      }
+    }
+    $fileName = str_replace('\\', '/', $className) . '.php';
+    if (self::loadFile($fileName))
+      return true;
     if (self::$throwExceptions) {
       throw new ClassNotFoundException(tr('Class not found: "%1"', $className));
     }
     return false;
   }
 }
-
-/**
- * Thrown when a class could not be found
- */
-class ClassNotFoundException extends \Exception { }
-
-/**
- * Thrown when a class is invalid
- */
-class ClassInvalidException extends \Exception { }

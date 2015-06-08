@@ -117,22 +117,16 @@ namespace {
     throw new InvalidArgumentException(tr('Assumption failed: %1', $matches[1]));
   }
   
-  if (!class_exists('InvalidArgumentException')) {
-    /**
-     * Thrown by function if parameters are invalid.
-     */
-    class InvalidArgumentException extends \Exception { }
-  }
   
   /**
    * Thrown when a magic method is undefined.
    */
-  class InvalidMethodException extends \Exception { }
+  class InvalidMethodException extends \LogicException { }
   
   /**
    * Thrown when a magic property is undefined.
    */
-  class InvalidPropertyException extends \Exception { }
+  class InvalidPropertyException extends \LogicException { }
   
   require Jivoo\PATH . '/Jivoo/Core/Lib.php';
   require Jivoo\PATH . '/Jivoo/Core/ErrorReporting.php';

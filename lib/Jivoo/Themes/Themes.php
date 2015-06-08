@@ -171,8 +171,3 @@ class Themes extends LoadableModule {
     
   }
 }
-
-/**
- * Thrown if a theme could not be found.
- */
-class ThemeNotFoundException extends \Exception { }

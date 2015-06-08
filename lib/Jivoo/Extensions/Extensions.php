@@ -534,16 +534,6 @@ class Extensions extends LoadableModule {
 }
 
 /**
- * Extension not found.
- */
-class ExtensionNotFoundException extends \Exception {}
-
-/**
- * Extension is invalid.
- */
-class ExtensionInvalidException extends \Exception {}
-
-/**
  * Event sent before and after an extension module has been loaded.
  */
 class LoadExtensionEvent extends LoadEvent { }

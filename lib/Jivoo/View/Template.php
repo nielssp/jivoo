@@ -260,8 +260,3 @@ class Template {
     }
   }
 }
-
-/**
- * When a template cannout be found.
- */
-class TemplateNotFoundException extends \Exception { }

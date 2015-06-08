@@ -844,47 +844,6 @@ class Routing extends LoadableModule {
 }
 
 /**
- * Invalid route.
- */
-class InvalidRouteException extends \Exception { }
-
-/**
- * Invalid response.
- */
-class InvalidResponseException extends \Exception { }
-
-/**
- * Can be used in an action to send the client to the error page.
- */
-class NotFoundException extends \Exception { }
-
-/**
- * When thrown, the current response is replaced.
- */
-class ResponseOverrideException extends \Exception {
-  /**
-   * @var Response New response object.
-   */
-  private $response;
-
-  /**
-   * Construct response override.
-   * @param Response $response New response object.
-   */
-  function __construct(Response $response) {
-    $this->response = $response;
-  }
-
-  /**
-   * Get the response object.
-   * @return Response Response object.
-   */
-  function getResponse() {
-    return $this->response;
-  }
-}
-
-/**
  * The event of rendering a page.
  */
 class RenderEvent extends Event {

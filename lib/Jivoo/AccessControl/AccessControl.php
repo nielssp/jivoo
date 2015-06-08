@@ -73,8 +73,3 @@ class AccessControl extends LoadableModule {
     return $this->hashers[$hasher];
   }
 }
-
-/**
- * Thrown when a hash type is unsupported.
- */
-class UnsupportedHashTypeException extends \Exception { }

@@ -135,13 +135,3 @@ class Map implements \IteratorAggregate, \ArrayAccess, \Countable {
     $this->readOnly = $readOnly;
   }
 }
-
-/**
- * Thrown if a key is not defined in map.
- */
-class MapKeyInvalidException extends \Exception { }
-
-/**
- * Thrown when editting a read-only map.
- */
-class MapReadOnlyException extends \Exception { }

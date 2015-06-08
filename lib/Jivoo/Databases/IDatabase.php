@@ -13,6 +13,7 @@ interface IDatabase {
    * Get table.
    * @param string $table Table name
    * @return Table Table.
+   * @throws TableNotFoundException If the table doesn't exist.
    */
   public function __get($table);
   
@@ -49,18 +50,3 @@ interface IDatabase {
    */
   public function rollback();
 }
-
-/**
- * A database selection has failed.
- */
-class DatabaseSelectFailedException extends \Exception {}
-
-/**
- * A database query has failed.
- */
-class DatabaseQueryFailedException extends \Exception {}
-
-/**
- * A table could not be found.
- */
-class TableNotFoundException extends \Exception { }

@@ -514,8 +514,3 @@ abstract class Model extends Module implements IModel {
     return $this->read($selection);    
   }
 }
-
-/**
- * Thrown if primary key is invalid
- */
-class InvalidPrimaryKeyException extends \Exception { }

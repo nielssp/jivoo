@@ -465,8 +465,3 @@ class Config implements \ArrayAccess, \IteratorAggregate {
     return new MapIterator($this->data);
   }
 }
-
-/**
- * A configuration file format is not supported
- */
-class UnsupportedConfigurationFormatException extends \Exception { }

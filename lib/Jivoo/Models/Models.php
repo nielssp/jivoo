@@ -128,8 +128,3 @@ class Models extends LoadableModule {
     unset($this->modelObjects[$name]);
   }
 }
-
-/**
- * A model could not be found.
- */
-class ModelNotFoundException extends \Exception { }

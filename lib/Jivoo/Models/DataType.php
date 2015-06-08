@@ -557,8 +557,3 @@ class DataType {
     }
   }
 }
-
-/**
- * Thrown when data type is unknown.
- */
-class InvalidDataTypeException extends \Exception { }

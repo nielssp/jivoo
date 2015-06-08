@@ -137,8 +137,3 @@ class Http {
     }
   }
 }
-
-/**
- * Headers have already been sent and cannot be changed.
- */
-class HeadersAlreadySentException extends \Exception { }

@@ -65,8 +65,3 @@ abstract class Enum {
     return array_search($str, self::$values[$class]);
   }
 }
-
-/**
- * For invalid enums.
- */
-class InvalidEnumException extends \Exception { }

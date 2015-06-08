@@ -767,8 +767,3 @@ class FormHelper extends Helper {
     return $html;
   }
 }
-
-/**
- * Form helper exception.
- */
-class FormHelperException extends \Exception { }
