@@ -16,12 +16,12 @@ class DefaultMacros {
   public static function getMacros() {
     $functions = array(
       'outerhtml', 'innerhtml', 'outertext', 'innertext', 'html', 'text',
-      'main', 'embed', 'block', 'layout', 'nolayout', 'extend',
+      'main', 'embed', 'block', 'layout', 'nolayout', 'extend', 'ignore',
       'if', 'else', 'foreach',
       'tr', 'tn',
-      'href', 'datetime',
+      'href', 'datetime', 'class',
       // attributes
-      'src', 'alt', 'title'
+      'src', 'alt', 'title', 'id', 'style'
     );
     $macros = array();
     foreach ($functions as $function)
@@ -152,6 +152,15 @@ class DefaultMacros {
   }
 
   /**
+   * Removes the node from the DOM.
+   * @param HtmlNode $node Node.
+   * @param string|null $value Macro paramter (omit).
+   */
+  static function _ignore(HtmlNode $node, $value) {
+    $node->detach();
+  }
+
+  /**
    * Begins or continues (if parameter omitted) an if block around the node.
    * @param HtmlNode $node Node.
    * @param string|null $value Macro paramter (PHP expression).
@@ -249,6 +258,23 @@ class DefaultMacros {
       $node->setAttribute('class', new PhpNode('if ($this->isCurrent(' . $value . ')) echo \'current\';', true));
     }
     $node->setAttribute('href', new PhpNode('$this->link(' . $value . ')'));
+  }
+  
+  /**
+   * Adds a class.
+   * @param HtmlNode $node Node.
+   * @param string|null $value Macro paramter (PHP expression).
+   */
+  static function _class(HtmlNode $node, $value) {
+    if ($node->hasAttribute('class')) {
+      $node->setAttribute(
+        'class',
+        new PhpNode("'" . h($node->getAttribute('class')) . " ' . " . $value)
+      );
+    }
+    else {
+      $node->setAttribute('class', new PhpNode($value));
+    }
   }
 
   /**
