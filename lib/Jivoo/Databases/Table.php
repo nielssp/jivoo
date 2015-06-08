@@ -22,14 +22,6 @@ abstract class Table extends Model {
   /**
    * {@inheritdoc}
    */
-  public function countSelection(ReadSelection $selection) {
-    $result = $selection->select('COUNT(*)');
-    return $result[0]['COUNT(*)'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function firstSelection(ReadSelection $selection) {
     $resultSet = $this->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())

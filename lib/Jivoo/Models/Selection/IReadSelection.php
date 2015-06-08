@@ -12,7 +12,7 @@ use Jivoo\Models\IBasicModel;
 /**
  * A read selection.
  */
-interface IReadSelection extends IBasicSelection, \IteratorAggregate {
+interface IReadSelection extends IBasicSelection, \IteratorAggregate, \Countable {
   /**
    * Make a projection.
    * @param string|string[]|array $expression Expression or array of expressions
@@ -91,7 +91,7 @@ interface IReadSelection extends IBasicSelection, \IteratorAggregate {
    * Count number of records in selection.
    * @return int Number of records.
   */
-  public function count();
+//   public function count();
   
   /**
    * Convert selection to an array.

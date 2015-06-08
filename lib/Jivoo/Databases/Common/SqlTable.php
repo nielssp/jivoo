@@ -165,7 +165,33 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
+  public function countSelection(ReadSelection $selection) {
+    if (isset($selection->groupBy)) {
+      $result = $this->owner->rawQuery(
+        'SELECT COUNT(*) FROM (' . $this->convertReadSelection($selection) . ') AS _selection_count'
+      );
+      $row = $result->fetchAssoc();
+      return $row['COUNT(*)'];
+    }
+    else {
+      $result = $selection->select('COUNT(*)');
+      return $result[0]['COUNT(*)'];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function readSelection(ReadSelection $selection) {
+    return $this->owner->rawQuery($this->convertReadSelection($selection));
+  }
+
+  /**
+   * Convert a read selection to an SQL query.
+   * @param ReadSelection $selection Read selection.
+   * @return string SQL query.
+   */
+  private function convertReadSelection(ReadSelection $selection) {
     $sqlString = 'SELECT ';
     if (!empty($selection->fields)) {
       $fields = $selection->fields;
@@ -250,7 +276,7 @@ class SqlTable extends Table {
     if (isset($selection->limit)) {
       $sqlString .= ' LIMIT ' . $selection->offset . ', ' . $selection->limit;
     }
-    return $this->owner->rawQuery($sqlString);
+    return $sqlString;
   }
   
   /**
