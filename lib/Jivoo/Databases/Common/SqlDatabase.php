@@ -9,6 +9,7 @@ use Jivoo\Databases\LoadableDatabase;
 use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\DataType;
+use Jivoo\Models\IBasicModel;
 
 /**
  * A generic SQL database.
@@ -116,6 +117,13 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     $value = $this->vars[$this->varCount];
     $this->varCount++;
     $type = null;
+    if ($matches[3] == 'm' || $matches[3] == 'model') {
+      if (!is_string($value)) {
+        assume($value instanceof IBasicModel);
+        $value = $value->getName();
+      }
+      return $this->quoteTableName($value);
+    }
     if (isset($matches[3]) and $matches[3] != '()')
       $type = DataType::fromPlaceholder($matches[3]);
     if (isset($matches[4]) or (isset($matches[3]) and $matches[3] == '()')) {
@@ -145,6 +153,7 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
    * true // Boolean true
    * false // Boolean false
    * {AnyTableName} // A table name
+   * %m %model // A table/model object or name
    * %i %int %integer // An integer value
    * %f %float // A floating point value
    * %s %str %string // A string
@@ -157,6 +166,7 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
    * %anyPlaceholder() // An array of values
    * </code>
    * 
+   * @todo Could be moved to a more general place.
    * @param string $format Query format, use placeholders instead of values.
    * @param mixed[] $vars List of values to replace Placeholders with.
    * @return string The escaped query.
