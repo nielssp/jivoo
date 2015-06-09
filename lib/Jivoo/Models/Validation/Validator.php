@@ -209,7 +209,7 @@ class Validator implements IValidator {
           == 1) == $rule)
           return true;
         else
-          return $rule ? tr('Must be a decimal number.') : tr('Must not be an integer.');
+          return $rule ? tr('Must be a decimal number.') : tr('Must not be a decimal number.');
       case 'boolean':
         if ((preg_match('/^(0|1|true|false|yes|no)$/i', $value) == 1) == $rule)
           return true;
