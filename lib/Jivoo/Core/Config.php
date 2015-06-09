@@ -391,10 +391,11 @@ class Config implements \ArrayAccess, \IteratorAggregate {
         }
       }
     }
-    $filePointer = fopen($this->file, 'w');
+    $filePointer = fopen($this->file, 'r+');
     if (!$filePointer)
       return false;
     if (flock($filePointer, LOCK_EX)) {
+      ftruncate($filePointer, 0);
       $data = Config::phpPrettyPrint($this->data);
       fwrite($filePointer, '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL);
       fflush($filePointer);
