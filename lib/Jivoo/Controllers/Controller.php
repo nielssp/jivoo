@@ -287,9 +287,9 @@ class Controller extends Module {
   
   /**
    * Called right after the selected action is called.
-   * @param Response $response Respone object, as returned by action.
+   * @param mixed $response Respone object, as returned by action.
    */
-  public function after(Response $response) {
+  public function after($response) {
   }
 
 }
