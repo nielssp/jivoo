@@ -47,6 +47,11 @@
   left: 0;
   right: 0;
 }
+#reference {
+  margin-top:32px;
+  font-size:0.8em;
+  color: #999;
+}
 </style>
 
 </head>
@@ -60,7 +65,11 @@
 
 <div id="message">
 <div>
-<?php echo tr('An error occurred while loading this page&hellip;'); ?>
+<p><?php echo tr('An error occurred while loading this page&hellip;'); ?></p>
+
+<?php if (isset($hash)): ?>
+<p id="reference">Reference: #<?php echo $hash; ?></p>
+<?php endif; ?>
 </div>
 </div>
 

@@ -527,9 +527,12 @@ class App implements IEventSubject {
           Logger::error(tr('A crash report has been generated: "%1"', $name));
         }
         else {
+          $hash = null;
           Logger::error(tr('Failed to create crash report "%1"', $name));
         }
       }
+      if (!$this->config['core']['showReference'])
+        $hash = null;
     }
     // Clean the view
     while (ob_get_level() > 0)
@@ -572,8 +575,7 @@ class App implements IEventSubject {
       return;
     }
 
-    $environmentConfigFile = $this
-      ->p('app', 'config/environments/' . $environment . '.php');
+    $environmentConfigFile = $this->p('app', 'config/environments/' . $environment . '.php');
     if (file_exists($environmentConfigFile)) {
       $this->config->override = include $environmentConfigFile;
     }
@@ -591,7 +593,8 @@ class App implements IEventSubject {
         'language' => $this->appConfig['defaultLanguage'],
         'showExceptions' => false,
         'logLevel' => Logger::ALL,
-        'createCrashReports' => true
+        'createCrashReports' => true,
+        'showReference' => true
       ),
     );
     
