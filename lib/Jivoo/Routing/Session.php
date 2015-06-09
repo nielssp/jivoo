@@ -39,9 +39,19 @@ class Session implements \ArrayAccess {
   /**
    * Construct session storage.
    * @param string $prefix Session prefix to use.
-   * @param string $clientIp Client IP (not used).
+   * @param string $name Session cookie name.
+   * @param bool $secure Whether to enable Secure flag on session cookie.
+   * @param bool $httpOnly Whether to enable HttpOnly flag on session cookie.
    */
-  public function __construct($prefix = '', $clientIp = null) {
+  public function __construct($prefix = '', $name = null, $secure = false, $httpOnly = true) {
+    $params = session_get_cookie_params();
+    session_set_cookie_params(
+      $params['lifetime'],
+      $params['path'],
+      $params['domain'],
+      $secure, $httpOnly
+    );
+    session_name($name);
     session_start();
     $this->prefix = $prefix;
     $this->flash = new FlashMap($this);

@@ -24,6 +24,7 @@ use Jivoo\Core\Utilities;
  * @property-read string|null $userAgent HTTP user agent or null if not set.
  * @property-read string|null $domain Domain name protocol and port.
  * @property-read string|null $method Request method, e.g. 'GET', 'POST' etc.
+ * @proeprty-read bool $secure Whether or not HTTPS was used for this request.
  */
 class Request {
 
@@ -97,6 +98,11 @@ class Request {
    * @var string[] List of encodings accepted by the client.
    */
   private $encodings = array();
+  
+  /**
+   * @var bool Whether or not HTTPS was used.
+   */
+  private $secure = false;
 
   /**
    * Construct request.
@@ -108,7 +114,8 @@ class Request {
        
     $request = parse_url($url);
     
-    if (isset($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] != 'off') {
+    if (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] != 'off') {
+      $this->secure = true;
       $this->domainName = 'https://';
     }
     else {
@@ -177,7 +184,7 @@ class Request {
     }
 
     $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
-    $this->session = new Session($sessionPrefix, $this->ip);
+    $this->session = new Session($sessionPrefix, $sessionPrefix . 'session_id', $this->secure);
   }
 
   /**
@@ -199,6 +206,7 @@ class Request {
       case 'fragment':
       case 'domainName':
       case 'method':
+      case 'secure':
         return $this->$name;
       case 'ip':
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;

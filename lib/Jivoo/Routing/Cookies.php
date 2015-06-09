@@ -47,8 +47,11 @@ class Cookies implements \ArrayAccess {
    * @param int $expire The time the cookie expires as a UNIX timestamp, default
    * is a year.
    * @param string $path The path on the server in which the cookie will be available on.
+   * @param string|null $domain Domain.
+   * @param bool $secure Whether to set Secure flag.
+   * @param bool $httpOnly Whether to set HttpOnly flag. 
    */
-  public function setCookie($name, $value, $expire = null, $path = null) {
+  public function setCookie($name, $value, $expire = null, $path = null, $domain = null, $secure = false, $httpOnly = false) {
     if (!isset($path)) {
       $path = $this->basePath;
     }
@@ -57,12 +60,12 @@ class Cookies implements \ArrayAccess {
     }
     $this->cookies[$this->prefix . $name] = $value;
     try {
-      setcookie($this->prefix . $name, $value, $expire, $path);
+      setcookie($this->prefix . $name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
     catch (\Exception $e) {
     }
   }
-
+  
   /**
    * Whether or not a cookie exists.
    * @param string $name Name of cookie.

@@ -536,12 +536,14 @@ class AuthHelper extends Helper {
   private function createCookie($sessionId) {
     $this->request->cookies->setCookie(
       $this->cookiePrefix . 'session',
-      $sessionId, time() + $this->cookieLifeTime
+      $sessionId, time() + $this->cookieLifeTime,
+      null, null, $this->request->secure, true
     );
     if ($this->cookieRenewAfter >= 0) {
       $this->request->cookies->setCookie(
         $this->cookiePrefix . 'renew_at',
-        time() + $this->cookieRenewAfter, time() + $this->cookieLifeTime
+        time() + $this->cookieRenewAfter, time() + $this->cookieLifeTime,
+        null, null, $this->request->secure, true
       );
     }
   }
