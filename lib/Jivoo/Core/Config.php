@@ -74,7 +74,14 @@ class Config implements \ArrayAccess, \IteratorAggregate {
       if (file_exists($configFile)) {
         switch ($this->type) {
           case 'php':
+            $lock = fopen($this->file, 'r');
+            if (!$lock)
+              throw new Exception(tr('Could not read configuration file'));
+            if (!flock($lock, LOCK_SH))
+              throw new Exception(tr('Could not lock configuration file'));
             $content = file_get_contents($this->file);
+            flock($lock, LOCK_UN);
+            fclose($lock);
             $content = str_replace('<?php', '', $content);
             $this->data = eval($content);
             if (!is_array($this->data)) {
