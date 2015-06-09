@@ -9,4 +9,13 @@ return array(
   'Extensions' => array(
     'disableBuggy' => false
   ),
+  'Console' => array(
+    'enable' => true
+  ),
+  'View' => array(
+    'compileTemplates' => true
+  ),
+  'Migrations' => array(
+    'automigrate' => true
+  )
 );
