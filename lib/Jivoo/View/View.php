@@ -224,10 +224,12 @@ class View extends LoadableModule {
           }
         }
       }
+      $compiled = $dir . 'compiled/' . $template . '.php';
+      if (file_exists($compiled))
+        return $compiled;
       $path = $dir . $template . '.php';
-      if (file_exists($path)) {
+      if (file_exists($path))
         return $path;
-      }
     }
     return null;
   }
