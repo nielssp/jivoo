@@ -38,7 +38,7 @@ class App implements IEventSubject {
     'modules' => array(
       'Snippets', 'Routing', 'Assets',
       'View', 'Models', 'Helpers', 'Extensions',
-      'Themes', 'Jtk', 'Console'
+      'Themes', 'Jtk', 'Setup', 'Console'
     ),
     'listeners' => array(),
     'defaultLanguage' => 'en',

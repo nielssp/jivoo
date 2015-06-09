@@ -6,7 +6,3 @@
 ); ?></p>
 
 <p><?php echo tr('Do you want Jivoo to generate a new application?')?></p>
-
-<p>
-<?php echo $Html->link(tr('Continue'), 'snippet:Jivoo\Console\Configure', array('class' => 'button')); ?>
-</p>

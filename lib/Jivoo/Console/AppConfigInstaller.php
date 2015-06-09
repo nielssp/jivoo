@@ -9,11 +9,12 @@ use Jivoo\Snippets\Snippet;
 use Jivoo\Models\Form;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Json;
+use Jivoo\Setup\InstallerSnippet;
 
 /**
  * Configure application.
  */
-class Configure extends Snippet {
+class AppConfigInstaller extends InstallerSnippet {
   /**
    * @var Form Configuration form.
    */
@@ -23,6 +24,14 @@ class Configure extends Snippet {
    * {@inheritdoc}
    */
   protected $helpers = array('Form', 'Jtk');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setup() {
+    $this->appendStep('welcome', true);
+    $this->appendStep('configure');
+  }  
   
   /**
    * {@inheritdoc}
@@ -38,45 +47,52 @@ class Configure extends Snippet {
     $this->view->data->title = tr('Configure application');
     return null;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function get() {
-    $this->configForm->name = $this->app->name;
-    $this->configForm->version = $this->app->version;
-    $this->configForm->modules = array(
-      'Controllers', 'Snippets', 'Databases', 'Migrations', 'ActiveModels',
-      'Jtk', 'Console', 'Generators'
-    );
+  
+  public function welcome($data = null) {
+    if (isset($data))
+      return $this->next();
+    $this->viewData['appDir'] = $this->p('app', '');
     return $this->render();
   }
 
   /**
-   * {@inheritdoc}
+   * 
    */
-  public function post($data) {
-    $this->configForm->addData($data);
-    $appConfig = array(
-      'name' => $this->configForm->name,
-      'version' => $this->configForm->version,
-      'modules' => array_merge(
-        array('Assets', 'Helpers', 'Models', 'Routing', 'View'),
-        array_values($this->configForm->modules)
-      )
-    );
-    mkdir($this->p('app', ''));
-    mkdir($this->p('app', 'config'));
-    mkdir($this->p('app', 'config/environments'));
-    $this->installFile('Core', 'config/environments/development.php');
-    $this->installFile('Core', 'config/environments/production.php');
-    mkdir($this->p('user', ''));
-    mkdir($this->p('log', ''));
-    $file = fopen($this->p('app', 'app.json'), 'w');
-    if ($file) {
-      fwrite($file, Json::prettyPrint($appConfig));
-      fclose($file);
-      return $this->redirect(null);
+  public function configure($data = null) {
+    if (isset($data)) {
+      $this->configForm->addData($data['Configure']);
+      $appConfig = array(
+        'name' => $this->configForm->name,
+        'version' => $this->configForm->version,
+        'modules' => array_merge(
+          array('Assets', 'Helpers', 'Models', 'Routing', 'View'),
+          array_values($this->configForm->modules)
+        ),
+        'install' => 'Jivoo\Setup\DefaultInstaller',
+        'update' => 'Jivoo\Setup\DefaultUpdater'
+      );
+      mkdir($this->p('app', ''));
+      mkdir($this->p('app', 'config'));
+      mkdir($this->p('app', 'config/environments'));
+      $this->installFile('Core', 'config/environments/development.php');
+      $this->installFile('Core', 'config/environments/production.php');
+      mkdir($this->p('user', ''));
+      mkdir($this->p('log', ''));
+      $file = fopen($this->p('app', 'app.json'), 'w');
+      if ($file) {
+        fwrite($file, Json::prettyPrint($appConfig));
+        fclose($file);
+        return $this->next();
+      }
+    }
+    else {
+      $this->configForm->name = $this->app->name;
+      $this->configForm->version = $this->app->version;
+      $this->configForm->modules = array(
+        'Controllers', 'Snippets', 'Databases', 'Migrations', 'ActiveModels',
+        'Extensions', 'Themes',
+        'AccessControl', 'Setup', 'Jtk', 'Console', 'Generators', 'Content'
+      );
     }
     return $this->render();
   }

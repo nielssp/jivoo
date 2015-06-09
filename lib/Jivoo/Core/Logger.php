@@ -76,6 +76,11 @@ class Logger {
    * @param string $append Whether to append messages to file.
    */
   private function __construct($logFile, $level = Logger::ALL, $append = true) {
+    if (!file_exists($logFile)) {
+      if (!touch($logFile)) {
+        Logger::error(tr('Could not create log file: %1', $logFile));
+      }
+    }
     $this->file = realpath($logFile);
     $this->level = $level;
     $this->append = $append;
@@ -86,6 +91,10 @@ class Logger {
    * @return boolean True if successful, false otherwise.
    */
   public function save() {
+    if ($this->append) {
+      if (!touch($this->file))
+        return false;
+    }
     $filePointer = fopen($this->file, $this->append ? 'a' : 'w');
     if ($filePointer) {
       foreach (self::$log as $entry) {

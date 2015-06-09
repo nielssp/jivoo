@@ -47,6 +47,7 @@ class Migrations extends LoadableModule {
   protected function init() {
     $this->config->defaults = array(
       'automigrate' => false,
+      'silent' => false,
       'mtimes' => array()
     );
     
@@ -89,10 +90,18 @@ class Migrations extends LoadableModule {
     $this->migrationDirs[$name] = $migrationDir;
     $this->connections[$name] = $db;
     if ($this->config['automigrate']) {
-      if (!$this->m->Setup->isActive()) {
+      if (!$this->m->Setup->isActive() and is_dir($this->migrationDirs[$name])) {
         $mtime = filemtime($this->migrationDirs[$name] . '/.');
         if (!isset($this->config['mtimes'][$name]) or $this->config['mtimes'][$name] != $mtime) {
-          $this->m->Setup->trigger('Jivoo\Migrations\MigrationUpdater');
+          if ($this->config['silent']) {
+            $missing = $this->check($name);
+            foreach ($missing as $migration)
+              $this->run($name, $migration);
+            $this->finalize($name);
+          }
+          else {
+            $this->m->Setup->trigger('Jivoo\Migrations\MigrationUpdater');
+          }
         }
       }
     }
