@@ -27,6 +27,9 @@ class Http {
   const PAYMENT_REQUIRED = 402;
   const FORBIDDEN = 403;
   const NOT_FOUND = 404;
+  const INTERNAL_SERVER_ERROR = 500;
+  const NOT_IMPLEMENTED = 501;
+  const SERVICE_UNAVAILABLE = 503;
 
   private function __construct() { }
   
@@ -112,6 +115,12 @@ class Http {
         return 'Forbidden';
       case 404:
         return 'Not Found';
+      case 500:
+        return 'Internal Server Error';
+      case 501:
+        return 'Not Implemented';
+      case 503:
+        return 'Service Unavailable';
     }
     return false;
   }

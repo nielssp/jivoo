@@ -28,7 +28,7 @@ if (isset($exception)) {
   $line = $exception->getLine();
   $message = $exception->getMessage();
 ?>
-<h2><?php echo $message ?></h2>
+<h2><?php echo $message; ?></h2>
 
 <p><?php echo tr(
   'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',

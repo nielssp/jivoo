@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\Routing\Http;
+
 /**
  * Application class for initiating Jivoo applications.
  * @property string $basePath Web base path.
@@ -515,7 +517,10 @@ class App implements IEventSubject {
    */
   public function handleError(\Exception $exception) {
     if ($this->config['core']['createCrashReports']) {
-      $hash = substr(md5($exception->__toString()), 0, 10);
+      $file = $exception->getFile();
+      $line = $exception->getLine();
+      $message = $exception->getMessage();
+      $hash = substr(md5($file . $line . $message), 0, 10);
       $name = date('Y-m-d') . '_crash_' . $hash . '.html';
       if (!file_exists($this->p('log', $name))) {
         $file = fopen($this->p('log', $name), 'w');
@@ -537,6 +542,7 @@ class App implements IEventSubject {
     // Clean the view
     while (ob_get_level() > 0)
       ob_end_clean(); 
+    Http::setStatus(Http::INTERNAL_SERVER_ERROR);
     if ($this->config['core']['showExceptions']) {
       $this->crashReport($exception);
       $this->stop();
