@@ -9,6 +9,7 @@ use Jivoo\Helpers\Helper;
 use Jivoo\Models\IModel;
 use Jivoo\Routing\TextResponse;
 use Jivoo\View\ViewResponse;
+use Jivoo\Routing\NotFoundException;
 
 /**
  * A helper for typical administration tasks such as bulk edit and deletion.
@@ -152,11 +153,12 @@ class ContentAdminHelper extends Helper {
     $this->selection = null;
     if (isset($ids)) {
       $ids = explode(',', $ids);
+      $type = $model->getType($idField);
       if (count($ids) == 1) {
-        $this->record = $model->where($idField . ' = ?', $ids[0])->first();
+        $this->record = $model->where('%c = %_', $idField, $type, $ids[0])->first();
       }
       else if (count($ids) > 1) {
-        $this->selection = $model->where($idField . ' IN ?()', $ids);
+        $this->selection = $model->where('%c IN %_()', $idField, $type, $ids);
       }
     }
     else if (isset($this->request->query['filter'])) {

@@ -117,12 +117,26 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     $value = $this->vars[$this->varCount];
     $this->varCount++;
     $type = null;
+    if (isset($matches[3]) and $matches[3] == '_') {
+      if (!is_string($value)) {
+        assume($value instanceof DataType);
+        $value = $value->placeholder;
+      }
+      $matches[3] = ltrim($value, '%');
+      $value = $this->vars[$this->varCount];
+      $this->varCount++;
+    }
     if (isset($matches[3]) and ($matches[3] == 'm' or $matches[3] == 'model')) {
       if (!is_string($value)) {
         assume($value instanceof IBasicModel);
         $value = $value->getName();
       }
       return $this->quoteTableName($value);
+    }
+    if (isset($matches[3]) and ($matches[3] == 'c' or $matches[3] == 'column')) {
+      assume(is_string($value));
+      // TODO: escape/validate that the column name is valid'ish
+      return $value;
     }
     if (isset($matches[3]) and $matches[3] != '()')
       $type = DataType::fromPlaceholder($matches[3]);
@@ -154,6 +168,8 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
    * false // Boolean false
    * {AnyTableName} // A table name
    * %m %model // A table/model object or name
+   * %c %column // A column/field name
+   * %_ // A placeholder placeholder, can also be a type, e.g. where(..., 'id = %_', $type, $value)
    * %i %int %integer // An integer value
    * %f %float // A floating point value
    * %s %str %string // A string
@@ -187,7 +203,7 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
     $format = preg_replace('/\btrue\b/i', $true, $format);
     $format = preg_replace('/\bfalse\b/i', $false, $format);
     $format = preg_replace_callback('/\{(.+?)\}/', array($this, 'replaceTable'), $format);
-    return preg_replace_callback('/((\?)|%([a-z\\\\]+))(\(\))?/i', array($this, 'replaceVar'), $format);
+    return preg_replace_callback('/((\?)|%([a-z_\\\\]+))(\(\))?/i', array($this, 'replaceVar'), $format);
   }
 
   /**

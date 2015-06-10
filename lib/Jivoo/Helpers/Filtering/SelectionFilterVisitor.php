@@ -79,7 +79,6 @@ class SelectionFilterVisitor extends FilterVisitor {
       return new Condition('false');
     $type = $this->model->getType($node->left);
     $right = $type->convert($node->right);
-    $placeholder = $type->placeholder;
     switch ($node->comparison) {
       case '=':
       case '!=':
@@ -87,9 +86,9 @@ class SelectionFilterVisitor extends FilterVisitor {
       case '>=':
       case '>':
       case '<':
-        return new Condition($node->left . ' ' . $node->comparison . ' ' . $placeholder, $right);
+        return new Condition('%c ' . $node->comparison . ' %_', $node->left, $type, $right);
       case 'contains':
-        return new Condition($node->left . ' LIKE %s', '%' . Condition::escapeLike($right) . '%');
+        return new Condition('%c LIKE %s', $node->left, '%' . Condition::escapeLike($right) . '%');
     }
     return new Condition('false');
   }
@@ -102,7 +101,7 @@ class SelectionFilterVisitor extends FilterVisitor {
       return new Condition('false');
     $condition = new Condition();
     foreach ($this->primary as $column) {
-      $condition->or($column . ' LIKE %s', '%' . $node->value . '%');
+      $condition->or('%c LIKE %s', $column, '%' . Condition::escapeLike($node->value) . '%');
     }
     return $condition;
   }
