@@ -33,6 +33,8 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
    */
   public function encode(DataType $type, $value) {
     $value = $type->convert($value);
+    if (!isset($value))
+      return 'NULL';
     switch ($type->type) {
       case DataType::INTEGER:
         return intval($value);

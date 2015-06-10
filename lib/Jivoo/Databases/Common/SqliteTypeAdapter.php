@@ -32,6 +32,8 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    */
   public function encode(DataType $type, $value) {
     $value = $type->convert($value);
+    if (!isset($value))
+      return 'NULL';
     switch ($type->type) {
       case DataType::BOOLEAN:
         return $value ? 1 : 0;

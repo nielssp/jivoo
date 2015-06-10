@@ -175,7 +175,8 @@ abstract class Model extends Module implements IModel {
       ));
     }
     for ($i = 0; $i < count($args); $i++) {
-      $selection = $selection->where($primaryKey[$i] . ' = ?', $args[$i]);
+      $type = $this->gettype($primaryKey[$i]);
+      $selection = $selection->where($primaryKey[$i] . ' = ' . $type->placeholder, $args[$i]);
     }
     return $selection->first();
   }

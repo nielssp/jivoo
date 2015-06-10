@@ -316,13 +316,13 @@ class Routing extends LoadableModule {
    * @param string $rewrite If true 'index.php/' will not be included in link.
    * @return string A URL.
    */
-  public function getLinkFromPath($path = null, $query = null, $fragment = null,
-    $rewrite = false) {
+  public function getLinkFromPath($path = null, $query = null, $fragment = null, $rewrite = false) {
     if (!isset($path)) {
       $path = $this->request->path;
     }
+    $path = array_map('urlencode', $path);
     if (isset($fragment)) {
-      $fragment = '#' . $fragment;
+      $fragment = '#' . urlencode($fragment);
     }
     else {
       $fragment = '';
@@ -339,7 +339,7 @@ class Routing extends LoadableModule {
       }
       $combined = implode('/', $path) . '?' . implode('&', $queryStrings) .
                    $fragment;
-      if ($this->config['rewrite'] OR $rewrite) {
+      if ($this->config['rewrite'] or $rewrite) {
         return $this->w($combined);
       }
       else {
@@ -347,7 +347,7 @@ class Routing extends LoadableModule {
       }
     }
     else {
-      if ($this->config['rewrite'] OR $rewrite) {
+      if ($this->config['rewrite'] or $rewrite) {
         return $this->w(implode('/', $path) . $fragment);
       }
       else {

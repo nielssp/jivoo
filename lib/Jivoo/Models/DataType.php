@@ -355,22 +355,47 @@ class DataType {
   }
   
   /**
-   * Convert a value to this data type.
+   * Convert a value such that it is compatible with this data type. The
+   * resulting value is of the correct type but may still not be valid (see
+   * {@see isValid()}), e.g. it may be null even if the data type isn't
+   * nullable, or out of range (string too long or integer too big or small).
    * @param mixed $value Value.
+   * @param bool $strict If true, the function will only use strict conversion
+   * for integers and floats and return null if the value is invalid. If false,
+   * it will use PHP's built-in conversions, e.g. any value can be converted to
+   * an integer etc. and a string like "5notanumber" will be converted to 5.
    * @return mixed A value depending on this data type.
    */
-  public function convert($value) {
+  public function convert($value, $strict = true) {
     //if ($this->null and $value == null)
     if ($value === null)
       return null;
     switch ($this->type) {
       case self::INTEGER:
+        if ($strict) {
+          if (is_int($value))
+            return $value;
+          if (!is_string($value) or preg_match('/^-?\d+$/', $value) !== 1)
+            return null;
+        }
         return intval($value);
       case self::STRING:
         return strval($value);
       case self::BOOLEAN:
+        if (is_bool($value))
+          return $value;
+        if (preg_match('/^yes|1|true$/i', $value) === 1)
+          return true;
+        if (preg_match('/^no|0|false/i', $value) === 1)
+          return false;
         return (bool) $value;
       case self::FLOAT:
+        if ($strict) {
+          if (is_float($value))
+            return $value;
+          if (!is_numeric($value))
+            return null;
+        }
         return floatval($value);
       case self::DATE:
       case self::DATETIME:

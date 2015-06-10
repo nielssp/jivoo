@@ -566,7 +566,8 @@ abstract class ActiveModel extends Model implements IEventListener {
   public function find($id) {
     if (array_key_exists($id, $this->cache))
       return $this->cache[$id];
-    $record = $this->where($this->primaryKey . ' = ?', $id)->first();
+    $type = $this->getType($this->primaryKey);
+    $record = $this->where($this->primaryKey . ' = ' . $type->placeholder, $id)->first();
     if (!isset($record))
       $this->cache[$id] = null;
     return $record;
