@@ -194,3 +194,94 @@ body.menu-open {
   }
 }
 
+
+.extension-list {
+  list-style-type: none;
+  margin: 0;
+
+  & > li {
+    margin: 0 0;
+    padding: 8px 0;
+    border-top: 1px solid darken($mainBg, 10%);
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    & > .extension-details {
+      margin-right: 100px;
+      & > .extension-name {
+        color: lighten($mainFg, 40%);
+        font-weight: bold;
+
+        & > .extension-version {
+          font-size: 0.9em;
+          color: lighten($mainFg, 20%);
+          font-weight: normal;
+          margin-left: 16px;
+        }
+      }
+
+      & > .extension-description {
+        font-size: 0.9em;
+        margin: 8px 0;
+        color: lighten($mainFg, 20%);
+      }
+
+      & > .extension-actions {
+        font-size: 0.8em;
+        & > a {
+          margin-left: 16px;
+
+          &:first-child {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    & > .extension-controls {
+      width: 150px;
+      float: right;
+      text-align: right;
+
+      & > .extension-enable,
+      & > .extension-enabled {
+        float: left;
+        font-size: 0.9em;
+        margin-right: 8px;
+        cursor: pointer;
+        text-align: left;
+        display: inline-block;
+      }
+
+      & > .extension-enabled {
+        font-weight: bold;
+        display: none;
+      }
+
+      & > a {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    &.extension-enabled {
+      & > .extension-details {
+        & > .extension-name {
+          color: $mainFg;
+        }
+      }
+
+      & > .extension-controls {
+        & > .extension-enable {
+          display: none;
+        }
+        & > .extension-enabled {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}

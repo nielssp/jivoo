@@ -1248,6 +1248,58 @@ body.menu-open .table-selection {
     padding: 6px 0 6px 8px;
     margin: -6px -8px; }
 
+.extension-list {
+  list-style-type: none;
+  margin: 0; }
+  .extension-list > li {
+    margin: 0 0;
+    padding: 8px 0;
+    border-top: 1px solid #e6e6e6; }
+    .extension-list > li:first-child {
+      border-top: 0; }
+    .extension-list > li > .extension-details {
+      margin-right: 100px; }
+      .extension-list > li > .extension-details > .extension-name {
+        color: #999999;
+        font-weight: bold; }
+        .extension-list > li > .extension-details > .extension-name > .extension-version {
+          font-size: 0.9em;
+          color: #666666;
+          font-weight: normal;
+          margin-left: 16px; }
+      .extension-list > li > .extension-details > .extension-description {
+        font-size: 0.9em;
+        margin: 8px 0;
+        color: #666666; }
+      .extension-list > li > .extension-details > .extension-actions {
+        font-size: 0.8em; }
+        .extension-list > li > .extension-details > .extension-actions > a {
+          margin-left: 16px; }
+          .extension-list > li > .extension-details > .extension-actions > a:first-child {
+            margin-left: 0; }
+    .extension-list > li > .extension-controls {
+      width: 150px;
+      float: right;
+      text-align: right; }
+      .extension-list > li > .extension-controls > .extension-enable, .extension-list > li > .extension-controls > .extension-enabled {
+        float: left;
+        font-size: 0.9em;
+        margin-right: 8px;
+        cursor: pointer;
+        text-align: left;
+        display: inline-block; }
+      .extension-list > li > .extension-controls > .extension-enabled {
+        font-weight: bold;
+        display: none; }
+      .extension-list > li > .extension-controls > a:hover {
+        text-decoration: none; }
+    .extension-list > li.extension-enabled > .extension-details > .extension-name {
+      color: #333333; }
+    .extension-list > li.extension-enabled > .extension-controls > .extension-enable {
+      display: none; }
+    .extension-list > li.extension-enabled > .extension-controls > .extension-enabled {
+      display: inline-block; }
+
 #login {
   overflow-y: auto;
   text-align: center;
