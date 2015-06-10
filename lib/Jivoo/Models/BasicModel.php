@@ -97,4 +97,40 @@ class BasicModel implements IBasicModel {
   public function isRequired($field) {
     return isset($this->required[$field]);
   }
+  
+  /**
+   * Sort an array of records by a field.
+   * @param string $field Field to sort by.
+   * @param IBasicRecord[] $selection Array of records.
+   * @param bool Whether to sort in descending order.
+   * @return IBasicRecord[] Sorted array.
+   */
+  public function sortBy($field, $selection, $descending = false) {
+    assume(is_array($selection));
+    usort($selection, function(IBasicRecord $a, IBasicRecord $b) use($field, $descending) {
+      if ($a->$field == $b->$field)
+        return 0;
+      if ($descending) {
+        if (is_numeric($a->$field))
+          return $b->$field - $a->$field;
+        return strcmp($b->$field, $a->$field);
+      }
+      else {
+        if (is_numeric($a->$field))
+          return $a->$field - $b->$field;
+        return strcmp($a->$field, $b->$field);
+      }
+    });
+    return $selection;
+  }
+
+  /**
+   * Sort an array of records by a field in descending order.
+   * @param string $field Field to sort by.
+   * @param IBasicRecord[] $selection Array of records.
+   * @return IBasicRecord[] Sorted array.
+   */
+  public function sortByDescending($field, $selection) {
+    return $this->sortBy($field, $selection, true);
+  }
 }
