@@ -8,12 +8,15 @@ namespace Jivoo\Jtk\Table;
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Jtk\JtkCollection;
 use Jivoo\Models\IBasicRecord;
+use Jivoo\Core\ObjectMacro;
 
 /**
  * A data table.
  * @property Jivoo\Models\IBasicModel $model Model.
- * @property IBasicSelection|IBasicRecord[] $selection Content of table. If
- * $model is a {@see Jivoo\Models\IModel}  
+ * @property ObjectMacro|IBasicSelection|IBasicRecord[] $selection Content of table.
+ * If $model is a {@see Jivoo\Models\IModel} then a {@see IBasicSelection} is
+ * expected. The default is an {@see ObjectMacro} that records method calls that
+ * will later be applied to the model when creating a selection.
  * @property string $primaryKey Name of primary key field.
  * @property JtkCollection $columns Collection of {@see Column}s.
  * @property JtkCollection $sortOptions Collection of {@see Column}s.
@@ -32,6 +35,7 @@ class DataTable extends JtkObject {
    */
   public function __construct() {
     $this->records = array();
+    $this->selection = new ObjectMacro();
     $this->columns = new JtkCollection('Jivoo\Jtk\Table\Column');
     $this->sortOptions = new JtkCollection('Jivoo\Jtk\Table\Column');
     $this->filters = new JtkCollection('Jivoo\Jtk\Table\Filter');

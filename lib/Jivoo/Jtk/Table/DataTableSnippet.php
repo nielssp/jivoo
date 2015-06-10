@@ -12,6 +12,7 @@ use Jivoo\Models\IModel;
 use Jivoo\Models\IBasicRecord;
 use Jivoo\Models\Form;
 use Jivoo\Models\DataType;
+use Jivoo\Core\ObjectMacro;
 
 /**
  * A data table snippet.
@@ -93,7 +94,9 @@ class DataTableSnippet extends JtkSnippet {
     $o = $this->object;
     assume($o->model instanceof IBasicModel);
     if ($o->model instanceof IModel) {
-      if (!($o->selection instanceof IBasicSelection))
+      if ($o->selection instanceof ObjectMacro)
+        $o->selection = $o->selection->playMacro($o->model);
+      else if (!($o->selection instanceof IBasicSelection))
         $o->selection = $o->model;
       if (!isset($o->primaryKey))
         $o->primaryKey = $o->model->getAiPrimaryKey(); // TODO: more general?

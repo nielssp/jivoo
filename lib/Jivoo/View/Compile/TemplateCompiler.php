@@ -5,6 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+use Jivoo\Core\Logger;
 /**
  * Converts HTML templates to PHP templates.
  */
@@ -41,6 +42,7 @@ class TemplateCompiler {
    * @return string PHP template content. 
    */
   public function compile($template) {
+    Logger::debug('Compiling template: ' . $template);
     $dom = new \simple_html_dom();
     $dom->load_file($template);
     
