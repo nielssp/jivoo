@@ -20,6 +20,8 @@ use Jivoo\Core\App;
  * @property-read string[] $phpDependencies List of PHP dependencies.
  * @property-read string $appName App depedency.
  * @property-read string $appVersion App version constraints.
+ * @property-read string $pKey Path key for location of extension.
+ * @property-read string[] Names of imported extensions that depend on this one.
  */
 class ExtensionInfo implements IBasicRecord {
   /**
@@ -43,7 +45,7 @@ class ExtensionInfo implements IBasicRecord {
   private $info;
   
   /**
-   * @var string Path key for library.
+   * @var string
    */
   private $pKey;
   
@@ -71,6 +73,11 @@ class ExtensionInfo implements IBasicRecord {
    * $var string
    */
   private $appVersion = null;
+  
+  /**
+   * @var string[]
+   */
+  private $requiredBy = array();
   
   /**
    * Construct extension information.
@@ -106,6 +113,7 @@ class ExtensionInfo implements IBasicRecord {
         }
       }
     }
+    $this->loadAfter = array_unique($this->loadAfter);
   }
   
   /**
@@ -120,6 +128,8 @@ class ExtensionInfo implements IBasicRecord {
       case 'phpDependencies':
       case 'appName':
       case 'appVersion':
+      case 'pKey':
+      case 'requiredBy':
         return $this->$property;
     }
     return $this->info[$property];
@@ -137,9 +147,27 @@ class ExtensionInfo implements IBasicRecord {
       case 'phpDependencies':
       case 'appName':
       case 'appVersion':
+      case 'pKey':
         return isset($this->$property);
     }
     return isset($this->info[$property]);
+  }
+  
+  /**
+   * Set the value of a property.
+   * @param string $property Property.
+   * @param mixed $value Value.
+   */
+  public function __set($property, $value) {
+    $this->info[$property] = $value;
+  }
+  
+  /**
+   * Add an extension that requires this one.
+   * @param string $extension Extension.
+   */
+  public function requiredBy($extension) {
+    $this->requiredBy[] = $extension;
   }
   
   /**

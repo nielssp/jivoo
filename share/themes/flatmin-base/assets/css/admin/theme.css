@@ -1275,9 +1275,9 @@ body.menu-open .table-selection {
       .extension-list > li > .extension-details > .extension-actions {
         font-size: 0.8em;
         margin-top: 8px; }
-        .extension-list > li > .extension-details > .extension-actions > a {
+        .extension-list > li > .extension-details > .extension-actions > a, .extension-list > li > .extension-details > .extension-actions > .extension-dependencies {
           margin-left: 16px; }
-          .extension-list > li > .extension-details > .extension-actions > a:first-child {
+          .extension-list > li > .extension-details > .extension-actions > a:first-child, .extension-list > li > .extension-details > .extension-actions > .extension-dependencies:first-child {
             margin-left: 0; }
     .extension-list > li > .extension-controls {
       width: 150px;
@@ -1295,6 +1295,9 @@ body.menu-open .table-selection {
         display: none; }
       .extension-list > li > .extension-controls > a:hover {
         text-decoration: none; }
+      .extension-list > li > .extension-controls > .extension-builtin {
+        font-style: italic;
+        font-size: 0.9em; }
     .extension-list > li .extension-configure {
       display: none; }
     .extension-list > li.extension-enabled > .extension-details > .extension-name {

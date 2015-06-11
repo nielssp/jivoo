@@ -299,8 +299,10 @@ class Extensions extends LoadableModule {
       throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
     Lib::import($extensionInfo->p($this->app, ''));
 
-    foreach ($extensionInfo->loadAfter as $dependency)
+    foreach ($extensionInfo->loadAfter as $dependency) {
       $this->import($dependency);
+      $this->getInfo($dependency)->requiredBy($extension);
+    }
     
     foreach ($this->featureHandlers as $tuple) {
       list($feature, $handler) = $tuple;

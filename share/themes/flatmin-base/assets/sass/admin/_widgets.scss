@@ -232,7 +232,8 @@ body.menu-open {
       & > .extension-actions {
         font-size: 0.8em;
         margin-top: 8px;
-        & > a {
+        & > a,
+        & > .extension-dependencies {
           margin-left: 16px;
 
           &:first-child {
@@ -266,6 +267,11 @@ body.menu-open {
         &:hover {
           text-decoration: none;
         }
+      }
+
+      & > .extension-builtin {
+        font-style: italic;
+        font-size: 0.9em;
       }
     }
 
