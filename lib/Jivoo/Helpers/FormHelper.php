@@ -508,7 +508,8 @@ class FormHelper extends Helper {
    */
   public function radio($field, $value, $attributes = array()) {
     $attributes = array_merge(array(
-      'type' => 'radio'
+      'type' => 'radio',
+      'name' => $this->name($field)
     ), $attributes);
     return $this->checkbox($field, $value, $attributes);
   }
