@@ -1270,10 +1270,13 @@ body.menu-open .table-selection {
       height: 54px;
       font-size: 24px;
       margin-right: 16px;
-      text-align: center; }
+      text-align: center;
+      opacity: 0.7; }
       .extension-list > li > .extension-icon > img {
         max-height: 54px;
-        max-width: 96px; }
+        max-width: 96px;
+        filter: grayscale(100%);
+        -webkit-filter: grayscale(100%); }
       .extension-list > li > .extension-icon > .extension-icon-default {
         color: #ccc;
         background-color: #f1f1f1;
@@ -1331,6 +1334,11 @@ body.menu-open .table-selection {
         font-size: 0.9em; }
     .extension-list > li .extension-configure {
       display: none; }
+    .extension-list > li.extension-enabled > .extension-icon {
+      opacity: 1; }
+      .extension-list > li.extension-enabled > .extension-icon > img {
+        filter: none;
+        -webkit-filter: none; }
     .extension-list > li.extension-enabled > .extension-details > .extension-name {
       color: #333333; }
     .extension-list > li.extension-enabled > .extension-details .extension-configure {

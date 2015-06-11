@@ -221,10 +221,13 @@ body.menu-open {
       font-size: 24px;
       margin-right: 16px;
       text-align: center;
+      opacity: 0.7;
 
       & > img {
         max-height: 54px;
         max-width: 96px;
+        filter: grayscale(100%);
+        -webkit-filter: grayscale(100%);
       }
 
       & > .extension-icon-default {
@@ -318,6 +321,15 @@ body.menu-open {
     }
 
     &.extension-enabled {
+
+      & > .extension-icon {
+        opacity: 1;
+        & > img {
+          filter: none;
+          -webkit-filter: none;
+        }
+      }
+
       & > .extension-details {
         & > .extension-name {
           color: $mainFg;
