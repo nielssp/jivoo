@@ -109,7 +109,7 @@ class App implements IEventSubject {
   private $listenerNames = array();
 
   /**
-   * @var Map Map of modules.
+   * @var ModuleMap Map of modules.
    */
   private $m = null;
   
@@ -199,7 +199,7 @@ class App implements IEventSubject {
     }
     $this->appConfig = $appConfig;
     $this->e = new EventManager($this);
-    $this->m = new Map();
+    $this->m = new ModuleMap();
     $this->paths = new PathMap(
       dirname($_SERVER['SCRIPT_FILENAME']),
       $userPath
@@ -443,7 +443,7 @@ class App implements IEventSubject {
   /**
    * Load several modules.
    * @param string[] $modules List of module names.
-   * @return Map A map of all loaded modules.
+   * @return ModuleMap A map of all loaded modules.
    */
   public function getModules($modules) {
     foreach ($modules as $name) {
