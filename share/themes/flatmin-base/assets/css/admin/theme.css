@@ -1077,6 +1077,9 @@ nav {
             nav > ul > li > ul > li > a .count {
               display: inline; } }
 
+#main #main-container {
+  float: left;
+  width: 100%; }
 @media screen and (min-width: 480px) {
   #main {
     margin-left: 32px; } }
@@ -1257,7 +1260,35 @@ body.menu-open .table-selection {
     border-top: 1px solid #e6e6e6; }
     .extension-list > li:first-child {
       border-top: 0; }
+    .extension-list > li:after {
+      display: block;
+      content: ' ';
+      clear: left; }
+    .extension-list > li > .extension-icon {
+      float: left;
+      width: 96px;
+      height: 54px;
+      font-size: 24px;
+      margin-right: 16px;
+      text-align: center; }
+      .extension-list > li > .extension-icon > img {
+        max-height: 54px;
+        max-width: 96px; }
+      .extension-list > li > .extension-icon > .extension-icon-default {
+        color: #ccc;
+        background-color: #f1f1f1;
+        line-height: 54px;
+        height: 100%;
+        width: 100%; }
+      .extension-list > li > .extension-icon > .extension-icon-default-small {
+        color: #ccc;
+        background-color: #f1f1f1;
+        line-height: 48px;
+        height: 48px;
+        width: 48px;
+        display: inline-block; }
     .extension-list > li > .extension-details {
+      margin-left: 112px;
       margin-right: 100px; }
       .extension-list > li > .extension-details > .extension-name {
         color: #999999;

@@ -157,6 +157,12 @@ nav {
 }
 
 #main {
+
+  #main-container {
+    float: left;
+    width: 100%;
+  }
+
   @media screen and (min-width: $xs) {
     margin-left: 32px;
   }

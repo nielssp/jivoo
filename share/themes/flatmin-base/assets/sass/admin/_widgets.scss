@@ -208,7 +208,45 @@ body.menu-open {
       border-top: 0;
     }
 
+    &:after {
+      display: block;
+      content: ' ';
+      clear: left;
+    }
+
+    & > .extension-icon {
+      float:left;
+      width: 96px;
+      height: 54px;
+      font-size: 24px;
+      margin-right: 16px;
+      text-align: center;
+
+      & > img {
+        max-height: 54px;
+        max-width: 96px;
+      }
+
+      & > .extension-icon-default {
+        color: #ccc;
+        background-color: #f1f1f1;
+        line-height: 54px;
+        height: 100%;
+        width: 100%;
+      }
+      
+      & > .extension-icon-default-small {
+        color: #ccc;
+        background-color: #f1f1f1;
+        line-height: 48px;
+        height: 48px;
+        width: 48px;
+        display: inline-block;
+      }
+    }
+
     & > .extension-details {
+      margin-left: 96px + 16px;
       margin-right: 100px;
       & > .extension-name {
         color: lighten($mainFg, 40%);

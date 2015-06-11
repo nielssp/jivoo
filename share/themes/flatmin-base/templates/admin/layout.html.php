@@ -51,6 +51,8 @@ $this->import(
 
 <div id="main">
 
+<div id="main-container">
+
 <?php if (isset($title)): ?>
 <h1><?php echo $title; ?></h1>
 <?php endif; ?>
@@ -62,6 +64,8 @@ $this->import(
 <?php endforeach; ?>
 
 <?php echo $this->block('content'); ?>
+</div>
+
 </div>
 
 <footer>
