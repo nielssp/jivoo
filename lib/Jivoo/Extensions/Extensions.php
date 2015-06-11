@@ -430,7 +430,7 @@ class Extensions extends LoadableModule {
   public function checkExtensionDependency($dependency) {
     preg_match('/^ *([^ <>=!]+) *(.*)$/', $dependency, $matches);
     $info = $this->getInfo($matches[1]);
-    if (!$info->isLibrary() and !$info->isEnabled())
+    if (!$info->isLibrary() and !$this->isEnabled($matches[1]))
       return false;
     if (empty($matches[2]))
       return true;
