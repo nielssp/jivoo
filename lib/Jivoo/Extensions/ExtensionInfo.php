@@ -14,6 +14,12 @@ use Jivoo\Core\App;
  * @property-read string $canonicalName Canonical (i.e. directory) name of
  * extension.
  * @property-read bool $enabled Whether or not extension is enabled..
+ * @property-read string[] $loadAfter Names of extensions to load before this one.
+ * @property-read string[] $dependencies List of extension dependencies along
+ * with version constraints.
+ * @property-read string[] $phpDependencies List of PHP dependencies.
+ * @property-read string $appName App depedency.
+ * @property-read string $appVersion App version constraints.
  */
 class ExtensionInfo implements IBasicRecord {
   /**
@@ -42,6 +48,31 @@ class ExtensionInfo implements IBasicRecord {
   private $pKey;
   
   /**
+   * @var string[]
+   */
+  private $loadAfter = array();
+  
+  /**
+   * @var string[]
+   */
+  private $dependencies = array();
+  
+  /**
+   * @var string[]
+   */
+  private $phpDependencies = array();
+  
+  /**
+   * $var string
+   */
+  private $appName = null;
+
+  /**
+   * $var string
+   */
+  private $appVersion = null;
+  
+  /**
    * Construct extension information.
    * @param string $canonicalName Canonical (i.e. directory) name of extension.
    * @param array $info Content of "extension.json" as an associative array.
@@ -53,6 +84,28 @@ class ExtensionInfo implements IBasicRecord {
     $this->info = $info;
     $this->pKey = $pKey;
     $this->enabled = $enabled;
+    
+    if (isset($info['dependencies'])) {
+      foreach ($info['dependencies'] as $key => $value) {
+        switch ($key) {
+          case 'extensions':
+            foreach ($value as $extension) {
+              $this->dependencies[] = $extension;
+              preg_match('/^ *([^ <>=!]+) *(.*)$/', $extension, $matches);
+              $this->loadAfter[] = $matches[1];
+            }
+            break;
+          case 'php':
+            foreach ($value as $phpExtension)
+              $this->phpDependencies[] = $phpExtension;
+            break;
+          default:
+            $this->appName = $key;
+            $this->appVersion = $value;
+            break;
+        }
+      }
+    }
   }
   
   /**
@@ -62,6 +115,11 @@ class ExtensionInfo implements IBasicRecord {
     switch ($property) {
       case 'canonicalName':
       case 'enabled':
+      case 'loadAfter':
+      case 'dependencies':
+      case 'phpDependencies':
+      case 'appName':
+      case 'appVersion':
         return $this->$property;
     }
     return $this->info[$property];
@@ -74,9 +132,23 @@ class ExtensionInfo implements IBasicRecord {
     switch ($property) {
       case 'canonicalName':
       case 'enabled':
-        return true;
+      case 'loadAfter':
+      case 'dependencies':
+      case 'phpDependencies':
+      case 'appName':
+      case 'appVersion':
+        return isset($this->$property);
     }
     return isset($this->info[$property]);
+  }
+  
+  /**
+   * Whether the extension is marked as a library. Libraries cannot be enabled
+   * but will be automatically loaded when needed.
+   * @return bool True if library.
+   */
+  public function isLibrary() {
+    return isset($this->info['library']) and $this->info['library'];
   }
 
   /**

@@ -298,6 +298,10 @@ class Extensions extends LoadableModule {
     if (!isset($extensionInfo))
       throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
     Lib::import($extensionInfo->p($this->app, ''));
+
+    foreach ($extensionInfo->loadAfter as $dependency)
+      $this->import($dependency);
+    
     foreach ($this->featureHandlers as $tuple) {
       list($feature, $handler) = $tuple;
       if (isset($extensionInfo->$feature))
@@ -381,44 +385,31 @@ class Extensions extends LoadableModule {
   public function checkDependencies(ExtensionInfo $info) {
     if (!isset($info->dependencies))
       return true;
-    $dependencies = $info->dependencies;
     $valid = true;
     $missing = array(
       'app' => null,
       'extensions' => array(),
       'php' => array()
     );
-    foreach ($dependencies as $key => $value) {
-      switch ($key) {
-        case 'extensions':
-          foreach ($value as $extension) {
-            if (!$this->checkExtensionDependency($extension)) {
-              $valid = false;
-              $missing['extensions'][] = $extension;
-            }
-          }
-          break;
-        case 'php':
-          foreach ($value as $phpExtension) {
-            if (!extension_loaded($phpExtension)) {
-              $valid = false;
-              $missing['php'][] = $phpExtension;
-            }
-          }
-          break;
-        default:
-          if ($this->app->name == $key) {
-            if (!$this->compareVersion($this->app->version, $value)) {
-              $valid = false;
-              $missing['app'] = $value;
-            }
-          }
-          else {
-            $valid = false;
-            $missing['app'] = $value;
-          }
-          break;
+    foreach ($info->dependencies as $extension) {
+      if (!$this->checkExtensionDependency($extension)) {
+        $valid = false;
+        $missing['extensions'][] = $extension;
       }
+    }
+    foreach ($info->phpDependencies as $phpExtension) {
+      if (!extension_loaded($phpExtension)) {
+        $valid = false;
+        $missing['php'][] = $phpExtension;
+      }
+    }
+    if (isset($info->appName) and $this->app->name != $info->appName) {
+      $valid = false;
+      $missing['app'] = $info->appName;
+    }
+    else if (isset($info->appVersion) and !$this->compareVersion($this->app->version, $info->appVersion)) {
+      $valid = false;
+      $missing['app'] = $info->appVersion;
     }
     if ($valid)
       return true;
@@ -435,7 +426,8 @@ class Extensions extends LoadableModule {
    */
   public function checkExtensionDependency($dependency) {
     preg_match('/^ *([^ <>=!]+) *(.*)$/', $dependency, $matches);
-    if (!$this->isEnabled($matches[1]))
+    $info = $this->getInfo($matches[1]);
+    if (!$info->isLibrary() and !$info->isEnabled())
       return false;
     if (empty($matches[2]))
       return true;
@@ -472,11 +464,16 @@ class Extensions extends LoadableModule {
    * different categories,s ee {@see Extensions::checkDependencies()}.
    */
   public function enable($extension) {
+    $info = $this->getInfo($extension);
+    if ($info->isLibrary())
+      return true;
     $missing = $this->checkDependencies($this->getInfo($extension));
     if ($missing !== true)
       return $missing;
     $this->importList[] = $extension;
-    $this->config['import'] = array_unique(array_values($this->importList));
+    $imports = $this->config->get('import', array());
+    $imports[] = $extension;
+    $this->config['import'] = $imports;
     return true;
   }
   
@@ -485,8 +482,9 @@ class Extensions extends LoadableModule {
    * @param string $extension Extension name.
    */
   public function disable($extension) {
-    $this->importList = array_diff($this->importList, array($extension));
-    $this->config['import'] = array_unique(array_values($this->importList));
+    $imports = $this->config->get('import', array());
+    $imports = array_diff($imports, array($extension));
+    $this->config['import'] = $imports;
   }
 
   /**

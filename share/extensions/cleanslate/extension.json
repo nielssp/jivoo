@@ -1,4 +1,5 @@
 {
+  "library": true,
   "name": "cleanslate",
   "version": "0.10.1",
   "website": "https://github.com/premasagar/cleanslate",

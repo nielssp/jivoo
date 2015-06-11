@@ -1,4 +1,5 @@
 {
+  "library": true,
   "name": "Respond",
   "version": "1.4.2",
   "website": "https://github.com/scottjehl/Respond",

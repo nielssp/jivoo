@@ -1,4 +1,5 @@
 {
+  "library": true,
   "name": "html5shiv",
   "version": "3.7.0",
   "website": "https://code.google.com/p/html5shiv/",
