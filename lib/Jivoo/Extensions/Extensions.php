@@ -298,6 +298,7 @@ class Extensions extends LoadableModule {
     if (!isset($extensionInfo))
       throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
     Lib::import($extensionInfo->p($this->app, ''));
+    $extensionInfo->imported = true;
 
     foreach ($extensionInfo->loadAfter as $dependency) {
       $this->import($dependency);
