@@ -35,7 +35,10 @@ class Extensions extends LoadableModule {
    * kinds (e.g. "extensions" => "extension").
    */
   private $kinds = array(
-    'extensions' => 'extension'
+    'extensions' => array(
+      'manifest' => 'extension',
+      'class' => 'Jivoo\Extensions\ExtensionInfo'
+    )
   );
   
   /**
@@ -206,10 +209,13 @@ class Extensions extends LoadableModule {
   /**
    * Add extension kind.
    * @param string $kind Kind (plural), e.g. "themes".
-   * @param String $infoName Name of JSON file (singular), e.g. "theme".
+   * @param String $infoName Name of manifest JSON file (singular), e.g. "theme".
    */
-  public function addKind($kind, $infoName) {
-    $this->kinds[$kind] = $infoName;
+  public function addKind($kind, $manifest = 'extension', $class = 'Jivoo\Extensions\ExtensionInfo') {
+    $this->kinds[$kind] = array(
+      'manifest' => $manifest,
+      'class' => $class
+    );
   }
 
   /**
@@ -218,20 +224,21 @@ class Extensions extends LoadableModule {
    * @return ExtensionInfo|null Extension information or null if not found or
    * invalid.
    */
-  public function getInfo($extension) {
+  public function getInfo($extension, $kind = 'extensions') {
     if (!isset($this->info[$extension])) {
-      $dir = $this->p('extensions', $extension);
+      $dir = $this->p($kind, $extension);
+      $manifest = $this->kinds[$kind]['manifest'] . '.json';
       $library = null;
-      if (!file_exists($dir . '/extension.json')) {
+      if (!file_exists($dir . '/' . $manifest)) {
         foreach ($this->libraries as $key) {
-          $dir = $this->p($key, 'extensions/' . $extension);
-          if (file_exists($dir . '/extension.json'))
+          $dir = $this->p($key, $kind . '/' . $extension);
+          if (file_exists($dir . '/' . $manifest))
             $library = $key;
         }
         if (!isset($library))
           return null;
       }
-      $info = Json::decodeFile($dir . '/extension.json');
+      $info = Json::decodeFile($dir . '/' . $manifest);
       if (!$info)
         return null;
       $this->info[$extension] = new ExtensionInfo($extension, $info, $library, $this->isEnabled($extension));

@@ -32,7 +32,7 @@ class Themes extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Extensions->addKind('themes', 'theme');
+    $this->m->Extensions->addKind('themes', 'theme', 'Jivoo\Themes\ThemeInfo');
   }
   
   /**
@@ -111,6 +111,12 @@ class Themes extends LoadableModule {
     foreach ($info->extend as $parent) {
       $this->load($parent, $priority - 1);
     }
+
+    foreach ($info->loadAfter as $dependency) {
+      $this->m->Extensions->import($dependency);
+      $this->m->Extensions->getInfo($dependency)->requiredBy($theme);
+    }
+    
     $this->view->addTemplateDir(
       $info->p($this->app, 'templates'),
       $priority
