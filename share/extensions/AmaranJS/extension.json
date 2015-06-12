@@ -1,0 +1,23 @@
+{
+  "library": true,
+  "name": "AmaranJS",
+  "description": "Nice, sleek and stylish notifications.",
+  "version": "0.5.4",
+  "website": "http://hakanersu.github.io/AmaranJS/",
+  "category": "JavaScript",
+  "dependencies": {
+    "extensions": [
+      "jquery >=1.9"
+    ]
+  },
+  "resources": {
+    "amaran.css": {
+      "file": "amaran.min.css"
+    },
+    "jquery.amaran.js": {
+      "file": "jquery.amaran.min.js",
+      "dependencies": ["jquery.js", "amaran.css"]
+    }
+  }
+}
+
