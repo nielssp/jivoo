@@ -12,8 +12,10 @@ use Jivoo\Snippets\SnippetDispatcher;
 
 /**
  * Authorize without the use of Access Control Lists. Calls the method
- * "authorize" in the current controller or snippet with the name of the action
- * as a parameter. The name of the method can be changed with the option "method".
+ * "authorize" in the current controller or snippet with the requesting user as 
+ * a parameter along with the name of the action (if controller). Return true
+ * to grant authorization or false to deny. The name of the method can be
+ * changed with the option "method".
  */
 class CallbackAuthorization extends LoadableAuthorization {
   /**
