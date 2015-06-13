@@ -304,7 +304,10 @@ class Extensions extends LoadableModule {
     $extensionInfo = $this->getInfo($extension);
     if (!isset($extensionInfo))
       throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
-    Lib::import($extensionInfo->p($this->app, ''));
+    if (isset($extensionInfo->namespace))
+      Lib::import($extensionInfo->p($this->app, ''), $extensionInfo->namespace);
+    else
+      Lib::import($extensionInfo->p($this->app, ''));
     $extensionInfo->imported = true;
 
     foreach ($extensionInfo->loadAfter as $dependency) {
@@ -532,9 +535,13 @@ class Extensions extends LoadableModule {
     $extensions = array();
     if ($files !== false) {
       foreach ($files as $file) {
-        $info = $this->getInfo($file);
-        if (isset($info))
-          $extensions[] = $info;
+        if ($file[0] != '.') {
+          $info = $this->getInfo($file);
+          if (isset($info))
+            $extensions[] = $info;
+          else
+            Logger::error(tr('Invalid extension: %1', $file));
+        }
       }
     }
     return $extensions;
