@@ -1,0 +1,7 @@
+{
+  "library": true,
+  "name": "JShrink",
+  "description": "Javascript Minifier built in PHP",
+  "version": "1.0.1",
+  "website": "http://github.com/tedious/JShrink",
+}
