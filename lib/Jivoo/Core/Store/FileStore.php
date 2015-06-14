@@ -8,9 +8,9 @@ namespace Jivoo\Core\Store;
 use Jivoo\Core\Config;
 
 /**
- * Stores data in PHP-files.
+ * Stores data in files. See subclasses for implementations of file formats.
  */
-class FileStore implements IStore {
+abstract class FileStore implements IStore {
   /**
    * @var string
    */
@@ -87,6 +87,20 @@ class FileStore implements IStore {
     $this->handle = null;
     $this->mutable = null;
   }
+  
+  /**
+   * Encode data for file output.
+   * @param array $data Data.
+   * @return string File content.
+   */
+  protected abstract function encode(array $data);
+  
+  /**
+   * Decode file content.
+   * @param string $content File content.
+   * @return array Data.
+   */
+  protected abstract function decode($content);
 
   /**
    * {@inheritdoc}
@@ -96,9 +110,8 @@ class FileStore implements IStore {
       return $this->data;
     if (!isset($this->handle))
       return;
-    $content = file_get_contents($this->file);
-    $content = str_replace('<?php', '', $content);
-    $this->data = eval($content);
+    $content = fread($this->handle, filesize($this->file));
+    $this->data = $this->decode($content);
     if (!is_array($this->data)) {
       $this->data = null;
       throw new StoreReadFailedException(tr('Invalid file: %1', $this->file));
@@ -116,8 +129,7 @@ class FileStore implements IStore {
       throw new StoreWriteFailedException(tr('Not mutable'));
     $this->data = $data;
     ftruncate($this->handle, 0);
-    $data = Config::phpPrettyPrint($this->data);
-    fwrite($this->handle, '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL);
+    fwrite($this->handle, $this->encode($data));
     fflush($this->handle);
   }
 
