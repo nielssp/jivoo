@@ -8,9 +8,10 @@ namespace Jivoo\Core\Store;
 class Config extends Document {
   private $store = null;
   
-  private $saveDefaults = true;
+  protected $saveDefaults = true;
   
   public function __construct(IStore $store = null) {
+    parent::__construct();
     if (isset($store)) {
       $this->store = $store;
       $this->store->open(false);
@@ -20,11 +21,19 @@ class Config extends Document {
   }
   
   public function save() {
+    if ($this->root !== $this)
+      return $this->root->save();
     if (!isset($this->store))
       return false;
+    if (!$this->updated)
+      return true;
     $this->store->open(true);
     $this->store->write($this->data);
     $this->store->close();
     return true;
+  }
+  
+  protected function createEmpty() {
+    return new Config();
   }
 }

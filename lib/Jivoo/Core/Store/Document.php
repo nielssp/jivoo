@@ -20,6 +20,11 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   protected $data = array();
   
   /**
+   * @var bool Whether to save default values.
+   */
+  protected $saveDefaults = true;
+  
+  /**
    * @var bool True if document has been changed.
    */
   protected $updated = false;
@@ -40,6 +45,12 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   public function toArray() {
     return $this->data;
+  }
+  
+  public function toDocument() {
+    $doc = new Document();
+    $doc->data = $this->data;
+    return $doc;
   }
 
   /**

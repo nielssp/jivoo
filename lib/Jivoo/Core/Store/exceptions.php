@@ -26,3 +26,8 @@ class StoreReadFailedException extends StoreException { }
  * Failure to write to a store.
  */
 class StoreWriteFailedException extends StoreException { }
+
+/**
+ * A state has already been closed.
+ */
+class StateClosedException extends Exception { }
