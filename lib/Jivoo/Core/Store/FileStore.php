@@ -67,12 +67,24 @@ abstract class FileStore implements IStore {
   public function disableBlocking() {
     $this->enableBlocking(false);
   }
+
+  /**
+   * Touch the file (attempt to create it if it doesn't exist).
+   * @return boolean True if file exists and is writable, false otherwise.
+   */
+  public function touch() {
+    $handle = fopen($this->file, 'c');
+    if (!$handle)
+      return false;
+    fclose($handle);
+    return true;
+  }
   
   /**
    * {@inheritdoc}
    */
   public function open($mutable = false) {
-    $handle = fopen($this->file, $mutable ? 'r+' : 'r');
+    $handle = fopen($this->file, $mutable ? 'c+' : 'r');
     if (!$handle)
       throw new StoreReadFailedException(tr('Could not open file: %1', $this->file));
     $noBlock = $this->blocking ? 0 : LOCK_NB;
