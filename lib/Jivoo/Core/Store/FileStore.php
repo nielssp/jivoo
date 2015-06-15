@@ -136,9 +136,16 @@ abstract class FileStore implements IStore {
   /**
    * {@inheritdoc}
    */
+  public function isOpen() {
+    return isset($this->handle);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isMutable() {
     if (!isset($this->handle))
-      return;
+      return false;
     return $this->mutable;
   }
 }

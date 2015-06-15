@@ -37,6 +37,16 @@ interface IStore {
    * @throws StoreWriteFailedException If the data could not be saved.
    */
   public function write(array $data);
+
+  /**
+   * Whether the store is open.
+   * @return bool True if open.
+   */
+  public function isOpen();
   
+  /**
+   * Whether the store is open and mutable.
+   * @return bool True if open and mutable.
+   */
   public function isMutable();
 }
