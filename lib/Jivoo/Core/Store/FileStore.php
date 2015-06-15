@@ -45,6 +45,14 @@ abstract class FileStore implements IStore {
   }
   
   /**
+   * Ensures that the file is unlocked.
+   */
+  public function __destruct() {
+    if (isset($this->handle))
+      flock($this->handle, LOCK_UN);
+  }
+  
+  /**
    * Enable blocking until a lock can be acquired.
    * @param bool $blocking Blocking.
    */
@@ -67,7 +75,8 @@ abstract class FileStore implements IStore {
     $handle = fopen($this->file, $mutable ? 'r+' : 'r');
     if (!$handle)
       throw new StoreReadFailedException(tr('Could not open file: %1', $this->file));
-    if (!flock($handle, $mutable ? LOCK_EX : LOCK_SH)) {
+    $noBlock = $this->blocking ? 0 : LOCK_NB;
+    if (!flock($handle, ($mutable ? LOCK_EX : LOCK_SH) | $noBlock)) {
       fclose($handle);
       throw new StoreLockException(tr('Could not lock file: %1', $this->file));
     }
