@@ -16,7 +16,7 @@ class Dashboard extends Snippet {
    */
   public function before() {
     $this->view->data->title = tr('Jivoo Console');
-    $this->view->data->app = $this->app->appConfig;
+    $this->view->data->app = $this->app->manifest;
     $this->view->data->entryScript = realpath($this->app->entryScript);
     $this->view->data->userDir = realpath($this->p('user', ''));
     $this->view->data->appDir = realpath($this->p('app', ''));

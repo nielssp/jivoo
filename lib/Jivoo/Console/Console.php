@@ -44,8 +44,8 @@ class Console extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
-    if ($this->app->noAppConfig) {
-      $this->m->Setup->trigger('Jivoo\Console\AppConfigInstaller');
+    if ($this->app->noManifest) {
+      $this->m->Setup->trigger('Jivoo\Console\ManifestInstaller');
       $this->m->Routing->routes->root('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Configure');

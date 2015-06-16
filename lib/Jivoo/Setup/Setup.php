@@ -72,8 +72,8 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
-    if (isset($this->app->appConfig['install'])) {
-      $installer = $this->app->appConfig['install'];
+    if (isset($this->app->manifest['install'])) {
+      $installer = $this->app->manifest['install'];
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       if (!$this->config[$installer]->get('done', false)) {
@@ -92,9 +92,9 @@ class Setup extends LoadableModule {
         }
       }
     }
-    if (isset($this->app->appConfig['update'])) {
+    if (isset($this->app->manifest['update'])) {
       if ($this->config->get('version', $this->app->version) !== $this->app->version) {
-        $installer = $this->app->appConfig['update'];
+        $installer = $this->app->manifest['update'];
         if (!Lib::classExists($installer))
           $installer = $this->app->n('Snippets\\' . $installer);
         $config = $this->config['updates'][$this->app->version][$installer];

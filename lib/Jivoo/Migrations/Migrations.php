@@ -57,8 +57,8 @@ class Migrations extends LoadableModule {
     $this->schema->setPrimaryKey('revision');
     
 
-    if (isset($this->app->appConfig['migrations'])) {
-      foreach ($this->app->appConfig['migrations'] as $name) {
+    if (isset($this->app->manifest['migrations'])) {
+      foreach ($this->app->manifest['migrations'] as $name) {
         $this->attachDatabase($name, $this->p('app', 'schemas/' . $name . '/migrations'));
       }
     }

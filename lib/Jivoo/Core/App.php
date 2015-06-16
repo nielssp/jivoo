@@ -17,8 +17,8 @@ use Jivoo\Routing\Http;
  * @property-read string $minPhpVersion Minimum PHP version.
  * @property-read string $environment Environment name.
  * @property-read Config $config User configuration.
- * @property-read bool $noAppConfig True if application configuration file missing.
- * @property-read array $appConfig Application configuration.
+ * @property-read bool $noManifest True if application manifest file missing.
+ * @property-read array $manifest Application manifest.
  * @property-read string $sessionPrefix Application session prefix.
  * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
  * @property-read EventManager $eventManager Application event manager.
@@ -27,12 +27,12 @@ class App implements IEventSubject {
   /**
    * @var array Application configuration.
    */
-  private $appConfig = array();
+  private $manifest = array();
   
   /**
    * @var array Default application configuration.
    */
-  private $defaultAppConfig = array(
+  private $defaultManifest = array(
     'name' => 'Jivoo Application',
     'version' => '0.0.0',
     'namespace' => 'App',
@@ -49,9 +49,9 @@ class App implements IEventSubject {
   );
   
   /**
-   * @var bool True if app config missing.
+   * @var bool True if app manifest missing.
    */
-  private $noAppConfig = false;
+  private $noManifest = false;
 
   /**
    * @var Config User configuration.
@@ -184,20 +184,20 @@ class App implements IEventSubject {
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
-    $appFile = $appPath . '/app.json';
-    $appConfig = array();
-    if (file_exists($appFile)) {
-      $appConfig = Json::decodeFile($appFile);
-      if (!isset($appConfig))
+    $manifestFile = $appPath . '/app.json';
+    $manifest = array();
+    if (file_exists($manifestFile)) {
+      $manifest = Json::decodeFile($manifestFile);
+      if (!isset($manifest))
         throw new \Exception('Invalid application. "app.json" invalid.');
-      $appConfig = array_merge($this->defaultAppConfig, $appConfig);
+      $manifest = array_merge($this->defaultManifest, $manifest);
     }
     else {
       Logger::error('Invalid application. "app.json" not found. Configuring default application.');
-      $this->noAppConfig = true;
-      $appConfig = $this->defaultAppConfig;
+      $this->noManifest = true;
+      $manifest = $this->defaultManifest;
     }
-    $this->appConfig = $appConfig;
+    $this->manifest = $manifest;
     $this->e = new EventManager($this);
     $this->m = new ModuleMap();
     $this->paths = new PathMap(
@@ -224,21 +224,21 @@ class App implements IEventSubject {
     $this->basePath = dirname(implode('/', $script));
     // END work-around
     
-    $this->name = $appConfig['name'];
-    $this->version = $appConfig['version'];
-    $this->namespace = $appConfig['namespace'];
-    $this->minPhpVersion = $appConfig['minPhpVersion'];
-    $this->modules = $appConfig['modules'];
-    $this->sessionPrefix = $appConfig['sessionPrefix'];
-    $this->listenerNames = $appConfig['listeners'];
-    $this->defaultConfig = $appConfig['defaultConfig'];
+    $this->name = $manifest['name'];
+    $this->version = $manifest['version'];
+    $this->namespace = $manifest['namespace'];
+    $this->minPhpVersion = $manifest['minPhpVersion'];
+    $this->modules = $manifest['modules'];
+    $this->sessionPrefix = $manifest['sessionPrefix'];
+    $this->listenerNames = $manifest['listeners'];
+    $this->defaultConfig = $manifest['defaultConfig'];
 
     Lib::import($this->p('app', 'lib'), $this->namespace);
     
     $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
 
     $this->config = new Config($this->p('user', 'config.php'));
-    $this->config->setVirtual('app', $this->appConfig);
+    $this->config->setVirtual('app', $this->manifest);
   }
 
   /**
@@ -256,8 +256,8 @@ class App implements IEventSubject {
       case 'minPhpVersion':
       case 'environment':
       case 'config':
-      case 'appConfig':
-      case 'noAppConfig':
+      case 'manifest':
+      case 'noManifest':
       case 'sessionPrefix':
       case 'basePath':
       case 'entryScript':
@@ -596,7 +596,7 @@ class App implements IEventSubject {
 
     $this->config->defaults = array(
       'core' => array(
-        'language' => $this->appConfig['defaultLanguage'],
+        'language' => $this->manifest['defaultLanguage'],
         'showExceptions' => false,
         'logLevel' => Logger::ALL,
         'createCrashReports' => true,

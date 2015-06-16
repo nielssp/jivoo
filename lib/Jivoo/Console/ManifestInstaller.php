@@ -14,7 +14,7 @@ use Jivoo\Setup\InstallerSnippet;
 /**
  * Configure application.
  */
-class AppConfigInstaller extends InstallerSnippet {
+class ManifestInstaller extends InstallerSnippet {
   /**
    * @var Form Configuration form.
    */
@@ -61,7 +61,7 @@ class AppConfigInstaller extends InstallerSnippet {
   public function configure($data = null) {
     if (isset($data)) {
       $this->configForm->addData($data['Configure']);
-      $appConfig = array(
+      $manifest = array(
         'name' => $this->configForm->name,
         'version' => $this->configForm->version,
         'modules' => array_merge(
@@ -80,7 +80,7 @@ class AppConfigInstaller extends InstallerSnippet {
       mkdir($this->p('log', ''));
       $file = fopen($this->p('app', 'app.json'), 'w');
       if ($file) {
-        fwrite($file, Json::prettyPrint($appConfig));
+        fwrite($file, Json::prettyPrint($manifest));
         fclose($file);
         return $this->next();
       }

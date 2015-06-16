@@ -38,8 +38,8 @@ class Databases extends LoadableModule {
   protected function init() {
     $this->drivers = new DatabaseDriversHelper($this->app);
     
-    if (isset($this->app->appConfig['databases'])) {
-      foreach ($this->app->appConfig['databases'] as $name) {
+    if (isset($this->app->manifest['databases'])) {
+      foreach ($this->app->manifest['databases'] as $name) {
         $this->attachDatabase($name, $this->p('app', 'schemas/' . $name));
       }
     }

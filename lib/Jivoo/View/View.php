@@ -108,7 +108,7 @@ class View extends LoadableModule {
       $this->autoCompile = true;
     }
     
-    $this->data->app = $this->app->appConfig;
+    $this->data->app = $this->app->manifest;
 
     $this->addTemplateDir($this->p('Core', 'templates'), 4);
     $this->addTemplateDir($this->p('app', 'templates'));
