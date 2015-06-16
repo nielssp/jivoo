@@ -6,7 +6,8 @@
 namespace Jivoo\Core\Store;
 
 /**
- * 
+ * Representation of semi-structured data such as a configuration ({@see Config})
+ * or a state object ({@see State}). 
  */
 class Document implements \ArrayAccess, \IteratorAggregate {
   /**
@@ -39,14 +40,25 @@ class Document implements \ArrayAccess, \IteratorAggregate {
    */
   protected $parent = null;
   
+  /**
+   * Construct empty document.
+   */
   public function __construct() {
     $this->root = $this;
   }
   
+  /**
+   * Convert to associative array.
+   * @return array Array.
+   */
   public function toArray() {
     return $this->data;
   }
   
+  /**
+   * Convert to document.
+   * @return Document Document.
+   */
   public function toDocument() {
     $doc = new Document();
     $doc->data = $this->data;
@@ -92,9 +104,9 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   }
   
   /**
-   * Update a configuration key.
-   * @param string $key The configuration key to access.
-   * @param mixed $value The variable to associate with the key. Could be a string/array/object etc..
+   * Update a document  key.
+   * @param string $key The document key to access.
+   * @param mixed $value The value to associate with the key.
    */
   public function set($key, $value) {
     if (isset($this->emptySubset))
@@ -109,8 +121,23 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     else {
       $this->data[$key] = null;
     }
-    if (!$this->root->updated AND $oldValue !== $value) {
+    if (!$this->root->updated and $oldValue !== $value) {
       $this->root->updated = true;
+    }
+  }
+  
+  /**
+   * Set default value.
+   * @param string $key Document key.
+   * @param mixed $value Value.
+   */
+  public function setDefault($key, $value) {
+    if ($this->saveDefaults) {
+      if (!$this->exists($key))
+        $this->set($key, $value);
+    }
+    else {
+      // ??
     }
   }
   
@@ -140,12 +167,12 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     }
     else {
       if (isset($default))
-        $this->set($key, $default);
+        $this->setDefaul($key, $default);
       return $default;
     }
     if (isset($default)) {
       if (gettype($default) !== gettype($value)) {
-        $this->set($key, $default);
+        $this->setDefaul($key, $default);
         return $default;
       }
     }

@@ -398,7 +398,7 @@ class Config implements \ArrayAccess, \IteratorAggregate {
         }
       }
     }
-    $filePointer = fopen($this->file, 'r+');
+    $filePointer = fopen($this->file, 'c');
     if (!$filePointer)
       return false;
     if (flock($filePointer, LOCK_EX)) {
