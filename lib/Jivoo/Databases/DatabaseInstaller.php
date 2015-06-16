@@ -131,7 +131,7 @@ class DatabaseInstaller extends InstallerSnippet {
       }
     }
     else {
-      $form->addData($this->config->getArray());
+      $form->addData($this->config->toArray());
     }
     $this->viewData['driver'] = $driver;
     $this->viewData['form'] = $form;

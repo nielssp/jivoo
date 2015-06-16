@@ -45,6 +45,10 @@ class Console extends LoadableModule {
    */
   public function afterLoad() {
     if ($this->app->noManifest) {
+      if (!is_dir($this->p('user', ''))) {
+        if (!mkdir($this->p('user', '')))
+          throw new \Exception(tr('Could not create user directory: %1', $this->p('user', '')));
+      }
       $this->m->Setup->trigger('Jivoo\Console\ManifestInstaller');
       $this->m->Routing->routes->root('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Index');

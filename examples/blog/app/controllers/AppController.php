@@ -43,16 +43,26 @@ class AppController extends Controller {
       if (!empty($form->password)) {
         if ($form->password === $form->confirmPassword) {
           $this->config['password'] = $this->Auth->passwordHasher->hash($form->password);
-          $this->session->flash->success = tr('Password changed.');
-          return $this->refresh();
+          if ($this->config->save()) {
+            $this->session->flash->success = tr('Password changed.');
+            return $this->refresh();
+          }
+          else {
+            $this->session->flash->error = tr('Could not save configuration file.');
+          }
         }
         else {
           $form->addError('password', tr('The two passwords are not identical.'));
         }
       }
       else {
-        $this->session->flash->success = tr('Settings saved.');
-        return $this->refresh();
+        if ($this->config->save()) {
+          $this->session->flash->success = tr('Settings saved.');
+          return $this->refresh();
+        }
+        else {
+          $this->session->flash->error = tr('Could not save configuration file.');
+        }
       }
     }
     $this->settings = $form;

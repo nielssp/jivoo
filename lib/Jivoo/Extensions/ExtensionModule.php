@@ -7,7 +7,7 @@ namespace Jivoo\Extensions;
 
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
-use Jivoo\Core\Config;
+use Jivoo\Core\Store\Config;
 
 /**
  * A module that can be loaded by an extension.

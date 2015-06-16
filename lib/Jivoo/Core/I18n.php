@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\Core\Store\Document;
+
 /**
  * Internationalization and localization.
  * @see Localization
@@ -22,12 +24,12 @@ class I18n {
   
   /**
    * Configure I18n system with a configuration.
-   * @param Config $config Configuration.
+   * @param Document $config Configuration document.
    * @param string $location Path of language directory.
    * @throws I18nException If language file does not return an instance of
    * {@see Localization}.
    */
-  public static function setup(Config $config, $location) {
+  public static function setup(Document $config, $location) {
     self::$config = $config;
     if (!date_default_timezone_set(self::$config['timeZone'])) {
       date_default_timezone_set('UTC');

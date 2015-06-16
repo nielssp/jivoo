@@ -763,7 +763,7 @@ class Routing extends LoadableModule {
       return $this->followRoute($this->error);
     }
     if (is_string($response))
-      $response = new TextResponse(Http::OK, 'text', $response);
+      $response = new TextResponse(Http::OK, 'text/html', $response);
     if (!($response instanceof Response)) {
       throw new InvalidResponseException(tr(
         'An invalid response was returned from a dispatch function'

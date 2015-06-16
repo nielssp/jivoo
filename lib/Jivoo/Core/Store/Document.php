@@ -5,9 +5,15 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Store;
 
+use Jivoo\Core\MapIterator;
+
 /**
  * Representation of semi-structured data such as a configuration ({@see Config})
- * or a state object ({@see State}). 
+ * or a state object ({@see State}).
+ * @property-read Document|null $parent Parent document if any.
+ * @property-read Document $root Root document.
+ * @property-write array $defaults Set multiple default values.
+ * @property-write array $override Set multiple values.
  */
 class Document implements \ArrayAccess, \IteratorAggregate {
   /**
@@ -16,9 +22,14 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   private $emptySubset = null;
   
   /**
-   * @var array Associatve array of key-value pairs for current subset
+   * @var array Associatve array of key-value pairs for current subset.
    */
   protected $data = array();
+  
+  /**
+   * @var array Associative array of default values for current subset.
+   */
+  protected $defaultData = array();
   
   /**
    * @var bool Whether to save default values.
@@ -31,9 +42,9 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   protected $updated = false;
   
   /**
-   * @var Document|null Root document.
+   * @var Document Root document.
    */
-  protected $root = null;
+  protected $root;
   
   /**
    * @var Document|null Parent document.
@@ -48,11 +59,52 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   }
   
   /**
+   * Get the value of a property.
+   * @param string $property Property name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If property undefined.
+   */
+  public function __get($property) {
+    switch ($property) {
+      case 'parent':
+      case 'root':
+        return $this->$property;
+    }
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  /**
+   * Set the value of a property.
+   * @param string $property Property name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If property undefined.
+   */
+  public function __set($property, $value) {
+    switch ($property) {
+      case 'defaults':
+        assume(is_array($value));
+        $array = $value;
+        foreach ($array as $key => $value)
+          $this->setDefault($key, $value);
+        return;
+      case 'override':
+        assume(is_array($value));
+        $array = $value;
+        foreach ($array as $key => $value)
+          $this->setRecursive($key, $value);
+        return;
+    }
+    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  /**
    * Convert to associative array.
    * @return array Array.
    */
   public function toArray() {
-    return $this->data;
+    if ($this->saveDefaults)
+      return $this->data;
+    return $this->toDocument()->toArray();
   }
   
   /**
@@ -62,6 +114,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   public function toDocument() {
     $doc = new Document();
     $doc->data = $this->data;
+    $doc->defaults = $this->defaultData;
     return $doc;
   }
 
@@ -80,6 +133,11 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     }
     else {
       $doc->data =& $this->data[$key];
+    }
+    if (!$this->saveDefaults) {
+      if (!isset($this->defaultData[$key]) or !is_array($this->defaultData[$key]))
+        $this->defaultData[$key] = array();
+      $doc->defaultData =& $this->defaultData[$key];
     }
     $doc->parent = $this;
     $doc->root = $this->root;
@@ -127,6 +185,20 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   }
   
   /**
+   * Update a subdocument recursively.
+   * @param string $key The document key to access.
+   * @param mixed $value The value or subarray to associate with the key.
+   */
+  public function setRecursive($key, $value) {
+    if (!is_array($value))
+      return $this->set($key, $value);
+    $subset = $this->getSubset($key);
+    $array = $value;
+    foreach ($array as $key => $value)
+      $subset->setRecursive($key, $value);
+  }
+  
+  /**
    * Set default value.
    * @param string $key Document key.
    * @param mixed $value Value.
@@ -135,9 +207,14 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     if ($this->saveDefaults) {
       if (!$this->exists($key))
         $this->set($key, $value);
+      else if (is_array($value))
+        $this[$key]->defaults = $value;
     }
     else {
-      // ??
+      if (!isset($this->defaultData[$key]))
+        $this->defaultData[$key] = $value;
+      else if (is_array($value))
+        $this[$key]->defaults = $value;
     }
   }
   
@@ -167,12 +244,14 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     }
     else {
       if (isset($default))
-        $this->setDefaul($key, $default);
+        $this->setDefault($key, $default);
+      else if (isset($this->defaultData[$key]))
+        $default = $this->defaultData[$key];
       return $default;
     }
     if (isset($default)) {
       if (gettype($default) !== gettype($value)) {
-        $this->setDefaul($key, $default);
+        $this->setDefault($key, $default);
         return $default;
       }
     }

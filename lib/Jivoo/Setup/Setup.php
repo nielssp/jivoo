@@ -11,9 +11,11 @@ use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Lib;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
-use Jivoo\Core\Config;
+use Jivoo\Core\Store\Config;
+use Jivoo\Core\Store\PhpStore;
 use Jivoo\AccessControl\AuthHelper;
 use Jivoo\AccessControl\SingleUserModel;
+use Jivoo\Core\Logger;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -48,7 +50,8 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->lock = new Config($this->p('user', 'lock.php'));
+    $lockFile = new PhpStore($this->p('user', 'lock.php'));
+    $this->lock = new Config($lockFile);
     if ($this->lock->get('enable', false)) {
       $auth = $this->getAuth();
       if (!$auth->isLoggedIn()) {
@@ -100,6 +103,7 @@ class Setup extends LoadableModule {
         $config = $this->config['updates'][$this->app->version][$installer];
         if ($config->get('done', false)) {
           $this->config['version'] = $this->app->version;
+          $this->config->save();
         }
         else {
           $snippet = $this->getInstaller($installer, $config);
@@ -125,6 +129,7 @@ class Setup extends LoadableModule {
       $config = $this->config['current'][$installer];
       if ($config->get('done', false)) {
         unset($this->config['current']);
+        $this->config->save();
       }
       else {
         $snippet = $this->getInstaller($installer, $config);
@@ -176,6 +181,7 @@ class Setup extends LoadableModule {
   public function trigger($installerClass) {
     if (!Lib::classExists($installerClass))
       $installerClass = $this->app->n('Snippets\\' . $installerClass);
+    Logger::notice(tr('Trigger installer: %1', $installerClass));
     $this->getInstaller($installerClass);
     unset($this->config['current']);
     $this->config['current']['install'] = $installerClass;
@@ -201,6 +207,7 @@ class Setup extends LoadableModule {
         $auth->createSession(array('user' => $username));
       }
     }
+    Logger::notice(tr('Enable lock'));
     return $this->lock->save();
   }
   
@@ -216,6 +223,7 @@ class Setup extends LoadableModule {
       unset($this->lock['username']);
       unset($this->lock['password']);
     }
+    Logger::notice(tr('Disable lock'));
     return $this->lock->save();
   }
   

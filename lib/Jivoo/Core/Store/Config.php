@@ -34,10 +34,25 @@ class Config extends Document {
     parent::__construct();
     if (isset($store)) {
       $this->store = $store;
+      $this->reload();
+    }
+  }
+  
+  /**
+   * Reload configuration document from store.
+   */
+  public function reload() {
+    if ($this->root !== $this)
+      return $this->root->reload();
+    if (!isset($this->store))
+      return;
+    try {
       $this->store->open(false);
       $this->data = $this->store->read();
-      $this->store->close();
     }
+    catch (StoreException $e) {
+    }
+    $this->store->close();
   }
   
   /**

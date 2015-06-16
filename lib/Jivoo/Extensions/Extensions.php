@@ -370,7 +370,7 @@ class Extensions extends LoadableModule {
    * @return bool True if enabled, false otherwise.
    */
   public function isEnabled($extension) {
-    return in_array($extension, $this->config['import']->getArray());
+    return in_array($extension, $this->config['import']->toArray());
   }
   
   /**

@@ -5,8 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Store;
 
-use Jivoo\Core\Config;
-
 /**
  * Stores data in files. See subclasses for implementations of file formats.
  */
@@ -143,7 +141,7 @@ abstract class FileStore implements IStore {
   /**
    * {@inheritdoc}
    */
-  public function save(array $data) {
+  public function write(array $data) {
     if (!isset($this->handle))
       return;
     if (!$this->mutable)

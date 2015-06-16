@@ -6,7 +6,7 @@
 namespace Jivoo\Setup;
 
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Config;
+use Jivoo\Core\Store\Config;
 use Jivoo\AccessControl\IUserModel;
 
 /**

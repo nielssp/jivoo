@@ -6,7 +6,7 @@
 namespace Jivoo\Content;
 
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Config;
+use Jivoo\Core\Store\Config;
 
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,

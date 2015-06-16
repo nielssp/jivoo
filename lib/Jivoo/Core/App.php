@@ -6,6 +6,8 @@
 namespace Jivoo\Core;
 
 use Jivoo\Routing\Http;
+use Jivoo\Core\Store\PhpStore;
+use Jivoo\Core\Store\Config;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -237,8 +239,9 @@ class App implements IEventSubject {
     
     $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
 
-    $this->config = new Config($this->p('user', 'config.php'));
-    $this->config->setVirtual('app', $this->manifest);
+    $file = new PhpStore($this->p('user', 'config.php'));
+    $this->config = new Config($file);
+//     $this->config->setVirtual('app', $this->manifest);
   }
 
   /**

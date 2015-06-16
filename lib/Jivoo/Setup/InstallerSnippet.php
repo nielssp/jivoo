@@ -10,7 +10,7 @@ use Jivoo\Core\Utilities;
 use Jivoo\Models\Form;
 use Jivoo\Routing\ResponseOverrideException;
 use Jivoo\Routing\TextResponse;
-use Jivoo\Core\Config;
+use Jivoo\Core\Store\Config;
 use Jivoo\Core\Logger;
 
 /**
@@ -175,7 +175,7 @@ abstract class InstallerSnippet extends Snippet {
     $this->installConfig['done'] = true;
     if (isset($this->parent))
       return $this->parent->next();
-    return $this->refresh();
+    return $this->saveConfig();
   }
   
   /**
@@ -239,7 +239,7 @@ abstract class InstallerSnippet extends Snippet {
    */
   public function jump($step) {
     $this->setCurrent($step);
-    return $this->refresh();
+    return $this->saveConfig();
   }
   
   /**
@@ -263,6 +263,7 @@ abstract class InstallerSnippet extends Snippet {
     $current = $this->current;
     if (isset($current->installer))
       return $current->installer->__invoke();
+    Logger::debug(tr('Installer step: %1::%2', get_class($this), $current->name));
     $this->viewData['enableBack'] = $this->isUndoable();
     return call_user_func($current->do, null);
   }
@@ -280,7 +281,7 @@ abstract class InstallerSnippet extends Snippet {
       return $step->installer->undoStep($last);
     }
     if ($step->undo === true)
-      return $this->refresh();
+      return $this->saveConfig();
     return call_user_func($step->undo);
   }
   
