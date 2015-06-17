@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
+use Jivoo\Core\Utilities;
+
 /**
  * Base class for HTTP responses.
  * @property-read int $status HTTP status code.
@@ -43,11 +45,12 @@ abstract class Response {
   /**
    * Construct response.
    * @param int $status HTTP status code, e.g. 200 for OK.
-   * @param string $type Response type.
+   * @param string $type Response type, either a MIME type or a file extension
+   * known by {@see Utilities::convertType()}.
    */
   public function __construct($status, $type) {
     $this->status = $status;
-    $this->type = $type;
+    $this->type = Utilities::convertType($type);
   }
 
   /**

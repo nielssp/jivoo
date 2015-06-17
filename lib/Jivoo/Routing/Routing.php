@@ -699,9 +699,10 @@ class Routing extends LoadableModule {
   /**
    * Follow a route.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param int $status HTTP status code override.
    * @throws InvalidRouteException If route is invalid.
    */
-  public function followRoute($route) {
+  public function followRoute($route, $status = null) {
     $route = $this->validateRoute($route);
     $event = new RenderEvent($this, $route);
     $this->triggerEvent('beforeFollowRoute', $event);
@@ -739,7 +740,30 @@ class Routing extends LoadableModule {
     $event->response = $response;
     $this->rendered = true;
     $this->triggerEvent('afterDispatch', $event);
-    $this->respond($response);
+    $this->respond($response, $status);
+  }
+  
+  /**
+   * Converts strings and arrays to valid response objects. 
+   * @param string|array|Response $response A response to convert.
+   * @param string $defaultType Default type for 
+   * @return Response|null A valid response object or null if invalid.
+   */
+  public function validateResponse($response, $defaultType = 'html') {
+    if (is_string($response))
+      return new TextResponse(Http::OK, $defaultType, $response);
+    if (is_array($response)) {
+      foreach ($response as $type => $choice) {
+        if ($this->request->accepts($type) or $type == '*')
+          return $this->validateResponse($choice);
+      }
+      throw new NotAcceptableException(tr('Not acceptable'));
+    }
+    if ($response instanceof Response)
+      return $response;
+    if (is_callable($response))
+      return $this->validateResponse($response());
+    return null;
   }
   
   /**
@@ -754,17 +778,15 @@ class Routing extends LoadableModule {
     $args = func_get_args();
     array_shift($args);
     try {
-      $response = call_user_func_array($function, $args);
+      $response = $this->validateResponse(call_user_func_array($function, $args));
     }
     catch (ResponseOverrideException $e) {
-      $response = $e->getResponse();
+      $response = $this->validateResponse($e->getResponse());
     }
-    catch (NotFoundException $e) {
-      return $this->followRoute($this->error);
+    catch (ClientErrorException $e) {
+      return $this->followRoute($this->error, $e->status);
     }
-    if (is_string($response))
-      $response = new TextResponse(Http::OK, 'text/html', $response);
-    if (!($response instanceof Response)) {
+    if (!isset($response)) {
       throw new InvalidResponseException(tr(
         'An invalid response was returned from a dispatch function'
       ));
@@ -775,13 +797,17 @@ class Routing extends LoadableModule {
   /**
    * Sends a response to the client and stops execution of the applicaton.
    * @param Response $response Response object.
+   * @param int $status HTTP status code override.
    */
-  public function respond(Response $response) {
+  public function respond(Response $response, $status = null) {
     if (headers_sent($file, $line))
       throw new \Exception(tr('Headers already sent in %1 on line %2', $file, $line));
     $event = new RenderEvent($this, $this->selection, $response);
     $this->triggerEvent('beforeRender', $event);
-    Http::setStatus($response->status);
+    if (isset($status))
+      Http::setStatus($status);
+    else
+      Http::setStatus($response->status);
     Http::setContentType($response->type);
     if (isset($response->modified)) {
       header('Modified: ' . Http::date($response->modified));

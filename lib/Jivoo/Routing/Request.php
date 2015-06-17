@@ -169,10 +169,7 @@ class Request {
       $this->accepts = array();
       foreach ($contentTypes as $contentType) {
         $contentType = explode(';', $contentType);
-        $type = Utilities::getExtension(trim(strtolower($contentType[0])));
-        if (isset($type)) {
-          $this->accepts[] = $type;
-        }
+        $this->accepts[] = trim(strtolower($contentType[0]));
       }
     }
 
@@ -340,14 +337,15 @@ class Request {
   /**
    * Whether or not the client accepts the specified type. If the type is
    * omitted then a list of acceptable types is returned.
-   * @param string $type Type.
+   * @param string $type Type, can be a MIME type or a file extension known by
+   * {@see Utilities::convertType()}.
    * @return bool|string[] True if client accepts provided type, false otherwise.
-   * List of accepted types if type parameter omitted.
+   * List of accepted MIME types if type parameter omitted.
    */
   public function accepts($type = null) {
     if (!isset($type))
       return $this->accepts;
-    return in_array($type, $this->accepts);
+    return in_array(Utilities::convertType($type), $this->accepts);
   }
 
   /**
@@ -369,7 +367,7 @@ class Request {
    */
   public function isAjax() {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-        AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+        and $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
   }
   
   /**

@@ -159,6 +159,16 @@ class Utilities {
   }
   
   /**
+   * Check whether a directory exists or create it if it doesn't.
+   * @param string $file File path.
+   * @param bool $create Attempt to create directory if it doesn't exist.
+   * @return bool True if directory exists.
+   */
+  public static function dirExists($file, $create = true) {
+    return is_dir($file) or ($create and mkdir($file));
+  }
+  
+  /**
    * Get lower case file extension from file name.
    * @param string $file File name.
    * @return string File extension.
@@ -176,12 +186,24 @@ class Utilities {
   public static function getContentType($fileName) {
     $array = explode('.', $fileName);
     $fileExt = strtolower(array_pop($array));
-    switch ($fileExt) {
+    return self::convertType($fileExt);
+  }
+  
+  /**
+   * Convert file extension type (e.g. 'html', 'json', etc.) to the corresponding
+   * MIME type. If the type contains a forward slash already, it is not covnerted. 
+   * @param string $type Type or file extension.
+   * @return string A valid MIME type, 'text/plain' if unknown.
+   */
+  public static function convertType($type) {
+    if (strpos($type, '/') !== false)
+      return $type;
+    switch ($type) {
       case 'htm':
-        $fileExt = 'html';
+        $type = 'html';
       case 'css':
       case 'html':
-        return 'text/' . $fileExt;
+        return 'text/' . $type;
       case 'js':
         return 'application/javascript';
       case 'json':
@@ -195,11 +217,11 @@ class Utilities {
       case 'xml':
         return 'application/xml';
       case 'jpg':
-        $fileExt = 'jpeg';
+        $type = 'jpeg';
       case 'gif':
       case 'jpeg':
       case 'png':
-        return 'image/' . $fileExt;
+        return 'image/' . $type;
       default:
         return 'text/plain';
     }

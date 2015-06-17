@@ -28,9 +28,34 @@ class InvalidRouteException extends RoutingException { }
 class InvalidResponseException extends RoutingException { }
 
 /**
+ * Indicates a client error.
+ */
+class ClientErrorException extends RoutingException {
+  /**
+   * @var int Optional HTTP status code overrride.
+   */
+  public $status = null;
+}
+
+/**
  * Can be used in an action to send the client to the error page.
  */
-class NotFoundException extends RoutingException { }
+class NotFoundException extends ClientErrorException {
+  /**
+   * {@inheritdoc}
+   */
+  public $status = Http::NOT_FOUND;
+}
+
+/**
+ * Can be used in an action to send the client to the error page.
+ */
+class NotAcceptableException extends ClientErrorException {
+  /**
+   * {@inheritdoc}
+   */
+  public $status = Http::NOT_ACCEPTABLE;
+}
 
 /**
  * When thrown, the current response is replaced.
