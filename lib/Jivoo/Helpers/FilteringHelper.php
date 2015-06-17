@@ -34,6 +34,11 @@ class FilteringHelper extends Helper {
   private $primary = array();
   
   /**
+   * @var bool
+   */
+  private $localizedOperators = false;
+  
+  /**
    * {@inheritdoc}
    */
   public function __get($property) {
@@ -74,6 +79,29 @@ class FilteringHelper extends Helper {
   public function removePrimary($column) {
     $this->primary = array_diff($this->primary, array($column));
   }
+  
+  /**
+   * Enable localized (translated) operators.
+   * @param bool $enable Enable/disable.
+   */
+  public function localizeOperators($enable = true) {
+    $this->localizedOperators = $enable;
+  }
+  
+  /**
+   * Adds localized operators.
+   */
+  private function addLocalizedOperators() {
+    $this->scanner->addOperator(tr('not'), '!');
+    $this->scanner->addOperator(tr('and'), '&');
+    $this->scanner->addOperator(tr('or'), '|');
+    $this->scanner->addOperator(tr('contains'), 'contains');
+    $this->scanner->addOperator(tr('before'), 'before');
+    $this->scanner->addOperator(tr('after'), 'after');
+    $this->scanner->addOperator(tr('in'), 'in');
+    $this->scanner->addOperator(tr('on'), 'on');
+    $this->scanner->addOperator(tr('at'), 'at');
+  }
 
   /**
    * Apply filtering to a selection or an array of records.
@@ -84,8 +112,11 @@ class FilteringHelper extends Helper {
   public function apply($selection, IBasicModel $model) {
     if (!isset($this->query) or empty($this->query))
       return $selection;
-    if (!isset($this->scanner))
+    if (!isset($this->scanner)) {
       $this->scanner = new FilterScanner();
+      if ($this->localizedOperators)
+        $this->addLocalizedOperators();
+    }
     if (!isset($this->parser))
       $this->parser = new FilterParser();
     $tokens = $this->scanner->scan($this->query);

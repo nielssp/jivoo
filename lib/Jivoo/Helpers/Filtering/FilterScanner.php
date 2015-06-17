@@ -23,7 +23,21 @@ class FilterScanner {
    * @var string Reserved characters.
    */
   private static $reserved = '= ()!<>&|"';
+  
+  /**
+   * @var string[] Mapping of custom operators to built-in ones.
+   */
+  private $customOperators = array();
 
+  /**
+   * Add a custom operator.
+   * @param string $operator New operator word.
+   * @param string $mapping Built-in operator.
+   */
+  public function addOperator($operator, $mapping) {
+    $this->customOperators[$operator] = $mapping;
+  }
+  
   /**
    * Convert an input string to a list of tokens.
    * @param string $input Filter string.
@@ -103,19 +117,32 @@ class FilterScanner {
       $value .= $this->current;
       $this->pop();
     }
-    switch (strtolower($value)) {
+    $operator = strtolower($value);
+    if (isset($this->customOperators[$operator]))
+      $operator = $this->customOperators[$operator];
+    switch ($operator) {
+      case '&':
       case 'and':
         return array('&', $value);
+      case '|':
       case 'or':
         return array('|', $value);
+      case '!':
       case 'not':
         return array('!', $value);
       case 'contains':
         return array('contains', $value);
+      case '<':
       case 'before':
         return array('<', $value);
+      case '>':
       case 'after':
         return array('>', $value);
+      case '<=':
+        return array('<=', $value);
+      case '>=':
+        return array('>=', $value);
+      case '=':
       case 'in':
       case 'on':
       case 'at':

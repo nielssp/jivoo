@@ -13,6 +13,7 @@ use Jivoo\Helpers\Filtering\Ast\FilterNode;
 use Jivoo\Helpers\Filtering\Ast\NotTermNode;
 use Jivoo\Helpers\Filtering\Ast\ComparisonNode;
 use Jivoo\Helpers\Filtering\Ast\StringNode;
+use Jivoo\Core\I18n;
 
 /**
  * A visitor that applies a filter to a model and produces a {@see Condition} for
@@ -86,6 +87,29 @@ class SelectionFilterVisitor extends FilterVisitor {
       case '>=':
       case '>':
       case '<':
+        if ($type->isDate() or $type->isDateTime()) {
+          $interval = I18n::stringToInterval($node->right);
+          if (isset($interval)) {
+            list($start, $end) = $interval;
+            switch ($node->comparison) {
+              case '=':
+                $cond = new Condition('%c >= %_', $node->left, $type, $start);
+                $cond->and('%c <= %_', $node->left, $type, $end);
+                return $cond;
+              case '!=':
+                $cond = new Condition('%c < %_', $node->left, $type, $start);
+                $cond->or('%c > %_', $node->left, $type, $end);
+                return $cond;
+              case '<':
+              case '>=':
+                $right = $start;
+                break;
+              default:
+                $right = $end;
+                break; 
+            }
+          }
+        }
         return new Condition('%c ' . $node->comparison . ' %_', $node->left, $type, $right);
       case 'contains':
         return new Condition('%c LIKE %s', $node->left, '%' . Condition::escapeLike($right) . '%');

@@ -86,6 +86,27 @@ class RecordFilterVisitor extends FilterVisitor {
       return false;
     $type = $this->model->getType($field);
     $right = $type->convert($node->right);
+    if ($type->isDate() or $type->isDateTime()) {
+      $interval = I18n::stringToInterval($node->right);
+      if (isset($interval)) {
+        list($start, $end) = $interval;
+        switch ($node->comparison) {
+          case '=':
+            return $this->record->$field >= $start and
+              $this->record->$field <= $end;
+          case '!=':
+            return $this->record->$field < $start or
+              $this->record->$field > $end;
+          case '<':
+          case '>=':
+            $right = $start;
+            break;
+          default:
+            $right = $end;
+            break; 
+        }
+      }
+    }
     switch ($node->comparison) {
       case '=':
         return $this->record->$field == $right;

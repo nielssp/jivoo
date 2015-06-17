@@ -227,4 +227,109 @@ class I18n {
     $date = str_replace(date('D', $timestamp), $D, $date);
     return $date;
   }
+  
+
+  /**
+   * A localized implementation of {@see strtotime}. NOT YET IMPLEMENTED
+   * @param string $str A date/time string.
+   * @return int|null A UNIX timestamp or null on failure.
+   */
+  public static function stringToTime($str) {
+    $date = \DateTime::createFromFormat(self::longFormat(), $str);
+    if (isset($date))
+      return $date->getTimestamp();
+    $time = strtotime($str);
+    if ($time === false)
+      return null;
+    return $time;
+  }
+
+  /**
+   * Converts a string to a timestamp like {@see stringToTime()} but returns an
+   * interval (a 2-tuple array) instead, e.g.
+   * the string "2014" is converted to a closed interval from 2014-01-01
+   * 00:00:00 (as a UNIX timestamp) to 2014-12-31 23:59:59.
+   * @param string $str A date/time string.
+   * @return int[]|null A closed interval as a 2-tuple or null on failure.
+   */
+  public static function stringToInterval($str) {
+    $tuple = self::parseDate($str);
+    if (!isset($tuple))
+      return null;
+    list($year, $month, $day, $hour, $minute, $day, $precision) = $tuple;
+    switch ($precision) {
+      case 'year':
+        return array(
+          mktime(0, 0, 0, 1, 1, $year),
+          mktime(23, 59, 59, 12, 31, $year)
+        );
+      case 'month':
+        $start = mktime(0, 0, 0, $month, 1, $year);
+        return array(
+          $start,
+          mktime(23, 59, 59, $month, idate('t', $start), $year)
+        );
+      case 'day':
+        return array(
+          mktime(0, 0, 0, $month, $day, $year),
+          mktime(23, 59, 59, $month, $day, $year)
+        );
+      case 'hour':
+        return array(
+          mktime($hour, 0, 0, $month, $day, $year),
+          mktime($hour, 59, 59, $month, $day, $year)
+        );
+      case 'minute':
+        return array(
+          mktime($hour, $minute, 0, $month, $day, $year),
+          mktime($hour, $minute, 59, $month, $day, $year)
+        );
+      default:
+        return array(
+          mktime($hour, $minute, $second, $month, $day, $year),
+          mktime($hour, $minute, $second, $month, $day, $year)
+        );
+    }
+  }
+  
+  /**
+   * Natural language date parser with precision, e.g. the string "june 2014"
+   * results in the tuple: array(2014, 6, 1, 0, 0, 0, 'month').
+   * @param string $str A date/time string
+   * @return array|null A 7-tuple consisting of integers year, month, day,
+   * hour, minute, second. The last element is a string defining the precision
+   * of the input: 'year', 'month', 'day', 'hour', 'minute', or 'second'.
+   * Returns null on failure.
+   */
+  public static function parseDate($str) {
+    $str = trim($str);
+    // american (middle endian)
+    if (preg_match('$(\d{1,2})\s*/\s*(\d{1,2})(?:\s*/\s*(\d{1,4}))?$', $str, $matches) === 1) {
+      if (isset($matches[3]))
+        $year = intval($matches[3]);
+      else
+        $year = idate('Y');
+      return array(
+        $year, intval($matches[1]), intval($matches[2]), 0, 0, 0, 'day'
+      );
+    }
+    // big endian
+    if (preg_match('$(\d{4})(?:\s*[-/]\s*(\d{1,2})(?:\s*[-/]\s*(\d{1,2}))?)?$', $str, $matches) === 1) {
+      $precision = 'year';
+      $month = 1;
+      $day = 1;
+      if (isset($matches[2])) {
+        $precision = 'month';
+        $month = intval($matches[2]);
+        if (isset($matches[3])) {
+          $precision = 'day';
+          $day = intval($matches[3]);
+        }
+      }
+      return array(
+        intval($matches[1]), $month, $day, 0, 0, 0, $precision
+      );
+    }
+    return null;
+  }
 }
