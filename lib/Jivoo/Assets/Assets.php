@@ -9,6 +9,7 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Utilities;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
+use Jivoo\Extensions\ExtensionInfo;
 
 /**
  * Asset system.
@@ -51,6 +52,7 @@ class Assets extends LoadableModule {
     $this->config->defaults = array(
       'minifyJs' => true,
       'minifyCss' => true,
+      'useCdnIfAvailable' => true
     );
     
     $this->docRoot = Utilities::convertRealPath($_SERVER['DOCUMENT_ROOT']);
@@ -76,6 +78,30 @@ class Assets extends LoadableModule {
           }
         }
       }
+    }
+    
+    // lazy call to Extensions module
+    $this->app->call('Extensions', 'attachFeature', 'resources', array($this, 'handleResources'));
+  }
+  
+  /**
+   * Handle "resources" extension feature.
+   * @param ExtensionInfo $info Extension information.
+   */
+  public function handleResources(ExtensionInfo $info) {
+    foreach ($info->resources as $resource => $resInfo) {
+      $dependencies = isset($resInfo['dependencies']) ? $resInfo['dependencies'] : array();
+      $condition = isset($resInfo['condition']) ? $resInfo['condition'] : null;
+      if (isset($resInfo['cdn']) and $this->config['useCdnIfAvailable'])
+        $file = $info->replaceVariables($resInfo['cdn']);
+      else
+        $file = $info->getAsset($this, $info->replaceVariables($resInfo['file']));
+      $this->m->View->resources->provide(
+        $resource,
+        $file,
+        $dependencies,
+        $condition
+      );
     }
   }
 

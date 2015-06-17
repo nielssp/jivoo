@@ -120,7 +120,6 @@ class Extensions extends LoadableModule {
     
     $this->attachFeature('load', array($this, 'handleLoad'));
     $this->attachFeature('include', array($this, 'handleInclude'));
-    $this->attachFeature('resources', array($this, 'handleResources'));
     $this->attachFeature('viewExtensions', array($this, 'handleViewExtensions'));
     
     $this->attachEventHandler('afterLoadExtensions', array($this, 'addViewExtensions'));
@@ -175,23 +174,6 @@ class Extensions extends LoadableModule {
       $this->viewExtensions[$module] = array(
         'template' => $template,
         'hook' => $hook
-      );
-    }
-  }
-  
-  /**
-   * Handle "resources" feature.
-   * @param ExtensionInfo $info Extension information.
-   */
-  public function handleResources(ExtensionInfo $info) {
-    foreach ($info->resources as $resource => $resInfo) {
-      $dependencies = isset($resInfo['dependencies']) ? $resInfo['dependencies'] : array();
-      $condition = isset($resInfo['condition']) ? $resInfo['condition'] : null;
-      $this->view->resources->provide(
-        $resource,
-        $info->getAsset($this->m->Assets, $info->replaceVariables($resInfo['file'])),
-        $dependencies,
-        $condition
       );
     }
   }

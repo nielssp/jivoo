@@ -6,7 +6,8 @@
   "category": "JavaScript",
   "resources": {
     "jquery.js": {
-      "file": "jquery-$version.min.js"
+      "file": "jquery-$version.min.js",
+      "cdn": "//code.jquery.com/jquery-$version.min.js"
     }
   }
 }
