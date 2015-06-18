@@ -1,6 +1,7 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400|Source+Code+Pro:400,700");
 #jivoo-dev-tools {
-  position: fixed; }
+  position: fixed;
+  display: none; }
   #jivoo-dev-tools, #jivoo-dev-tools * {
     font-weight: normal;
     text-align: left; }
@@ -48,11 +49,13 @@
           #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a:hover {
             background-color: #a01b1b; }
           #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count {
-            color: white; }
-            #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count:before {
-              content: '('; }
-            #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count:after {
-              content: ')'; }
+            color: #cc2222;
+            background-color: white;
+            margin-left: 5px;
+            padding: 1px 3px;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 11px; }
     #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings {
       float: right;
       margin: 0;
@@ -71,7 +74,7 @@
           cursor: pointer; }
           #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li label:hover {
             background-color: #a01b1b; }
-  #jivoo-dev-tools > .jivoo-dev-frame {
+  #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame {
     font-size: 13px;
     background-color: #fff;
     color: #000;
@@ -81,7 +84,7 @@
     overflow-y: auto;
     display: none;
     position: static; }
-    #jivoo-dev-tools > .jivoo-dev-frame > .ui-resizable-handle {
+    #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame > .ui-resizable-handle {
       background-color: transparent;
       top: -3px;
       left: 0;

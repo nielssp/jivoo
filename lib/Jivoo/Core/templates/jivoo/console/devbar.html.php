@@ -17,9 +17,11 @@ $this->import('jivoo-console.css');
       </li>
     </ul>
   </div>
-  <div class="jivoo-dev-frame">
-    <div class="ui-resizable-handle ui-resizable-n"></div>
-    <div class="jivoo-dev-frame-content">
+  <div class="jivoo-dev-frame-container">
+    <div class="jivoo-dev-frame">
+      <div class="ui-resizable-handle ui-resizable-n"></div>
+      <div class="jivoo-dev-frame-content">
+      </div>
     </div>
   </div>
 </div>
