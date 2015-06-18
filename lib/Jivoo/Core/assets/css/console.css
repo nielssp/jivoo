@@ -79,14 +79,14 @@
     padding: 8px;
     overflow-x: auto;
     overflow-y: auto;
-    display: none; }
+    display: none;
+    position: static; }
     #jivoo-dev-tools > .jivoo-dev-frame > .ui-resizable-handle {
-      background-color: #E0DFDA;
-      border-left: 1px solid #C1BDB3;
-      top: 0;
+      background-color: transparent;
+      top: -3px;
       left: 0;
       right: 0;
-      height: 5px; }
+      height: 6px; }
   #jivoo-dev-tools.jivoo-dev-tools-top, #jivoo-dev-tools.jivoo-dev-tools-bottom {
     right: 0; }
   #jivoo-dev-tools.jivoo-dev-tools-left, #jivoo-dev-tools.jivoo-dev-tools-right {
