@@ -101,6 +101,17 @@ $fg: #FFF;
     }
   }
 
+  & > .jivoo-dev-frame {
+    font-size: 13px;
+    background-color: #fff;
+    color: #000;
+    min-height: 50px;
+    padding: 8px;
+    overflow-x: auto;
+    overflow-y: auto;
+    display: none;
+  }
+
   &.jivoo-dev-tools-top,
   &.jivoo-dev-tools-bottom {
     right: 0;
