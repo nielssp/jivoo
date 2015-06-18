@@ -1,5 +1,118 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400|Source+Code+Pro:400,700");
 
+$bg: #C22;
+$fg: #FFF;
+
+#jivoo-dev-tools {
+  position: fixed;
+
+  &, * {
+    font-weight: normal;
+    text-align: left;
+  }
+  
+  &.jivoo-dev-tools-top,
+  &.jivoo-dev-tools-left {
+    top: 0;
+    left: 0;
+  }
+
+  &.jivoo-dev-tools-bottom {
+    bottom: 0;
+    left: 0;
+  }
+
+  &.jivoo-dev-tools-right {
+    top: 0;
+    right: 0;
+  }
+
+  & > .jivoo-devbar {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: $bg;
+    color: $fg;
+    font-family: "Open Sans", sans-serif;
+    font-size: 0;
+    white-space: nowrap;
+    & > .jivoo-devbar-handle {
+      padding: 4px 8px;
+      font-weight: bold;
+      display: inline-block;
+      cursor: move;
+      font-size: 13px;
+    }
+    & > .jivoo-devbar-tools {
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      li {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        a {
+          text-decoration: none;
+          color: inherit;
+          padding: 4px 8px;
+          font-size: 13px;
+          display: block;
+          cursor: pointer;
+
+          &:hover {
+            background-color: darken($bg, 10%);
+          }
+          .jivoo-devbar-count {
+            color: $fg;
+            &:before {
+              content: '(';
+            }
+            &:after {
+              content: ')';
+            }
+          }
+        }
+      }
+    }
+    & > .jivoo-devbar-settings {
+      float: right;
+      margin: 0;
+      padding: 0;
+      display: block;
+      li {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        label {
+          text-decoration: none;
+          color: inherit;
+          padding: 4px 8px;
+          font-size: 13px;
+          display: block;
+          cursor: pointer;
+
+          &:hover {
+            background-color: darken($bg, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  &.jivoo-dev-tools-top,
+  &.jivoo-dev-tools-bottom {
+    right: 0;
+  }
+
+  &.jivoo-dev-tools-left,
+  &.jivoo-dev-tools-right {
+    bottom: 0;
+  }
+}
+
+
 .jivoo-frame,
 #jivoo-devbar {
   &, * {

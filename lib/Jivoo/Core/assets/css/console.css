@@ -1,4 +1,81 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400|Source+Code+Pro:400,700");
+#jivoo-dev-tools {
+  position: fixed; }
+  #jivoo-dev-tools, #jivoo-dev-tools * {
+    font-weight: normal;
+    text-align: left; }
+  #jivoo-dev-tools.jivoo-dev-tools-top, #jivoo-dev-tools.jivoo-dev-tools-left {
+    top: 0;
+    left: 0; }
+  #jivoo-dev-tools.jivoo-dev-tools-bottom {
+    bottom: 0;
+    left: 0; }
+  #jivoo-dev-tools.jivoo-dev-tools-right {
+    top: 0;
+    right: 0; }
+  #jivoo-dev-tools > .jivoo-devbar {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #cc2222;
+    color: white;
+    font-family: "Open Sans", sans-serif;
+    font-size: 0;
+    white-space: nowrap; }
+    #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-handle {
+      padding: 4px 8px;
+      font-weight: bold;
+      display: inline-block;
+      cursor: move;
+      font-size: 13px; }
+    #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools {
+      margin: 0;
+      padding: 0;
+      display: inline-block; }
+      #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li {
+        margin: 0;
+        padding: 0;
+        display: inline-block; }
+        #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a {
+          text-decoration: none;
+          color: inherit;
+          padding: 4px 8px;
+          font-size: 13px;
+          display: block;
+          cursor: pointer; }
+          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a:hover {
+            background-color: #a01b1b; }
+          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count {
+            color: white; }
+            #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count:before {
+              content: '('; }
+            #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count:after {
+              content: ')'; }
+    #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings {
+      float: right;
+      margin: 0;
+      padding: 0;
+      display: block; }
+      #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li {
+        margin: 0;
+        padding: 0;
+        display: inline-block; }
+        #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li label {
+          text-decoration: none;
+          color: inherit;
+          padding: 4px 8px;
+          font-size: 13px;
+          display: block;
+          cursor: pointer; }
+          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li label:hover {
+            background-color: #a01b1b; }
+  #jivoo-dev-tools.jivoo-dev-tools-top, #jivoo-dev-tools.jivoo-dev-tools-bottom {
+    right: 0; }
+  #jivoo-dev-tools.jivoo-dev-tools-left, #jivoo-dev-tools.jivoo-dev-tools-right {
+    bottom: 0; }
+
 .jivoo-frame, .jivoo-frame *,
 #jivoo-devbar,
 #jivoo-devbar * {
