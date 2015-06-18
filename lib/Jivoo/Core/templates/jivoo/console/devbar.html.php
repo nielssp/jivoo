@@ -3,7 +3,7 @@ $this->import('jivoo-console.js');
 $this->import('jivoo-console.css');
 ?>
 
-<div id="jivoo-dev-tools" class="jivoo-dev-tools-bottom">
+<div id="jivoo-dev-tools">
   <div class="jivoo-devbar">
     <div class="jivoo-devbar-handle">Development</div>
     <ul class="jivoo-devbar-tools">
@@ -19,7 +19,6 @@ $this->import('jivoo-console.css');
   </div>
   <div class="jivoo-dev-frame-container">
     <div class="jivoo-dev-frame">
-      <div class="ui-resizable-handle ui-resizable-n"></div>
       <div class="jivoo-dev-frame-content">
       </div>
     </div>

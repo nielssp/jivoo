@@ -105,6 +105,7 @@ $fg: #FFF;
   }
 
   & > .jivoo-dev-frame-container {
+    background-color: #fff;
     & > .jivoo-dev-frame {
       font-size: 13px;
       background-color: #fff;
@@ -116,12 +117,29 @@ $fg: #FFF;
       display: none;
       position: static;
       
-      & > .ui-resizable-handle {
-        background-color: transparent;
+      & > .ui-resizable-n {
         top: -3px;
         left: 0;
         right: 0;
         height: 6px;
+      }
+      & > .ui-resizable-s {
+        bottom: -3px;
+        left: 0;
+        right: 0;
+        height: 6px;
+      }
+      & > .ui-resizable-w {
+        top: 0;
+        bottom: 0;
+        left: -3px;
+        width: 6px;
+      }
+      & > .ui-resizable-e {
+        top: 0;
+        bottom: 0;
+        right: -3px;
+        width: 6px;
       }
     }
   }
@@ -133,6 +151,22 @@ $fg: #FFF;
 
   &.jivoo-dev-tools-left,
   &.jivoo-dev-tools-right {
+    top: 0;
+    bottom: 0;
+    width: auto !important;
+    & > .jivoo-dev-frame-container {
+      & > .jivoo-dev-frame {
+        min-width: 50px;
+        height: 100%;
+      }
+    }
+  }
+
+  &.jivoo-dev-tools-left {
+  }
+
+  &.jivoo-dev-tools-right {
+    top: 0;
     bottom: 0;
   }
 }

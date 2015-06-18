@@ -76,25 +76,49 @@
           cursor: pointer; }
           #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li label:hover {
             background-color: #a01b1b; }
-  #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame {
-    font-size: 13px;
-    background-color: #fff;
-    color: #000;
-    min-height: 50px;
-    padding: 8px;
-    overflow-x: auto;
-    overflow-y: auto;
-    display: none;
-    position: static; }
-    #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame > .ui-resizable-handle {
-      background-color: transparent;
-      top: -3px;
-      left: 0;
-      right: 0;
-      height: 6px; }
+  #jivoo-dev-tools > .jivoo-dev-frame-container {
+    background-color: #fff; }
+    #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame {
+      font-size: 13px;
+      background-color: #fff;
+      color: #000;
+      min-height: 50px;
+      padding: 8px;
+      overflow-x: auto;
+      overflow-y: auto;
+      display: none;
+      position: static; }
+      #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame > .ui-resizable-n {
+        top: -3px;
+        left: 0;
+        right: 0;
+        height: 6px; }
+      #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame > .ui-resizable-s {
+        bottom: -3px;
+        left: 0;
+        right: 0;
+        height: 6px; }
+      #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame > .ui-resizable-w {
+        top: 0;
+        bottom: 0;
+        left: -3px;
+        width: 6px; }
+      #jivoo-dev-tools > .jivoo-dev-frame-container > .jivoo-dev-frame > .ui-resizable-e {
+        top: 0;
+        bottom: 0;
+        right: -3px;
+        width: 6px; }
   #jivoo-dev-tools.jivoo-dev-tools-top, #jivoo-dev-tools.jivoo-dev-tools-bottom {
     right: 0; }
   #jivoo-dev-tools.jivoo-dev-tools-left, #jivoo-dev-tools.jivoo-dev-tools-right {
+    top: 0;
+    bottom: 0;
+    width: auto !important; }
+    #jivoo-dev-tools.jivoo-dev-tools-left > .jivoo-dev-frame-container > .jivoo-dev-frame, #jivoo-dev-tools.jivoo-dev-tools-right > .jivoo-dev-frame-container > .jivoo-dev-frame {
+      min-width: 50px;
+      height: 100%; }
+  #jivoo-dev-tools.jivoo-dev-tools-right {
+    top: 0;
     bottom: 0; }
 
 .jivoo-console-log {
