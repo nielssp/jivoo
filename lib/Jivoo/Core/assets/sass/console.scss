@@ -110,6 +110,15 @@ $fg: #FFF;
     overflow-x: auto;
     overflow-y: auto;
     display: none;
+    
+    & > .ui-resizable-handle {
+      background-color: #E0DFDA;
+      border-left: 1px solid #C1BDB3;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+    }
   }
 
   &.jivoo-dev-tools-top,
