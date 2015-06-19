@@ -8,7 +8,7 @@ namespace Jivoo\Console;
 use Jivoo\Snippets\Snippet;
 
 /**
- * Console dashboard
+ * System information viewer.
  */
 class SystemInfo extends ConsoleSnippet {
   /**

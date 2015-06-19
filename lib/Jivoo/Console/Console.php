@@ -19,7 +19,7 @@ class Console extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Snippets', 'Routing', 'Setup', 'View', 'Assets', 'Extensions', 'Jtk');
+  protected $modules = array('Snippets', 'Routing', 'Setup', 'View', 'Assets', 'Extensions');
 
   /**
    * {@inheritdoc}
@@ -78,12 +78,12 @@ class Console extends LoadableModule {
       $this->app->attachEventHandler('beforeShowException', array($this, 'injectCode'));
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\SystemInfo');
-      $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Console\I18nInfo');
       
       $this->addTool('system', tr('System'), 'snippet:Jivoo\Console\SystemInfo', true);
       
       $this->addTool('generate', tr('Generate'), 'snippet:Jivoo\Console\SystemInfo', false);
-      $this->addTool('i18n', tr('I18n'), 'snippet:Jivoo\Console\SystemInfo', false);
+      $this->addTool('i18n', tr('I18n'), 'snippet:Jivoo\Console\I18nInfo', false);
       $this->addTool('release', tr('Release'), 'snippet:Jivoo\Console\SystemInfo', false);
     }
   }

@@ -20,7 +20,7 @@ abstract class Module implements IEventSubject {
   protected $app = null;
   
   /**
-   * @var Map Collection of loaded modules.
+   * @var ModuleMap Collection of loaded modules.
    */
   protected $m;
 

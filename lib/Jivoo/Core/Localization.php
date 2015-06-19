@@ -7,6 +7,9 @@ namespace Jivoo\Core;
 
 /**
  * A localization, e.g. translation strings and date formats.
+ * @property string $name Language name (in English).
+ * @property string $localName Language name.
+ * @property string $region Region name.
  * @property string $dateFormat Preferred date format.
  * @property string $timeFormat Preferred time format.
  * @property string $longFormat Preferred long format, can use special
@@ -17,6 +20,21 @@ namespace Jivoo\Core;
  * @property string $weekDay Week day and time format. 
  */
 class Localization {
+  /**
+   * @var string
+   */
+  private $name = '';
+
+  /**
+   * @var string
+   */
+  private $localName = '';
+  
+  /**
+   * @var string
+   */
+  private $region = '';
+  
   /**
    * @var array Messages in english and their local translation.
    */
@@ -65,6 +83,9 @@ class Localization {
    */
   public function __get($property) {
     switch ($property) {
+      case 'name':
+      case 'localName':
+      case 'region':
       case 'dateFormat':
       case 'timeFormat':
         return $this->$property;
@@ -89,6 +110,9 @@ class Localization {
    */
   public function __set($property, $value) {
     switch ($property) {
+      case 'name':
+      case 'localName':
+      case 'region':
       case 'dateFormat':
       case 'timeFormat':
       case 'longFormat':
