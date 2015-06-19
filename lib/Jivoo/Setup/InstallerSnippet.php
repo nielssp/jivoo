@@ -362,6 +362,8 @@ abstract class InstallerSnippet extends Snippet {
         }
         $state = $task->suspend();
         $taskConfig['state'] = $state;
+        if (!$taskConfig->save())
+          echo 'error: ' . tr('Could not save progress!');
         exit;
       }
       if ($task->isDone())
