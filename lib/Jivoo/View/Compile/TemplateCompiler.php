@@ -44,7 +44,11 @@ class TemplateCompiler {
   public function compile($template) {
     Logger::debug('Compiling template: ' . $template);
     $dom = new \simple_html_dom();
-    $dom->load_file($template);
+    $file = file_get_contents($template);
+    if ($file === false)
+      throw new \Exception(tr('Could not read template: %1', $template));
+    if (!$dom->loadFile($file))
+      throw new \Exception(tr('Could not parse template: %1', $template));
     
     $root = new InternalNode();
     
