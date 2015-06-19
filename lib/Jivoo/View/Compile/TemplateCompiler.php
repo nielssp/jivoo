@@ -47,7 +47,7 @@ class TemplateCompiler {
     $file = file_get_contents($template);
     if ($file === false)
       throw new \Exception(tr('Could not read template: %1', $template));
-    if (!$dom->loadFile($file))
+    if (!$dom->load($file))
       throw new \Exception(tr('Could not parse template: %1', $template));
     
     $root = new InternalNode();
