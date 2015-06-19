@@ -39,6 +39,14 @@ class Cookies implements \ArrayAccess {
     $this->prefix = $prefix;
     $this->basePath = $basePath;
   }
+  
+  /**
+   * Convert cookie data to associative array.
+   * @return array Aassociative array.
+   */
+  public function toArray() {
+    return $this->cookies;
+  }
 
   /**
    * Create a cookie.

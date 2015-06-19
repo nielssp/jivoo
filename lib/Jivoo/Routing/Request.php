@@ -20,7 +20,9 @@ use Jivoo\Core\Utilities;
  * @property-read Sessione $session Session storage access object.
  * @property-read string|null $ip The remote address or null if not set.
  * @property-read string|null $url The request uri or null if not set.
- * @property-read string|null $referer HTTP referer or null if not set.
+ * @property-read string|null $referrer HTTP referer or null if not set.
+ * @property-read string|null $referer HTTP referer or null if not set
+ * (intentional misspelling).
  * @property-read string|null $userAgent HTTP user agent or null if not set.
  * @property-read string|null $domain Domain name protocol and port.
  * @property-read string|null $method Request method, e.g. 'GET', 'POST' etc.
@@ -209,6 +211,7 @@ class Request {
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
       case 'url':
         return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+      case 'referrer':
       case 'referer':
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
       case 'userAgent':
@@ -235,6 +238,28 @@ class Request {
     throw new \InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
+  /**
+   * Convert request to associative array.
+   * @return array Aassociative array.
+   */
+  public function toArray() {
+    return array(
+      'path' => $this->path,
+      'realPath' => $this->realPath,
+      'data' => $this->data,
+      'query' => $this->query,
+      'fragment' => $this->fragment,
+      'domainName' => $this->domainName,
+      'method' => $this->method,
+      'secure' => $this->secure,
+      'ip' => $this->ip,
+      'url' => $this->url,
+      'referer' => $this->referer,
+      'referrer' => $this->referer,
+      'userAgent' => $this->userAgent
+    );
+  }
+  
   /**
    * Unset the entire GET query array or part of it.
    * @param string $key A specific key to unset.

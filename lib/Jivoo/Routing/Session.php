@@ -82,6 +82,14 @@ class Session implements \ArrayAccess {
   }
   
   /**
+   * Convert session data to associative array.
+   * @return array Aassociative array.
+   */
+  public function toArray() {
+    return $_SESSION;
+  }
+  
+  /**
    * Reopen a closed session.
    * @return boolean True on success, false on failure.
    */

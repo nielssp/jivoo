@@ -60,10 +60,10 @@ class Console extends LoadableModule {
       $this->m->Extensions->import('jquery');
       $this->m->Extensions->import('jqueryui');
       $this->m->Extensions->import('js-cookie');
-      $asset = $this->m->Assets->getAsset('js/console.js');
+      $asset = $this->m->Assets->getAsset('js/jivoo/console/console.js');
       $this->view->resources->provide('jivoo-console.js', $asset, array('jquery.js', 'jquery-ui.js', 'js.cookie.js'));
-      $asset = $this->m->Assets->getAsset('css/console.css');
-      $this->view->resources->provide('jivoo-console.css', $asset);
+      $asset = $this->m->Assets->getAsset('css/jivoo/console/tools.css');
+      $this->view->resources->provide('jivoo-tools.css', $asset);
       
       $devbar = $this->view->renderOnly('jivoo/console/devbar.html');
       
@@ -75,6 +75,9 @@ class Console extends LoadableModule {
           if ($pos === false)
             return;
           $self->setVariable('jivooLog', Logger::getLog());
+          $self->setVariable('jivooRequest', $this->request->toArray());
+          $self->setVariable('jivooSession', $this->request->session->toArray());
+          $self->setVariable('jivooCookies', $this->request->cookies->toArray());
           $extraVars = '<script type="text/javascript">'
             . $self->outputVariables()
             . $self->outputTools()
@@ -84,10 +87,10 @@ class Console extends LoadableModule {
         }
       });
       
-      $this->m->Routing->routes->auto('snippet:Jivoo\Console\Dashboard');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Console\SystemInfo');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
       
-      $this->addTool('dashboard', tr('System'), 'snippet:Jivoo\Console\Dashboard', true);
+      $this->addTool('system', tr('System'), 'snippet:Jivoo\Console\SystemInfo', true);
     }
   }
   
@@ -129,14 +132,17 @@ class Console extends LoadableModule {
    * @param string $id A unique tool id.
    * @param string $name Name of tool.
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
-   * @param bool $ajax Whether or not to use Ajax. If false, then a simple
+   * @param bool $ajax Whether to use Ajax. If false, then a simple
    * link is created instead.
+   * @param bool $ajaxOnly Whether to only allow Ajax (e.g. don't allow middle
+   * clicking).
    */
-  public function addTool($id, $name, $route, $ajax = true) {
+  public function addTool($id, $name, $route, $ajax = true, $ajaxOnly = false) {
     $this->tools[$id] = array(
       'name' => $name,
       'route' => $route,
-      'ajax' => $ajax
+      'ajax' => $ajax,
+      'ajaxOnly' => $ajaxOnly
     );
   }
   
@@ -158,7 +164,10 @@ class Console extends LoadableModule {
       $output .= Json::encode($id) . ', ';
       $output .= Json::encode($tool['name']) . ', ';
       $link = $this->m->Routing->getLink($tool['route']);
-      $output .= Json::encode($link) . ');';
+      $output .= Json::encode($link);
+      if ($tool['ajax'] and $tool['ajaxOnly'])
+        $output .= ', true';
+      $output .= ');';
     }
     $output .= '}';
     return $output;

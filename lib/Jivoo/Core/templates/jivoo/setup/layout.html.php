@@ -44,16 +44,20 @@ if (!$Form->isOpen())
 
 <div class="install-buttons">
 <?php
-if ($enableNext)
-  echo $Form->submit(tr('Next'), array('name' => 'next', 'class' => 'primary'));
-else
-  echo $Form->submit(tr('Next'), array('disabled' => 'disabled', 'class' => 'primary'));
+if (isset($enableNext)) {
+  if ($enableNext)
+    echo $Form->submit(tr('Next'), array('name' => 'next', 'class' => 'primary'));
+  else
+    echo $Form->submit(tr('Next'), array('disabled' => 'disabled', 'class' => 'primary'));
+}
 ?>
 <?php
-if ($enableBack)
-  echo $Form->submit(tr('Back'), array('name' => 'back'));
-else
-  echo $Form->submit(tr('Back'), array('disabled' => 'disabled'));
+if (isset($enableBack)) {
+  if ($enableBack)
+    echo $Form->submit(tr('Back'), array('name' => 'back'));
+  else
+    echo $Form->submit(tr('Back'), array('disabled' => 'disabled'));
+}
 ?>
 </div>
 

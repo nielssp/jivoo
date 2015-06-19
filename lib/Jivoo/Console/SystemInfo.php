@@ -10,26 +10,18 @@ use Jivoo\Snippets\Snippet;
 /**
  * Console dashboard
  */
-class Dashboard extends Snippet {
+class SystemInfo extends ConsoleSnippet {
   /**
    * {@inheritdoc}
    */
   public function before() {
-    $this->view->data->title = tr('Jivoo Console');
+    $this->view->data->title = tr('System Info');
     $this->view->data->app = $this->app->manifest;
     $this->view->data->entryScript = realpath($this->app->entryScript);
     $this->view->data->userDir = realpath($this->p('user', ''));
     $this->view->data->appDir = realpath($this->p('app', ''));
     $this->view->data->environment = $this->app->environment;
     $this->view->data->shareDir = realpath($this->p('share', ''));
-    return null;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function get() {
-    $this->disableLayout();
-    return $this->render();
+    return parent::before();
   }
 }

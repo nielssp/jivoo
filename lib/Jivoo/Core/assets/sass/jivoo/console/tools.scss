@@ -45,6 +45,7 @@ $fg: #FFF;
       padding: 4px 8px;
       font-weight: bold;
       display: inline-block;
+      text-transform: uppercase;
       cursor: move;
       font-size: 13px;
     }
@@ -194,20 +195,18 @@ $fg: #FFF;
   }
 }
 
-.jivoo-console-log {
-  font-family: "Source Code Pro", monospace;
+
+#jivoo-dev-tools .jivoo-dev-frame-content {
+  font-family: "Open Sans", monospace;
   font-size: 12px;
   font-weight: normal;
   text-align: left;
+  color: #222;
 
-  & > .jivoo-console-log-entry {
-    border-top: 1px solid #ccc;
-    &:first-child {
-      border: none;
-    }
+  strong {
+    color: $bg;
+    font-weight: bold;
   }
 
-  & > .jivoo-console-log-entry:hover {
-    background-color: #f1f1f1;
-  }
+  @import 'main';
 }
