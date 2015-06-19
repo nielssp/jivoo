@@ -169,6 +169,29 @@ $fg: #FFF;
     top: 0;
     bottom: 0;
   }
+
+  &.jivoo-dev-tools-minimize {
+    width: auto !important;
+    &.jivoo-dev-tools-top,
+    &.jivoo-dev-tools-bottom {
+      right: auto;
+    }
+
+    & > .jivoo-devbar {
+      & > .jivoo-devbar-handle {
+        cursor: pointer;
+      }
+      & > .jivoo-devbar-tools {
+        display: none;
+      }
+      & > .jivoo-devbar-settings {
+        display: none;
+      }
+    }
+    & > .jivoo-dev-frame-container {
+      display: none;
+    }
+  }
 }
 
 .jivoo-console-log {

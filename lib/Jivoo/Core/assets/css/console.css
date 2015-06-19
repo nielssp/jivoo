@@ -120,6 +120,18 @@
   #jivoo-dev-tools.jivoo-dev-tools-right {
     top: 0;
     bottom: 0; }
+  #jivoo-dev-tools.jivoo-dev-tools-minimize {
+    width: auto !important; }
+    #jivoo-dev-tools.jivoo-dev-tools-minimize.jivoo-dev-tools-top, #jivoo-dev-tools.jivoo-dev-tools-minimize.jivoo-dev-tools-bottom {
+      right: auto; }
+    #jivoo-dev-tools.jivoo-dev-tools-minimize > .jivoo-devbar > .jivoo-devbar-handle {
+      cursor: pointer; }
+    #jivoo-dev-tools.jivoo-dev-tools-minimize > .jivoo-devbar > .jivoo-devbar-tools {
+      display: none; }
+    #jivoo-dev-tools.jivoo-dev-tools-minimize > .jivoo-devbar > .jivoo-devbar-settings {
+      display: none; }
+    #jivoo-dev-tools.jivoo-dev-tools-minimize > .jivoo-dev-frame-container {
+      display: none; }
 
 .jivoo-console-log {
   font-family: "Source Code Pro", monospace;
