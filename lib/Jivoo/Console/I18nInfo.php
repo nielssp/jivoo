@@ -18,11 +18,25 @@ class I18nInfo extends ConsoleSnippet {
    */
   protected $helpers = array('Form');
   
+  /**
+   * @var string
+   */
   private $scope = 'app';
   
+  /**
+   * @var \Jivoo\Extensions\ExtensionInfo
+   */
   private $extension = null;
-  
+
+  /**
+   * @var \Jivoo\Themes\ThemeInfo
+   */
   private $theme = null;
+
+  /**
+   * @var string
+   */
+  private $rootDir = null;
   
   /**
    * {@inheritdoc}
@@ -44,11 +58,13 @@ class I18nInfo extends ConsoleSnippet {
     }
     
     $this->viewData['dir'] = $this->p('app', 'languages');
+    $this->rootDir = $this->p('app');
     if (isset($this->request->query['scope'])) {
       $scope = $this->request->query['scope'];
       if ($scope === 'lib') {
         $this->scope = 'lib';
         $this->viewData['dir'] = $this->p('Core', 'languages');
+        $this->rootDir = \Jivoo\PATH;
       }
       else if (strpos($scope, '-') !== false) {
         $scope = explode('-', $scope);
@@ -57,6 +73,7 @@ class I18nInfo extends ConsoleSnippet {
             $this->scope = 'extension';
             $this->extension = $this->viewData['extensions'][$scope[1]];
             $this->viewData['dir'] = $this->extension->p($this->app, 'languages');
+            $this->rootDir = $this->extension->p($this->app, '');
           }
         }
         else if (isset($this->m->Themes) and $scope[0] === 'theme') {
@@ -64,6 +81,7 @@ class I18nInfo extends ConsoleSnippet {
             $this->scope = 'theme';
             $this->theme = $this->viewData['themes'][$scope[1]];
             $this->viewData['dir'] = $this->theme->p($this->app, 'languages');
+            $this->rootDir = $this->theme->p($this->app, '');
           }
         }
       }
@@ -81,7 +99,9 @@ class I18nInfo extends ConsoleSnippet {
   public function post($data) {
     if (isset($data['generate']) and $this->viewData['dirExists']) {
       $gen = new LanguageGenerator();
-      $gen->scanDir($this->viewData['dir']);
+      $gen->scanDir($this->rootDir);
+      var_dump($gen->getLocalization());
+      exit;
     }
     else if (isset($data['new'])) {
       
