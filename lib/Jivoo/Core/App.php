@@ -161,7 +161,8 @@ class App implements IEventSubject {
    */
   private $events = array(
     'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
-    'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit'
+    'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit',
+    'beforeShowException'
   );
   
   /**
@@ -547,7 +548,12 @@ class App implements IEventSubject {
       ob_end_clean(); 
     Http::setStatus(Http::INTERNAL_SERVER_ERROR);
     if ($this->config['core']['showExceptions']) {
+      ob_start();
       $this->crashReport($exception);
+      $body = ob_get_clean();
+      $event = new ShowExceptionEvent($this, $exception, $body);
+      $this->triggerEvent('beforeShowException', $event);
+      echo $event->body;
       $this->stop();
     }
     else {
@@ -667,3 +673,31 @@ class App implements IEventSubject {
  * Event sent before and after a module has been loaded
  */
 class LoadModuleEvent extends LoadEvent { }
+
+/**
+ * Event sent before an exception page is sent to the client.
+ */
+class ShowExceptionEvent extends Event {
+  
+  /**
+   * @var \Exception The exception.
+   */
+  public $exception;
+  
+  /**
+   * @var string The response body.
+   */
+  public $body;
+  
+  /**
+   * Construct exception event.
+   * @param object $sender Sender object.
+   * @param \Exception $exception The exception.
+   * @param string $body The response body.
+   */
+  public function __construct($sender, \Exception $exception, $body) {
+    parent::__construct($sender);
+    $this->exception = $exception;
+    $this->body = $body;
+  }
+}

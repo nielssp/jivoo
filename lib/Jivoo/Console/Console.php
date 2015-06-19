@@ -9,6 +9,8 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Json;
 use Jivoo\Core\Logger;
 use Jivoo\Routing\RenderEvent;
+use Jivoo\Core\Event;
+use Jivoo\Core\ShowExceptionEvent;
 
 /**
  * Developer console module.
@@ -33,6 +35,11 @@ class Console extends LoadableModule {
    * @var mixed[] Associative array of tool ids and settings.
    */
   private $tools = array();
+  
+  /**
+   * @var string Devbar HTML if enabled.
+   */
+  private $devbar = null;
   
   /**
    * {@inheritdoc}
@@ -65,33 +72,48 @@ class Console extends LoadableModule {
       $asset = $this->m->Assets->getAsset('css/jivoo/console/tools.css');
       $this->view->resources->provide('jivoo-tools.css', $asset);
       
-      $devbar = $this->view->renderOnly('jivoo/console/devbar.html');
+      $this->devbar = $this->view->renderOnly('jivoo/console/devbar.html');
       
-      $self = $this; // pre 5.4
-      $this->m->Routing->attachEventHandler('afterRender', function(RenderEvent $event) use($devbar, $self) {
-        if ($event->response->type === 'text/html') {
-          $body = $event->body;
-          $pos = strripos($body, '</body');
-          if ($pos === false)
-            return;
-          $self->setVariable('jivooLog', Logger::getLog());
-          $self->setVariable('jivooRequest', $this->request->toArray());
-          $self->setVariable('jivooSession', $this->request->session->toArray());
-          $self->setVariable('jivooCookies', $this->request->cookies->toArray());
-          $extraVars = '<script type="text/javascript">'
-            . $self->outputVariables()
-            . $self->outputTools()
-            . '</script>' . PHP_EOL;
-          $event->body = substr_replace($body, $devbar . $extraVars, $pos, 0);
-          $event->overrideBody = true;
-        }
-      });
+      $this->m->Routing->attachEventHandler('afterRender', array($this, 'injectCode'));
+      $this->app->attachEventHandler('beforeShowException', array($this, 'injectCode'));
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\SystemInfo');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
       
       $this->addTool('system', tr('System'), 'snippet:Jivoo\Console\SystemInfo', true);
+      
+      $this->addTool('generate', tr('Generate'), 'snippet:Jivoo\Console\SystemInfo', false);
+      $this->addTool('i18n', tr('I18n'), 'snippet:Jivoo\Console\SystemInfo', false);
+      $this->addTool('release', tr('Release'), 'snippet:Jivoo\Console\SystemInfo', false);
     }
+  }
+  
+  public function injectCode(Event $event) {
+    if (!isset($this->devbar))
+      return;
+    if ($event instanceof RenderEvent) {
+      if ($event->response->type !== 'text/html')
+        return;
+      $extraIncludes = '';
+    }
+    else {
+      assume($event instanceof ShowExceptionEvent);
+      $extraIncludes = $this->view->resourceBlock();
+    }
+    $body = $event->body;
+    $pos = strripos($body, '</body');
+    if ($pos === false)
+      return;
+    $this->setVariable('jivooLog', Logger::getLog());
+    $this->setVariable('jivooRequest', $this->request->toArray());
+    $this->setVariable('jivooSession', $this->request->session->toArray());
+    $this->setVariable('jivooCookies', $this->request->cookies->toArray());
+    $extraVars = '<script type="text/javascript">'
+      . $this->outputVariables()
+      . $this->outputTools()
+      . '</script>' . PHP_EOL;
+    $event->body = substr_replace($body, $extraIncludes . $this->devbar . $extraVars, $pos, 0);
+    $event->overrideBody = true;
   }
   
   /**

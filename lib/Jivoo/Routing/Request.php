@@ -245,6 +245,7 @@ class Request {
   public function toArray() {
     return array(
       'path' => $this->path,
+      'route' => $this->route,
       'realPath' => $this->realPath,
       'data' => $this->data,
       'query' => $this->query,
