@@ -103,11 +103,11 @@ input[type=checkbox] {
 
   &:checked:before {
     color: $primaryBg;
-    font-size: 12px;
+    font-size: 14px;
     float: left;
-    margin: 1px 0 0 1px; 
-    font-family: icomoon;
-    content: '\e686';
+    margin: -2px 0 0 2px;
+    font-family: $font; 
+    content: '\2714';
   }
 
   &:focus {

@@ -13,6 +13,16 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600");
 
 
+input[type=checkbox] {
+  &:checked:before {
+    font-family: icomoon;
+    font-size: 12px;
+    float: left;
+    margin: 1px 0 0 1px;
+    content: '\e686';
+  }
+}
+
 #login {
   overflow-y: auto;
   text-align: center;

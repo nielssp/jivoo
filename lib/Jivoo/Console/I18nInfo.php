@@ -58,7 +58,7 @@ class I18nInfo extends ConsoleSnippet {
     }
     
     $this->viewData['dir'] = $this->p('app', 'languages');
-    $this->rootDir = $this->p('app');
+    $this->rootDir = $this->p('app', '');
     if (isset($this->request->query['scope'])) {
       $scope = $this->request->query['scope'];
       if ($scope === 'lib') {
