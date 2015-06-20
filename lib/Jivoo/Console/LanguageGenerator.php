@@ -14,14 +14,19 @@ use Jivoo\Core\Localization;
 class LanguageGenerator {
 
   /**
-   * @var array
+   * @var string[]
    */
   private $stringLiterals = array();
 
   /**
-   * @var array
+   * @var array[]
    */
   private $pluralLiterals = array();
+  
+  /**
+   * @var string[]
+   */
+  private $warnings = array();
   
   /**
    * Scan a single file.
@@ -39,7 +44,8 @@ class LanguageGenerator {
       foreach ($matchesTest[0] as $match) {
         $offset = $match[1];
         if (!isset($offsets[$offset])) {
-          echo '// [INFO] invalid tr() at offset ' . $offset . ' in ' . $file . PHP_EOL;
+          $line = substr_count($content, "\n", 0, $offset) + 1;
+          $this->warnings[] = tr('Invalid use of %1 on line %2 in %3', 'tr()', $line, $file);
         }
       }
     }
@@ -58,7 +64,8 @@ class LanguageGenerator {
       foreach ($matchesTest[0] as $match) {
         $offset = $match[1];
         if (!isset($offsets[$offset])) {
-          echo '// [INFO] invalid tn() at offset ' . $offset . ' in ' . $file . PHP_EOL;
+          $line = substr_count($content, "\n", 0, $offset) + 1;
+          $this->warnings[] = tr('Invalid use of %1 on line %2 in %3', 'tn()', $line, $file);
         }
       }
     }
@@ -94,6 +101,14 @@ class LanguageGenerator {
       }
       closedir($dir);
     }
+  }
+  
+  /**
+   * Get list of warnings generated when scanning files.
+   * @return string[] List of warnings.
+   */
+  public function getWarnings() {
+    return $this->warnings;
   }
   
   /**
