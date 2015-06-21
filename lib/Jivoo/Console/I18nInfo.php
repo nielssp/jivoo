@@ -100,8 +100,18 @@ class I18nInfo extends ConsoleSnippet {
     if (isset($data['generate']) and $this->viewData['dirExists']) {
       $gen = new LanguageGenerator();
       $gen->scanDir($this->rootDir);
-      var_dump($gen->getLocalization());
-      exit;
+      
+      $fileName = $this->viewData['dir'] . '/en.lng.php';
+      $file = fopen($fileName, 'w');
+      if ($file) {
+        fwrite($file, $gen->createCorePhpFile());
+        fclose($file);
+        $this->session->flash->success = tr('Language created: %1', $fileName);
+        return $this->refresh();
+      }
+      else {
+        $this->session->flash->error = tr('Unable to create file: %1', $fileName);
+      }
     }
     else if (isset($data['new'])) {
       

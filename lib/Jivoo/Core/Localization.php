@@ -175,6 +175,17 @@ class Localization {
       $this->messages[$message] = array();
     $this->messages[$message][] = $args;
   }
+  
+  /**
+   * Return a list of known messages along with translation strings and
+   * pattern list.
+   * @return string[][] List of arrays. The keys are messages. The first element
+   * of each array array is the translation string, and the remaining elements
+   * (if any) are the message variable patterns.
+   */
+  public function getTranslationStrings() {
+    return $this->messages;
+  }
 
   /**
    * Translate a string.

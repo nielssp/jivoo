@@ -80,15 +80,15 @@ class LanguageGenerator {
   
   /**
    * Scan a directory tree recursively.
-   * @param string $dirPath Directory path.
+   * @param string $dir Directory path.
    */
-  public function scanDir($dirPath) {
-    $dir = opendir($dirPath);
-    if ($dir) {
-      while (($file = readdir($dir)) !== false) {
+  public function scanDir($dir) {
+    $files = scandir($dir);
+    if ($files !== false) {
+      foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
-        $file = $dirPath . '/' . $file;
+        $file = $dir . '/' . $file;
         if (is_dir($file)) {
           $this->scanDir($file);
         }
@@ -125,5 +125,46 @@ class LanguageGenerator {
       $l->set($plural, $plural);
     }
     return $l;
+  }
+  
+  /**
+   * Create a PHP file that returns a {@see Localization} object for the Core
+   * language.
+   * @return string PHP file content.
+   */
+  public function createCorePhpFile() {
+    $php = '<?php' . PHP_EOL;
+    foreach ($this->warnings as $warning)
+      $php .= '// [WARNING] ' . $warning . PHP_EOL;
+    $php .= PHP_EOL;
+    $php .= '$l = new \Jivoo\Core\Localization()';
+    $php .= ';' . PHP_EOL . PHP_EOL;
+    $php .= '$l->name = "English";' . PHP_EOL;
+    $php .= '$l->localName = "English";' . PHP_EOL;
+    $php .= PHP_EOL;
+
+    foreach ($this->stringLiterals as $literal) {
+      $php .= '$l->set(' . PHP_EOL
+        . '  ' . $literal . ',' . PHP_EOL
+        . '  ' . $literal . PHP_EOL
+        . ');' . PHP_EOL;
+    }
+
+    foreach ($this->pluralLiterals as $array) {
+      list($plural, $singular) = $array;
+      $php .= '$l->set(' . PHP_EOL
+      . '  ' . $plural . ',' . PHP_EOL
+      . '  ' . $singular . ',' . PHP_EOL
+      . "  '/^-?1$/'" . PHP_EOL
+      . ');' . PHP_EOL;
+      $php .= '$l->set(' . PHP_EOL
+      . '  ' . $plural . ',' . PHP_EOL
+      . '  ' . $plural . PHP_EOL
+      . ');' . PHP_EOL;
+    }
+
+    $php .= PHP_EOL;
+    $php .= 'return $l;' . PHP_EOL;
+    return $php;
   }
 }
