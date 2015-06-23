@@ -95,6 +95,11 @@ class View extends LoadableModule {
   private $autoCompile = false;
   
   /**
+   * @var string[]
+   */
+  private $compiled = array();
+  
+  /**
    * {@inheritdoc}
    */
   protected function init() {
@@ -193,16 +198,18 @@ class View extends LoadableModule {
    * @return string Absolute path to compiled template.
    */
   public function compileTemplate($dir, $template) {
-    $this->app->getModule('Extensions')->import('simplehtmldom');
-    $source = $dir . $template;
-    $compiled = $dir . 'compiled/' . $template . '.php';
-    $file = fopen($compiled, 'w');
-    if ($file) {
+    if (!isset($this->compiled[$template])) {
+      $this->app->getModule('Extensions')->import('simplehtmldom');
+      $source = $dir . $template;
+      $compiled = $dir . 'compiled/' . $template . '.php';
+      $file = fopen($compiled, 'w');
+      if (!$file)
+        throw new \Exception(tr('Could not write compiled template: %1', $compiled));
       fwrite($file, $this->compiler->compile($source));
       fclose($file);
-      return $compiled;
+      $this->compiled[$template] = $compiled;
     }
-    throw new \Exception(tr('Could not compile template: %1', $source));
+    return $this->compiled[$template];
   }
   
   /**
