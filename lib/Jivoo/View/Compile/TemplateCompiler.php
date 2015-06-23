@@ -57,9 +57,11 @@ class TemplateCompiler {
       $root->append($this->convert($main));
     }
     else {
-      foreach ($dom->find('*') as $html) {
+      foreach ($dom->find('*, text') as $html) {
+        if ($html->parent->tag != 'root')
+          continue;
         $root->append($this->convert($html));
-      } 
+      }
     }
     
     $this->transform($root);
