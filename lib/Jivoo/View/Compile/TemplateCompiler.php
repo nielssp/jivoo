@@ -22,7 +22,7 @@ class TemplateCompiler {
    */
   public function __construct($defaultMacros = true) {
     if ($defaultMacros)
-      $this->macros = DefaultMacros::getMacros();
+      $this->addMacros(DefaultMacros::getMacros());
   }
   
   /**
@@ -33,6 +33,23 @@ class TemplateCompiler {
    */
   public function addMacro($name, $function) {
     $this->macros[strtolower($name)] = $function;
+  }
+  
+  /**
+   * Add multiple macros.
+   * @param callable[] $macros Mapping of macro names to functions.
+   */
+  public function addMacros($macros) {
+    foreach ($macros as $name => $function)
+      $this->addMacro($name, $function);
+  }
+  
+  /**
+   * Adds macros from a {@see Macros} class. 
+   * @param string $class Class name.
+   */
+  public function addMacrosFrom($class) {
+    $this->addMacros(Macros::getMacros($class));
   }
   
   /**

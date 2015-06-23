@@ -60,6 +60,14 @@ abstract class TemplateNode {
   public function __isset($property) {
     return $this->__get($property) !== null;
   }
+  
+  /**
+   * Whether node is null.
+   * @return boolean True if null.
+   */
+  public function isNull() {
+    return false;
+  }
 
   /**
    * Detach from parent.

@@ -37,8 +37,17 @@ class TextNode extends TemplateNode {
   /**
    * {@inheritdoc}
    */
+  public function isNull() {
+    return $this->text === true;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     $text = $this->text;
+    if (!is_string($text))
+      return '';
     if (trim($text) == '')
       return "\n";
     if ($text[0] == ' ')

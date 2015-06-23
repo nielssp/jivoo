@@ -92,7 +92,7 @@ class HtmlNode extends InternalNode {
     $output = '<' . $this->tag;
     foreach ($this->attributes as $name => $value) {
       $output .= ' ' . $name;
-      if (isset($value))
+      if (isset($value) and !$value->isNull())
         $output .= '="' . $value . '"';
     }
     if (count($this->content) == 0 and $this->selfClosing)
