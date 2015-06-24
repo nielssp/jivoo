@@ -777,6 +777,8 @@ abstract class ActiveModel extends Model implements IEventListener {
   public function setAssociation(ActiveRecord $record, $association, $value) {
     switch ($association['type']) {
       case 'belongsTo':
+        if (!isset($value))
+          return $this->unsetAssociation($record, $association);
         assume($value instanceof ActiveRecord);
         assume($value->getModel() == $association['model']);
         $key = $association['otherKey'];
