@@ -52,6 +52,7 @@ class Assets extends LoadableModule {
     $this->config->defaults = array(
       'minifyJs' => true,
       'minifyCss' => true,
+      'compileScss' => false,
       'useCdnIfAvailable' => true
     );
     
