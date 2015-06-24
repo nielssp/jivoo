@@ -49,3 +49,18 @@ class MapKeyInvalidException extends MapException { }
  * Thrown when editting a read-only map.
  */
 class MapReadOnlyException extends MapException { }
+
+/**
+ * JSON encoding or decoding error.
+ */
+class JsonException extends Exception { }
+
+/**
+ * JSON encoding error.
+ */
+class JsonEncodeException extends JsonException { }
+
+/**
+ * JSON decoding error.
+ */
+class JsonDecodeException extends JsonException { }

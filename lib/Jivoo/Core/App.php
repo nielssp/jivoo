@@ -191,8 +191,6 @@ class App implements IEventSubject {
     $manifest = array();
     if (file_exists($manifestFile)) {
       $manifest = Json::decodeFile($manifestFile);
-      if (!isset($manifest))
-        throw new \Exception('Invalid application. "app.json" invalid.');
       $manifest = array_merge($this->defaultManifest, $manifest);
     }
     else {
