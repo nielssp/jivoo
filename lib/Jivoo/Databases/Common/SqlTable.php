@@ -203,7 +203,10 @@ class SqlTable extends Table {
       $sqlString .= implode(', ', $fields);
     }
     else {
-      $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
+      if (isset($selection->alias))
+        $sqlString .= $selection->alias . '.*';
+      else
+        $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
       if (!empty($selection->additionalFields)) {
         $fields = $selection->additionalFields;
         array_walk($fields, array($this, 'getColumnList'));
@@ -211,6 +214,8 @@ class SqlTable extends Table {
       }
     }
     $sqlString .= ' FROM ' . $this->owner->quoteTableName($this->name);
+    if (isset($selection->alias))
+      $sqlString .= ' AS ' . $selection->alias; 
     if (!empty($selection->sources)) {
       foreach ($selection->sources as $source) {
         if (is_string($source['source'])) {

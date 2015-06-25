@@ -69,6 +69,11 @@ class ActiveCollection extends Model {
    * @var ICondition
    */
   private $condition = null;
+  
+  /**
+   * @var string
+   */
+  private $alias = null;
 
   /**
    * Construct active collection.
@@ -87,6 +92,8 @@ class ActiveCollection extends Model {
       $this->join = $association['join'];
       $this->otherPrimary = $association['otherPrimary'];
     }
+    if (isset($association['name']))
+      $this->alias = $association['name'];
     if (isset($association['condition']))
       $this->condition = $association['condition'];
     $this->source = $this->prepareSelection($this->other);
@@ -100,6 +107,7 @@ class ActiveCollection extends Model {
   private function prepareSelection(IBasicSelection $selection = null) {
     if (!isset($selection))
       return $this->source;
+    $selection->alias($this->alias);
     if (isset($this->join)) {
       assume($selection instanceof IReadSelection);
       $selection = $selection

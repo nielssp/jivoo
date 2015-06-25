@@ -444,6 +444,14 @@ abstract class Model extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
+  public function alias($alias) {
+    $select = new ReadSelection($this);
+    return $select->alias($alias);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function select($expression, $alias = null) {
     $select = new ReadSelection($this);
     return $select->select($expression, $alias);

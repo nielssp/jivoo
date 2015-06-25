@@ -22,6 +22,11 @@ use Jivoo\Models\IBasicModel;
 class ReadSelection extends BasicSelection implements IReadSelection {
 
   /**
+   * @var string|null Alias for source.
+   */
+  protected $alias = null;
+  
+  /**
    * An arrays describing grouping.
    * 
    * Each array is of the following format:
@@ -87,6 +92,14 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    */
   protected $additionalFields = array();
 
+  /**
+   * {@inheritdoc}
+   */
+  public function alias($alias) {
+    $this->alias = $alias;
+    return $this;
+  }
+  
   /**
    * {@inheritdoc}
    */

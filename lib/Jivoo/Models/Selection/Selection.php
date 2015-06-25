@@ -55,6 +55,13 @@ class Selection extends BasicSelection implements ISelection {
   public function delete() {
     return $this->copyBasicAttr(new DeleteSelection($this->model))->delete();
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function alias($alias) {
+    return $this->copyBasicAttr(new ReadSelection($this->model))->alias($alias);
+  }
 
   /**
    * {@inheritdoc}

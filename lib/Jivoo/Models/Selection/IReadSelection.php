@@ -14,6 +14,13 @@ use Jivoo\Models\IBasicModel;
  */
 interface IReadSelection extends IBasicSelection, \IteratorAggregate, \Countable {
   /**
+   * Set alias for selection source.
+   * @param string $alias Alias.
+   * @return IReadSelection A read selection.
+   */
+  public function alias($alias);
+  
+  /**
    * Make a projection.
    * @param string|string[]|array $expression Expression or array of expressions
    * and aliases

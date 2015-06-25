@@ -741,18 +741,19 @@ abstract class ActiveModel extends Model implements IEventListener {
           ->and('J.%c = %m.%c', $thisKey, $this->name, $id), 'J'
       );
     }
-    $condition = where('%m.%c = %m.%c', $other, $thisKey, $this->name, $id);
+    $condition = where('%c.%c = %m.%c', $field, $thisKey, $this->name, $id);
     if (isset($association['condition']))
       $condition = $condition->and($association['condition']);
     $selection = $selection->leftJoin(
       $other,
-      $condition
+      $condition,
+      $field
     );
     $selection->groupBy('{' . $this->name . '}.' . $id);
     
     return $selection->with(
       $field . '_count',
-      'COUNT({' . $other->getName() . '}.' . $thisKey . ')',
+      'COUNT(' . $field . '.' . $thisKey . ')',
       DataType::integer()
     );
   }
