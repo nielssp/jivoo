@@ -25,6 +25,7 @@ use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\Selection\BasicSelection;
 use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\Record;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -289,15 +290,24 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($data = array(), ReadSelection $selection) {
+  public function createExisting($data = array(), ReadSelection $selection = null) {
     if (isset($data[$this->primaryKey])) {
       $id = $data[$this->primaryKey];
       if (array_key_exists($id, $this->cache))
         return $this->cache[$id];
     }
-    $record = $this->source->createExisting($data, $selection);
-    return ActiveRecord::createExisting($this, $record->getData(), 
-      $record->getVirtualData(), $this->record);
+    return $this->convert($this->source->createExisting($data, $selection));
+  }
+  
+  /**
+   * Convert a record to an ActiveRecord.
+   * @param Record $record Record.
+   * @return ActiveRecord Active record.
+   */
+  public function convert(Record $record) {
+    return ActiveRecord::createExisting(
+      $this, $record->getData(), $record->getVirtualData(), $this->record
+    );
   }
 
   /**
