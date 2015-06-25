@@ -11,6 +11,7 @@ use Jivoo\Core\Map;
 use Jivoo\Core\Json;
 use Jivoo\Core\Lib;
 use Jivoo\Core\Logger;
+use Jivoo\Core\JsonDecodeException;
 
 /**
  * Extension system.
@@ -220,9 +221,13 @@ class Extensions extends LoadableModule {
         if (!isset($library))
           return null;
       }
-      $info = Json::decodeFile($dir . '/' . $manifest);
-      if (!$info)
+      try {
+        $info = Json::decodeFile($dir . '/' . $manifest);
+      }
+      catch (JsonDecodeException $e) {
+        Logger::warning(tr('Error decoding JSON: %1', $dir . '/' . $manifest));
         return null;
+      }
       $this->info[$extension] = new ExtensionInfo($extension, $info, $library, $this->isEnabled($extension));
     }
     return $this->info[$extension];

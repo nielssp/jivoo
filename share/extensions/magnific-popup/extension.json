@@ -1,0 +1,23 @@
+{
+  "library": true,
+  "name": "magnific-popup",
+  "version": "1.0.0",
+  "description": "Lightbox and modal dialog plugin. Can display inline HTML, iframes (YouTube video, Vimeo, Google Maps), or an image gallery. Animation effects are added with CSS3 transitions. For jQuery or Zepto.",
+  "website": "http://dimsemenov.com/plugins/magnific-popup/",
+  "category": "JavaScript",
+  "dependencies": {
+    "extensions": [
+      "jquery >=1.8.0"
+    ]
+  },
+  "resources": {
+    "jquery.magnific-popup.js": {
+      "file": "dist/jquery.magnific-popup.min.js",
+      "dependencies": ["jquery.js", "magnific-popup.css"]
+    },
+    "magnific-popup.css": {
+      "file": "dist/magnific-popup.css"
+    }
+  }
+}
+
