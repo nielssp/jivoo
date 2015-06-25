@@ -21,6 +21,7 @@ use Jivoo\Databases\TableNotFoundException;
 use Jivoo\Models\Validation\Validator;
 use Jivoo\Databases\ResultSetIterator;
 use Jivoo\Models\DataType;
+use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\Selection\BasicSelection;
 use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\IReadSelection;
@@ -370,6 +371,26 @@ abstract class ActiveModel extends Model implements IEventListener {
     }
     return null;
   }
+  
+  /**
+   * Create a new virtual ("hasMany" or "hasAndBelongsToMany") collection.
+   * @param string $name
+   * @param string $association Name of "hasMany" or "hasAndBelongsToMany"
+   * association to base collection on.
+   * @param string|ICondition $condition Select condition for collection.
+   */
+  public function addVirtualCollection($name, $association, $condition) {
+    if (!isset($this->associations))
+      $this->createAssociations();
+    if (!isset($this->associations[$association]))
+      throw new InvalidAssociationException(tr('Unknown association: %1', $association));
+    $association = $this->associations[$association];
+    $association['name'] = $name;
+    if (is_string($condition))
+      $condition = new Condition($condition);
+    $association['condition'] = $condition;
+    $this->associations[$name] = $association;
+  }
 
   /**
    * Create all associations.
@@ -409,6 +430,7 @@ abstract class ActiveModel extends Model implements IEventListener {
    */
   private function createAssociation($type, $name, $options) {
     $options['type'] = $type;
+    $options['name'] = $name;
     $otherModel = $options['model'];
     if (!isset($this->database->$otherModel)) {
       throw new ModelNotFoundException(tr(
@@ -689,6 +711,53 @@ abstract class ActiveModel extends Model implements IEventListener {
   }
 
   /**
+   * Join with and count the content of an associated collection (associated
+   * using either "hasMany" or "hasAndBelongsToMany").
+   * @param string $association Name of association.
+   * @param IReadSelection $selection Optional selection.
+   * @return IReadSelection Resulting selection.
+   */
+  public function withCount($association, IReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new Selection($this);
+    if (!isset($this->associations))
+      $this->createAssociations();
+    if (!isset($this->associations[$association]))
+      throw new InvalidAssociationException(tr('Unknown association: %1', $association));
+    $field = $association;
+    $association = $this->associations[$field];
+
+    $other = $association['model'];
+    $thisKey = $association['thisKey'];
+    $otherKey = $association['otherKey'];
+    $id = $this->primaryKey;
+    
+    if (isset($association['join'])) {
+      $join = $association['join'];
+      $otherPrimary = $association['otherPrimary'];
+      $selection = $selection->leftJoin(
+        $join,
+        where('%m.%c = J.%c', $join, $otherPrimary, $otherKey)
+          ->and('J.%c = %m.%c', $thisKey, $this->name, $id), 'J'
+      );
+    }
+    $condition = where('%m.%c = %m.%c', $other, $thisKey, $this->name, $id);
+    if (isset($association['condition']))
+      $condition = $condition->and($association['condition']);
+    $selection = $selection->leftJoin(
+      $other,
+      $condition
+    );
+    $selection->groupBy('{' . $this->name . '}.' . $id);
+    
+    return $selection->with(
+      $field . '_count',
+      'COUNT({' . $other->getName() . '}.' . $thisKey . ')',
+      DataType::integer()
+    );
+  }
+
+  /**
    * Get an association.
    * @param ActiveRecord $record A record.
    * @param array $association Association options.
@@ -710,7 +779,11 @@ abstract class ActiveModel extends Model implements IEventListener {
       case 'hasMany':
       case 'hasAndBelongsToMany':
         $id = $this->primaryKey;
-        return new ActiveCollection($this, $record->$id, $association);
+        $collection = new ActiveCollection($this, $record->$id, $association);
+        $virtualData = $record->getVirtualData();
+        if (isset($virtualData[$association['name'] . '_count']))
+          $collection->setCount($virtualData[$association['name'] . '_count']);
+        return $collection;
     }
     throw new InvalidAssociationException(tr('Unknown association type: %1', $association['type']));
   }

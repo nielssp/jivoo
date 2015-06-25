@@ -13,6 +13,7 @@ use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\IBasicSelection;
 use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Condition\ICondition;
 
 /**
  * A special model representing an association collection as result from for
@@ -58,6 +59,16 @@ class ActiveCollection extends Model {
    * @var string Name of "other" primary key.
    */
   private $otherPrimary;
+  
+  /**
+   * @var int|null Number of items in collection.
+   */
+  private $count = null;
+  
+  /**
+   * @var ICondition
+   */
+  private $condition = null;
 
   /**
    * Construct active collection.
@@ -76,6 +87,8 @@ class ActiveCollection extends Model {
       $this->join = $association['join'];
       $this->otherPrimary = $association['otherPrimary'];
     }
+    if (isset($association['condition']))
+      $this->condition = $association['condition'];
     $this->source = $this->prepareSelection($this->other);
   }
 
@@ -89,7 +102,7 @@ class ActiveCollection extends Model {
       return $this->source;
     if (isset($this->join)) {
       assume($selection instanceof IReadSelection);
-      return $selection
+      $selection = $selection
         ->leftJoin($this->join, $this->otherPrimary . '= J.' . $this->otherKey, 'J')
         ->where('J.' . $this->thisKey . ' = ?', $this->recordId);
     }
@@ -97,8 +110,10 @@ class ActiveCollection extends Model {
       $selection = $selection->where($this->thisKey . ' = ?', $this->recordId);
       if ($selection instanceof Selection)
         $selection = $selection->toReadSelection();
-      return $selection;
     }
+    if (isset($this->condition))
+      $selection = $selection->where($this->condition);
+    return $selection;
   }
 
   /**
@@ -137,6 +152,23 @@ class ActiveCollection extends Model {
     else {
       $selection->set($this->thisKey, $this->recordId)->update();
     }
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function count() {
+    if (isset($this->count))
+      return $this->count;
+    return parent::count();
+  }
+  
+  /**
+   * Set the number of items in this collection.
+   * @param int $count Count.
+   */
+  public function setCount($count) {
+    $this->count = $count;
   }
 
   /**
@@ -273,8 +305,6 @@ class ActiveCollection extends Model {
    * {@inheritdoc}
    */
   public function countSelection(ReadSelection $selection) {
-//     return $this->other->countSelection($this->prepareSelection($selection));
-      
     return $this->other->countSelection($selection);
   }
 
