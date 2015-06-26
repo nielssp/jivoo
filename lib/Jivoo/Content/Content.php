@@ -209,6 +209,8 @@ class Content extends LoadableModule {
     $name = $model->getName();
     $formatField = $field . 'Format';
     $format = $this->getFormat($record->$formatField);
+    if (!isset($format))
+      return $record->$field;
     $html = $format->toHtml($record->$field);
     if (!isset($this->extensionsEnabled[$name]))
       return $html;
