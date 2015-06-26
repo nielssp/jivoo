@@ -4,6 +4,7 @@ $this->import(
   'admin/icomoon/style.css',
   'admin/theme.css',
   'jquery.js',
+  'jquery.amaran.js',
   'admin/theme.js',
   'html5shiv.js',
   'respond.js'

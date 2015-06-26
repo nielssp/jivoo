@@ -6,4 +6,11 @@ $(function() {
     $('nav > ul > li > a').removeClass('current');
     $(this).addClass('current');
   });
+  
+  $.amaran({
+    message: 'Hello, world...',
+    position: 'top right',
+    inEffect: 'slideTop'
+  });
+  $('.amaran-wrapper.top').css('top', 32);
 });

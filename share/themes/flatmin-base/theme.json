@@ -8,6 +8,9 @@
   "dependencies": {
     "extensions": [
       "jquery >=1.7",
+      "jqueryui",
+      "AmaranJS",
+      "magnific-popup",
       "respond",
       "html5shiv"
     ]
