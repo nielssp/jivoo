@@ -257,6 +257,8 @@ class Content extends LoadableModule {
     $name = $model->getName();
     $formatField = $field . 'Format';
     $format = $this->getFormat($record->$formatField);
+    if (!isset($format))
+      return null;
     $formatName = $format->getName();
     $defaultEditor = $this->getDefaultEditor($record, $field);
     if ($defaultEditor->getFormat() == $formatName)
