@@ -1501,4 +1501,7 @@ input[type=checkbox]:checked:before {
     .publish .tags .tag a:hover {
       color: #2272cc; }
 
+.amaran-wrapper.top {
+  top: 32px !important; }
+
 /*# sourceMappingURL=theme.css.map */

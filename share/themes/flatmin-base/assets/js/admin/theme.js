@@ -12,5 +12,4 @@ $(function() {
     position: 'top right',
     inEffect: 'slideTop'
   });
-  $('.amaran-wrapper.top').css('top', 32);
 });
