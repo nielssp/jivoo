@@ -1498,3 +1498,77 @@ input[type=checkbox]:checked:before {
 
 .amaran-wrapper.top {
   top: 32px !important; }
+
+.amaran.notification {
+  font-size: 0.9em;
+  width: 300px;
+  min-height: 100%;
+  overflow-y: hidden;
+  display: table;
+  background-color: transparent;
+  padding: 0; }
+  .amaran.notification > .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    display: table-cell;
+    vertical-align: middle;
+    background-color: rgba(0, 0, 0, 0.7); }
+  .amaran.notification > .message {
+    margin-left: 48px;
+    padding: 12px;
+    background-color: rgba(30, 30, 30, 0.7); }
+    .amaran.notification > .message a:link, .amaran.notification > .message a:active, .amaran.notification > .message a:visited {
+      color: #fff;
+      text-decoration: underline; }
+    .amaran.notification > .message a:hover {
+      color: #fff;
+      text-decoration: none; }
+  .amaran.notification > .icon:before {
+    font-family: 'icomoon';
+    speak: none;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e69b";
+    color: #fff;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    left: 12px; }
+  .amaran.notification:after {
+    content: ' ';
+    display: block;
+    clear: left; }
+  .amaran.notification.error > .icon:before {
+    content: '\e698'; }
+  .amaran.notification.warn > .icon:before {
+    content: '\e699'; }
+  .amaran.notification.success > .icon:before {
+    content: '\e686'; }
+  .amaran.notification.question > .icon:before {
+    content: '\e69a'; }
+  .amaran.notification.loading > .icon:before {
+    content: '\e653';
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite; }
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg); } }
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }

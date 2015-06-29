@@ -1,6 +1,7 @@
 <?php
 $this->meta('viewport', 'width=device-width, initial-scale=1');
 $this->import(
+  'jivoo/jtk/notifications.js',
   'admin/icomoon/style.css',
   'admin/theme.css',
   'jquery.js',
@@ -21,7 +22,7 @@ $this->import(
 <?php echo $this->resourceBlock(); ?>
 
 </head>
-<body>
+<body data-loadmsg="<?php echo tr('Loading&hellip;'); ?>">
 
 <header>
 <a href="#" class="toggle-menu"></a>
@@ -58,12 +59,6 @@ $this->import(
 <h1><?php echo $title; ?></h1>
 <?php endif; ?>
 
-<?php foreach ($flash as $message): ?>
-<div class="flash flash-<?php echo h($message->type); ?>">
-<?php echo $message; ?>
-</div>
-<?php endforeach; ?>
-
 <?php echo $this->block('content'); ?>
 </div>
 
@@ -76,6 +71,14 @@ $this->import(
 <?php echo $app['name'] . ' ' . $app['version'];?>
 <?php endif; ?>
 </footer>
+
+<script type="text/javascript">
+$(function() {
+<?php foreach ($flash as $message): ?>
+  JIVOO.notifications.send(<?php echo Jivoo\Core\Json::encode($message->message); ?>, '<?php echo $message->type; ?>');
+<?php endforeach; ?>
+});
+</script>
 
 </body>
 </html>

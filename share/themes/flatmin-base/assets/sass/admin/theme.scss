@@ -206,3 +206,78 @@ input[type=checkbox] {
 .amaran-wrapper.top {
   top: 32px !important;
 }
+
+.amaran.notification {
+  font-size: 0.9em;
+  width: 300px;
+  min-height: 100%;
+  overflow-y: hidden;
+  display: table;
+  background-color: transparent;
+  padding: 0;
+  & > .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    display: table-cell;
+    vertical-align: middle;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  & > .message {
+    margin-left: 48px;
+    padding: 12px;
+    background-color: rgba(30, 30, 30, 0.7);
+
+    a {
+      &:link, &:active, &:visited {
+        color: #fff;
+        text-decoration: underline;
+      }
+
+      &:hover {
+        color: #fff;
+        text-decoration: none;
+      }
+
+    }
+  }
+  & > .icon:before {
+    @include icon('\e69b', 24px);
+    color: #fff;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    left: 12px;
+  }
+  &:after {
+    content: ' ';
+    display: block;
+    clear: left;
+  }
+  &.error > .icon:before {
+    content: '\e698';
+  }
+  &.warn > .icon:before {
+    content: '\e699';
+  }
+  &.success > .icon:before {
+    content: '\e686';
+  }
+  &.question > .icon:before {
+    content: '\e69a';
+  }
+  &.loading > .icon:before {
+//content: '\e6a1';
+    content: '\e653';
+    -webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+  }
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
