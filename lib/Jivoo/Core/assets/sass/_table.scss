@@ -70,27 +70,23 @@ table {
         border-top: 1px solid darken($mainBg, 10%);
       }
       &.warn {
-        td:first-child {
-          padding-left: 4px;
-          border-left: 4px solid lighten(#cccc22, 30%);
+        td{
+          background-color: lighten(#cccc22, 50%);
         }
       }
       &.error {
-        td:first-child {
-          padding-left: 4px;
-          border-left: 4px solid lighten(#cc2222, 30%);
+        td{
+          background-color: lighten(#cc2222, 50%);
         }
       }
       &.unread {
-        td:first-child {
-          padding-left: 4px;
-          border-left: 4px solid lighten(#2272CC, 30%);
+        td {
+          background-color: lighten(#2272CC, 50%);
         }
       }
       &.success {
-        td:first-child {
-          padding-left: 4px;
-          border-left: 4px solid lighten(#50cc22, 30%);
+        td {
+          background-color: lighten(#50cc22, 50%);
         }
       }
 

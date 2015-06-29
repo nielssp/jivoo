@@ -11,9 +11,9 @@ html {
 body {
   height: 100%;
   overflow-y: scroll;
-  background-color: #eee;
+  background-color: #eeeeee;
   font-family: "Open Sans", sans-serif;
-  color: #333;
+  color: #333333;
   font-size: 14px; }
 
 header, footer, section, nav {
@@ -103,7 +103,7 @@ header {
   background-color: #2272cc;
   position: absolute;
   padding: 0 12px 0 12px;
-  color: #fff;
+  color: white;
   width: 100%;
   z-index: 1000;
   height: 32px; }
@@ -121,7 +121,7 @@ header {
       padding-left: 24px; } }
 
 #main {
-  background-color: #fff;
+  background-color: white;
   position: relative;
   min-height: 100%;
   padding: 48px 12px 37px 12px; }
@@ -138,7 +138,7 @@ footer {
   position: absolute;
   color: #666;
   height: 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #eeeeee;
   line-height: 24px;
   width: 100%;
   font-size: 0.8em;
@@ -180,10 +180,10 @@ input[type=reset]:visited,
 input[type=submit],
 input[type=submit]:link,
 input[type=submit]:visited {
-  background-color: #eee;
+  background-color: #eeeeee;
   border: none;
-  border-bottom: 2px solid #444;
-  color: #444;
+  border-bottom: 2px solid #444444;
+  color: #444444;
   line-height: normal;
   text-decoration: none;
   padding: 6px 12px 4px;
@@ -213,7 +213,7 @@ input[type=reset]:hover,
 input[type=reset]:active,
 input[type=submit]:hover,
 input[type=submit]:active {
-  background-color: #ddd;
+  background-color: #dddddd;
   color: #2272cc;
   border-color: #2272cc;
   text-decoration: none; }
@@ -238,8 +238,8 @@ input[type=submit][disabled],
 input[type=submit][disabled]:hover,
 input[type=submit][disabled]:active {
   background-color: #f1f1f1;
-  border-color: #999;
-  color: #999;
+  border-color: #999999;
+  color: #999999;
   cursor: default;
   box-shadow: none;
   outline: none; }
@@ -419,16 +419,16 @@ table {
     table td.non-essential, table th.non-essential {
       display: none; }
   table thead th, table tfoot th {
-    background-color: #eee;
-    color: #999; }
+    background-color: #eeeeee;
+    color: #999999; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
-      color: #444;
+      color: #444444;
       padding: 12px 8px;
       margin: -12px -8px;
       text-decoration: none;
       display: block; }
     table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
-      background-color: #ddd;
+      background-color: #dddddd;
       color: #2272cc;
       border-color: #2272cc;
       text-decoration: none; }
@@ -436,18 +436,14 @@ table {
     border-top: 0; }
   table tbody tr td {
     border-top: 1px solid #e6e6e6; }
-  table tbody tr.warn td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #eeee99; }
-  table tbody tr.error td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #ee9999; }
-  table tbody tr.unread td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #99c1ee; }
-  table tbody tr.success td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #b0ee99; }
+  table tbody tr.warn td {
+    background-color: #fdfdf0; }
+  table tbody tr.error td {
+    background-color: #fdf0f0; }
+  table tbody tr.unread td {
+    background-color: #f0f6fd; }
+  table tbody tr.success td {
+    background-color: #f4fdf0; }
   table tbody tr:hover td {
     background-color: #f7f7f7; }
   table tbody tr .actions a {
@@ -538,7 +534,7 @@ body.exception {
 
 @media screen and (min-width: 768px) {
   body.narrow {
-    background-color: #fff;
+    background-color: white;
     text-align: center; }
     body.narrow > * {
       text-align: left; }
@@ -558,5 +554,3 @@ table.trace td, table.trace th {
   .install-buttons .primary {
     float: right;
     margin-left: 0.5em; }
-
-/*# sourceMappingURL=core.css.map */

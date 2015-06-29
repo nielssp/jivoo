@@ -1,4 +1,3 @@
-@charset "UTF-8";
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600");
 * {
   padding: 0;
@@ -12,9 +11,9 @@ html {
 body {
   height: 100%;
   overflow-y: scroll;
-  background-color: #eee;
+  background-color: #eeeeee;
   font-family: "Open Sans", sans-serif;
-  color: #333;
+  color: #333333;
   font-size: 14px; }
 
 header, footer, section, nav {
@@ -104,7 +103,7 @@ header {
   background-color: #2272cc;
   position: absolute;
   padding: 0 12px 0 12px;
-  color: #fff;
+  color: white;
   width: 100%;
   z-index: 1000;
   height: 32px; }
@@ -122,7 +121,7 @@ header {
       padding-left: 24px; } }
 
 #main {
-  background-color: #fff;
+  background-color: white;
   position: relative;
   min-height: 100%;
   padding: 48px 12px 37px 12px; }
@@ -139,7 +138,7 @@ footer {
   position: absolute;
   color: #666;
   height: 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #eeeeee;
   line-height: 24px;
   width: 100%;
   font-size: 0.8em;
@@ -181,10 +180,10 @@ input[type=reset]:visited,
 input[type=submit],
 input[type=submit]:link,
 input[type=submit]:visited {
-  background-color: #eee;
+  background-color: #eeeeee;
   border: none;
-  border-bottom: 2px solid #444;
-  color: #444;
+  border-bottom: 2px solid #444444;
+  color: #444444;
   line-height: normal;
   text-decoration: none;
   padding: 6px 12px 4px;
@@ -214,7 +213,7 @@ input[type=reset]:hover,
 input[type=reset]:active,
 input[type=submit]:hover,
 input[type=submit]:active {
-  background-color: #ddd;
+  background-color: #dddddd;
   color: #2272cc;
   border-color: #2272cc;
   text-decoration: none; }
@@ -239,8 +238,8 @@ input[type=submit][disabled],
 input[type=submit][disabled]:hover,
 input[type=submit][disabled]:active {
   background-color: #f1f1f1;
-  border-color: #999;
-  color: #999;
+  border-color: #999999;
+  color: #999999;
   cursor: default;
   box-shadow: none;
   outline: none; }
@@ -420,16 +419,16 @@ table {
     table td.non-essential, table th.non-essential {
       display: none; }
   table thead th, table tfoot th {
-    background-color: #eee;
-    color: #999; }
+    background-color: #eeeeee;
+    color: #999999; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
-      color: #444;
+      color: #444444;
       padding: 12px 8px;
       margin: -12px -8px;
       text-decoration: none;
       display: block; }
     table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
-      background-color: #ddd;
+      background-color: #dddddd;
       color: #2272cc;
       border-color: #2272cc;
       text-decoration: none; }
@@ -437,18 +436,14 @@ table {
     border-top: 0; }
   table tbody tr td {
     border-top: 1px solid #e6e6e6; }
-  table tbody tr.warn td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #eeee99; }
-  table tbody tr.error td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #ee9999; }
-  table tbody tr.unread td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #99c1ee; }
-  table tbody tr.success td:first-child {
-    padding-left: 4px;
-    border-left: 4px solid #b0ee99; }
+  table tbody tr.warn td {
+    background-color: #fdfdf0; }
+  table tbody tr.error td {
+    background-color: #fdf0f0; }
+  table tbody tr.unread td {
+    background-color: #f0f6fd; }
+  table tbody tr.success td {
+    background-color: #f4fdf0; }
   table tbody tr:hover td {
     background-color: #f7f7f7; }
   table tbody tr .actions a {
@@ -583,7 +578,7 @@ table thead th a {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  content: "";
+  content: "\e69b";
   color: #2272CC;
   float: right;
   margin-left: 8px; }
@@ -601,10 +596,10 @@ table thead th a {
   position: relative;
   text-align: left; }
   .dropdown > a, .dropdown > a:link, .dropdown > a:visited {
-    background-color: #eee;
+    background-color: #eeeeee;
     border: none;
-    border-bottom: 2px solid #444;
-    color: #444;
+    border-bottom: 2px solid #444444;
+    color: #444444;
     line-height: normal;
     text-decoration: none;
     padding: 6px 12px 4px;
@@ -614,7 +609,7 @@ table thead th a {
     .dropdown > a.primary, .dropdown > a:link.primary, .dropdown > a:visited.primary {
       font-weight: 600; }
   .dropdown > a:hover, .dropdown > a:active {
-    background-color: #ddd;
+    background-color: #dddddd;
     color: #2272cc;
     border-color: #2272cc;
     text-decoration: none; }
@@ -623,8 +618,8 @@ table thead th a {
     outline: none; }
   .dropdown > a[disabled], .dropdown > a[disabled]:hover, .dropdown > a[disabled]:active {
     background-color: #f1f1f1;
-    border-color: #999;
-    color: #999;
+    border-color: #999999;
+    color: #999999;
     cursor: default;
     box-shadow: none;
     outline: none; }
@@ -647,7 +642,7 @@ table thead th a {
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    content: "";
+    content: "\e6b7";
     display: inline-block;
     margin: 0 -6px 0 4px; }
   .dropdown ul {
@@ -693,9 +688,9 @@ table thead th a {
         .dropdown ul li ul li {
           position: relative;
           display: block;
-          color: #333; }
+          color: #333333; }
           .dropdown ul li ul li:hover {
-            background-color: #eee;
+            background-color: #eeeeee;
             color: #2272cc; }
           .dropdown ul li ul li a, .dropdown ul li ul li a:link, .dropdown ul li ul li a:active, .dropdown ul li ul li a:visited, .dropdown ul li ul li a:hover {
             padding: 6px 0 6px 12px; }
@@ -704,7 +699,7 @@ table thead th a {
           .dropdown ul li ul li a .count {
             display: inline-block; }
     .dropdown ul > li {
-      color: #333; }
+      color: #333333; }
       .dropdown ul > li a, .dropdown ul > li a:link, .dropdown ul > li a:active, .dropdown ul > li a:visited, .dropdown ul > li a:hover, .dropdown ul > li button, .dropdown ul > li button:link, .dropdown ul > li button:active, .dropdown ul > li button:visited, .dropdown ul > li button:hover {
         overflow: hidden;
         padding: 6px 12px 6px 32px;
@@ -724,7 +719,7 @@ table thead th a {
         text-align: center;
         vertical-align: 0; }
       .dropdown ul > li:hover {
-        background-color: #eee;
+        background-color: #eeeeee;
         color: #2272cc; }
       .dropdown ul > li.selected a:before {
         width: 32px;
@@ -740,7 +735,7 @@ table thead th a {
       .dropdown ul > li.selected-desc a:before {
         content: '\e6af'; }
   .dropdown:hover > a {
-    background-color: #ddd;
+    background-color: #dddddd;
     color: #2272cc;
     border-color: #2272cc; }
   .dropdown:hover > ul {
@@ -802,9 +797,9 @@ header {
         header > ul li ul li {
           position: relative;
           display: block;
-          color: #333; }
+          color: #333333; }
           header > ul li ul li:hover {
-            background-color: #eee;
+            background-color: #eeeeee;
             color: #2272cc; }
           header > ul li ul li a, header > ul li ul li a:link, header > ul li ul li a:active, header > ul li ul li a:visited, header > ul li ul li a:hover {
             padding: 6px 0 6px 12px; }
@@ -818,7 +813,7 @@ header {
       display: block;
       float: left;
       height: 48px;
-      color: #fff; }
+      color: white; }
       header > ul > li > a {
         height: 48px;
         line-height: 48px;
@@ -854,7 +849,7 @@ header {
             margin-right: 10px; } }
       header > ul > li:hover {
         background-color: rgba(0, 0, 0, 0.15);
-        color: #fff; }
+        color: white; }
       header > ul > li > ul {
         left: 0;
         top: 100%; }
@@ -921,7 +916,7 @@ body.menu-open {
   body.menu-open nav {
     display: block;
     width: 220px;
-    background-color: #eee; }
+    background-color: #eeeeee; }
     body.menu-open nav.ontop {
       position: absolute;
       top: 48px;
@@ -959,11 +954,11 @@ header .toggle-menu {
   margin-left: -32px;
   text-align: center; }
   header .toggle-menu:link, header .toggle-menu:active, header .toggle-menu:visited {
-    color: #fff;
+    color: white;
     text-decoration: none; }
   header .toggle-menu:hover {
     background-color: rgba(0, 0, 0, 0.15);
-    color: #fff; }
+    color: white; }
   header .toggle-menu:before {
     font-family: icomoon;
     content: '\e66c'; }
@@ -979,7 +974,7 @@ header .toggle-menu {
 nav {
   float: left;
   display: none;
-  color: #444;
+  color: #444444;
   font-size: 1em;
   padding-top: 56px; }
   @media screen and (min-width: 480px) {
@@ -992,7 +987,7 @@ nav {
     nav {
       width: 220px; } }
   nav h1 {
-    color: #444;
+    color: #444444;
     font-size: 1.0em;
     font-weight: 600;
     padding-left: 32px;
@@ -1046,9 +1041,9 @@ nav {
             nav > ul > li > ul li ul li {
               position: relative;
               display: block;
-              color: #333; }
+              color: #333333; }
               nav > ul > li > ul li ul li:hover {
-                background-color: #eee;
+                background-color: #eeeeee;
                 color: #2272cc; }
               nav > ul > li > ul li ul li a, nav > ul > li > ul li ul li a:link, nav > ul > li > ul li ul li a:active, nav > ul > li > ul li ul li a:visited, nav > ul > li > ul li ul li a:hover {
                 padding: 6px 0 6px 12px; }
@@ -1057,13 +1052,13 @@ nav {
               nav > ul > li > ul li ul li a .count {
                 display: inline-block; }
         nav > ul > li > ul > li {
-          color: #444; }
+          color: #444444; }
           nav > ul > li > ul > li:hover {
-            background-color: #ddd;
+            background-color: #dddddd;
             color: #2272cc; }
           nav > ul > li > ul > li > a.current {
             background-color: #2272cc;
-            color: #fff; }
+            color: white; }
             @media screen and (min-width: 1010px) {
               nav > ul > li > ul > li > a.current + ul {
                 display: block;
@@ -1171,7 +1166,7 @@ body.menu-open .table-selection {
       right: -220px; } }
 
 .table-settings-box {
-  color: #333;
+  color: #333333;
   background-color: #f7f7f7;
   width: 240px;
   box-shadow: 0px 2px 4px #ababab;
@@ -1342,7 +1337,7 @@ body.menu-open .table-selection {
         filter: none;
         -webkit-filter: none; }
     .extension-list > li.extension-enabled > .extension-details > .extension-name {
-      color: #333; }
+      color: #333333; }
     .extension-list > li.extension-enabled > .extension-details .extension-configure {
       display: inline; }
     .extension-list > li.extension-enabled > .extension-controls > .extension-enable {
@@ -1392,7 +1387,7 @@ input[type=checkbox]:checked:before {
       margin: 0 0 0 24px;
       text-align: left; }
       #login > div h1 a {
-        color: #444; }
+        color: #444444; }
         #login > div h1 a, #login > div h1 a:link, #login > div h1 a:active, #login > div h1 a:visited {
           color: inherit;
           text-decoration: none; }
@@ -1402,14 +1397,14 @@ input[type=checkbox]:checked:before {
       margin: 12px 24px 0 0;
       font-size: 0.8em; }
     #login > div a, #login > div a:link, #login > div a:active, #login > div a:visited {
-      color: #444;
+      color: #444444;
       text-decoration: none; }
     #login > div a:hover {
       color: #2272cc; }
     #login > div form {
       border-left: 4px solid #2272cc;
       box-shadow: 1px 2px 1px #d4d4d4;
-      background-color: #fff;
+      background-color: white;
       padding: 24px 24px 24px 20px;
       text-align: right;
       margin: 24px 0; }
@@ -1489,19 +1484,17 @@ input[type=checkbox]:checked:before {
     padding: 2px 8px;
     margin-right: 4px;
     margin-bottom: 4px;
-    background-color: #eee;
-    color: #444;
+    background-color: #eeeeee;
+    color: #444444;
     cursor: default; }
     .publish .tags .tag:hover {
-      background-color: #ddd; }
+      background-color: #dddddd; }
     .publish .tags .tag a, .publish .tags .tag a:link, .publish .tags .tag a:visited {
       margin-left: 4px;
-      color: #444;
+      color: #444444;
       text-decoration: none; }
     .publish .tags .tag a:hover {
       color: #2272cc; }
 
 .amaran-wrapper.top {
   top: 32px !important; }
-
-/*# sourceMappingURL=theme.css.map */
