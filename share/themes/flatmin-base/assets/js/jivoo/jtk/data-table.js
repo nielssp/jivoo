@@ -99,7 +99,7 @@ $(function() {
         var data = $.extend(true, {
           access_token: $('input[name=access_token]').val()
           }, $link.data('data'));
-        $.ajax({
+        JIVOO.ajax({
           url: action,
           type: 'POST',
           data: data,
