@@ -30,16 +30,7 @@ $this->import(
 <h1><?php echo $app['name']; ?></h1>
 
 <ul class="account">
-<li><?php echo $Icon->link(h($user->username), 'Admin', 'user'); ?></li>
-<li><?php echo $Icon->link('Log out', 'Admin::logout', 'exit'); ?></li>
-<li class="account-menu notifications">
-  <?php echo $Icon->link('3', array('url' => '#'), 'key'); ?>
-<ul>
-<li><a href="#"><span class="icon icon-bell"></span><span class="label">Notifications</span><span class="count">3</span></a></li>
-<li><?php echo $Icon->link(h($user->username), 'Admin', 'user'); ?></li>
-<li><?php echo $Icon->link('Log out', 'Admin::logout', 'exit'); ?></li>
-</ul>
-</li>
+<?php echo $this->block('account-menu'); ?>
 </ul>
 
 <?php echo $Jtk->Menu($shortcutsMenu); ?>
