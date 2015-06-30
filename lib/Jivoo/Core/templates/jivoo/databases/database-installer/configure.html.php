@@ -12,7 +12,11 @@
 <?php foreach ($form->getFields() as $field) : ?>
 <div class="field<?php echo $Form->ifRequired($field, ' field-required'); ?>">
 <?php echo $Form->label($field); ?>
+<?php if ($field == 'password'): ?>
+<?php echo $Form->password($field); ?>
+<?php else: ?>
 <?php echo $Form->text($field); ?>
+<?php endif; ?>
 <?php if ($Form->isValid($field)) : ?> 
 <?php
 switch ($field) {
