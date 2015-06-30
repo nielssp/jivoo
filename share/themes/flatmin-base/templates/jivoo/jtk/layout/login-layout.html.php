@@ -1,6 +1,6 @@
 <?php
 $this->meta('viewport', 'width=device-width, initial-scale=1');
-$this->import('admin/icomoon/style.css', 'admin/theme.css');
+$this->import('icomoon/style.css', 'jivoo/jtk/theme.css');
 ?>
 <body id="login">
 

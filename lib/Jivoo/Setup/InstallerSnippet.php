@@ -369,7 +369,7 @@ abstract class InstallerSnippet extends Snippet {
       if ($task->isDone())
         return true;
     }
-    $this->view->resources->import('setup/async.js');
+    $this->view->resources->import('jivoo/setup/async.js');
     return false;
   }
   

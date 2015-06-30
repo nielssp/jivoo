@@ -1,6 +1,8 @@
 <?php 
-$this->import('jivoo-console.js');
-$this->import('jivoo-tools.css');
+$this->import(
+  'jquery.js', 'jquery-ui.js', 'js.cookie.js',
+  'jivoo/console/console.js', 'jivoo/console/tools.css'
+);
 ?>
 
 <div id="jivoo-dev-tools">

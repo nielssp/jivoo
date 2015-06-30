@@ -1,7 +1,7 @@
 <?php
 $this->meta('viewport', 'width=device-width, initial-scale=1');
-$this->icon('jivoo-red.ico');
-$this->import('core.css');
+$this->icon('jivoo/jivoo-red.ico');
+$this->import('jivoo/core.css');
 ?>
 <!DOCTYPE html>
 <html>
