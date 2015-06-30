@@ -15,6 +15,8 @@ use Jivoo\Routing\Http;
 class SkinHelper extends Helper {
   
   private $variables = array();
+  
+  private $skins = array();
 
   public function __get($variable) {
     if (isset($this->variables[$variable]))
@@ -36,6 +38,23 @@ class SkinHelper extends Helper {
   
   public function setDefault($vars) {
     $this->variables = array_merge($vars, $this->variables);
+  }
+  
+  public function set($vars) {
+    $this->variables = array_merge($this->variables, $vars);
+  }
+  
+  public function addSkin($name, $vars) {
+    $this->skins[$name] = $vars;
+  }
+  
+  public function getSkins() {
+    return $this->skins;
+  }
+  
+  public function useSkin($name) {
+    if (isset($this->skins[$name]))
+      $this->set($this->skins[$name]);
   }
   
   /**

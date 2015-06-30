@@ -538,6 +538,9 @@ class FormHelper extends Helper {
       or array_search($value, $currentValue) !== false)) {
       $attributes['checked'] = 'checked';
     }
+    else if ($currentValue === $value) {
+      $attributes['checked'] = 'checked';
+    }
     return $this->element('input', $attributes);
   }
   

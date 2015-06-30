@@ -389,3 +389,59 @@ body.menu-open {
     }
   }
 }
+
+.skin-list {
+  list-style-type: none;
+
+  & > .skin {
+    float: left;
+    width: 160px;
+    padding: 8px;
+    cursor: pointer;
+    &:hover {
+      background-color: #eee;
+    }
+    .skin-name {
+      margin-bottom: 8px;
+      input {
+        margin-right: 8px;
+      }
+    }
+    & > .example {
+      width: 100%;
+      height: 50px;
+      position: relative;
+      * {
+        position: absolute;
+      }
+      .example-header {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 20px;
+      }
+      .example-nav {
+        top: 20px;
+        left: 0;
+        bottom: 0;
+        width: 60px;
+        .example-nav-cu {
+          top: 10px;
+          left: 0;
+          width: 60px;
+          height: 10px;
+        }
+      }
+      .example-main {
+        top: 20px;
+        left: 60px;
+        bottom: 0;
+        width: 100px;
+        font-style: normal;
+        padding-left: 8px;
+        line-height: 30px;
+        font-size: 0.9em;
+      }
+    }
+  }
+}

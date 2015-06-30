@@ -847,6 +847,50 @@ body.menu-open .table-selection {
   .extension-list.extension-list-large > li > .extension-details {
     margin-left: 256px; }
 
+.skin-list {
+  list-style-type: none; }
+  .skin-list > .skin {
+    float: left;
+    width: 160px;
+    padding: 8px;
+    cursor: pointer; }
+    .skin-list > .skin:hover {
+      background-color: #eee; }
+    .skin-list > .skin .skin-name {
+      margin-bottom: 8px; }
+      .skin-list > .skin .skin-name input {
+        margin-right: 8px; }
+    .skin-list > .skin > .example {
+      width: 100%;
+      height: 50px;
+      position: relative; }
+      .skin-list > .skin > .example * {
+        position: absolute; }
+      .skin-list > .skin > .example .example-header {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 20px; }
+      .skin-list > .skin > .example .example-nav {
+        top: 20px;
+        left: 0;
+        bottom: 0;
+        width: 60px; }
+        .skin-list > .skin > .example .example-nav .example-nav-cu {
+          top: 10px;
+          left: 0;
+          width: 60px;
+          height: 10px; }
+      .skin-list > .skin > .example .example-main {
+        top: 20px;
+        left: 60px;
+        bottom: 0;
+        width: 100px;
+        font-style: normal;
+        padding-left: 8px;
+        line-height: 30px;
+        font-size: 0.9em; }
+
 input[type=checkbox]:checked:before {
   font-family: icomoon;
   font-size: 12px;

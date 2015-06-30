@@ -78,6 +78,8 @@ $Css('.table-settings-box')->css(array(
   'box-shadow' => '0px 2px 4px ' . $Skin->subMenuShadow,
 ));
 
+$Css('.skin-list > .skin:hover')->backgroundColor = $Skin->tableHlBg;
+
 // Theme
 
 $tag = $Css('.publish .tags .tag');
