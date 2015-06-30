@@ -22,6 +22,11 @@ class CssHelper extends Helper {
   private $clearAfterPrint = true;
   
   /**
+   * @var callable[]
+   */
+  private $mixins = array();
+  
+  /**
    * Whether to clear rules after converting to string with {@see __toString()}. 
    * @param string $clear Clears if true.
    */
@@ -45,8 +50,29 @@ class CssHelper extends Helper {
    */
   public function select($selector) {
     if (!isset($this->blocks[$selector]))
-      $this->blocks[$selector] = new CssBlock($selector);
+      $this->blocks[$selector] = new CssBlock($selector, $this);
     return $this->blocks[$selector];
+  }
+  
+  /**
+   * Add a mixin function.
+   * @param string $name Mixin name.
+   * @param callable $callable Mixin function accepting one parameter: a
+   * {@see CssBlock}.
+   */
+  public function addMixin($name, $callable) {
+    $this->mixins[$name] = $callable;
+  }
+  
+  /**
+   * Get a mixin function.
+   * @param string $name Mixin name.
+   * @return callable Mixin function.
+   */
+  public function getMixin($name) {
+    if (isset($this->mixins[$name]))
+      return $this->mixins[$name];
+    return null;
   }
   
   /**
@@ -80,6 +106,11 @@ class CssBlock {
   private $selector;
   
   /**
+   * @var CssHelper
+   */
+  private $helper;
+  
+  /**
    * @var string[]
    */
   private $declarations = array();
@@ -92,9 +123,11 @@ class CssBlock {
   /**
    * Construct CSS block.
    * @param string $selector CSS selector.
+   * @param CssHelper $helper Helper object.
    */
-  public function __construct($selector) {
+  public function __construct($selector, CssHelper $helper) {
     $this->selector = $selector;
+    $this->helper = $helper;
   }
   
   /**
@@ -118,6 +151,17 @@ class CssBlock {
   }
   
   /**
+   * Apply a mixin (as defined on the {@see CssHelper}).
+   * @param string $mixin Mixin name.
+   * @return self Self.
+   */
+  public function apply($mixin) {
+    $mixin = $this->helper->getMixin($mixin);
+    $mixin($this);
+    return $this;
+  }
+  
+  /**
    * Create/edit a nested block.
    * @param string $selector CSS selector, '&' is automatically replaced with
    * the selector of the outer block.
@@ -125,9 +169,26 @@ class CssBlock {
    */
   public function find($selector) {
     if (!isset($this->blocks[$selector])) {
-      $this->blocks[$selector] = new CssBlock(
-        str_replace('&', $this->selector, $selector)
-      );
+      if (strpos($this->selector, ',') === false)
+        $prefixes = array($this->selector);
+      else
+        $prefixes = explode(',', $this->selector);
+      
+      if (strpos($selector, ',') === false)
+        $suffixes = array($selector);
+      else
+        $suffixes = explode(',', $selector);
+      
+      $selectors = array(); 
+      foreach ($prefixes as $prefix) {
+        foreach ($suffixes as $suffix) {
+          if (strpos($suffix, '&') === false)
+            $selectors[] = $prefix . ' ' . $suffix;
+          else
+            $selectors[] = str_replace('&', $prefix, $suffix);
+        }
+      }
+      $this->blocks[$selector] = new CssBlock(implode(',', $selectors), $this->helper);
     }
     return $this->blocks[$selector];
   }
@@ -171,6 +232,8 @@ class CssBlock {
     foreach ($this->declarations as $property => $value) {
       if (isset($value))
         $out .= $property . ':' . $value . ';';
+      else
+        $out .= '/*' . $property . ':' . $value . ';' . '*/';
     }
     $out .= '}' . PHP_EOL;
     foreach ($this->blocks as $block)

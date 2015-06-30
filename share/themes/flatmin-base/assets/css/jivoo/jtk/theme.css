@@ -599,8 +599,8 @@ nav {
   .dropdown-actions > ul {
     display: inline-block;
     position: static;
-    box-shadow: none;
-    background: none; }
+    box-shadow: none !important;
+    background: none !important; }
     .dropdown-actions > ul > li {
       display: inline-block;
       background: none !important; }

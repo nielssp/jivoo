@@ -28,7 +28,7 @@ a {
     text-decoration: none;
   }
   &:hover {
-    color: lighten($primaryBg, 30%);
+    color: lighten($primaryBg, 20%);
     text-decoration: underline;
   }
 }

@@ -49,7 +49,9 @@ class SkinHelper extends Helper {
   public function apply($route) {
     $url = $this->getLink($route);
     $this->view->resources->provide($url . '.css', $url);
+    $this->view->resources->closeFrame();
     $this->view->resources->import($url . '.css');
+    $this->view->resources->openFrame();
   }
   
   public function render($skin) {
