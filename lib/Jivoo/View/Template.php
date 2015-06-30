@@ -154,6 +154,8 @@ class Template {
     array_unshift($this->templateStack, $_template);
     require $_file;
     array_shift($this->templateStack);
+    if (isset($this->extend))
+      $this->view->data[$this->extend] = $this->view->data[$_template];
   }
 
   /**

@@ -80,9 +80,31 @@ class ViewData implements \ArrayAccess {
   }
 
   /**
-   * Does not do anything.
+   * Set view data for a specific template.
+   * @param string $template Template name.
+   * @param ViewData|array $data The data.
    */
-  public function offsetSet($template, $value) {
+  public function offsetSet($template, $data) {
+    if (!isset($this->templateData[$template])) {
+      if (is_array($data)) {
+        $this->templateData[$template] = new ViewData();
+        $this->templateData[$template]->data = $data;
+      }
+      else {
+        assume($data instanceof ViewData);
+        $this->templateData[$template] = $data;
+      }
+    }
+    else {
+      if (!is_array($data)) {
+        assume($data instanceof ViewData);
+        $data = $data->toArray();
+      }
+      $this->templateData[$template]->data = array_merge(
+        $this->templateData[$template]->data,
+        $data
+      );
+    }
   }
 
   /**
