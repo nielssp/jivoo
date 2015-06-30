@@ -33,10 +33,7 @@ $(function() {
     themeTemplate: themeTemplate,
     position: 'top right',
     inEffect: 'slideTop',
-    closeOnClick: false,
-    beforeStart: function(){
-      console.log(this)
-    }
+    closeOnClick: false
   });
   
   var $loading = $('.notification.loading');
