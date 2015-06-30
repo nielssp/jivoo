@@ -436,11 +436,13 @@ body.menu-open {
         top: 20px;
         left: 60px;
         bottom: 0;
-        width: 100px;
+        right: 0;
+        white-space: nowrap;
         font-style: normal;
+        overflow: hidden;
         padding-left: 8px;
         line-height: 30px;
-        font-size: 0.9em;
+        font-size: 0.8em;
       }
     }
   }

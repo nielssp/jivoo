@@ -93,12 +93,12 @@ class SelectionFilterVisitor extends FilterVisitor {
             list($start, $end) = $interval;
             switch ($node->comparison) {
               case '=':
-                $cond = new Condition('%c >= %_', $node->left, $type, $start);
-                $cond->and('%c <= %_', $node->left, $type, $end);
+                $cond = new Condition('%m.%c >= %_', $this->model, $node->left, $type, $start);
+                $cond->and('%m.%c <= %_', $this->model, $node->left, $type, $end);
                 return $cond;
               case '!=':
-                $cond = new Condition('%c < %_', $node->left, $type, $start);
-                $cond->or('%c > %_', $node->left, $type, $end);
+                $cond = new Condition('%m.%c < %_', $this->model, $node->left, $type, $start);
+                $cond->or('%m.%c > %_', $this->model, $node->left, $type, $end);
                 return $cond;
               case '<':
               case '>=':
@@ -110,9 +110,9 @@ class SelectionFilterVisitor extends FilterVisitor {
             }
           }
         }
-        return new Condition('%c ' . $node->comparison . ' %_', $node->left, $type, $right);
+        return new Condition('%m.%c ' . $node->comparison . ' %_', $this->model, $node->left, $type, $right);
       case 'contains':
-        return new Condition('%c LIKE %s', $node->left, '%' . Condition::escapeLike($right) . '%');
+        return new Condition('%m.%c LIKE %s', $this->model, $node->left, '%' . Condition::escapeLike($right) . '%');
     }
     return new Condition('false');
   }
