@@ -17,6 +17,19 @@ class CssHelper extends Helper {
   private $blocks = array();
   
   /**
+   * @var bool
+   */
+  private $clearAfterPrint = true;
+  
+  /**
+   * Whether to clear rules after converting to string with {@see __toString()}. 
+   * @param string $clear Clears if true.
+   */
+  public function clearAfterPrint($clear = true) {
+    $this->clearAfterPrint = $clear;
+  }
+  
+  /**
    * Create block.
    * @param string $selector CSS selector.
    * @return CssBlock A block.
@@ -31,9 +44,16 @@ class CssHelper extends Helper {
    * @return CssBlock A block.
    */
   public function select($selector) {
-    if (!isset($blocks[$selector]))
-      $blocks[$selector] = new CssBlock();
-    return $blocks[$selector];
+    if (!isset($this->blocks[$selector]))
+      $this->blocks[$selector] = new CssBlock($selector);
+    return $this->blocks[$selector];
+  }
+  
+  /**
+   * Clear rules.
+   */
+  public function clear() {
+    $this->blocks = array();
   }
 
   /**
@@ -42,18 +62,40 @@ class CssHelper extends Helper {
    */
   public function __toString() {
     $out = '';
-    foreach ($this->blocks as $selector => $block) {
-      $out .= $selector . '{' . $block->__toString() . '}' . PHP_EOL;
-    }
+    foreach ($this->blocks as $block)
+      $out .= $block->__toString();
+    if ($this->clearAfterPrint)
+      $this->clear();
     return $out;
   }
 }
 
+/**
+ * A CSS block.
+ */
 class CssBlock {
+  /**
+   * @var string
+   */
+  private $selector;
+  
   /**
    * @var string[]
    */
   private $declarations = array();
+
+  /**
+   * @var CssBlock[]
+   */
+  private $blocks = array();
+  
+  /**
+   * Construct CSS block.
+   * @param string $selector CSS selector.
+   */
+  public function __construct($selector) {
+    $this->selector = $selector;
+  }
   
   /**
    * Declaration setter.
@@ -63,6 +105,42 @@ class CssBlock {
    */
   public function __set($property, $value) {
     $this->declarations[Utilities::camelCaseToDashes($property)] = $value;
+  }
+  
+  /**
+   * Create/edit a nested block.
+   * @param string $selector CSS selector, '&' is automatically replaced with
+   * the selector of the outer block.
+   * @return CssBlock A block.
+   */
+  public function __invoke($selector) {
+    return $this->find($selector);
+  }
+  
+  /**
+   * Create/edit a nested block.
+   * @param string $selector CSS selector, '&' is automatically replaced with
+   * the selector of the outer block.
+   * @return CssBlock A block.
+   */
+  public function find($selector) {
+    if (!isset($this->blocks[$selector])) {
+      $this->blocks[$selector] = new CssBlock(
+        str_replace('&', $this->selector, $selector)
+      );
+    }
+    return $this->blocks[$selector];
+  }
+  
+  /**
+   * Nest selectors using a callback (e.g. an anonymous function).
+   * @param callable $callable Function that accepts a single parameter, a
+   * {@see CssBlock} (this block).
+   * @return self Self.
+   */
+  public function nest($callable) {
+    $callable($this);
+    return $this;
   }
   
   /**
@@ -89,10 +167,14 @@ class CssBlock {
    * @return string CSS.
    */
   public function __toString() {
-    $out = '';
+    $out = $this->selector . '{';
     foreach ($this->declarations as $property => $value) {
-      $out .= $property . ':' . $value . ';';
+      if (isset($value))
+        $out .= $property . ':' . $value . ';';
     }
+    $out .= '}' . PHP_EOL;
+    foreach ($this->blocks as $block)
+      $out .= $block->__toString();
     return $out;
   }
 }

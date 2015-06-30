@@ -1,10 +1,6 @@
 <?php 
 // test skin
 
-$primaryColor = '#2272CC';
+echo $Skin->import('jivoo/skin.css');
 
-$Css('header')->css(array(
-  'background-color' => $primaryColor
-));
-
-echo $Css;
+?>
