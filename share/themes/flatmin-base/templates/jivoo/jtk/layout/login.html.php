@@ -6,7 +6,7 @@ $this->import('icomoon/style.css', 'jivoo/core.css', 'jivoo/jtk/theme.css');
 <html>
 <head>
 <meta charset="utf-8" />
-<title><?php echo tr('Log in'); ?> | <?php echo $site['title']; ?></title>
+<title><?php if (isset($title)) echo $title . ' | '; ?><?php echo $site['title']; ?></title>
 
 <?php echo $this->block('meta'); ?>
 
