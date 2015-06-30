@@ -17,7 +17,9 @@ $this->import('jivoo/core.css');
 <body class="narrow">
 
 <header>
-<h1><?php echo $app['name']; ?></h1>
+<h1><a href="<?php echo $this->link('path:'); ?>">
+<?php echo $app['name']; ?>
+</a></h1>
 </header>
 
 <div id="main">
