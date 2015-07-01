@@ -22,6 +22,7 @@ $(function() {
       themeTemplate: JIVOO.notifications.themeTemplate(notification),
       position: 'top right',
       inEffect: 'slideTop',
+      delay: 6000,
       resetTimeout: true
     });
   });

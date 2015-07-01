@@ -63,9 +63,9 @@ table thead th a {
   float: right;
   margin-left: 8px; }
 .flash.flash-error:before {
-  content: '\e698'; }
+  content: '\e685'; }
 .flash.flash-warn:before {
-  content: '\e699'; }
+  content: '\e698'; }
 .flash.flash-success:before {
   content: '\e686'; }
 .flash.flash-question:before {
@@ -1086,9 +1086,9 @@ input[type=checkbox]:checked:before {
     display: block;
     clear: left; }
   .amaran.notification.error > .icon:before {
-    content: '\e698'; }
+    content: '\e685'; }
   .amaran.notification.warn > .icon:before {
-    content: '\e699'; }
+    content: '\e698'; }
   .amaran.notification.success > .icon:before {
     content: '\e686'; }
   .amaran.notification.question > .icon:before {

@@ -68,10 +68,10 @@ table thead th a {
     margin-left: 8px;
   }
   &.flash-error:before {
-    content: '\e698';
+    content: '\e685';
   }
   &.flash-warn:before {
-    content: '\e699';
+    content: '\e698';
   }
   &.flash-success:before {
     content: '\e686';

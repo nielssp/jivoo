@@ -256,10 +256,10 @@ input[type=checkbox] {
     clear: left;
   }
   &.error > .icon:before {
-    content: '\e698';
+    content: '\e685';
   }
   &.warn > .icon:before {
-    content: '\e699';
+    content: '\e698';
   }
   &.success > .icon:before {
     content: '\e686';
