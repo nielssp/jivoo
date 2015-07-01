@@ -53,6 +53,7 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
         $this->items[$id] = $item;
       else
         $this->items[] = $item;
+      $item->parent = $this;
     }
   }
 
@@ -77,6 +78,7 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
       else
         $itemArray = array($item);
       $this->items = array_merge($itemArray, $this->items);
+      $item->parent = $this;
     }
   }
 
@@ -103,6 +105,7 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
         $itemArray = array($item);
       $head = array_splice($this->items, 0, $offset);
       $this->items = array_merge($head, $itemArray, $this->items);
+      $item->parent = $this;
     }
   }
   
@@ -111,8 +114,10 @@ class Menu extends LabelMenuItem implements \Countable, \IteratorAggregate, \Arr
    * @param string $id Item id.
    */
   public function remove($id) {
-    if (isset($this->items[$id]))
+    if (isset($this->items[$id])) {
+      $this->items[$id]->parent = null;
       unset($this->items[$id]);
+    }
   }
   
   /**

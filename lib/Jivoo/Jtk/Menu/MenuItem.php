@@ -11,6 +11,7 @@ use Jivoo\Jtk\JtkObject;
  * A menu item. Menu items can be added to a {@see Menu}.
  * All menu items can be extended with custom properties, e.g.
  * label, icon, shortcut key, etc., using the magic getters and setters.
+ * @property Menu $parent Parent menu if any.
  */
 abstract class MenuItem extends JtkObject {
   /**

@@ -4,18 +4,23 @@
 <li class="separator"><hr /></li>
 <?php else: ?>
 <?php
-$current = $this->isCurrent($item->route);
+if ($item->isMenu())
+  $submenu = $Jtk->Menu($item);
+else
+  $submenu = '';
+
+$current = ($this->isCurrent($item->route) or $item->childIsCurrent);
+if (isset($item->parent) and $current)
+  $object->childIsCurrent = true;
 ?>
 <li>
 <?php
 $url = $this->link($item->route);
-if ($url != ''):
+echo '<a';
+if ($url != '') echo ' href="' . h($url) . '"';
+if ($current) echo ' class="current"';
+echo '>';
 ?>
-<a href="<?php echo h($url); ?>"<?php
-if ($current) echo ' class="current"'; ?>>
-<?php else: ?>
-<a>
-<?php endif; ?>
 <?php if (isset($item->icon)): ?>
 <span class="icon"><?php echo $Icon->icon($item->icon); ?></span><?php endif; ?>
 <span class="label"><?php echo $item->label; ?></span>
@@ -23,9 +28,7 @@ if ($current) echo ' class="current"'; ?>>
 <span class="count"><?php echo $item->badge; ?></span>
 <?php endif; ?>
 </a>
-<?php if ($item->isMenu()): ?>
-<?php echo $Jtk->Menu($item); ?>
-<?php endif; ?>
+<?php echo $submenu; ?>
 </li>
 <?php endif; ?>
 <?php endforeach; ?>

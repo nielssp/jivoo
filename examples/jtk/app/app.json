@@ -1,0 +1,19 @@
+{
+  "name": "JTK example",
+  "namespace": "Minimal",
+  "version": "1.0",
+  "modules": [
+    "Routing",
+    "Assets",
+    "View",
+    "Controllers",
+    "Snippets",
+    "Setup",
+    "Models",
+    "Content",
+    "Helpers",
+    "Extensions",
+    "Themes",
+    "Jtk"
+  ]
+}
