@@ -848,7 +848,15 @@ body.menu-open .table-selection {
     margin-left: 256px; }
 
 .skin-list {
-  list-style-type: none; }
+  list-style-type: none;
+  margin-bottom: 20px;
+  content: ' ';
+  display: block;
+  clear: left; }
+  .skin-list:after {
+    content: ' ';
+    display: block;
+    clear: left; }
   .skin-list > .skin {
     float: left;
     width: 160px;

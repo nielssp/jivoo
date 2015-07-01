@@ -392,6 +392,16 @@ body.menu-open {
 
 .skin-list {
   list-style-type: none;
+  margin-bottom: 20px;
+    content: ' ';
+    display: block;
+    clear: left;
+
+  &:after {
+    content: ' ';
+    display: block;
+    clear: left;
+  }
 
   & > .skin {
     float: left;
