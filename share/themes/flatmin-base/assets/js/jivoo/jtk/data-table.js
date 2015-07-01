@@ -1,4 +1,21 @@
 $(function() {
+  
+  $.amaran({
+    content: {
+      themeName: 'notification selection',
+      message: ''
+    },
+    sticky: true,
+    themeTemplate: JIVOO.notifications.themeTemplate(true),
+    position: 'top right',
+    inEffect: 'slideTop',
+    closeOnClick: false
+  });
+  
+  var $selection = $('.notification.selection');
+  $selection.find('.message').html($('.table-selection').html());
+  $selection.hide();
+  
   $('.data-table').each(function() {
     var $dataTable = $(this);
     var allSelected = false;
@@ -13,23 +30,23 @@ $(function() {
         $table.find('th input[type=checkbox]').prop('checked', true);
       else
         $table.find('th input[type=checkbox]').prop('checked', false);
-      $('.table-selection .selection-count').html(selection);
+      $selection.find('.selection-count').html(selection);
       if (selection > 0) {
-        $('.table-selection').fadeIn(100);
+        $selection.fadeIn(100);
       }
       else {
-        $('.table-selection').fadeOut(100);
+        $selection.fadeOut(100);
       }
       if (selection == max && selection != itemCount) {
-        $('.table-selection .select-all').show().click(function() {
-          $('.table-selection .selection-count').html(itemCount);
-          $('.table-selection .select-all').hide();
+        $selection.find('.select-all').show().click(function() {
+          $selection.find('.selection-count').html(itemCount);
+          $selection.find('.select-all').hide();
           allSelected = true;
           return false;
         });
       }
       else {
-        $('.table-selection .select-all').hide();
+        $selection.find('.select-all').hide();
       }
     };
     updateCounter();
@@ -73,7 +90,7 @@ $(function() {
         if (confirmation !== undefined && !confirm(confirmation)) {
           return false;
         }
-        $.ajax({
+        JIVOO.ajax({
           url: action,
           type: 'POST',
           data: data,

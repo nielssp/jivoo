@@ -271,6 +271,9 @@ input[type=checkbox] {
     -moz-animation:spin 2s linear infinite;
     animation:spin 2s linear infinite;
   }
+  &.selection > .icon:before {
+    content: '\e667';
+  }
 }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }

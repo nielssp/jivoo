@@ -199,8 +199,9 @@ else
 </div>
 
 <div class="table-selection">
-<span class="selection-count">0</span> items selected
-<a href="#" class="select-all">(Select all <?php echo $Pagination->getCount(); ?> items)</a>
+<?php echo tr('%1 items selected', '<span class="selection-count">0</span>'); ?>
+
+<a href="#" class="select-all">(<?php echo tr('Select all %1 items', $Pagination->getCount()); ?>)</a>
 </div>
 
 </div>

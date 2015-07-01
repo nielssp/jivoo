@@ -1087,6 +1087,8 @@ input[type=checkbox]:checked:before {
     -webkit-animation: spin 2s linear infinite;
     -moz-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite; }
+  .amaran.notification.selection > .icon:before {
+    content: '\e667'; }
 
 @-moz-keyframes spin {
   100% {

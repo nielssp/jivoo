@@ -7,8 +7,10 @@ $(function() {
     $(this).addClass('current');
   });
   
-  var themeTemplate = function(data) {
-    return '<div class="icon"></div><div class="message">' + data.message + '</div>';
+  JIVOO.notifications.themeTemplate = function(notification) {
+    return function(data) {
+      return '<div class="icon"></div><div class="message">' + data.message + '</div>';
+    };
   };
   
   JIVOO.notifications.onReceive(function(notification) {
@@ -17,7 +19,7 @@ $(function() {
         themeName: 'notification ' + notification.type,
         message: notification.message
       },
-      themeTemplate: themeTemplate,
+      themeTemplate: JIVOO.notifications.themeTemplate(notification),
       position: 'top right',
       inEffect: 'slideTop',
       resetTimeout: true
@@ -30,7 +32,7 @@ $(function() {
       message: $('body').data('loadmsg')
     },
     sticky: true,
-    themeTemplate: themeTemplate,
+    themeTemplate: JIVOO.notifications.themeTemplate(true),
     position: 'top right',
     inEffect: 'slideTop',
     closeOnClick: false
