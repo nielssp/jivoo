@@ -17,6 +17,11 @@ class AppController extends Controller {
     $this->title = tr('Dashboard');
     return $this->render();
   }
+
+  public function colors() {
+    $this->title = tr('Colors');
+    return $this->render();
+  }
   
   public function notFound() {
     $this->setStatus(404);

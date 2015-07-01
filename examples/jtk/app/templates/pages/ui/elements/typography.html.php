@@ -14,3 +14,44 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lore
 <p>
 Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper felis nec, aliquet orci. Morbi non sagittis est. Donec tincidunt ut metus sit amet fringilla. Suspendisse id est ac nulla luctus aliquam ullamcorper eget augue. Nam elementum pellentesque elit, ac dignissim est volutpat vel. Mauris ut tellus dolor. Nulla facilisi. Mauris massa tortor, pretium vel massa eu, imperdiet viverra dui. Maecenas a urna maximus, accumsan nisl non, lobortis nunc. Proin lorem ligula, tempus sit amet aliquet eget, consequat vitae turpis. In mattis sagittis nunc eget interdum. Nulla faucibus eu lorem ac egestas.
 </p>
+
+<blockquote>
+  Linux is awesome.
+  <cite>Leonardo da Vinci</cite>
+</blockquote>
+
+<p>Unordered list:</p>
+<ul>
+  <li>Lorem</li>
+  <li>Ipsum</li>
+  <li>Dolor
+    <ul>
+      <li>Eget</li>
+      <li>Neque
+        <ul>
+          <li>Erat</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Sit</li>
+  <li>Amet</li>
+</ul>
+
+<p>Ordered list:</p>
+<ol>
+  <li>Lorem</li>
+  <li>Ipsum</li>
+  <li>Dolor
+    <ol>
+      <li>Eget</li>
+      <li>Neque
+        <ol>
+          <li>Erat</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>Sit</li>
+  <li>Amet</li>
+</ol>

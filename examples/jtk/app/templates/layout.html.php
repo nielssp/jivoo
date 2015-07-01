@@ -22,7 +22,7 @@ echo $menu();
 $menu = $Jtk->Menu;
 $jtk = $menu->appendMenu(tr('JTK'));
 $jtk->appendAction(tr('Dashboard'))->setRoute('action:App::index')->setIcon('meter');
-$jtk->appendAction(tr('Colors'))->setRoute('path:colors')->setIcon('paint-format');
+$jtk->appendAction(tr('Colors'))->setRoute('action:App::colors')->setIcon('paint-format');
 
 $ui = $menu->appendMenu(tr('UI'));
 $sub = $ui->appendMenu(tr('Elements'))->setIcon('newspaper');
