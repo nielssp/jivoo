@@ -58,11 +58,14 @@ $this->import(
 </div>
 
 <footer>
+<?php if ($this->isEmpty('footer')): $this->begin('footer'); ?>
 <?php if (isset($app['website'])): ?>
 <?php echo $Html->link($app['name'] . ' ' . $app['version'], $app['website']); ?>
 <?php else: ?>
 <?php echo $app['name'] . ' ' . $app['version'];?>
 <?php endif; ?>
+<?php $this->end(); endif; ?>
+<?php echo $this->block('footer'); ?>
 </footer>
 
 <script type="text/javascript">
