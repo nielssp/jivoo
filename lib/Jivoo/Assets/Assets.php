@@ -238,7 +238,7 @@ class Assets extends LoadableModule {
    * @param string $path Path.
    * @return string Asset url.
    */
-  public function getAssetUrl($key, $path) {
+  private function getAssetUrl($key, $path) {
     $prefix = array('assets');
     if ($key == 'app') {
       $p = $this->p($key, 'assets/' . $path);
