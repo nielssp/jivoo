@@ -554,7 +554,7 @@ class Routing extends LoadableModule {
       else if ($part == '*') {
         $arity++;
       }
-      else if ($part[0] == ':') {
+      else if (isset($part[0]) and $part[0] == ':') {
         $var = substr($part, 1);
         if (is_numeric($var)) {
           $arity++;
@@ -591,7 +591,7 @@ class Routing extends LoadableModule {
           $route['parameters'][] = $path[$j];
           continue;
         }
-        if ($part[0] == ':') {
+        if (isset($part[0]) and $part[0] == ':') {
           $var = substr($part, 1);
           if (is_numeric($var)) {
             $route['parameters'][(int)$var] = $path[$j];
