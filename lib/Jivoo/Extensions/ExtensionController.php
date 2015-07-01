@@ -122,7 +122,8 @@ abstract class ExtensionController extends ExtensionModule {
    * @return ViewResponse A view response.
    */
   protected function render($templateName = null) {
-    $this->view->addTemplateDir($this->p(''), 4);
+    list($key, $path) = $this->info->getKeyPath();
+    $this->view->addTemplateDir($key, $path, 4);
     if (!isset($templateName))
       $templateName = Utilities::camelCaseToDashes(get_class($this)) . '.html';
     return $this->view->renderOnly($templateName);

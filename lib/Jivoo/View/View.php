@@ -115,8 +115,8 @@ class View extends LoadableModule {
     
     $this->data->app = $this->app->manifest;
 
-    $this->addTemplateDir($this->p('Core', 'templates'), 4);
-    $this->addTemplateDir($this->p('app', 'templates'));
+    $this->addTemplateDir('Core', 'templates', 4);
+    $this->addTemplateDir('app', 'templates');
 
     $this->addFunction('link', array($this->m->Routing, 'getLink'));
     $this->addFunction('url', array($this->m->Routing, 'getUrl'));
@@ -184,11 +184,15 @@ class View extends LoadableModule {
   
   /**
    * Add a template directory.
-   * @param string $dir Absolute path to directory.
+   * @param string $key Path key.
+   * @param string $path Path.
    * @param int $priority Priority.
    */
-  public function addTemplateDir($dir, $priority = 5) {
-    $this->templateDirs[$dir] = $priority;
+  public function addTemplateDir($key, $path, $priority = 5) {
+    $dir = $this->p($key, $path);
+    $this->templateDirs[$dir] = array(
+      'priority' => $priority
+    );
   }
   
   /**
@@ -272,7 +276,7 @@ class View extends LoadableModule {
   public function render($template, $data = array(), $withLayout = true) {
     if (isset($this->template))
       return $this->template->render($template, $data, $withLayout);
-    arsort($this->templateDirs);
+    uasort($this->templateDirs, array('Jivoo\Core\Utilities', 'prioritySorter'));
     $this->data->flash = $this->request->session->flash;
     $this->template = new Template($this);
     $result = $this->template->render($template, $data, $withLayout);

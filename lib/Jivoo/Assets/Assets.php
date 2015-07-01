@@ -44,6 +44,11 @@ class Assets extends LoadableModule {
   private $assetDirs = array();
   
   /**
+   * @var array[] List of additional dynamic asset dirs
+   */
+  private $dynamicAssetDirs = array();
+  
+  /**
    * @var bool Whether or not $assetDirs is sorted
    */
   private $sorted = true;
@@ -80,7 +85,7 @@ class Assets extends LoadableModule {
             $key = $this->getPathKey(array_shift($path));
             $file = $this->p($key, implode('/', $path));
             if (!$this->returnAsset($file)) {
-              $this->app->call('Routing', 'attachEventHandler', 'beforeFindRoute', array($this, 'returnDynamicAsset'));
+              $this->app->call('Routing', 'attachEventHandler', 'beforeFindRoute', array($this, 'findDynamicAsset'));
             }
           }
         }
@@ -178,28 +183,42 @@ class Assets extends LoadableModule {
   /**
    * Find a dynamic asset an return it to the client.
    */
-  public function returnDynamicAsset() {
+  public function findDynamicAsset() {
+    $path = $this->request->path;
+    array_shift($path);
+    if (!$this->returnDynamicAsset($this->p('app', 'assets/' . implode('/', $path)))) {
+      $key = $this->getPathKey(array_shift($path));
+      $file = $this->p($key, implode('/', $path));
+      $this->returnDynamicAsset($file);
+    }
+  }
+
+  /**
+   * Find a dynamic asset an return it to the client.
+   * @param string $path Path to asset
+   * @return boolean False if file does not exist
+   */
+  private function returnDynamicAsset($path) {
     $route = $this->m->Routing->route;
     if (isset($route) and $route['priority'] >= 5)
       return;
-    $path = $this->request->path;
-    if (isset($this->m->Snippets)) {
-      $name = str_replace('.', '_', implode('\\', array_map(array('Jivoo\Core\Utilities', 'dashesToCamelCase'), $path)));
-      try {
-        $snippet = $this->m->Snippets->getSnippet($name);
-        $response = $this->m->Routing->dispatch($snippet);
-        $response->cache();
-        $this->m->Routing->respond($response);
-      }
-      catch (ClassNotFoundException $e) { }
-    }
-    $template = implode('/', $path);
+//     if (isset($this->m->Snippets)) {
+//       $name = str_replace('.', '_', implode('\\', array_map(array('Jivoo\Core\Utilities', 'dashesToCamelCase'), $path)));
+//       try {
+//         $snippet = $this->m->Snippets->getSnippet($name);
+//         $response = $this->m->Routing->dispatch($snippet);
+//         $response->cache();
+//         $this->m->Routing->respond($response);
+//       }
+//       catch (ClassNotFoundException $e) { }
+//     }
     try {
-      $response = $this->m->Routing->dispatch(array($this->m->View, 'render'), $template);
+      $response = $this->m->Routing->dispatch(array($this->m->View, 'render'), $path . '.php');
       $response->cache();
       $this->m->Routing->respond($response);
     }
     catch (TemplateNotFoundException $e) { }
+    return false;
   }
   
   /**
@@ -245,7 +264,7 @@ class Assets extends LoadableModule {
   public function getAsset($key, $path = null) {
     if (!isset($path)) {
       if (file_exists($this->p('app', 'assets/' . $key)))
-        return $this->getAssetUrl('app', 'assets/' . $key);
+        return $this->getAssetUrl('app', $key);
       if (!$this->sorted) {
         uasort($this->assetDirs, array('Jivoo\Core\Utilities', 'prioritySorter'));
         $this->sorted = true;
@@ -292,11 +311,18 @@ class Assets extends LoadableModule {
   
   /**
    * Get link to a dynamic asset.
-   * @param string $template Template name.
+   * @param string $key Path key.
+   * @param string $path Path to template.
    * @return string|null Link to asset, or null if template not found.
    */
-  public function getDynamicAsset($template) {
-    $file = $this->m->View->findTemplate('assets/' . $template);
+  public function getDynamicAsset($key, $path) {
+    if ($key == 'app') {
+      $p = $this->p($key, 'templates/assets/' . $path);
+    }
+    else {
+      $prefix[] = $this->getAssetKey($key);
+      $p = Utilities::convertRealPath($this->p($key, $path));
+    }
     if (!isset($file))
       return null;
     $suffix = '';

@@ -208,16 +208,26 @@ class ExtensionInfo implements IBasicRecord {
   }
   
   /**
+   * Get path key and path as a 2-tuple.
+   * @param string $path Optional path.
+   * @return string[] 2-tuple of key and path.
+   */
+  public function getKeyPath($path = '') {
+    if ($this->pKey)
+      return array($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
+    else
+      return array($this->kind, $this->canonicalName . '/' . $path);
+  }
+  
+  /**
    * Get a path relative to this extension's directory.
    * @param App $app Application.
    * @param string $path A relative path.
    * @return string An absolute path.
    */
   public function p(App $app, $path) {
-    if ($this->pKey)
-      return $app->p($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
-    else
-      return $app->p($this->kind, $this->canonicalName . '/' . $path);
+    list($key, $path) = $this->getKeyPath($path);
+    return $app->p($key, $path);
   }
   
   /**
@@ -227,10 +237,8 @@ class ExtensionInfo implements IBasicRecord {
    * @return string An asset path.
    */
   public function getAsset(Assets $assets, $path) {
-    if ($this->pKey)
-      return $assets->getAsset($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
-    else
-      return $assets->getAsset($this->kind, $this->canonicalName . '/' . $path);
+    list($key, $path) = $this->getKeyPath($path);
+    return $assets->getAsset($key, $path);
   }
   
   /**
@@ -239,10 +247,8 @@ class ExtensionInfo implements IBasicRecord {
    * @param string $path A relative path.
    */
   public function addAssetDir(Assets $assets, $path) {
-    if ($this->pKey)
-      $assets->addAssetDir($this->pKey, $this->kind . '/' . $this->canonicalName . '/' . $path);
-    else
-      $assets->addAssetDir($this->kind, $this->canonicalName . '/' . $path);
+    list($key, $path) = $this->getKeyPath($path);
+    $assets->addAssetDir($key, $path);
   }
   
   /**

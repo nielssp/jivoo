@@ -117,10 +117,8 @@ class Themes extends LoadableModule {
       $this->m->Extensions->getInfo($dependency)->requiredBy($theme);
     }
     
-    $this->view->addTemplateDir(
-      $info->p($this->app, 'templates'),
-      $priority
-    );
+    list($key, $path) = $info->getKeyPath('templates');
+    $this->view->addTemplateDir($key, $path, $priority);
     $info->addAssetDir($this->m->Assets, 'assets');
   }
   
