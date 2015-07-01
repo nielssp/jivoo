@@ -61,7 +61,7 @@ class Assets extends LoadableModule {
     
     $this->addAssetDir('Core', 'assets');
 
-    if (isset($this->request->path[1]) AND $this->request->path[0] == 'assets') {
+    if (isset($this->request->path[1]) and $this->request->path[0] == 'assets') {
       $path = $this->request->path;
       array_shift($path);
       if ($path == array('js', 'app.js'))
@@ -69,7 +69,7 @@ class Assets extends LoadableModule {
       if ($path == array('css', 'app.css'))
         $this->returnAppCss();
       $filename = explode('.', $path[(count($path) - 1)]);
-      if (count($filename) > 1 AND !empty($filename[0])) {
+      if (count($filename) > 1 and !empty($filename[0])) {
         $extension = strtolower(array_pop($filename));
         if (!in_array($extension, $this->extensionBlacklist)) {
           if (!$this->returnAsset($this->p('app', 'assets/' . implode('/', $path)))) {

@@ -24,6 +24,7 @@ class AppController extends Controller {
   }
   
   public function notFound() {
+    $this->title = tr('Not found');
     $this->setStatus(404);
     return $this->render();
   }

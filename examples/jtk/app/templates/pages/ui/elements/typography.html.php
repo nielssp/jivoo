@@ -55,3 +55,28 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
   <li>Sit</li>
   <li>Amet</li>
 </ol>
+
+
+<div class="flash">
+  <strong>Default</strong> Default
+</div>
+
+<div class="flash flash-success">
+  <strong>Success</strong> Success
+</div>
+
+<div class="flash flash-error">
+  <strong>Error</strong> Error
+</div>
+
+<div class="flash flash-warn">
+  <strong>Warning</strong> Warning
+</div>
+
+<div class="flash flash-info">
+  <strong>Information</strong> Information
+</div>
+
+<div class="flash flash-question">
+  <strong>Question</strong> Question
+</div>
