@@ -53,7 +53,8 @@ class Assets extends LoadableModule {
       'minifyJs' => true,
       'minifyCss' => true,
       'compileScss' => false,
-      'useCdnIfAvailable' => true
+      'useCdnIfAvailable' => true,
+      'mtimeSuffix' => true
     );
     
     $this->docRoot = Utilities::convertRealPath($_SERVER['DOCUMENT_ROOT']);
@@ -211,38 +212,50 @@ class Assets extends LoadableModule {
    */
   public function getAsset($key, $path = null) {
     if (!isset($path)) {
-      if (file_exists($this->p('app', 'assets/' . $key))) {
-        $p = $this->p('app', 'assets/' . $key);
-        if (strncmp($p, $this->docRoot, $this->docRootLength) == 0)
-          return substr($p, $this->docRootLength);
-        else
-          return $this->m->Routing->getLinkFromPath(
-            array_merge(array('assets'), explode('/', $key))
-          );
+      if (file_exists($this->p('app', 'assets/' . $key)))
+        return $this->getAssetUrl('app', 'assets/' . $key);
+      if (!$this->sorted) {
+        uasort($this->assetDirs, array('Jivoo\Core\Utilities', 'prioritySorter'));
+        $this->sorted = true;
       }
-      else {
-        if (!$this->sorted) {
-          uasort($this->assetDirs, array('Jivoo\Core\Utilities', 'prioritySorter'));
-          $this->sorted = true;
+      $path = $key;
+      $key = null;
+        foreach ($this->assetDirs as $dir) {
+        if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
+          $key = $dir['key'];
+          $path = $dir['path'] . '/' . $path;
         }
-        $path = $key;
-        $key = null;
-          foreach ($this->assetDirs as $dir) {
-          if (file_exists($this->p($dir['key'], $dir['path'] . '/' . $path))) {
-            $key = $dir['key'];
-            $path = $dir['path'] . '/' . $path;
-          }
-        }
-        if (!isset($key))
-          return null;
       }
+      if (!isset($key))
+        return null;
     }
-    $p = Utilities::convertRealPath($this->p($key, $path));
+    return $this->getAssetUrl($key, $path);
+  }
+  
+  /**
+   * Get an asset url.
+   * @param string $key Path key.
+   * @param string $path Path.
+   * @return string Asset url.
+   */
+  public function getAssetUrl($key, $path) {
+    $prefix = array('assets');
+    if ($key == 'app') {
+      $p = $this->p($key, 'assets/' . $path);
+    }
+    else {
+      $prefix[] = $this->getAssetKey($key);
+      $p = Utilities::convertRealPath($this->p($key, $path));
+    }
+    $suffix = '';
+    if ($this->config['mtimeSuffix']) {
+      $suffix = '?' . filemtime($p);
+    }
     if (strncmp($p, $this->docRoot, $this->docRootLength) == 0)
-      return substr($p, $this->docRootLength);
+      return substr($p, $this->docRootLength) . $suffix;
     else
       return $this->m->Routing->getLinkFromPath(
-        array_merge(array('assets', $this->getAssetKey($key)), explode('/', $path))
-      );
+        array_merge($prefix, explode('/', $path))
+      ) . $suffix;
   }
 }

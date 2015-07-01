@@ -105,6 +105,8 @@ if ($column->primary)
   echo ' class="primary"';
 else
   echo ' class="non-essential"';
+if (isset($column->size))
+  echo ' style="width: ' . $column->size . ';"';
 ?>
  scope="col">
 <?php $sortOption = $object->sortOptions->find(function($b) use($column) {
