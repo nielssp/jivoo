@@ -33,13 +33,14 @@ $this->import(
 <?php echo $this->block('account-menu'); ?>
 </ul>
 
-<?php echo $Jtk->Menu($shortcutsMenu); ?>
+
+<?php echo $this->block('shortcuts-menu'); ?>
 
 </header>
 
 <nav>
 
-<?php echo $Jtk->Menu($mainMenu); ?>
+<?php echo $this->block('main-menu'); ?>
 
 </nav>
 
