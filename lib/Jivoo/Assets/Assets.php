@@ -10,6 +10,9 @@ use Jivoo\Core\Utilities;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
 use Jivoo\Extensions\ExtensionInfo;
+use Jivoo\Core\Logger;
+use Jivoo\Core\ClassNotFoundException;
+use Jivoo\View\TemplateNotFoundException;
 
 /**
  * Asset system.
@@ -76,7 +79,9 @@ class Assets extends LoadableModule {
           if (!$this->returnAsset($this->p('app', 'assets/' . implode('/', $path)))) {
             $key = $this->getPathKey(array_shift($path));
             $file = $this->p($key, implode('/', $path));
-            $this->returnAsset($file);
+            if (!$this->returnAsset($file)) {
+              $this->app->call('Routing', 'attachEventHandler', 'beforeFindRoute', array($this, 'returnDynamicAsset'));
+            }
           }
         }
       }
@@ -169,6 +174,33 @@ class Assets extends LoadableModule {
     }
     return false;
   }
+
+  /**
+   * Find a dynamic asset an return it to the client.
+   */
+  public function returnDynamicAsset() {
+    $route = $this->m->Routing->route;
+    if (isset($route) and $route['priority'] >= 5)
+      return;
+    $path = $this->request->path;
+    if (isset($this->m->Snippets)) {
+      $name = str_replace('.', '_', implode('\\', array_map(array('Jivoo\Core\Utilities', 'dashesToCamelCase'), $path)));
+      try {
+        $snippet = $this->m->Snippets->getSnippet($name);
+        $response = $this->m->Routing->dispatch($snippet);
+        $response->cache();
+        $this->m->Routing->respond($response);
+      }
+      catch (ClassNotFoundException $e) { }
+    }
+    $template = implode('/', $path);
+    try {
+      $response = $this->m->Routing->dispatch(array($this->m->View, 'render'), $template);
+      $response->cache();
+      $this->m->Routing->respond($response);
+    }
+    catch (TemplateNotFoundException $e) { }
+  }
   
   /**
    * Add additional asset dirs
@@ -248,14 +280,30 @@ class Assets extends LoadableModule {
       $p = Utilities::convertRealPath($this->p($key, $path));
     }
     $suffix = '';
-    if ($this->config['mtimeSuffix']) {
+    if ($this->config['mtimeSuffix'])
       $suffix = '?' . filemtime($p);
-    }
     if (strncmp($p, $this->docRoot, $this->docRootLength) == 0)
       return substr($p, $this->docRootLength) . $suffix;
     else
       return $this->m->Routing->getLinkFromPath(
         array_merge($prefix, explode('/', $path))
       ) . $suffix;
+  }
+  
+  /**
+   * Get link to a dynamic asset.
+   * @param string $template Template name.
+   * @return string|null Link to asset, or null if template not found.
+   */
+  public function getDynamicAsset($template) {
+    $file = $this->m->View->findTemplate('assets/' . $template);
+    if (!isset($file))
+      return null;
+    $suffix = '';
+    if ($this->config['mtimeSuffix'])
+      $suffix = '?' . filemtime($file);
+    return $this->m->Routing->getLinkFromPath(
+      array_merge(array('assets'), explode('/', $template))
+    ) . $suffix;
   }
 }
