@@ -1031,7 +1031,10 @@ input[type=checkbox]:checked:before {
       color: #2272cc; }
 
 .amaran-wrapper.top {
-  top: 32px !important; }
+  top: 48px !important; }
+  @media screen and (min-width: 768px) {
+    .amaran-wrapper.top {
+      top: 32px !important; } }
 
 .amaran.notification {
   font-size: 0.9em;

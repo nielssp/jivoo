@@ -199,7 +199,10 @@ input[type=checkbox] {
 }
 
 .amaran-wrapper.top {
-  top: 32px !important;
+  top: 48px !important;
+  @media screen and (min-width: $sm) {
+    top: 32px !important;
+  }
 }
 
 .amaran.notification {

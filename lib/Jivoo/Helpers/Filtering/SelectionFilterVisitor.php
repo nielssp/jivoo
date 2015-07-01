@@ -125,7 +125,7 @@ class SelectionFilterVisitor extends FilterVisitor {
       return new Condition('false');
     $condition = new Condition();
     foreach ($this->primary as $column) {
-      $condition->or('%c LIKE %s', $column, '%' . Condition::escapeLike($node->value) . '%');
+      $condition->or('%m.%c LIKE %s', $this->model, $column, '%' . Condition::escapeLike($node->value) . '%');
     }
     return $condition;
   }
