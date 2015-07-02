@@ -716,16 +716,16 @@ class Routing extends LoadableModule {
       $this->request->query = array_merge($route['query'], $this->request->query);
     }
     
-    $this->selection = $route;
-    
     Logger::debug(tr('Dispatch: %1', $route['dispatcher']->fromRoute($route)));
 
     $event->route = $route;
     $this->triggerEvent('beforeCreateDispatch', $event);
-    $this->request->route = $route;
     $dispatch = $route['dispatcher']->createDispatch($route);
     
     $this->triggerEvent('afterCreateDispatch', $event);
+    
+    $this->selection = $route;
+    $this->request->route = $route;
 
     $this->triggerEvent('beforeDispatch', $event);
     try {
@@ -737,6 +737,7 @@ class Routing extends LoadableModule {
         'An invalid response was returned for: %1', $routeString
       ), null, $e);
     }
+
     $event->response = $response;
     $this->rendered = true;
     $this->triggerEvent('afterDispatch', $event);

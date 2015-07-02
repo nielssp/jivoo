@@ -13,6 +13,7 @@ use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Json;
+use Jivoo\Core\ClassNotFoundException;
 
 /**
  * Action based routing.
@@ -106,7 +107,7 @@ class ActionDispatcher implements IDispatcher {
         if ($action == 'index') {
           $table->match($patternBase, $route);
         }
-        $patternBase .= '/' . Utilities::camelCaseToDashes($action);
+        $patternBase .= '/' . str_replace('_', '.', Utilities::camelCaseToDashes($action));
         if ($required < 1) {
           $table->match($patternBase, $route);
         }
@@ -205,7 +206,7 @@ class ActionDispatcher implements IDispatcher {
       throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
     if (!isset($route['action']))
       $route['action'] = 'index';
-    if (!is_callable(array($controller, $route['action']))) {
+    if (!$controller->isAction($route['action'])) {
       throw new InvalidRouteException(tr(
         'Invalid action: %1',
         $route['controller'] . '::' . $route['action']

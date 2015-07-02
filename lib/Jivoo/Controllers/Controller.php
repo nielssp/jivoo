@@ -79,7 +79,7 @@ class Controller extends Module {
     
     $this->init();
   }
-
+  
   /**
    * Get an associated model, helper or data-value (in that order).
    * @param string $name Name of model/helper or key for data-value.
@@ -123,6 +123,15 @@ class Controller extends Module {
    */
   public function getName() {
     return $this->name;
+  }
+  
+  /**
+   * Whether an action exists.
+   * @param string $action Action.
+   * @return bool True if action exists.
+   */
+  public function isAction($action) {
+    return in_array($action, $this->actions);
   }
   
   /**
@@ -266,8 +275,13 @@ class Controller extends Module {
         $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), explode('\\', $class));
         $templateName = implode('/', $dirs) . '/';
       }
-      $templateName .= Utilities::camelCaseToDashes($caller['function'])
-        . '.html';
+      $type = 'html';
+      $action = $caller['function'];
+      if (strpos($action, '_') !== false and preg_match('/^(.*)_([a-z0-9]+)$/i', $action, $matches) === 1) {
+        $action = $matches[1];
+        $type = $matches[2];
+      }
+      $templateName .= Utilities::camelCaseToDashes($action) . '.' . $type;
     }
     return new ViewResponse($this->status, $this->view, $templateName);
   }

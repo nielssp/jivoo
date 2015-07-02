@@ -144,15 +144,21 @@ class Template {
    * @throws TemplateNotFoundException If template could not be found.
    */
   protected function embed($_template, $_data = array()) {
+    assume(is_string($_template));
     extract($_data, EXTR_SKIP);
     extract($this->view->data->toArray(), EXTR_SKIP);
     extract($this->view->data[$_template]->toArray(), EXTR_SKIP);
-    $_file = $this->view->findTemplate($_template);
-    if (!isset($_file)) {
+    $_templateInfo = $this->view->findTemplate($_template);
+    if (!isset($_templateInfo)) {
       throw new TemplateNotFoundException(tr('Template not found: %1', $_template));
     }
+    if (isset($_templateInfo['init']) and !$_templateInfo['init']) {
+      $_init = $this->view->getInitFile($_templateInfo['key'], $_templateInfo['path']);
+      if (isset($_init))
+        $this->embed($_init);
+    }
     array_unshift($this->templateStack, $_template);
-    require $_file;
+    require $_templateInfo['file'];
     array_shift($this->templateStack);
     if (isset($this->extend))
       $this->view->data[$this->extend] = $this->view->data[$_template];

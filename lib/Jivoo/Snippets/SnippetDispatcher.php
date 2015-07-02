@@ -14,6 +14,7 @@ use Jivoo\Routing\RoutingTable;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
 use Jivoo\Core\Json;
+use Jivoo\Core\ClassNotFoundException;
 
 /**
  * Snippet based routing.
@@ -65,7 +66,7 @@ class SnippetDispatcher implements IDispatcher {
     $class = $route['snippet'];
     $dirs = explode('\\', $class);
     $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), $dirs);
-    $pattern = 'ANY ' . implode('/', $dirs);
+    $pattern = 'ANY ' . str_replace('_', '.', implode('/', $dirs));
     $table->match($pattern, $route);
     return $pattern;
   }
@@ -118,9 +119,14 @@ class SnippetDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function createDispatch($route) {
-    $snippet = $this->snippets->getSnippet($route['snippet']);
-    if (!isset($snippet))
+    try {
+      $snippet = $this->snippets->getSnippet($route['snippet']);
+      if (!isset($snippet))
+        throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
+    }
+    catch (ClassNotFoundException $e) {
       throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
+    }
     return function() use($snippet, $route) {
       $snippet->enableLayout();
       $response = $snippet($route['parameters']);

@@ -287,8 +287,13 @@ class Snippet extends Module implements ISnippet {
   protected function render($templateName = null) {
     if (!isset($templateName)) {
       $class = str_replace($this->app->n('Snippets\\'), '', get_class($this));
+      $type = 'html';
+      if (strpos($class, '_') !== false and preg_match('/^(.*)_([a-z0-9]+)$/i', $class, $matches) === 1) {
+        $class = $matches[1];
+        $type = $matches[2];
+      }
       $dirs = array_map(array('Jivoo\Core\Utilities', 'camelCaseToDashes'), explode('\\', $class));
-      $templateName = implode('/', $dirs) . '.html';
+      $templateName = implode('/', $dirs) . '.' . $type;
     }
     $enableLayout = $this->enableLayout;
     $this->disableLayout();

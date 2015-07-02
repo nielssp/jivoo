@@ -177,6 +177,19 @@ class Utilities {
     $array = explode('.', $file);
     return strtolower(array_pop($array));
   }
+  
+  /**
+   * Whether a path is absolute, e.g. it starts with a slash. 
+   * @param string $path Path.
+   * @return bool True if absolute, false if relative.
+   */
+  public static function isAbsolutePath($path) {
+    if (isset($path[0]) and ($path[0] == '/' or $path[0] == '\\'))
+      return true;
+    if (isset($path[1]) and $path[1] == ':')
+      return true;
+    return false;
+  }
 
   /**
    * Get content-type (MIME type) of a file name or file extension.

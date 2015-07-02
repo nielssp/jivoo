@@ -66,12 +66,10 @@ class SkinHelper extends Helper {
   }
   
   public function apply($route) {
-    $url = $this->getLink($route);
-    $this->view->resources->provide($url . '.css', $url);
-//     $this->view->resources->provide($url . '2.css', $this->m->Assets->getDynamicAsset('admin/skin.css'));
+    $url =  $this->m->Assets->getDynamicAsset($route);
+    $this->view->resources->provide($url, $url);
     $this->view->resources->closeFrame();
-    $this->view->resources->import($url . '.css');
-//     $this->view->resources->import($url . '2.css');
+    $this->view->resources->import($url);
     $this->view->resources->openFrame();
   }
   

@@ -66,15 +66,6 @@ class ViewResources {
   }
   
   /**
-   * Get a file.
-   * @param string $file File name.
-   * @return string|null Asset.
-   */
-  private function file($file) {
-    return $this->assets->getAsset($file);
-  }
-  
-  /**
    * Type of file extension.
    * @param string $resource Resource name.
    * @throws \Exception If unknown type.
@@ -105,17 +96,18 @@ class ViewResources {
     switch ($type) {
       case 'js':
         $type = 'script';
-        $location = $this->file('js/' . $resource);
+        $location = $this->assets->getAsset('js/' . $resource);
         break;
       case 'css':
         $type = 'style';
-        $location = $this->file('css/' . $resource);
+        $location = $this->assets->getAsset('css/' . $resource);
         break;
       default:
         throw new \Exception(tr('Unknown type of resource: "%1"', $type));
     }
-    if (!isset($location))
+    if (!isset($location)) {
       $location = 'resource-is-missing/' . $resource;
+    }
 //     if (!isset($location))
 //       throw new \Exception(tr('Resource not found: "%1"', $resource));
     return array(

@@ -191,8 +191,32 @@ class View extends LoadableModule {
   public function addTemplateDir($key, $path, $priority = 5) {
     $dir = $this->p($key, $path);
     $this->templateDirs[$dir] = array(
+      'key' => $key,
+      'path' => $path,
+      'init' => false, 
       'priority' => $priority
     );
+  }
+
+  /**
+   * Find the 'init.php'-template in a template directory if the directory has
+   * not been initialized. 
+   * @param string $key Path key.
+   * @param string $path Path.
+   * @return string|null Absolute path to init-file or null if the file does
+   * not exist or the file has already been included.
+   */
+  public function getInitFile($key, $path) {
+    $dir = $this->p($key, $path);
+    if (!isset($this->templateDirs[$dir]) or $this->templateDirs[$dir]['init'])
+      return;
+    $this->templateDirs[$dir]['init'] = true;
+    if (substr($dir, -1, 1) != '/')
+      $dir .= '/';
+    $file = $dir . 'init.php';
+    if (file_exists($file))
+      return realpath($file);
+    return null;
   }
   
   /**
@@ -217,40 +241,71 @@ class View extends LoadableModule {
   }
   
   /**
-   * Find template in available template directories.
-   * @param string $template Template name.
-   * @return string|null Absolute path to template or null if not found.
+   * Find a template in available template directories.
+   * @param string $name Template name.
+   * @return array|null An associative array or null if template not found.
+   * The associative array is of the form:
+   * <code>
+   * array(
+   *   'key' => ..., // Path key for template directory (e.g. 'app').
+   *   'path' => ..., // Path for template directory.
+   *   'init' => ..., // Whether the init.php-file in the template directory (bool)
+   *   'priority' => ..., // Priority of template directory (int)
+   *   'compiled' => ..., // Whether this is a compiled template (bool)
+   *   'name' => ..., // Template name, i.e. the function parameter
+   *   'file' => ..., // Absolute path to template 
+   * );
+   * </code>
    */
-  public function findTemplate($template) {
-    if (file_exists($template))
-      return $template;
-    foreach ($this->templateDirs as $dir => $priority) {
-      if (substr($dir, -1, 1) != '/') {
+  public function findTemplate($name) {
+    if (Utilities::isAbsolutePath($name)) {
+      return array(
+        'compiled' => false,
+        'name' => $name,
+        'file' => $name
+      );
+    }
+    $result = array(); 
+    foreach ($this->templateDirs as $dir => $templateDir) {
+      $result = $templateDir;
+      if (substr($dir, -1, 1) != '/')
         $dir .= '/';
-      }
       if ($this->autoCompile) {
-        if (file_exists($dir . $template)) {
-          if (Utilities::getFileExtension($template) === 'html') {
-            return $this->compileTemplate($dir, $template);
+        if (file_exists($dir . $name)) {
+          if (Utilities::getFileExtension($name) === 'html') {
+             $result['file'] = $this->compileTemplate($dir, $name);
+             $result['compiled'] = true;
+             break;
           }
         }
       }
-      $compiled = $dir . 'compiled/' . $template . '.php';
-      if (file_exists($compiled))
-        return $compiled;
-      $path = $dir . $template . '.php';
-      if (file_exists($path))
-        return $path;
+      $file = $dir . 'compiled/' . $name . '.php';
+      if (file_exists($file)) {
+        $result['file'] = $file;
+         $result['compiled'] = true;
+        break;
+      }
+      $file = $dir . $name . '.php';
+      if (file_exists($file)) {
+        $result['file'] = $file;
+        $result['compiled'] = false;
+        break;
+      }
     }
-    return null;
+    if (!isset($result['file']))
+      return null;
+    $result['name'] = $name;
+    return $result;
   }
   
   /**
    * Find layout template for a template.
    * @param string $template Template name.
-   * @return string|null Absolute path to template or null if not found.
+   * @return string|null Name of layout template or null if not found.
    */
   public function findLayout($template) {
+    if (Utilities::isAbsolutePath($template))
+      return null;
     $extension = Utilities::getFileExtension($template);
     $dir = $template;
     do {

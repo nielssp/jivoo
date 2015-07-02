@@ -57,7 +57,7 @@ class PathMap extends Map {
     }
     $path = parent::__get($key);
     /** @todo Also check for other absolute paths.. E.g. C:\example\directory on Windows */
-    if ($path == '' OR $path[0] == '/' OR $path[1] == ':') {
+    if ($path == '' or Utilities::isAbsolutePath($path)) {
       return $path;
     }
     return $this->basePath . '/' . $path;
