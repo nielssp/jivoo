@@ -135,7 +135,8 @@ abstract class Module implements IEventSubject {
     $parent = new \ReflectionClass(get_parent_class($this));
     while ($parent->name != 'Jivoo\Core\Module') {
       $defaults = $parent->getDefaultProperties();
-      $value = array_merge($value, $defaults[$property]);
+      if (isset($defaults[$property]) and is_array($defaults[$property]))
+        $value = array_merge($value, $defaults[$property]);
       $parent = $parent->getParentClass();
     }
     $this->$property = array_unique($value);

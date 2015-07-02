@@ -51,6 +51,16 @@ class I18n {
     if (!isset(self::$language))
       self::$language = new Localization();
   }
+  
+  /**
+   * Get language code of current language.
+   * @return string A language code, e.g. 'en', 'en-GB', 'da-DK', etc.
+   */
+  public static function getLanguageCode() {
+    if (isset(self::$config['language']))
+      return self::$config['language'];
+    return 'en';
+  }
 
   /**
    * Translate a string.
