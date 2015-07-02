@@ -299,6 +299,7 @@ ol {
   clear: left; }
 
 .block {
+  position: relative;
   background-color: #f7f7f7;
   margin-bottom: 20px;
   box-shadow: 1px 1px 2px #e6e6e6; }

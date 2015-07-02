@@ -1111,6 +1111,36 @@ input[type=checkbox]:checked:before {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
+.loading-screen {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  background-color: #f7f7f7;
+  opacity: 0.7; }
+  .loading-screen:after {
+    font-family: 'icomoon';
+    speak: none;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e653";
+    color: #333333;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -12px;
+    margin-left: -12px;
+    -webkit-animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite; }
+
 .ui-tooltip, .tooltip-arrow:after {
   background: rgba(0, 0, 0, 0.7) none;
   border: none;

@@ -283,6 +283,27 @@ input[type=checkbox] {
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
+.loading-screen {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  background-color: $subMenuBg;
+  opacity: 0.7;
+  &:after {
+    @include icon('\e653', 24px);
+    color: $subMenuFg;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -12px;
+    margin-left: -12px;
+    -webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+  }
+}
 
 .ui-tooltip, .tooltip-arrow:after {
   background: rgba(0, 0, 0, 0.7) none;
