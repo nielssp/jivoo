@@ -20,7 +20,12 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
   <cite>Leonardo da Vinci</cite>
 </blockquote>
 
-<p>Unordered list:</p>
+<div class="block">
+<div class="block-header">Lists</div>
+<div class="block-content">
+<div class="row-1-1">
+<div class="cell">
+<p>Unordered</p>
 <ul>
   <li>Lorem</li>
   <li>Ipsum</li>
@@ -37,8 +42,9 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
   <li>Sit</li>
   <li>Amet</li>
 </ul>
-
-<p>Ordered list:</p>
+</div>
+<div class="cell">
+<p>Ordered</p>
 <ol>
   <li>Lorem</li>
   <li>Ipsum</li>
@@ -55,6 +61,10 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
   <li>Sit</li>
   <li>Amet</li>
 </ol>
+</div>
+</div>
+</div>
+</div>
 
 
 <div class="flash">

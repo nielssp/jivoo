@@ -88,3 +88,16 @@
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
 </div>
 </div>
+
+
+<h2>3:2</h2>
+
+<div class="row-3-2">
+<div class="cell">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat.</p>
+<p>Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
+</div>
+<div class="cell">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
+</div>
+</div>

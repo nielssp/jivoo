@@ -1,0 +1,37 @@
+.block {
+  background-color: $subMenuBg;
+  margin-bottom: 20px;
+  & > .block-header  {
+    padding: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #727272;
+  }
+  & > .block-content {
+    padding: 16px;
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &.block-info > .block-header {
+    background-color: #2272cc;
+    color: #fff;
+  }
+
+  &.block-success > .block-header {
+    background-color: #22cc22;
+    color: #fff;
+  }
+
+  &.block-warn > .block-header {
+    background-color: #cc7222;
+    color: #fff;
+  }
+
+  &.block-error > .block-header {
+    background-color: #cc2222;
+    color: #fff;
+  }
+}
+
