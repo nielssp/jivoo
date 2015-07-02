@@ -94,6 +94,91 @@ class CssHelper extends Helper {
       $this->clear();
     return $out;
   }
+  
+  /**
+   * Convert a hexadecimal RGB representation to an HSL-array.
+   * @param string $hex Hexadecimal color string, e.g. '#fff', '#aabbcc', or
+   * '112233'.
+   * @return array A 3-tuple of hue, saturation and lightness.
+   */
+  public function hex($hex) {
+    $hex = ltrim($hex, '#');
+    if (strlen($hex) == 3) {
+      $rgb = str_split($hex, 1);
+    }
+    else {
+      $rgb = str_split($hex, 2);
+    }
+    return $this->rgb(intval($rgb[0], 16), intval($rgb[1], 16), intval($rgb[2], 16));
+  }
+  
+  /**
+   * Converts RGB to an HSL-array which can be used for color manipulation.
+   * @param int|float $r Red: An integer between 0 and 100 or a float between
+   * 0.0 and 1.1. 
+   * @param int|float $g Green: An integer between 0 and 100 or a float between
+   * 0.0 and 1.1.
+   * @param int|float $b Blue: An integer between 0 and 100 or a float between
+   * 0.0 and 1.1.
+   * @return array A 3-tuple of hue, saturation and lightness.
+   */
+  public function rgb($r, $g, $b) {
+    if (is_int($r)) {
+      $r /= 255;
+      $g /= 255;
+      $b /= 255;
+    }
+    $M = max($r, $g, $b);
+    $m = min($r, $g, $b);
+    $C = $M - $m;
+    $L = 0.5 * ($M + $m);
+    $H = 0.0;
+    $S = 0.0;
+    if ($C != 0) {
+      if ($M == $r)
+        $H = ($g - $b) / $C;
+      if ($M == $g)
+        $H = ($b - $r) / $C + 2;
+      if ($M == $b)
+        $H = ($r - $g) / $C + 4;
+    }
+    if ($L != 0)
+      $S = $C / (1 - abs(2 * $L - 1));
+    $h = round(60 * $H);
+    if ($h < 0) $h += 360;
+    if ($h >= 360) $h -= 360;
+//     $s = round($S * 100);
+//     $l = round($L * 100);
+    return array($h, $S, $L);
+  }
+  
+  /**
+   * Ligthen a color.
+   * @param array $color Color tuple, e.g. from {@see rgb()}.
+   * @param float $amount Amount to increase ligthness by.
+   * @return array Color.
+   */
+  public function lighten($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    $color[2] *= 1 + $amount;
+    if ($color[2] > 1) $color[2] = 1.0;
+    return $color;
+  }
+  
+  /**
+   * Darken a color.
+   * @param array $color Color tuple, e.g. from {@see rgb()}.
+   * @param float $amount Amount to decrease ligthness by.
+   * @return array Color.
+   */
+  public function darken($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    $color[2] *= 1 - $amount;
+    if ($color[2] < 0) $color[2] = 0.0;
+    return $color;
+  }
 }
 
 /**
@@ -134,10 +219,23 @@ class CssBlock {
    * Declaration setter.
    * @param string $property Property in camelCase, e.g. backgroundColor,
    * fontFamily, etc.
-   * @param string $value Value.
+   * @param string|array $value Value.
    */
   public function __set($property, $value) {
     $this->declarations[Utilities::camelCaseToDashes($property)] = $value;
+  }
+
+  /**
+   * Declaration getter.
+   * @param string $property Property in camelCase, e.g. backgroundColor,
+   * fontFamily, etc.
+   * @return string|array Value.
+   */
+  public function __get($property) {
+    $property = Utilities::camelCaseToDashes($property);
+    if (isset($this->declarations[$property]))
+      return $this->declarations[$property];
+    return null;
   }
   
   /**
@@ -230,10 +328,18 @@ class CssBlock {
   public function __toString() {
     $out = $this->selector . '{';
     foreach ($this->declarations as $property => $value) {
-      if (isset($value))
+      if (isset($value)) {
+        if (is_array($value)) {
+          $h = $value[0];
+          $s = round($value[1] * 100);
+          $l = round($value[2] * 100);
+          $value = 'hsl(' . $h . ', ' . $s . '%, ' . $l . '%)';
+        }
         $out .= $property . ':' . $value . ';';
-      else
-        $out .= '/*' . $property . ':' . $value . ';' . '*/';
+      }
+      else {
+        $out .= '/*' . $property . ' has no value */';
+      }
     }
     $out .= '}' . PHP_EOL;
     foreach ($this->blocks as $block)
