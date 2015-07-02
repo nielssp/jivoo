@@ -46,20 +46,17 @@ class ViewExtensions {
    * Access view extensions attached to a hook, and make sure they
    * implement the desired interface.
    * @param string $hook Hook name.
-   * @param string $type Interface that view extensions must implement.
    * @return IViewExtension[] List of view extensions for hook.
    */
-  public function extensions($hook = null, $type = 'IViewExtension') {
+  public function extensions($hook = null) {
     $template = $this->view->template->getCurrent();
     $extensions = array();
     if (isset($this->extensions[$template])) {
       foreach ($this->extensions[$template] as $extInfo) {
         if ($hook == null or $extInfo['hook'] == $hook) {
           $extension = $extInfo['extension'];
-          if ($extension instanceof $type) {
-            if ($extension->prepare())
-              $extensions[] = $extension;
-          }
+          if ($extension->prepare())
+            $extensions[] = $extension;
         }
       }
     }

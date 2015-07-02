@@ -7,6 +7,8 @@ namespace Jivoo\Helpers;
 
 use Jivoo\Models\IBasicRecord;
 use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\DataType;
+use Jivoo\Models\EnumDataType;
 
 /**
  * A helper for creating HTML forms
@@ -28,7 +30,7 @@ class FormHelper extends Helper {
   private $data = array();
   
   /**
-   * @var IBasicModel Associated model.
+   * @var \Jivoo\Models\IBasicModel Associated model.
    */
   private $model = null;
   
@@ -200,12 +202,14 @@ class FormHelper extends Helper {
   /**
    * Get the id of a field. If the form has an id, that id is prepended along
    * with an underscore.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $value Value if checkbox/radio, will be appended along with
    * an underscore.
    * @return string Id.
    */
   public function id($field, $value = null) {
+    if ($field instanceof IFormExtension)
+      $field = $field->getName();
     if (isset($this->id))
       $field = $this->id . '_' . $field;
     if (isset($value))
@@ -216,10 +220,12 @@ class FormHelper extends Helper {
   /**
    * Get the name of a field. If the form has a name, that name is used in
    * combination with the field name, e.g.: "formName[fieldName]".
-   * @param string $field Field name
+   * @param string|IFormExtension $field Field name
    * @return string Name.
    */
   public function name($field, $value = null) {
+    if ($field instanceof IFormExtension)
+      $field = $field->getName();
     if (isset($this->name))
       $field = $this->name . '[' . $field . ']';
     if (isset($value) and !is_bool($value))
@@ -230,11 +236,13 @@ class FormHelper extends Helper {
   /**
    * Get value of field, e.g. if form was submitted, or associated recod
    * contains data.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @return mixed Value of field or null if undefined.
    */
   public function value($field) {
-    if (isset($this->record))
+    if ($field instanceof IFormExtension)
+      return $field->getValue($this->record);
+    else if (isset($this->record))
       return $this->record->$field;
     else if (isset($this->data[$field]))
       return $this->data[$field];
@@ -243,10 +251,12 @@ class FormHelper extends Helper {
   
   /**
    * Whether or not field is required.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @return boolean True if required, false if optional.
    */
   public function isRequired($field) {
+    if ($field instanceof IFormExtension)
+      return $field->isRequired();
     if (isset($this->model))
       return $this->model->isRequired($field);
     return false;
@@ -254,7 +264,7 @@ class FormHelper extends Helper {
   
   /**
    * Whether or not field is optional.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @return boolean True if optional, false if required.
    */
   public function isOptional($field) {
@@ -263,10 +273,12 @@ class FormHelper extends Helper {
   
   /**
    * Whether or not the form or field contains errors.
-   * @param string $field Field name, or null for entire form.
+   * @param string|IFormExtension $field Field name, or null for entire form.
    * @return boolean True if valid, false if errors.
    */
   public function isValid($field = null) {
+    if ($field instanceof IFormExtension)
+      return $field->getError() === null;
     if (isset($field))
       return !isset($this->errors[$field]);
     return count($this->errors) == 0;
@@ -274,7 +286,7 @@ class FormHelper extends Helper {
   
   /**
    * Opposite of {@see isValid()}.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @return boolean True if invalid, false otherwise.
    */
   public function isInvalid($field = null) {
@@ -291,20 +303,25 @@ class FormHelper extends Helper {
   
   /**
    * Output an error message or a default string.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $default Output if field is valid.
    * @return string Error or default string.
    */
   public function error($field, $default = '') {
-    if (isset($this->errors[$field]))
+    if ($field instanceof IFormExtension) {
+      $error = $field->getError();
+      if (isset($error))
+        return $error;
+    }
+    else if (isset($this->errors[$field])) {
       return $this->errors[$field];
-    else
-      return $default;
+    }
+    return $default;
   }
   
   /**
    * Output a message if the field is valid.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $output Output to return if field is valid.
    * @return string Returns output if field is valid, otherwise the empty string.
    */
@@ -316,7 +333,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a message if the field is invalid.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $output Output to return if field is invalid.
    * @return string Returns output if field is invalid, otherwise the empty string.
    */
@@ -328,7 +345,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a message if the field is required.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $output Output to return if field is required.
    * @return string Returns output if required is valid, otherwise the empty string.
    */
@@ -340,7 +357,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a message if the field is optional.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $output Output to return if field is optional.
    * @return string Returns output if field is optional, otherwise the empty string.
    */
@@ -352,14 +369,14 @@ class FormHelper extends Helper {
   
   /**
    * Output a labelled field with an optional description.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $type Field type, can be any of 'text', 'password', 'date',
    * 'time', 'dateTime', or 'file'.
    * @param string $label Label, default is to look up the label in the model.
    * @param string $description Optional description;
    * @param array $attributes Addtional element attributes for the field.
    */
-  public function standardField($field, $type = 'text', $label = null, $description = '', $attributes = array()) {
+  public function standardField($field, $type = 'field', $label = null, $description = '', $attributes = array()) {
     if ($this->isRequired($field))
       $divAttributes = array('class' => 'field field-required');
     else
@@ -376,7 +393,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a label element.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string $label Label, default is to look up the label in the model.
    * @param array $attributes Addtional element attributes.
    * @return string HTML label element.
@@ -384,7 +401,9 @@ class FormHelper extends Helper {
   public function label($field, $label = null, $attributes = array()) {
     if (!isset($label) ) {
       $label = '';
-      if (isset($this->model))
+      if ($field instanceof IFormExtension)
+        $label = $field->getLabel();
+      else if (isset($this->model))
         $label = $this->model->getLabel($field);
     }
     $attributes = array_merge(array(
@@ -395,7 +414,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a label element for a radio field.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
    * @param string $label Label.
    * @param array $attributes Additional element attributes.
@@ -410,7 +429,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a label element for a checkbox field.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
    * @param string $label Label.
    * @param array $attributes Additional element attributes.
@@ -421,8 +440,48 @@ class FormHelper extends Helper {
   }
 
   /**
+   * Output an input element. The type of the element is based on the field
+   * type.
+   * @param string|IFormExtension $field Field name.
+   * @param array $attributes Additional element attributes.
+   * @return string HTML input element.
+   */
+  public function field($field, $attributes = array()) {
+    if ($field instanceof IFormExtension) {
+      $attributes = array_merge(array(
+        'name' => $this->name($field),
+        'id' => $this->id($field),
+        'value' => $this->value($field)
+      ), $attributes);
+      return $field->getField($attributes);
+    }
+    if (isset($this->model)) {
+      $type = $this->model->getType($field);
+      if (isset($type)) {
+        switch ($type->type) {
+          case DataType::TEXT:
+          case DataType::BINARY:
+          case DataType::OBJECT:
+            return $this->textarea($field, $attributes);
+          case DataType::DATE:
+            return $this->date($field, $attributes);
+          case DataType::DATETIME:
+            return $this->datetime($field, $attributes);
+          case DataType::BOOLEAN:
+            return $this->checkboxAndLabel($field, true, $attributes);
+          case DataType::ENUM:
+            return $this->selectOf($field, null, $attributes);
+        }
+      }
+    }
+    if (strpos(strtolower($field), 'password') !== false)
+      return $this->password($field, $attributes);
+    return $this->text($field, $attributes);
+  }
+
+  /**
    * Output an input element for a text input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -432,7 +491,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a date input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -445,7 +504,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a time input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -458,7 +517,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a datet/time input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -471,7 +530,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a password input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -481,7 +540,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a file input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -491,7 +550,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a hidden input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
@@ -501,7 +560,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a radio input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
@@ -516,7 +575,7 @@ class FormHelper extends Helper {
 
   /**
    * Output an input element for a checkbox input.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
@@ -544,6 +603,15 @@ class FormHelper extends Helper {
     return $this->element('input', $attributes);
   }
   
+  /**
+   * 
+   * Output an input element for a checkbox input followed by a label.
+   * @param string|IFormExtension $field Field name.
+   * @param mixed $value Field value.
+   * @param string $label Checkbox label.
+   * @param array $attributes Additional element attributes.
+   * @return string HTML input element.
+   */
   public function checkboxAndLabel($field, $value, $label = null, $attributes = array()) {
     if (!isset($label))
       $label = $value;
@@ -553,7 +621,7 @@ class FormHelper extends Helper {
   
   /**
    * Begin a select element. End with {@see end()}.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes. 
    * @throws FormHelperException If inappropriate location of element.
    * @return string Start of an HTML select element.
@@ -592,7 +660,7 @@ class FormHelper extends Helper {
 
   /**
    * Output a select element consisting of a number of options.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param string[]|null $value Associative array of values and labels, or null
    * in which case the field type must be an enum.
    * @param array $attributes Additional element attributes.
@@ -626,7 +694,7 @@ class FormHelper extends Helper {
   
   /**
    * Output a select element with options made from a selection.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param IReadSelection $selection Selection of records.
    * @param string $valueField Field to use for values.
    * @param string $labelField Field to use for labels.
@@ -671,7 +739,7 @@ class FormHelper extends Helper {
   
   /**
    * Output a textarea element.
-   * @param string $field Field name.
+   * @param string|IFormExtension $field Field name.
    * @param array $attributes Additional element attributes.
    * @return string HTML textarea element.
    */
