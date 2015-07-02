@@ -300,7 +300,8 @@ ol {
 
 .block {
   background-color: #f7f7f7;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 2px #e6e6e6; }
   .block > .block-header {
     padding: 16px;
     text-transform: uppercase;
