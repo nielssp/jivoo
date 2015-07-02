@@ -65,7 +65,6 @@ $(function() {
   $(document).tooltip({
     items: '[data-error]',
     content: function() {
-      console.log($(this));
       return $(this).data('error');
     },
     show: false,

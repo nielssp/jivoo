@@ -30,6 +30,7 @@ $sub->appendAction(tr('Typography'))->setRoute('path:ui/elements/typography');
 $sub->appendAction(tr('Buttons'))->setRoute('path:ui/elements/buttons');
 $sub->appendAction(tr('Icons'))->setRoute('path:ui/elements/icons');
 $sub->appendAction(tr('Blocks'))->setRoute('path:ui/elements/blocks');
+$sub->appendAction(tr('Grid'))->setRoute('path:ui/elements/grid');
 $sub->appendAction(tr('Notifications'))->setRoute('path:ui/elements/notifications');
 $sub->appendAction(tr('Modals'))->setRoute('path:ui/elements/modals');
 $sub->appendAction(tr('Tooltips'))->setRoute('path:ui/elements/tooltips');

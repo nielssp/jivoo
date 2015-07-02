@@ -26,6 +26,7 @@ table {
   thead th, tfoot th {
     background-color: $navBg;
     color: $navDisFg;
+    text-transform: uppercase;
     a, label {
       &, &:link, &:visited {
         color: $navFg;

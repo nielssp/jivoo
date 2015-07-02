@@ -27,7 +27,8 @@ a:hover {
   text-decoration: underline; }
 
 p {
-  margin: 0 0 20px; }
+  margin: 0 0 20px;
+  line-height: 1.6em; }
 
 h1, h2, h3 {
   margin: 0 0 12px;
@@ -98,6 +99,172 @@ ol {
   list-style-type: decimal; }
   ol ol {
     list-style-type: lower-alpha; }
+
+.row-1-1-1 > .cell,
+.row-1-2 > .cell,
+.row-2-1 > .cell {
+  width: 33.333333%; }
+
+.row-1-1-1-1 > .cell,
+.row-1-1-2 > .cell,
+.row-1-2-1 > .cell,
+.row-2-1-1 > .cell,
+.row-1-3 > .cell,
+.row-3-1 > .cell {
+  width: 25%; }
+
+.row-1-2 > .cell:nth-child(2),
+.row-2-1 > .cell:nth-child(1) {
+  width: 66.666667%; }
+
+.row-1-1 > .cell,
+.row-1-1-2 > .cell:nth-child(3),
+.row-1-2-1 > .cell:nth-child(2),
+.row-2-1-1 > .cell:nth-child(1) {
+  width: 50%; }
+
+.row-1-3 > .cell:nth-child(2),
+.row-3-1 > .cell:nth-child(1) {
+  width: 75%; }
+
+@media screen and (min-width: 1010px) {
+  .row-1-1,
+  .row-1-1-1,
+  .row-1-1-1-1,
+  .row-1-2,
+  .row-2-1,
+  .row-1-1-2,
+  .row-1-2-1,
+  .row-2-1-1,
+  .row-1-3,
+  .row-3-1 {
+    margin: 0 -10px 20px; }
+    .row-1-1 > .cell,
+    .row-1-1-1 > .cell,
+    .row-1-1-1-1 > .cell,
+    .row-1-2 > .cell,
+    .row-2-1 > .cell,
+    .row-1-1-2 > .cell,
+    .row-1-2-1 > .cell,
+    .row-2-1-1 > .cell,
+    .row-1-3 > .cell,
+    .row-3-1 > .cell {
+      float: left;
+      padding: 0 10px;
+      margin-bottom: -20px; } }
+@media screen and (min-width: 480px) {
+  .row-1-1.row-xs,
+  .row-1-1-1.row-xs,
+  .row-1-1-1-1.row-xs,
+  .row-1-2.row-xs,
+  .row-2-1.row-xs,
+  .row-1-1-2.row-xs,
+  .row-1-2-1.row-xs,
+  .row-2-1-1.row-xs,
+  .row-1-3.row-xs,
+  .row-3-1.row-xs {
+    margin: 0 -10px 20px; }
+    .row-1-1.row-xs > .cell,
+    .row-1-1-1.row-xs > .cell,
+    .row-1-1-1-1.row-xs > .cell,
+    .row-1-2.row-xs > .cell,
+    .row-2-1.row-xs > .cell,
+    .row-1-1-2.row-xs > .cell,
+    .row-1-2-1.row-xs > .cell,
+    .row-2-1-1.row-xs > .cell,
+    .row-1-3.row-xs > .cell,
+    .row-3-1.row-xs > .cell {
+      float: left;
+      padding: 0 10px;
+      margin-bottom: -20px; } }
+@media screen and (min-width: 768px) {
+  .row-1-1.row-sm,
+  .row-1-1-1.row-sm,
+  .row-1-1-1-1.row-sm,
+  .row-1-2.row-sm,
+  .row-2-1.row-sm,
+  .row-1-1-2.row-sm,
+  .row-1-2-1.row-sm,
+  .row-2-1-1.row-sm,
+  .row-1-3.row-sm,
+  .row-3-1.row-sm {
+    margin: 0 -10px 20px; }
+    .row-1-1.row-sm > .cell,
+    .row-1-1-1.row-sm > .cell,
+    .row-1-1-1-1.row-sm > .cell,
+    .row-1-2.row-sm > .cell,
+    .row-2-1.row-sm > .cell,
+    .row-1-1-2.row-sm > .cell,
+    .row-1-2-1.row-sm > .cell,
+    .row-2-1-1.row-sm > .cell,
+    .row-1-3.row-sm > .cell,
+    .row-3-1.row-sm > .cell {
+      float: left;
+      padding: 0 10px;
+      margin-bottom: -20px; } }
+@media screen and (min-width: 1010px) {
+  .row-1-1.row-md,
+  .row-1-1-1.row-md,
+  .row-1-1-1-1.row-md,
+  .row-1-2.row-md,
+  .row-2-1.row-md,
+  .row-1-1-2.row-md,
+  .row-1-2-1.row-md,
+  .row-2-1-1.row-md,
+  .row-1-3.row-md,
+  .row-3-1.row-md {
+    margin: 0 -10px 20px; }
+    .row-1-1.row-md > .cell,
+    .row-1-1-1.row-md > .cell,
+    .row-1-1-1-1.row-md > .cell,
+    .row-1-2.row-md > .cell,
+    .row-2-1.row-md > .cell,
+    .row-1-1-2.row-md > .cell,
+    .row-1-2-1.row-md > .cell,
+    .row-2-1-1.row-md > .cell,
+    .row-1-3.row-md > .cell,
+    .row-3-1.row-md > .cell {
+      float: left;
+      padding: 0 10px;
+      margin-bottom: -20px; } }
+@media screen and (min-width: 1200px) {
+  .row-1-1.row-lg,
+  .row-1-1-1.row-lg,
+  .row-1-1-1-1.row-lg,
+  .row-1-2.row-lg,
+  .row-2-1.row-lg,
+  .row-1-1-2.row-lg,
+  .row-1-2-1.row-lg,
+  .row-2-1-1.row-lg,
+  .row-1-3.row-lg,
+  .row-3-1.row-lg {
+    margin: 0 -10px 20px; }
+    .row-1-1.row-lg > .cell,
+    .row-1-1-1.row-lg > .cell,
+    .row-1-1-1-1.row-lg > .cell,
+    .row-1-2.row-lg > .cell,
+    .row-2-1.row-lg > .cell,
+    .row-1-1-2.row-lg > .cell,
+    .row-1-2-1.row-lg > .cell,
+    .row-2-1-1.row-lg > .cell,
+    .row-1-3.row-lg > .cell,
+    .row-3-1.row-lg > .cell {
+      float: left;
+      padding: 0 10px;
+      margin-bottom: -20px; } }
+.row-1-1:after,
+.row-1-1-1:after,
+.row-1-1-1-1:after,
+.row-1-2:after,
+.row-2-1:after,
+.row-1-1-2:after,
+.row-1-2-1:after,
+.row-2-1-1:after,
+.row-1-3:after,
+.row-3-1:after {
+  content: ' ';
+  display: block;
+  clear: left; }
 
 header {
   background-color: #2272cc;
@@ -425,7 +592,8 @@ table {
       display: none; }
   table thead th, table tfoot th {
     background-color: #eeeeee;
-    color: #999999; }
+    color: #999999;
+    text-transform: uppercase; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
       color: #444444;
       padding: 12px 8px;
