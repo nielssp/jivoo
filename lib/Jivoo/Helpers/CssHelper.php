@@ -27,11 +27,25 @@ class CssHelper extends Helper {
   private $mixins = array();
   
   /**
+   * @var bool
+   */
+  private $useRgbOutput = false;
+  
+  /**
    * Whether to clear rules after converting to string with {@see __toString()}. 
    * @param string $clear Clears if true.
    */
   public function clearAfterPrint($clear = true) {
     $this->clearAfterPrint = $clear;
+  }
+  
+
+  /**
+   * Whether to convert color values to RGB (for older browsers).
+   * @param bool $useRgbOutput Converts all colors to RGB if true.
+   */
+  public function useRgbOutput($useRgbOutput = true) {
+    $this->useRgbOutput = $useRgbOutput;
   }
   
   /**
@@ -147,9 +161,24 @@ class CssHelper extends Helper {
     $h = round(60 * $H);
     if ($h < 0) $h += 360;
     if ($h >= 360) $h -= 360;
-//     $s = round($S * 100);
-//     $l = round($L * 100);
     return array($h, $S, $L);
+  }
+  
+  /**
+   * Create a color tuple from HSL values.
+   * @param int $h Hue: An integer between 0 and 360.
+   * @param int|float $s Saturation: An integer between 0 and 100 or a float
+   * between 0.0 and 1.1.
+   * @param int|float $l Ligthness: An integer between 0 and 100 or a float
+   * between 0.0 and 1.1.
+   * @return multitype:unknown number
+   */
+  public function hsl($h, $s, $l) {
+    if (is_int($s))
+      $s /= 100;
+    if (is_int($l))
+      $l /= 100;
+    return array($h, $s, $l);
   }
   
   /**

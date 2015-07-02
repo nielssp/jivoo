@@ -231,6 +231,15 @@ class Assets extends LoadableModule {
   }
   
   /**
+   * Get asset dirs.
+   * @return array[] List of asset dirs as associative arrays (with key, path,
+   * and priority).
+   */
+  public function getAssetDirs() {
+    return $this->assetDirs;
+  }
+  
+  /**
    * Convert a path key to an asset key (converts backslashes to dashes).
    * @param string $key Path key.
    * @return string Asset key.

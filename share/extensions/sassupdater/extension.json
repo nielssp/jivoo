@@ -1,0 +1,6 @@
+{
+  "name": "SASS updater",
+  "version": "1.0",
+  "description": "(DEVELOPMENT) Automatically calls sass on all assets directories. The sass-command must be in the system PATH.",
+  "load": ["SassUpdater"]
+}
