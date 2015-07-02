@@ -9,7 +9,7 @@ class AppController extends Controller {
   protected $helpers = array('Html', 'Jtk', 'Icon');
   
   public function before() {
-    $this->Jtk->setTheme('flatmin-base');
+    $this->Jtk->setTheme('flatmin');
     $this->Icon->addProvider(new ClassIconProvider());
   }
 

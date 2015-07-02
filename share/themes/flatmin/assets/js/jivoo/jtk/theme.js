@@ -48,4 +48,31 @@ $(function() {
   JIVOO.notifications.stopLoading = function() {
     $loading.fadeOut(200);
   };
+  
+  $('[title]').tooltip({
+    show: false,
+    hide: false,
+    position: {
+      my: 'center bottom-12',
+      at: 'center top',
+      using: function(position, feedback) {
+        $(this).css(position).addClass(feedback.vertical)
+          .addClass(feedback.horizontal);
+      }
+    }
+  });
+
+  $(document).tooltip({
+    items: '[data-error]',
+    content: function() {
+      console.log($(this));
+      return $(this).data('error');
+    },
+    show: false,
+    hide: false,
+    position: {
+      my: 'right top',
+      at: 'right-4 top+4'
+    }
+  });
 });

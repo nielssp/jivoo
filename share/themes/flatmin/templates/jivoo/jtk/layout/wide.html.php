@@ -2,14 +2,15 @@
 $this->meta('viewport', 'width=device-width, initial-scale=1');
 $this->import(
   'jivoo/jtk/notifications.js',
-  'icomoon/style.css',
-  'jivoo/core.css',
-  'jivoo/jtk/theme.css',
   'jquery.js',
+  'jquery-ui.js',
   'jquery.amaran.js',
   'jivoo/jtk/theme.js',
   'html5shiv.js',
-  'respond.js'
+  'respond.js',
+  'icomoon/style.css',
+  'jivoo/core.css',
+  'jivoo/jtk/theme.css'
 );
 ?>
 <!DOCTYPE html>
