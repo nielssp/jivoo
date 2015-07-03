@@ -305,12 +305,24 @@ input[type=checkbox] {
   }
 }
 
+.mfp-bg {
+  opacity: 0.3;
+}
+
 .modal {
   position: relative;
   width: auto;
   max-width: 500px;
   margin: 48px auto;
   box-shadow: none;
+
+  & > .mfp-close {
+    background-color: transparent;
+    &:focus, &:hover {
+      background-color: rgba(0,0,0,0.1);
+      margin: 0;
+    }
+  }
 }
 
 .ui-tooltip, .tooltip-arrow:after {

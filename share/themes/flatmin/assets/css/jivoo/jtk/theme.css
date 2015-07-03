@@ -1141,12 +1141,20 @@ input[type=checkbox]:checked:before {
     -moz-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite; }
 
+.mfp-bg {
+  opacity: 0.3; }
+
 .modal {
   position: relative;
   width: auto;
   max-width: 500px;
   margin: 48px auto;
   box-shadow: none; }
+  .modal > .mfp-close {
+    background-color: transparent; }
+    .modal > .mfp-close:focus, .modal > .mfp-close:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      margin: 0; }
 
 .ui-tooltip, .tooltip-arrow:after {
   background: rgba(0, 0, 0, 0.7) none;

@@ -12,19 +12,24 @@
 <?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
 </p>
 
-<div class="block modal" id="block">
+<div class="block modal" id="block" style="display: none">
 <div class="block-header">Block</div>
 <div class="block-content">Lorem ipsum</div>
 </div>
 
+<p><em>todo: add close button to block header</em></p>
+<p><em>todo: optional footer with buttons to block</em></p>
+
 <script type="text/javascript">
 $(function() {
   var $popup = $('#block').clone();
-  $('#block').remove();
+  $popup.show();
   $('.modals-demo button').click(function() {
     var $this = $popup.clone();
     $this.addClass('block-' + $(this).data('type'));
     $.magnificPopup.open({
+      closeBtnInside: false,
+      prependTo: $('#main'),
       alignTop: true,
       items: {
         src: $this,
