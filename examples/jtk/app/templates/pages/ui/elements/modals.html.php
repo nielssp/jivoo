@@ -15,6 +15,10 @@
 <div class="block modal" id="block" style="display: none">
 <div class="block-header">Block</div>
 <div class="block-content">Lorem ipsum</div>
+<div class="block-buttons">
+  <?php echo $Icon->button('Cancel', 'close'); ?>
+  <?php echo $Icon->button('OK', 'checkmark', array('class' => 'primary')); ?>
+</div>
 </div>
 
 <p><em>todo: add close button to block header</em></p>
@@ -27,6 +31,7 @@ $(function() {
   $('.modals-demo button').click(function() {
     var $this = $popup.clone();
     $this.addClass('block-' + $(this).data('type'));
+    $this.find('button').click($.magnificPopup.close);
     $.magnificPopup.open({
       closeBtnInside: false,
       prependTo: $('#main'),

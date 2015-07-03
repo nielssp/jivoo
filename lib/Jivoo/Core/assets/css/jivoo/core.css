@@ -11,9 +11,9 @@ html {
 body {
   height: 100%;
   overflow-y: scroll;
-  background-color: #eeeeee;
+  background-color: #eee;
   font-family: "Open Sans", sans-serif;
-  color: #333333;
+  color: #333;
   font-size: 14px; }
 
 header, footer, section, nav {
@@ -312,6 +312,10 @@ ol {
     padding: 16px; }
     .block > .block-content > *:last-child {
       margin-bottom: 0; }
+  .block > .block-buttons {
+    border-top: 1px solid #ddd;
+    padding: 16px;
+    text-align: right; }
   .block.block-info > .block-header {
     background-color: #2272cc;
     color: #fff; }
@@ -329,7 +333,7 @@ header {
   background-color: #2272cc;
   position: absolute;
   padding: 0 12px 0 12px;
-  color: white;
+  color: #fff;
   width: 100%;
   z-index: 1000;
   height: 32px; }
@@ -352,7 +356,7 @@ header {
       padding-left: 24px; } }
 
 #main {
-  background-color: white;
+  background-color: #fff;
   position: relative;
   min-height: 100%;
   padding: 48px 12px 37px 12px; }
@@ -369,7 +373,7 @@ footer {
   position: absolute;
   color: #666;
   height: 24px;
-  border-top: 1px solid #eeeeee;
+  border-top: 1px solid #eee;
   line-height: 24px;
   width: 100%;
   font-size: 0.8em;
@@ -411,10 +415,10 @@ input[type=reset]:visited,
 input[type=submit],
 input[type=submit]:link,
 input[type=submit]:visited {
-  background-color: #eeeeee;
+  background-color: #eee;
   border: none;
-  border-bottom: 2px solid #444444;
-  color: #444444;
+  border-bottom: 2px solid #444;
+  color: #444;
   line-height: normal;
   text-decoration: none;
   padding: 6px 12px 4px;
@@ -444,7 +448,7 @@ input[type=reset]:hover,
 input[type=reset]:active,
 input[type=submit]:hover,
 input[type=submit]:active {
-  background-color: #dddddd;
+  background-color: #ddd;
   color: #2272cc;
   border-color: #2272cc;
   text-decoration: none; }
@@ -469,8 +473,8 @@ input[type=submit][disabled],
 input[type=submit][disabled]:hover,
 input[type=submit][disabled]:active {
   background-color: #f1f1f1;
-  border-color: #999999;
-  color: #999999;
+  border-color: #999;
+  color: #999;
   cursor: default;
   box-shadow: none;
   outline: none; }
@@ -650,17 +654,17 @@ table {
     table td.non-essential, table th.non-essential {
       display: none; }
   table thead th, table tfoot th {
-    background-color: #eeeeee;
-    color: #999999;
+    background-color: #eee;
+    color: #999;
     text-transform: uppercase; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
-      color: #444444;
+      color: #444;
       padding: 12px 8px;
       margin: -12px -8px;
       text-decoration: none;
       display: block; }
     table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
-      background-color: #dddddd;
+      background-color: #ddd;
       color: #2272cc;
       border-color: #2272cc;
       text-decoration: none; }
@@ -766,7 +770,7 @@ body.exception {
 
 @media screen and (min-width: 768px) {
   body.narrow {
-    background-color: white;
+    background-color: #fff;
     text-align: center; }
     body.narrow > * {
       text-align: left; }
@@ -786,3 +790,5 @@ table.trace td, table.trace th {
   .install-buttons .primary {
     float: right;
     margin-left: 0.5em; }
+
+/*# sourceMappingURL=core.css.map */

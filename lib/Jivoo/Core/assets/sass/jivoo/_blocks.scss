@@ -15,6 +15,11 @@
       margin-bottom: 0;
     }
   }
+  & > .block-buttons {
+    border-top: 1px solid #ddd;
+    padding: 16px;
+    text-align: right;
+  }
 
   &.block-info > .block-header {
     background-color: #2272cc;
