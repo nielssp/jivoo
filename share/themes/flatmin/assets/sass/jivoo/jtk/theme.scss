@@ -305,6 +305,14 @@ input[type=checkbox] {
   }
 }
 
+.modal {
+  position: relative;
+  width: auto;
+  max-width: 500px;
+  margin: 48px auto;
+  box-shadow: none;
+}
+
 .ui-tooltip, .tooltip-arrow:after {
   background: rgba(0, 0, 0, 0.7) none;
   border: none;

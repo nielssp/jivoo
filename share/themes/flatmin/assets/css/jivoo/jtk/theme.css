@@ -1141,6 +1141,13 @@ input[type=checkbox]:checked:before {
     -moz-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite; }
 
+.modal {
+  position: relative;
+  width: auto;
+  max-width: 500px;
+  margin: 48px auto;
+  box-shadow: none; }
+
 .ui-tooltip, .tooltip-arrow:after {
   background: rgba(0, 0, 0, 0.7) none;
   border: none;

@@ -5,6 +5,7 @@ $this->import(
   'jquery.js',
   'jquery-ui.js',
   'jquery.amaran.js',
+  'jquery.magnific-popup.js',
   'jivoo/jtk/theme.js',
   'html5shiv.js',
   'respond.js',
