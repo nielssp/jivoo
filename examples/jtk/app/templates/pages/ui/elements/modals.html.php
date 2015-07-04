@@ -26,6 +26,7 @@
 
 <p><em>todo: add close button to block header</em></p>
 
+
 <script type="text/javascript">
 $(function() {
   var $popup = $('#block').clone();
