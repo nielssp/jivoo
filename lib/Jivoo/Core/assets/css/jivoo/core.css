@@ -308,6 +308,8 @@ ol {
     text-transform: uppercase;
     font-weight: bold;
     color: #727272; }
+    .block > .block-header > .block-toolbar {
+      float: right; }
   .block > .block-content {
     padding: 16px; }
     .block > .block-content > *:last-child {

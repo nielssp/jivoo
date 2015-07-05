@@ -8,6 +8,10 @@
     text-transform: uppercase;
     font-weight: bold;
     color: #727272;
+
+    & > .block-toolbar {
+      float: right;
+    }
   }
   & > .block-content {
     padding: 16px;

@@ -1,7 +1,12 @@
 <?php $this->view->data->title = tr('Blocks'); ?>
 
 <div class="block">
-<div class="block-header">A block</div>
+  <div class="block-header">
+    A block
+    <div class="block-toolbar">
+      toolbar
+    </div>
+  </div>
 <div class="block-content">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat. Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
 </div>
