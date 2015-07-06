@@ -11,6 +11,16 @@
 
     & > .block-toolbar {
       float: right;
+      & > a {
+        margin-left: 8px;
+        &, &:link, &:visited, &:active {
+          color: #727272;
+        }
+        &:hover {
+          color: $primaryBg;
+          text-decoration: none;
+        }
+      }
     }
   }
   & > .block-content {

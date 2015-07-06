@@ -310,6 +310,13 @@ ol {
     color: #727272; }
     .block > .block-header > .block-toolbar {
       float: right; }
+      .block > .block-header > .block-toolbar > a {
+        margin-left: 8px; }
+        .block > .block-header > .block-toolbar > a, .block > .block-header > .block-toolbar > a:link, .block > .block-header > .block-toolbar > a:visited, .block > .block-header > .block-toolbar > a:active {
+          color: #727272; }
+        .block > .block-header > .block-toolbar > a:hover {
+          color: #2272cc;
+          text-decoration: none; }
   .block > .block-content {
     padding: 16px; }
     .block > .block-content > *:last-child {

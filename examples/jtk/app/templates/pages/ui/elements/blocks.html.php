@@ -4,7 +4,8 @@
   <div class="block-header">
     A block
     <div class="block-toolbar">
-      toolbar
+      <?php echo $Html->link($Icon->icon('cog'), 'url:#'); ?>
+      <?php echo $Html->link($Icon->icon('close'), 'url:#'); ?>
     </div>
   </div>
 <div class="block-content">
