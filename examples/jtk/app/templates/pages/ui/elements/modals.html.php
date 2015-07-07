@@ -13,7 +13,11 @@
 </p>
 
 <div class="block modal" id="block" style="display: none">
-<div class="block-header">A modal</div>
+<div class="block-header">A modal
+  <div class="block-toolbar">
+    <?php echo $Html->link($Icon->icon('close'), 'null:', array('class' => 'close')); ?>
+  </div>
+</div>
 <div class="block-content">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat.</p>
 <p>Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
@@ -35,6 +39,7 @@ $(function() {
     var $this = $popup.clone();
     $this.addClass('block-' + $(this).data('type'));
     $this.find('button').click($.magnificPopup.close);
+    $this.find('.block-toolbar a.close').click($.magnificPopup.close);
     $.magnificPopup.open({
       closeBtnInside: false,
       prependTo: $('#main'),

@@ -19,12 +19,14 @@ body {
 header, footer, section, nav {
   display: block; }
 
-a:link, a:active, a:visited {
-  color: #2272cc;
-  text-decoration: none; }
-a:hover {
-  color: #6da6e7;
-  text-decoration: underline; }
+a {
+  cursor: pointer; }
+  a:link, a:active, a:visited {
+    color: #2272cc;
+    text-decoration: none; }
+  a:hover {
+    color: #6da6e7;
+    text-decoration: underline; }
 
 p {
   margin: 0 0 20px;
@@ -313,7 +315,7 @@ ol {
       .block > .block-header > .block-toolbar > a {
         margin-left: 8px; }
         .block > .block-header > .block-toolbar > a, .block > .block-header > .block-toolbar > a:link, .block > .block-header > .block-toolbar > a:visited, .block > .block-header > .block-toolbar > a:active {
-          color: #727272; }
+          color: inherit; }
         .block > .block-header > .block-toolbar > a:hover {
           color: #2272cc;
           text-decoration: none; }

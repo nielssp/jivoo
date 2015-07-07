@@ -23,6 +23,7 @@ header, footer, section, nav {
 }
 
 a {
+  cursor: pointer;
   &:link, &:active, &:visited {
     color: $primaryBg;
     text-decoration: none;
