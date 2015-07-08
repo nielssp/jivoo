@@ -311,6 +311,8 @@ ol {
     font-weight: bold;
     color: #727272; }
     .block > .block-header > .block-toolbar {
+      font-size: 0.9em;
+      line-height: 1.111em;
       float: right; }
       .block > .block-header > .block-toolbar > a {
         margin-left: 8px; }
