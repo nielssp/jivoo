@@ -18,6 +18,9 @@ $icons = array(
 }
 </style>
 
+<div class="block">
+  <div class="block-header"><h2>Theme icons <small><?php echo count($icons); ?> Icomoon icons</small></h2></div>
+  <div class="block-content">
 <div class="row-auto-xs icon-table">
   <?php foreach ($icons as $icon): ?>
   <div class="cell center">
@@ -25,4 +28,6 @@ $icons = array(
     <p><code><?php echo $icon; ?></code></p>
   </div>
   <?php endforeach; ?>
+</div>
+</div>
 </div>

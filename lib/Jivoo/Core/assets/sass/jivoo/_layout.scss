@@ -38,15 +38,42 @@ header {
   position: relative;
   min-height: 100%;
   padding: 48px 12px 37px 12px;
+
+  #main-container > h1:first-child {
+    background-color: #fbfbfb;
+    margin: -48px -12px 24px -12px;
+    padding: 56px 12px 24px 12px;
+    font-size: 1.9em;
+
+    & > small {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.6em;
+    }
+  }
+
   @media screen and (min-width: $sm) {
     padding-right: 24px;
     padding-left: 24px;
+
+    #main-container > h1:first-child {
+      margin-left: -24px;
+      margin-right: -24px;
+      padding-top: 48px;
+      padding-left: 24px;
+      padding-right: 24px;
+      & > small {
+        display: inline;
+        margin-top: 0;
+      }
+    }
   }
   &:after {
     clear: left;
     display: table;
     content: ' ';
   }
+
 }
 
 footer {
