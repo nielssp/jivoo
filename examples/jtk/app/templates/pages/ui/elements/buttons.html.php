@@ -1,18 +1,50 @@
 <?php $this->view->data->title = tr('Buttons'); ?>
- 
-<p>
-  <a href="#" class="button">A button</a>
-  <button>A button</button>
-  <input type="submit" value="A button" />
-  <input type="button" value="A button" />
-</p>
 
-<p>
-  Disabled: 
-  <button disabled>A button</button>
-  <input type="submit" value="A button" disabled />
-  <input type="button" value="A button" disabled />
-</p>
+<div class="row-1-1">
+  <div class="cell">
+    <div class="block">
+      <div class="block-header"><h3>Button types</h3></div>
+      <div class="block-content">
+        <div class="row-1-1">
+          <div class="cell">
+            <p><a href="#" class="button">Button</a></p>
+            <p><code>&lt;a class="button"&gt;</code></p>
+            <p><input type="submit" value="Button" /></p>
+            <p><code>&lt;input type="submit"&gt;</code></p>
+          </div>
+          <div class="cell">
+            <p><button>Button</button></p>
+            <p><code>&lt;button&gt;</code></p>
+            <p><input type="button" value="Button" /></p>
+            <p><code>&lt;input type="button"&gt;</code></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cell">
+    <div class="block">
+      <div class="block-header"><h3>Disabled buttons</h3></div>
+      <div class="block-content">
+        <button disabled>Button</button>
+        <input type="submit" value="Submit button" disabled />
+        <input type="button" value="Input button" disabled />
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><h3>Button contexts</h3></div>
+      <div class="block-content">
+        <button>Default</button>
+        <button class="primary">Primary</button>
+        <button class="info">Info</button>
+        <button class="success">Success</button>
+        <button class="warn">Warn</button>
+        <button class="error">Error</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
 
 <h2>Buttons with icons</h2>
 

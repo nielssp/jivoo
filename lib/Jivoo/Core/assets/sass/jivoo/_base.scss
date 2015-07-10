@@ -125,6 +125,18 @@ blockquote {
   }
 }
 
+pre, code, kbd {
+  font-family: "Source Code Pro", monospace;
+}
+
+code {
+  background-color: #eee;
+  color: #cc7222;
+  padding: 3px;
+  font-size: 0.9em;
+  border-radius: 3px;
+}
+
 a img {
   border: 0;
 }

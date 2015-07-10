@@ -2,7 +2,7 @@
 
 <h2>1:1</h2>
 
-<div class="row-1-1">
+<div class="row-1-1 row-lg">
 <div class="cell">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat.</p>
 <p>Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
