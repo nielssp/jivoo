@@ -311,7 +311,10 @@ ol {
     font-weight: bold;
     color: #727272; }
     .block > .block-header > .block-toolbar {
-      float: right; }
+      text-transform: none;
+      font-weight: normal;
+      float: right;
+      color: rgba(0, 0, 0, 0.4); }
       .block > .block-header > .block-toolbar > a {
         margin-left: 8px; }
         .block > .block-header > .block-toolbar > a, .block > .block-header > .block-toolbar > a:link, .block > .block-header > .block-toolbar > a:visited, .block > .block-header > .block-toolbar > a:active {
@@ -319,6 +322,9 @@ ol {
         .block > .block-header > .block-toolbar > a:hover {
           color: #2272cc;
           text-decoration: none; }
+        .block > .block-header > .block-toolbar > a > .label {
+          margin-left: 8px;
+          font-size: 0.9em; }
   .block > .block-content {
     padding: 16px; }
     .block > .block-content > *:last-child {
@@ -327,18 +333,20 @@ ol {
     border-top: 1px solid #ddd;
     padding: 16px;
     text-align: right; }
+  .block.block-info > .block-header, .block.block-success > .block-header, .block.block-warn > .block-header, .block.block-error > .block-header {
+    color: #fff; }
+    .block.block-info > .block-header > .block-toolbar, .block.block-success > .block-header > .block-toolbar, .block.block-warn > .block-header > .block-toolbar, .block.block-error > .block-header > .block-toolbar {
+      color: rgba(255, 255, 255, 0.4); }
+      .block.block-info > .block-header > .block-toolbar > a:hover, .block.block-success > .block-header > .block-toolbar > a:hover, .block.block-warn > .block-header > .block-toolbar > a:hover, .block.block-error > .block-header > .block-toolbar > a:hover {
+        color: rgba(255, 255, 255, 0.8); }
   .block.block-info > .block-header {
-    background-color: #2272cc;
-    color: #fff; }
+    background-color: #2272cc; }
   .block.block-success > .block-header {
-    background-color: #22cc22;
-    color: #fff; }
+    background-color: #22cc22; }
   .block.block-warn > .block-header {
-    background-color: #cc7222;
-    color: #fff; }
+    background-color: #cc7222; }
   .block.block-error > .block-header {
-    background-color: #cc2222;
-    color: #fff; }
+    background-color: #cc2222; }
 
 header {
   background-color: #2272cc;

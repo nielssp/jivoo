@@ -15,7 +15,7 @@
 <div class="block modal" id="block" style="display: none">
 <div class="block-header">A modal
   <div class="block-toolbar">
-    <?php echo $Html->link($Icon->icon('close'), 'null:', array('class' => 'close')); ?>
+    <?php echo $Icon->iconLink('Close', 'null:', 'close', array('class' => 'close')); ?>
   </div>
 </div>
 <div class="block-content">
@@ -39,9 +39,13 @@ $(function() {
     var $this = $popup.clone();
     $this.addClass('block-' + $(this).data('type'));
     $this.find('button').click($.magnificPopup.close);
-    $this.find('.block-toolbar a.close').click($.magnificPopup.close);
+    $this.find('.block-toolbar a.close').click(function() {
+      $.magnificPopup.close();
+      return false;
+    });
     $.magnificPopup.open({
       closeBtnInside: false,
+      showCloseBtn: false,
       prependTo: $('#main'),
       alignTop: true,
       items: {

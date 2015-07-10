@@ -60,6 +60,36 @@ class IconHelper extends Helper {
            $this->Html->addAttributes($attributes) . '>' . $icon .
            '<span class="label">' . $label . '</span></button>';
   }
+
+  /**
+   * Create a link with only an icon.
+   * @param string $label Link label.
+   * @property string|array|Jivoo\Routing\ILinkable|null $route A route, see
+   * {@see Jivoo\Routing\Routing}.
+   * @param string $icon Icon identifier.
+   * @param string[] $attributes Additional attributes for link.
+   * @return string HTML source for link.
+   */
+  public function iconLink($label, $route, $icon = null, $attributes = array()) {
+    try {
+      $url = $this->m->Routing->getLink($route);
+      if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
+        $attributes['class'] = 'current';
+      if (!isset($attributes['title']))
+        $attributes['title'] = h($label);
+      if (isset($icon))
+        $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
+      else
+        $icon = '';
+      return '<a href="' . h($url) . '"' .
+        $this->Html->addAttributes($attributes) . '>' . $icon . '</a>';
+    }
+    catch (InvalidRouteException $e) {
+      Logger::logException($e);
+      return '<a href="#invalid-route" class="invalid"><span class="label">' .
+             $label . '</span></a>';
+    }
+  }
   
   /**
    * Create a link with a label and an icon.

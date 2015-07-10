@@ -4,10 +4,10 @@
   <div class="block-header">
     A block
     <div class="block-toolbar">
-      <?php echo $Html->link($Icon->icon('undo') . ' undo', 'url:#'); ?>
-      <?php echo $Html->link($Icon->icon('redo'), 'url:#'); ?>
-      <?php echo $Html->link($Icon->icon('spell-check'), 'url:#'); ?>
-      <?php echo $Html->link($Icon->icon('cog'), 'url:#'); ?>
+      <?php echo $Icon->link('Undo', 'url:#', 'undo'); ?>
+      <?php echo $Icon->iconLink('Redo', 'url:#', 'redo'); ?>
+      <?php echo $Icon->iconLink('Spell check', 'url:#', 'spell-check'); ?>
+      <?php echo $Icon->iconLink('Settings', 'url:#', 'cog'); ?>
     </div>
   </div>
 <div class="block-content">
@@ -21,8 +21,8 @@
 <div class="block">
   <div class="block-header">A block
     <div class="block-toolbar">
-      <?php echo $Html->link($Icon->icon('loop'), 'url:#'); ?>
-      <?php echo $Html->link($Icon->icon('close'), 'url:#'); ?>
+      <?php echo $Icon->iconLink('Refresh', 'url:#', 'loop'); ?>
+      <?php echo $Icon->iconLink('Close', 'url:#', 'close'); ?>
     </div>
   </div>
 <div class="block-content">

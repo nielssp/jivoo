@@ -10,7 +10,10 @@
     color: #727272;
 
     & > .block-toolbar {
+      text-transform: none;
+      font-weight: normal;
       float: right;
+      color: rgba(0,0,0,0.4);
       & > a {
         margin-left: 8px;
         &, &:link, &:visited, &:active {
@@ -19,6 +22,10 @@
         &:hover {
           color: $primaryBg;
           text-decoration: none;
+        }
+        & > .label {
+          margin-left: 8px;
+          font-size: 0.9em;
         }
       }
     }
@@ -34,25 +41,35 @@
     padding: 16px;
     text-align: right;
   }
+  &.block-info,
+  &.block-success,
+  &.block-warn,
+  &.block-error {
+    & > .block-header {
+      color: #fff;
+      & > .block-toolbar {
+        color: rgba(255, 255, 255, 0.4);
+        & > a:hover {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+    }
+  }
 
   &.block-info > .block-header {
     background-color: #2272cc;
-    color: #fff;
   }
 
   &.block-success > .block-header {
     background-color: #22cc22;
-    color: #fff;
   }
 
   &.block-warn > .block-header {
     background-color: #cc7222;
-    color: #fff;
   }
 
   &.block-error > .block-header {
     background-color: #cc2222;
-    color: #fff;
   }
 }
 
