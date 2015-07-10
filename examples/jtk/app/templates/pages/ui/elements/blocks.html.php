@@ -34,7 +34,11 @@
 
 <div class="cell">
 <div class="block">
-<div class="block-header">A block</div>
+  <div class="block-header">A block
+    <div class="block-toolbar">
+      Lorem ipsum
+    </div>
+  </div>
 <div class="block-content">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
 </div>

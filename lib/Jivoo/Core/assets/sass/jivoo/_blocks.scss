@@ -8,6 +8,23 @@
     text-transform: uppercase;
     font-weight: bold;
     color: #727272;
+    & > h1,
+    & > h2,
+    & > h3,
+    & > h4,
+    & > h5,
+    & > h6 {
+      font-size: inherit;
+      margin: 0;
+      font-weight: inherit;
+      & > small {
+        text-transform: none;
+        font-weight: normal;
+        font-size: 0.9em;
+        margin-left: 8px;
+        color: #939393;
+      }
+    }
 
     & > .block-toolbar {
       text-transform: none;

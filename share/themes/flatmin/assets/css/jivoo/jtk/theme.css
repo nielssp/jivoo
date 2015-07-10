@@ -1057,7 +1057,8 @@ input[type=checkbox]:checked:before {
   .amaran.notification > .message {
     margin-left: 48px;
     padding: 12px;
-    background-color: rgba(30, 30, 30, 0.7); }
+    background-color: rgba(30, 30, 30, 0.7);
+    color: #fff; }
     .amaran.notification > .message a:link, .amaran.notification > .message a:active, .amaran.notification > .message a:visited {
       color: #fff;
       text-decoration: underline; }

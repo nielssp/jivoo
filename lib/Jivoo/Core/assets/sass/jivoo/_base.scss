@@ -43,6 +43,14 @@ p {
   }
 }
 
+h1, h2, h3, h4, h5, h6 { 
+  & > small {
+    font-weight: normal;
+    color: lighten($mainFg, 40%);
+    font-size: 0.8em;
+  }
+}
+
 h1, h2, h3 {
   margin: 0 0 12px;
   font-weight: normal;
@@ -54,14 +62,23 @@ h4, h5, h6 {
 
 h1 {
   font-size: 2.2em;
+  & > small {
+    font-size: 0.5em;
+  }
 }
 
 h2 {
   font-size: 1.8em;
+  & > small {
+    font-size: 0.6em;
+  }
 }
 
 h3 {
   font-size: 1.6em;
+  & > small {
+    font-size: 0.7em;
+  }
 }
 
 h4 {
@@ -133,4 +150,41 @@ ol {
   ol {
     list-style-type: lower-alpha;
   }
+}
+
+.info {
+  color: $primaryBg;
+}
+
+.success {
+  color: #22cc22;
+}
+
+.warn {
+  color: #cc7222;
+}
+
+.error {
+  color: #cc2222;
+}
+
+.bg-info, .bg-success, .bg-warn, .bg-error {
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.bg-info {
+  background-color: $primaryBg;
+}
+
+.bg-success {
+  background-color: #22cc22;
+}
+
+.bg-warn {
+  background-color: #cc7222;
+}
+
+.bg-error {
+  background-color: #cc2222;
 }
