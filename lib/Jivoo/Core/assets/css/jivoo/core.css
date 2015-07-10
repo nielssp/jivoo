@@ -73,6 +73,20 @@ h6 {
 strong, b {
   font-weight: 600; }
 
+em {
+  font-style: italic; }
+
+mark {
+  background-color: #ffffcc; }
+
+del {
+  color: #722222;
+  text-decoration: line-through; }
+
+ins {
+  color: #227222;
+  text-decoration: underline; }
+
 abbr[title] {
   border-bottom: 1px dotted #222;
   cursor: help; }
@@ -99,12 +113,17 @@ blockquote {
 pre, code, kbd {
   font-family: "Source Code Pro", monospace; }
 
-code {
+pre, code {
   background-color: #eee;
   color: #cc7222;
-  padding: 3px;
   font-size: 0.9em;
   border-radius: 3px; }
+
+pre {
+  padding: 8px; }
+
+code {
+  padding: 3px; }
 
 a img {
   border: 0; }
@@ -151,6 +170,37 @@ ol {
   background-color: #cc7222; }
 
 .bg-error {
+  background-color: #cc2222; }
+
+.badge {
+  background-color: #727272;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 0.85em;
+  border-radius: 3px;
+  font-weight: bold; }
+  .badge > .icon {
+    margin-right: 6px; }
+
+a.badge, a.badge:link, a.badge:active, a.badge:visited, a.badge:hover {
+  color: #fff;
+  text-decoration: none; }
+a.badge:hover {
+  opacity: 0.8; }
+
+.badge-primary {
+  background-color: #2272cc; }
+
+.badge-info {
+  background-color: #2272cc; }
+
+.badge-success {
+  background-color: #22cc22; }
+
+.badge-warn {
+  background-color: #cc7222; }
+
+.badge-error {
   background-color: #cc2222; }
 
 .row-1-1,

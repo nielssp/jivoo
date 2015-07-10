@@ -126,4 +126,23 @@ class IconHelper extends Helper {
              $label . '</span></a>';
     }
   }
+
+  /**
+   * Create a badge with a label and an icon.
+   * @param string $label Badge label.
+   * @param string $icon Icon identifier.
+   * @param string $context Badge context (e.g. 'success', 'primary', 'error', etc.)
+   * @return string HTML source for badge.
+   */
+  public function badge($label, $icon = null, $context = null) {
+    $class = 'badge';
+    if (isset($context))
+      $class .= ' badge-' . $context;
+    if (isset($icon))
+      $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
+    else
+      $icon = '';
+    return '<span class="' . $class . '">' . $icon .
+           '<span class="label">' . $label . '</span>' . $count . '</span>';
+  }
 }

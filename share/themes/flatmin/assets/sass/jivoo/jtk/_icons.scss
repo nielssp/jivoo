@@ -23,6 +23,10 @@
   }
 }
 
+.badge {
+  @include iconsize(10px, 0px);
+}
+
 .button,
 button,
 input[type=button],

@@ -35,10 +35,20 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
     <div class="block">
       <div class="block-header"><h3>Blockquotes</h3></div>
       <div class="block-content">
-<blockquote>
-  Linux is awesome.
-  <cite>Leonardo da Vinci</cite>
-</blockquote>
+        <blockquote>
+          Linux is awesome.
+          <cite>Leonardo da Vinci</cite>
+        </blockquote>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><h3>Preformatted</h3></div>
+      <div class="block-content">
+        <pre>#include &lt;stdio.h&gt;
+int main() {
+  printf("Hello, World!\n");
+  return 0;
+}</pre>
       </div>
     </div>
   </div>
@@ -46,7 +56,49 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
     <div class="block">
       <div class="block-header"><h3>Links</h3></div>
       <div class="block-content">
-        <a href="#" title="Title">Link</a>
+        <p>
+        <a href="#" title="Title">A normal link</a>
+        <a href="#" title="Title" class="badge">A badge link</a>
+        <?php echo $Icon->link('An icon link', 'url:#', 'cog', null, array('class' => 'badge badge-primary')); ?>
+        </p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><h3>Labels/badges</h3></div>
+      <div class="block-content">
+        <p>
+          <span class="badge">Default</span>
+          <span class="badge badge-primary">Primary</span>
+          <span class="badge badge-info">Info</span>
+          <span class="badge badge-success">Success</span>
+          <span class="badge badge-warn">Warn</span>
+          <span class="badge badge-error">Error</span>
+        </p>
+        <p>
+          <?php echo $Icon->badge('Default', 'home'); ?>
+          <?php echo $Icon->badge('Primary', 'flag', 'primary'); ?>
+          <?php echo $Icon->badge('Info', 'info', 'info'); ?>
+          <?php echo $Icon->badge('Success', 'checkmark', 'success'); ?>
+          <?php echo $Icon->badge('Warn', 'warning', 'warn'); ?>
+          <?php echo $Icon->badge('Error', 'close', 'error'); ?>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="cell">
+    <div class="block">
+      <div class="block-header"><h3>Formatting</h3></div>
+      <div class="block-content">
+        <p>
+          The following text <em>is emphasized</em>.
+          The following text <strong>is strongly emphasized</strong>.
+          The following text <mark>is highlighted</mark>.
+          The following text <q>is an inline quotation</q>.
+          This <del>text is deleted</del>, <ins>and this is inserted</ins>.
+          This is a code fragment: <code>int main()</code>.
+          This is a keyboard shortcut: <kbd>Ctrl</kbd>+<kbd>S</kbd>.
+          <abbr title="Jivoo Toolkit">JTK</abbr> is an abbreviation.
+        </p>
       </div>
     </div>
   </div>
