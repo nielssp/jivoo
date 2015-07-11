@@ -278,5 +278,10 @@ class Logger {
       'file' => null,
       'line' => null
     );
+    $previous = $exception->getPrevious();
+    if (isset($previous)) {
+      self::error(tr('The above exception was caused by:')); 
+      self::logException($previous);
+    }
   }
 }
