@@ -1,5 +1,25 @@
 <?php $this->view->data->title = tr('Blocks'); ?>
 
+<div class="row-1-1 row-sm">
+<div class="cell"><div class="block">
+<div class="block-content">This is a simple block.</div>
+</div><div class="block">
+<div class="block-header"><h3>Block header <small>Subheader</small></h3></div>
+<div class="block-content">This is a block with a header and a footer.</div>
+<div class="block-footer">Block footer</div>
+</div></div>
+<div class="cell"><div class="block">
+<div class="block-header"><h3>Block header <small>Subheader</small></h3></div>
+<div class="block-content">This is a block with a header.</div>
+</div><div class="block">
+<div class="block-content">This is a block with a footer.</div>
+<div class="block-footer">Block footer</div>
+</div></div>
+<div class="cell"></div>
+</div>
+
+<div class="row-1-1-1">
+  <div class="cell">
 <div class="block">
   <div class="block-header">
     A block
@@ -14,8 +34,7 @@
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat. Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
 </div>
 </div>
-
-<div class="row-1-1-1">
+  </div>
 
 <div class="cell">
 <div class="block">
@@ -45,14 +64,6 @@
 </div>
 </div>
 
-<div class="cell">
-<div class="block">
-<div class="block-header">A block</div>
-<div class="block-content">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
-</div>
-</div>
-</div>
 </div>
 
 <div class="row-1-1-1-1">
@@ -100,7 +111,7 @@
 <div class="block">
 <div class="block-header">A block</div>
 <div class="block-content">
-<div class="row-1-1-1">
+<div class="row-1-1-1 row-xs">
 <div class="cell">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat.</p>
 </div>
