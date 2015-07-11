@@ -1152,15 +1152,15 @@ input[type=checkbox]:checked:before {
 .mfp-bg {
   opacity: 0.3; }
 
-.modal {
+.dialog {
   position: relative;
   width: auto;
   max-width: 500px;
   margin: 48px auto;
   box-shadow: none; }
-  .modal > .mfp-close {
+  .dialog > .mfp-close {
     background-color: transparent; }
-    .modal > .mfp-close:focus, .modal > .mfp-close:hover {
+    .dialog > .mfp-close:focus, .dialog > .mfp-close:hover {
       background-color: rgba(0, 0, 0, 0.1);
       margin: 0; }
 

@@ -2091,7 +2091,7 @@ a.badge:hover {
     padding: 16px; }
     .block > .block-content > *:last-child {
       margin-bottom: 0; }
-  .block > .block-buttons {
+  .block > .block-footer {
     border-top: 1px solid #ddd;
     padding: 16px;
     text-align: right; }
