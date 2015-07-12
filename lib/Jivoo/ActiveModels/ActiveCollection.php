@@ -347,11 +347,11 @@ class ActiveCollection extends Model {
   /**
    * {@inheritdoc}
    */
-  public function insert($data) {
+  public function insert($data, $replace = false) {
     if (!isset($this->join)) {
       $data[$this->thisKey] = $this->recordId;
     }
-    $insertId = $this->other->insert($data);
+    $insertId = $this->other->insert($data, $replace);
     if (isset($this->join)) {
       $pk = $this->other->getAiPrimaryKey();
       if (isset($pk))
@@ -359,8 +359,16 @@ class ActiveCollection extends Model {
       $this->join->insert(array(
         $this->thisKey => $this->recordId,
         $this->otherKey => $data[$this->otherPrimary]
-      ));
+      ), $replace);
     }
     return $insertId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insertMultiple($records, $replace = false) {
+    foreach ($records as $data)
+      $this->insert($data, $replace);
   }
 }

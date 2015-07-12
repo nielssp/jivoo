@@ -362,31 +362,44 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function insert($data) {
+  public function insert($data, $replace = false) {
+    return $this->insertMultiple(array($data), $replace);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insertMultiple($records, $replace = false) {
+    if (count($records) == 0)
+      return null;
     $typeAdapter = $this->owner->getTypeAdapter();
-    $columns = array_keys($data);
-    $values = array_values($data);
-    $sqlString = 'INSERT INTO ' . $this->owner->quoteTableName($this->name) . ' (';
+    $columns = array_keys($records[0]);
+    if ($replace)
+      $sqlString = 'REPLACE';
+    else
+      $sqlString = 'INSERT';
+    $sqlString .= ' INTO ' . $this->owner->quoteTableName($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
-    $sqlString .= ') VALUES (';
-    $first = true;
-    foreach ($data as $column => $value) {
-      if ($first) {
-        $first = false;
+    $sqlString .= ') VALUES ';
+    $tuples = array();
+    foreach ($records as $data) {
+      $first = true;
+      $tupleSql = '(';
+      foreach ($data as $column => $value) {
+        if ($first)
+          $first = false;
+        else
+          $tupleSql .= ', ';
+        if (isset($value))
+          $tupleSql .= $typeAdapter->encode($this->getType($column), $value);
+        else
+          $tupleSql .= 'NULL';
       }
-      else {
-        $sqlString .= ', ';
-      }
-      if (isset($value)) {
-        $sqlString .= $typeAdapter->encode($this->getType($column), $value);
-      }
-      else {
-        $sqlString .= 'NULL';
-      }
+      $tupleSql .= ')';
+      $tuples[] = $tupleSql;
     }
-    $sqlString .= ')';
+    $sqlString .= implode(', ', $tuples);
     return $this->owner->rawQuery($sqlString);
   }
-  
   
 }

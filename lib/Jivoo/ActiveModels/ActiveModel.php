@@ -675,8 +675,15 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function insert($data) {
-    return $this->source->insert($data);
+  public function insert($data, $replace = false) {
+    return $this->source->insert($data, $replace);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insertMultiple($data, $replace = false) {
+    return $this->source->insertMultiple($data, $replace);
   }
 
   /**

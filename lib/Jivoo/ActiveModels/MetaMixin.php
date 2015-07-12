@@ -23,7 +23,53 @@ class MetaMixin extends ActiveModelMixin {
    */
   protected $options = array(
     'model' => null,
-    'thisKey' => null,
-    'otherKey' => null
+    'recordKey' => null
   );
+
+  /**
+   * @var IModel Meta data model.
+   */
+  private $other;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function init() {
+    if (!isset($this->options['model']))
+      $this->options['model'] = $this->model->getName() . 'Meta';
+    if (!isset($this->options['recordKey']))
+      $this->options['thisKey'] = lcfirst($this->model->getName()) . 'Id';
+    $this->model->addVirtual('meta');
+    $other = $this->options['model'];
+    $db = $this->model->getDatabase();
+    if (!isset($db->$other)) {
+      throw new ModelNotFoundException(tr(
+        'Model %1 not found in %2', $other, $this->model->getName()
+      ));
+    }
+    $this->other = $db->$other;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function afterLoad(ActiveModelEvent $event) {
+    $recordKey = $this->options['recordKey'];
+    $event->record->meta = new Meta($this->other, $thisKey, $event->record);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function afterCreate(ActiveModelEvent $event) {
+    $recordKey = $this->options['recordKey'];
+    $event->record->meta = new Meta($this->other, $thisKey, $event->record);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function afterSave(ActiveModelEvent $event) {
+    $event->record->meta->save();
+  }
 }
