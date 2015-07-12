@@ -334,7 +334,9 @@ class Assets extends LoadableModule {
 //     if ($this->config['mtimeSuffix'])
 //       $suffix = '?' . filemtime($file);
     return $this->m->Routing->getLinkFromPath(
-      array_merge(array('assets'), $path)
+      array_merge(array('assets'), $path),
+      $route['query'],
+      $route['fragment']
     ) . $suffix;
   }
 }

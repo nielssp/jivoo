@@ -8,6 +8,7 @@ namespace Jivoo\Snippets;
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
 use Jivoo\Routing\NotFoundException;
+use Jivoo\Routing\Http;
 use Jivoo\Core\Utilities;
 use Jivoo\View\ViewResponse;
 use Jivoo\Core\Lib;
@@ -52,11 +53,6 @@ class Snippet extends Module implements ISnippet {
   private $modelObjects = array();
   
   /**
-   * @var int HTTP status code.
-   */
-  private $status = 200;
-  
-  /**
    * @var bool Whether or not to render the layout.
    */
   private $enableLayout = false;
@@ -65,6 +61,11 @@ class Snippet extends Module implements ISnippet {
    * @var array Data for template.
    */
   protected $viewData = array();
+
+  /**
+   * @var Response Response (the default value is a {@see ViewResponse}.
+   */
+  protected $response;
   
   /**
    * Construct snippet.
@@ -87,6 +88,9 @@ class Snippet extends Module implements ISnippet {
     if (isset($this->m->Models)) {
       $this->modelObjects = $this->m->Models->getModels($this->models);
     }
+
+    $this->response = new ViewResponse(Http::OK, $this->view);
+
     $this->init();
   }
   
@@ -240,7 +244,7 @@ class Snippet extends Module implements ISnippet {
    * @param integer $httpStatus HTTP status code.
    */
   protected function setStatus($httpStatus) {
-    $this->status = $httpStatus;
+    $this->response->status = $httpStatus;
   }
   
   /**
@@ -248,7 +252,7 @@ class Snippet extends Module implements ISnippet {
    * @return integer HTTP status code.
    */
   public function getStatus() {
-    return $this->status;
+    return $this->response->status;
   }
   
   /**
@@ -285,6 +289,8 @@ class Snippet extends Module implements ISnippet {
    * @return string Rendered template.
    */
   protected function render($templateName = null) {
+    if (!($this->response instanceof ViewResponse))
+      return $this->response;
     if (!isset($templateName)) {
       $class = str_replace($this->app->n('Snippets\\'), '', get_class($this));
       $type = 'html';
@@ -297,6 +303,19 @@ class Snippet extends Module implements ISnippet {
     }
     $enableLayout = $this->enableLayout;
     $this->disableLayout();
-    return $this->view->render($templateName, $this->viewData, $enableLayout);
+    $this->response->template = $templateName;
+    $this->response->data = $this->viewData;
+    $this->response->withLayout = $enableLayout;
+    return $this->response;
+  }
+
+  /**
+   * Set cache settings.
+   * @param string $public Public or private.
+   * @param int|string $expires Time on which cache expires. Can be a UNIX
+   * timestamp or a string used with {@see strtotime()}.
+   */
+  public function cache($public = true, $expires = '+1 year') {
+    $this->response->cache($public, $expires);
   }
 }

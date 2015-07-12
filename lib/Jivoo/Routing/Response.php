@@ -9,8 +9,8 @@ use Jivoo\Core\Utilities;
 
 /**
  * Base class for HTTP responses.
- * @property-read int $status HTTP status code.
- * @property-read string $type Response type.
+ * @property int $status HTTP status code.
+ * @property string $type Response type.
  * @property-read string|null $cache Either 'public', 'private' or null.
  * @property-read string $body Response body.
  * @property int|null $modified Time of last modification, for caching purposes.
@@ -81,9 +81,13 @@ abstract class Response {
    */
   public function __set($property, $value) {
     switch ($property) {
+      case 'status':
       case 'modified':
       case 'maxAge':
         $this->$property = $value;
+        return;
+      case 'type':
+        $this->type = Utilities::convertType($value);
         return;
     }
     throw new \InvalidPropertyException(tr('Invalid property: %1', $property));

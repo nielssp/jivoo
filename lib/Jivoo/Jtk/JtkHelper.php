@@ -6,6 +6,7 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Helpers\Helper;
+use Jivoo\Routing\Response;
 
 /**
  * Jivoo toolkit helper.
@@ -45,7 +46,10 @@ class JtkHelper extends Helper {
   public function __call($tool, $parameters) {
     $tool = $this->m->Jtk->getTool($tool);
     if (isset($tool)) {
-      return $tool->__invoke($parameters);
+      $response = $tool->__invoke($parameters);
+      if ($response instanceof Response)
+        return $response->body;
+      return $response;
     }
     throw new \InvalidMethodException(tr('Invalid method: %1', $tool));
   }

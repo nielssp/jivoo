@@ -35,7 +35,10 @@ class SnippetHelper extends Helper {
    */
   public function __call($snippet, $parameters) {
     try {
-      return $this->m->Snippets->getSnippet($snippet)->__invoke($parameters);
+      $response = $this->m->Snippets->getSnippet($snippet)->__invoke($parameters);
+      if ($response instanceof Response)
+        return $response->body;
+      return $response;
     }
     catch (NotFoundException $exception) {
       return tr('Not found');
@@ -51,6 +54,9 @@ class SnippetHelper extends Helper {
   public function __invoke($snippet) {
     $parameters = func_get_args();
     array_shift($parameters);
-    return $this->__call($snippet, $parameters);
+    $response = $this->__call($snippet, $parameters);
+    if ($response instanceof Response)
+      return $response->body;
+    return $response;
   }
 }

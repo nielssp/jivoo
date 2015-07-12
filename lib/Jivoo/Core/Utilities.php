@@ -174,7 +174,8 @@ class Utilities {
    * @return string File extension.
    */
   public static function getFileExtension($file) {
-    $array = explode('.', $file);
+    $array = explode('?', $file);
+    $array = explode('.', $array[0]);
     return strtolower(array_pop($array));
   }
   
@@ -197,7 +198,8 @@ class Utilities {
    * @return string Content type, 'text/plain' if unknown.
    */
   public static function getContentType($fileName) {
-    $array = explode('.', $fileName);
+    $array = explode('?', $fileName);
+    $array = explode('.', $array[0]);
     $fileExt = strtolower(array_pop($array));
     return self::convertType($fileExt);
   }

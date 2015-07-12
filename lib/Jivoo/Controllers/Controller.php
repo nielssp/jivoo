@@ -10,6 +10,7 @@ use Jivoo\Core\App;
 use Jivoo\Core\Utilities;
 use Jivoo\View\ViewResponse;
 use Jivoo\Routing\Response;
+use Jivoo\Routing\Http;
 use Jivoo\Core\Lib;
 
 /**
@@ -51,9 +52,9 @@ class Controller extends Module {
   private $actions = array();
 
   /**
-   * @var HTTP status code.
+   * @var Response Response (the default value is a {@see ViewResponse}.
    */
-  private $status = 200;
+  protected $response;
   
   /**
    * Construct controller.
@@ -72,6 +73,8 @@ class Controller extends Module {
     }
     
     $this->name = preg_replace('/Controller$/', '', Lib::getClassName($this));
+
+    $this->response = new ViewResponse(Http::OK, $this->view);
 
     $classMethods = get_class_methods($this);
     $parentMethods = get_class_methods(__CLASS__);
@@ -253,7 +256,7 @@ class Controller extends Module {
    * @param integer $httpStatus HTTP status code.
    */
   protected function setStatus($httpStatus) {
-    $this->status = $httpStatus;
+    $this->response->status = $httpStatus;
   }
   
   /**
@@ -266,6 +269,8 @@ class Controller extends Module {
    * @return ViewResponse A view response for template.
    */
   protected function render($templateName = null) {
+    if (!($this->response instanceof ViewResponse))
+      return $this->response;
     if (!isset($templateName)) {
       list(, $caller) = debug_backtrace(false);
       $class = str_replace($this->app->n('Controllers\\'), '', $caller['class']);
@@ -283,8 +288,20 @@ class Controller extends Module {
       }
       $templateName .= Utilities::camelCaseToDashes($action) . '.' . $type;
     }
-    return new ViewResponse($this->status, $this->view, $templateName);
+    $this->response->template = $templateName;
+    return $this->response;
   }
+
+  /**
+   * Set cache settings.
+   * @param string $public Public or private.
+   * @param int|string $expires Time on which cache expires. Can be a UNIX
+   * timestamp or a string used with {@see strtotime()}.
+   */
+  public function cache($public = true, $expires = '+1 year') {
+    $this->response->cache($public, $expires);
+  }
+
 
   /**
    * Controller initialization, called by constructor.

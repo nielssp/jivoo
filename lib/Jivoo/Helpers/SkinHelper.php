@@ -65,7 +65,11 @@ class SkinHelper extends Helper {
     return $this->view->render($skin);
   }
   
-  public function apply($route) {
+  public function apply($route, $options = null) {
+    if (isset($options)) {
+      $route = $this->m->Routing->validateRoute($route);
+      $route['query'] = $options;
+    }
     $url =  $this->m->Assets->getDynamicAsset($route);
     $this->view->resources->provide($url, $url);
     $this->view->resources->closeFrame();
