@@ -1,0 +1,17 @@
+{
+  "library": true,
+  "name": "jQuery 2",
+  "version": "2.1.1",
+  "website": "http://jquery.com",
+  "category": "JavaScript",
+  "dependencies": {
+    "extensions": [
+      "jquery = 0"
+    ]
+  },
+  "resources": {
+    "jquery.js": {
+      "file": "jquery-$version.min.js"
+    }
+  }
+}

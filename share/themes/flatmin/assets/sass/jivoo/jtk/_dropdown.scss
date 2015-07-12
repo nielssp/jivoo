@@ -1,0 +1,149 @@
+@mixin dropdown {
+  list-style-type: none;
+  margin: 0;
+
+  li {
+    position: relative;
+
+    a {
+      &, &:link, &:active, &:visited, &:hover {
+        background-color: inherit;
+        color: inherit;
+        text-decoration: none;
+        padding: 6px 0 6px 12px;
+        display: block;
+      }
+      .icon {
+        width: 32px;
+        margin-left: -12px;
+        text-align: center;
+        display: inline-block;
+      }
+      .count {
+        margin-right: 12px;
+        display: none;
+        float: right;
+        color: #999;
+      }
+    }
+    &:hover > ul {
+      display: block;
+    }
+    ul {
+      margin: 0;
+      position: absolute;
+      float: none;
+      left: 100%;
+      top: 0px;
+      z-index: 999;
+      list-style-type: none;
+      background-color: $subMenuBg;
+      width: 160px;
+      box-shadow: 0px 2px 4px darken($subMenuBg, 30%);
+      display: none;
+      li {
+        position: relative;
+        display: block;
+        color: $subMenuFg;
+        &:hover {
+          background-color: $navBg;
+          color: $navHlFg;
+        }
+        a {
+          &, &:link, &:active, &:visited, &:hover {
+            padding: 6px 0 6px 12px;
+          }
+          &.current {
+            font-weight: 600;
+          }
+          .count {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  & > a {
+    @include button;
+    @include iconsize(12px, 0px);
+    .icon {
+      margin-right: 6px;
+    }
+    &:after {
+      @include icon('\e6b7', 12px);
+      display: inline-block;
+      margin: 0 -6px 0 4px;
+    }
+  }
+  ul {
+    @include dropdown;
+    position: absolute;
+    display: none;
+    z-index: 999;
+
+    background-color: $subMenuBg;
+    box-shadow: 0px 2px 4px darken($subMenuBg, 30%);
+
+    & > li {
+      color: $subMenuFg;
+      a, button {
+        &, &:link, &:active, &:visited, &:hover {
+          overflow: hidden;
+          padding: 6px 12px 6px 32px;
+          text-align: left;
+          white-space: nowrap;
+        }
+
+        @include iconsize(12px, -1px);
+
+        .icon {
+          margin-left: -32px;
+          width: 32px;
+          display: inline-block;
+          float: left;
+          text-align: center;
+          vertical-align: 0;
+        }
+
+        .label {
+        }
+      }
+      &:hover {
+        background-color: $navBg;
+        color: $navHlFg;
+      }
+      &.selected a:before {
+        width: 32px;
+        text-align: center;
+        display: inline-block;
+        font-size: 12px;
+        float: left;
+        font-family: icomoon;
+        content: '\e686';
+        margin: 3px 0 0 -32px;
+      }
+      &.selected-asc a:before {
+        content: '\e6ab';
+      }
+      &.selected-desc a:before {
+        content: '\e6af';
+      }
+    }
+  }
+  &:hover {
+    & > a {
+      background-color: $navHlBg;
+      color: $navHlFg;
+      border-color: $navHlFg;
+    }
+    & > ul {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "library": true,
+  "name": "leafo/scssphp",
+  "version": "0.0.12",
+  "description": "scssphp is a compiler for SCSS written in PHP.",
+  "website": "http://leafo.net/scssphp/",
+  "include": ["scss.inc.php"]
+}

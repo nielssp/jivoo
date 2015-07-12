@@ -1,0 +1,212 @@
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400|Source+Code+Pro:400,700");
+
+$bg: #C22;
+$fg: #FFF;
+
+#jivoo-dev-tools {
+  position: fixed !important;
+  display: none;
+  width: 100% !important;
+  text-align: left !important;
+  margin: 0 !important;
+
+  &, * {
+    font-weight: normal;
+  }
+  
+  &.jivoo-dev-tools-top,
+  &.jivoo-dev-tools-left {
+    top: 0;
+    left: 0;
+  }
+
+  &.jivoo-dev-tools-bottom {
+    bottom: 0;
+    left: 0;
+  }
+
+  &.jivoo-dev-tools-right {
+    top: 0;
+    right: 0;
+  }
+
+  & > .jivoo-devbar {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: $bg;
+    color: $fg;
+    font-family: "Open Sans", sans-serif;
+    font-size: 0;
+    white-space: nowrap;
+    & > .jivoo-devbar-handle {
+      padding: 4px 8px;
+      font-weight: bold;
+      display: inline-block;
+      text-transform: uppercase;
+      cursor: move;
+      font-size: 13px;
+    }
+    & > .jivoo-devbar-tools {
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      li {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        a {
+          text-decoration: none;
+          color: inherit;
+          padding: 4px 8px;
+          font-size: 13px;
+          display: block;
+          cursor: pointer;
+
+          &:hover {
+            background-color: darken($bg, 10%);
+          }
+          .jivoo-devbar-count {
+            color: $bg;
+            background-color: $fg;
+            margin-left: 5px;
+            padding: 1px 3px;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 11px;
+          }
+        }
+      }
+    }
+    & > .jivoo-devbar-settings {
+      float: right;
+      margin: 0;
+      padding: 0;
+      display: block;
+      li {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        label {
+          text-decoration: none;
+          color: inherit;
+          padding: 4px 8px;
+          font-size: 13px;
+          display: block;
+          cursor: pointer;
+
+          &:hover {
+            background-color: darken($bg, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  & > .jivoo-dev-frame-container {
+    background-color: #fff;
+    & > .jivoo-dev-frame {
+      font-size: 13px;
+      background-color: #fff;
+      color: #000;
+      min-height: 50px;
+      padding: 8px;
+      overflow-x: auto;
+      overflow-y: auto;
+      display: none;
+      position: static;
+      
+      & > .ui-resizable-n {
+        top: -3px;
+        left: 0;
+        right: 0;
+        height: 6px;
+      }
+      & > .ui-resizable-s {
+        bottom: -3px;
+        left: 0;
+        right: 0;
+        height: 6px;
+      }
+      & > .ui-resizable-w {
+        top: 0;
+        bottom: 0;
+        left: -3px;
+        width: 6px;
+      }
+      & > .ui-resizable-e {
+        top: 0;
+        bottom: 0;
+        right: -3px;
+        width: 6px;
+      }
+    }
+  }
+
+  &.jivoo-dev-tools-top,
+  &.jivoo-dev-tools-bottom {
+    right: 0;
+  }
+
+  &.jivoo-dev-tools-left,
+  &.jivoo-dev-tools-right {
+    top: 0;
+    bottom: 0;
+    width: auto !important;
+    & > .jivoo-dev-frame-container {
+      & > .jivoo-dev-frame {
+        min-width: 50px;
+        height: 100%;
+      }
+    }
+  }
+
+  &.jivoo-dev-tools-left {
+  }
+
+  &.jivoo-dev-tools-right {
+    top: 0;
+    bottom: 0;
+  }
+
+  &.jivoo-dev-tools-minimize {
+    width: auto !important;
+    &.jivoo-dev-tools-top,
+    &.jivoo-dev-tools-bottom {
+      right: auto;
+    }
+
+    & > .jivoo-devbar {
+      & > .jivoo-devbar-handle {
+        cursor: pointer;
+      }
+      & > .jivoo-devbar-tools {
+        display: none;
+      }
+      & > .jivoo-devbar-settings {
+        display: none;
+      }
+    }
+    & > .jivoo-dev-frame-container {
+      display: none;
+    }
+  }
+}
+
+
+#jivoo-dev-tools .jivoo-dev-frame-content {
+  font-family: "Open Sans", monospace;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+  color: #222;
+
+  strong {
+    color: $bg;
+    font-weight: bold;
+  }
+
+  @import 'main';
+}

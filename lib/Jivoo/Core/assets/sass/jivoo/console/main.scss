@@ -1,0 +1,37 @@
+
+.jivoo-system-info {
+  float: left;
+  width: 50%;
+  margin-bottom: 4px;
+
+  &-header {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 4px;
+  }
+
+  strong {
+    margin-right: 8px;
+    &:after {
+      content: ':';
+    }
+  }
+}
+
+.jivoo-console-log {
+  font-family: "Source Code Pro", monospace;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+
+  &-entry {
+    border-top: 1px solid #ccc;
+    &:first-child {
+      border: none;
+    }
+  }
+
+  &-entry:hover {
+    background-color: #f1f1f1;
+  }
+}

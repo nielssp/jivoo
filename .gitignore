@@ -1,5 +1,14 @@
 .project
 *.swp
-/tmp
 /apigen
-/index.php
+doc/
+*~
+.buildpath
+.settings/.jsdtscope
+.settings/
+.sass-cache/*
+*.scssc
+user/*/config.php
+user/*/db.sqlite3
+public/*/index.php
+tests/_output/*

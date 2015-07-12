@@ -1,0 +1,193 @@
+
+
+@mixin row($min-size: $md) {
+  margin: 0;
+  & > .cell {
+    float: none;
+    padding: 0;
+    margin: 0;
+  }
+  @media screen and (min-width: $min-size) {
+    margin: 0 -10px 20px;
+    & > .cell {
+      float: left;
+      padding: 0 10px;
+      margin-bottom: -20px;
+    }
+  }
+}
+
+@mixin col($num, $den, $min-size: $md) {
+  @media screen and (min-width: $min-size) {
+    float: left;
+    width: ($num / $den) * 100%;
+    padding: 0 10px;
+  }
+}
+
+@mixin auto-row($cells, $min-size: $md) {
+  @include row($min-size);
+  & > .cell {
+    width: auto;
+  }
+  @media screen and (min-width: $min-size) {
+    & > .cell {
+      width: (1 / $cells) * 100%;
+    }
+  }
+}
+
+@mixin row-sizes($min-size: $md) {
+  &.row-1-1,
+  &.row-1-1-1,
+  &.row-1-1-1-1,
+  &.row-1-2,
+  &.row-2-1,
+  &.row-1-1-2,
+  &.row-1-2-1,
+  &.row-2-1-1,
+  &.row-1-3,
+  &.row-3-1,
+  &.row-2-3,
+  &.row-3-2 {
+    & > .cell {
+      width: auto;
+    }
+  }
+  @media screen and (min-width: $min-size) {
+    &.row-1-1-1,
+    &.row-1-2,
+    &.row-2-1 {
+      & > .cell {
+        width: (1 / 3) * 100%;
+      }
+    }
+
+    &.row-1-1-1-1,
+    &.row-1-1-2,
+    &.row-1-2-1,
+    &.row-2-1-1,
+    &.row-1-3,
+    &.row-3-1 {
+      & > .cell {
+        width: 25%;
+      }
+    }
+
+    &.row-1-2 > .cell:nth-child(2),
+    &.row-2-1 > .cell:nth-child(1) {
+      width: (2 / 3) * 100%;
+    }
+
+    &.row-1-1 > .cell,
+    &.row-1-1-2 > .cell:nth-child(3),
+    &.row-1-2-1 > .cell:nth-child(2),
+    &.row-2-1-1 > .cell:nth-child(1) {
+      width: 50%;
+    }
+
+    &.row-1-3 > .cell:nth-child(2),
+    &.row-3-1 > .cell:nth-child(1) {
+      width: 75%;
+    }
+
+    &.row-2-3 > .cell:nth-child(2),
+    &.row-3-2 > .cell:nth-child(1) {
+      width: 60%;
+    }
+
+    &.row-3-2 > .cell:nth-child(2),
+    &.row-2-3 > .cell:nth-child(1) {
+      width: 40%;
+    }
+  }
+}
+
+.row-1-1,
+.row-1-1-1,
+.row-1-1-1-1,
+.row-1-2,
+.row-2-1,
+.row-1-1-2,
+.row-1-2-1,
+.row-2-1-1,
+.row-1-3,
+.row-3-1,
+.row-2-3,
+.row-3-2 {
+  @include row($md);
+  @include row-sizes($md);
+
+  &.row-xs {
+    @include row($xs);
+    @include row-sizes($xs);
+  }
+  &.row-sm {
+    @include row($sm);
+    @include row-sizes($sm);
+  }
+  &.row-lg {
+    @include row($lg);
+    @include row-sizes($lg);
+  }
+
+  &:after {
+    content: ' ';
+    display: block;
+    clear: left;
+  }
+}
+
+.row-auto,
+.row-auto-xs,
+.row-auto-sm,
+.row-auto-md,
+.row-auto-lg {
+  &:after {
+    content: ' ';
+    display: block;
+    clear: left;
+  }
+}
+
+@mixin auto-row($numxs, $numsm, $nummd, $numlg) {
+  margin: 0 -10px 20px;
+  & > .cell {
+    float: left;
+    padding: 0 10px;
+    margin-bottom: -20px;
+    width: (1 / $numxs) * 100%;
+  }
+  @media screen and (min-width: $xs) {
+    & > .cell {
+      width: (1 / $numsm) * 100%;
+    }
+  }
+  @media screen and (min-width: $sm) {
+    & > .cell {
+      width: (1 / $nummd) * 100%;
+    }
+  }
+  @media screen and (min-width: $lg) {
+    & > .cell {
+      width: (1 / $numlg) * 100%;
+    }
+  }
+}
+
+.row-auto,
+.row-auto-md {
+  @include auto-row(1, 2, 3, 4);
+}
+
+.row-auto-xs {
+  @include auto-row(2, 3, 5, 7);
+}
+
+.row-auto-sm {
+  @include auto-row(1, 2, 4, 5);
+}
+
+.row-auto-lg {
+  @include auto-row(1, 1, 2, 3);
+}

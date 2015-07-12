@@ -1,0 +1,13 @@
+{
+  "library": true,
+  "name": "Respond",
+  "version": "1.4.2",
+  "website": "https://github.com/scottjehl/Respond",
+  "category": "JavaScript",
+  "resources": {
+    "respond.js": {
+      "file": "respond.min.js",
+      "condition": "lt IE 9"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+header {
+  padding: 0 12px 0 32px;
+  height: 48px;
+  & > * {
+    height: 48px;
+  }
+
+  .account {
+    & > li {
+      display: none;
+    }
+    & > .account-menu {
+      display: block;
+    }
+    & > li > ul {
+      right: 0;
+      left: auto;
+    }
+  }
+
+  h1 {
+    line-height: 48px;
+    display: none;
+    margin: 0 8px;
+  }
+
+  & > ul {
+    @include dropdown;
+    display: block;
+    float: left;
+
+    &.account {
+      float: right;
+    }
+
+    & > li {
+      display: block;
+      float: left;
+      height: 48px;
+      color: $headerFg;
+      & > a {
+        height: 48px;
+        line-height: 48px;
+        font-size: 24px;
+        &, &:link, &:active, &:visited, &:hover {
+          color: inherit;
+          background: inherit;
+          text-decoration: none;
+          display: block;
+          padding: 0 10px;
+        }
+
+        .label {
+          display: none;
+        }
+
+        @include iconsize(24px);
+
+        .icon {
+          margin: 0;
+          width: auto;
+        }
+
+        @media screen and (min-width: $sm) {
+
+          @include iconsize(16px);
+
+          .label {
+            display: inline;
+          }
+
+          .icon {
+            margin-left: 0;
+            margin-right: 10px;
+          }
+        }
+      }
+      &:hover {
+        background-color: $headerHlBg;
+        color: $headerHlFg;
+      }
+      & > ul {
+        left: 0;
+        top: 100%;
+      }
+      &.notifications {
+        & > a > .label {
+          @media screen and (max-width: $sm - 1) {
+            display: inline;
+            background-color: #c22;
+            color: #fff;
+            font-size: 12px;
+            position: absolute;
+            right: 4px;
+            bottom: 8px;
+            height: 16px;
+            width: 16px;
+            line-height: 16px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: 600;
+          }
+        }
+        .notifications-menu {
+          min-width: 280px;
+          .flash {
+            padding: 8px;
+            margin: 0;
+            font-size: 0.9em;
+            box-shadow: inset -1px -1px 2px darken($subMenuBg, 10%);
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-height: $xs) {
+    position: fixed;
+  }
+  @media screen and (min-width: $xs) {
+    .account > li {
+      display: block;
+    }
+    .account > .account-menu {
+      display: none;
+    }
+  }
+  @media screen and (min-width: $sm) {
+    padding-right: 24px;
+    height: 32px;
+    & > * {
+      height: 32px;
+    }
+    h1 {
+      display: block;
+      line-height: 32px;
+    }
+    & > ul > li {
+      height: 32px;
+      & > a {
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+      }
+    }
+  }
+  @media screen and (min-width: $md) {
+    h1 {
+      margin: 0 16px 0 0 ;
+    }
+  }
+}
+
+#main {
+  padding-top: 56px;
+  @media screen and (min-width: $sm) {
+    padding-top: 48px;
+  }
+}

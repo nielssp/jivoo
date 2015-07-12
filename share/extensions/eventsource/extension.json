@@ -1,0 +1,12 @@
+{
+  "library": true,
+  "name": "EventSource",
+  "version": "0.0.5",
+  "website": "https://github.com/Yaffle/EventSource",
+  "category": "JavaScript",
+  "resources": {
+    "eventsource.js": {
+      "file": "eventsource.min.js"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+// sizes
+$xs: 480px;
+$sm: 768px;
+$md: 1010px;
+$lg: 1200px;
+
+// fonts
+$font: 'Open Sans', sans-serif;
+$monoFont: 'Consolas', monospace;
+
+// colors
+$primaryBg: #2272cc;
+$primaryFg: #fff;
+
+$headerBg: $primaryBg;
+$headerFg: $primaryFg;
+$headerHlBg: rgba(0, 0, 0, 0.15);
+$headerHlFg: $headerFg;
+$navBg: #eee;
+$navFg: #444;
+$navHlBg: #ddd;
+$navHlFg: $primaryBg;
+$navCuBg: $primaryBg;
+$navCuFg: $primaryFg;
+$navDisBg: #f1f1f1;
+$navDisFg: #999;
+$mainBg: #fff;
+$mainFg: #333;
+$subMenuBg: #f7f7f7;
+$subMenuFg: #333;

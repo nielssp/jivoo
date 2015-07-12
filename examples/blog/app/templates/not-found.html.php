@@ -1,0 +1,1 @@
+<p><?php echo tr('The requested page or file does not exist. '); ?></p>

@@ -1,0 +1,26 @@
+.jivoo-system-info {
+  float: left;
+  width: 50%;
+  margin-bottom: 4px; }
+  .jivoo-system-info-header {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 4px; }
+  .jivoo-system-info strong {
+    margin-right: 8px; }
+    .jivoo-system-info strong:after {
+      content: ':'; }
+
+.jivoo-console-log {
+  font-family: "Source Code Pro", monospace;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left; }
+  .jivoo-console-log-entry {
+    border-top: 1px solid #ccc; }
+    .jivoo-console-log-entry:first-child {
+      border: none; }
+  .jivoo-console-log-entry:hover {
+    background-color: #f1f1f1; }
+
+/*# sourceMappingURL=main.css.map */

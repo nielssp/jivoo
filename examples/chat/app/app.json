@@ -1,0 +1,28 @@
+{
+  "name": "Jivoo chat application",
+  "namespace": "Chat",
+  "version": "1.0",
+  "modules": [
+    "Routing",
+    "AccessControl",
+    "Assets",
+    "View",
+    "Controllers",
+    "Snippets",
+    "Models",
+    "Content",
+    "Helpers",
+    "Extensions",
+    "Databases",
+    "ActiveModels",
+    "Migrations",
+    "Setup",
+    "Jtk",
+    "Console"
+  ],
+  "extensions": [
+    "jquery"
+  ],
+  "install": "Jivoo\\Setup\\DefaultInstaller",
+  "update": "Jivoo\\Setup\\DefaultUpdater"
+}

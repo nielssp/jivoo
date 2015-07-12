@@ -1,0 +1,2594 @@
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600|Source+Code+Pro:400,700");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box; }
+
+html {
+  height: 100%; }
+
+body {
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #eee;
+  font-family: "Open Sans", sans-serif;
+  color: #333;
+  font-size: 14px; }
+
+header, footer, section, nav {
+  display: block; }
+
+a {
+  cursor: pointer; }
+  a:link, a:active, a:visited {
+    color: #2272cc;
+    text-decoration: none; }
+  a:hover {
+    color: #6da6e7;
+    text-decoration: underline; }
+
+p {
+  margin: 0 0 20px;
+  line-height: 1.6em; }
+  p.center {
+    text-align: center; }
+
+h1 > small, h2 > small, h3 > small, h4 > small, h5 > small, h6 > small {
+  font-weight: normal;
+  color: #999999;
+  font-size: 0.8em; }
+
+h1, h2, h3 {
+  margin: 0 0 12px;
+  font-weight: normal; }
+
+h4, h5, h6 {
+  margin: 0 0 8px; }
+
+h1 {
+  font-size: 2.2em; }
+  h1 > small {
+    font-size: 0.5em; }
+
+h2 {
+  font-size: 1.8em; }
+  h2 > small {
+    font-size: 0.6em; }
+
+h3 {
+  font-size: 1.6em; }
+  h3 > small {
+    font-size: 0.7em; }
+
+h4 {
+  font-size: 1.4em; }
+
+h5 {
+  font-size: 1.3em; }
+
+h6 {
+  font-size: 1.2em; }
+
+strong, b {
+  font-weight: 600; }
+
+em {
+  font-style: italic; }
+
+mark {
+  background-color: #ffffcc; }
+
+del {
+  color: #722222;
+  text-decoration: line-through; }
+
+ins {
+  color: #227222;
+  text-decoration: underline; }
+
+abbr[title] {
+  border-bottom: 1px dotted #222;
+  cursor: help; }
+
+q {
+  quotes: "\201C" "\201D" "\2018" "\2019"; }
+
+blockquote {
+  border-left: 4px solid #ccc;
+  padding: 10px 20px;
+  font-size: 1.4em;
+  margin-bottom: 20px; }
+  blockquote cite {
+    margin-top: 5px;
+    font-size: 0.7em;
+    color: #999;
+    font-style: italic;
+    display: block; }
+    blockquote cite:before {
+      color: #999;
+      content: "\2014";
+      padding-right: 0.5em; }
+
+pre, code, kbd {
+  font-family: "Source Code Pro", monospace; }
+
+pre, code {
+  background-color: #eee;
+  color: #cc7222;
+  font-size: 0.9em;
+  border-radius: 3px; }
+
+pre {
+  padding: 8px; }
+
+code {
+  padding: 3px; }
+
+a img {
+  border: 0; }
+
+ul, ol {
+  margin-left: 32px;
+  margin-bottom: 20px; }
+  ul ul, ul ol, ol ul, ol ol {
+    margin-bottom: 0; }
+
+ul {
+  list-style-type: disc; }
+  ul ul {
+    list-style-type: circle; }
+
+ol {
+  list-style-type: decimal; }
+  ol ol {
+    list-style-type: lower-alpha; }
+
+.center {
+  text-align: center; }
+
+.info {
+  color: #2272cc; }
+
+.success {
+  color: #22cc22; }
+
+.warn {
+  color: #cc7222; }
+
+.error {
+  color: #cc2222; }
+
+.bg-info, .bg-success, .bg-warn, .bg-error {
+  color: #fff;
+  padding: 10px 20px; }
+
+.bg-info {
+  background-color: #2272cc; }
+
+.bg-success {
+  background-color: #22cc22; }
+
+.bg-warn {
+  background-color: #cc7222; }
+
+.bg-error {
+  background-color: #cc2222; }
+
+.badge {
+  background-color: #727272;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 0.85em;
+  border-radius: 3px;
+  font-weight: bold; }
+  .badge > .icon {
+    margin-right: 6px; }
+
+a.badge, a.badge:link, a.badge:active, a.badge:visited, a.badge:hover {
+  color: #fff;
+  text-decoration: none; }
+a.badge:hover {
+  opacity: 0.8; }
+
+.badge-primary {
+  background-color: #2272cc; }
+
+.badge-info {
+  background-color: #2272cc; }
+
+.badge-success {
+  background-color: #22cc22; }
+
+.badge-warn {
+  background-color: #cc7222; }
+
+.badge-error {
+  background-color: #cc2222; }
+
+.row-1-1,
+.row-1-1-1,
+.row-1-1-1-1,
+.row-1-2,
+.row-2-1,
+.row-1-1-2,
+.row-1-2-1,
+.row-2-1-1,
+.row-1-3,
+.row-3-1,
+.row-2-3,
+.row-3-2 {
+  margin: 0; }
+  .row-1-1 > .cell,
+  .row-1-1-1 > .cell,
+  .row-1-1-1-1 > .cell,
+  .row-1-2 > .cell,
+  .row-2-1 > .cell,
+  .row-1-1-2 > .cell,
+  .row-1-2-1 > .cell,
+  .row-2-1-1 > .cell,
+  .row-1-3 > .cell,
+  .row-3-1 > .cell,
+  .row-2-3 > .cell,
+  .row-3-2 > .cell {
+    float: none;
+    padding: 0;
+    margin: 0; }
+  @media screen and (min-width: 1010px) {
+    .row-1-1,
+    .row-1-1-1,
+    .row-1-1-1-1,
+    .row-1-2,
+    .row-2-1,
+    .row-1-1-2,
+    .row-1-2-1,
+    .row-2-1-1,
+    .row-1-3,
+    .row-3-1,
+    .row-2-3,
+    .row-3-2 {
+      margin: 0 -10px 20px; }
+      .row-1-1 > .cell,
+      .row-1-1-1 > .cell,
+      .row-1-1-1-1 > .cell,
+      .row-1-2 > .cell,
+      .row-2-1 > .cell,
+      .row-1-1-2 > .cell,
+      .row-1-2-1 > .cell,
+      .row-2-1-1 > .cell,
+      .row-1-3 > .cell,
+      .row-3-1 > .cell,
+      .row-2-3 > .cell,
+      .row-3-2 > .cell {
+        float: left;
+        padding: 0 10px;
+        margin-bottom: -20px; } }
+  .row-1-1.row-1-1 > .cell, .row-1-1.row-1-1-1 > .cell, .row-1-1.row-1-1-1-1 > .cell, .row-1-1.row-1-2 > .cell, .row-1-1.row-2-1 > .cell, .row-1-1.row-1-1-2 > .cell, .row-1-1.row-1-2-1 > .cell, .row-1-1.row-2-1-1 > .cell, .row-1-1.row-1-3 > .cell, .row-1-1.row-3-1 > .cell, .row-1-1.row-2-3 > .cell, .row-1-1.row-3-2 > .cell,
+  .row-1-1-1.row-1-1 > .cell,
+  .row-1-1-1.row-1-1-1 > .cell,
+  .row-1-1-1.row-1-1-1-1 > .cell,
+  .row-1-1-1.row-1-2 > .cell,
+  .row-1-1-1.row-2-1 > .cell,
+  .row-1-1-1.row-1-1-2 > .cell,
+  .row-1-1-1.row-1-2-1 > .cell,
+  .row-1-1-1.row-2-1-1 > .cell,
+  .row-1-1-1.row-1-3 > .cell,
+  .row-1-1-1.row-3-1 > .cell,
+  .row-1-1-1.row-2-3 > .cell,
+  .row-1-1-1.row-3-2 > .cell,
+  .row-1-1-1-1.row-1-1 > .cell,
+  .row-1-1-1-1.row-1-1-1 > .cell,
+  .row-1-1-1-1.row-1-1-1-1 > .cell,
+  .row-1-1-1-1.row-1-2 > .cell,
+  .row-1-1-1-1.row-2-1 > .cell,
+  .row-1-1-1-1.row-1-1-2 > .cell,
+  .row-1-1-1-1.row-1-2-1 > .cell,
+  .row-1-1-1-1.row-2-1-1 > .cell,
+  .row-1-1-1-1.row-1-3 > .cell,
+  .row-1-1-1-1.row-3-1 > .cell,
+  .row-1-1-1-1.row-2-3 > .cell,
+  .row-1-1-1-1.row-3-2 > .cell,
+  .row-1-2.row-1-1 > .cell,
+  .row-1-2.row-1-1-1 > .cell,
+  .row-1-2.row-1-1-1-1 > .cell,
+  .row-1-2.row-1-2 > .cell,
+  .row-1-2.row-2-1 > .cell,
+  .row-1-2.row-1-1-2 > .cell,
+  .row-1-2.row-1-2-1 > .cell,
+  .row-1-2.row-2-1-1 > .cell,
+  .row-1-2.row-1-3 > .cell,
+  .row-1-2.row-3-1 > .cell,
+  .row-1-2.row-2-3 > .cell,
+  .row-1-2.row-3-2 > .cell,
+  .row-2-1.row-1-1 > .cell,
+  .row-2-1.row-1-1-1 > .cell,
+  .row-2-1.row-1-1-1-1 > .cell,
+  .row-2-1.row-1-2 > .cell,
+  .row-2-1.row-2-1 > .cell,
+  .row-2-1.row-1-1-2 > .cell,
+  .row-2-1.row-1-2-1 > .cell,
+  .row-2-1.row-2-1-1 > .cell,
+  .row-2-1.row-1-3 > .cell,
+  .row-2-1.row-3-1 > .cell,
+  .row-2-1.row-2-3 > .cell,
+  .row-2-1.row-3-2 > .cell,
+  .row-1-1-2.row-1-1 > .cell,
+  .row-1-1-2.row-1-1-1 > .cell,
+  .row-1-1-2.row-1-1-1-1 > .cell,
+  .row-1-1-2.row-1-2 > .cell,
+  .row-1-1-2.row-2-1 > .cell,
+  .row-1-1-2.row-1-1-2 > .cell,
+  .row-1-1-2.row-1-2-1 > .cell,
+  .row-1-1-2.row-2-1-1 > .cell,
+  .row-1-1-2.row-1-3 > .cell,
+  .row-1-1-2.row-3-1 > .cell,
+  .row-1-1-2.row-2-3 > .cell,
+  .row-1-1-2.row-3-2 > .cell,
+  .row-1-2-1.row-1-1 > .cell,
+  .row-1-2-1.row-1-1-1 > .cell,
+  .row-1-2-1.row-1-1-1-1 > .cell,
+  .row-1-2-1.row-1-2 > .cell,
+  .row-1-2-1.row-2-1 > .cell,
+  .row-1-2-1.row-1-1-2 > .cell,
+  .row-1-2-1.row-1-2-1 > .cell,
+  .row-1-2-1.row-2-1-1 > .cell,
+  .row-1-2-1.row-1-3 > .cell,
+  .row-1-2-1.row-3-1 > .cell,
+  .row-1-2-1.row-2-3 > .cell,
+  .row-1-2-1.row-3-2 > .cell,
+  .row-2-1-1.row-1-1 > .cell,
+  .row-2-1-1.row-1-1-1 > .cell,
+  .row-2-1-1.row-1-1-1-1 > .cell,
+  .row-2-1-1.row-1-2 > .cell,
+  .row-2-1-1.row-2-1 > .cell,
+  .row-2-1-1.row-1-1-2 > .cell,
+  .row-2-1-1.row-1-2-1 > .cell,
+  .row-2-1-1.row-2-1-1 > .cell,
+  .row-2-1-1.row-1-3 > .cell,
+  .row-2-1-1.row-3-1 > .cell,
+  .row-2-1-1.row-2-3 > .cell,
+  .row-2-1-1.row-3-2 > .cell,
+  .row-1-3.row-1-1 > .cell,
+  .row-1-3.row-1-1-1 > .cell,
+  .row-1-3.row-1-1-1-1 > .cell,
+  .row-1-3.row-1-2 > .cell,
+  .row-1-3.row-2-1 > .cell,
+  .row-1-3.row-1-1-2 > .cell,
+  .row-1-3.row-1-2-1 > .cell,
+  .row-1-3.row-2-1-1 > .cell,
+  .row-1-3.row-1-3 > .cell,
+  .row-1-3.row-3-1 > .cell,
+  .row-1-3.row-2-3 > .cell,
+  .row-1-3.row-3-2 > .cell,
+  .row-3-1.row-1-1 > .cell,
+  .row-3-1.row-1-1-1 > .cell,
+  .row-3-1.row-1-1-1-1 > .cell,
+  .row-3-1.row-1-2 > .cell,
+  .row-3-1.row-2-1 > .cell,
+  .row-3-1.row-1-1-2 > .cell,
+  .row-3-1.row-1-2-1 > .cell,
+  .row-3-1.row-2-1-1 > .cell,
+  .row-3-1.row-1-3 > .cell,
+  .row-3-1.row-3-1 > .cell,
+  .row-3-1.row-2-3 > .cell,
+  .row-3-1.row-3-2 > .cell,
+  .row-2-3.row-1-1 > .cell,
+  .row-2-3.row-1-1-1 > .cell,
+  .row-2-3.row-1-1-1-1 > .cell,
+  .row-2-3.row-1-2 > .cell,
+  .row-2-3.row-2-1 > .cell,
+  .row-2-3.row-1-1-2 > .cell,
+  .row-2-3.row-1-2-1 > .cell,
+  .row-2-3.row-2-1-1 > .cell,
+  .row-2-3.row-1-3 > .cell,
+  .row-2-3.row-3-1 > .cell,
+  .row-2-3.row-2-3 > .cell,
+  .row-2-3.row-3-2 > .cell,
+  .row-3-2.row-1-1 > .cell,
+  .row-3-2.row-1-1-1 > .cell,
+  .row-3-2.row-1-1-1-1 > .cell,
+  .row-3-2.row-1-2 > .cell,
+  .row-3-2.row-2-1 > .cell,
+  .row-3-2.row-1-1-2 > .cell,
+  .row-3-2.row-1-2-1 > .cell,
+  .row-3-2.row-2-1-1 > .cell,
+  .row-3-2.row-1-3 > .cell,
+  .row-3-2.row-3-1 > .cell,
+  .row-3-2.row-2-3 > .cell,
+  .row-3-2.row-3-2 > .cell {
+    width: auto; }
+  @media screen and (min-width: 1010px) {
+    .row-1-1.row-1-1-1 > .cell, .row-1-1.row-1-2 > .cell, .row-1-1.row-2-1 > .cell,
+    .row-1-1-1.row-1-1-1 > .cell,
+    .row-1-1-1.row-1-2 > .cell,
+    .row-1-1-1.row-2-1 > .cell,
+    .row-1-1-1-1.row-1-1-1 > .cell,
+    .row-1-1-1-1.row-1-2 > .cell,
+    .row-1-1-1-1.row-2-1 > .cell,
+    .row-1-2.row-1-1-1 > .cell,
+    .row-1-2.row-1-2 > .cell,
+    .row-1-2.row-2-1 > .cell,
+    .row-2-1.row-1-1-1 > .cell,
+    .row-2-1.row-1-2 > .cell,
+    .row-2-1.row-2-1 > .cell,
+    .row-1-1-2.row-1-1-1 > .cell,
+    .row-1-1-2.row-1-2 > .cell,
+    .row-1-1-2.row-2-1 > .cell,
+    .row-1-2-1.row-1-1-1 > .cell,
+    .row-1-2-1.row-1-2 > .cell,
+    .row-1-2-1.row-2-1 > .cell,
+    .row-2-1-1.row-1-1-1 > .cell,
+    .row-2-1-1.row-1-2 > .cell,
+    .row-2-1-1.row-2-1 > .cell,
+    .row-1-3.row-1-1-1 > .cell,
+    .row-1-3.row-1-2 > .cell,
+    .row-1-3.row-2-1 > .cell,
+    .row-3-1.row-1-1-1 > .cell,
+    .row-3-1.row-1-2 > .cell,
+    .row-3-1.row-2-1 > .cell,
+    .row-2-3.row-1-1-1 > .cell,
+    .row-2-3.row-1-2 > .cell,
+    .row-2-3.row-2-1 > .cell,
+    .row-3-2.row-1-1-1 > .cell,
+    .row-3-2.row-1-2 > .cell,
+    .row-3-2.row-2-1 > .cell {
+      width: 33.33333%; }
+    .row-1-1.row-1-1-1-1 > .cell, .row-1-1.row-1-1-2 > .cell, .row-1-1.row-1-2-1 > .cell, .row-1-1.row-2-1-1 > .cell, .row-1-1.row-1-3 > .cell, .row-1-1.row-3-1 > .cell,
+    .row-1-1-1.row-1-1-1-1 > .cell,
+    .row-1-1-1.row-1-1-2 > .cell,
+    .row-1-1-1.row-1-2-1 > .cell,
+    .row-1-1-1.row-2-1-1 > .cell,
+    .row-1-1-1.row-1-3 > .cell,
+    .row-1-1-1.row-3-1 > .cell,
+    .row-1-1-1-1.row-1-1-1-1 > .cell,
+    .row-1-1-1-1.row-1-1-2 > .cell,
+    .row-1-1-1-1.row-1-2-1 > .cell,
+    .row-1-1-1-1.row-2-1-1 > .cell,
+    .row-1-1-1-1.row-1-3 > .cell,
+    .row-1-1-1-1.row-3-1 > .cell,
+    .row-1-2.row-1-1-1-1 > .cell,
+    .row-1-2.row-1-1-2 > .cell,
+    .row-1-2.row-1-2-1 > .cell,
+    .row-1-2.row-2-1-1 > .cell,
+    .row-1-2.row-1-3 > .cell,
+    .row-1-2.row-3-1 > .cell,
+    .row-2-1.row-1-1-1-1 > .cell,
+    .row-2-1.row-1-1-2 > .cell,
+    .row-2-1.row-1-2-1 > .cell,
+    .row-2-1.row-2-1-1 > .cell,
+    .row-2-1.row-1-3 > .cell,
+    .row-2-1.row-3-1 > .cell,
+    .row-1-1-2.row-1-1-1-1 > .cell,
+    .row-1-1-2.row-1-1-2 > .cell,
+    .row-1-1-2.row-1-2-1 > .cell,
+    .row-1-1-2.row-2-1-1 > .cell,
+    .row-1-1-2.row-1-3 > .cell,
+    .row-1-1-2.row-3-1 > .cell,
+    .row-1-2-1.row-1-1-1-1 > .cell,
+    .row-1-2-1.row-1-1-2 > .cell,
+    .row-1-2-1.row-1-2-1 > .cell,
+    .row-1-2-1.row-2-1-1 > .cell,
+    .row-1-2-1.row-1-3 > .cell,
+    .row-1-2-1.row-3-1 > .cell,
+    .row-2-1-1.row-1-1-1-1 > .cell,
+    .row-2-1-1.row-1-1-2 > .cell,
+    .row-2-1-1.row-1-2-1 > .cell,
+    .row-2-1-1.row-2-1-1 > .cell,
+    .row-2-1-1.row-1-3 > .cell,
+    .row-2-1-1.row-3-1 > .cell,
+    .row-1-3.row-1-1-1-1 > .cell,
+    .row-1-3.row-1-1-2 > .cell,
+    .row-1-3.row-1-2-1 > .cell,
+    .row-1-3.row-2-1-1 > .cell,
+    .row-1-3.row-1-3 > .cell,
+    .row-1-3.row-3-1 > .cell,
+    .row-3-1.row-1-1-1-1 > .cell,
+    .row-3-1.row-1-1-2 > .cell,
+    .row-3-1.row-1-2-1 > .cell,
+    .row-3-1.row-2-1-1 > .cell,
+    .row-3-1.row-1-3 > .cell,
+    .row-3-1.row-3-1 > .cell,
+    .row-2-3.row-1-1-1-1 > .cell,
+    .row-2-3.row-1-1-2 > .cell,
+    .row-2-3.row-1-2-1 > .cell,
+    .row-2-3.row-2-1-1 > .cell,
+    .row-2-3.row-1-3 > .cell,
+    .row-2-3.row-3-1 > .cell,
+    .row-3-2.row-1-1-1-1 > .cell,
+    .row-3-2.row-1-1-2 > .cell,
+    .row-3-2.row-1-2-1 > .cell,
+    .row-3-2.row-2-1-1 > .cell,
+    .row-3-2.row-1-3 > .cell,
+    .row-3-2.row-3-1 > .cell {
+      width: 25%; }
+    .row-1-1.row-1-2 > .cell:nth-child(2), .row-1-1.row-2-1 > .cell:nth-child(1),
+    .row-1-1-1.row-1-2 > .cell:nth-child(2),
+    .row-1-1-1.row-2-1 > .cell:nth-child(1),
+    .row-1-1-1-1.row-1-2 > .cell:nth-child(2),
+    .row-1-1-1-1.row-2-1 > .cell:nth-child(1),
+    .row-1-2.row-1-2 > .cell:nth-child(2),
+    .row-1-2.row-2-1 > .cell:nth-child(1),
+    .row-2-1.row-1-2 > .cell:nth-child(2),
+    .row-2-1.row-2-1 > .cell:nth-child(1),
+    .row-1-1-2.row-1-2 > .cell:nth-child(2),
+    .row-1-1-2.row-2-1 > .cell:nth-child(1),
+    .row-1-2-1.row-1-2 > .cell:nth-child(2),
+    .row-1-2-1.row-2-1 > .cell:nth-child(1),
+    .row-2-1-1.row-1-2 > .cell:nth-child(2),
+    .row-2-1-1.row-2-1 > .cell:nth-child(1),
+    .row-1-3.row-1-2 > .cell:nth-child(2),
+    .row-1-3.row-2-1 > .cell:nth-child(1),
+    .row-3-1.row-1-2 > .cell:nth-child(2),
+    .row-3-1.row-2-1 > .cell:nth-child(1),
+    .row-2-3.row-1-2 > .cell:nth-child(2),
+    .row-2-3.row-2-1 > .cell:nth-child(1),
+    .row-3-2.row-1-2 > .cell:nth-child(2),
+    .row-3-2.row-2-1 > .cell:nth-child(1) {
+      width: 66.66667%; }
+    .row-1-1.row-1-1 > .cell, .row-1-1.row-1-1-2 > .cell:nth-child(3), .row-1-1.row-1-2-1 > .cell:nth-child(2), .row-1-1.row-2-1-1 > .cell:nth-child(1),
+    .row-1-1-1.row-1-1 > .cell,
+    .row-1-1-1.row-1-1-2 > .cell:nth-child(3),
+    .row-1-1-1.row-1-2-1 > .cell:nth-child(2),
+    .row-1-1-1.row-2-1-1 > .cell:nth-child(1),
+    .row-1-1-1-1.row-1-1 > .cell,
+    .row-1-1-1-1.row-1-1-2 > .cell:nth-child(3),
+    .row-1-1-1-1.row-1-2-1 > .cell:nth-child(2),
+    .row-1-1-1-1.row-2-1-1 > .cell:nth-child(1),
+    .row-1-2.row-1-1 > .cell,
+    .row-1-2.row-1-1-2 > .cell:nth-child(3),
+    .row-1-2.row-1-2-1 > .cell:nth-child(2),
+    .row-1-2.row-2-1-1 > .cell:nth-child(1),
+    .row-2-1.row-1-1 > .cell,
+    .row-2-1.row-1-1-2 > .cell:nth-child(3),
+    .row-2-1.row-1-2-1 > .cell:nth-child(2),
+    .row-2-1.row-2-1-1 > .cell:nth-child(1),
+    .row-1-1-2.row-1-1 > .cell,
+    .row-1-1-2.row-1-1-2 > .cell:nth-child(3),
+    .row-1-1-2.row-1-2-1 > .cell:nth-child(2),
+    .row-1-1-2.row-2-1-1 > .cell:nth-child(1),
+    .row-1-2-1.row-1-1 > .cell,
+    .row-1-2-1.row-1-1-2 > .cell:nth-child(3),
+    .row-1-2-1.row-1-2-1 > .cell:nth-child(2),
+    .row-1-2-1.row-2-1-1 > .cell:nth-child(1),
+    .row-2-1-1.row-1-1 > .cell,
+    .row-2-1-1.row-1-1-2 > .cell:nth-child(3),
+    .row-2-1-1.row-1-2-1 > .cell:nth-child(2),
+    .row-2-1-1.row-2-1-1 > .cell:nth-child(1),
+    .row-1-3.row-1-1 > .cell,
+    .row-1-3.row-1-1-2 > .cell:nth-child(3),
+    .row-1-3.row-1-2-1 > .cell:nth-child(2),
+    .row-1-3.row-2-1-1 > .cell:nth-child(1),
+    .row-3-1.row-1-1 > .cell,
+    .row-3-1.row-1-1-2 > .cell:nth-child(3),
+    .row-3-1.row-1-2-1 > .cell:nth-child(2),
+    .row-3-1.row-2-1-1 > .cell:nth-child(1),
+    .row-2-3.row-1-1 > .cell,
+    .row-2-3.row-1-1-2 > .cell:nth-child(3),
+    .row-2-3.row-1-2-1 > .cell:nth-child(2),
+    .row-2-3.row-2-1-1 > .cell:nth-child(1),
+    .row-3-2.row-1-1 > .cell,
+    .row-3-2.row-1-1-2 > .cell:nth-child(3),
+    .row-3-2.row-1-2-1 > .cell:nth-child(2),
+    .row-3-2.row-2-1-1 > .cell:nth-child(1) {
+      width: 50%; }
+    .row-1-1.row-1-3 > .cell:nth-child(2), .row-1-1.row-3-1 > .cell:nth-child(1),
+    .row-1-1-1.row-1-3 > .cell:nth-child(2),
+    .row-1-1-1.row-3-1 > .cell:nth-child(1),
+    .row-1-1-1-1.row-1-3 > .cell:nth-child(2),
+    .row-1-1-1-1.row-3-1 > .cell:nth-child(1),
+    .row-1-2.row-1-3 > .cell:nth-child(2),
+    .row-1-2.row-3-1 > .cell:nth-child(1),
+    .row-2-1.row-1-3 > .cell:nth-child(2),
+    .row-2-1.row-3-1 > .cell:nth-child(1),
+    .row-1-1-2.row-1-3 > .cell:nth-child(2),
+    .row-1-1-2.row-3-1 > .cell:nth-child(1),
+    .row-1-2-1.row-1-3 > .cell:nth-child(2),
+    .row-1-2-1.row-3-1 > .cell:nth-child(1),
+    .row-2-1-1.row-1-3 > .cell:nth-child(2),
+    .row-2-1-1.row-3-1 > .cell:nth-child(1),
+    .row-1-3.row-1-3 > .cell:nth-child(2),
+    .row-1-3.row-3-1 > .cell:nth-child(1),
+    .row-3-1.row-1-3 > .cell:nth-child(2),
+    .row-3-1.row-3-1 > .cell:nth-child(1),
+    .row-2-3.row-1-3 > .cell:nth-child(2),
+    .row-2-3.row-3-1 > .cell:nth-child(1),
+    .row-3-2.row-1-3 > .cell:nth-child(2),
+    .row-3-2.row-3-1 > .cell:nth-child(1) {
+      width: 75%; }
+    .row-1-1.row-2-3 > .cell:nth-child(2), .row-1-1.row-3-2 > .cell:nth-child(1),
+    .row-1-1-1.row-2-3 > .cell:nth-child(2),
+    .row-1-1-1.row-3-2 > .cell:nth-child(1),
+    .row-1-1-1-1.row-2-3 > .cell:nth-child(2),
+    .row-1-1-1-1.row-3-2 > .cell:nth-child(1),
+    .row-1-2.row-2-3 > .cell:nth-child(2),
+    .row-1-2.row-3-2 > .cell:nth-child(1),
+    .row-2-1.row-2-3 > .cell:nth-child(2),
+    .row-2-1.row-3-2 > .cell:nth-child(1),
+    .row-1-1-2.row-2-3 > .cell:nth-child(2),
+    .row-1-1-2.row-3-2 > .cell:nth-child(1),
+    .row-1-2-1.row-2-3 > .cell:nth-child(2),
+    .row-1-2-1.row-3-2 > .cell:nth-child(1),
+    .row-2-1-1.row-2-3 > .cell:nth-child(2),
+    .row-2-1-1.row-3-2 > .cell:nth-child(1),
+    .row-1-3.row-2-3 > .cell:nth-child(2),
+    .row-1-3.row-3-2 > .cell:nth-child(1),
+    .row-3-1.row-2-3 > .cell:nth-child(2),
+    .row-3-1.row-3-2 > .cell:nth-child(1),
+    .row-2-3.row-2-3 > .cell:nth-child(2),
+    .row-2-3.row-3-2 > .cell:nth-child(1),
+    .row-3-2.row-2-3 > .cell:nth-child(2),
+    .row-3-2.row-3-2 > .cell:nth-child(1) {
+      width: 60%; }
+    .row-1-1.row-3-2 > .cell:nth-child(2), .row-1-1.row-2-3 > .cell:nth-child(1),
+    .row-1-1-1.row-3-2 > .cell:nth-child(2),
+    .row-1-1-1.row-2-3 > .cell:nth-child(1),
+    .row-1-1-1-1.row-3-2 > .cell:nth-child(2),
+    .row-1-1-1-1.row-2-3 > .cell:nth-child(1),
+    .row-1-2.row-3-2 > .cell:nth-child(2),
+    .row-1-2.row-2-3 > .cell:nth-child(1),
+    .row-2-1.row-3-2 > .cell:nth-child(2),
+    .row-2-1.row-2-3 > .cell:nth-child(1),
+    .row-1-1-2.row-3-2 > .cell:nth-child(2),
+    .row-1-1-2.row-2-3 > .cell:nth-child(1),
+    .row-1-2-1.row-3-2 > .cell:nth-child(2),
+    .row-1-2-1.row-2-3 > .cell:nth-child(1),
+    .row-2-1-1.row-3-2 > .cell:nth-child(2),
+    .row-2-1-1.row-2-3 > .cell:nth-child(1),
+    .row-1-3.row-3-2 > .cell:nth-child(2),
+    .row-1-3.row-2-3 > .cell:nth-child(1),
+    .row-3-1.row-3-2 > .cell:nth-child(2),
+    .row-3-1.row-2-3 > .cell:nth-child(1),
+    .row-2-3.row-3-2 > .cell:nth-child(2),
+    .row-2-3.row-2-3 > .cell:nth-child(1),
+    .row-3-2.row-3-2 > .cell:nth-child(2),
+    .row-3-2.row-2-3 > .cell:nth-child(1) {
+      width: 40%; } }
+  .row-1-1.row-xs,
+  .row-1-1-1.row-xs,
+  .row-1-1-1-1.row-xs,
+  .row-1-2.row-xs,
+  .row-2-1.row-xs,
+  .row-1-1-2.row-xs,
+  .row-1-2-1.row-xs,
+  .row-2-1-1.row-xs,
+  .row-1-3.row-xs,
+  .row-3-1.row-xs,
+  .row-2-3.row-xs,
+  .row-3-2.row-xs {
+    margin: 0; }
+    .row-1-1.row-xs > .cell,
+    .row-1-1-1.row-xs > .cell,
+    .row-1-1-1-1.row-xs > .cell,
+    .row-1-2.row-xs > .cell,
+    .row-2-1.row-xs > .cell,
+    .row-1-1-2.row-xs > .cell,
+    .row-1-2-1.row-xs > .cell,
+    .row-2-1-1.row-xs > .cell,
+    .row-1-3.row-xs > .cell,
+    .row-3-1.row-xs > .cell,
+    .row-2-3.row-xs > .cell,
+    .row-3-2.row-xs > .cell {
+      float: none;
+      padding: 0;
+      margin: 0; }
+    @media screen and (min-width: 480px) {
+      .row-1-1.row-xs,
+      .row-1-1-1.row-xs,
+      .row-1-1-1-1.row-xs,
+      .row-1-2.row-xs,
+      .row-2-1.row-xs,
+      .row-1-1-2.row-xs,
+      .row-1-2-1.row-xs,
+      .row-2-1-1.row-xs,
+      .row-1-3.row-xs,
+      .row-3-1.row-xs,
+      .row-2-3.row-xs,
+      .row-3-2.row-xs {
+        margin: 0 -10px 20px; }
+        .row-1-1.row-xs > .cell,
+        .row-1-1-1.row-xs > .cell,
+        .row-1-1-1-1.row-xs > .cell,
+        .row-1-2.row-xs > .cell,
+        .row-2-1.row-xs > .cell,
+        .row-1-1-2.row-xs > .cell,
+        .row-1-2-1.row-xs > .cell,
+        .row-2-1-1.row-xs > .cell,
+        .row-1-3.row-xs > .cell,
+        .row-3-1.row-xs > .cell,
+        .row-2-3.row-xs > .cell,
+        .row-3-2.row-xs > .cell {
+          float: left;
+          padding: 0 10px;
+          margin-bottom: -20px; } }
+    .row-1-1.row-xs.row-1-1 > .cell, .row-1-1.row-xs.row-1-1-1 > .cell, .row-1-1.row-xs.row-1-1-1-1 > .cell, .row-1-1.row-xs.row-1-2 > .cell, .row-1-1.row-xs.row-2-1 > .cell, .row-1-1.row-xs.row-1-1-2 > .cell, .row-1-1.row-xs.row-1-2-1 > .cell, .row-1-1.row-xs.row-2-1-1 > .cell, .row-1-1.row-xs.row-1-3 > .cell, .row-1-1.row-xs.row-3-1 > .cell, .row-1-1.row-xs.row-2-3 > .cell, .row-1-1.row-xs.row-3-2 > .cell,
+    .row-1-1-1.row-xs.row-1-1 > .cell,
+    .row-1-1-1.row-xs.row-1-1-1 > .cell,
+    .row-1-1-1.row-xs.row-1-1-1-1 > .cell,
+    .row-1-1-1.row-xs.row-1-2 > .cell,
+    .row-1-1-1.row-xs.row-2-1 > .cell,
+    .row-1-1-1.row-xs.row-1-1-2 > .cell,
+    .row-1-1-1.row-xs.row-1-2-1 > .cell,
+    .row-1-1-1.row-xs.row-2-1-1 > .cell,
+    .row-1-1-1.row-xs.row-1-3 > .cell,
+    .row-1-1-1.row-xs.row-3-1 > .cell,
+    .row-1-1-1.row-xs.row-2-3 > .cell,
+    .row-1-1-1.row-xs.row-3-2 > .cell,
+    .row-1-1-1-1.row-xs.row-1-1 > .cell,
+    .row-1-1-1-1.row-xs.row-1-1-1 > .cell,
+    .row-1-1-1-1.row-xs.row-1-1-1-1 > .cell,
+    .row-1-1-1-1.row-xs.row-1-2 > .cell,
+    .row-1-1-1-1.row-xs.row-2-1 > .cell,
+    .row-1-1-1-1.row-xs.row-1-1-2 > .cell,
+    .row-1-1-1-1.row-xs.row-1-2-1 > .cell,
+    .row-1-1-1-1.row-xs.row-2-1-1 > .cell,
+    .row-1-1-1-1.row-xs.row-1-3 > .cell,
+    .row-1-1-1-1.row-xs.row-3-1 > .cell,
+    .row-1-1-1-1.row-xs.row-2-3 > .cell,
+    .row-1-1-1-1.row-xs.row-3-2 > .cell,
+    .row-1-2.row-xs.row-1-1 > .cell,
+    .row-1-2.row-xs.row-1-1-1 > .cell,
+    .row-1-2.row-xs.row-1-1-1-1 > .cell,
+    .row-1-2.row-xs.row-1-2 > .cell,
+    .row-1-2.row-xs.row-2-1 > .cell,
+    .row-1-2.row-xs.row-1-1-2 > .cell,
+    .row-1-2.row-xs.row-1-2-1 > .cell,
+    .row-1-2.row-xs.row-2-1-1 > .cell,
+    .row-1-2.row-xs.row-1-3 > .cell,
+    .row-1-2.row-xs.row-3-1 > .cell,
+    .row-1-2.row-xs.row-2-3 > .cell,
+    .row-1-2.row-xs.row-3-2 > .cell,
+    .row-2-1.row-xs.row-1-1 > .cell,
+    .row-2-1.row-xs.row-1-1-1 > .cell,
+    .row-2-1.row-xs.row-1-1-1-1 > .cell,
+    .row-2-1.row-xs.row-1-2 > .cell,
+    .row-2-1.row-xs.row-2-1 > .cell,
+    .row-2-1.row-xs.row-1-1-2 > .cell,
+    .row-2-1.row-xs.row-1-2-1 > .cell,
+    .row-2-1.row-xs.row-2-1-1 > .cell,
+    .row-2-1.row-xs.row-1-3 > .cell,
+    .row-2-1.row-xs.row-3-1 > .cell,
+    .row-2-1.row-xs.row-2-3 > .cell,
+    .row-2-1.row-xs.row-3-2 > .cell,
+    .row-1-1-2.row-xs.row-1-1 > .cell,
+    .row-1-1-2.row-xs.row-1-1-1 > .cell,
+    .row-1-1-2.row-xs.row-1-1-1-1 > .cell,
+    .row-1-1-2.row-xs.row-1-2 > .cell,
+    .row-1-1-2.row-xs.row-2-1 > .cell,
+    .row-1-1-2.row-xs.row-1-1-2 > .cell,
+    .row-1-1-2.row-xs.row-1-2-1 > .cell,
+    .row-1-1-2.row-xs.row-2-1-1 > .cell,
+    .row-1-1-2.row-xs.row-1-3 > .cell,
+    .row-1-1-2.row-xs.row-3-1 > .cell,
+    .row-1-1-2.row-xs.row-2-3 > .cell,
+    .row-1-1-2.row-xs.row-3-2 > .cell,
+    .row-1-2-1.row-xs.row-1-1 > .cell,
+    .row-1-2-1.row-xs.row-1-1-1 > .cell,
+    .row-1-2-1.row-xs.row-1-1-1-1 > .cell,
+    .row-1-2-1.row-xs.row-1-2 > .cell,
+    .row-1-2-1.row-xs.row-2-1 > .cell,
+    .row-1-2-1.row-xs.row-1-1-2 > .cell,
+    .row-1-2-1.row-xs.row-1-2-1 > .cell,
+    .row-1-2-1.row-xs.row-2-1-1 > .cell,
+    .row-1-2-1.row-xs.row-1-3 > .cell,
+    .row-1-2-1.row-xs.row-3-1 > .cell,
+    .row-1-2-1.row-xs.row-2-3 > .cell,
+    .row-1-2-1.row-xs.row-3-2 > .cell,
+    .row-2-1-1.row-xs.row-1-1 > .cell,
+    .row-2-1-1.row-xs.row-1-1-1 > .cell,
+    .row-2-1-1.row-xs.row-1-1-1-1 > .cell,
+    .row-2-1-1.row-xs.row-1-2 > .cell,
+    .row-2-1-1.row-xs.row-2-1 > .cell,
+    .row-2-1-1.row-xs.row-1-1-2 > .cell,
+    .row-2-1-1.row-xs.row-1-2-1 > .cell,
+    .row-2-1-1.row-xs.row-2-1-1 > .cell,
+    .row-2-1-1.row-xs.row-1-3 > .cell,
+    .row-2-1-1.row-xs.row-3-1 > .cell,
+    .row-2-1-1.row-xs.row-2-3 > .cell,
+    .row-2-1-1.row-xs.row-3-2 > .cell,
+    .row-1-3.row-xs.row-1-1 > .cell,
+    .row-1-3.row-xs.row-1-1-1 > .cell,
+    .row-1-3.row-xs.row-1-1-1-1 > .cell,
+    .row-1-3.row-xs.row-1-2 > .cell,
+    .row-1-3.row-xs.row-2-1 > .cell,
+    .row-1-3.row-xs.row-1-1-2 > .cell,
+    .row-1-3.row-xs.row-1-2-1 > .cell,
+    .row-1-3.row-xs.row-2-1-1 > .cell,
+    .row-1-3.row-xs.row-1-3 > .cell,
+    .row-1-3.row-xs.row-3-1 > .cell,
+    .row-1-3.row-xs.row-2-3 > .cell,
+    .row-1-3.row-xs.row-3-2 > .cell,
+    .row-3-1.row-xs.row-1-1 > .cell,
+    .row-3-1.row-xs.row-1-1-1 > .cell,
+    .row-3-1.row-xs.row-1-1-1-1 > .cell,
+    .row-3-1.row-xs.row-1-2 > .cell,
+    .row-3-1.row-xs.row-2-1 > .cell,
+    .row-3-1.row-xs.row-1-1-2 > .cell,
+    .row-3-1.row-xs.row-1-2-1 > .cell,
+    .row-3-1.row-xs.row-2-1-1 > .cell,
+    .row-3-1.row-xs.row-1-3 > .cell,
+    .row-3-1.row-xs.row-3-1 > .cell,
+    .row-3-1.row-xs.row-2-3 > .cell,
+    .row-3-1.row-xs.row-3-2 > .cell,
+    .row-2-3.row-xs.row-1-1 > .cell,
+    .row-2-3.row-xs.row-1-1-1 > .cell,
+    .row-2-3.row-xs.row-1-1-1-1 > .cell,
+    .row-2-3.row-xs.row-1-2 > .cell,
+    .row-2-3.row-xs.row-2-1 > .cell,
+    .row-2-3.row-xs.row-1-1-2 > .cell,
+    .row-2-3.row-xs.row-1-2-1 > .cell,
+    .row-2-3.row-xs.row-2-1-1 > .cell,
+    .row-2-3.row-xs.row-1-3 > .cell,
+    .row-2-3.row-xs.row-3-1 > .cell,
+    .row-2-3.row-xs.row-2-3 > .cell,
+    .row-2-3.row-xs.row-3-2 > .cell,
+    .row-3-2.row-xs.row-1-1 > .cell,
+    .row-3-2.row-xs.row-1-1-1 > .cell,
+    .row-3-2.row-xs.row-1-1-1-1 > .cell,
+    .row-3-2.row-xs.row-1-2 > .cell,
+    .row-3-2.row-xs.row-2-1 > .cell,
+    .row-3-2.row-xs.row-1-1-2 > .cell,
+    .row-3-2.row-xs.row-1-2-1 > .cell,
+    .row-3-2.row-xs.row-2-1-1 > .cell,
+    .row-3-2.row-xs.row-1-3 > .cell,
+    .row-3-2.row-xs.row-3-1 > .cell,
+    .row-3-2.row-xs.row-2-3 > .cell,
+    .row-3-2.row-xs.row-3-2 > .cell {
+      width: auto; }
+    @media screen and (min-width: 480px) {
+      .row-1-1.row-xs.row-1-1-1 > .cell, .row-1-1.row-xs.row-1-2 > .cell, .row-1-1.row-xs.row-2-1 > .cell,
+      .row-1-1-1.row-xs.row-1-1-1 > .cell,
+      .row-1-1-1.row-xs.row-1-2 > .cell,
+      .row-1-1-1.row-xs.row-2-1 > .cell,
+      .row-1-1-1-1.row-xs.row-1-1-1 > .cell,
+      .row-1-1-1-1.row-xs.row-1-2 > .cell,
+      .row-1-1-1-1.row-xs.row-2-1 > .cell,
+      .row-1-2.row-xs.row-1-1-1 > .cell,
+      .row-1-2.row-xs.row-1-2 > .cell,
+      .row-1-2.row-xs.row-2-1 > .cell,
+      .row-2-1.row-xs.row-1-1-1 > .cell,
+      .row-2-1.row-xs.row-1-2 > .cell,
+      .row-2-1.row-xs.row-2-1 > .cell,
+      .row-1-1-2.row-xs.row-1-1-1 > .cell,
+      .row-1-1-2.row-xs.row-1-2 > .cell,
+      .row-1-1-2.row-xs.row-2-1 > .cell,
+      .row-1-2-1.row-xs.row-1-1-1 > .cell,
+      .row-1-2-1.row-xs.row-1-2 > .cell,
+      .row-1-2-1.row-xs.row-2-1 > .cell,
+      .row-2-1-1.row-xs.row-1-1-1 > .cell,
+      .row-2-1-1.row-xs.row-1-2 > .cell,
+      .row-2-1-1.row-xs.row-2-1 > .cell,
+      .row-1-3.row-xs.row-1-1-1 > .cell,
+      .row-1-3.row-xs.row-1-2 > .cell,
+      .row-1-3.row-xs.row-2-1 > .cell,
+      .row-3-1.row-xs.row-1-1-1 > .cell,
+      .row-3-1.row-xs.row-1-2 > .cell,
+      .row-3-1.row-xs.row-2-1 > .cell,
+      .row-2-3.row-xs.row-1-1-1 > .cell,
+      .row-2-3.row-xs.row-1-2 > .cell,
+      .row-2-3.row-xs.row-2-1 > .cell,
+      .row-3-2.row-xs.row-1-1-1 > .cell,
+      .row-3-2.row-xs.row-1-2 > .cell,
+      .row-3-2.row-xs.row-2-1 > .cell {
+        width: 33.33333%; }
+      .row-1-1.row-xs.row-1-1-1-1 > .cell, .row-1-1.row-xs.row-1-1-2 > .cell, .row-1-1.row-xs.row-1-2-1 > .cell, .row-1-1.row-xs.row-2-1-1 > .cell, .row-1-1.row-xs.row-1-3 > .cell, .row-1-1.row-xs.row-3-1 > .cell,
+      .row-1-1-1.row-xs.row-1-1-1-1 > .cell,
+      .row-1-1-1.row-xs.row-1-1-2 > .cell,
+      .row-1-1-1.row-xs.row-1-2-1 > .cell,
+      .row-1-1-1.row-xs.row-2-1-1 > .cell,
+      .row-1-1-1.row-xs.row-1-3 > .cell,
+      .row-1-1-1.row-xs.row-3-1 > .cell,
+      .row-1-1-1-1.row-xs.row-1-1-1-1 > .cell,
+      .row-1-1-1-1.row-xs.row-1-1-2 > .cell,
+      .row-1-1-1-1.row-xs.row-1-2-1 > .cell,
+      .row-1-1-1-1.row-xs.row-2-1-1 > .cell,
+      .row-1-1-1-1.row-xs.row-1-3 > .cell,
+      .row-1-1-1-1.row-xs.row-3-1 > .cell,
+      .row-1-2.row-xs.row-1-1-1-1 > .cell,
+      .row-1-2.row-xs.row-1-1-2 > .cell,
+      .row-1-2.row-xs.row-1-2-1 > .cell,
+      .row-1-2.row-xs.row-2-1-1 > .cell,
+      .row-1-2.row-xs.row-1-3 > .cell,
+      .row-1-2.row-xs.row-3-1 > .cell,
+      .row-2-1.row-xs.row-1-1-1-1 > .cell,
+      .row-2-1.row-xs.row-1-1-2 > .cell,
+      .row-2-1.row-xs.row-1-2-1 > .cell,
+      .row-2-1.row-xs.row-2-1-1 > .cell,
+      .row-2-1.row-xs.row-1-3 > .cell,
+      .row-2-1.row-xs.row-3-1 > .cell,
+      .row-1-1-2.row-xs.row-1-1-1-1 > .cell,
+      .row-1-1-2.row-xs.row-1-1-2 > .cell,
+      .row-1-1-2.row-xs.row-1-2-1 > .cell,
+      .row-1-1-2.row-xs.row-2-1-1 > .cell,
+      .row-1-1-2.row-xs.row-1-3 > .cell,
+      .row-1-1-2.row-xs.row-3-1 > .cell,
+      .row-1-2-1.row-xs.row-1-1-1-1 > .cell,
+      .row-1-2-1.row-xs.row-1-1-2 > .cell,
+      .row-1-2-1.row-xs.row-1-2-1 > .cell,
+      .row-1-2-1.row-xs.row-2-1-1 > .cell,
+      .row-1-2-1.row-xs.row-1-3 > .cell,
+      .row-1-2-1.row-xs.row-3-1 > .cell,
+      .row-2-1-1.row-xs.row-1-1-1-1 > .cell,
+      .row-2-1-1.row-xs.row-1-1-2 > .cell,
+      .row-2-1-1.row-xs.row-1-2-1 > .cell,
+      .row-2-1-1.row-xs.row-2-1-1 > .cell,
+      .row-2-1-1.row-xs.row-1-3 > .cell,
+      .row-2-1-1.row-xs.row-3-1 > .cell,
+      .row-1-3.row-xs.row-1-1-1-1 > .cell,
+      .row-1-3.row-xs.row-1-1-2 > .cell,
+      .row-1-3.row-xs.row-1-2-1 > .cell,
+      .row-1-3.row-xs.row-2-1-1 > .cell,
+      .row-1-3.row-xs.row-1-3 > .cell,
+      .row-1-3.row-xs.row-3-1 > .cell,
+      .row-3-1.row-xs.row-1-1-1-1 > .cell,
+      .row-3-1.row-xs.row-1-1-2 > .cell,
+      .row-3-1.row-xs.row-1-2-1 > .cell,
+      .row-3-1.row-xs.row-2-1-1 > .cell,
+      .row-3-1.row-xs.row-1-3 > .cell,
+      .row-3-1.row-xs.row-3-1 > .cell,
+      .row-2-3.row-xs.row-1-1-1-1 > .cell,
+      .row-2-3.row-xs.row-1-1-2 > .cell,
+      .row-2-3.row-xs.row-1-2-1 > .cell,
+      .row-2-3.row-xs.row-2-1-1 > .cell,
+      .row-2-3.row-xs.row-1-3 > .cell,
+      .row-2-3.row-xs.row-3-1 > .cell,
+      .row-3-2.row-xs.row-1-1-1-1 > .cell,
+      .row-3-2.row-xs.row-1-1-2 > .cell,
+      .row-3-2.row-xs.row-1-2-1 > .cell,
+      .row-3-2.row-xs.row-2-1-1 > .cell,
+      .row-3-2.row-xs.row-1-3 > .cell,
+      .row-3-2.row-xs.row-3-1 > .cell {
+        width: 25%; }
+      .row-1-1.row-xs.row-1-2 > .cell:nth-child(2), .row-1-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-1-1-1.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-1-1-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-1-1-1-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-1-2.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-1-2.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-2-1.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-2-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-1-1-2.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-1-1-2.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-1-2-1.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-1-2-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-2-1-1.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-2-1-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-1-3.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-1-3.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-3-1.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-3-1.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-2-3.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-2-3.row-xs.row-2-1 > .cell:nth-child(1),
+      .row-3-2.row-xs.row-1-2 > .cell:nth-child(2),
+      .row-3-2.row-xs.row-2-1 > .cell:nth-child(1) {
+        width: 66.66667%; }
+      .row-1-1.row-xs.row-1-1 > .cell, .row-1-1.row-xs.row-1-1-2 > .cell:nth-child(3), .row-1-1.row-xs.row-1-2-1 > .cell:nth-child(2), .row-1-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-1.row-xs.row-1-1 > .cell,
+      .row-1-1-1.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-1.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-xs.row-1-1 > .cell,
+      .row-1-1-1-1.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-1-1.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-1-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-1-2.row-xs.row-1-1 > .cell,
+      .row-1-2.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-1-2.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-1-2.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-2-1.row-xs.row-1-1 > .cell,
+      .row-2-1.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-2-1.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-2-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-2.row-xs.row-1-1 > .cell,
+      .row-1-1-2.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-2.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-2.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-1-2-1.row-xs.row-1-1 > .cell,
+      .row-1-2-1.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-1-2-1.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-1-2-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-2-1-1.row-xs.row-1-1 > .cell,
+      .row-2-1-1.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-2-1-1.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-2-1-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-1-3.row-xs.row-1-1 > .cell,
+      .row-1-3.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-1-3.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-1-3.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-3-1.row-xs.row-1-1 > .cell,
+      .row-3-1.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-3-1.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-3-1.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-2-3.row-xs.row-1-1 > .cell,
+      .row-2-3.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-2-3.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-2-3.row-xs.row-2-1-1 > .cell:nth-child(1),
+      .row-3-2.row-xs.row-1-1 > .cell,
+      .row-3-2.row-xs.row-1-1-2 > .cell:nth-child(3),
+      .row-3-2.row-xs.row-1-2-1 > .cell:nth-child(2),
+      .row-3-2.row-xs.row-2-1-1 > .cell:nth-child(1) {
+        width: 50%; }
+      .row-1-1.row-xs.row-1-3 > .cell:nth-child(2), .row-1-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-1-1-1.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-1-1-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-1-1-1-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-1-2.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-1-2.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-2-1.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-2-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-1-1-2.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-1-1-2.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-1-2-1.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-1-2-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-2-1-1.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-2-1-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-1-3.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-1-3.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-3-1.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-3-1.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-2-3.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-2-3.row-xs.row-3-1 > .cell:nth-child(1),
+      .row-3-2.row-xs.row-1-3 > .cell:nth-child(2),
+      .row-3-2.row-xs.row-3-1 > .cell:nth-child(1) {
+        width: 75%; }
+      .row-1-1.row-xs.row-2-3 > .cell:nth-child(2), .row-1-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-1-1-1.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-1-1-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-1-1-1-1.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-1-1-1-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-1-2.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-1-2.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-2-1.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-2-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-1-1-2.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-1-1-2.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-1-2-1.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-1-2-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-2-1-1.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-2-1-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-1-3.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-1-3.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-3-1.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-3-1.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-2-3.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-2-3.row-xs.row-3-2 > .cell:nth-child(1),
+      .row-3-2.row-xs.row-2-3 > .cell:nth-child(2),
+      .row-3-2.row-xs.row-3-2 > .cell:nth-child(1) {
+        width: 60%; }
+      .row-1-1.row-xs.row-3-2 > .cell:nth-child(2), .row-1-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-1-1-1.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-1-1-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-1-1-1-1.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-1-1-1-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-1-2.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-1-2.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-2-1.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-2-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-1-1-2.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-1-1-2.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-1-2-1.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-1-2-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-2-1-1.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-2-1-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-1-3.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-1-3.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-3-1.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-3-1.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-2-3.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-2-3.row-xs.row-2-3 > .cell:nth-child(1),
+      .row-3-2.row-xs.row-3-2 > .cell:nth-child(2),
+      .row-3-2.row-xs.row-2-3 > .cell:nth-child(1) {
+        width: 40%; } }
+  .row-1-1.row-sm,
+  .row-1-1-1.row-sm,
+  .row-1-1-1-1.row-sm,
+  .row-1-2.row-sm,
+  .row-2-1.row-sm,
+  .row-1-1-2.row-sm,
+  .row-1-2-1.row-sm,
+  .row-2-1-1.row-sm,
+  .row-1-3.row-sm,
+  .row-3-1.row-sm,
+  .row-2-3.row-sm,
+  .row-3-2.row-sm {
+    margin: 0; }
+    .row-1-1.row-sm > .cell,
+    .row-1-1-1.row-sm > .cell,
+    .row-1-1-1-1.row-sm > .cell,
+    .row-1-2.row-sm > .cell,
+    .row-2-1.row-sm > .cell,
+    .row-1-1-2.row-sm > .cell,
+    .row-1-2-1.row-sm > .cell,
+    .row-2-1-1.row-sm > .cell,
+    .row-1-3.row-sm > .cell,
+    .row-3-1.row-sm > .cell,
+    .row-2-3.row-sm > .cell,
+    .row-3-2.row-sm > .cell {
+      float: none;
+      padding: 0;
+      margin: 0; }
+    @media screen and (min-width: 768px) {
+      .row-1-1.row-sm,
+      .row-1-1-1.row-sm,
+      .row-1-1-1-1.row-sm,
+      .row-1-2.row-sm,
+      .row-2-1.row-sm,
+      .row-1-1-2.row-sm,
+      .row-1-2-1.row-sm,
+      .row-2-1-1.row-sm,
+      .row-1-3.row-sm,
+      .row-3-1.row-sm,
+      .row-2-3.row-sm,
+      .row-3-2.row-sm {
+        margin: 0 -10px 20px; }
+        .row-1-1.row-sm > .cell,
+        .row-1-1-1.row-sm > .cell,
+        .row-1-1-1-1.row-sm > .cell,
+        .row-1-2.row-sm > .cell,
+        .row-2-1.row-sm > .cell,
+        .row-1-1-2.row-sm > .cell,
+        .row-1-2-1.row-sm > .cell,
+        .row-2-1-1.row-sm > .cell,
+        .row-1-3.row-sm > .cell,
+        .row-3-1.row-sm > .cell,
+        .row-2-3.row-sm > .cell,
+        .row-3-2.row-sm > .cell {
+          float: left;
+          padding: 0 10px;
+          margin-bottom: -20px; } }
+    .row-1-1.row-sm.row-1-1 > .cell, .row-1-1.row-sm.row-1-1-1 > .cell, .row-1-1.row-sm.row-1-1-1-1 > .cell, .row-1-1.row-sm.row-1-2 > .cell, .row-1-1.row-sm.row-2-1 > .cell, .row-1-1.row-sm.row-1-1-2 > .cell, .row-1-1.row-sm.row-1-2-1 > .cell, .row-1-1.row-sm.row-2-1-1 > .cell, .row-1-1.row-sm.row-1-3 > .cell, .row-1-1.row-sm.row-3-1 > .cell, .row-1-1.row-sm.row-2-3 > .cell, .row-1-1.row-sm.row-3-2 > .cell,
+    .row-1-1-1.row-sm.row-1-1 > .cell,
+    .row-1-1-1.row-sm.row-1-1-1 > .cell,
+    .row-1-1-1.row-sm.row-1-1-1-1 > .cell,
+    .row-1-1-1.row-sm.row-1-2 > .cell,
+    .row-1-1-1.row-sm.row-2-1 > .cell,
+    .row-1-1-1.row-sm.row-1-1-2 > .cell,
+    .row-1-1-1.row-sm.row-1-2-1 > .cell,
+    .row-1-1-1.row-sm.row-2-1-1 > .cell,
+    .row-1-1-1.row-sm.row-1-3 > .cell,
+    .row-1-1-1.row-sm.row-3-1 > .cell,
+    .row-1-1-1.row-sm.row-2-3 > .cell,
+    .row-1-1-1.row-sm.row-3-2 > .cell,
+    .row-1-1-1-1.row-sm.row-1-1 > .cell,
+    .row-1-1-1-1.row-sm.row-1-1-1 > .cell,
+    .row-1-1-1-1.row-sm.row-1-1-1-1 > .cell,
+    .row-1-1-1-1.row-sm.row-1-2 > .cell,
+    .row-1-1-1-1.row-sm.row-2-1 > .cell,
+    .row-1-1-1-1.row-sm.row-1-1-2 > .cell,
+    .row-1-1-1-1.row-sm.row-1-2-1 > .cell,
+    .row-1-1-1-1.row-sm.row-2-1-1 > .cell,
+    .row-1-1-1-1.row-sm.row-1-3 > .cell,
+    .row-1-1-1-1.row-sm.row-3-1 > .cell,
+    .row-1-1-1-1.row-sm.row-2-3 > .cell,
+    .row-1-1-1-1.row-sm.row-3-2 > .cell,
+    .row-1-2.row-sm.row-1-1 > .cell,
+    .row-1-2.row-sm.row-1-1-1 > .cell,
+    .row-1-2.row-sm.row-1-1-1-1 > .cell,
+    .row-1-2.row-sm.row-1-2 > .cell,
+    .row-1-2.row-sm.row-2-1 > .cell,
+    .row-1-2.row-sm.row-1-1-2 > .cell,
+    .row-1-2.row-sm.row-1-2-1 > .cell,
+    .row-1-2.row-sm.row-2-1-1 > .cell,
+    .row-1-2.row-sm.row-1-3 > .cell,
+    .row-1-2.row-sm.row-3-1 > .cell,
+    .row-1-2.row-sm.row-2-3 > .cell,
+    .row-1-2.row-sm.row-3-2 > .cell,
+    .row-2-1.row-sm.row-1-1 > .cell,
+    .row-2-1.row-sm.row-1-1-1 > .cell,
+    .row-2-1.row-sm.row-1-1-1-1 > .cell,
+    .row-2-1.row-sm.row-1-2 > .cell,
+    .row-2-1.row-sm.row-2-1 > .cell,
+    .row-2-1.row-sm.row-1-1-2 > .cell,
+    .row-2-1.row-sm.row-1-2-1 > .cell,
+    .row-2-1.row-sm.row-2-1-1 > .cell,
+    .row-2-1.row-sm.row-1-3 > .cell,
+    .row-2-1.row-sm.row-3-1 > .cell,
+    .row-2-1.row-sm.row-2-3 > .cell,
+    .row-2-1.row-sm.row-3-2 > .cell,
+    .row-1-1-2.row-sm.row-1-1 > .cell,
+    .row-1-1-2.row-sm.row-1-1-1 > .cell,
+    .row-1-1-2.row-sm.row-1-1-1-1 > .cell,
+    .row-1-1-2.row-sm.row-1-2 > .cell,
+    .row-1-1-2.row-sm.row-2-1 > .cell,
+    .row-1-1-2.row-sm.row-1-1-2 > .cell,
+    .row-1-1-2.row-sm.row-1-2-1 > .cell,
+    .row-1-1-2.row-sm.row-2-1-1 > .cell,
+    .row-1-1-2.row-sm.row-1-3 > .cell,
+    .row-1-1-2.row-sm.row-3-1 > .cell,
+    .row-1-1-2.row-sm.row-2-3 > .cell,
+    .row-1-1-2.row-sm.row-3-2 > .cell,
+    .row-1-2-1.row-sm.row-1-1 > .cell,
+    .row-1-2-1.row-sm.row-1-1-1 > .cell,
+    .row-1-2-1.row-sm.row-1-1-1-1 > .cell,
+    .row-1-2-1.row-sm.row-1-2 > .cell,
+    .row-1-2-1.row-sm.row-2-1 > .cell,
+    .row-1-2-1.row-sm.row-1-1-2 > .cell,
+    .row-1-2-1.row-sm.row-1-2-1 > .cell,
+    .row-1-2-1.row-sm.row-2-1-1 > .cell,
+    .row-1-2-1.row-sm.row-1-3 > .cell,
+    .row-1-2-1.row-sm.row-3-1 > .cell,
+    .row-1-2-1.row-sm.row-2-3 > .cell,
+    .row-1-2-1.row-sm.row-3-2 > .cell,
+    .row-2-1-1.row-sm.row-1-1 > .cell,
+    .row-2-1-1.row-sm.row-1-1-1 > .cell,
+    .row-2-1-1.row-sm.row-1-1-1-1 > .cell,
+    .row-2-1-1.row-sm.row-1-2 > .cell,
+    .row-2-1-1.row-sm.row-2-1 > .cell,
+    .row-2-1-1.row-sm.row-1-1-2 > .cell,
+    .row-2-1-1.row-sm.row-1-2-1 > .cell,
+    .row-2-1-1.row-sm.row-2-1-1 > .cell,
+    .row-2-1-1.row-sm.row-1-3 > .cell,
+    .row-2-1-1.row-sm.row-3-1 > .cell,
+    .row-2-1-1.row-sm.row-2-3 > .cell,
+    .row-2-1-1.row-sm.row-3-2 > .cell,
+    .row-1-3.row-sm.row-1-1 > .cell,
+    .row-1-3.row-sm.row-1-1-1 > .cell,
+    .row-1-3.row-sm.row-1-1-1-1 > .cell,
+    .row-1-3.row-sm.row-1-2 > .cell,
+    .row-1-3.row-sm.row-2-1 > .cell,
+    .row-1-3.row-sm.row-1-1-2 > .cell,
+    .row-1-3.row-sm.row-1-2-1 > .cell,
+    .row-1-3.row-sm.row-2-1-1 > .cell,
+    .row-1-3.row-sm.row-1-3 > .cell,
+    .row-1-3.row-sm.row-3-1 > .cell,
+    .row-1-3.row-sm.row-2-3 > .cell,
+    .row-1-3.row-sm.row-3-2 > .cell,
+    .row-3-1.row-sm.row-1-1 > .cell,
+    .row-3-1.row-sm.row-1-1-1 > .cell,
+    .row-3-1.row-sm.row-1-1-1-1 > .cell,
+    .row-3-1.row-sm.row-1-2 > .cell,
+    .row-3-1.row-sm.row-2-1 > .cell,
+    .row-3-1.row-sm.row-1-1-2 > .cell,
+    .row-3-1.row-sm.row-1-2-1 > .cell,
+    .row-3-1.row-sm.row-2-1-1 > .cell,
+    .row-3-1.row-sm.row-1-3 > .cell,
+    .row-3-1.row-sm.row-3-1 > .cell,
+    .row-3-1.row-sm.row-2-3 > .cell,
+    .row-3-1.row-sm.row-3-2 > .cell,
+    .row-2-3.row-sm.row-1-1 > .cell,
+    .row-2-3.row-sm.row-1-1-1 > .cell,
+    .row-2-3.row-sm.row-1-1-1-1 > .cell,
+    .row-2-3.row-sm.row-1-2 > .cell,
+    .row-2-3.row-sm.row-2-1 > .cell,
+    .row-2-3.row-sm.row-1-1-2 > .cell,
+    .row-2-3.row-sm.row-1-2-1 > .cell,
+    .row-2-3.row-sm.row-2-1-1 > .cell,
+    .row-2-3.row-sm.row-1-3 > .cell,
+    .row-2-3.row-sm.row-3-1 > .cell,
+    .row-2-3.row-sm.row-2-3 > .cell,
+    .row-2-3.row-sm.row-3-2 > .cell,
+    .row-3-2.row-sm.row-1-1 > .cell,
+    .row-3-2.row-sm.row-1-1-1 > .cell,
+    .row-3-2.row-sm.row-1-1-1-1 > .cell,
+    .row-3-2.row-sm.row-1-2 > .cell,
+    .row-3-2.row-sm.row-2-1 > .cell,
+    .row-3-2.row-sm.row-1-1-2 > .cell,
+    .row-3-2.row-sm.row-1-2-1 > .cell,
+    .row-3-2.row-sm.row-2-1-1 > .cell,
+    .row-3-2.row-sm.row-1-3 > .cell,
+    .row-3-2.row-sm.row-3-1 > .cell,
+    .row-3-2.row-sm.row-2-3 > .cell,
+    .row-3-2.row-sm.row-3-2 > .cell {
+      width: auto; }
+    @media screen and (min-width: 768px) {
+      .row-1-1.row-sm.row-1-1-1 > .cell, .row-1-1.row-sm.row-1-2 > .cell, .row-1-1.row-sm.row-2-1 > .cell,
+      .row-1-1-1.row-sm.row-1-1-1 > .cell,
+      .row-1-1-1.row-sm.row-1-2 > .cell,
+      .row-1-1-1.row-sm.row-2-1 > .cell,
+      .row-1-1-1-1.row-sm.row-1-1-1 > .cell,
+      .row-1-1-1-1.row-sm.row-1-2 > .cell,
+      .row-1-1-1-1.row-sm.row-2-1 > .cell,
+      .row-1-2.row-sm.row-1-1-1 > .cell,
+      .row-1-2.row-sm.row-1-2 > .cell,
+      .row-1-2.row-sm.row-2-1 > .cell,
+      .row-2-1.row-sm.row-1-1-1 > .cell,
+      .row-2-1.row-sm.row-1-2 > .cell,
+      .row-2-1.row-sm.row-2-1 > .cell,
+      .row-1-1-2.row-sm.row-1-1-1 > .cell,
+      .row-1-1-2.row-sm.row-1-2 > .cell,
+      .row-1-1-2.row-sm.row-2-1 > .cell,
+      .row-1-2-1.row-sm.row-1-1-1 > .cell,
+      .row-1-2-1.row-sm.row-1-2 > .cell,
+      .row-1-2-1.row-sm.row-2-1 > .cell,
+      .row-2-1-1.row-sm.row-1-1-1 > .cell,
+      .row-2-1-1.row-sm.row-1-2 > .cell,
+      .row-2-1-1.row-sm.row-2-1 > .cell,
+      .row-1-3.row-sm.row-1-1-1 > .cell,
+      .row-1-3.row-sm.row-1-2 > .cell,
+      .row-1-3.row-sm.row-2-1 > .cell,
+      .row-3-1.row-sm.row-1-1-1 > .cell,
+      .row-3-1.row-sm.row-1-2 > .cell,
+      .row-3-1.row-sm.row-2-1 > .cell,
+      .row-2-3.row-sm.row-1-1-1 > .cell,
+      .row-2-3.row-sm.row-1-2 > .cell,
+      .row-2-3.row-sm.row-2-1 > .cell,
+      .row-3-2.row-sm.row-1-1-1 > .cell,
+      .row-3-2.row-sm.row-1-2 > .cell,
+      .row-3-2.row-sm.row-2-1 > .cell {
+        width: 33.33333%; }
+      .row-1-1.row-sm.row-1-1-1-1 > .cell, .row-1-1.row-sm.row-1-1-2 > .cell, .row-1-1.row-sm.row-1-2-1 > .cell, .row-1-1.row-sm.row-2-1-1 > .cell, .row-1-1.row-sm.row-1-3 > .cell, .row-1-1.row-sm.row-3-1 > .cell,
+      .row-1-1-1.row-sm.row-1-1-1-1 > .cell,
+      .row-1-1-1.row-sm.row-1-1-2 > .cell,
+      .row-1-1-1.row-sm.row-1-2-1 > .cell,
+      .row-1-1-1.row-sm.row-2-1-1 > .cell,
+      .row-1-1-1.row-sm.row-1-3 > .cell,
+      .row-1-1-1.row-sm.row-3-1 > .cell,
+      .row-1-1-1-1.row-sm.row-1-1-1-1 > .cell,
+      .row-1-1-1-1.row-sm.row-1-1-2 > .cell,
+      .row-1-1-1-1.row-sm.row-1-2-1 > .cell,
+      .row-1-1-1-1.row-sm.row-2-1-1 > .cell,
+      .row-1-1-1-1.row-sm.row-1-3 > .cell,
+      .row-1-1-1-1.row-sm.row-3-1 > .cell,
+      .row-1-2.row-sm.row-1-1-1-1 > .cell,
+      .row-1-2.row-sm.row-1-1-2 > .cell,
+      .row-1-2.row-sm.row-1-2-1 > .cell,
+      .row-1-2.row-sm.row-2-1-1 > .cell,
+      .row-1-2.row-sm.row-1-3 > .cell,
+      .row-1-2.row-sm.row-3-1 > .cell,
+      .row-2-1.row-sm.row-1-1-1-1 > .cell,
+      .row-2-1.row-sm.row-1-1-2 > .cell,
+      .row-2-1.row-sm.row-1-2-1 > .cell,
+      .row-2-1.row-sm.row-2-1-1 > .cell,
+      .row-2-1.row-sm.row-1-3 > .cell,
+      .row-2-1.row-sm.row-3-1 > .cell,
+      .row-1-1-2.row-sm.row-1-1-1-1 > .cell,
+      .row-1-1-2.row-sm.row-1-1-2 > .cell,
+      .row-1-1-2.row-sm.row-1-2-1 > .cell,
+      .row-1-1-2.row-sm.row-2-1-1 > .cell,
+      .row-1-1-2.row-sm.row-1-3 > .cell,
+      .row-1-1-2.row-sm.row-3-1 > .cell,
+      .row-1-2-1.row-sm.row-1-1-1-1 > .cell,
+      .row-1-2-1.row-sm.row-1-1-2 > .cell,
+      .row-1-2-1.row-sm.row-1-2-1 > .cell,
+      .row-1-2-1.row-sm.row-2-1-1 > .cell,
+      .row-1-2-1.row-sm.row-1-3 > .cell,
+      .row-1-2-1.row-sm.row-3-1 > .cell,
+      .row-2-1-1.row-sm.row-1-1-1-1 > .cell,
+      .row-2-1-1.row-sm.row-1-1-2 > .cell,
+      .row-2-1-1.row-sm.row-1-2-1 > .cell,
+      .row-2-1-1.row-sm.row-2-1-1 > .cell,
+      .row-2-1-1.row-sm.row-1-3 > .cell,
+      .row-2-1-1.row-sm.row-3-1 > .cell,
+      .row-1-3.row-sm.row-1-1-1-1 > .cell,
+      .row-1-3.row-sm.row-1-1-2 > .cell,
+      .row-1-3.row-sm.row-1-2-1 > .cell,
+      .row-1-3.row-sm.row-2-1-1 > .cell,
+      .row-1-3.row-sm.row-1-3 > .cell,
+      .row-1-3.row-sm.row-3-1 > .cell,
+      .row-3-1.row-sm.row-1-1-1-1 > .cell,
+      .row-3-1.row-sm.row-1-1-2 > .cell,
+      .row-3-1.row-sm.row-1-2-1 > .cell,
+      .row-3-1.row-sm.row-2-1-1 > .cell,
+      .row-3-1.row-sm.row-1-3 > .cell,
+      .row-3-1.row-sm.row-3-1 > .cell,
+      .row-2-3.row-sm.row-1-1-1-1 > .cell,
+      .row-2-3.row-sm.row-1-1-2 > .cell,
+      .row-2-3.row-sm.row-1-2-1 > .cell,
+      .row-2-3.row-sm.row-2-1-1 > .cell,
+      .row-2-3.row-sm.row-1-3 > .cell,
+      .row-2-3.row-sm.row-3-1 > .cell,
+      .row-3-2.row-sm.row-1-1-1-1 > .cell,
+      .row-3-2.row-sm.row-1-1-2 > .cell,
+      .row-3-2.row-sm.row-1-2-1 > .cell,
+      .row-3-2.row-sm.row-2-1-1 > .cell,
+      .row-3-2.row-sm.row-1-3 > .cell,
+      .row-3-2.row-sm.row-3-1 > .cell {
+        width: 25%; }
+      .row-1-1.row-sm.row-1-2 > .cell:nth-child(2), .row-1-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-1-1-1.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-1-1-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-1-1-1-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-1-2.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-1-2.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-2-1.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-2-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-1-1-2.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-1-1-2.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-1-2-1.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-1-2-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-2-1-1.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-2-1-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-1-3.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-1-3.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-3-1.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-3-1.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-2-3.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-2-3.row-sm.row-2-1 > .cell:nth-child(1),
+      .row-3-2.row-sm.row-1-2 > .cell:nth-child(2),
+      .row-3-2.row-sm.row-2-1 > .cell:nth-child(1) {
+        width: 66.66667%; }
+      .row-1-1.row-sm.row-1-1 > .cell, .row-1-1.row-sm.row-1-1-2 > .cell:nth-child(3), .row-1-1.row-sm.row-1-2-1 > .cell:nth-child(2), .row-1-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-1.row-sm.row-1-1 > .cell,
+      .row-1-1-1.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-1.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-sm.row-1-1 > .cell,
+      .row-1-1-1-1.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-1-1.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-1-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-1-2.row-sm.row-1-1 > .cell,
+      .row-1-2.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-1-2.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-1-2.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-2-1.row-sm.row-1-1 > .cell,
+      .row-2-1.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-2-1.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-2-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-2.row-sm.row-1-1 > .cell,
+      .row-1-1-2.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-2.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-2.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-1-2-1.row-sm.row-1-1 > .cell,
+      .row-1-2-1.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-1-2-1.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-1-2-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-2-1-1.row-sm.row-1-1 > .cell,
+      .row-2-1-1.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-2-1-1.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-2-1-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-1-3.row-sm.row-1-1 > .cell,
+      .row-1-3.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-1-3.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-1-3.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-3-1.row-sm.row-1-1 > .cell,
+      .row-3-1.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-3-1.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-3-1.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-2-3.row-sm.row-1-1 > .cell,
+      .row-2-3.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-2-3.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-2-3.row-sm.row-2-1-1 > .cell:nth-child(1),
+      .row-3-2.row-sm.row-1-1 > .cell,
+      .row-3-2.row-sm.row-1-1-2 > .cell:nth-child(3),
+      .row-3-2.row-sm.row-1-2-1 > .cell:nth-child(2),
+      .row-3-2.row-sm.row-2-1-1 > .cell:nth-child(1) {
+        width: 50%; }
+      .row-1-1.row-sm.row-1-3 > .cell:nth-child(2), .row-1-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-1-1-1.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-1-1-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-1-1-1-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-1-2.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-1-2.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-2-1.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-2-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-1-1-2.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-1-1-2.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-1-2-1.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-1-2-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-2-1-1.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-2-1-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-1-3.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-1-3.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-3-1.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-3-1.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-2-3.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-2-3.row-sm.row-3-1 > .cell:nth-child(1),
+      .row-3-2.row-sm.row-1-3 > .cell:nth-child(2),
+      .row-3-2.row-sm.row-3-1 > .cell:nth-child(1) {
+        width: 75%; }
+      .row-1-1.row-sm.row-2-3 > .cell:nth-child(2), .row-1-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-1-1-1.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-1-1-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-1-1-1-1.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-1-1-1-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-1-2.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-1-2.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-2-1.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-2-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-1-1-2.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-1-1-2.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-1-2-1.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-1-2-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-2-1-1.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-2-1-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-1-3.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-1-3.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-3-1.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-3-1.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-2-3.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-2-3.row-sm.row-3-2 > .cell:nth-child(1),
+      .row-3-2.row-sm.row-2-3 > .cell:nth-child(2),
+      .row-3-2.row-sm.row-3-2 > .cell:nth-child(1) {
+        width: 60%; }
+      .row-1-1.row-sm.row-3-2 > .cell:nth-child(2), .row-1-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-1-1-1.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-1-1-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-1-1-1-1.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-1-1-1-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-1-2.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-1-2.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-2-1.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-2-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-1-1-2.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-1-1-2.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-1-2-1.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-1-2-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-2-1-1.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-2-1-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-1-3.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-1-3.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-3-1.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-3-1.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-2-3.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-2-3.row-sm.row-2-3 > .cell:nth-child(1),
+      .row-3-2.row-sm.row-3-2 > .cell:nth-child(2),
+      .row-3-2.row-sm.row-2-3 > .cell:nth-child(1) {
+        width: 40%; } }
+  .row-1-1.row-lg,
+  .row-1-1-1.row-lg,
+  .row-1-1-1-1.row-lg,
+  .row-1-2.row-lg,
+  .row-2-1.row-lg,
+  .row-1-1-2.row-lg,
+  .row-1-2-1.row-lg,
+  .row-2-1-1.row-lg,
+  .row-1-3.row-lg,
+  .row-3-1.row-lg,
+  .row-2-3.row-lg,
+  .row-3-2.row-lg {
+    margin: 0; }
+    .row-1-1.row-lg > .cell,
+    .row-1-1-1.row-lg > .cell,
+    .row-1-1-1-1.row-lg > .cell,
+    .row-1-2.row-lg > .cell,
+    .row-2-1.row-lg > .cell,
+    .row-1-1-2.row-lg > .cell,
+    .row-1-2-1.row-lg > .cell,
+    .row-2-1-1.row-lg > .cell,
+    .row-1-3.row-lg > .cell,
+    .row-3-1.row-lg > .cell,
+    .row-2-3.row-lg > .cell,
+    .row-3-2.row-lg > .cell {
+      float: none;
+      padding: 0;
+      margin: 0; }
+    @media screen and (min-width: 1200px) {
+      .row-1-1.row-lg,
+      .row-1-1-1.row-lg,
+      .row-1-1-1-1.row-lg,
+      .row-1-2.row-lg,
+      .row-2-1.row-lg,
+      .row-1-1-2.row-lg,
+      .row-1-2-1.row-lg,
+      .row-2-1-1.row-lg,
+      .row-1-3.row-lg,
+      .row-3-1.row-lg,
+      .row-2-3.row-lg,
+      .row-3-2.row-lg {
+        margin: 0 -10px 20px; }
+        .row-1-1.row-lg > .cell,
+        .row-1-1-1.row-lg > .cell,
+        .row-1-1-1-1.row-lg > .cell,
+        .row-1-2.row-lg > .cell,
+        .row-2-1.row-lg > .cell,
+        .row-1-1-2.row-lg > .cell,
+        .row-1-2-1.row-lg > .cell,
+        .row-2-1-1.row-lg > .cell,
+        .row-1-3.row-lg > .cell,
+        .row-3-1.row-lg > .cell,
+        .row-2-3.row-lg > .cell,
+        .row-3-2.row-lg > .cell {
+          float: left;
+          padding: 0 10px;
+          margin-bottom: -20px; } }
+    .row-1-1.row-lg.row-1-1 > .cell, .row-1-1.row-lg.row-1-1-1 > .cell, .row-1-1.row-lg.row-1-1-1-1 > .cell, .row-1-1.row-lg.row-1-2 > .cell, .row-1-1.row-lg.row-2-1 > .cell, .row-1-1.row-lg.row-1-1-2 > .cell, .row-1-1.row-lg.row-1-2-1 > .cell, .row-1-1.row-lg.row-2-1-1 > .cell, .row-1-1.row-lg.row-1-3 > .cell, .row-1-1.row-lg.row-3-1 > .cell, .row-1-1.row-lg.row-2-3 > .cell, .row-1-1.row-lg.row-3-2 > .cell,
+    .row-1-1-1.row-lg.row-1-1 > .cell,
+    .row-1-1-1.row-lg.row-1-1-1 > .cell,
+    .row-1-1-1.row-lg.row-1-1-1-1 > .cell,
+    .row-1-1-1.row-lg.row-1-2 > .cell,
+    .row-1-1-1.row-lg.row-2-1 > .cell,
+    .row-1-1-1.row-lg.row-1-1-2 > .cell,
+    .row-1-1-1.row-lg.row-1-2-1 > .cell,
+    .row-1-1-1.row-lg.row-2-1-1 > .cell,
+    .row-1-1-1.row-lg.row-1-3 > .cell,
+    .row-1-1-1.row-lg.row-3-1 > .cell,
+    .row-1-1-1.row-lg.row-2-3 > .cell,
+    .row-1-1-1.row-lg.row-3-2 > .cell,
+    .row-1-1-1-1.row-lg.row-1-1 > .cell,
+    .row-1-1-1-1.row-lg.row-1-1-1 > .cell,
+    .row-1-1-1-1.row-lg.row-1-1-1-1 > .cell,
+    .row-1-1-1-1.row-lg.row-1-2 > .cell,
+    .row-1-1-1-1.row-lg.row-2-1 > .cell,
+    .row-1-1-1-1.row-lg.row-1-1-2 > .cell,
+    .row-1-1-1-1.row-lg.row-1-2-1 > .cell,
+    .row-1-1-1-1.row-lg.row-2-1-1 > .cell,
+    .row-1-1-1-1.row-lg.row-1-3 > .cell,
+    .row-1-1-1-1.row-lg.row-3-1 > .cell,
+    .row-1-1-1-1.row-lg.row-2-3 > .cell,
+    .row-1-1-1-1.row-lg.row-3-2 > .cell,
+    .row-1-2.row-lg.row-1-1 > .cell,
+    .row-1-2.row-lg.row-1-1-1 > .cell,
+    .row-1-2.row-lg.row-1-1-1-1 > .cell,
+    .row-1-2.row-lg.row-1-2 > .cell,
+    .row-1-2.row-lg.row-2-1 > .cell,
+    .row-1-2.row-lg.row-1-1-2 > .cell,
+    .row-1-2.row-lg.row-1-2-1 > .cell,
+    .row-1-2.row-lg.row-2-1-1 > .cell,
+    .row-1-2.row-lg.row-1-3 > .cell,
+    .row-1-2.row-lg.row-3-1 > .cell,
+    .row-1-2.row-lg.row-2-3 > .cell,
+    .row-1-2.row-lg.row-3-2 > .cell,
+    .row-2-1.row-lg.row-1-1 > .cell,
+    .row-2-1.row-lg.row-1-1-1 > .cell,
+    .row-2-1.row-lg.row-1-1-1-1 > .cell,
+    .row-2-1.row-lg.row-1-2 > .cell,
+    .row-2-1.row-lg.row-2-1 > .cell,
+    .row-2-1.row-lg.row-1-1-2 > .cell,
+    .row-2-1.row-lg.row-1-2-1 > .cell,
+    .row-2-1.row-lg.row-2-1-1 > .cell,
+    .row-2-1.row-lg.row-1-3 > .cell,
+    .row-2-1.row-lg.row-3-1 > .cell,
+    .row-2-1.row-lg.row-2-3 > .cell,
+    .row-2-1.row-lg.row-3-2 > .cell,
+    .row-1-1-2.row-lg.row-1-1 > .cell,
+    .row-1-1-2.row-lg.row-1-1-1 > .cell,
+    .row-1-1-2.row-lg.row-1-1-1-1 > .cell,
+    .row-1-1-2.row-lg.row-1-2 > .cell,
+    .row-1-1-2.row-lg.row-2-1 > .cell,
+    .row-1-1-2.row-lg.row-1-1-2 > .cell,
+    .row-1-1-2.row-lg.row-1-2-1 > .cell,
+    .row-1-1-2.row-lg.row-2-1-1 > .cell,
+    .row-1-1-2.row-lg.row-1-3 > .cell,
+    .row-1-1-2.row-lg.row-3-1 > .cell,
+    .row-1-1-2.row-lg.row-2-3 > .cell,
+    .row-1-1-2.row-lg.row-3-2 > .cell,
+    .row-1-2-1.row-lg.row-1-1 > .cell,
+    .row-1-2-1.row-lg.row-1-1-1 > .cell,
+    .row-1-2-1.row-lg.row-1-1-1-1 > .cell,
+    .row-1-2-1.row-lg.row-1-2 > .cell,
+    .row-1-2-1.row-lg.row-2-1 > .cell,
+    .row-1-2-1.row-lg.row-1-1-2 > .cell,
+    .row-1-2-1.row-lg.row-1-2-1 > .cell,
+    .row-1-2-1.row-lg.row-2-1-1 > .cell,
+    .row-1-2-1.row-lg.row-1-3 > .cell,
+    .row-1-2-1.row-lg.row-3-1 > .cell,
+    .row-1-2-1.row-lg.row-2-3 > .cell,
+    .row-1-2-1.row-lg.row-3-2 > .cell,
+    .row-2-1-1.row-lg.row-1-1 > .cell,
+    .row-2-1-1.row-lg.row-1-1-1 > .cell,
+    .row-2-1-1.row-lg.row-1-1-1-1 > .cell,
+    .row-2-1-1.row-lg.row-1-2 > .cell,
+    .row-2-1-1.row-lg.row-2-1 > .cell,
+    .row-2-1-1.row-lg.row-1-1-2 > .cell,
+    .row-2-1-1.row-lg.row-1-2-1 > .cell,
+    .row-2-1-1.row-lg.row-2-1-1 > .cell,
+    .row-2-1-1.row-lg.row-1-3 > .cell,
+    .row-2-1-1.row-lg.row-3-1 > .cell,
+    .row-2-1-1.row-lg.row-2-3 > .cell,
+    .row-2-1-1.row-lg.row-3-2 > .cell,
+    .row-1-3.row-lg.row-1-1 > .cell,
+    .row-1-3.row-lg.row-1-1-1 > .cell,
+    .row-1-3.row-lg.row-1-1-1-1 > .cell,
+    .row-1-3.row-lg.row-1-2 > .cell,
+    .row-1-3.row-lg.row-2-1 > .cell,
+    .row-1-3.row-lg.row-1-1-2 > .cell,
+    .row-1-3.row-lg.row-1-2-1 > .cell,
+    .row-1-3.row-lg.row-2-1-1 > .cell,
+    .row-1-3.row-lg.row-1-3 > .cell,
+    .row-1-3.row-lg.row-3-1 > .cell,
+    .row-1-3.row-lg.row-2-3 > .cell,
+    .row-1-3.row-lg.row-3-2 > .cell,
+    .row-3-1.row-lg.row-1-1 > .cell,
+    .row-3-1.row-lg.row-1-1-1 > .cell,
+    .row-3-1.row-lg.row-1-1-1-1 > .cell,
+    .row-3-1.row-lg.row-1-2 > .cell,
+    .row-3-1.row-lg.row-2-1 > .cell,
+    .row-3-1.row-lg.row-1-1-2 > .cell,
+    .row-3-1.row-lg.row-1-2-1 > .cell,
+    .row-3-1.row-lg.row-2-1-1 > .cell,
+    .row-3-1.row-lg.row-1-3 > .cell,
+    .row-3-1.row-lg.row-3-1 > .cell,
+    .row-3-1.row-lg.row-2-3 > .cell,
+    .row-3-1.row-lg.row-3-2 > .cell,
+    .row-2-3.row-lg.row-1-1 > .cell,
+    .row-2-3.row-lg.row-1-1-1 > .cell,
+    .row-2-3.row-lg.row-1-1-1-1 > .cell,
+    .row-2-3.row-lg.row-1-2 > .cell,
+    .row-2-3.row-lg.row-2-1 > .cell,
+    .row-2-3.row-lg.row-1-1-2 > .cell,
+    .row-2-3.row-lg.row-1-2-1 > .cell,
+    .row-2-3.row-lg.row-2-1-1 > .cell,
+    .row-2-3.row-lg.row-1-3 > .cell,
+    .row-2-3.row-lg.row-3-1 > .cell,
+    .row-2-3.row-lg.row-2-3 > .cell,
+    .row-2-3.row-lg.row-3-2 > .cell,
+    .row-3-2.row-lg.row-1-1 > .cell,
+    .row-3-2.row-lg.row-1-1-1 > .cell,
+    .row-3-2.row-lg.row-1-1-1-1 > .cell,
+    .row-3-2.row-lg.row-1-2 > .cell,
+    .row-3-2.row-lg.row-2-1 > .cell,
+    .row-3-2.row-lg.row-1-1-2 > .cell,
+    .row-3-2.row-lg.row-1-2-1 > .cell,
+    .row-3-2.row-lg.row-2-1-1 > .cell,
+    .row-3-2.row-lg.row-1-3 > .cell,
+    .row-3-2.row-lg.row-3-1 > .cell,
+    .row-3-2.row-lg.row-2-3 > .cell,
+    .row-3-2.row-lg.row-3-2 > .cell {
+      width: auto; }
+    @media screen and (min-width: 1200px) {
+      .row-1-1.row-lg.row-1-1-1 > .cell, .row-1-1.row-lg.row-1-2 > .cell, .row-1-1.row-lg.row-2-1 > .cell,
+      .row-1-1-1.row-lg.row-1-1-1 > .cell,
+      .row-1-1-1.row-lg.row-1-2 > .cell,
+      .row-1-1-1.row-lg.row-2-1 > .cell,
+      .row-1-1-1-1.row-lg.row-1-1-1 > .cell,
+      .row-1-1-1-1.row-lg.row-1-2 > .cell,
+      .row-1-1-1-1.row-lg.row-2-1 > .cell,
+      .row-1-2.row-lg.row-1-1-1 > .cell,
+      .row-1-2.row-lg.row-1-2 > .cell,
+      .row-1-2.row-lg.row-2-1 > .cell,
+      .row-2-1.row-lg.row-1-1-1 > .cell,
+      .row-2-1.row-lg.row-1-2 > .cell,
+      .row-2-1.row-lg.row-2-1 > .cell,
+      .row-1-1-2.row-lg.row-1-1-1 > .cell,
+      .row-1-1-2.row-lg.row-1-2 > .cell,
+      .row-1-1-2.row-lg.row-2-1 > .cell,
+      .row-1-2-1.row-lg.row-1-1-1 > .cell,
+      .row-1-2-1.row-lg.row-1-2 > .cell,
+      .row-1-2-1.row-lg.row-2-1 > .cell,
+      .row-2-1-1.row-lg.row-1-1-1 > .cell,
+      .row-2-1-1.row-lg.row-1-2 > .cell,
+      .row-2-1-1.row-lg.row-2-1 > .cell,
+      .row-1-3.row-lg.row-1-1-1 > .cell,
+      .row-1-3.row-lg.row-1-2 > .cell,
+      .row-1-3.row-lg.row-2-1 > .cell,
+      .row-3-1.row-lg.row-1-1-1 > .cell,
+      .row-3-1.row-lg.row-1-2 > .cell,
+      .row-3-1.row-lg.row-2-1 > .cell,
+      .row-2-3.row-lg.row-1-1-1 > .cell,
+      .row-2-3.row-lg.row-1-2 > .cell,
+      .row-2-3.row-lg.row-2-1 > .cell,
+      .row-3-2.row-lg.row-1-1-1 > .cell,
+      .row-3-2.row-lg.row-1-2 > .cell,
+      .row-3-2.row-lg.row-2-1 > .cell {
+        width: 33.33333%; }
+      .row-1-1.row-lg.row-1-1-1-1 > .cell, .row-1-1.row-lg.row-1-1-2 > .cell, .row-1-1.row-lg.row-1-2-1 > .cell, .row-1-1.row-lg.row-2-1-1 > .cell, .row-1-1.row-lg.row-1-3 > .cell, .row-1-1.row-lg.row-3-1 > .cell,
+      .row-1-1-1.row-lg.row-1-1-1-1 > .cell,
+      .row-1-1-1.row-lg.row-1-1-2 > .cell,
+      .row-1-1-1.row-lg.row-1-2-1 > .cell,
+      .row-1-1-1.row-lg.row-2-1-1 > .cell,
+      .row-1-1-1.row-lg.row-1-3 > .cell,
+      .row-1-1-1.row-lg.row-3-1 > .cell,
+      .row-1-1-1-1.row-lg.row-1-1-1-1 > .cell,
+      .row-1-1-1-1.row-lg.row-1-1-2 > .cell,
+      .row-1-1-1-1.row-lg.row-1-2-1 > .cell,
+      .row-1-1-1-1.row-lg.row-2-1-1 > .cell,
+      .row-1-1-1-1.row-lg.row-1-3 > .cell,
+      .row-1-1-1-1.row-lg.row-3-1 > .cell,
+      .row-1-2.row-lg.row-1-1-1-1 > .cell,
+      .row-1-2.row-lg.row-1-1-2 > .cell,
+      .row-1-2.row-lg.row-1-2-1 > .cell,
+      .row-1-2.row-lg.row-2-1-1 > .cell,
+      .row-1-2.row-lg.row-1-3 > .cell,
+      .row-1-2.row-lg.row-3-1 > .cell,
+      .row-2-1.row-lg.row-1-1-1-1 > .cell,
+      .row-2-1.row-lg.row-1-1-2 > .cell,
+      .row-2-1.row-lg.row-1-2-1 > .cell,
+      .row-2-1.row-lg.row-2-1-1 > .cell,
+      .row-2-1.row-lg.row-1-3 > .cell,
+      .row-2-1.row-lg.row-3-1 > .cell,
+      .row-1-1-2.row-lg.row-1-1-1-1 > .cell,
+      .row-1-1-2.row-lg.row-1-1-2 > .cell,
+      .row-1-1-2.row-lg.row-1-2-1 > .cell,
+      .row-1-1-2.row-lg.row-2-1-1 > .cell,
+      .row-1-1-2.row-lg.row-1-3 > .cell,
+      .row-1-1-2.row-lg.row-3-1 > .cell,
+      .row-1-2-1.row-lg.row-1-1-1-1 > .cell,
+      .row-1-2-1.row-lg.row-1-1-2 > .cell,
+      .row-1-2-1.row-lg.row-1-2-1 > .cell,
+      .row-1-2-1.row-lg.row-2-1-1 > .cell,
+      .row-1-2-1.row-lg.row-1-3 > .cell,
+      .row-1-2-1.row-lg.row-3-1 > .cell,
+      .row-2-1-1.row-lg.row-1-1-1-1 > .cell,
+      .row-2-1-1.row-lg.row-1-1-2 > .cell,
+      .row-2-1-1.row-lg.row-1-2-1 > .cell,
+      .row-2-1-1.row-lg.row-2-1-1 > .cell,
+      .row-2-1-1.row-lg.row-1-3 > .cell,
+      .row-2-1-1.row-lg.row-3-1 > .cell,
+      .row-1-3.row-lg.row-1-1-1-1 > .cell,
+      .row-1-3.row-lg.row-1-1-2 > .cell,
+      .row-1-3.row-lg.row-1-2-1 > .cell,
+      .row-1-3.row-lg.row-2-1-1 > .cell,
+      .row-1-3.row-lg.row-1-3 > .cell,
+      .row-1-3.row-lg.row-3-1 > .cell,
+      .row-3-1.row-lg.row-1-1-1-1 > .cell,
+      .row-3-1.row-lg.row-1-1-2 > .cell,
+      .row-3-1.row-lg.row-1-2-1 > .cell,
+      .row-3-1.row-lg.row-2-1-1 > .cell,
+      .row-3-1.row-lg.row-1-3 > .cell,
+      .row-3-1.row-lg.row-3-1 > .cell,
+      .row-2-3.row-lg.row-1-1-1-1 > .cell,
+      .row-2-3.row-lg.row-1-1-2 > .cell,
+      .row-2-3.row-lg.row-1-2-1 > .cell,
+      .row-2-3.row-lg.row-2-1-1 > .cell,
+      .row-2-3.row-lg.row-1-3 > .cell,
+      .row-2-3.row-lg.row-3-1 > .cell,
+      .row-3-2.row-lg.row-1-1-1-1 > .cell,
+      .row-3-2.row-lg.row-1-1-2 > .cell,
+      .row-3-2.row-lg.row-1-2-1 > .cell,
+      .row-3-2.row-lg.row-2-1-1 > .cell,
+      .row-3-2.row-lg.row-1-3 > .cell,
+      .row-3-2.row-lg.row-3-1 > .cell {
+        width: 25%; }
+      .row-1-1.row-lg.row-1-2 > .cell:nth-child(2), .row-1-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-1-1-1.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-1-1-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-1-1-1-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-1-2.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-1-2.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-2-1.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-2-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-1-1-2.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-1-1-2.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-1-2-1.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-1-2-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-2-1-1.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-2-1-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-1-3.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-1-3.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-3-1.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-3-1.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-2-3.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-2-3.row-lg.row-2-1 > .cell:nth-child(1),
+      .row-3-2.row-lg.row-1-2 > .cell:nth-child(2),
+      .row-3-2.row-lg.row-2-1 > .cell:nth-child(1) {
+        width: 66.66667%; }
+      .row-1-1.row-lg.row-1-1 > .cell, .row-1-1.row-lg.row-1-1-2 > .cell:nth-child(3), .row-1-1.row-lg.row-1-2-1 > .cell:nth-child(2), .row-1-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-1.row-lg.row-1-1 > .cell,
+      .row-1-1-1.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-1.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-lg.row-1-1 > .cell,
+      .row-1-1-1-1.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-1-1.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-1-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-1-2.row-lg.row-1-1 > .cell,
+      .row-1-2.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-1-2.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-1-2.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-2-1.row-lg.row-1-1 > .cell,
+      .row-2-1.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-2-1.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-2-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-1-1-2.row-lg.row-1-1 > .cell,
+      .row-1-1-2.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-1-1-2.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-1-1-2.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-1-2-1.row-lg.row-1-1 > .cell,
+      .row-1-2-1.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-1-2-1.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-1-2-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-2-1-1.row-lg.row-1-1 > .cell,
+      .row-2-1-1.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-2-1-1.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-2-1-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-1-3.row-lg.row-1-1 > .cell,
+      .row-1-3.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-1-3.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-1-3.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-3-1.row-lg.row-1-1 > .cell,
+      .row-3-1.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-3-1.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-3-1.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-2-3.row-lg.row-1-1 > .cell,
+      .row-2-3.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-2-3.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-2-3.row-lg.row-2-1-1 > .cell:nth-child(1),
+      .row-3-2.row-lg.row-1-1 > .cell,
+      .row-3-2.row-lg.row-1-1-2 > .cell:nth-child(3),
+      .row-3-2.row-lg.row-1-2-1 > .cell:nth-child(2),
+      .row-3-2.row-lg.row-2-1-1 > .cell:nth-child(1) {
+        width: 50%; }
+      .row-1-1.row-lg.row-1-3 > .cell:nth-child(2), .row-1-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-1-1-1.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-1-1-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-1-1-1-1.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-1-1-1-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-1-2.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-1-2.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-2-1.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-2-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-1-1-2.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-1-1-2.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-1-2-1.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-1-2-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-2-1-1.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-2-1-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-1-3.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-1-3.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-3-1.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-3-1.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-2-3.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-2-3.row-lg.row-3-1 > .cell:nth-child(1),
+      .row-3-2.row-lg.row-1-3 > .cell:nth-child(2),
+      .row-3-2.row-lg.row-3-1 > .cell:nth-child(1) {
+        width: 75%; }
+      .row-1-1.row-lg.row-2-3 > .cell:nth-child(2), .row-1-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-1-1-1.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-1-1-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-1-1-1-1.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-1-1-1-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-1-2.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-1-2.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-2-1.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-2-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-1-1-2.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-1-1-2.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-1-2-1.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-1-2-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-2-1-1.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-2-1-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-1-3.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-1-3.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-3-1.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-3-1.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-2-3.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-2-3.row-lg.row-3-2 > .cell:nth-child(1),
+      .row-3-2.row-lg.row-2-3 > .cell:nth-child(2),
+      .row-3-2.row-lg.row-3-2 > .cell:nth-child(1) {
+        width: 60%; }
+      .row-1-1.row-lg.row-3-2 > .cell:nth-child(2), .row-1-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-1-1-1.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-1-1-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-1-1-1-1.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-1-1-1-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-1-2.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-1-2.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-2-1.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-2-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-1-1-2.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-1-1-2.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-1-2-1.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-1-2-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-2-1-1.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-2-1-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-1-3.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-1-3.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-3-1.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-3-1.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-2-3.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-2-3.row-lg.row-2-3 > .cell:nth-child(1),
+      .row-3-2.row-lg.row-3-2 > .cell:nth-child(2),
+      .row-3-2.row-lg.row-2-3 > .cell:nth-child(1) {
+        width: 40%; } }
+  .row-1-1:after,
+  .row-1-1-1:after,
+  .row-1-1-1-1:after,
+  .row-1-2:after,
+  .row-2-1:after,
+  .row-1-1-2:after,
+  .row-1-2-1:after,
+  .row-2-1-1:after,
+  .row-1-3:after,
+  .row-3-1:after,
+  .row-2-3:after,
+  .row-3-2:after {
+    content: ' ';
+    display: block;
+    clear: left; }
+
+.row-auto:after,
+.row-auto-xs:after,
+.row-auto-sm:after,
+.row-auto-md:after,
+.row-auto-lg:after {
+  content: ' ';
+  display: block;
+  clear: left; }
+
+.row-auto,
+.row-auto-md {
+  margin: 0 -10px 20px; }
+  .row-auto > .cell,
+  .row-auto-md > .cell {
+    float: left;
+    padding: 0 10px;
+    margin-bottom: -20px;
+    width: 100%; }
+  @media screen and (min-width: 480px) {
+    .row-auto > .cell,
+    .row-auto-md > .cell {
+      width: 50%; } }
+  @media screen and (min-width: 768px) {
+    .row-auto > .cell,
+    .row-auto-md > .cell {
+      width: 33.33333%; } }
+  @media screen and (min-width: 1200px) {
+    .row-auto > .cell,
+    .row-auto-md > .cell {
+      width: 25%; } }
+
+.row-auto-xs {
+  margin: 0 -10px 20px; }
+  .row-auto-xs > .cell {
+    float: left;
+    padding: 0 10px;
+    margin-bottom: -20px;
+    width: 50%; }
+  @media screen and (min-width: 480px) {
+    .row-auto-xs > .cell {
+      width: 33.33333%; } }
+  @media screen and (min-width: 768px) {
+    .row-auto-xs > .cell {
+      width: 20%; } }
+  @media screen and (min-width: 1200px) {
+    .row-auto-xs > .cell {
+      width: 14.28571%; } }
+
+.row-auto-sm {
+  margin: 0 -10px 20px; }
+  .row-auto-sm > .cell {
+    float: left;
+    padding: 0 10px;
+    margin-bottom: -20px;
+    width: 100%; }
+  @media screen and (min-width: 480px) {
+    .row-auto-sm > .cell {
+      width: 50%; } }
+  @media screen and (min-width: 768px) {
+    .row-auto-sm > .cell {
+      width: 25%; } }
+  @media screen and (min-width: 1200px) {
+    .row-auto-sm > .cell {
+      width: 20%; } }
+
+.row-auto-lg {
+  margin: 0 -10px 20px; }
+  .row-auto-lg > .cell {
+    float: left;
+    padding: 0 10px;
+    margin-bottom: -20px;
+    width: 100%; }
+  @media screen and (min-width: 480px) {
+    .row-auto-lg > .cell {
+      width: 100%; } }
+  @media screen and (min-width: 768px) {
+    .row-auto-lg > .cell {
+      width: 50%; } }
+  @media screen and (min-width: 1200px) {
+    .row-auto-lg > .cell {
+      width: 33.33333%; } }
+
+.block {
+  position: relative;
+  background-color: #f7f7f7;
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 2px #e6e6e6; }
+  .block > .block-header {
+    padding: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #727272; }
+    .block > .block-header > h1, .block > .block-header > h2, .block > .block-header > h3, .block > .block-header > h4, .block > .block-header > h5, .block > .block-header > h6 {
+      font-size: inherit;
+      margin: 0;
+      font-weight: inherit; }
+      .block > .block-header > h1 > small, .block > .block-header > h2 > small, .block > .block-header > h3 > small, .block > .block-header > h4 > small, .block > .block-header > h5 > small, .block > .block-header > h6 > small {
+        text-transform: none;
+        font-weight: normal;
+        font-size: 0.9em;
+        margin-left: 8px;
+        color: #939393; }
+    .block > .block-header > .block-toolbar {
+      text-transform: none;
+      font-weight: normal;
+      float: right;
+      color: rgba(0, 0, 0, 0.4); }
+      .block > .block-header > .block-toolbar > a {
+        margin-left: 8px; }
+        .block > .block-header > .block-toolbar > a, .block > .block-header > .block-toolbar > a:link, .block > .block-header > .block-toolbar > a:visited, .block > .block-header > .block-toolbar > a:active {
+          color: inherit; }
+        .block > .block-header > .block-toolbar > a:hover {
+          color: #2272cc;
+          text-decoration: none; }
+        .block > .block-header > .block-toolbar > a > .label {
+          margin-left: 8px;
+          font-size: 0.9em; }
+  .block > .block-content {
+    padding: 16px; }
+    .block > .block-content > *:last-child {
+      margin-bottom: 0; }
+  .block > .block-footer {
+    border-top: 1px solid #ddd;
+    color: #727272;
+    padding: 16px;
+    text-align: right; }
+  .block.block-info > .block-header, .block.block-success > .block-header, .block.block-warn > .block-header, .block.block-error > .block-header {
+    color: #fff; }
+    .block.block-info > .block-header > .block-toolbar, .block.block-success > .block-header > .block-toolbar, .block.block-warn > .block-header > .block-toolbar, .block.block-error > .block-header > .block-toolbar {
+      color: rgba(255, 255, 255, 0.4); }
+      .block.block-info > .block-header > .block-toolbar > a:hover, .block.block-success > .block-header > .block-toolbar > a:hover, .block.block-warn > .block-header > .block-toolbar > a:hover, .block.block-error > .block-header > .block-toolbar > a:hover {
+        color: rgba(255, 255, 255, 0.8); }
+  .block.block-info > .block-header {
+    background-color: #2272cc; }
+  .block.block-success > .block-header {
+    background-color: #22cc22; }
+  .block.block-warn > .block-header {
+    background-color: #cc7222; }
+  .block.block-error > .block-header {
+    background-color: #cc2222; }
+
+header {
+  background-color: #2272cc;
+  position: absolute;
+  padding: 0 12px 0 12px;
+  color: #fff;
+  width: 100%;
+  z-index: 1000;
+  height: 32px; }
+  header > * {
+    height: 32px;
+    vertical-align: top; }
+  header h1 {
+    font-weight: normal;
+    font-size: 1.4em;
+    float: left;
+    line-height: 32px; }
+    header h1 a, header h1 a:link, header h1 a:active, header h1 a:visited, header h1 a:hover {
+      color: inherit;
+      text-decoration: none; }
+    header h1 a:hover {
+      text-decoration: underline; }
+  @media screen and (min-width: 768px) {
+    header {
+      padding-right: 24px;
+      padding-left: 24px; } }
+
+#main {
+  background-color: #fff;
+  position: relative;
+  min-height: 100%;
+  padding: 48px 12px 37px 12px; }
+  #main #main-container > h1:first-child {
+    background-color: #fbfbfb;
+    margin: -48px -12px 24px -12px;
+    padding: 56px 12px 24px 12px;
+    font-size: 1.9em; }
+    #main #main-container > h1:first-child > small {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.6em; }
+  @media screen and (min-width: 768px) {
+    #main {
+      padding-right: 24px;
+      padding-left: 24px; }
+      #main #main-container > h1:first-child {
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-top: 48px;
+        padding-left: 24px;
+        padding-right: 24px; }
+        #main #main-container > h1:first-child > small {
+          display: inline;
+          margin-top: 0; } }
+  #main:after {
+    clear: left;
+    display: table;
+    content: ' '; }
+
+footer {
+  position: absolute;
+  color: #666;
+  height: 24px;
+  border-top: 1px solid #eee;
+  line-height: 24px;
+  width: 100%;
+  font-size: 0.8em;
+  text-align: right;
+  padding: 0 12px 0 12px;
+  margin-top: -25px;
+  z-index: 1000; }
+  @media screen and (min-width: 768px) {
+    footer {
+      padding-right: 24px;
+      padding-left: 24px; } }
+  footer a, footer a:link, footer a:active, footer a:visited {
+    color: inherit;
+    text-decoration: underline; }
+  footer a:hover {
+    color: inherit;
+    text-decoration: none; }
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit; }
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+.button, .button:link, .button:visited,
+button,
+button:link,
+button:visited,
+input[type=button],
+input[type=button]:link,
+input[type=button]:visited,
+input[type=reset],
+input[type=reset]:link,
+input[type=reset]:visited,
+input[type=submit],
+input[type=submit]:link,
+input[type=submit]:visited {
+  background-color: #eee;
+  border: none;
+  border-bottom: 2px solid #444;
+  color: #444;
+  line-height: normal;
+  text-decoration: none;
+  padding: 6px 12px 4px;
+  display: inline-block;
+  margin: 2px 0;
+  cursor: pointer; }
+  .button.primary, .button:link.primary, .button:visited.primary,
+  button.primary,
+  button:link.primary,
+  button:visited.primary,
+  input[type=button].primary,
+  input[type=button]:link.primary,
+  input[type=button]:visited.primary,
+  input[type=reset].primary,
+  input[type=reset]:link.primary,
+  input[type=reset]:visited.primary,
+  input[type=submit].primary,
+  input[type=submit]:link.primary,
+  input[type=submit]:visited.primary {
+    font-weight: 600; }
+.button:hover, .button:active,
+button:hover,
+button:active,
+input[type=button]:hover,
+input[type=button]:active,
+input[type=reset]:hover,
+input[type=reset]:active,
+input[type=submit]:hover,
+input[type=submit]:active {
+  background-color: #ddd;
+  color: #2272cc;
+  border-color: #2272cc;
+  text-decoration: none; }
+.button:active,
+button:active,
+input[type=button]:active,
+input[type=reset]:active,
+input[type=submit]:active {
+  box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.15);
+  outline: none; }
+.button[disabled], .button[disabled]:hover, .button[disabled]:active,
+button[disabled],
+button[disabled]:hover,
+button[disabled]:active,
+input[type=button][disabled],
+input[type=button][disabled]:hover,
+input[type=button][disabled]:active,
+input[type=reset][disabled],
+input[type=reset][disabled]:hover,
+input[type=reset][disabled]:active,
+input[type=submit][disabled],
+input[type=submit][disabled]:hover,
+input[type=submit][disabled]:active {
+  background-color: #f1f1f1;
+  border-color: #999;
+  color: #999;
+  cursor: default;
+  box-shadow: none;
+  outline: none; }
+
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=date],
+input[type=time],
+input[type=datetime],
+textarea,
+select {
+  padding: 5px 12px 5px;
+  margin: 2px 0;
+  display: block;
+  border: 1px solid #d9d9d9;
+  font-size: 14px;
+  background-color: #fff;
+  color: #999;
+  width: 100%;
+  box-shadow: inset 0 1px 2px #e6e6e6; }
+  input[type=text]:focus,
+  input[type=email]:focus,
+  input[type=password]:focus,
+  input[type=date]:focus,
+  input[type=time]:focus,
+  input[type=datetime]:focus,
+  textarea:focus,
+  select:focus {
+    color: #222;
+    border: 1px solid #6da6e7;
+    box-shadow: 0 0 1px #6da6e7;
+    outline: 0; }
+  input[type=text][data-error], input[type=text].error,
+  input[type=email][data-error],
+  input[type=email].error,
+  input[type=password][data-error],
+  input[type=password].error,
+  input[type=date][data-error],
+  input[type=date].error,
+  input[type=time][data-error],
+  input[type=time].error,
+  input[type=datetime][data-error],
+  input[type=datetime].error,
+  textarea[data-error],
+  textarea.error,
+  select[data-error],
+  select.error {
+    background-color: #fee;
+    border: 1px solid #f55; }
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  box-shadow: inset 0 1px 2px #e6e6e6;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 0 0 0;
+  text-align: center;
+  cursor: pointer; }
+  input[type=checkbox]:checked:before {
+    color: #2272cc;
+    font-size: 14px;
+    float: left;
+    margin: -2px 0 0 2px;
+    font-family: "Open Sans", sans-serif;
+    content: '\2714'; }
+  input[type=checkbox]:focus {
+    color: #222;
+    border: 1px solid #6da6e7;
+    box-shadow: 0 0 1px #6da6e7;
+    outline: 0; }
+
+input[type=radio] {
+  -webkit-appearance: none;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  box-shadow: inset 0 1px 2px #e6e6e6;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 0 0 0;
+  text-align: center;
+  cursor: pointer; }
+  input[type=radio]:checked:before {
+    background: #2272cc;
+    float: left;
+    width: 8px;
+    height: 8px;
+    margin: 3px 0 0 3px;
+    content: ' ';
+    font-size: 1px;
+    border-radius: 50%; }
+  input[type=radio]:focus {
+    color: #222;
+    border: 1px solid #6da6e7;
+    box-shadow: 0 0 1px #6da6e7;
+    outline: 0; }
+
+label[for] {
+  cursor: pointer; }
+
+form {
+  display: block;
+  margin-bottom: 20px; }
+  form .field {
+    margin-bottom: 12px;
+    padding: 6px 0;
+    font-style: italic; }
+    form .field input[type=text],
+    form .field input[type=email],
+    form .field input[type=password],
+    form .field input[type=date],
+    form .field input[type=time],
+    form .field input[type=datetime],
+    form .field textarea,
+    form .field select {
+      margin: 0 0 6px 0; }
+      @media screen and (min-width: 768px) {
+        form .field input[type=text],
+        form .field input[type=email],
+        form .field input[type=password],
+        form .field input[type=date],
+        form .field input[type=time],
+        form .field input[type=datetime],
+        form .field textarea,
+        form .field select {
+          margin-top: -6px;
+          margin-bottom: 6px;
+          width: 380px; } }
+    form .field label:first-child {
+      font-weight: 600;
+      font-style: normal;
+      display: block;
+      margin-bottom: 6px; }
+      @media screen and (min-width: 768px) {
+        form .field label:first-child {
+          float: left;
+          width: 240px;
+          margin-left: -240px; } }
+    @media screen and (min-width: 768px) {
+      form .field {
+        margin-left: 240px; } }
+    form .field.field-required label:first-child:after {
+      content: '*';
+      margin-left: 4px;
+      font-style: italic;
+      color: #c22; }
+    form .field input[type=checkbox],
+    form .field input[type=radio] {
+      margin-right: 6px; }
+    form .field input + label {
+      font-weight: normal;
+      font-style: normal;
+      display: inline;
+      margin: 0 12px 0 0px; }
+
+table {
+  font-size: 0.9em;
+  margin: 0 0 6px 0;
+  border-spacing: 0;
+  width: 100%; }
+  table thead tr th, table tfoot tr th {
+    text-align: left;
+    font-weight: 600; }
+  table td, table th {
+    padding: 12px 8px;
+    vertical-align: top;
+    width: 15%; }
+    table td.primary, table th.primary {
+      width: auto; }
+    table td.non-essential, table th.non-essential {
+      display: none; }
+  table thead th, table tfoot th {
+    background-color: #eee;
+    color: #999;
+    text-transform: uppercase; }
+    table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
+      color: #444;
+      padding: 12px 8px;
+      margin: -12px -8px;
+      text-decoration: none;
+      display: block; }
+    table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
+      background-color: #ddd;
+      color: #2272cc;
+      border-color: #2272cc;
+      text-decoration: none; }
+  table tbody tr:first-child td {
+    border-top: 0; }
+  table tbody tr td {
+    border-top: 1px solid #e6e6e6; }
+  table tbody tr.warn td {
+    background-color: #fdfdf0; }
+  table tbody tr.error td {
+    background-color: #fdf0f0; }
+  table tbody tr.unread td {
+    background-color: #f0f6fd; }
+  table tbody tr.success td {
+    background-color: #f4fdf0; }
+  table tbody tr:hover td {
+    background-color: #f7f7f7; }
+  table tbody tr .actions a {
+    text-decoration: none;
+    margin-right: 2px; }
+  @media screen and (min-width: 768px) {
+    table tbody tr .actions a {
+      visibility: hidden;
+      padding-right: 10px; }
+    table tbody tr:hover td.actions a {
+      visibility: visible; } }
+  table td.primary {
+    width: auto; }
+    table td.primary > a:first-child {
+      font-weight: 600;
+      font-size: 1.1em; }
+    table td.primary .essential > span {
+      white-space: nowrap;
+      margin-right: 8px; }
+      table td.primary .essential > span:last-child {
+        margin-right: 0; }
+    @media screen and (min-width: 768px) {
+      table td.primary .essential {
+        display: none; } }
+  table .action-links {
+    margin-top: 8px; }
+    table .action-links a {
+      margin-right: 8px; }
+      table .action-links a:last-child {
+        margin-right: 0; }
+  table .selection {
+    display: table-cell;
+    width: 32px; }
+    table .selection label {
+      padding: 12px 0 12px 8px;
+      margin: -12px -8px;
+      display: block;
+      cursor: pointer; }
+  @media screen and (min-width: 768px) {
+    table td.non-essential, table th.non-essential {
+      display: table-cell; }
+    table .action-links {
+      display: none; } }
+
+.flash {
+  background-color: #eee;
+  font-size: 0.9em;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid #2272CC;
+  box-shadow: 1px 2px 1px #e6e6e6; }
+  .flash.flash-info {
+    border-color: #cccc22; }
+    .flash.flash-info:before {
+      color: #cccc22; }
+  .flash.flash-error {
+    border-color: #cc2222; }
+    .flash.flash-error:before {
+      color: #cc2222; }
+  .flash.flash-warn {
+    border-color: #cc7222; }
+    .flash.flash-warn:before {
+      color: #cc7222; }
+  .flash.flash-success {
+    border-color: #50CC22; }
+    .flash.flash-success:before {
+      color: #50CC22; }
+  .flash.flash-question {
+    border-color: #2272CC; }
+    .flash.flash-question:before {
+      color: #2272CC; }
+  .flash h2 {
+    font-size: 1.1em;
+    font-weight: 600; }
+
+body.exception {
+  background-color: #fff; }
+  body.exception header {
+    background-color: #cc2222; }
+  body.exception #sad {
+    float: right;
+    color: #cc2222;
+    font-size: 120px;
+    display: none; }
+    @media screen and (min-width: 480px) {
+      body.exception #sad {
+        display: block; } }
+
+@media screen and (min-width: 768px) {
+  body.narrow {
+    background-color: #fff;
+    text-align: center; }
+    body.narrow > * {
+      text-align: left; }
+    body.narrow #main {
+      padding-left: 0;
+      padding-right: 0;
+      width: 720px;
+      margin: 0 auto; } }
+
+table.trace td, table.trace th {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  display: table-cell; }
+
+.install-buttons {
+  text-align: right; }
+  .install-buttons .primary {
+    float: right;
+    margin-left: 0.5em; }
+
+/*# sourceMappingURL=core.css.map */

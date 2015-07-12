@@ -1,0 +1,25 @@
+{
+  "name": "Jivoo Blog Example",
+  "namespace": "Blog",
+  "version": "1.0",
+  "modules": [
+    "Assets",
+    "Helpers",
+    "Models",
+    "Routing",
+    "View",
+    "Controllers",
+    "Snippets",
+    "Databases",
+    "ActiveModels",
+    "Migrations",
+    "Setup",
+    "Console",
+    "AccessControl",
+    "Jtk",
+    "Console",
+    "Extensions"
+  ],
+  "install": "Jivoo\\Setup\\DefaultInstaller",
+  "update": "Jivoo\\Setup\\DefaultUpdater"
+}
