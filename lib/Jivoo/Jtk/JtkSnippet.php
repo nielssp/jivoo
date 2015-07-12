@@ -6,6 +6,7 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Snippets\Snippet;
+use Jivoo\View\ViewResponse;
 use Jivoo\Core\Lib;
 
 /**
@@ -51,6 +52,9 @@ class JtkSnippet extends Snippet {
     else
       throw new \Exception(tr('JTK object is null'));
     $this->viewData['object'] = $object;
-    return parent::__invoke($parameters);
+    $response = parent::__invoke($parameters);
+    if ($response instanceof ViewResponse)
+      return $response->body;
+    return $response;
   }
 }
