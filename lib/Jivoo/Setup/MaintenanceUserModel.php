@@ -50,6 +50,7 @@ class MaintenanceUserModel implements IUserModel {
   public function createSession($userData, $validUntil) {
     $sessionId = Utilities::randomString(32);
     $this->lock['session'] = $sessionId;
+    $this->lock->save();
     return $sessionId;
   }
   
