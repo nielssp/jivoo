@@ -12,8 +12,7 @@ namespace Jivoo\ActiveModels;
  * <code>
  * array(
  *   'model' => // the meta data model, e.g. 'UserMeta'
- *   'thisKey' => // the foreign key in the above model, e.g. 'userId'
- *   'otherKey' => // the primary key of the current model, e.g. 'id'
+ *   'recordKey' => // the foreign key in the above model, e.g. 'userId'
  * )
  * </code>
  */
@@ -38,7 +37,7 @@ class MetaMixin extends ActiveModelMixin {
     if (!isset($this->options['model']))
       $this->options['model'] = $this->model->getName() . 'Meta';
     if (!isset($this->options['recordKey']))
-      $this->options['thisKey'] = lcfirst($this->model->getName()) . 'Id';
+      $this->options['recordKey'] = lcfirst($this->model->getName()) . 'Id';
     $this->model->addVirtual('meta');
     $other = $this->options['model'];
     $db = $this->model->getDatabase();
@@ -55,7 +54,7 @@ class MetaMixin extends ActiveModelMixin {
    */
   public function afterLoad(ActiveModelEvent $event) {
     $recordKey = $this->options['recordKey'];
-    $event->record->meta = new Meta($this->other, $thisKey, $event->record);
+    $event->record->meta = new Meta($this->other, $recordKey, $event->record);
   }
 
   /**
@@ -63,7 +62,7 @@ class MetaMixin extends ActiveModelMixin {
    */
   public function afterCreate(ActiveModelEvent $event) {
     $recordKey = $this->options['recordKey'];
-    $event->record->meta = new Meta($this->other, $thisKey, $event->record);
+    $event->record->meta = new Meta($this->other, $recordKey, $event->record);
   }
 
   /**
