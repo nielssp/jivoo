@@ -294,13 +294,11 @@ class Assets extends LoadableModule {
    */
   private function getAssetUrl($key, $path) {
     $prefix = array('assets');
-    if ($key == 'app') {
-      $p = $this->p($key, 'assets/' . $path);
-    }
-    else {
+    if ($key == 'app')
+      $path = 'assets/' . $path;
+    else
       $prefix[] = $this->getAssetKey($key);
-      $p = Utilities::convertRealPath($this->p($key, $path));
-    }
+    $p = Utilities::convertRealPath($this->p($key, $path));
     $suffix = '';
     if ($this->config['mtimeSuffix'])
       $suffix = '?' . filemtime($p);

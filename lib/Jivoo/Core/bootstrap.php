@@ -14,7 +14,7 @@ namespace Jivoo\Core {
   /**
    * @var string Jivoo framework version string.
    */
-  const VERSION = '0.16.3';
+  const VERSION = '0.16.4';
 }
 
 namespace {
