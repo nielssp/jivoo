@@ -414,7 +414,7 @@ class Routing extends LoadableModule {
         $function = $this->paths[$routeString . '[*]']['function'];
     }
     if (isset($function))
-      $path = $function($route, $path);
+      $path = call_user_func($function, $route, $path);
     else
       $path = $route['dispatcher']->getPath($route, $path);
     if (!isset($path))
