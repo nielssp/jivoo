@@ -75,12 +75,15 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
+    $state = $this->state->read('setup');
     if (isset($this->app->manifest['install'])) {
       $installer = $this->app->manifest['install'];
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
-      if (!$this->config[$installer]->get('done', false)) {
-        $snippet = $this->getInstaller($installer);
+      if (!$state[$installer]->get('done', false)) {
+        $state->close();
+        $state = $this->state->write('setup');
+        $snippet = $this->getInstaller($installer, $state[$installer]);
         try {
           $this->active = true;
           $this->m->Routing->respond(
@@ -96,16 +99,19 @@ class Setup extends LoadableModule {
       }
     }
     if (isset($this->app->manifest['update'])) {
-      if ($this->config->get('version', $this->app->version) !== $this->app->version) {
+      if ($state->get('version', $this->app->version) !== $this->app->version) {
+        $state->close();
+        $state = $this->state->write('setup');
         $installer = $this->app->manifest['update'];
         if (!Lib::classExists($installer))
           $installer = $this->app->n('Snippets\\' . $installer);
-        $config = $this->config['updates'][$this->app->version][$installer];
+        $config = $state['updates'][$this->app->version][$installer];
         if ($config->get('done', false)) {
-          $this->config['version'] = $this->app->version;
-          $this->config->save();
+          $state['version'] = $this->app->version;
+          $state->close();
         }
         else {
+          $state->close();
           $snippet = $this->getInstaller($installer, $config);
           try {
             $this->active = true;
@@ -122,16 +128,19 @@ class Setup extends LoadableModule {
         }
       }
     }
-    if (isset($this->config['current']['install'])) {
-      $installer = $this->config['current']->get('install', null);
+    if (isset($state['current']['install'])) {
+      $state->close();
+      $state = $this->state->write('setup');
+      $installer = $state['current']->get('install', null);
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       $config = $this->config['current'][$installer];
       if ($config->get('done', false)) {
-        unset($this->config['current']);
-        $this->config->save();
+        unset($state['current']);
+        $state->close();
       }
       else {
+        $state->close();
         $snippet = $this->getInstaller($installer, $config);
         try {
           $this->active = true;
@@ -147,6 +156,7 @@ class Setup extends LoadableModule {
         }
       }
     }
+    $state->close();
   }
   
   /**
@@ -183,10 +193,12 @@ class Setup extends LoadableModule {
       $installerClass = $this->app->n('Snippets\\' . $installerClass);
     Logger::notice(tr('Trigger installer: %1', $installerClass));
     $this->getInstaller($installerClass);
-    unset($this->config['current']);
-    $this->config['current']['install'] = $installerClass;
-    if (!$this->config->save())
-      throw new \Exception(tr('Could not start installer, config could not be saved.'));
+    $state = $this->state->write('setup');
+    unset($state['current']);
+    $state['current']['install'] = $installerClass;
+    $state->close();
+//     if (!$this->config->save())
+//       throw new \Exception(tr('Could not start installer, config could not be saved.'));
     $this->m->Routing->refresh();
   }
   
@@ -248,13 +260,16 @@ class Setup extends LoadableModule {
    * @param string $config Installer state.
    * @return InstallerSnippet Instalelr.
    */
-  public function getInstaller($class, $config = null) {
+  public function getInstaller($class, $state = null) {
     if (!isset($this->installers[$class])) {
-      if (!isset($config))
-        $config = $this->config[$class];
+      if (!isset($state) and $this->state->isMutable('setup')) {
+        $state = $this->state->write('setup');
+        $state = $state[$class];
+      }
       $snippet = $this->m->Snippets->getSnippet($class);
       assume($snippet instanceof InstallerSnippet);
-      $snippet->setConfig($config);
+      if (isset($state))
+        $snippet->setState($state);
       $this->installers[$class] = $snippet;
     }
     return $this->installers[$class];

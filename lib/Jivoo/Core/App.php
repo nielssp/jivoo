@@ -170,7 +170,7 @@ class App implements IEventSubject {
   private $events = array(
     'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
     'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit',
-    'beforeShowException'
+    'beforeShowException', 'beforeStop'
   );
   
   /**
@@ -668,13 +668,20 @@ class App implements IEventSubject {
     $this->triggerEvent('afterLoadModules');
     
     $this->triggerEvent('afterInit');
+    
+    Logger::warning(tr('Application not stopped'));
   }
   
   /**
-   * Stop application (exit PHP execution)
+   * Stop application (exit PHP execution). Use instead of {@see exit}.
    * @param int $status Return code
    */
   public function stop($status = 0) {
+    $this->triggerEvent('beforeStop');
+    
+    $open = $this->state->closeAll();
+    if (!empty($open))
+      Logger::warning(tr('The following state documents were not properly closed: %1{, }{ and }', $open));
     exit($status);
   }
 }

@@ -20,6 +20,11 @@ class StateMap {
   private $files = array();
   
   /**
+   * @var State[]
+   */
+  private $states = array();
+  
+  /**
    * Construct state map.
    * @param string $dir State directory.
    */
@@ -45,9 +50,12 @@ class StateMap {
    * @return State State document.
    */
   public function read($key) {
+    if (isset($this->states[$key]) and $this->states[$key]->isOpen())
+      return $this->states[$key];
     if (!isset($this->files[$key]))
       $this->touch($key);
-    return new State($this->files[$key], false);
+    $this->states[$key] = new State($this->files[$key], false);
+    return $this->states[$key];
   }
 
   /**
@@ -57,8 +65,56 @@ class StateMap {
    * @return State State document.
    */
   public function write($key) {
+    if (isset($this->states[$key])) {
+      if ($this->states[$key]->isMutable())
+        return $this->states[$key];
+      $this->states[$key]->close();
+    }
     if (!isset($this->files[$key]))
       $this->touch($key);
-    return new State($this->files[$key], true);
+    $this->states[$key] = new State($this->files[$key], true);
+    return $this->states[$key];
+  }
+  
+  /**
+   * Whether a state document is open.
+   * @param string $key State document key.
+   * @return bool True if open.
+   */
+  public function isOpen($key) {
+    return isset($this->states[$key]) and $this->states[$key]->isOpen();
+  }
+  
+  /**
+   * Whether a state document is open and mutable.
+   * @param string $key State document key.
+   * @return bool True if mutable.
+   */
+  public function isMutable($key) {
+    return isset($this->states[$key]) and $this->states[$key]->isMutable();
+  }
+  
+  /**
+   * Close a state document.
+   * @param string $key State document key.
+   */
+  public function close($key) {
+    if (isset($this->states[$key]) and $this->states[$key]->isOpen())
+      $this->states[$key]->close();
+  }
+
+  /**
+   * Close all open state documents.
+   * @return string[] List of keys of states that were closed.
+   */
+  public function closeAll() {
+    $open = array();
+    foreach ($this->states as $key => $state) {
+      if ($state->isOpen()) {
+        $state->close();
+        $open[] = $key;
+      }
+    }
+    return $open;
   }
 }

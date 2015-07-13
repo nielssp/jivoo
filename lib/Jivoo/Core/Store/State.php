@@ -38,6 +38,22 @@ class State extends Document {
   }
   
   /**
+   * Whether state is open.
+   * @return bool True if open.
+   */
+  public function isOpen() {
+    return isset($this->store);
+  }
+  
+  /**
+   * Whether state is open and mutable.
+   * @return bool True if mutable.
+   */
+  public function isMutable() {
+    return isset($this->store) and $this->store->isMutable();
+  }
+  
+  /**
    * Close, save (if mutable), and unlock state data.
    * @throws StateClosedException If the state has already been closed.
    */
