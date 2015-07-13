@@ -227,15 +227,18 @@ class ViewResources {
    * Output resource block.
    * @param string[]|string Type(s) of resources to output, e.g. 'script',
    * 'style'. 
+   * @param bool $allFrames Whether to output all frames or only the current one.
    * @return string Resource block HTML.
    */
-  public function resourceBlock($types = null) {
+  public function resourceBlock($types = null, $allFrames = true) {
     if (!isset($types))
       $types = array('style', 'script');
     if (!is_array($types))
       $types = func_get_args();
-    while ($this->framePointer > 0)
-      $this->closeFrame();
+    if ($allFrames) {
+      while ($this->framePointer > 0)
+        $this->closeFrame();
+    }
     $this->emitted = array();
     $this->blocks = array(
       'script' => '',

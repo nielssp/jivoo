@@ -42,6 +42,11 @@ class Console extends LoadableModule {
   private $devbar = null;
   
   /**
+   * @var string Devbar resource imports.
+   */
+  private $devbarResources = null;
+  
+  /**
    * {@inheritdoc}
    */
   protected function init() {
@@ -68,7 +73,10 @@ class Console extends LoadableModule {
       $this->m->Extensions->import('jqueryui');
       $this->m->Extensions->import('js-cookie');
       
+      $this->view->resources->openFrame();
       $this->devbar = $this->view->renderOnly('jivoo/console/devbar.html');
+      $this->devbarResources = $this->view->resources->resourceBlock(null, false); 
+      $this->view->resources->closeFrame();
       
       $this->m->Routing->attachEventHandler('afterRender', array($this, 'injectCode'));
       $this->app->attachEventHandler('beforeShowException', array($this, 'injectCode'));
@@ -94,7 +102,7 @@ class Console extends LoadableModule {
     }
     else {
       assume($event instanceof ShowExceptionEvent);
-      $extraIncludes = $this->view->resourceBlock();
+      $extraIncludes = $this->devbarResources;
     }
     $body = $event->body;
     $pos = strripos($body, '</body');
