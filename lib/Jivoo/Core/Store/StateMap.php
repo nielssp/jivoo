@@ -5,6 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Store;
 
+use Jivoo\Core\Logger;
 /**
  * An object allowing for the creation and reading of state-files in a directoy.
  */
@@ -55,6 +56,7 @@ class StateMap {
     if (!isset($this->files[$key]))
       $this->touch($key);
     $this->states[$key] = new State($this->files[$key], false);
+    Logger::debug(tr('Open state (read): %1', $key));
     return $this->states[$key];
   }
 
@@ -73,6 +75,7 @@ class StateMap {
     if (!isset($this->files[$key]))
       $this->touch($key);
     $this->states[$key] = new State($this->files[$key], true);
+    Logger::debug(tr('Open state (write): %1', $key));
     return $this->states[$key];
   }
   
