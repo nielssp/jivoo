@@ -187,7 +187,7 @@ class Utilities {
   public static function isAbsolutePath($path) {
     if (isset($path[0]) and ($path[0] == '/' or $path[0] == '\\'))
       return true;
-    if (isset($path[1]) and $path[1] == ':')
+    if (preg_match('/^[A-Za-z0-9]+:/', $path) === 1)
       return true;
     return false;
   }

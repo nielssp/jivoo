@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers;
 
+use Jivoo\Core\Utilities;
+
 /**
  * HTML helper. Adds some useful methods when working with HTML views.
  */
@@ -56,12 +58,27 @@ class HtmlHelper extends Helper {
   }
 
   /**
+   * Insert an image.
+   * @param $file Path to file (can be an asset or an absolute path).
+   * @param array $attributes Associative array of attributes to add to image.
+   * @return string HTML image.
+   */
+  public function img($file, $attributes = array()) {
+    if (!isset($attributes['alt']))
+      $attributes['alt'] = $file;
+    if (!Utilities::isAbsolutePath($file))
+      $file = $this->view->file($file);
+    $attributes['src'] = $file;
+    return '<img' . $this->addAttributes($attributes) . ' />';
+  }
+
+  /**
    * Create a link
    * @param string $label Label for link
    * @param array|ILinkable|string|null $route Route for link, default is
    *        frontpage, see {@see Routing}.
    * @param array $attributes Associative array of attributes to add to link.
-   * @return string false HTML link or false if invalid route.
+   * @return string HTML link.
    */
   public function link($label, $route = null, $attributes = array()) {
     try {
