@@ -8,6 +8,8 @@ namespace Jivoo\Core;
 use Jivoo\Routing\Http;
 use Jivoo\Core\Store\PhpStore;
 use Jivoo\Core\Store\Config;
+use Jivoo\Core\Store\StateMap;
+use Jivoo\Core\Store\Jivoo\Core\Store;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -24,6 +26,7 @@ use Jivoo\Core\Store\Config;
  * @property-read string $sessionPrefix Application session prefix.
  * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
  * @property-read EventManager $eventManager Application event manager.
+ * @property-read StateMap $state Application persistent state storage.
  */
 class App implements IEventSubject {
   /**
@@ -130,6 +133,11 @@ class App implements IEventSubject {
    * @var string Environment name.
    */
   private $environment = 'production';
+  
+  /**
+   * @var StateMap
+   */
+  private $state = null;
   
   /**
    * @var array Associative array of default environment configurations.
@@ -263,6 +271,7 @@ class App implements IEventSubject {
       case 'sessionPrefix':
       case 'basePath':
       case 'entryScript':
+      case 'state':
         return $this->$property;
       case 'eventManager':
         return $this->e;
@@ -616,7 +625,7 @@ class App implements IEventSubject {
       try {
         $defaultTimeZone = @date_default_timezone_get();
       }
-      catch (ErrorException $e) { }
+      catch (\ErrorException $e) { }
       $this->config['core']['timeZone'] = $defaultTimeZone;
     }
     
@@ -633,6 +642,9 @@ class App implements IEventSubject {
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
+    
+    // Persistent state storage
+    $this->state = new StateMap($this->p('state', ''));
 
     // Import modules
     $this->triggerEvent('beforeImportModules');

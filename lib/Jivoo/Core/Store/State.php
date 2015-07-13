@@ -28,8 +28,13 @@ class State extends Document {
   public function __construct(IStore $store, $mutable = true) {
     parent::__construct();
     $this->store = $store;
-    $this->store->open($mutable);
-    $this->data = $this->store->read();
+    try {
+      $this->store->open($mutable);
+      $this->data = $this->store->read();
+    }
+    catch (StoreException $e) {
+      throw new StateInvalidException(tr('Could not read state: %1', $e->getMessage()), null, $e);
+    }
   }
   
   /**

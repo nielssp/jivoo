@@ -12,6 +12,11 @@ class PhpStore extends FileStore {
   /**
    * {@inheritdoc}
    */
+  protected $defaultContent = "<?php\nreturn array();";
+  
+  /**
+   * {@inheritdoc}
+   */
   protected function encode(array $data) {
     $data = self::prettyPrint($data);
     return '<?php' . PHP_EOL . 'return ' . $data . ';' . PHP_EOL;

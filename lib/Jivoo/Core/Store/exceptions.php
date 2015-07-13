@@ -28,6 +28,16 @@ class StoreReadFailedException extends StoreException { }
 class StoreWriteFailedException extends StoreException { }
 
 /**
+ * State base exception.
+ */
+class StateException extends Exception { }
+
+/**
  * A state has already been closed.
  */
-class StateClosedException extends Exception { }
+class StateClosedException extends StateException { }
+
+/**
+ * A state is invalid or corrupted.
+ */
+class StateInvalidException extends StateException { }
