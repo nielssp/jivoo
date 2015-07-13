@@ -91,3 +91,17 @@
   }
 }
 
+.block-container {
+  & > h2 {
+    font-size: 1.0em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #727272;
+    & > small {
+      font-size: 0.9em;
+    }
+    * {
+      text-transform: none;
+    }
+  }
+}

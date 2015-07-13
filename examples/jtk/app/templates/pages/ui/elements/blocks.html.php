@@ -1,6 +1,6 @@
 <?php $this->view->data->title = tr('Blocks'); ?>
 
-<div class="row-1-1 row-sm">
+<div class="grid-sm grid-1-1">
 <div class="cell"><div class="block">
 <div class="block-content">This is a simple block.</div>
 </div><div class="block">
@@ -15,10 +15,9 @@
 <div class="block-content">This is a block with a footer.</div>
 <div class="block-footer">Block footer</div>
 </div></div>
-<div class="cell"></div>
 </div>
 
-<div class="row-1-1-1">
+<div class="grid-md grid-1-1-1">
   <div class="cell">
 <div class="block">
   <div class="block-header">
@@ -66,7 +65,7 @@
 
 </div>
 
-<div class="row-1-1-1-1">
+<div class="grid-md grid-1-1-1-1">
 
 <div class="cell">
 <div class="block block-info">
@@ -106,12 +105,12 @@
 </div>
 
 
-<div class="row-3-1">
+<div class="grid-md grid-3-1">
 <div class="cell">
 <div class="block">
 <div class="block-header">A block</div>
 <div class="block-content">
-<div class="row-1-1-1 row-xs">
+<div class="grid-xs grid-1-1-1">
 <div class="cell">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed pharetra lorem. Nunc auctor luctus tellus a faucibus. Quisque dictum in eros sed consequat.</p>
 </div>

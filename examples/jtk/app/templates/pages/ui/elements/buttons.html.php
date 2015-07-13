@@ -1,11 +1,11 @@
 <?php $this->view->data->title = tr('Buttons'); ?>
 
-<div class="row-1-1 row-sm">
+<div class="grid-sm grid-1-1">
   <div class="cell">
     <div class="block">
       <div class="block-header"><h3>Button types</h3></div>
       <div class="block-content">
-        <div class="row-1-1 row-xs">
+        <div class="grid-xs grid-1-1">
           <div class="cell center">
             <p><a href="#" class="button">Button</a></p>
             <p><code>&lt;a class="button"&gt;</code></p>

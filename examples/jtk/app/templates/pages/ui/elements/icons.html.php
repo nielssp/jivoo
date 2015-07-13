@@ -21,7 +21,7 @@ $icons = array(
 <div class="block">
   <div class="block-header"><h2>Theme icons <small><?php echo count($icons); ?> Icomoon icons</small></h2></div>
   <div class="block-content">
-<div class="row-auto-xs icon-table">
+<div class="grid-auto-xs icon-table">
   <?php foreach ($icons as $icon): ?>
   <div class="cell center">
     <div class="icon"><?php echo $Icon->icon($icon); ?></div>

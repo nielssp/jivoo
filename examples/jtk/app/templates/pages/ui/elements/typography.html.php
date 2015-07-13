@@ -1,6 +1,6 @@
 <?php $this->view->data->title = tr('Typography'); ?>
 
-<div class="row-1-1">
+<div class="grid-sm grid-1-1">
   <div class="cell">
 <div class="block">
   <div class="block-header"><h3>Headings</h3></div>
@@ -30,7 +30,7 @@ Vivamus cursus lorem sed vulputate tincidunt. Vivamus eget nibh iaculis, semper 
   </div>
 </div>
 
-<div class="row-1-1-1">
+<div class="grid-md grid-1-1-1">
   <div class="cell">
     <div class="block">
       <div class="block-header"><h3>Blockquotes</h3></div>
@@ -106,7 +106,7 @@ int main() {
 
 <h2>Context highlighting</h2>
 
-<div class="row-1-1-1">
+<div class="grid-sm grid-1-1-1">
 <div class="cell">
 <div class="block">
 <div class="block-header">Colors</div>
@@ -166,7 +166,7 @@ int main() {
 
 <h2>Lists</h2>
 
-<div class="row-1-1">
+<div class="grid-sm grid-1-1">
 <div class="cell">
 <div class="block">
 <div class="block-header">Unordered lists</div>

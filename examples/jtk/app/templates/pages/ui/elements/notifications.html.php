@@ -29,7 +29,7 @@ Apply loading screen:
 <?php echo $Icon->button(tr('Apply to body'), null, array('class' => 'load-body')); ?>
 </p>
 
-<div class="row-1-1-1">
+<div class="grid-sm grid-1-1-1">
 <div class="cell">
 <div class="block" id="block">
 <div class="block-header">Loading screen</div>

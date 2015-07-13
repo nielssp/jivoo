@@ -1,7 +1,7 @@
 <?php $this->view->data->title = tr('Notifications'); ?>
  
 
-<div class="row-1-1-1">
+<div class="grid-xs grid-1-1-1">
 <div class="cell">
 <p class="center">
 <a href="#" class="button" title="This is a tooltip">Hover</a>
