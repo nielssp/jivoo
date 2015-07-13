@@ -436,6 +436,11 @@ a.badge:hover {
     padding: 16px; }
     .block > .block-content > *:last-child {
       margin-bottom: 0; }
+    .block > .block-content .block {
+      background-color: white;
+      box-shadow: 1px 1px 2px white; }
+      .block > .block-content .block > .block-footer {
+        border-color: #eee; }
   .block > .block-footer {
     border-top: 1px solid #ddd;
     color: #727272;
@@ -748,6 +753,8 @@ label[for] {
 form {
   display: block;
   margin-bottom: 20px; }
+  form > *:last-child {
+    margin-bottom: 0; }
   form .field {
     margin-bottom: 12px;
     padding: 6px 0;

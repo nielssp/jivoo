@@ -52,6 +52,14 @@
     & > *:last-child {
       margin-bottom: 0;
     }
+
+    .block {
+      background-color: lighten($subMenuBg, 5%);
+      box-shadow: 1px 1px 2px lighten($subMenuBg, 10%);
+      & > .block-footer {
+        border-color: #eee;
+      }
+    }
   }
   & > .block-footer {
     border-top: 1px solid #ddd;
