@@ -89,6 +89,15 @@
   &.block-error > .block-header {
     background-color: #cc2222;
   }
+
+  &.block-collapse {
+    & > .block-content {
+      display: none;
+    }
+    & > .block-footer {
+      display: none;
+    }
+  }
 }
 
 .block-container {

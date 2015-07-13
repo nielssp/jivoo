@@ -11,9 +11,9 @@ html {
 body {
   height: 100%;
   overflow-y: scroll;
-  background-color: #eee;
+  background-color: #eeeeee;
   font-family: "Open Sans", sans-serif;
-  color: #333;
+  color: #333333;
   font-size: 14px; }
 
 header, footer, section, nav {
@@ -455,6 +455,10 @@ a.badge:hover {
     background-color: #cc7222; }
   .block.block-error > .block-header {
     background-color: #cc2222; }
+  .block.block-collapse > .block-content {
+    display: none; }
+  .block.block-collapse > .block-footer {
+    display: none; }
 
 .block-container > h2 {
   font-size: 1.0em;
@@ -470,7 +474,7 @@ header {
   background-color: #2272cc;
   position: absolute;
   padding: 0 12px 0 12px;
-  color: #fff;
+  color: white;
   width: 100%;
   z-index: 1000;
   height: 32px; }
@@ -493,7 +497,7 @@ header {
       padding-left: 24px; } }
 
 #main {
-  background-color: #fff;
+  background-color: white;
   position: relative;
   min-height: 100%;
   padding: 48px 12px 37px 12px; }
@@ -528,7 +532,7 @@ footer {
   position: absolute;
   color: #666;
   height: 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #eeeeee;
   line-height: 24px;
   width: 100%;
   font-size: 0.8em;
@@ -570,10 +574,10 @@ input[type=reset]:visited,
 input[type=submit],
 input[type=submit]:link,
 input[type=submit]:visited {
-  background-color: #eee;
+  background-color: #eeeeee;
   border: none;
-  border-bottom: 2px solid #444;
-  color: #444;
+  border-bottom: 2px solid #444444;
+  color: #444444;
   line-height: normal;
   text-decoration: none;
   padding: 6px 12px 4px;
@@ -603,7 +607,7 @@ input[type=reset]:hover,
 input[type=reset]:active,
 input[type=submit]:hover,
 input[type=submit]:active {
-  background-color: #ddd;
+  background-color: #dddddd;
   color: #2272cc;
   border-color: #2272cc;
   text-decoration: none; }
@@ -628,8 +632,8 @@ input[type=submit][disabled],
 input[type=submit][disabled]:hover,
 input[type=submit][disabled]:active {
   background-color: #f1f1f1;
-  border-color: #999;
-  color: #999;
+  border-color: #999999;
+  color: #999999;
   cursor: default;
   box-shadow: none;
   outline: none; }
@@ -680,6 +684,10 @@ select {
   select.error {
     background-color: #fee;
     border: 1px solid #f55; }
+
+textarea {
+  min-height: 128px;
+  max-width: 100%; }
 
 input[type=checkbox] {
   -webkit-appearance: none;
@@ -792,6 +800,43 @@ form {
       display: inline;
       margin: 0 12px 0 0px; }
 
+form.form-narrow .field,
+.block form .field,
+form .block .field {
+  margin-left: 0; }
+  form.form-narrow .field input[type=text],
+  form.form-narrow .field input[type=email],
+  form.form-narrow .field input[type=password],
+  form.form-narrow .field input[type=date],
+  form.form-narrow .field input[type=time],
+  form.form-narrow .field input[type=datetime],
+  form.form-narrow .field textarea,
+  form.form-narrow .field select,
+  .block form .field input[type=text],
+  .block form .field input[type=email],
+  .block form .field input[type=password],
+  .block form .field input[type=date],
+  .block form .field input[type=time],
+  .block form .field input[type=datetime],
+  .block form .field textarea,
+  .block form .field select,
+  form .block .field input[type=text],
+  form .block .field input[type=email],
+  form .block .field input[type=password],
+  form .block .field input[type=date],
+  form .block .field input[type=time],
+  form .block .field input[type=datetime],
+  form .block .field textarea,
+  form .block .field select {
+    margin: 0 0 6px 0;
+    width: 100%; }
+  form.form-narrow .field label:first-child,
+  .block form .field label:first-child,
+  form .block .field label:first-child {
+    float: none;
+    width: auto;
+    margin-left: 0; }
+
 table {
   font-size: 0.9em;
   margin: 0 0 6px 0;
@@ -809,17 +854,17 @@ table {
     table td.non-essential, table th.non-essential {
       display: none; }
   table thead th, table tfoot th {
-    background-color: #eee;
-    color: #999;
+    background-color: #eeeeee;
+    color: #999999;
     text-transform: uppercase; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
-      color: #444;
+      color: #444444;
       padding: 12px 8px;
       margin: -12px -8px;
       text-decoration: none;
       display: block; }
     table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
-      background-color: #ddd;
+      background-color: #dddddd;
       color: #2272cc;
       border-color: #2272cc;
       text-decoration: none; }
@@ -925,7 +970,7 @@ body.exception {
 
 @media screen and (min-width: 768px) {
   body.narrow {
-    background-color: #fff;
+    background-color: white;
     text-align: center; }
     body.narrow > * {
       text-align: left; }
@@ -945,5 +990,3 @@ table.trace td, table.trace th {
   .install-buttons .primary {
     float: right;
     margin-left: 0.5em; }
-
-/*# sourceMappingURL=core.css.map */
