@@ -78,6 +78,7 @@ class ManifestInstaller extends InstallerSnippet {
       $this->installFile('Core', 'config/environments/production.php');
       mkdir($this->p('user', ''));
       mkdir($this->p('log', ''));
+      mkdir($this->p('state', ''));
       $file = fopen($this->p('app', 'app.json'), 'w');
       if ($file) {
         fwrite($file, Json::prettyPrint($manifest));

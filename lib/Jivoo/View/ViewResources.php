@@ -250,7 +250,9 @@ class ViewResources {
     }
     $block = '';
     foreach ($types as $type) {
-      $block .= $this->blocks[$type] . PHP_EOL;
+      if ($block != '')
+        $block .= PHP_EOL;
+      $block .= $this->blocks[$type];
       if (isset($this->resCondition[$type])) {
         $block .= '<![endif]-->' . PHP_EOL;
         $this->resCondition[$type] = null;

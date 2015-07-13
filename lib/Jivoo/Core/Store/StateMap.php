@@ -70,7 +70,7 @@ class StateMap {
     if (isset($this->states[$key])) {
       if ($this->states[$key]->isMutable())
         return $this->states[$key];
-      $this->states[$key]->close();
+      $this->close($key);
     }
     if (!isset($this->files[$key]))
       $this->touch($key);

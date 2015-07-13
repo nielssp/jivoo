@@ -18,6 +18,8 @@ use Jivoo\AccessControl\SingleUserModel;
 use Jivoo\Core\Logger;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\Event;
+use Jivoo\Core\Utilities;
+use Jivoo\Core\Store\StateInvalidException;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -77,7 +79,16 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
-    $state = $this->state->read('setup');
+    try {
+      $state = $this->state->read('setup');
+    }
+    catch (StateInvalidException $e) {
+      if (Utilities::dirExists($this->p('state', ''), true))
+        $state = $this->state->read('setup');
+      else {
+        throw $e;
+      }
+    }
     if (isset($this->app->manifest['install'])) {
       $installer = $this->app->manifest['install'];
       if (!Lib::classExists($installer))

@@ -64,7 +64,7 @@ class TemplateCompiler {
     $file = file_get_contents($template);
     if ($file === false)
       throw new \Exception(tr('Could not read template: %1', $template));
-    if (!$dom->load($file))
+    if (!$dom->load($file, true, false))
       throw new \Exception(tr('Could not parse template: %1', $template));
     
     $root = new InternalNode();
@@ -93,9 +93,9 @@ class TemplateCompiler {
    */
   public function convert(\simple_html_dom_node $node) {
     if ($node->tag === 'text' or $node->tag === 'unknown')
-      return new TextNode($node->innertext . "\n");
+      return new TextNode($node->innertext);
     else if ($node->tag === 'comment') {
-      if (preg_match('/^<!-- *\{(.*)\} *-->$/', $node->innertext, $matches) === 1) {
+      if (preg_match('/^<!-- *\{(.*)\} *-->$/ms', $node->innertext, $matches) === 1) {
         return new PhpNode($matches[1], true);
       }
       return new TextNode('');
