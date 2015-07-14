@@ -122,7 +122,7 @@ class Setup extends LoadableModule {
       $installer = $state['current']->get('install', null);
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
-      $installerState = $this->config['current'][$installer];
+      $installerState = $state['current'][$installer];
       if ($installerState->get('done', false)) {
         unset($state['current']);
       }

@@ -237,5 +237,6 @@ class Migrations extends LoadableModule {
       $this->migrationSchemas[$name]->finalize();
     $mtime = filemtime($this->migrationDirs[$name] . '/.');
     $this->config['mtimes'][$name] = $mtime;
+    $this->config->save();
   }
 }
