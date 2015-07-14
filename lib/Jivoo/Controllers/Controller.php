@@ -269,8 +269,11 @@ class Controller extends Module {
    * @return ViewResponse A view response for template.
    */
   protected function render($templateName = null) {
-    if (!($this->response instanceof ViewResponse))
-      return $this->response;
+    if (!($this->response instanceof ViewResponse)) {
+      $response = $this->response;
+      $this->response = new ViewResponse(Http::OK, $this->view);
+      return $response;
+    }
     if (!isset($templateName)) {
       list(, $caller) = debug_backtrace(false);
       $class = str_replace($this->app->n('Controllers\\'), '', $caller['class']);
@@ -289,7 +292,9 @@ class Controller extends Module {
       $templateName .= Utilities::camelCaseToDashes($action) . '.' . $type;
     }
     $this->response->template = $templateName;
-    return $this->response;
+    $response = $this->response;
+    $this->response = new ViewResponse(Http::OK, $this->view);
+    return $response;
   }
 
   /**

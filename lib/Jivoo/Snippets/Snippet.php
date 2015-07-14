@@ -289,8 +289,11 @@ class Snippet extends Module implements ISnippet {
    * @return string Rendered template.
    */
   protected function render($templateName = null) {
-    if (!($this->response instanceof ViewResponse))
-      return $this->response;
+    if (!($this->response instanceof ViewResponse)) {
+      $resposne = $this->response;
+      $this->response = new ViewResponse(Http::OK, $this->view);
+      return $response;
+    }
     if (!isset($templateName)) {
       $class = str_replace($this->app->n('Snippets\\'), '', get_class($this));
       $type = 'html';
@@ -306,7 +309,9 @@ class Snippet extends Module implements ISnippet {
     $this->response->template = $templateName;
     $this->response->data = $this->viewData;
     $this->response->withLayout = $enableLayout;
-    return $this->response;
+    $response = $this->response;
+    $this->response = new ViewResponse(Http::OK, $this->view);
+    return $response;
   }
 
   /**
