@@ -79,16 +79,7 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
-    try {
-      $state = $this->state->read('setup');
-    }
-    catch (StateInvalidException $e) {
-      if (Utilities::dirExists($this->p('state', ''), true))
-        $state = $this->state->read('setup');
-      else {
-        throw $e;
-      }
-    }
+    $state = $this->state->read('setup');
     if (isset($this->app->manifest['install'])) {
       $installer = $this->app->manifest['install'];
       if (!Lib::classExists($installer))

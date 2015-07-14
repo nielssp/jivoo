@@ -19,8 +19,13 @@ class Console extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Snippets', 'Routing', 'Setup', 'View', 'Assets', 'Extensions');
+  protected $modules = array('Snippets', 'Routing', 'View', 'Assets', 'Extensions');
 
+  /**
+   * {@inheritdoc}
+   */
+  protected static $loadBefore = array('Setup');
+  
   /**
    * {@inheritdoc}
    */
@@ -61,11 +66,11 @@ class Console extends LoadableModule {
         if (!mkdir($this->p('user', '')))
           throw new \Exception(tr('Could not create user directory: %1', $this->p('user', '')));
       }
-      $this->m->Setup->trigger('Jivoo\Console\ManifestInstaller');
+      $this->app->getModule('Setup')->trigger('Jivoo\Console\ManifestInstaller');
       $this->m->Routing->routes->root('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Index');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Configure');
-      $this->m->Themes->load('flatmin-base');
+      $this->m->Themes->load('flatmin');
     }
     if ($this->config->get('enable', false) === true) {
 

@@ -6,6 +6,8 @@
 namespace Jivoo\Core\Store;
 
 use Jivoo\Core\Logger;
+use Jivoo\Core\Utilities;
+
 /**
  * An object allowing for the creation and reading of state-files in a directoy.
  */
@@ -39,9 +41,11 @@ class StateMap {
    */
   public function touch($key) {
     if (!isset($this->files[$key])) {
+      if (!Utilities::dirExists($this->dir, true))
+        return false;
       $this->files[$key] = new PhpStore($this->dir . '/' . $key . '.php');
-      $this->files[$key]->touch();
     }
+    return $this->files[$key]->touch();
   }
 
   /**
@@ -53,8 +57,8 @@ class StateMap {
   public function read($key) {
     if (isset($this->states[$key]) and $this->states[$key]->isOpen())
       return $this->states[$key];
-    if (!isset($this->files[$key]))
-      $this->touch($key);
+    if (!isset($this->files[$key]) and !$this->touch($key))
+      throw new StateInvalidException(tr('State file missing or inaccessible: %1', $key));
     $this->states[$key] = new State($this->files[$key], false);
     Logger::debug(tr('Open state (read): %1', $key));
     return $this->states[$key];
