@@ -203,8 +203,7 @@ form {
   }
 }
 
-form.form-narrow,
-.block form,
-form .block {
+.form-narrow,
+.block {
   @include narrow-form;
 }

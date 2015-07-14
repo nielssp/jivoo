@@ -74,4 +74,18 @@ $(function() {
       at: 'right-4 top+4'
     }
   });
+  
+  $.fn.startLoading = function() {
+    var $screen = $('<div class="loading-screen">');
+    $screen.hide();
+    $screen.appendTo(this);
+    $screen.fadeIn(100);
+  };
+  $.fn.stopLoading = function() {
+    var $screen = $(this).find('.loading-screen');
+    $screen.fadeOut(100, function() {
+      $screen.remove()
+    });
+  };
+
 });

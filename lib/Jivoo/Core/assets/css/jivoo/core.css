@@ -460,6 +460,12 @@ a.badge:hover {
     background-color: #cc7222; }
   .block.block-error > .block-header {
     background-color: #cc2222; }
+  .block.block-draggable > .block-header {
+    cursor: move; }
+  .block.block-dragging {
+    outline: 1px solid #b3b3b3; }
+  .block.block-accept {
+    outline: 1px solid gray; }
   .block.block-collapse > .block-content {
     display: none; }
   .block.block-collapse > .block-footer {
@@ -807,39 +813,29 @@ form {
       display: inline;
       margin: 0 12px 0 0px; }
 
-form.form-narrow .field,
-.block form .field,
-form .block .field {
+.form-narrow .field,
+.block .field {
   margin-left: 0; }
-  form.form-narrow .field input[type=text],
-  form.form-narrow .field input[type=email],
-  form.form-narrow .field input[type=password],
-  form.form-narrow .field input[type=date],
-  form.form-narrow .field input[type=time],
-  form.form-narrow .field input[type=datetime],
-  form.form-narrow .field textarea,
-  form.form-narrow .field select,
-  .block form .field input[type=text],
-  .block form .field input[type=email],
-  .block form .field input[type=password],
-  .block form .field input[type=date],
-  .block form .field input[type=time],
-  .block form .field input[type=datetime],
-  .block form .field textarea,
-  .block form .field select,
-  form .block .field input[type=text],
-  form .block .field input[type=email],
-  form .block .field input[type=password],
-  form .block .field input[type=date],
-  form .block .field input[type=time],
-  form .block .field input[type=datetime],
-  form .block .field textarea,
-  form .block .field select {
+  .form-narrow .field input[type=text],
+  .form-narrow .field input[type=email],
+  .form-narrow .field input[type=password],
+  .form-narrow .field input[type=date],
+  .form-narrow .field input[type=time],
+  .form-narrow .field input[type=datetime],
+  .form-narrow .field textarea,
+  .form-narrow .field select,
+  .block .field input[type=text],
+  .block .field input[type=email],
+  .block .field input[type=password],
+  .block .field input[type=date],
+  .block .field input[type=time],
+  .block .field input[type=datetime],
+  .block .field textarea,
+  .block .field select {
     margin: 0 0 6px 0;
     width: 100%; }
-  form.form-narrow .field label:first-child,
-  .block form .field label:first-child,
-  form .block .field label:first-child {
+  .form-narrow .field label:first-child,
+  .block .field label:first-child {
     float: none;
     width: auto;
     margin-left: 0; }

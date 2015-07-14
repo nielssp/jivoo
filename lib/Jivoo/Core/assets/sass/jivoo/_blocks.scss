@@ -98,6 +98,20 @@
     background-color: #cc2222;
   }
 
+  &.block-draggable {
+    & > .block-header {
+      cursor: move;
+    }
+  }
+
+  &.block-dragging {
+    outline: 1px solid darken($mainBg, 30%);
+  }
+
+  &.block-accept {
+    outline: 1px solid darken($mainBg, 50%);
+  }
+
   &.block-collapse {
     & > .block-content {
       display: none;
