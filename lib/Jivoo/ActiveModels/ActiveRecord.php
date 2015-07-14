@@ -205,9 +205,10 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     else if (array_key_exists($field, $this->data)) {
       $oldValue = $this->data[$field];
       $this->data[$field] = $value;
-      if ($oldValue !== $value)
+      if ($oldValue !== $value) {
         $this->updatedData[$field] = $value;
-      $this->saved = false;
+        $this->saved = false;
+      }
     }
     else if (array_key_exists($field, $this->virtualData))
       $this->virtualData[$field] = $value;

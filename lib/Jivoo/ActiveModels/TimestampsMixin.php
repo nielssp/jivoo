@@ -15,7 +15,7 @@ class TimestampsMixin extends ActiveModelMixin {
    * {@inheritdoc}
    */
   public function beforeValidate(ActiveModelEvent $event) {
-    if (!$event->record->isNew())
+    if (!$event->record->isNew() and !$event->record->isSaved())
       $event->record->updated = time();
   }
 
