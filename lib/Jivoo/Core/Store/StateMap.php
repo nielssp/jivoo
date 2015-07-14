@@ -11,7 +11,7 @@ use Jivoo\Core\Utilities;
 /**
  * An object allowing for the creation and reading of state-files in a directoy.
  */
-class StateMap {
+class StateMap implements \ArrayAccess {
   /**
    * @var string
    */
@@ -123,5 +123,44 @@ class StateMap {
       }
     }
     return $open;
+  }
+
+
+  /**
+   * Whether or not a state document is open (for reading).
+   * @param string $key State document key.
+   * @return bool True if it does, false otherwise
+   */
+  public function offsetExists($key) {
+    return $this->isOpen($key);
+  }
+  
+  /**
+   * Get an already opened state document (for reading).
+   * @param string $key State document key.
+   * @return State State document.
+   * @throws StateClosedException If the specified state has not been opened.
+   */
+  public function offsetGet($key) {
+    if (isset($this->states[$key]) and $this->states[$key]->isOpen())
+      return $this->states[$key];
+    throw new StateClosedException(tr('State not open: %1', $key));
+  }
+  
+  /**
+   * Not implemented.
+   * @param string $key Key.
+   * @param mixed $value Value.
+   */
+  public function offsetSet($key, $value) {
+    throw new \InvalidMethodException(tr('Method not implemented.'));
+  }
+  
+  /**
+   * Close a state document.
+   * @param string $key State document key.
+   */
+  public function offsetUnset($key) {
+    $this->close($key);
   }
 }

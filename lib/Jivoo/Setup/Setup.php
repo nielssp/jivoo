@@ -215,6 +215,7 @@ class Setup extends LoadableModule {
    */
   public function unlock($deleteCredentials = true) {
     $this->lock['enable'] = false;
+    unset($this->lock['session']);
     if ($deleteCredentials) {
       unset($this->lock['username']);
       unset($this->lock['password']);

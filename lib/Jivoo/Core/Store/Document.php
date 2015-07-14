@@ -270,7 +270,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
 
   /**
    * Whether or not a key exists.
-   * @param string $name Key
+   * @param string $key Key
    * @return bool True if it does, false otherwise
    */
   public function offsetExists($key) {
@@ -279,7 +279,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Get a value
-   * @param string $name Key
+   * @param string $key Key
    * @return mixed Value
    */
   public function offsetGet($key) {
@@ -291,7 +291,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Associate a value with a key
-   * @param string $name Key
+   * @param string $key Key
    * @param mixed $value Value
    */
   public function offsetSet($key, $value) {
@@ -304,7 +304,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Delete a key
-   * @param string $name Key
+   * @param string $key Key
    */
   public function offsetUnset($key) {
     $this->delete($key);
