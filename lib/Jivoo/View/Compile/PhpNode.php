@@ -59,7 +59,7 @@ class PhpNode extends TemplateNode {
       return '<?php ' . $code . $semi . ' ?>';
     }
     else {
-      return '<?php echo ' . $this->code . '; ?> ';
+      return '<?php echo ' . $this->code . '; ?>';
     }
   }
 }
