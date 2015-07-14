@@ -42,8 +42,7 @@ namespace {
    * @return string Input.
    */
   function h($string) {
-    assume(is_scalar($string));
-    return htmlentities($string, ENT_COMPAT, 'UTF-8');
+    return htmlentities(strval($string), ENT_COMPAT, 'UTF-8');
     //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
   }
   
