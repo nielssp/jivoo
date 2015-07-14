@@ -276,15 +276,24 @@ class Request {
   
   /**
    * Whether or not the current request is POST and has a valid access token.
-   * @param string $key Optional key to test for existence in POST-data.
+   * @param string|string[] $key Optional key or list of keys to test for
+   * existence in POST-data.
    * @return boolean True if valid, false otherwise.
    */
   public function hasValidData($key = null) {
     if (!$this->hasData) {
       return false;
     }
-    if (isset($key) and !isset($this->data[$key])) {
-      return false;
+    if (isset($key)) {
+      if (is_array($key)) {
+        foreach ($key as $k) {
+          if (!isset($this->data[$k])) 
+            return false;
+        }
+      }
+      else if (!isset($this->data[$key])) { 
+        return false;
+      }
     }
     return $this->checkToken();
   }
