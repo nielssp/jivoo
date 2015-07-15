@@ -372,7 +372,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     if (isset($this->actions[$action])) {
       $route = $this->m->Routing->validateRoute($this->actions[$action]);
       foreach ($route['parameters'] as $key => $parameter) {
-        if (preg_match('/^%(.+)%$/', $parameter, $matches) === 1) {
+        if (preg_match('/^\$([a-z_][a-z0-9_]*)$/i', $parameter, $matches) === 1) {
           $field = $matches[1];
           $route['parameters'][$key] = $record->$field;
         }
