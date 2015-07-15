@@ -10,8 +10,7 @@ use Jivoo\Core\Lib;
 use Jivoo\Core\Utilities;
 
 /**
- * Controller module. Will automatically find controllers in the controllers
- * directory (and subdirectories). 
+ * Controllers module.
  */
 class Controllers extends LoadableModule {
   /**
