@@ -31,16 +31,16 @@ class DefaultUpdater extends InstallerSnippet {
         throw new \Exception(tr('Update required. Could not enter maintenance mode.'));
       return $this->refresh();
     }
-    if (isset($this->app->config['Setup']['version'])) { 
+    if (isset($this->app->state['setup']['version'])) { 
       $this->viewData['title'] = tr(
         'Updating %1 from version %2 to version %3',
-        $this->app->name, $this->app->config['Setup']['version'],
+        $this->app->name, $this->app->state['setup']['version'],
         $this->app->version
       );
     }
     else { 
       $this->viewData['title'] = tr(
-        'Updating %1 to version %3',
+        'Updating %1 to version %2',
         $this->app->name, $this->app->version
       );
     }

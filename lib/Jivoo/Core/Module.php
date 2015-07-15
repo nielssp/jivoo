@@ -126,6 +126,7 @@ abstract class Module implements IEventSubject {
    * Call a method.
    * @param string $method Method name.
    * @param mixed[] $paramters List of parameters.
+   * @return mixed Return value.
    * @throws InvalidMethodException If method is not defined.
    */
   public function __call($method, $parameters) {

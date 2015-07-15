@@ -97,6 +97,12 @@ class Console extends LoadableModule {
     }
   }
   
+  /**
+   * Event handler for {@see RenderEvent} and {@see ShowExceptionEvent}. Inserts
+   * the development bar code into the response if the response type is
+   * 'text/html' and the body contains '</body'.
+   * @param RenderEvent|ShowExceptionEvent $event The event object.
+   */
   public function injectCode(Event $event) {
     if (!isset($this->devbar))
       return;

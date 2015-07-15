@@ -41,7 +41,7 @@ class EnumDataType extends DataType {
       $this->values = Enum::getValues($this->class);
     }
     if (isset($default) and !in_array($default, $this->values)) {
-      throw new InvalidArgumentException(tr(
+      throw new \InvalidArgumentException(tr(
         'Default value must be part of enum'
       ));
     }

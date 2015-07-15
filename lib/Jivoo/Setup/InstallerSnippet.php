@@ -171,6 +171,7 @@ abstract class InstallerSnippet extends Snippet {
   
   /**
    * Exit installer.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function end() {
     $this->installState['done'] = true;
@@ -181,7 +182,7 @@ abstract class InstallerSnippet extends Snippet {
   
   /**
    * Go to next step.
-   * @return bool False if state could not be updated.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function next() {
     if (!isset($this->current->next)) {
@@ -198,7 +199,7 @@ abstract class InstallerSnippet extends Snippet {
 
   /**
    * Go to previous step.
-   * @return bool False if state could not be updated.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function back() {
     if (!isset($this->current->previous)) {
@@ -237,6 +238,7 @@ abstract class InstallerSnippet extends Snippet {
   /**
    * Go to another step.
    * @param string $step Step name.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function jump($step) {
     $this->setCurrent($step);
@@ -373,6 +375,10 @@ abstract class InstallerSnippet extends Snippet {
     return false;
   }
   
+  /**
+   * Attempt to save the state of this installer.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
   public function saveState() {
     $this->state->close('setup');
     return $this->refresh();
@@ -381,7 +387,7 @@ abstract class InstallerSnippet extends Snippet {
   /**
    * Attempt to save configuration, then refresh.
    * @param Config $config Configuration.
-   * @return string Response.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function saveConfig(Config $config = null) {
     if (!isset($config))
@@ -402,7 +408,7 @@ abstract class InstallerSnippet extends Snippet {
   /**
    * Attempt to save configuration, then go to next step.
    * @param Config $config Configuration.
-   * @return string Response.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function saveConfigAndContinue(Config $config = null) {
     if (!isset($config))

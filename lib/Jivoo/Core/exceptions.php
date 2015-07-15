@@ -11,11 +11,6 @@ namespace Jivoo\Core;
 class Exception extends \Exception { }
 
 /**
- * A configuration file format is not supported, see {@see Config}.
- */
-class UnsupportedConfigurationFormatException extends Exception { }
-
-/**
  * Thrown when language is invalid, see {@see I18n}
  */
 class I18nException extends Exception { }

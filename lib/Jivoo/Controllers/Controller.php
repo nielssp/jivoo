@@ -140,7 +140,6 @@ class Controller extends Module {
   /**
    * Automatically route a single or all actions in this controller.
    * @param string $action If set, the name of the single action to auto route.
-   * @param string $prefix A prefix to use for all resulting paths.
    */
   public function autoRoute($action = null) {
     $this->m->Routing->autoRoute(array(
@@ -219,7 +218,7 @@ class Controller extends Module {
   }
 
   /**
-   * Call another action in another controller in order.
+   * Call another action in another controller.
    * @param string $controller Controller name.
    * @param string $action Action name.
    * @param mixed[] $parameters Parameters.
@@ -232,6 +231,7 @@ class Controller extends Module {
       'parameters' => $parameters
     ));
     $response = $dispatch();
+    return $response;
   }
 
   /**

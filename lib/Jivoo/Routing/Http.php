@@ -56,7 +56,8 @@ class Http {
   
   /**
    * Set HTTP content type (and encoding)
-   * @param string Content type, e.g. 'text/html'.
+   * @param string $type Content type, e.g. 'text/html'.
+   * @param string $encoding Content encoding (charset), e.g. 'UTF-8'.
    */
   public static function setContentType($type, $encoding = 'UTF-8') {
     header('Content-Type: ' . $type . '; charset=' . $encoding);

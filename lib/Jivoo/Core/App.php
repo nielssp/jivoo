@@ -373,7 +373,7 @@ class App implements IEventSubject {
    * @param string $name Name.
    * @return string Name.
    */
-  public function n($name) {
+  public function n($name = '') {
     if ($this->namespace == '')
       return $name;
     if ($name == '')

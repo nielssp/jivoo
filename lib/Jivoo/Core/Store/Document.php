@@ -190,8 +190,10 @@ class Document implements \ArrayAccess, \IteratorAggregate {
    * @param mixed $value The value or subarray to associate with the key.
    */
   public function setRecursive($key, $value) {
-    if (!is_array($value))
-      return $this->set($key, $value);
+    if (!is_array($value)) {
+      $this->set($key, $value);
+      return;
+    }
     $subset = $this->getSubset($key);
     $array = $value;
     foreach ($array as $key => $value)
@@ -270,7 +272,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
 
   /**
    * Whether or not a key exists.
-   * @param string $name Key
+   * @param string $key Key
    * @return bool True if it does, false otherwise
    */
   public function offsetExists($key) {
@@ -279,7 +281,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Get a value
-   * @param string $name Key
+   * @param string $key Key
    * @return mixed Value
    */
   public function offsetGet($key) {
@@ -291,7 +293,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Associate a value with a key
-   * @param string $name Key
+   * @param string $key Key
    * @param mixed $value Value
    */
   public function offsetSet($key, $value) {
@@ -304,7 +306,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Delete a key
-   * @param string $name Key
+   * @param string $key Key
    */
   public function offsetUnset($key) {
     $this->delete($key);

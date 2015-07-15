@@ -42,8 +42,10 @@ class Config extends Document {
    * Reload configuration document from store.
    */
   public function reload() {
-    if ($this->root !== $this)
-      return $this->root->reload();
+    if ($this->root !== $this) {
+      $this->root->reload();
+      return;
+    }
     if (!isset($this->store))
       return;
     try {

@@ -543,10 +543,7 @@ class DataType {
    * @return DataType Type object.
    */
   public static function fromPlaceholder($placeholder) {
-    if (Lib::classExists($placeholder))
-      return self::enum($placeholder);
-    $placeholder = strtolower($placeholder);
-    switch ($placeholder) {
+    switch (strtolower($placeholder)) {
       case 'i':
       case 'int':
       case 'integer':
@@ -580,5 +577,8 @@ class DataType {
       case 'object':
         return self::binary();
     }
+    if (Enum::classExists($placeholder))
+      return self::enum($placeholder);
+    throw new \DomainException(tr('Invalid data type placeholder: %1', '%' . $placeholder));
   }
 }

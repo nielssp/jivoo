@@ -33,6 +33,7 @@ class Condition implements ICondition {
   /**
    * Get value of property.
    * @param string $property Property name.
+   * @return mixed Value.
    * @throws InvalidPropertyException If property undefined.
    */
   public function __get($property) {

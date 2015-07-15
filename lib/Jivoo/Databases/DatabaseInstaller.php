@@ -12,7 +12,7 @@ use Jivoo\Databases\DatabaseSelectFailedException;
 use Jivoo\Setup\InstallerSnippet;
 
 /**
- * Controller for setting up database. 
+ * Installer for setting up database configuration. 
  */
 class DatabaseInstaller extends InstallerSnippet {
   /**
@@ -20,6 +20,9 @@ class DatabaseInstaller extends InstallerSnippet {
    */
   protected $helpers = array('Html', 'Form', 'Jivoo\Databases\DatabaseDrivers');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setup() {
     $this->appendStep('select');
     $this->appendStep('configure', true);
@@ -38,9 +41,11 @@ class DatabaseInstaller extends InstallerSnippet {
   }
 
   /**
-   * Action for selecting database driver.
+   * Installer step: Select database driver.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
    */
-  public function select($data) {
+  public function select($data = null) {
     if (isset($this->config['driver']))
       return $this->next();
     $this->viewData['title'] = tr('Select database driver');
@@ -57,6 +62,10 @@ class DatabaseInstaller extends InstallerSnippet {
     return $this->render();
   }
   
+  /**
+   * Undo step: Select database driver.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
   public function undoSelect() {
     unset($this->config['driver']);
     return $this->saveConfig();
@@ -77,9 +86,11 @@ class DatabaseInstaller extends InstallerSnippet {
   }
 
   /**
-   * Action for configuring database driver.
+   * Installer step: Configure database driver.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
    */
-  public function configure($data) {
+  public function configure($data = null) {
     if (!isset($this->config['driver']))
       return $this->back();
     $driver = $this->DatabaseDrivers->checkDriver($this->config['driver']);

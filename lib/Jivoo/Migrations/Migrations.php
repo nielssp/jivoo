@@ -156,8 +156,10 @@ class Migrations extends LoadableModule {
     $db = $this->getDatabase($name);
     Logger::debug('Creating SchemaRevision table for ' . $name);
     $db->createTable($this->schema);
-    foreach ($this->getMigrations($name) as $migration) 
-      $db->SchemaRevision->insert(array('revision' => $migration));
+    $records = array();
+    foreach ($this->getMigrations($name) as $migration)
+      $records[] = array('revision' => $migration);
+    $db->SchemaRevision->insertMultiple($records);
   }
 
   /**
@@ -232,6 +234,10 @@ class Migrations extends LoadableModule {
     }
   }
   
+  /**
+   * Finalize the migration of a database.
+   * @param string $name Name of database.
+   */
   public function finalize($name) {
     if (isset($this->migrationSchemas[$name]))
       $this->migrationSchemas[$name]->finalize();

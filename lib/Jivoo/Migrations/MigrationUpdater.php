@@ -9,16 +9,31 @@ use Jivoo\Setup\InstallerSnippet;
 use Jivoo\Setup\AsyncTask;
 use Jivoo\Databases\IMigratableDatabase;
 
+/**
+ * Migration updater. Migrates tables. 
+ */
 class MigrationUpdater extends InstallerSnippet {
   
+  /**
+   * @var string Name of database being migrated.
+   */
   protected $dbName = 'default'; // TODO: set this somewhere
   
+  /**
+   * @var \Jivoo\Databases\IDatabase Database being migrated.
+   */
   protected $db = null; 
-  
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setup() {
     $this->appendStep('migrate');
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function before() {
     $this->app->getModule('Migrations');
     
@@ -26,7 +41,13 @@ class MigrationUpdater extends InstallerSnippet {
     $this->db = $this->m->Databases->$name->getConnection();
   }
 
-  public function migrate($data) {
+  /**
+   * Installer step: Migrate tables.
+   * clean or initialize.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function migrate($data = null) {
     $this->viewData['title'] = tr('Migrating database');
     $task = new MigrateTask($this->m->Migrations, $this->dbName);
     if ($this->runAsync($task)) {
@@ -37,21 +58,45 @@ class MigrationUpdater extends InstallerSnippet {
   }
 }
 
+/**
+ * Asynchronous task for migrating tables.
+ */
 class MigrateTask extends AsyncTask {
-
+  /**
+   * @var Migrations
+   */
   private $migrations;
+  
+  /**
+   * @var string
+   */
   private $name;
+  
+  /**
+   * @var string[]
+   */
   private $missing = array();
   
+  /**
+   * Construct migration task.
+   * @param Migrations $migrations Migrations module.
+   * @param string $dbName Name of database to migrate.
+   */
   public function __construct(Migrations $migrations, $dbName) {
     $this->migrations = $migrations;
     $this->name = $dbName;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function suspend() {
     return array('missing' => $this->missing);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function resume(array $data) {
     if (isset($data['waiting'])) {
       $this->missing = $data['missing'];
@@ -60,11 +105,17 @@ class MigrateTask extends AsyncTask {
       $this->missing = $this->migrations->check($this->name);
     } 
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function isDone() {
     return count($this->missing) == 0;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function run() {
     $migration = array_shift($this->missing);
     $this->status(tr('Running migration "%1"...', $migration));

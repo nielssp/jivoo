@@ -97,6 +97,7 @@ abstract class Response {
   /**
    * Whether or not a property is set.
    * @param string $name Property name.
+   * @return bool True if property set.
    * @throws InvalidPropertyException If unknown property.
    */
   public function __isset($property) {

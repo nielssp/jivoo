@@ -36,7 +36,7 @@ class Snippets extends LoadableModule {
   /**
    * Get a snippet instance.
    * @param string $name Snippet class name.
-   * @parm bool $singleton Whether to use an existing instance instead of
+   * @param bool $singleton Whether to use an existing instance instead of
    * creating a new one.
    * @return ISnippet Snippet instance or null if not found.
    */
@@ -44,7 +44,7 @@ class Snippets extends LoadableModule {
     if (!$singleton or !isset($this->instances[$name])) {
       $class = $name;
       if (!Lib::classExists($class))
-        $class = $this->app->n('Snippets\\' . $name);
+        $class = $this->app->n('Snippets\\' . $class);
       Lib::assumeSubclassOf($class, 'Jivoo\Snippets\Snippet');
       $object = new $class($this->app);
       if (!$singleton)

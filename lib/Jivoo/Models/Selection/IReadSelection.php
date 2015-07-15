@@ -102,6 +102,7 @@ interface IReadSelection extends IBasicSelection, \IteratorAggregate, \Countable
   
   /**
    * Convert selection to an array.
+   * @return \Jivoo\Models\IRecord[] Array of records.
    */
   public function toArray();
 

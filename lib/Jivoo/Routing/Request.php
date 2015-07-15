@@ -13,6 +13,7 @@ use Jivoo\Core\Utilities;
  * @property string[] $path The path relative to the application root as an array.
  * @property array $query The GET query as an associative array.
  * @property string $fragment The fragment.
+ * @property array|null $route Currently selected route, {@see Routing}.
  * @property-read string[] $realPath The original $path.
  * @property-read array $data POST data as an associative array.
  * @property-read array $files File upload data.
@@ -54,6 +55,11 @@ class Request {
    * @var Session Session object.
    */
   private $session;
+  
+  /**
+   * @var array|null Route.
+   */
+  private $route = null;
 
   /**
    * @var string Fragment. 

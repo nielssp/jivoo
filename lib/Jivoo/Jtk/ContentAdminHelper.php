@@ -119,7 +119,7 @@ class ContentAdminHelper extends Helper {
   
   /**
    * Respond with a confirmation dialog.
-   * @property string|array|Jivoo\Routing\ILinkable|null $returnRoute A route,
+   * @property string|array|\Jivoo\Routing\ILinkable|null $returnRoute A route,
    * see {@see Jivoo\Routing\Routing}.
    * @return \Jivoo\Routing\Response Response object.
    */
