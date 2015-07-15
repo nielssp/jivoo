@@ -20,172 +20,76 @@ class Controllers extends LoadableModule {
   protected $modules = array('Routing');
   
   /**
-   * @var array An associative array of controller names and associated class
-   * names.
+   * @var Controller[] Associative array of controller instances.
    */
-  private $controllers = array();
+  private $instances = array();
   
   /**
    * @var array An associative array of controller names and actions.
    */
   private $actions = array();
-  
-  /**
-   * @var array Associative array of controller names and paths.
-   */
-  private $paths = array();
-
-  /**
-   * @var array An associative array of controller names and associated objects.
-   */
-  private $controllerObjects = array();
 
   /**
    * {@inheritdoc}
    */
   protected function init() {
     $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing, $this));
-    if (is_dir($this->p('app', 'controllers'))) {
+    if (is_dir($this->p('app', 'controllers')))
       Lib::import($this->p('app', 'controllers'), $this->app->n('Controllers'));
-      $this->findControllers();
-    }
-  }
-  
-  /**
-   * Find controllers in a directory.
-   * @param string $dir Directory.
-   */
-  private function findControllers($dir = '') {
-    $files = scandir($this->p('app', 'controllers/' . $dir));
-    if ($files !== false) {
-      foreach ($files as $file) {
-        if ($file[0] == '.') {
-          continue;
-        }
-        if (is_dir($this->p('app', 'controllers/' . $dir . '/' . $file))) {
-          if ($dir === '')
-            $this->findControllers($file);
-          else
-            $this->findControllers($dir . '/' . $file);
-        }
-        else {
-          $split = explode('.', $file);
-          if (isset($split[1]) and $split[1] == 'php') {
-            $name = $split[0];
-            if ($dir != '')
-              $name = str_replace('/', '\\', $dir) . '\\' . $name;
-            $class = $this->app->n('Controllers\\' . $name);
-            $this->controllers[preg_replace('/Controller$/', '', $name)] = $class;
-          }
-        }
-      }
-    }
   }
   
   /**
    * Get class name of controller.
-   * @param string $controller Controller name.
+   * @param string $name Controller name.
    * @return string|false Class name or false if not found.
    */
-  public function getClass($controller) {
-    if (isset($this->controllers[$controller])) {
-      return $this->controllers[$controller];
-    }
-    return $controller . 'Controller';
-  }
-  
-  /**
-   * Get path for controller.
-   * @param string $controller Controller name.
-   * @return string|false Path or false if not found.
-   */
-  public function getControllerPath($controller) {
-    if (!isset($this->paths[$controller])) {
-      $this->paths[$controller] = Utilities::camelCaseToDashes($controller);
-    }
-    return $this->paths[$controller];
-  }
-  
-  /**
-   * Set path of a controller.
-   * @param string $controller Controller name..
-   * @param string $path Path.
-   */
-  public function setControllerPath($controller, $path) {
-    $this->paths[$controller] = $path;
+  public function getClass($name) {
+    if (isset($this->instances[$name]))
+      return get_class($this->instances[$name]);
+    $class = $name . 'Controller';
+    if (!Lib::classExists($class))
+      $class = $this->app->n('Controllers\\' . $class);
+    return $class;
   }
   
   /**
    * Get list of actions.
-   * @param string $controller Controller name.
+   * @param string $name Controller name.
    * @return string[]|boolean List of actions or false if controller not found. 
    */
-  public function getActions($controller) {
-    if (isset($this->controllers[$controller])) {
-      if (!isset($this->actions[$controller])) {
-        $class = $this->controllers[$controller];
-        $reflection = new \ReflectionClass($class);
-        $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $this->actions[$controller] = array();
-        foreach ($methods as $method) {
-          if ($method->class == $class) {
-            $this->actions[$controller][] = $method->name;
-          }
-        }
-      }
-      return $this->actions[$controller];
-    }
-    return false;
-  }
-  
-
-  /**
-   * Get instance of controller.
-   * @param string $name Controller name.
-   * @return Controller|null Controller object or null if not found.
-   */
-  private function getInstance($name) {
-    if (!isset($this->controllers[$name])) {
-      if (Lib::classExists($name . 'Controller')) {
-        $this->controllers[$name] = $name . 'Controller';
-      }
-      else {
-        return null;
+  public function getActions($name) {
+    $controller = $this->getController($name);
+    if (!isset($this->actions[$name])) {
+      $class = get_class($controller);
+      $reflection = new \ReflectionClass($class);
+      $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+      $this->actions[$name] = array();
+      foreach ($methods as $method) {
+        if ($method->class == $class and $method->name != 'before' and $method->name != 'after')
+          $this->actions[$name][] = $method->name;
       }
     }
-    $class = $this->controllers[$name];
-    $this->controllerObjects[$name] = new $class($this->app);
-    return $this->controllerObjects[$name];
+    return $this->actions[$name];
   }
 
   /**
-   * Add a controller object.
-   * @param Controller $controller Controller object.
-   */
-  public function addController(Controller $controller) {
-    $name = str_replace('Controller', '', get_class($controller));
-    $this->controllers[$name] = get_class($controller);
-    $this->controllerObjects[$name] = $controller;
-  }
-
-  /**
-   * Get a controller object.
+   * Get a controller instance.
    * @param string $name Controller name.
+   * @param bool $singleton Whether to use an existing instance instead of
+   * creating a new one.
    * @return Controller|null Controller object or null if not found.
    */
-  public function getController($name) {
-    if (isset($this->controllerObjects[$name])) {
-      return $this->controllerObjects[$name];
+  public function getController($name, $singleton = true) {
+    if (!$singleton or !isset($this->instances[$name])) {
+      $class = $name . 'Controller';
+      if (!Lib::classExists($class))
+        $class = $this->app->n('Controllers\\' . $class);
+      Lib::assumeSubclassOf($class, 'Jivoo\Controllers\Controller');
+      $object = new $class($this->app);
+      if (!$singleton)
+        return $object;
+      $this->instances[$name] = $object;
     }
-    return $this->getInstance($name);
-  }
-
-  /**
-   * Get a controller object.
-   * @param string $name Controller name.
-   * @return Controller|null Controller object or null if not found.
-   */
-  public function __get($name) {
-    return $this->getController($name);
+    return $this->instances[$name];
   }
 }
