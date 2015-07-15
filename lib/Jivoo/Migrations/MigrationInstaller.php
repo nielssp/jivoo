@@ -91,8 +91,10 @@ class MigrationInstaller extends MigrationUpdater {
   public function create($data = null) {
     $this->viewData['title'] = tr('Creating tables');
     $task = new CreateTask($this->db);
-    if ($this->runAsync($task))
+    if ($this->runAsync($task)) {
+      $this->m->Migrations->finalize($this->dbName);
       return $this->next();
+    }
     return $this->render();
   }
 }

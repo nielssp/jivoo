@@ -27,8 +27,16 @@ class LockInstaller extends InstallerSnippet {
    * @return \Jivoo\Routing\Response|string Response.
    */
   public function check($data = null) {
-    if ($this->m->Setup->getLock()->get('enable', false))
+    $lock = $this->m->Setup->getLock();
+    if ($lock->get('enable', false)) {
       return $this->end();
+    }
+    if (isset($lock['username']) and isset($lock['password'])) {
+      if ($this->m->Setup->lock())
+        return $this->end();
+      else
+        throw new \Exception(tr('Installation required. Could not enter maintenance mode.'));
+    }
     return $this->next();
   }
 
