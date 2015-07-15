@@ -27,6 +27,8 @@ class Models extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    Enum::addSearchPrefix($this->app->n() . '\\');
+    
     $modelsDir = $this->p('app', 'models');
     if (is_dir($modelsDir)) {
       Lib::import($modelsDir, $this->app->n('Models'));
