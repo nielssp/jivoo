@@ -7,7 +7,6 @@ namespace Jivoo\Console;
 
 use Jivoo\Snippets\Snippet;
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Localization;
 
 /**
  * I18n language generator and editor.
@@ -126,6 +125,12 @@ class I18nInfo extends ConsoleSnippet {
     return $this->render();
   }
   
+  /**
+   * Finds language files (*.lng.php) in a directory. 
+   * @param string $dir Directory path.
+   * @return \Jivoo\Core\Localization[] Array of localizations indexed by their
+   * language code.
+   */
   public function findLanguages($dir) {
     $files = scandir($dir);
     $languages = array();

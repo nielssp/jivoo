@@ -388,6 +388,7 @@ abstract class ActiveModel extends Model implements IEventListener {
    * @param string $association Name of "hasMany" or "hasAndBelongsToMany"
    * association to base collection on.
    * @param string|ICondition $condition Select condition for collection.
+   * @throws InvalidAssociationException If association is undefined.
    */
   public function addVirtualCollection($name, $association, $condition) {
     if (!isset($this->associations))
@@ -692,6 +693,8 @@ abstract class ActiveModel extends Model implements IEventListener {
    * @param string $association Name of association.
    * @param IReadSelection $selection Optional selection.
    * @return IReadSelection Resulting selection.
+   * @throws InvalidAssociationException If association is undefined or not of
+   * the correct type ("belongsTo" or "hasOne").
    */
   public function withAssociated($association, IReadSelection $selection = null) {
     if (!isset($selection))
@@ -868,8 +871,10 @@ abstract class ActiveModel extends Model implements IEventListener {
   public function setAssociation(ActiveRecord $record, $association, $value) {
     switch ($association['type']) {
       case 'belongsTo':
-        if (!isset($value))
-          return $this->unsetAssociation($record, $association);
+        if (!isset($value)) {
+          $this->unsetAssociation($record, $association);
+          return;
+        }
         assume($value instanceof ActiveRecord);
         assume($value->getModel() == $association['model']);
         $key = $association['otherKey'];
