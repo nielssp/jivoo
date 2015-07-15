@@ -38,6 +38,7 @@ class StateMap implements \ArrayAccess {
   /**
    * Touch a state document (make sure that it exists).
    * @param string $key State document key.
+   * @return bool True if document exists.
    */
   public function touch($key) {
     if (!isset($this->files[$key])) {

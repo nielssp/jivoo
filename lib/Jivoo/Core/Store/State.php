@@ -24,6 +24,7 @@ class State extends Document {
   /**
    * Construct state.
    * @param IStore $store Store to load/save data from/to.
+   * @param bool $mutable Whether state is mutable (true) or read-only (false).
    */
   public function __construct(IStore $store, $mutable = true) {
     parent::__construct();

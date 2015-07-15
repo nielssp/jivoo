@@ -148,6 +148,13 @@ class Setup extends LoadableModule {
     return $this->active;
   }
   
+  /**
+   * Dispatch an installer.
+   * @param string $installer Name of installer class.
+   * @param Document $installerState Installer state document if any.
+   * @throws InvalidResponseException If the installer returns an invalid
+   * response.
+   */
   public function dispatchInstaller($installer, Document $installerState = null) {
     $snippet = $this->getInstaller($installer, $installerState);
     $this->app->attachEventHandler('beforeStop', function(Event $event) {

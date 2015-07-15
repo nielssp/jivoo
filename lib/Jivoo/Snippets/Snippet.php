@@ -127,7 +127,7 @@ class Snippet extends Module implements ISnippet {
   
   /**
    * Called before invoking.
-   * @return Response|string|null If a response or a string is returned, snippet
+   * @return \Jivoo\Routing\Response|string|null If a response or a string is returned, snippet
    * execution ends.
    */
   public function before() {
@@ -136,7 +136,8 @@ class Snippet extends Module implements ISnippet {
   
   /**
    * Called after invoking.
-   * @param Response|string $response Respone object.
+   * @param \Jivoo\Routing\Response|string $response Respone object.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function after($response) {
     return $response;

@@ -9,8 +9,13 @@ use Jivoo\Setup\InstallerSnippet;
 use Jivoo\Setup\AsyncTask;
 use Jivoo\Databases\IMigratableDatabase;
 
+/**
+ * Migration installer. Checks database, cleans/migrates data, creates tables.
+ */
 class MigrationInstaller extends MigrationUpdater {
-  
+  /**
+   * {@inheritdoc}
+   */
   protected function setup() {
     $this->appendStep('check');
     $this->appendStep('clean');
@@ -19,7 +24,13 @@ class MigrationInstaller extends MigrationUpdater {
     $this->appendStep('create');
   }
     
-  public function check($data) {
+  /**
+   * Installer step: Check state of database and allow user to either migrate,
+   * clean or initialize.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function check($data = null) {
     // if schema_revision exists
     $this->viewData['enableNext'] = false;
     $this->viewData['title'] = tr('Existing data detected');
@@ -48,18 +59,36 @@ class MigrationInstaller extends MigrationUpdater {
     }
     return $this->render();
   }
-  
-  public function clean($data) {
+
+  /**
+   * Installer step: Clean database (delete all tables),
+   * clean or initialize.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function clean($data = null) {
     $this->m->Migrations->clean($this->dbName);
     return $this->next();
   }
-  
-  public function initialize($data) {
+
+  /**
+   * Installer step: Initialize database (create SchemaRevision),
+   * clean or initialize.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function initialize($data = null) {
     $this->m->Migrations->initialize($this->dbName);
     return $this->jump('create');
   }
 
-  public function create($data) {
+  /**
+   * Installer step: Create missing tables.
+   * clean or initialize.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function create($data = null) {
     $this->viewData['title'] = tr('Creating tables');
     $task = new CreateTask($this->db);
     if ($this->runAsync($task))
@@ -68,21 +97,44 @@ class MigrationInstaller extends MigrationUpdater {
   }
 }
 
+/**
+ * Asynchronous task for creating tables.
+ */
 class CreateTask extends AsyncTask {
+  /*
+   * @var IMigratableDatabase
+   */
   private $db;
+  
+  /**
+   * @var \Jivoo\Databases\DatabaseSchema
+   */
   private $schema;
   
+  /**
+   * @var string[]
+   */
   private $tables = array();
   
+  /**
+   * Construct task.
+   * @param IMigratableDatabase $db Database to create tables in.
+   */
   public function __construct(IMigratableDatabase $db) {
     $this->db = $db;
     $this->schema = $db->getSchema();
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function suspend() {
     return array('tables' => $this->tables);
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function resume(array $data) {
     if (isset($data['tables'])) {
       $this->tables = $data['tables'];
@@ -91,11 +143,17 @@ class CreateTask extends AsyncTask {
       $this->tables = $this->schema->getTables();
     }
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function isDone() {
     return count($this->tables) == 0;
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function run() {
     $table = array_shift($this->tables);
     if (!isset($this->db->$table)) {

@@ -361,6 +361,7 @@ class Routing extends LoadableModule {
    * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param array $mergeWith Route array to merge with.
    * @param array Resulting route (as an array).
+   * @return array Merged route.
    */
   public function mergeRoutes($route = null, $mergeWith = array()) {
     $route = $this->validateRoute($route);

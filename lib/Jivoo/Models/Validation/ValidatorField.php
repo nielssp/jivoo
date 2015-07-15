@@ -130,7 +130,8 @@ class ValidatorField {
 
   /**
    * Validate a value. Return value must be compared using ===.
-   * @param mixed $value Value to validate.
+   * @param IRecord $record Record.
+   * @param string $field Record field.
    * @return true|string True if valid or an error message if invalid.
    */
   public function validate(IRecord $record, $field) {

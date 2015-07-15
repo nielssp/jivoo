@@ -232,6 +232,10 @@ class Migrations extends LoadableModule {
     }
   }
   
+  /**
+   * Finalize the migration of a database.
+   * @param string $name Name of database.
+   */
   public function finalize($name) {
     if (isset($this->migrationSchemas[$name]))
       $this->migrationSchemas[$name]->finalize();

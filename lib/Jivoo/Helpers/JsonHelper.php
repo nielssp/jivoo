@@ -21,6 +21,7 @@ class JsonHelper extends Helper {
   /**
    * Create a JSON response.
    * @param mixed Data.
+   * @return TextResponse Response.
    */
   public function respond($response) {
     return new TextResponse(Http::OK, 'json', Json::encode($response));

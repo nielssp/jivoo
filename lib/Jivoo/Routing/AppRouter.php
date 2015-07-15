@@ -9,7 +9,7 @@ use Jivoo\Core\AppListener;
 use Jivoo\Core\Lib;
 
 /**
- * 
+ * An application listener that can be used to implement custom routing.
  */
 abstract class AppRouter extends AppListener {
   /**
@@ -31,12 +31,12 @@ abstract class AppRouter extends AppListener {
   protected $beforeConfig = false;
   
   /**
-   *
+   * @var int Priority of routes created by class.
    */
   protected $priority = 7;
   
   /**
-   * 
+   * Is called before the applications routes are loaded.
    */
   public function beforeLoadRoutes() {
     if ($this->beforeConfig) {
@@ -53,7 +53,7 @@ abstract class AppRouter extends AppListener {
   }
 
   /**
-   *
+   * Is called after the application routes are loaded.
    */
   public function afterLoadRoutes() {
     if (!$this->beforeConfig) {
@@ -70,26 +70,36 @@ abstract class AppRouter extends AppListener {
   }
 
   /**
-   *
+   * Create custom routes on the routing table.
+   * @param RoutingTable $routes Routing table.
    */
   protected abstract function createRoutes(RoutingTable $routes);
 
   /**
-   *
+   * Use to manually convert a path (the current path) to a route. Use
+   * {@see setRoute} to set the current route.
+   * @param string[] Path array.
+   * @return bool True if path was recognized, false otherwise. 
    */
   public function checkPath($path) {
     return false;
   }
 
   /**
-   * 
+   * Convert a route to a path
+   * @param array $route Route array.
+   * @param string[]|null $path Path pattern array or null if no associated path.
+   * @return string[]|null Path.
    */
   public function getPath($route, $path = null) {
-    
+    return null;
   }
 
   /**
-   *
+   * Set up this {@see AppRouter} as the creator of paths for a specific route. 
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param int|string $arity Arity of route, i.e. number of parameters (integer or '*').
+   * @param int $priority Priority of route.
    */
   protected function reroute($route, $arity, $priority = null) {
     if (!isset($priority))
@@ -98,7 +108,9 @@ abstract class AppRouter extends AppListener {
   }
 
   /**
-   *
+   * Set the current route.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param int $priority Priority of route.
    */
   protected function setRoute($route, $priority = null) {
     if (!isset($priority))

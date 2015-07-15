@@ -68,6 +68,7 @@ interface ISchema {
   /**
    * Check whether or not an index exists.
    * @param string $name Index name.
+   * @return bool True if index exists.
    */
   public function indexExists($name);
   

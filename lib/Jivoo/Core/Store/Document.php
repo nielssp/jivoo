@@ -190,8 +190,10 @@ class Document implements \ArrayAccess, \IteratorAggregate {
    * @param mixed $value The value or subarray to associate with the key.
    */
   public function setRecursive($key, $value) {
-    if (!is_array($value))
-      return $this->set($key, $value);
+    if (!is_array($value)) {
+      $this->set($key, $value);
+      return;
+    }
     $subset = $this->getSubset($key);
     $array = $value;
     foreach ($array as $key => $value)

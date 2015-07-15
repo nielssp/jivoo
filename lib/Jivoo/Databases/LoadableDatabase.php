@@ -121,14 +121,17 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get tables.
+   * @return string[] List of table names.
    */
   public function getTables() {
     return $this->migrationAdapter->getTables();
   }
 
   /**
-   * {@inheritdoc}
+   * Get table schema.
+   * @param string $table Table name.
+   * @return ISchema Schema.
    */
   public function getTableSchema($table) {
     return $this->migrationAdapter->getTableSchema($table);

@@ -39,6 +39,7 @@ class RoutingTable {
    */
   public function load($file) {
     require $file;
+    return $this;
   }
 
   /**

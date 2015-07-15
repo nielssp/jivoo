@@ -74,6 +74,7 @@ class Record implements IRecord {
    * Recreate an existing record.
    * @param IModel $model Associated model.
    * @param array $data Associative array of record data.
+   * @param array $virtual Associative array of virtual record data.
    * @return Record An existing record.
    */
   public static function createExisting(IModel $model, $data = array(), $virtual = array()) {
