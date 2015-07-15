@@ -25,7 +25,11 @@ $this->import('jivoo/core.css');
 <div id="main">
 
 <?php if (isset($title)): ?>
-<h1><?php echo $title; ?></h1>
+<h1><?php echo $title; ?>
+<?php if (isset($subtitle)):?>
+ <small><?php echo $subtitle; ?></small>
+<?php endif; ?>
+</h1>
 <?php endif; ?>
 
 <?php foreach ($flash as $message): ?>

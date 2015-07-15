@@ -5,4 +5,4 @@
   $appDir
 ); ?></p>
 
-<p><?php echo tr('Do you want Jivoo to generate a new application?')?></p>
+<p class="info"><?php echo tr('Do you want Jivoo to generate a new application?')?></p>
