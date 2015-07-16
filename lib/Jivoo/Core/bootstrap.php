@@ -39,11 +39,10 @@ namespace {
   /**
    * Encode string for HTML usage.
    * @param string $string Input.
-   * @return string Input.
+   * @return string Output.
    */
   function h($string) {
     return htmlentities(strval($string), ENT_COMPAT, 'UTF-8');
-    //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
   }
   
   /**

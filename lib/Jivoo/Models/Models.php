@@ -28,6 +28,7 @@ class Models extends LoadableModule {
    */
   protected function init() {
     Enum::addSearchPrefix($this->app->n() . '\\');
+    Enum::addSearchPrefix($this->app->n('Enums') . '\\');
     
     $modelsDir = $this->p('app', 'models');
     if (is_dir($modelsDir)) {

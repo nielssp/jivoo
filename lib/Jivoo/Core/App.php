@@ -242,6 +242,7 @@ class App implements IEventSubject {
     $this->listenerNames = $manifest['listeners'];
     $this->defaultConfig = $manifest['defaultConfig'];
 
+    Lib::import($this->p('app', ''), $this->namespace);
     Lib::import($this->p('app', 'lib'), $this->namespace);
     
     $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
