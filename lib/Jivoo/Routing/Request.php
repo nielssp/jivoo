@@ -25,7 +25,7 @@ use Jivoo\Core\Utilities;
  * @property-read string|null $referer HTTP referer or null if not set
  * (intentional misspelling).
  * @property-read string|null $userAgent HTTP user agent or null if not set.
- * @property-read string|null $domain Domain name protocol and port.
+ * @property-read string|null $domainName Domain name protocol and port.
  * @property-read string|null $method Request method, e.g. 'GET', 'POST' etc.
  * @proeprty-read bool $secure Whether or not HTTPS was used for this request.
  */
