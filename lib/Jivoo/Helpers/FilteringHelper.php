@@ -106,10 +106,11 @@ class FilteringHelper extends Helper {
   /**
    * Apply filtering to a selection or an array of records.
    * @param IBasicSelection|IBasicRecord[] $selection Selection or array of records.
-   * @param IBasicModel $model Model.
+   * @param IBasicModel $model Model (must be set if using {@see IBasicSelection}
+   * for the first parameter).
    * @return IBasicSelection|IBasicRecord[] Filtered selection or array of records.
    */
-  public function apply($selection, IBasicModel $model) {
+  public function apply($selection, IBasicModel $model = null) {
     if (!isset($this->query) or empty($this->query))
       return $selection;
     if (!isset($this->scanner)) {
@@ -124,6 +125,10 @@ class FilteringHelper extends Helper {
       return $selection;
     $root = $this->parser->parse($tokens);
     if ($selection instanceof IBasicSelection) {
+      if (!isset($model)) {
+        assume($selection instanceof IModel);
+        $model = $selection;
+      }
       $visitor = new SelectionFilterVisitor($this, $model);
       $selection = $selection->where($visitor->visit($root));
       return $selection;

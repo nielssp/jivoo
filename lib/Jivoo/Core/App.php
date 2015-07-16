@@ -242,6 +242,7 @@ class App implements IEventSubject {
     $this->listenerNames = $manifest['listeners'];
     $this->defaultConfig = $manifest['defaultConfig'];
 
+    Lib::import($this->p('app', ''), $this->namespace);
     Lib::import($this->p('app', 'lib'), $this->namespace);
     
     $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
@@ -553,6 +554,7 @@ class App implements IEventSubject {
     // Clean the view
     while (ob_get_level() > 0)
       ob_end_clean(); 
+    Http::setContentType('text/html');
     Http::setStatus(Http::INTERNAL_SERVER_ERROR);
     if ($this->config['core']['showExceptions']) {
       ob_start();

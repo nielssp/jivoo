@@ -3,7 +3,7 @@
 <?php if ($item->isSeparator()): ?>
 <li class="separator"><hr /></li>
 <?php else: ?>
-<?php
+<?php 
 if ($item->isMenu())
   $submenu = $Jtk->Menu($item);
 else

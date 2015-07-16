@@ -88,7 +88,7 @@ table {
       @media screen and (min-width: $sm) {
         .actions a {
           visibility: hidden;
-          padding-right: 10px;
+          margin-right: 12px;
         }
         &:hover {
           td.actions a {

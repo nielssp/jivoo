@@ -1,6 +1,7 @@
 .block {
   background-color: $subMenuBg;
   margin-bottom: 20px;
+  position: relative;
   box-shadow: 1px 1px 2px darken($mainBg, 10%);
   & > .block-header  {
     padding: 16px;

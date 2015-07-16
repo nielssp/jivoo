@@ -3,17 +3,12 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\AccessControl\Acl;
-
-use Jivoo\AccessControl\LoadableAcl;
-use Jivoo\AccessControl\IPermissionList;
+namespace Jivoo\AccessControl;
 
 /**
- * Default modifiable access control list. Permissions are independent of user.
- * Can be used to dynamically set permissions in the controller. Default is
- * to deny everything.
+ * Modificable permission list. Default is to deny everything.
  */
-class DefaultAcl extends LoadableAcl {
+class PermissionList implements IPermissionList {
   /**
    * @var true|array Allowed permissions.
    */
@@ -25,16 +20,38 @@ class DefaultAcl extends LoadableAcl {
   private $deny = true;
   
   /**
+   * @var IPermissionList
+   */
+  private $parent = null;
+  
+  /**
    * {@inheritdoc}
    */
-  public function hasPermission($permission, $user = null) {
+  public function hasPermission($permission) {
     if ($this->allow === true) {
       if (!isset($this->deny[$permission]))
         return true;
     }
     if (isset($this->allow[$permission]))
       return true;
+    if (isset($this->parent))
+      return $this->parent->hasPermission($permission);
     return false;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __isset($permission) {
+    return $this->hasPermission($permission);
+  }
+  
+  /**
+   * Set inheritted permissions.
+   * @param IPermissionList $parent Parent.
+   */
+  public function inheritFrom(IPermissionList $parent) {
+    $this->parent = $parent;
   }
   
   /**

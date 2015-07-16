@@ -6,21 +6,21 @@
 namespace Jivoo\Routing;
 
 /**
- * A dummy dispatcher that handles 'null:' routes.
+ * A dummy dispatcher that handles 'void:' routes.
  */
-class NulLDispatcher implements IDispatcher {
+class VoidDispatcher implements IDispatcher {
   /**
    * {@inheritdoc}
    */
   public function getPrefixes() {
-    return array('null');
+    return array('void');
   }
 
   /**
    * {@inheritdoc}
    */
   public function validate(&$route) {
-    return isset($route['null']);
+    return isset($route['void']);
   }
 
   /**
@@ -34,14 +34,14 @@ class NulLDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    return array('null' => true);
+    return array('void' => true);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fromRoute($route) {
-    return 'null:';
+    return 'void:';
   }
 
   /**
@@ -62,6 +62,6 @@ class NulLDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function createDispatch($route) {
-    throw new InvalidRouteException(tr('Trying to dispatch null route.'));
+    throw new InvalidRouteException(tr('Trying to dispatch void route.'));
   }
 }

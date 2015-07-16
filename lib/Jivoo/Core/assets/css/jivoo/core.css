@@ -1,4 +1,4 @@
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600|Source+Code+Pro:400,700");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600|Source+Code+Pro:400,700");
 * {
   padding: 0;
   margin: 0;
@@ -400,6 +400,7 @@ a.badge:hover {
 .block {
   background-color: #f7f7f7;
   margin-bottom: 20px;
+  position: relative;
   box-shadow: 1px 1px 2px #e6e6e6; }
   .block > .block-header {
     padding: 16px;
@@ -890,7 +891,7 @@ table {
   @media screen and (min-width: 768px) {
     table tbody tr .actions a {
       visibility: hidden;
-      padding-right: 10px; }
+      margin-right: 12px; }
     table tbody tr:hover td.actions a {
       visibility: visible; } }
   table td.primary {
