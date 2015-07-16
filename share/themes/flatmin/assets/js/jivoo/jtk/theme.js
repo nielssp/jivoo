@@ -70,8 +70,8 @@ $(function() {
     show: false,
     hide: false,
     position: {
-      my: 'right top',
-      at: 'right-4 top+4'
+      my: 'right middle',
+      at: 'right-4 middle+4'
     }
   });
   

@@ -439,18 +439,33 @@ class AuthHelper extends Helper {
   }
   
   /**
-   * Check user authorization for an action. 
+   * Check user authorization for the current route. 
    * @param CallActionEvent $event The action event.
    */
   public function checkAuthorization(RenderEvent $event) {
+    if (!$this->hasAuthorization($event->route))
+      $this->authorizationError();
+  }
+  
+  /**
+   * Check user authorization for a route.
+   * @param array|\Jivoo\Routing\ILinkable|string|null $route A route,
+   * see {@see \Jivoo\Routing\Routing}.
+   * @param mixed $user Optional user data, if null the current user is used.
+   * @return bool True if user is authorized.
+   */
+  public function hasAuthorization($route, $user = null) {
     if (empty($this->authorizationMethods))
-      return;
-    $authRequest = new AuthorizationRequest($event->route, $this->user);
+      return true;
+    if (!isset($user))
+      $user = $this->getUser();
+    $route = $this->m->Routing->validateRoute($route);
+    $authRequest = new AuthorizationRequest($route, $user);
     foreach ($this->authorizationMethods as $method) {
       if ($method->authorize($authRequest))
-        return;
+        return true;
     }
-    $this->authorizationError();
+    return false;
   }
 
   /**
