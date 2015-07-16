@@ -57,9 +57,8 @@ class Controllers extends LoadableModule {
    * @return string[]|boolean List of actions or false if controller not found. 
    */
   public function getActions($name) {
-    $controller = $this->getController($name);
+    $class = $this->getClass($name);
     if (!isset($this->actions[$name])) {
-      $class = get_class($controller);
       $reflection = new \ReflectionClass($class);
       $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
       $this->actions[$name] = array();
