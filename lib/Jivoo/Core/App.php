@@ -553,7 +553,7 @@ class App implements IEventSubject {
     // Clean the view
     while (ob_get_level() > 0)
       ob_end_clean(); 
-    Http::setContentType('html');
+    Http::setContentType('text/html');
     Http::setStatus(Http::INTERNAL_SERVER_ERROR);
     if ($this->config['core']['showExceptions']) {
       ob_start();
