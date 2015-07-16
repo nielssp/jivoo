@@ -9,6 +9,8 @@ use Jivoo\AccessControl\LoadableAcl;
 use Jivoo\Models\IBasicRecord;
 use Jivoo\AccessControl\IPermissionList;
 use Jivoo\Core\Logger;
+use Jivoo\AccessControl\PermissionList;
+use Jivoo\AccessControl\Jivoo\AccessControl;
 
 /**
  * An access control list implementation that assumes the user data has a
@@ -74,14 +76,14 @@ class RoleAcl extends LoadableAcl {
   }
   
   /**
-   * Create a role (an instance of {@see DefaultAcl}.
+   * Create a role (an instance of {@see PermissionList}.
    * @param string $role Role name or id.
    * @param string|null $parent Optional parent role.
    * @return DefaultAcl Permission list for role.
    * @throws \DomainException If the parent role is undefined.
    */
   public function createRole($role, $parent = null) {
-    $permissions = new DefaultAcl($this->app);
+    $permissions = new PermissionList($this->app);
     if (isset($parent)) {
       if (!isset($this->roles[$parent]))
         throw new \DomainException(tr('Undefined role: %1', $parent));

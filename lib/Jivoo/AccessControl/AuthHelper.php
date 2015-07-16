@@ -423,7 +423,6 @@ class AuthHelper extends Helper {
       if ($this->checkAcl(preg_replace('/\\.[^\.]+?$/', '', $permission)))
         return true;
     }
-    Logger::log('deny: ' . $permission);
     return false;
   }
   
