@@ -9,6 +9,7 @@ use Jivoo\Helpers\Helper;
 use Jivoo\AccessControl\Acl\DefaultAcl;
 use Jivoo\Core\Lib;
 use Jivoo\Routing\RenderEvent;
+use Jivoo\Core\Logger;
 
 /**
  * Helper class for authentication and autorization.
@@ -152,6 +153,11 @@ class AuthHelper extends Helper {
   private $aclMethods = array();
   
   /**
+   * @var (IAuthentication|IAuthorization|IAcl)[]
+   */
+  private $acModules = array();
+  
+  /**
    * @var IPasswordHasher Password hasher.
    */
   private $passwordHasher = null;
@@ -195,6 +201,8 @@ class AuthHelper extends Helper {
       case 'user':
         return $this->getUser();
     }
+    if (isset($this->acModules[$property]))
+      return $this->acModules[$property];
     return parent::__get($property);
   }
 
@@ -278,9 +286,9 @@ class AuthHelper extends Helper {
   private function loadAuthentication($name, $options = array()) {
     if ($name instanceof IAuthentication)
       return $this->addAuthentication($name);
-    $name = 'Jivoo\AccessControl\Authentication\\' . $name . 'Authentication';
-    Lib::assumeSubclassOf($name, 'Jivoo\AccessControl\LoadableAuthentication');
-    $this->addAuthentication(new $name($this->app, $options));
+    $class = 'Jivoo\AccessControl\Authentication\\' . $name . 'Authentication';
+    Lib::assumeSubclassOf($class, 'Jivoo\AccessControl\LoadableAuthentication');
+    $this->addAuthentication(new $class($this->app, $options), $name);
   }
   
   /**
@@ -291,9 +299,9 @@ class AuthHelper extends Helper {
   private function loadAuthorization($name, $options = array()) {
     if ($name instanceof IAuthorization)
       return $this->addAuthorization($name);
-    $name = 'Jivoo\AccessControl\Authorization\\' . $name . 'Authorization';
-    Lib::assumeSubclassOf($name, 'Jivoo\AccessControl\LoadableAuthorization');
-    $this->addAuthorization(new $name($this->app, $options, $this));
+    $class = 'Jivoo\AccessControl\Authorization\\' . $name . 'Authorization';
+    Lib::assumeSubclassOf($class, 'Jivoo\AccessControl\LoadableAuthorization');
+    $this->addAuthorization(new $class($this->app, $options, $this), $name);
   }
 
   /**
@@ -304,35 +312,50 @@ class AuthHelper extends Helper {
   private function loadAcl($name, $options = array()) {
     if ($name instanceof IAcl)
       return $this->addAcl($name);
-    $name = 'Jivoo\AccessControl\Acl\\' . $name . 'Acl';
-    Lib::assumeSubclassOf($name, 'Jivoo\AccessControl\LoadableAcl');
-    $this->addAcl(new $name($this->app, $options));
+    $class = 'Jivoo\AccessControl\Acl\\' . $name . 'Acl';
+    Lib::assumeSubclassOf($class, 'Jivoo\AccessControl\LoadableAcl');
+    $this->addAcl(new $class($this->app, $options), $name);
   }
   
   /**
    * Add an authentication module.
    * @param IAuthentication $authentication Module.
+   * @param string $name Name that can be used to later access the module using
+   * {@see __get}, default is the class name (without namespace).
    */
-  public function addAuthentication(IAuthentication $authentication) {
+  public function addAuthentication(IAuthentication $authentication, $name = null) {
     $this->authenticationMethods[] = $authentication;
     if ($authentication->isStateless())
       $this->statelessAuthenticationMethods[] = $authentication;
+    if (!isset($name))
+      $name = Lib::getClassName($authentication);
+    $this->acModules[$name] = $authentication;
   }
   
   /**
    * Add an authorization module.
    * @param IAuthorization $authorization Module.
+   * @param string $name Name that can be used to later access the module using
+   * {@see __get}, default is the class name (without namespace).
    */
-  public function addAuthorization(IAuthorization $authorization) {
+  public function addAuthorization(IAuthorization $authorization, $name = null) {
     $this->authorizationMethods[] = $authorization;
+    if (!isset($name))
+      $name = Lib::getClassName($authorization);
+    $this->acModules[$name] = $authorization;
   }
   
   /**
    * Add an ACL module.
    * @param IAcl $acl Module.
+   * @param string $name Name that can be used to later access the module using
+   * {@see __get}, default is the class name (without namespace).
    */
-  public function addAcl(IAcl $acl) {
+  public function addAcl(IAcl $acl, $name = null) {
     $this->aclMethods[] = $acl;
+    if (!isset($name))
+      $name = Lib::getClassName($acl);
+    $this->acModules[$name] = $acl;
   }
   
   /**
@@ -393,11 +416,14 @@ class AuthHelper extends Helper {
    */
   private function checkAcl($permission) {
     foreach ($this->aclMethods as $method) {
-      if ($method->hasPermission($this->user, $permission))
+      if ($method->hasPermission($permission, $this->user))
         return true;
     }
-    if (strpos($permission, '.') !== false)
-      return $this->checkAcl(preg_replace('/\\..+?$/', '', $permission));
+    if (strpos($permission, '.') !== false) {
+      if ($this->checkAcl(preg_replace('/\\.[^\.]+?$/', '', $permission)))
+        return true;
+    }
+    Logger::log('deny: ' . $permission);
     return false;
   }
   
@@ -455,11 +481,14 @@ class AuthHelper extends Helper {
    * @return bool True if user is authorized.
    */
   public function hasAuthorization($route, $user = null) {
-    if (empty($this->authorizationMethods))
+    if (count($this->authorizationMethods) == 0)
       return true;
     if (!isset($user))
       $user = $this->getUser();
     $route = $this->m->Routing->validateRoute($route);
+    if (isset($route['void'])) {
+      return true;
+    }
     $authRequest = new AuthorizationRequest($route, $user);
     foreach ($this->authorizationMethods as $method) {
       if ($method->authorize($authRequest))

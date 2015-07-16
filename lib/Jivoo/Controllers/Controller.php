@@ -71,8 +71,11 @@ class Controller extends Module {
     foreach ($helperObjects as $name => $helper) {
       $this->$name = $helper;
     }
-    
-    $this->name = preg_replace('/Controller$/', '', Lib::getClassName($this));
+
+    $this->name = preg_replace(
+      '/Controller$/', '',
+      str_replace($this->app->n('Controllers\\'), '', get_class($this))
+    );
 
     $this->response = new ViewResponse(Http::OK, $this->view);
 

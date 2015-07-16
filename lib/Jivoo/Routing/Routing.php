@@ -142,7 +142,7 @@ class Routing extends LoadableModule {
     $this->request = new Request($this->config['sessionPrefix'], $this->app->basePath);
     
     $this->dispatchers = new DispatcherCollection($this);
-    $this->dispatchers->add(new NullDispatcher());
+    $this->dispatchers->add(new VoidDispatcher());
     $this->dispatchers->add(new PathDispatcher($this));
     $this->dispatchers->add(new UrlDispatcher($this));
     

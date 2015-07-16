@@ -22,7 +22,6 @@ class SnippetAuthorization extends LoadableAuthorization {
     $route = $authRequest->route; 
     if ($route['dispatcher'] instanceof SnippetDispatcher) {
       $permission = str_replace('\\', '.', $route['snippet']);
-      \Jivoo\Core\Logger::debug('authorize ' . $permission);
       return $this->Auth->hasPermission($permission);
     }
   }
