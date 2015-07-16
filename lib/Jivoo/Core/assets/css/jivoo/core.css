@@ -890,7 +890,7 @@ table {
   @media screen and (min-width: 768px) {
     table tbody tr .actions a {
       visibility: hidden;
-      padding-right: 10px; }
+      margin-right: 12px; }
     table tbody tr:hover td.actions a {
       visibility: visible; } }
   table td.primary {
