@@ -37,7 +37,7 @@
 <div class="block dialog" id="block" style="display: none">
 <div class="block-header">A dialog 
   <div class="block-toolbar">
-    <?php echo $Icon->iconLink('Close', 'null:', 'close', array('class' => 'close')); ?>
+    <?php echo $Icon->iconLink('Close', 'void:', 'close', array('class' => 'close')); ?>
   </div>
 </div>
 <div class="block-content">

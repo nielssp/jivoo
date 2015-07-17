@@ -103,6 +103,7 @@ class InternalNode extends TemplateNode implements \Countable {
     assume(!isset($replacement->parent));
     $offset = array_search($node, $this->content, true);
     $this->content[$offset] = $replacement;
+    $replacement->parent = $this;
     $node->parent = null;
     if (isset($node->next)) {
       $node->next->prev = $replacement;

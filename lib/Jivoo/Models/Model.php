@@ -196,7 +196,8 @@ abstract class Model extends Module implements IModel {
   }
 
   /**
-   * {@inheritdoc}
+   * Count number of records in model.
+   * @return int Number of records.
    */
   public function count() {
     return $this->countSelection(new ReadSelection($this));
@@ -515,7 +516,9 @@ abstract class Model extends Module implements IModel {
   
 
   /**
-   * {@inheritdoc}
+   * Get iterator.
+   * @param IReadSelection $selection Optional selection to get iterator for.
+   * @return IRecordIterator A record iterator.
    */
   public function getIterator(IReadSelection $selection = null) {
     if (!isset($selection))

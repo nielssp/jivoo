@@ -6,6 +6,7 @@
 namespace Jivoo\AccessControl\Acl;
 
 use Jivoo\AccessControl\LoadableAcl;
+use Jivoo\AccessControl\IPermissionList;
 
 /**
  * Default modifiable access control list. Permissions are independent of user.
@@ -26,11 +27,14 @@ class DefaultAcl extends LoadableAcl {
   /**
    * {@inheritdoc}
    */
-  public function hasPermission($user = null, $permission) {
+  public function hasPermission($permission, $user = null) {
     if ($this->allow === true) {
-      return !isset($this->deny[$permission]);
+      if (!isset($this->deny[$permission]))
+        return true;
     }
-    return isset($this->allow[$permission]);
+    if (isset($this->allow[$permission]))
+      return true;
+    return false;
   }
   
   /**

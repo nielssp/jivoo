@@ -192,7 +192,8 @@ class Extensions extends LoadableModule {
   /**
    * Add extension kind.
    * @param string $kind Kind (plural), e.g. "themes".
-   * @param String $infoName Name of manifest JSON file (singular), e.g. "theme".
+   * @param String $manifest Name of manifest JSON file (singular), e.g. "theme".
+   * @param string $class Class to use for manifest.
    */
   public function addKind($kind, $manifest = 'extension', $class = 'Jivoo\Extensions\ExtensionInfo') {
     $this->kinds[$kind] = array(
@@ -204,6 +205,7 @@ class Extensions extends LoadableModule {
   /**
    * Get extension information.
    * @param string $extension Extension name.
+   * @param string $kind Extension kind.
    * @return ExtensionInfo|null Extension information or null if not found or
    * invalid.
    */
@@ -314,6 +316,7 @@ class Extensions extends LoadableModule {
    * Get a module provided by an extension. Load it if has not yet been
    * loaded.
    * @param string $name Name of module.
+   * @return ExtensionModule Module.
    * @throws ExtensionNotFoundException If extension module not found in the
    * load list, i.e. if the extension that provides the module has not been 
    * imported.

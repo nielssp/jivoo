@@ -1,7 +1,7 @@
 .block {
-  position: relative;
   background-color: $subMenuBg;
   margin-bottom: 20px;
+  position: relative;
   box-shadow: 1px 1px 2px darken($mainBg, 10%);
   & > .block-header  {
     padding: 16px;
@@ -52,6 +52,14 @@
     & > *:last-child {
       margin-bottom: 0;
     }
+
+    .block {
+      background-color: lighten($subMenuBg, 5%);
+      box-shadow: 1px 1px 2px lighten($subMenuBg, 10%);
+      & > .block-footer {
+        border-color: #eee;
+      }
+    }
   }
   & > .block-footer {
     border-top: 1px solid #ddd;
@@ -88,6 +96,29 @@
 
   &.block-error > .block-header {
     background-color: #cc2222;
+  }
+
+  &.block-draggable {
+    & > .block-header {
+      cursor: move;
+    }
+  }
+
+  &.block-dragging {
+    outline: 1px solid darken($mainBg, 30%);
+  }
+
+  &.block-accept {
+    outline: 1px solid darken($mainBg, 50%);
+  }
+
+  &.block-collapse {
+    & > .block-content {
+      display: none;
+    }
+    & > .block-footer {
+      display: none;
+    }
   }
 }
 

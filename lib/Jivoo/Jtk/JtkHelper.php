@@ -23,6 +23,14 @@ class JtkHelper extends Helper {
   protected $helpers = array('Snippet');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function init() {
+    if (isset($this->view->compiler))
+      $this->view->compiler->addMacros(new JtkMacros());
+  }
+  
+  /**
    * Get a JTK tool.
    * @param string $toolName Tool name.
    * @return PartialJtkSnippet A partial JTK snippet that can be used to

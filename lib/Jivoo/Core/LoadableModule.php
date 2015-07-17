@@ -60,22 +60,23 @@ abstract class LoadableModule extends Module {
   /**
    * Get load order for optional dependencies of module and modify a list of
    * optional dependencies.
-   * @param string $module Module name (name class that extends {@see LoadableModule}).
+   * @param string $module Module class (class that extends {@see LoadableModule}).
    * @param string[][] $dependencies Associative array of module names and their dependencies.
    * @return string[][] Associative array of module names and their dependencies.
    */
   public static function getLoadOrder($module, $dependencies) {
     $vars = get_class_vars($module);
+    $name = Lib::getClassName($module);
     foreach ($vars['loadBefore'] as $other) {
       if (!isset($dependencies[$other]))
         $dependencies[$other] = array();
-      $dependencies[$other][] = $module;
+      $dependencies[$other][] = $name;
     }
     if (count($vars['loadAfter']) > 0) {
-      if (!isset($dependencies[$module]))
-        $dependencies[$module] = array();
+      if (!isset($dependencies[$name]))
+        $dependencies[$name] = array();
       foreach ($vars['loadAfter'] as $other)
-        $dependencies[$module][] = $other;
+        $dependencies[$name][] = $other;
     }
     return $dependencies;
   }

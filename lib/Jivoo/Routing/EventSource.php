@@ -5,6 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
+use Jivoo\Core\App;
 /**
  * Used for pushing data to the client side using Server-Sent Events.
  * @property int $lastId Last event id.
@@ -100,8 +101,12 @@ class EventSource {
   
   /**
    * Stop event source and program execution.
+   * @param App|null $app If set, the application's {@see App::stop} method will
+   * be called instead of {@see exit}.
    */
-  public function stop() {
+  public function stop(App $app = null) {
+    if (isset($app))
+      $app->stop();
     exit;
   }
 

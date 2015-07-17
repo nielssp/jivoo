@@ -14,7 +14,7 @@ namespace Jivoo\Core {
   /**
    * @var string Jivoo framework version string.
    */
-  const VERSION = '0.17-dev';
+  const VERSION = '0.18-dev';
 }
 
 namespace {
@@ -39,11 +39,10 @@ namespace {
   /**
    * Encode string for HTML usage.
    * @param string $string Input.
-   * @return string Input.
+   * @return string Output.
    */
   function h($string) {
-    return htmlentities($string, ENT_COMPAT, 'UTF-8');
-    //return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+    return htmlentities(strval($string), ENT_COMPAT, 'UTF-8');
   }
   
   /**

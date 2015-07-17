@@ -127,7 +127,7 @@ class Snippet extends Module implements ISnippet {
   
   /**
    * Called before invoking.
-   * @return Response|string|null If a response or a string is returned, snippet
+   * @return \Jivoo\Routing\Response|string|null If a response or a string is returned, snippet
    * execution ends.
    */
   public function before() {
@@ -136,7 +136,8 @@ class Snippet extends Module implements ISnippet {
   
   /**
    * Called after invoking.
-   * @param Response|string $response Respone object.
+   * @param \Jivoo\Routing\Response|string $response Respone object.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function after($response) {
     return $response;
@@ -289,8 +290,11 @@ class Snippet extends Module implements ISnippet {
    * @return string Rendered template.
    */
   protected function render($templateName = null) {
-    if (!($this->response instanceof ViewResponse))
-      return $this->response;
+    if (!($this->response instanceof ViewResponse)) {
+      $resposne = $this->response;
+      $this->response = new ViewResponse(Http::OK, $this->view);
+      return $response;
+    }
     if (!isset($templateName)) {
       $class = str_replace($this->app->n('Snippets\\'), '', get_class($this));
       $type = 'html';
@@ -306,7 +310,9 @@ class Snippet extends Module implements ISnippet {
     $this->response->template = $templateName;
     $this->response->data = $this->viewData;
     $this->response->withLayout = $enableLayout;
-    return $this->response;
+    $response = $this->response;
+    $this->response = new ViewResponse(Http::OK, $this->view);
+    return $response;
   }
 
   /**

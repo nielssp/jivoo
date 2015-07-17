@@ -36,7 +36,9 @@ class DatabaseConnection implements IDatabase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get table.
+   * @param string $table Table name.
+   * @return Table Table.
    */
   public function __get($table) {
     if (isset($this->tables[$table]))
@@ -45,11 +47,13 @@ class DatabaseConnection implements IDatabase {
       $this->tables[$table] = $this->connection->$table;
       return $this->tables[$table];
     }
-    return parent::__get($table);
+    return null;
   }
 
   /**
-   * {@inheritdoc}
+   * Whether or not table exists.
+   * @param string $table Table name.
+   * @return bool True if table exists.
    */
   public function __isset($table) {
     if (isset($this->tables[$table]))

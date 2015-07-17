@@ -71,8 +71,11 @@ class Controller extends Module {
     foreach ($helperObjects as $name => $helper) {
       $this->$name = $helper;
     }
-    
-    $this->name = preg_replace('/Controller$/', '', Lib::getClassName($this));
+
+    $this->name = preg_replace(
+      '/Controller$/', '',
+      str_replace($this->app->n('Controllers\\'), '', get_class($this))
+    );
 
     $this->response = new ViewResponse(Http::OK, $this->view);
 
@@ -140,7 +143,6 @@ class Controller extends Module {
   /**
    * Automatically route a single or all actions in this controller.
    * @param string $action If set, the name of the single action to auto route.
-   * @param string $prefix A prefix to use for all resulting paths.
    */
   public function autoRoute($action = null) {
     $this->m->Routing->autoRoute(array(
@@ -219,7 +221,7 @@ class Controller extends Module {
   }
 
   /**
-   * Call another action in another controller in order.
+   * Call another action in another controller.
    * @param string $controller Controller name.
    * @param string $action Action name.
    * @param mixed[] $parameters Parameters.
@@ -232,6 +234,7 @@ class Controller extends Module {
       'parameters' => $parameters
     ));
     $response = $dispatch();
+    return $response;
   }
 
   /**
@@ -269,8 +272,11 @@ class Controller extends Module {
    * @return ViewResponse A view response for template.
    */
   protected function render($templateName = null) {
-    if (!($this->response instanceof ViewResponse))
-      return $this->response;
+    if (!($this->response instanceof ViewResponse)) {
+      $response = $this->response;
+      $this->response = new ViewResponse(Http::OK, $this->view);
+      return $response;
+    }
     if (!isset($templateName)) {
       list(, $caller) = debug_backtrace(false);
       $class = str_replace($this->app->n('Controllers\\'), '', $caller['class']);
@@ -289,7 +295,9 @@ class Controller extends Module {
       $templateName .= Utilities::camelCaseToDashes($action) . '.' . $type;
     }
     $this->response->template = $templateName;
-    return $this->response;
+    $response = $this->response;
+    $this->response = new ViewResponse(Http::OK, $this->view);
+    return $response;
   }
 
   /**

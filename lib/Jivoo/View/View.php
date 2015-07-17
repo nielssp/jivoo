@@ -230,6 +230,10 @@ class View extends LoadableModule {
       $this->app->getModule('Extensions')->import('simplehtmldom');
       $source = $dir . $template;
       $compiled = $dir . 'compiled/' . $template . '.php';
+      $dir = dirname($compiled);
+      if (!Utilities::dirExists($dir) and !Utilities::createDir($dir, true)) {
+        throw new \Exception(tr('Could not create directory: %1', $dir));
+      }
       $file = fopen($compiled, 'w');
       if (!$file)
         throw new \Exception(tr('Could not write compiled template: %1', $compiled));

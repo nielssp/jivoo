@@ -24,12 +24,34 @@ class State extends Document {
   /**
    * Construct state.
    * @param IStore $store Store to load/save data from/to.
+   * @param bool $mutable Whether state is mutable (true) or read-only (false).
    */
   public function __construct(IStore $store, $mutable = true) {
     parent::__construct();
     $this->store = $store;
-    $this->store->open($mutable);
-    $this->data = $this->store->read();
+    try {
+      $this->store->open($mutable);
+      $this->data = $this->store->read();
+    }
+    catch (StoreException $e) {
+      throw new StateInvalidException(tr('Could not read state: %1', $e->getMessage()), null, $e);
+    }
+  }
+  
+  /**
+   * Whether state is open.
+   * @return bool True if open.
+   */
+  public function isOpen() {
+    return isset($this->store);
+  }
+  
+  /**
+   * Whether state is open and mutable.
+   * @return bool True if mutable.
+   */
+  public function isMutable() {
+    return isset($this->store) and $this->store->isMutable();
   }
   
   /**

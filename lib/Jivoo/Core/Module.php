@@ -23,6 +23,11 @@ abstract class Module implements IEventSubject {
    * @var ModuleMap Collection of loaded modules.
    */
   protected $m;
+  
+  /**
+   * @var \Jivoo\Core\Store\StateMap Application persistent state storage.
+   */
+  protected $state;
 
   /**
    * @var Config Module configuration.
@@ -64,6 +69,7 @@ abstract class Module implements IEventSubject {
   public function __construct(App $app) {
     $this->app = $app;
     $this->config = $app->config;
+    $this->state = $app->state;
     $this->m = $app->getModules($this->modules);
     if (isset($this->m->Routing)) {
       $this->request = $this->m->Routing->request;
@@ -120,6 +126,7 @@ abstract class Module implements IEventSubject {
    * Call a method.
    * @param string $method Method name.
    * @param mixed[] $paramters List of parameters.
+   * @return mixed Return value.
    * @throws InvalidMethodException If method is not defined.
    */
   public function __call($method, $parameters) {

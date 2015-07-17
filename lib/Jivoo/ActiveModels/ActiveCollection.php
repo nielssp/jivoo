@@ -368,7 +368,9 @@ class ActiveCollection extends Model {
    * {@inheritdoc}
    */
   public function insertMultiple($records, $replace = false) {
+    $id = null;
     foreach ($records as $data)
-      $this->insert($data, $replace);
+      $id = $this->insert($data, $replace);
+    return $id;
   }
 }

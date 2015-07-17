@@ -1,27 +1,26 @@
 <?php
-/**
- * Main entry-script of a Jivoo application
- *
- * Copy to an empty directory and access from webbrowser to create a new
- * application. 
- *
- * @package Jivoo
- * @since 0.1.0
- */
+// Main entry-script of a Jivoo application.
+//
+// Copy to an empty directory (as 'index.php') on a local web server and access
+// it using a web browser to create a new application. 
+//
 
-// Points to Jivoo framework
-require_once 'lib/Jivoo/Core/bootstrap.php';
+// Path to $directory containing Jivoo framework distribution.
+$root = '.';
 
-$app = new App(
-  'app',
-  'user',
+// Path to Jivoo framework bootstrap script.
+require_once $root . '/lib/Jivoo/Core/bootstrap.php';
+
+$app = new \Jivoo\Core\App(
+  'app', // Path to application directory containing the manifest (app.json).
+  'user', // Path to configuration directory.
   basename(__FILE__)
 );
 
 // Optional. Application-independent extensions and themes delivered with Jivoo.
-$app->paths->share = 'share';
+$app->paths->share = $root . '/share';
 
 // Run application. Environment can be 'development', 'production' or something
-// else. 'development' should ONLY be used on private local development web
-// servers.
+// else (defined in app/config/environments). 'development' should ONLY be used
+// on private local development web servers.
 $app->run('development');

@@ -2,6 +2,9 @@ $(function() {
   $('.toggle-menu').click(function() {
     $('body').toggleClass('menu-open');
   });
+  $('#main').click(function() {
+    $('body').removeClass('menu-open');
+  });
   $('nav > ul > li > a').click(function() {
     $('nav > ul > li > a').removeClass('current');
     $(this).addClass('current');
@@ -70,8 +73,22 @@ $(function() {
     show: false,
     hide: false,
     position: {
-      my: 'right top',
-      at: 'right-4 top+4'
+      my: 'right middle',
+      at: 'right-4 middle+4'
     }
   });
+  
+  $.fn.startLoading = function() {
+    var $screen = $('<div class="loading-screen">');
+    $screen.hide();
+    $screen.appendTo(this);
+    $screen.fadeIn(100);
+  };
+  $.fn.stopLoading = function() {
+    var $screen = $(this).find('.loading-screen');
+    $screen.fadeOut(100, function() {
+      $screen.remove()
+    });
+  };
+
 });

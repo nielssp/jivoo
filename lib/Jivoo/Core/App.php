@@ -8,6 +8,8 @@ namespace Jivoo\Core;
 use Jivoo\Routing\Http;
 use Jivoo\Core\Store\PhpStore;
 use Jivoo\Core\Store\Config;
+use Jivoo\Core\Store\StateMap;
+use Jivoo\Core\Store\Jivoo\Core\Store;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -24,6 +26,7 @@ use Jivoo\Core\Store\Config;
  * @property-read string $sessionPrefix Application session prefix.
  * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
  * @property-read EventManager $eventManager Application event manager.
+ * @property-read StateMap $state Application persistent state storage.
  */
 class App implements IEventSubject {
   /**
@@ -132,6 +135,11 @@ class App implements IEventSubject {
   private $environment = 'production';
   
   /**
+   * @var StateMap
+   */
+  private $state = null;
+  
+  /**
    * @var array Associative array of default environment configurations.
    */
   private $defaultEnvironments = array(
@@ -162,7 +170,7 @@ class App implements IEventSubject {
   private $events = array(
     'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
     'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit',
-    'beforeShowException'
+    'beforeShowException', 'beforeStop'
   );
   
   /**
@@ -234,6 +242,7 @@ class App implements IEventSubject {
     $this->listenerNames = $manifest['listeners'];
     $this->defaultConfig = $manifest['defaultConfig'];
 
+    Lib::import($this->p('app', ''), $this->namespace);
     Lib::import($this->p('app', 'lib'), $this->namespace);
     
     $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
@@ -263,6 +272,7 @@ class App implements IEventSubject {
       case 'sessionPrefix':
       case 'basePath':
       case 'entryScript':
+      case 'state':
         return $this->$property;
       case 'eventManager':
         return $this->e;
@@ -364,7 +374,7 @@ class App implements IEventSubject {
    * @param string $name Name.
    * @return string Name.
    */
-  public function n($name) {
+  public function n($name = '') {
     if ($this->namespace == '')
       return $name;
     if ($name == '')
@@ -422,8 +432,8 @@ class App implements IEventSubject {
       if (!isset($this->imports[$name]))
         throw new \Exception(tr('Module not imported: %1', $name));
       $module = $this->imports[$name];
-      if (isset($this->optionalDependencies[$module])) {
-        foreach ($this->optionalDependencies[$module] as $dependency) {
+      if (isset($this->optionalDependencies[$name])) {
+        foreach ($this->optionalDependencies[$name] as $dependency) {
           if (isset($this->imports[$dependency]))
             $this->getModule($dependency);
         }
@@ -544,6 +554,7 @@ class App implements IEventSubject {
     // Clean the view
     while (ob_get_level() > 0)
       ob_end_clean(); 
+    Http::setContentType('text/html');
     Http::setStatus(Http::INTERNAL_SERVER_ERROR);
     if ($this->config['core']['showExceptions']) {
       ob_start();
@@ -616,7 +627,7 @@ class App implements IEventSubject {
       try {
         $defaultTimeZone = @date_default_timezone_get();
       }
-      catch (ErrorException $e) { }
+      catch (\ErrorException $e) { }
       $this->config['core']['timeZone'] = $defaultTimeZone;
     }
     
@@ -633,6 +644,9 @@ class App implements IEventSubject {
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
+    
+    // Persistent state storage
+    $this->state = new StateMap($this->p('state', ''));
 
     // Import modules
     $this->triggerEvent('beforeImportModules');
@@ -656,13 +670,20 @@ class App implements IEventSubject {
     $this->triggerEvent('afterLoadModules');
     
     $this->triggerEvent('afterInit');
+    
+    Logger::warning(tr('Application not stopped'));
   }
   
   /**
-   * Stop application (exit PHP execution)
+   * Stop application (exit PHP execution). Use instead of {@see exit}.
    * @param int $status Return code
    */
   public function stop($status = 0) {
+    $this->triggerEvent('beforeStop');
+    
+    $open = $this->state->closeAll();
+    if (!empty($open))
+      Logger::warning(tr('The following state documents were not properly closed: %1{, }{ and }', $open));
     exit($status);
   }
 }

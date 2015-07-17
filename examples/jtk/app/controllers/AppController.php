@@ -1,5 +1,5 @@
 <?php
-namespace Minimal\Controllers;
+namespace App\Controllers;
 
 use Jivoo\Controllers\Controller;
 use Jivoo\Jtk\ClassIconProvider;

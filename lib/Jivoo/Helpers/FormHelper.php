@@ -118,6 +118,10 @@ class FormHelper extends Helper {
     return $html;
   }
   
+  /**
+   * Get the opening tag of the current form.
+   * @return string The HTML for the start of the form.
+   */
   public function begin() {
     return $this->startTag;
   }
@@ -220,7 +224,9 @@ class FormHelper extends Helper {
   /**
    * Get the name of a field. If the form has a name, that name is used in
    * combination with the field name, e.g.: "formName[fieldName]".
-   * @param string|IFormExtension $field Field name
+   * @param string|IFormExtension $field Field name.
+   * @param string $value Value if checkbox/radio, will be appended along with
+   * an underscore.
    * @return string Name.
    */
   public function name($field, $value = null) {
@@ -375,6 +381,7 @@ class FormHelper extends Helper {
    * @param string $label Label, default is to look up the label in the model.
    * @param string $description Optional description;
    * @param array $attributes Addtional element attributes for the field.
+   * @return string HTML code.
    */
   public function standardField($field, $type = 'field', $label = null, $description = '', $attributes = array()) {
     if ($this->isRequired($field))
@@ -604,7 +611,6 @@ class FormHelper extends Helper {
   }
   
   /**
-   * 
    * Output an input element for a checkbox input followed by a label.
    * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
@@ -665,6 +671,7 @@ class FormHelper extends Helper {
    * in which case the field type must be an enum.
    * @param array $attributes Additional element attributes.
    * @return string HTML select element.
+   * @throws FormHelperException If unexpected field type.
    */
   public function selectOf($field, $options = null, $attributes = array()) {
     $attributes = array_merge(array(

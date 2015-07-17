@@ -50,6 +50,11 @@ select {
   }
 }
 
+textarea {
+  min-height: 128px;
+  max-width: 100%;
+}
+
 input[type=checkbox] {
   -webkit-appearance: none;
   background-color: #fff;
@@ -120,6 +125,9 @@ label[for] {
 form {
   display: block;
   margin-bottom: 20px;
+  & > *:last-child {
+    margin-bottom: 0;
+  }
   .field {
     margin-bottom: 12px;
     padding: 6px 0;
@@ -173,4 +181,29 @@ form {
   }
 }
 
+@mixin narrow-form {
+  .field {
+    input[type=text],
+    input[type=email],
+    input[type=password],
+    input[type=date],
+    input[type=time],
+    input[type=datetime],
+    textarea,
+    select {
+      margin: 0 0 6px 0;
+      width: 100%;
+    }
+    label:first-child {
+      float: none;
+      width: auto;
+      margin-left: 0;
+    }
+    margin-left: 0;
+  }
+}
 
+.form-narrow,
+.block {
+  @include narrow-form;
+}

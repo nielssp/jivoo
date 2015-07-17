@@ -54,9 +54,9 @@ class PhpNode extends TemplateNode {
       $code = trim($this->code);
       $last = substr($code, -1);
       $semi = '';
-      if ($last != ';' and $last != ':')
+      if ($last != ';' and $last != ':' and $last != '}')
         $semi = ';';
-      return '<?php ' . $this->code . $semi . ' ?>' . "\n";
+      return '<?php ' . $code . $semi . ' ?>';
     }
     else {
       return '<?php echo ' . $this->code . '; ?>';

@@ -15,6 +15,7 @@ interface ICondition {
    * Implements methods {@see ICondition::and()} and {@see ICondition::or()}
    * @param string $method Method name ('and' or 'or')
    * @param mixed[] $args List of parameters
+   * @return self Self.
    */
   public function __call($method, $args);
 
@@ -29,7 +30,7 @@ interface ICondition {
    * @param Condition|string $clause Clause
    * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
-   * @return ICondition Self
+   * @return self Self.
    */
   public function where($clause);
 
@@ -38,7 +39,7 @@ interface ICondition {
    * @param Condition|string $clause Clause
    * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
-   * @return ICondition Self
+   * @return self Self.
    */
   public function andWhere($clause);
 
@@ -47,7 +48,7 @@ interface ICondition {
    * @param Condition|string $clause Clause
    * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
-   * @return ICondition Self
+   * @return self Self.
    */
   public function orWhere($clause);
 }

@@ -12,6 +12,7 @@ use Jivoo\Routing\ResponseOverrideException;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Store\Config;
 use Jivoo\Core\Logger;
+use Jivoo\Core\Store\Document;
 
 /**
  * An installer. Consists of a number of steps (implemented as methods) and 
@@ -44,9 +45,9 @@ abstract class InstallerSnippet extends Snippet {
   private $parent = null;
 
   /**
-   * @var Config Installer state.
+   * @var Document Installer state.
    */
-  private $installConfig;
+  private $installState;
 
   /**
    * {@inheritdoc}
@@ -58,16 +59,16 @@ abstract class InstallerSnippet extends Snippet {
   
   /**
    * Set installer state.
-   * @param Config $config State.
+   * @param Document $state State.
    */
-  public function setConfig(Config $config) {
-    $this->installConfig = $config;
+  public function setState(Document $state) {
+    $this->installState = $state;
     $this->setup();
-    if (!isset($this->installConfig['current']) or !isset($this->steps[$this->installConfig['current']])) {
+    if (!isset($this->installState['current']) or !isset($this->steps[$this->installState['current']])) {
       $head = array_keys(array_slice($this->steps, 0, 1));
-      $this->installConfig['current'] = $head[0];
+      $this->installState['current'] = $head[0];
     }
-    $this->current = $this->steps[$this->installConfig['current']];
+    $this->current = $this->steps[$this->installState['current']];
 
     $this->view->data->enableNext = true;
   }
@@ -170,34 +171,35 @@ abstract class InstallerSnippet extends Snippet {
   
   /**
    * Exit installer.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function end() {
-    $this->installConfig['done'] = true;
+    $this->installState['done'] = true;
     if (isset($this->parent))
       return $this->parent->next();
-    return $this->saveConfig();
+    return $this->saveState();
   }
   
   /**
    * Go to next step.
-   * @return bool False if state could not be updated.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function next() {
     if (!isset($this->current->next)) {
-      $this->installConfig['done'] = true;
+      $this->installState['done'] = true;
       if (isset($this->parent))
         return $this->parent->next();
       $this->app->config['Setup']['version'] = $this->app->version;
     }
     else {
-      $this->installConfig['current'] = $this->current->next->name;
+      $this->installState['current'] = $this->current->next->name;
     }
-    return $this->saveConfig();
+    return $this->saveState();
   }
 
   /**
    * Go to previous step.
-   * @return bool False if state could not be updated.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function back() {
     if (!isset($this->current->previous)) {
@@ -206,9 +208,9 @@ abstract class InstallerSnippet extends Snippet {
       }
     }
     else {
-      $this->installConfig['current'] = $this->current->previous->name;
+      $this->installState['current'] = $this->current->previous->name;
     }
-    return $this->saveConfig();
+    return $this->saveState();
   }
   
   /**
@@ -220,7 +222,7 @@ abstract class InstallerSnippet extends Snippet {
       $this->current = $step;
     else
       $this->current = $this->steps[$step];
-    $this->installConfig['current'] = $this->current->name;
+    $this->installState['current'] = $this->current->name;
   }
   
   /**
@@ -236,10 +238,11 @@ abstract class InstallerSnippet extends Snippet {
   /**
    * Go to another step.
    * @param string $step Step name.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function jump($step) {
     $this->setCurrent($step);
-    return $this->saveConfig();
+    return $this->saveState();
   }
   
   /**
@@ -277,11 +280,11 @@ abstract class InstallerSnippet extends Snippet {
     $this->setCurrent($step);
     if (isset($step->installer)) {
       $last = $step->installer->getLast();
-      $step->installer->installConfig['done'] = false;
+      $step->installer->installState['done'] = false;
       return $step->installer->undoStep($last);
     }
     if ($step->undo === true)
-      return $this->saveConfig();
+      return $this->saveState();
     return call_user_func($step->undo);
   }
   
@@ -323,8 +326,8 @@ abstract class InstallerSnippet extends Snippet {
    */
   public function runAsync(IAsyncTask $task) {
     if ($this->request->hasValidData()) {
-      $taskConfig = $this->installConfig->getSubset('async')->getSubset($this->current->name);
-      $state = $taskConfig->get('state', array());
+      $taskState = $this->installState->getSubset('async')->getSubset($this->current->name);
+      $state = $taskState->get('state', array());
       $task->resume($state);
       if ($this->request->isAjax()) {
         $max = 1;
@@ -334,7 +337,7 @@ abstract class InstallerSnippet extends Snippet {
         header('Cache-Control: no-cache');
         if ($task->isDone()) {
           echo "done:\n";
-          exit;
+          $this->app->stop();
         }
         while (true) {
           try {
@@ -361,10 +364,9 @@ abstract class InstallerSnippet extends Snippet {
           flush();
         }
         $state = $task->suspend();
-        $taskConfig['state'] = $state;
-        if (!$taskConfig->save())
-          echo 'error: ' . tr('Could not save progress!');
-        exit;
+        $taskState['state'] = $state;
+        $this->state->close('setup');
+        $this->app->stop();
       }
       if ($task->isDone())
         return true;
@@ -374,9 +376,18 @@ abstract class InstallerSnippet extends Snippet {
   }
   
   /**
+   * Attempt to save the state of this installer.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function saveState() {
+    $this->state->close('setup');
+    return $this->refresh();
+  }
+  
+  /**
    * Attempt to save configuration, then refresh.
    * @param Config $config Configuration.
-   * @return string Response.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function saveConfig(Config $config = null) {
     if (!isset($config))
@@ -397,7 +408,7 @@ abstract class InstallerSnippet extends Snippet {
   /**
    * Attempt to save configuration, then go to next step.
    * @param Config $config Configuration.
-   * @return string Response.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function saveConfigAndContinue(Config $config = null) {
     if (!isset($config))

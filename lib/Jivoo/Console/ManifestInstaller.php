@@ -48,6 +48,11 @@ class ManifestInstaller extends InstallerSnippet {
     return null;
   }
   
+  /**
+   * Installer step: Welcome to the Jivoo framework.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
   public function welcome($data = null) {
     if (isset($data))
       return $this->next();
@@ -56,7 +61,10 @@ class ManifestInstaller extends InstallerSnippet {
   }
 
   /**
-   * 
+   * Installer step: Configure application manifest, create directories, and
+   * copy files.
+   * @param array $data POST data.
+   * @return \Jivoo\Routing\Response|string Response.
    */
   public function configure($data = null) {
     if (isset($data)) {
@@ -78,6 +86,7 @@ class ManifestInstaller extends InstallerSnippet {
       $this->installFile('Core', 'config/environments/production.php');
       mkdir($this->p('user', ''));
       mkdir($this->p('log', ''));
+      mkdir($this->p('state', ''));
       $file = fopen($this->p('app', 'app.json'), 'w');
       if ($file) {
         fwrite($file, Json::prettyPrint($manifest));

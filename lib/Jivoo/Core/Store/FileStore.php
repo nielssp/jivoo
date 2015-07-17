@@ -35,6 +35,11 @@ abstract class FileStore implements IStore {
   private $data = null;
   
   /**
+   * @var string Default file content (used by {@see touch()}).
+   */
+  protected $defaultContent = '';
+  
+  /**
    * Construct PHP file store.
    * @param string $file File path.
    */
@@ -71,9 +76,12 @@ abstract class FileStore implements IStore {
    * @return boolean True if file exists and is writable, false otherwise.
    */
   public function touch() {
+    if (file_exists($this->file))
+      return true;
     $handle = fopen($this->file, 'c');
     if (!$handle)
       return false;
+    fwrite($handle, $this->defaultContent);
     fclose($handle);
     return true;
   }
@@ -133,7 +141,7 @@ abstract class FileStore implements IStore {
     $this->data = $this->decode($content);
     if (!is_array($this->data)) {
       $this->data = null;
-      throw new StoreReadFailedException(tr('Invalid file: %1', $this->file));
+      throw new StoreReadFailedException(tr('Invalid file format: %1', $this->file));
     }
     return $this->data;
   }
@@ -148,6 +156,7 @@ abstract class FileStore implements IStore {
       throw new StoreWriteFailedException(tr('Not mutable'));
     $this->data = $data;
     ftruncate($this->handle, 0);
+    rewind($this->handle);
     fwrite($this->handle, $this->encode($data));
     fflush($this->handle);
   }

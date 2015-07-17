@@ -16,6 +16,10 @@ use Jivoo\Core\Store\PhpStore;
 use Jivoo\AccessControl\AuthHelper;
 use Jivoo\AccessControl\SingleUserModel;
 use Jivoo\Core\Logger;
+use Jivoo\Core\Store\Document;
+use Jivoo\Core\Event;
+use Jivoo\Core\Utilities;
+use Jivoo\Core\Store\StateInvalidException;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -75,78 +79,49 @@ class Setup extends LoadableModule {
    * {@inheritdoc}
    */
   public function afterLoad() {
+    $state = $this->state->read('setup');
     if (isset($this->app->manifest['install'])) {
       $installer = $this->app->manifest['install'];
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
-      if (!$this->config[$installer]->get('done', false)) {
-        $snippet = $this->getInstaller($installer);
-        try {
-          $this->active = true;
-          $this->m->Routing->respond(
-            $this->m->Routing->dispatch($snippet)
-          );
-        }
-        catch (InvalidResponseException $e) {
-          throw new InvalidResponseException(tr(
-            'An invalid response was returned from installer step: %1',
-            $snippet->getCurrentStep()
-          ), null, $e);
-        }
+      if (!$state[$installer]->get('done', false)) {
+        $state = $this->state->write('setup');
+        $this->dispatchInstaller($installer, $state[$installer]);
       }
     }
     if (isset($this->app->manifest['update'])) {
-      if ($this->config->get('version', $this->app->version) !== $this->app->version) {
+      if (!isset($state['version'])) {
+        $state = $this->state->write('setup');
+        $state['version'] = $this->app->version;
+      }
+      else if ($state['version'] !== $this->app->version) {
+        $state = $this->state->write('setup');
         $installer = $this->app->manifest['update'];
         if (!Lib::classExists($installer))
           $installer = $this->app->n('Snippets\\' . $installer);
-        $config = $this->config['updates'][$this->app->version][$installer];
-        if ($config->get('done', false)) {
-          $this->config['version'] = $this->app->version;
-          $this->config->save();
+        $installerState = $state['updates'][$this->app->version][$installer];
+        if ($installerState->get('done', false)) {
+          $state['version'] = $this->app->version;
         }
         else {
-          $snippet = $this->getInstaller($installer, $config);
-          try {
-            $this->active = true;
-            $this->m->Routing->respond(
-              $this->m->Routing->dispatch($snippet)
-            );
-          }
-          catch (InvalidResponseException $e) {
-            throw new InvalidResponseException(tr(
-              'An invalid response was returned from updater step: %1',
-              $snippet->getCurrentStep()
-            ), null, $e);
-          }
+          $this->dispatchInstaller($installer, $installerState);
         }
       }
     }
-    if (isset($this->config['current']['install'])) {
-      $installer = $this->config['current']->get('install', null);
+    if (isset($state['current']['install'])) {
+      $state = $this->state->write('setup');
+      $installer = $state['current']->get('install', null);
       if (!Lib::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
-      $config = $this->config['current'][$installer];
-      if ($config->get('done', false)) {
-        unset($this->config['current']);
-        $this->config->save();
+      $installerState = $state['current'][$installer];
+      if ($installerState->get('done', false)) {
+        unset($state['current']);
       }
       else {
-        $snippet = $this->getInstaller($installer, $config);
-        try {
-          $this->active = true;
-          $this->m->Routing->respond(
-            $this->m->Routing->dispatch($snippet)
-          );
-        }
-        catch (InvalidResponseException $e) {
-          throw new InvalidResponseException(tr(
-            'An invalid response was returned from installer step: %1',
-            $snippet->getCurrentStep()
-          ), null, $e);
-        }
+        $this->dispatchInstaller($installer, $installerState);
       }
     }
+    $state->close();
   }
   
   /**
@@ -174,6 +149,32 @@ class Setup extends LoadableModule {
   }
   
   /**
+   * Dispatch an installer.
+   * @param string $installer Name of installer class.
+   * @param Document $installerState Installer state document if any.
+   * @throws InvalidResponseException If the installer returns an invalid
+   * response.
+   */
+  public function dispatchInstaller($installer, Document $installerState = null) {
+    $snippet = $this->getInstaller($installer, $installerState);
+    $this->app->attachEventHandler('beforeStop', function(Event $event) {
+      $event->sender->state->close('setup');
+    });
+    try {
+      $this->active = true;
+      $this->m->Routing->respond(
+        $this->m->Routing->dispatch($snippet)
+      );
+    }
+    catch (InvalidResponseException $e) {
+      throw new InvalidResponseException(tr(
+        'An invalid response was returned from installer step: %1',
+        $snippet->getCurrentStep()
+      ), null, $e);
+    }
+  }
+  
+  /**
    * Start an installer manually.
    * @param string $installerClass Installer class.
    * @throws \Exception If the installer could not be started.
@@ -183,10 +184,12 @@ class Setup extends LoadableModule {
       $installerClass = $this->app->n('Snippets\\' . $installerClass);
     Logger::notice(tr('Trigger installer: %1', $installerClass));
     $this->getInstaller($installerClass);
-    unset($this->config['current']);
-    $this->config['current']['install'] = $installerClass;
-    if (!$this->config->save())
-      throw new \Exception(tr('Could not start installer, config could not be saved.'));
+    $state = $this->state->write('setup');
+    unset($state['current']);
+    $state['current']['install'] = $installerClass;
+    $state->close();
+//     if (!$this->config->save())
+//       throw new \Exception(tr('Could not start installer, config could not be saved.'));
     $this->m->Routing->refresh();
   }
   
@@ -219,6 +222,7 @@ class Setup extends LoadableModule {
    */
   public function unlock($deleteCredentials = true) {
     $this->lock['enable'] = false;
+    unset($this->lock['session']);
     if ($deleteCredentials) {
       unset($this->lock['username']);
       unset($this->lock['password']);
@@ -245,16 +249,19 @@ class Setup extends LoadableModule {
   /**
    * Get an installer.
    * @param string $class Installer class.
-   * @param string $config Installer state.
+   * @param Document $state Installer state.
    * @return InstallerSnippet Instalelr.
    */
-  public function getInstaller($class, $config = null) {
+  public function getInstaller($class, Document $state = null) {
     if (!isset($this->installers[$class])) {
-      if (!isset($config))
-        $config = $this->config[$class];
+      if (!isset($state) and $this->state->isMutable('setup')) {
+        $state = $this->state->write('setup');
+        $state = $state[$class];
+      }
       $snippet = $this->m->Snippets->getSnippet($class);
       assume($snippet instanceof InstallerSnippet);
-      $snippet->setConfig($config);
+      if (isset($state))
+        $snippet->setState($state);
       $this->installers[$class] = $snippet;
     }
     return $this->installers[$class];

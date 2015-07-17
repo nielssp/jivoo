@@ -25,10 +25,10 @@ class AuthorizationRequest {
   
   /**
    * Construct authorization request.
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array $route A route array, see {@see \Jivoo\Routing\Routing}.
    * @param mixed $user User data of requesting user.
    */
-  public function __construct($route, $user = null) {
+  public function __construct(array $route, $user = null) {
     $this->route = $route;
     $this->user = $user;
   }

@@ -92,7 +92,7 @@ class Lib {
       if (is_object($class))
         $class = get_class($class);
       if ($class === $parent)
-        return true;
+        return;
       throw new ClassInvalidException(tr(
         'Class "%1" should extend "%2"', $class, $parent
       ));

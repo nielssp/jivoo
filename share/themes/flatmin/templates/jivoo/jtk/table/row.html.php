@@ -30,11 +30,11 @@
 <?php endforeach; ?>
 <td class="actions non-essential">
 <?php foreach ($row->actions as $action): ?>
-<?php echo $Html->link(
-  $Icon->icon($action->icon),
+<?php echo $Icon->iconLink(
+  $action->label,
   $this->mergeRoutes($action->route, array($row->id)),
+  $action->icon,
   array(
-    'title' => $action->label,
     'data' => array(
       'method' => $action->method,
       'data' => json_encode($action->data),

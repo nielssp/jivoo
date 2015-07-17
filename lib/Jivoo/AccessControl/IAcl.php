@@ -15,5 +15,5 @@ interface IAcl {
    * @param string $permission Permission string.
    * @return bool True if user has permission, false if not.
    */
-  public function hasPermission($user = null, $permission);
+  public function hasPermission($permission, $user = null);
 }

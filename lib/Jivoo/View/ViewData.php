@@ -48,6 +48,7 @@ class ViewData implements \ArrayAccess {
   /**
    * Whether or not a view variable exists.
    * @param string $property Variable name.
+   * @return bool True if variable exists and is set.
    */
   public function __isset($property) {
     return isset($this->data[$property]);
@@ -62,6 +63,7 @@ class ViewData implements \ArrayAccess {
   }
   
   /**
+   * @param string $template
    * @return true
    */
   public function offsetExists($template) {

@@ -13,6 +13,7 @@ use Jivoo\Core\Utilities;
  * @property string[] $path The path relative to the application root as an array.
  * @property array $query The GET query as an associative array.
  * @property string $fragment The fragment.
+ * @property array|null $route Currently selected route, {@see Routing}.
  * @property-read string[] $realPath The original $path.
  * @property-read array $data POST data as an associative array.
  * @property-read array $files File upload data.
@@ -24,7 +25,7 @@ use Jivoo\Core\Utilities;
  * @property-read string|null $referer HTTP referer or null if not set
  * (intentional misspelling).
  * @property-read string|null $userAgent HTTP user agent or null if not set.
- * @property-read string|null $domain Domain name protocol and port.
+ * @property-read string|null $domainName Domain name protocol and port.
  * @property-read string|null $method Request method, e.g. 'GET', 'POST' etc.
  * @proeprty-read bool $secure Whether or not HTTPS was used for this request.
  */
@@ -54,6 +55,11 @@ class Request {
    * @var Session Session object.
    */
   private $session;
+  
+  /**
+   * @var array|null Route.
+   */
+  private $route = null;
 
   /**
    * @var string Fragment. 
@@ -276,15 +282,24 @@ class Request {
   
   /**
    * Whether or not the current request is POST and has a valid access token.
-   * @param string $key Optional key to test for existence in POST-data.
+   * @param string|string[] $key Optional key or list of keys to test for
+   * existence in POST-data.
    * @return boolean True if valid, false otherwise.
    */
   public function hasValidData($key = null) {
     if (!$this->hasData) {
       return false;
     }
-    if (isset($key) and !isset($this->data[$key])) {
-      return false;
+    if (isset($key)) {
+      if (is_array($key)) {
+        foreach ($key as $k) {
+          if (!isset($this->data[$k])) 
+            return false;
+        }
+      }
+      else if (!isset($this->data[$key])) { 
+        return false;
+      }
     }
     return $this->checkToken();
   }

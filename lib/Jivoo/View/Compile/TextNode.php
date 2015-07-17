@@ -46,12 +46,12 @@ class TextNode extends TemplateNode {
    */
   public function __toString() {
     $text = $this->text;
-    if (!is_string($text))
+    if (!is_string($text) or $text == '')
       return '';
     if (trim($text) == '')
       return "\n";
     if ($text[0] == ' ')
-      $text = "\n " . ltrim($text);
+      $text = "\n" . ltrim($text);
     if (substr($text, -1) == ' ')
       $text = rtrim($text) . "\n";
     return $text;
