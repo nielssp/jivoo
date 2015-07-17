@@ -19,7 +19,7 @@ class DefaultMacros {
       'main', 'embed', 'block', 'layout', 'nolayout', 'extend', 'ignore',
       'if', 'else', 'foreach',
       'tr', 'tn',
-      'href', 'datetime', 'class',
+      'href', 'datetime', 'class', 'file',
       // attributes
       'src', 'alt', 'title', 'id', 'style'
     );
@@ -275,6 +275,14 @@ class DefaultMacros {
     else {
       $node->setAttribute('class', new PhpNode($value));
     }
+  }
+
+  /**
+   * Points the src- or href-attribute at an asset.
+   * @param HtmlNode $node Node.
+   * @param string|null $value Macro parameter (string).
+   */
+  static function _file(HtmlNode $node, $value) {
   }
 
   /**
