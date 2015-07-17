@@ -2,6 +2,9 @@ $(function() {
   $('.toggle-menu').click(function() {
     $('body').toggleClass('menu-open');
   });
+  $('#main').click(function() {
+    $('body').removeClass('menu-open');
+  });
   $('nav > ul > li > a').click(function() {
     $('nav > ul > li > a').removeClass('current');
     $(this).addClass('current');
