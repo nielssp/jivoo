@@ -1,21 +1,27 @@
 <?php $this->view->data->title = tr('Blocks'); ?>
-<div class="grid-sm grid-1-1">
-<div class="cell"><div class="block">
-<div class="block-content">This is a simple block.</div>
-</div><div class="block">
-<div class="block-header"><h3>Block header
-<small>Subheader</small></h3></div>
-<div class="block-content">This is a block with a header and a footer.</div>
-<div class="block-footer">Block footer</div>
+<div class="grid-1-1 grid-sm">
+<div class="cell">
+<div class="block"><div class="block-content">
+      This is a simple block.
 </div></div>
-<div class="cell"><div class="block">
-<div class="block-header"><h3>Block header
-<small>Subheader</small></h3></div>
-<div class="block-content">This is a block with a header.</div>
-</div><div class="block">
-<div class="block-content">This is a block with a footer.</div>
-<div class="block-footer">Block footer</div>
+<div class="block"><div class=" block-header"><h3>Block header
+<small>Subheader</small></h3></div><div class="block-content">
+
+      This is a block with a header and a footer.
+
+</div><div class=" block-footer"><div>Block footer</div></div></div>
+</div>
+<div class="cell">
+<div class="block"><div class=" block-header"><h3>Block header
+<small>Subheader</small></h3></div><div class="block-content">
+
+      This is a block with a header.
 </div></div>
+<div class="block"><div class="block-content">
+      This is a block with a footer.
+
+</div><div class=" block-footer"><div>Block footer</div></div></div>
+</div>
 </div>
 <div class="grid-md grid-1-1-1">
 <div class="cell">

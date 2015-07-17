@@ -128,6 +128,8 @@ class TemplateCompiler {
         $this->transform($child);
     }
     foreach ($node->macros as $macro => $value) {
+      if (!$node->hasMacro($macro))
+        continue;
       if (!isset($this->macros[$macro]))
         throw new \Exception(tr('Undefined macro: %1', $macro));
       call_user_func($this->macros[$macro], $node, $value);

@@ -7,6 +7,10 @@ namespace Jivoo\View\Compile;
 
 /**
  * A template node.
+ * @property-read string[] $macros Macros and values.
+ * @property-read InternalNode|null $parent Parent node if any.
+ * @property-read TemplateNode|null $next Next sibling if any.
+ * @property-read TemplateNode|null $prev Previous sibling if any.
  */
 abstract class TemplateNode {
   /**
@@ -122,5 +126,35 @@ abstract class TemplateNode {
    */
   public function addMacro($macro, $value = null) {
     $this->macros[$macro] = $value;
+  }
+  
+  /**
+   * Whether node has macro.
+   * @param string $macro Macro name.
+   * @return bool True if node has macro.
+   */
+  public function hasMacro($macro) {
+    return array_key_exists($macro, $this->macros);
+  }
+  
+  /**
+   * Get parameter of a macro, returns null if macro doesn't hava a parameter,
+   * use {@see hasMacro} to check for existence of macro.
+   * @param string $macro Macro name.
+   * @return string|null Macro parameter.
+   */
+  public function getMacro($macro) {
+    if (isset($this->macros[$macro]))
+      return $this->macros[$macro];
+    return null;
+  }
+  
+  /**
+   * Remove a macro.
+   * @param string $macro Macro name.
+   */
+  public function removeMacro($macro) {
+    if (isset($this->macros[$macro]))
+      unset($this->macros[$macro]);
   }
 }
