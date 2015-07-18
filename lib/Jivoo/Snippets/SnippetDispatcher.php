@@ -119,14 +119,9 @@ class SnippetDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function createDispatch($route) {
-    try {
-      $snippet = $this->snippets->getSnippet($route['snippet']);
-      if (!isset($snippet))
-        throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
-    }
-    catch (ClassNotFoundException $e) {
+    $snippet = $this->snippets->getSnippet($route['snippet']);
+    if (!isset($snippet))
       throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
-    }
     return function() use($snippet, $route) {
       $snippet->enableLayout();
       $response = $snippet($route['parameters']);

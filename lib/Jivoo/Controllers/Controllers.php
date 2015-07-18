@@ -82,6 +82,8 @@ class Controllers extends LoadableModule {
       $class = $name . 'Controller';
       if (!Lib::classExists($class))
         $class = $this->app->n('Controllers\\' . $class);
+      if (!Lib::classExists($class))
+        return null;
       Lib::assumeSubclassOf($class, 'Jivoo\Controllers\Controller');
       $object = new $class($this->app);
       if (!$singleton)
