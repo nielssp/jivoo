@@ -90,7 +90,7 @@ abstract class FileStore implements IStore {
    * {@inheritdoc}
    */
   public function open($mutable = false) {
-    $handle = fopen($this->file, $mutable ? 'c+' : 'r');
+    $handle = @fopen($this->file, $mutable ? 'c+' : 'r');
     if (!$handle)
       throw new StoreReadFailedException(tr('Could not open file: %1', $this->file));
     $noBlock = $this->blocking ? 0 : LOCK_NB;
@@ -110,6 +110,7 @@ abstract class FileStore implements IStore {
       return;
     flock($this->handle, LOCK_UN);
     fclose($this->handle);
+    clearstatcache($this->file); // fixes wrong filesize() etc.
     $this->data = null;
     $this->handle = null;
     $this->mutable = null;

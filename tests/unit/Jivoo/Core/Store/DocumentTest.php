@@ -36,6 +36,25 @@ class DocumentTest extends \Codeception\TestCase\Test {
     $this->assertInstanceOf('Iterator', $a->getIterator());
   }
   
+  public function testSetArray() {
+    $a = new Document();
+    $a['a'] = array(1, 2, 3);
+    $a['b'] = array(1, 2, array(3, 4));
+    
+    $this->assertEquals(array(1, 2, 3), $a['a']->toArray());
+    $this->assertEquals(array(1, 2, array(3, 4)), $a['b']->toArray());
+    
+    $data = array(
+      'a' => 'foo',
+      'b' => array('c' => 'bar'),
+      'd' => array(1, 2, array(1, 2), 4)
+    );
+    
+    $a = new Document();
+    $a->override = $data;
+    $this->assertEquals($data, $a->toArray());
+  }
+  
   public function testDefaults() {
     $a = new Document();
     
