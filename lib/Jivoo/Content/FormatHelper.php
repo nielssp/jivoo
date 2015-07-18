@@ -109,7 +109,13 @@ class FormatHelper extends Helper {
         $this->hasBreak = true;
       $content = $sections[0];
     }
-    return $encoder->encode($content, $options);
+    $content = $encoder->encode($content, $options);
+    // TODO temporary jivoo-link replacer
+    $routing = $this->m->Routing;
+    $content = preg_replace_callback('/\bjivoo:([a-zA-Z0-9_]+:[-a-zA-Z0-9_\.~\\\\:\[\]?&+%/]+)/', function($matches) use ($routing){
+      return $routing->getLink($matches[1]);
+    }, $content);
+    return $content;
   }
   
   /**
