@@ -128,14 +128,10 @@ namespace {
   class InvalidPropertyException extends \LogicException { }
   
   require Jivoo\PATH . '/Jivoo/Core/Lib.php';
-  require Jivoo\PATH . '/Jivoo/Core/ErrorReporting.php';
+  spl_autoload_register(array('Jivoo\Core\Lib', 'autoload'));
+  Jivoo\Core\Lib::import(Jivoo\PATH);
   
   error_reporting(-1);
   set_error_handler(array('Jivoo\Core\ErrorReporting', 'handleError'));
   set_exception_handler(array('Jivoo\Core\ErrorReporting', 'handleException'));
-  
-  spl_autoload_register(array('Jivoo\Core\Lib', 'autoload'));
-  
-  Jivoo\Core\Lib::import(Jivoo\PATH);
-
 }
