@@ -168,14 +168,14 @@ class SqlTable extends Table {
   public function countSelection(ReadSelection $selection) {
     if (isset($selection->groupBy)) {
       $result = $this->owner->rawQuery(
-        'SELECT COUNT(*) FROM (' . $this->convertReadSelection($selection, '1') . ') AS _selection_count'
+        'SELECT COUNT(*) as _count FROM (' . $this->convertReadSelection($selection, '1') . ') AS _selection_count'
       );
       $row = $result->fetchAssoc();
-      return $row['COUNT(*)'];
+      return $row['_count'];
     }
     else {
-      $result = $selection->select('COUNT(*)');
-      return $result[0]['COUNT(*)'];
+      $result = $selection->select('COUNT(*)', '_count');
+      return $result[0]['_count'];
     }
   }
 
