@@ -2,8 +2,12 @@
 
 $Skin->setDefault(array(
   'primaryBg' => '#2272cc',
-  'primaryHlBg' => '#6da6e7',
+//   'primaryHlBg' => '#6da6e7',
   'primaryFg' => '#fff'
+));
+
+$Skin->setDefault(array(
+  'primaryHlBg' => $Css->lighten($Skin->primaryBg, 0.44)
 ));
 
 $Skin->setDefault(array(
