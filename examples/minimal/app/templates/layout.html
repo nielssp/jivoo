@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title j:innertext="$this->app['title']">Title goes here</title>
+
+</head>
+<body>
+
+<div j:block="content">Content goes here</div>
+
+<p>Menu:</p>
+<ul>
+<li><a j:href="null">Frontpage</a></li>
+<li><a j:href="array('action:Pages::view', 'example')">Example page 1</a></li>
+</ul>
+
+</body>
+</html>
