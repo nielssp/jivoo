@@ -45,7 +45,7 @@ class PdoPostgresqlDatabase extends PdoDatabase {
   /**
    * {@inheritdoc}
    */
-  public function quoteTableName($name) {
+  public function quoteModel($name) {
     return '"' . $this->tableName($name) . '"';
   }
 

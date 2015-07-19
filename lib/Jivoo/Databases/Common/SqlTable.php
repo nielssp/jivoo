@@ -124,28 +124,25 @@ class SqlTable extends Table {
    * @return string SQL subquery.
    */
   protected function conditionToSql(Condition $where) {
-    $sqlString = '';
-    foreach ($where->clauses as $clause) {
-      if ($sqlString != '') {
-        $sqlString .= ' ' . $clause['glue'] . ' ';
-      }
-      if ($clause['clause'] instanceof Condition) {
-        if ($clause['clause']->hasClauses()) {
-          if ($clause['clause'] instanceof NotCondition) {
-            $sqlString .= 'NOT ';
-          }
-          $sqlString .= '(' . $this->conditionToSql($clause['clause']) . ')';
-        }
-      }
-      else {
-        $sqlString .= $this->owner->escapeQuery($clause['clause'], $clause['vars']);
-      }
-    }
-    return $sqlString;
+    return $where->toString($this->owner);
   }
   
   /**
-   * For use with array_walk(), will run {@see SqlTable::owner->escapeQuery()} on
+   * Interpolate variables. See {@see Condition::interpolate}.
+   * @param string $query Query.
+   * @param array $vars Variables.
+   * @return string Interpolated query.
+   */
+  protected function escapeQuery($query, $vars = array()) {
+    if (!is_array($vars)) {
+      $vars = func_get_args();
+      array_shift($vars); 
+    }
+    return Condition::interpolate($query, $vars, $this->owner);
+  }
+  
+  /**
+   * For use with array_walk(), will run {@see SqlTable::escapeQuery()} on
    * each column in an array. The input $value should be an associative array
    * as described in the documentation for {@see SelectQuery::$columns}.
    * The resulting $value will be a string.
@@ -153,7 +150,7 @@ class SqlTable extends Table {
    * @param mixed $key Key (not used).
    */
   protected function getColumnList(&$value, $key) {
-    $expression = $this->owner->escapeQuery($value['expression'], array());
+    $expression = $this->escapeQuery($value['expression'], array());
     if (isset($value['alias'])) {
       $value = $expression . ' AS ' . $value['alias'];
     }
@@ -206,14 +203,14 @@ class SqlTable extends Table {
       if (isset($selection->alias))
         $sqlString .= $selection->alias . '.*';
       else
-        $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
+        $sqlString .= $this->owner->quoteModel($this->name) . '.*';
       if (!empty($selection->additionalFields)) {
         $fields = $selection->additionalFields;
         array_walk($fields, array($this, 'getColumnList'));
         $sqlString .= ', ' . implode(', ', $fields);
       }
     }
-    $sqlString .= ' FROM ' . $this->owner->quoteTableName($this->name);
+    $sqlString .= ' FROM ' . $this->owner->quoteModel($this->name);
     if (isset($selection->alias))
       $sqlString .= ' AS ' . $selection->alias; 
     if (!empty($selection->sources)) {
@@ -227,7 +224,7 @@ class SqlTable extends Table {
         else {
           continue;
         }
-        $sqlString .= ', ' . $this->owner->quoteTableName($table);
+        $sqlString .= ', ' . $this->owner->quoteModel($table);
         if (isset($source['alias'])) {
           $sqlString .= ' AS ' . $source['alias'];
         }
@@ -250,7 +247,7 @@ class SqlTable extends Table {
         }
         $table = $joinSource->name;
 
-        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->quoteTableName($table);
+        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->quoteModel($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];
         }
@@ -265,7 +262,7 @@ class SqlTable extends Table {
     if (isset($selection->groupBy)) {
       $columns = array();
       foreach ($selection->groupBy['columns'] as $column) {
-        $columns[] = $this->owner->escapeQuery($column);
+        $columns[] = $this->escapeQuery($column);
       }
       $sqlString .= ' GROUP BY ' . implode(', ', $columns);
       if (isset($selection->groupBy['condition'])
@@ -277,7 +274,7 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->owner->escapeQuery($orderBy['column'])
+        $columns[] = $this->escapeQuery($orderBy['column'])
         . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
@@ -292,7 +289,7 @@ class SqlTable extends Table {
    */
   public function updateSelection(UpdateSelection $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
-    $sqlString = 'UPDATE ' . $this->owner->quoteTableName($this->name);
+    $sqlString = 'UPDATE ' . $this->owner->quoteModel($this->name);
     $sets = $selection->sets;
     if (!empty($sets)) {
       $sqlString .= ' SET';
@@ -306,7 +303,7 @@ class SqlTable extends Table {
           $sqlString .= ',';
         }
         if (strpos($key, '=') !== false) {
-          $sqlString .= ' ' . $this->owner->escapeQuery($key, $value);
+          $sqlString .= ' ' . $this->escapeQuery($key, $value);
         }
         else {
           $sqlString .= ' ' . $key . ' = ';
@@ -320,7 +317,7 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->owner->escapeQuery($orderBy['column'])
+        $columns[] = $this->escapeQuery($orderBy['column'])
           . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
@@ -334,14 +331,14 @@ class SqlTable extends Table {
    * {@inheritdoc}
    */
   public function deleteSelection(DeleteSelection $selection) {
-    $sqlString = 'DELETE FROM ' . $this->owner->quoteTableName($this->name);
+    $sqlString = 'DELETE FROM ' . $this->owner->quoteModel($this->name);
     if ($selection->where->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
     }
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->owner->escapeQuery($orderBy['column'])
+        $columns[] = $this->escapeQuery($orderBy['column'])
           . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
@@ -370,7 +367,7 @@ class SqlTable extends Table {
       $sqlString = 'REPLACE';
     else
       $sqlString = 'INSERT';
-    $sqlString .= ' INTO ' . $this->owner->quoteTableName($this->name) . ' (';
+    $sqlString .= ' INTO ' . $this->owner->quoteModel($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES ';
     $tuples = array();

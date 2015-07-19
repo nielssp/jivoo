@@ -5,6 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Condition;
 
+use Jivoo\Models\DataType;
 /**
  * A condition for selecting records in a model.
  * @property-read array[] $clauses A list of clauses in the form of arrays of the format
@@ -145,5 +146,107 @@ class Condition implements ICondition {
       array('\\%', '\\_'),
       str_replace('\\', '\\\\', $string)
     );
+  }
+  
+/**
+   * Substitute and encode variables in an expression.
+   * 
+   * Placeholders (see also {@see DataType::fromPlaceHolder()}:
+   * <code>
+   * true // Boolean true
+   * false // Boolean false
+   * {AnyModelName} // A model name
+   * [anyFieldName] // A column/field name
+   * ? // Any scalar value.
+   * %m %model // A table/model object or name
+   * %c %column %field // A column/field name
+   * %_ // A placeholder placeholder, can also be a type, e.g. where(..., 'id = %_', $type, $value)
+   * %i %int %integer // An integer value
+   * %f %float // A floating point value
+   * %s %str %string // A string
+   * %t $text // Text
+   * %b %bool %boolean // A boolean value
+   * %date // A date value
+   * %d %datetime // A date/time value
+   * %n %bin %binary // A binary object
+   * %AnyEnumClassName // An enum value of that class
+   * %anyPlaceholder() // An array of values
+   * </code>
+   * 
+   * @param string $format Expression format, use placeholders instead of values.
+   * @param mixed[] $vars List of values to replace placeholders with.
+   * @param IQuoter $quoter Quoter object for quoting identifieres and literals.
+   * @return string The interpolated expression.
+   */
+  public static function interpolate($format, $vars, IQuoter $quoter) {
+    $boolean = DataType::boolean();
+    $true = $quoter->quoteLiteral($boolean, true);
+    $false = $quoter->quoteLiteral($boolean, false);
+    $format = preg_replace('/\btrue\b/i', $true, $format);
+    $format = preg_replace('/\bfalse\b/i', $false, $format);
+    $format = preg_replace_callback('/\{(.+?)\}/', function($matches) use($quoter) {
+      return $quoter->quoteModel($matches[1]);
+    }, $format);
+    $format = preg_replace_callback('/\[(.+?)\]/', function($matches) use($quoter) {
+      return $quoter->quoteField($matches[1]);
+    }, $format);
+    $i = 0;
+    return preg_replace_callback('/((\?)|%([a-z_\\\\]+))(\(\))?/i', function($matches) use($vars, &$i, $quoter) {
+      $value = $vars[$i];
+      $i++;
+      $type = null;
+      if (isset($matches[3]) and $matches[3] == '_') {
+        if (!is_string($value)) {
+          assume($value instanceof DataType);
+          $value = $value->placeholder;
+        }
+        $matches[3] = ltrim($value, '%');
+        $value = $vars[$i];
+        $i++;
+      }
+      if (isset($matches[3]) and ($matches[3] == 'm' or $matches[3] == 'model')) {
+        if (!is_string($value)) {
+          assume($value instanceof IBasicModel);
+          $value = $value->getName();
+        }
+        return $quoter->quoteModel($value);
+      }
+      if (isset($matches[3]) and ($matches[3] == 'c' or $matches[3] == 'column' or $matches[3] == 'field')) {
+        assume(is_string($value));
+        return $quoter->quoteField($value);
+      }
+      if (isset($matches[3]) and $matches[3] != '()')
+        $type = DataType::fromPlaceholder($matches[3]);
+      if (!isset($type))
+        $type = DataType::detectType($value);
+      if (isset($matches[4]) or (isset($matches[3]) and $matches[3] == '()')) {
+        assume(is_array($value));
+        foreach ($value as $key => $v)
+          $value[$key] = $quoter->quoteLiteral($type, $v);
+        return '(' . implode(', ', $value) . ')';
+      }
+      return $quoter->quoteLiteral($type, $value);
+    }, $format);
+  }
+  
+  public function toString(IQuoter $quoter) {
+    $sqlString = '';
+    foreach ($this->clauses as $clause) {
+      if ($sqlString != '') {
+        $sqlString .= ' ' . $clause['glue'] . ' ';
+      }
+      if ($clause['clause'] instanceof Condition) {
+        if ($clause['clause']->hasClauses()) {
+          if ($clause['clause'] instanceof NotCondition) {
+            $sqlString .= 'NOT ';
+          }
+          $sqlString .= '(' . $clause['clause']->toString($quoter) . ')';
+        }
+      }
+      else {
+        $sqlString .= self::interpolate($clause['clause'], $clause['vars'], $quoter);
+      }
+    }
+    return $sqlString;
   }
 }
