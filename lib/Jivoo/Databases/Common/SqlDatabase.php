@@ -221,6 +221,19 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase {
   public function tableExists($table) {
     return $this->typeAdapter->tableExists($table);
   }
+  
+  /**
+   * Get SQL for LIMIT / OFFSET. Default style ("LIMIT 0,1") is used by SQLite
+   * and MySQL, override for other implementations.
+   * @param int $limit Limit.
+   * @param int|null $offset Optional offset.
+   * @return string SQL.
+   */
+  public function sqlLimitOffset($limit, $offset = null) {
+    if (isset($offset))
+      return 'LIMIT ' . $offset . ', ' . $limit;
+    return 'LIMIT ' . $limit;
+  }
 
   /**
    * {@inheritdoc}

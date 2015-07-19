@@ -282,9 +282,8 @@ class SqlTable extends Table {
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($selection->limit)) {
-      $sqlString .= ' LIMIT ' . $selection->offset . ', ' . $selection->limit;
-    }
+    if (isset($selection->limit))
+      $sqlString .= ' ' . $this->owner->sqlLimitOffset($selection->limit, $selection->offset);
     return $sqlString;
   }
   
@@ -311,12 +310,7 @@ class SqlTable extends Table {
         }
         else {
           $sqlString .= ' ' . $key . ' = ';
-          if (isset($value)) {
-            $sqlString .= $typeAdapter->encode($this->getType($key), $value);
-          }
-          else {
-            $sqlString .= 'NULL';
-          }
+          $sqlString .= $typeAdapter->encode($this->getType($key), $value);
         }
       }
     }
@@ -331,9 +325,8 @@ class SqlTable extends Table {
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($selection->limit)) {
-      $sqlString .= ' LIMIT ' . $selection->limit;
-    }
+    if (isset($selection->limit))
+      $sqlString .= ' ' . $this->owner->sqlLimitOffset($selection->limit);
     return $this->owner->rawQuery($sqlString);
   }
   
@@ -353,9 +346,8 @@ class SqlTable extends Table {
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($selection->limit)) {
-      $sqlString .= ' LIMIT ' . $selection->limit;
-    }
+    if (isset($selection->limit))
+      $sqlString .= ' ' . $this->owner->sqlLimitOffset($selection->limit);
     return $this->owner->rawQuery($sqlString);
   }
 
@@ -390,10 +382,7 @@ class SqlTable extends Table {
           $first = false;
         else
           $tupleSql .= ', ';
-        if (isset($value))
-          $tupleSql .= $typeAdapter->encode($this->getType($column), $value);
-        else
-          $tupleSql .= 'NULL';
+        $tupleSql .= $typeAdapter->encode($this->getType($column), $value);
       }
       $tupleSql .= ')';
       $tuples[] = $tupleSql;
