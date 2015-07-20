@@ -10,6 +10,7 @@ use Jivoo\Models\IRecord;
 use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\DataType;
 use Jivoo\Models\IBasicModel;
+use Jivoo\Models\Model;
 
 /**
  * A read selection.
@@ -104,6 +105,13 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * {@inheritdoc}
    */
   public function select($expression, $alias = null) {
+    if ($alias instanceof Model) {
+      $this->fields = array(array(
+        'expression' => $expression,
+        'alias' => null
+      ));
+      return $this->model->readCustom($this, $alias);
+    }
     $this->fields = array();
     if (is_array($expression)) {
       foreach ($expression as $exp => $alias) {
@@ -175,10 +183,11 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
-    if (isset($this->groupBy)) {
-      $columns = array_merge($this->groupBy['columns'], $columns);
-      $condition = where($this->groupBy['condition'])->and($condition);
-    }
+//     if (isset($this->groupBy)) {
+//       $columns = array_merge($this->groupBy['columns'], $columns);
+//       if ($this->groupBy['condition']->hasClauses())
+//         $condition = where($this->groupBy['condition'])->and($condition);
+//     }
     $this->groupBy = array('columns' => $columns, 'condition' => $condition,);
     return $this;
   }

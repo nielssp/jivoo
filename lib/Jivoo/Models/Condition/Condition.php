@@ -175,12 +175,15 @@ class Condition implements ICondition {
    * %anyPlaceholder() // A tuple of values
    * </code>
    * 
-   * @param string $format Expression format, use placeholders instead of values.
+   * @param string|Condition $format Expression format, use placeholders instead of values.
    * @param mixed[] $vars List of values to replace placeholders with.
    * @param IQuoter $quoter Quoter object for quoting identifieres and literals.
    * @return string The interpolated expression.
    */
   public static function interpolate($format, $vars, IQuoter $quoter) {
+    if ($format instanceof self)
+      return $format->toString($quoter);
+    assume(is_string($format));
     $boolean = DataType::boolean();
     $true = $quoter->quoteLiteral($boolean, true);
     $false = $quoter->quoteLiteral($boolean, false);

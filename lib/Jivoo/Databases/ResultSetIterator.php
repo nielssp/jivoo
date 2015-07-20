@@ -89,4 +89,14 @@ class ResultSetIterator implements IRecordIterator {
   public function valid() {
     return isset($this->array[$this->position]);
   }
+  
+  /**
+   * Convert result set to array.
+   * @return \Jivoo\Databases\IRecord[] Array of records.
+   */
+  public function toArray() {
+    while ($this->resultSet->hasRows())
+      $this->next();
+    return $this->array;
+  }
 }

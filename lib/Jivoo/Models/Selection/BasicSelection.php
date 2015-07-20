@@ -41,7 +41,7 @@ abstract class BasicSelection implements IBasicSelection {
   protected $where = null;
 
   /**
-   * @var Model.
+   * @var Model
    */
   protected $model = null;
 
