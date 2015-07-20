@@ -14,13 +14,12 @@ $Skin->setDefault(array(
 ));
 
 $Skin->setDefault(array(
-  'primaryBg' => $Skin->primary,
-//   'primaryHlBg' => '#6da6e7',
-  'primaryFg' => '#fff'
+  'primaryBg' => $Skin->primary
 ));
 
 $Skin->setDefault(array(
-  'primaryHlBg' => $Css->lighten($Skin->primary, 25)
+  'primaryFg' => $Css->contrasted($Skin->primaryBg, '#222', '#fff'),
+  'primaryHlBg' => $Css->lighten($Skin->primaryBg, 25)
 ));
 
 $Skin->setDefault(array(
