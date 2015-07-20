@@ -186,15 +186,15 @@ class Condition implements ICondition {
     $false = $quoter->quoteLiteral($boolean, false);
     $format = preg_replace('/\btrue\b/i', $true, $format);
     $format = preg_replace('/\bfalse\b/i', $false, $format);
+    $string = DataType::text();
+    $format = preg_replace_callback('/"((?:[^"\\\\"]|\\\\.)*)"/', function($matches) use($quoter, $string) {
+      return $quoter->quoteLiteral($string, stripslashes($matches[1]));
+    }, $format);
     $format = preg_replace_callback('/\{(.+?)\}/', function($matches) use($quoter) {
       return $quoter->quoteModel($matches[1]);
     }, $format);
     $format = preg_replace_callback('/\[(.+?)\]/', function($matches) use($quoter) {
       return $quoter->quoteField($matches[1]);
-    }, $format);
-    $string = DataType::text();
-    $format = preg_replace_callback('/"((?:[^"\\\\"]|\\\\.)*)"/', function($matches) use($quoter, $string) {
-      return $quoter->quoteLiteral($string, stripslashes($matches[1]));
     }, $format);
     $i = 0;
     return preg_replace_callback('/((\?)|%([a-z_\\\\]+))(\(\))?/i', function($matches) use($vars, &$i, $quoter) {
