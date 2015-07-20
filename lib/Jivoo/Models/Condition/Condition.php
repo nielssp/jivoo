@@ -172,7 +172,7 @@ class Condition implements ICondition {
    * %d %datetime // A date/time value
    * %n %bin %binary // A binary object
    * %AnyEnumClassName // An enum value of that class
-   * %anyPlaceholder() // An array of values
+   * %anyPlaceholder() // A tuple of values
    * </code>
    * 
    * @param string $format Expression format, use placeholders instead of values.
@@ -187,14 +187,13 @@ class Condition implements ICondition {
     $format = preg_replace('/\btrue\b/i', $true, $format);
     $format = preg_replace('/\bfalse\b/i', $false, $format);
     $string = DataType::text();
-    $format = preg_replace_callback('/"((?:[^"\\\\"]|\\\\.)*)"/', function($matches) use($quoter, $string) {
-      return $quoter->quoteLiteral($string, stripslashes($matches[1]));
-    }, $format);
-    $format = preg_replace_callback('/\{(.+?)\}/', function($matches) use($quoter) {
-      return $quoter->quoteModel($matches[1]);
-    }, $format);
-    $format = preg_replace_callback('/\[(.+?)\]/', function($matches) use($quoter) {
-      return $quoter->quoteField($matches[1]);
+    $format = preg_replace_callback('/"((?:[^"\\\\]|\\\\.)*)"|\{(.+?)\}|\[(.+?)\]/', function($matches) use($quoter, $string) {
+      if (isset($matches[3]))
+        return $quoter->quoteField($matches[3]);
+      else if (isset($matches[2]))
+        return $quoter->quoteModel($matches[2]);
+      else
+        return $quoter->quoteLiteral($string, stripslashes($matches[1]));
     }, $format);
     $i = 0;
     return preg_replace_callback('/((\?)|%([a-z_\\\\]+))(\(\))?/i', function($matches) use($vars, &$i, $quoter) {
