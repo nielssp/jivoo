@@ -1,13 +1,26 @@
 <?php
 
 $Skin->setDefault(array(
-  'primaryBg' => '#2272cc',
+  'primary' => '#2272cc',
+  'grey' => '#727272',
+  'info' => '#22aacc',
+  'success' => '#22cc22',
+  'warning' => '#cc7222',
+  'error' => '#cc2222'
+));
+$Skin->setDefault(array(
+  'dark' => $Css->darken($Skin->primary, 25),
+  'light' => $Css->lighten($Skin->primary, 25)
+));
+
+$Skin->setDefault(array(
+  'primaryBg' => $Skin->primary,
 //   'primaryHlBg' => '#6da6e7',
   'primaryFg' => '#fff'
 ));
 
 $Skin->setDefault(array(
-  'primaryHlBg' => $Css->lighten($Skin->primaryBg, 0.44)
+  'primaryHlBg' => $Css->lighten($Skin->primary, 25)
 ));
 
 $Skin->setDefault(array(
@@ -21,8 +34,8 @@ $Skin->setDefault(array(
 ));
 
 $Skin->setDefault(array(
-  'linkFg' => $Skin->primaryBg,
-  'linkHlFg' => $Skin->primaryHlBg,
+  'linkFg' => $Skin->primary,
+  'linkHlFg' => $Skin->light,
   'navBg' => '#eee',
   'navFg' => '#444',
   'navHlBg' => '#ddd',
@@ -41,6 +54,8 @@ $Skin->setDefault(array(
   'inputHlBorder' => $Skin->primaryHlBg,
   'inputErrorBg' => '#fee',
   'inputErrorBorder' => '#f55',
+  'codeBg' => $Skin->navBg,
+  'codeFg' => $Skin->warning,
   'tableHlBg' => '#f7f7f7'
 ));
 
@@ -69,8 +84,41 @@ $Css('body')->css(array(
   'color' => $Skin->mainFg
 ));
 
-$Css('a:link, a:active, a:visited')->color = $Skin->linkFg;
+// Typography
+
+$Css('a, a:link, a:active, a:visited')->color = $Skin->linkFg;
 $Css('a:hover')->color = $Skin->linkHlFg;
+
+$Css('h1, h2, h3, h4, h5, h6')->find('& > small')->color = $Css->lighten($Skin->mainFg, 40);
+
+$Css('mark')->backgroundColor = '#ffffcc';
+$Css('del')->color = '#722222';
+$Css('ins')->color = '#227222';
+
+$Css('pre, code')->backgroundColor = $Skin->codeBg;
+$Css('pre, code')->color = $Skin->codeFg;
+
+$Css('.muted')->color = $Skin->grey;
+$Css('.primary')->color = $Skin->primary;
+$Css('.light')->color = $Skin->light;
+$Css('.dark')->color = $Skin->dark;
+$Css('.info')->color = $Skin->info;
+$Css('.success')->color = $Skin->success;
+$Css('.warning')->color = $Skin->warning;
+$Css('.error')->color = $Skin->error;
+
+$Css('.badge, .bg, .bg-muted, .bg-primary, .bg-light, .bg-dark, .bg-info, .bg-success, .bg-warning, .bg-error')->css(array(
+  'background-color' => $Skin->grey,
+  'color' => '#fff'
+);
+
+$Css('.bg-primary, .badge-primary')->backgroundColor = $Skin->primary;
+$Css('.bg-light, .badge-light')->backgroundColor = $Skin->light;
+$Css('.bg-dark, .badge-dark')->backgroundColor = $Skin->dark;
+$Css('.bg-info, .badge-info')->backgroundColor = $Skin->info;
+$Css('.bg-success, .badge-success')->backgroundColor = $Skin->success;
+$Css('.bg-warning, .badge-warning')->backgroundColor = $Skin->warning;
+$Css('.bg-error, .badge-error')->backgroundColor = $Skin->error;
 
 // Layout
 

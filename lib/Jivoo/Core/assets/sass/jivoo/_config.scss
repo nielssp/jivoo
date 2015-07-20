@@ -8,8 +8,22 @@ $lg: 1200px;
 $font: 'Open Sans', sans-serif;
 $monoFont: 'Consolas', monospace;
 
+// context colors
+$primary: #2272cc;
+$dark: darken($primary, 25%);
+$light: lighten($primary, 25%);
+$grey: #727272;
+$info: #22aacc;
+$success: #22cc22;
+$warning: #cc7222;
+$error: #cc2222;
+
+// typography
+$linkFg: $primary;
+$linkHlFg: lighten($primary, 25%);
+
 // colors
-$primaryBg: #2272cc;
+$primaryBg: $primary;
 $primaryFg: #fff;
 
 $headerBg: $primaryBg;
@@ -28,3 +42,10 @@ $mainBg: #fff;
 $mainFg: #333;
 $subMenuBg: #f7f7f7;
 $subMenuFg: #333;
+
+$codeBg: $navBg;
+$codeFg: $warning;
+
+// lengths
+
+$pmargin: 20px;

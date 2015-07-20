@@ -143,6 +143,6 @@ class IconHelper extends Helper {
     else
       $icon = '';
     return '<span class="' . $class . '">' . $icon .
-           '<span class="label">' . $label . '</span>' . $count . '</span>';
+           '<span class="label">' . $label . '</span></span>';
   }
 }

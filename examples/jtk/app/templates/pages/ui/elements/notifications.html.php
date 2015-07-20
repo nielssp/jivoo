@@ -7,7 +7,7 @@
 
 <?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
 
-<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warn')); ?>
+<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warning')); ?>
 
 <?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
 </p>

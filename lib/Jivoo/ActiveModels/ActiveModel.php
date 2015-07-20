@@ -837,7 +837,14 @@ abstract class ActiveModel extends Model implements IEventListener {
         $key = $association['otherKey'];
         if (!isset($record->$key))
           return null;
-        return $association['model']->find($record->$key);
+        $associated = $association['model']->find($record->$key);
+        if (!isset($associated)) {
+          // TODO: Orphan!! do something here ... following is only possible if
+          // key is nullable
+//           $record->$key = null;
+//           $record->save(false);
+        }
+        return $associated;
       case 'hasOne':
         $key = $association['thisKey'];
         $id = $this->primaryKey;

@@ -55,7 +55,7 @@
         <button class="primary">Primary</button>
         <button class="info">Info</button>
         <button class="success">Success</button>
-        <button class="warn">Warn</button>
+        <button class="warning">Warning</button>
         <button class="error">Error</button>
       </div>
     </div>

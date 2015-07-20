@@ -19,14 +19,13 @@ body {
 header, footer, section, nav {
   display: block; }
 
-a {
-  cursor: pointer; }
-  a:link, a:active, a:visited {
-    color: #2272cc;
-    text-decoration: none; }
-  a:hover {
-    color: #6da6e7;
-    text-decoration: underline; }
+a, a:link, a:active, a:visited {
+  cursor: pointer;
+  color: #2272cc;
+  text-decoration: none; }
+a:hover {
+  color: #83b4ea;
+  text-decoration: underline; }
 
 p {
   margin: 0 0 20px;
@@ -147,29 +146,52 @@ ol {
 .center {
   text-align: center; }
 
-.info {
+.muted {
+  color: #727272; }
+
+.primary {
   color: #2272cc; }
+
+.light {
+  color: #83b4ea; }
+
+.dark {
+  color: #10355f; }
+
+.info {
+  color: #22aacc; }
 
 .success {
   color: #22cc22; }
 
-.warn {
+.warning {
   color: #cc7222; }
 
 .error {
   color: #cc2222; }
 
-.bg-info, .bg-success, .bg-warn, .bg-error {
+.bg, .bg-muted, .bg-primary, .bg-light, .bg-dark,
+.bg-info, .bg-success, .bg-warning, .bg-error {
   color: #fff;
+  background-color: #727272;
   padding: 10px 20px; }
 
-.bg-info {
+.bg-primary {
   background-color: #2272cc; }
+
+.bg-light {
+  background-color: #83b4ea; }
+
+.bg-dark {
+  background-color: #10355f; }
+
+.bg-info {
+  background-color: #22aacc; }
 
 .bg-success {
   background-color: #22cc22; }
 
-.bg-warn {
+.bg-warning {
   background-color: #cc7222; }
 
 .bg-error {
@@ -194,13 +216,19 @@ a.badge:hover {
 .badge-primary {
   background-color: #2272cc; }
 
+.badge-light {
+  background-color: #83b4ea; }
+
+.badge-dark {
+  background-color: #10355f; }
+
 .badge-info {
-  background-color: #2272cc; }
+  background-color: #22aacc; }
 
 .badge-success {
   background-color: #22cc22; }
 
-.badge-warn {
+.badge-warning {
   background-color: #cc7222; }
 
 .badge-error {
