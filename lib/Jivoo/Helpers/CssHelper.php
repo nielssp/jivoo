@@ -191,7 +191,7 @@ class CssHelper extends Helper {
   
   /**
    * Set hue of a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
    * @param int $hue New hue in degrees.
    * @return array Color.
    */
@@ -204,7 +204,7 @@ class CssHelper extends Helper {
   
   /**
    * Set saturation of a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
    * @param int|float $s Saturation: An integer between 0 and 100 or a float
    * between 0.0 and 1.1.
    * @return array Color.
@@ -220,7 +220,7 @@ class CssHelper extends Helper {
   
   /**
    * Set lightness of a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
    * @param int|float $l Lightness: An integer between 0 and 100 or a float
    * between 0.0 and 1.1.
    * @return array Color.
@@ -236,7 +236,7 @@ class CssHelper extends Helper {
   
   /**
    * Adjust hue of a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
    * @param int $amount Amount to increase (or decrease) hue by in degrees.
    * @return array Color.
    */
@@ -249,8 +249,8 @@ class CssHelper extends Helper {
   
   /**
    * Saturate a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
-   * @param float $amount Amount to increase saturation by.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to increase saturation by.
    * @return array Color.
    */
   public function saturate($color, $amount) {
@@ -265,8 +265,8 @@ class CssHelper extends Helper {
   
   /**
    * Desaturate a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
-   * @param float $amount Amount to decrease saturation by.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to decrease saturation by.
    * @return array Color.
    */
   public function desaturate($color, $amount) {
@@ -281,8 +281,8 @@ class CssHelper extends Helper {
   
   /**
    * Ligthen a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
-   * @param float $amount Amount to increase ligthness by.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to increase ligthness by.
    * @return array Color.
    */
   public function lighten($color, $amount) {
@@ -297,8 +297,8 @@ class CssHelper extends Helper {
   
   /**
    * Darken a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
-   * @param float $amount Amount to decrease ligthness by.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to decrease ligthness by.
    * @return array Color.
    */
   public function darken($color, $amount) {
@@ -309,6 +309,63 @@ class CssHelper extends Helper {
     $color[2] -= $amount;
     if ($color[2] < 0) $color[2] = 0.0;
     return $color;
+  }
+  
+  /**
+   * Darken a color by mixing with black.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to darken by.
+   * @return array Color.
+   */
+  public function shade($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($amount))
+      $amount /= 100;
+    $color[1] *= 1 - $amount;
+    $color[2] *= 1 - $amount;
+    if ($color[1] < 0) $color[1] = 0.0;
+    if ($color[2] < 0) $color[2] = 0.0;
+    return $color;
+  }
+  
+  /**
+   * Lighten a color by mixing with white.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to lighten by.
+   * @return array Color.
+   */
+  public function tint($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($amount))
+      $amount /= 100;
+    $color[1] += (1 - $color[1]) * $amount;
+    $color[2] += (1 - $color[2]) * $amount;
+    if ($color[1] > 1) $color[1] = 1.0;
+    if ($color[2] > 1) $color[2] = 1.0;
+    return $color;
+  }
+  
+  /**
+   * Returns the light or dark color depending on the lightness of the
+   * background color. 
+   * @param string|array $color Background color, e.g. from {@see rgb()}.
+   * @param string|array $dark Dark color, e.g. from {@see rgb()}.
+   * @param string|array $light Lightcolor, e.g. from {@see rgb()}.
+   * @return array Color.
+   */
+  public function constrasted($color, $dark = '#000', $light = '#fff') {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_string($dark))
+      $dark = $this->hex($dark);
+    if (is_string($light))
+      $light = $this->hex($light);
+    if (abs($color[2] - $dark[2]) > abs($color[2] - $light[2]))
+      return $dark;
+    else
+      return $light;
   }
 }
 

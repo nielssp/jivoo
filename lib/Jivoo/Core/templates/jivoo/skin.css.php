@@ -9,8 +9,8 @@ $Skin->setDefault(array(
   'error' => '#cc2222'
 ));
 $Skin->setDefault(array(
-  'dark' => $Css->darken($Skin->primary, 25),
-  'light' => $Css->lighten($Skin->primary, 25)
+  'dark' => $Css->shade($Skin->primary, 40),
+  'light' => $Css->tint($Skin->primary, 40)
 ));
 
 $Skin->setDefault(array(
@@ -110,7 +110,7 @@ $Css('.error')->color = $Skin->error;
 $Css('.badge, .bg, .bg-muted, .bg-primary, .bg-light, .bg-dark, .bg-info, .bg-success, .bg-warning, .bg-error')->css(array(
   'background-color' => $Skin->grey,
   'color' => '#fff'
-);
+));
 
 $Css('.bg-primary, .badge-primary')->backgroundColor = $Skin->primary;
 $Css('.bg-light, .badge-light')->backgroundColor = $Skin->light;
