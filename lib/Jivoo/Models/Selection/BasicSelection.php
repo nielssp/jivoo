@@ -143,7 +143,10 @@ abstract class BasicSelection implements IBasicSelection {
    * {@inheritdoc}
    */
   public function orderBy($column) {
-    $this->orderBy[] = array('column' => $column, 'descending' => false);
+    if (!isset($column))
+      $this->orderBy = array();
+    else
+      $this->orderBy[] = array('column' => $column, 'descending' => false);
     return $this;
   }
 

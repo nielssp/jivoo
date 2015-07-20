@@ -6,6 +6,7 @@
 namespace Jivoo\Models\Condition;
 
 use Jivoo\Models\DataType;
+use Jivoo\Models\IBasicModel;
 /**
  * A condition for selecting records in a model.
  * @property-read array[] $clauses A list of clauses in the form of arrays of the format
@@ -157,6 +158,7 @@ class Condition implements ICondition {
    * false // Boolean false
    * {AnyModelName} // A model name
    * [anyFieldName] // A column/field name
+   * "any string" // A string
    * ? // Any scalar value.
    * %m %model // A table/model object or name
    * %c %column %field // A column/field name
@@ -189,6 +191,10 @@ class Condition implements ICondition {
     }, $format);
     $format = preg_replace_callback('/\[(.+?)\]/', function($matches) use($quoter) {
       return $quoter->quoteField($matches[1]);
+    }, $format);
+    $string = DataType::text();
+    $format = preg_replace_callback('/"((?:[^"\\\\"]|\\\\.)*)"/', function($matches) use($quoter, $string) {
+      return $quoter->quoteLiteral($string, stripslashes($matches[1]));
     }, $format);
     $i = 0;
     return preg_replace_callback('/((\?)|%([a-z_\\\\]+))(\(\))?/i', function($matches) use($vars, &$i, $quoter) {

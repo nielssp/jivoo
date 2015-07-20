@@ -33,6 +33,11 @@ class SqlTable extends Table {
    * @var Schema|null Table schema if set.
    */
   private $schema = null;
+  
+  /**
+   * @var bool
+   */
+  private $caseInsensitive = false;
 
   /**
    * Construct table.
@@ -44,6 +49,7 @@ class SqlTable extends Table {
     $this->owner = $database;
     $this->name = $table;
     $this->schema = $this->owner->getSchema()->getSchema($table);
+    $this->caseInsensitive = $this->owner->caseInsensitiveFields();
     parent::__construct($app);
   }
 
@@ -77,7 +83,16 @@ class SqlTable extends Table {
     $data = array();
     $virtual = array();
     $subrecords = array();
+    if ($this->caseInsensitive) {
+      $lower = array();
+      foreach ($this->getFields() as $field)
+        $lower[strtolower($field)] = $field;
+      foreach ($additional as $field => $a)
+        $lower[strtolower($field)] = $field;
+    }
     foreach ($raw as $field => $value) {
+      if (isset($lower) and isset($lower[$field]))
+        $field = $lower[$field];
       if (isset($additional[$field])) {
         if (isset($additional[$field]['type']))
           $value = $typeAdapter->decode($additional[$field]['type'], $value);
@@ -171,7 +186,7 @@ class SqlTable extends Table {
       return $row['_count'];
     }
     else {
-      $result = $selection->select('COUNT(*)', '_count');
+      $result = $selection->orderBy(null)->select('COUNT(*)', '_count');
       return $result[0]['_count'];
     }
   }
@@ -385,7 +400,7 @@ class SqlTable extends Table {
       $tuples[] = $tupleSql;
     }
     $sqlString .= implode(', ', $tuples);
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner->rawQuery($sqlString, $this->getAiPrimaryKey());
   }
   
 }

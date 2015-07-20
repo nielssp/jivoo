@@ -67,7 +67,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
       return null;
     switch ($type->type) {
       case DataType::BOOLEAN:
-        return $value != 'f';
+        return $value != 0;
       case DataType::DATE:
       case DataType::DATETIME:
         return strtotime($value . ' UTC');

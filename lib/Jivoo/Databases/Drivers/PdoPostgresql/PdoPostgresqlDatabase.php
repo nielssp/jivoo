@@ -9,6 +9,7 @@ use Jivoo\Databases\Common\PostgresqlTypeAdapter;
 use Jivoo\Databases\Common\PdoDatabase;
 use Jivoo\Databases\DatabaseQueryFailedException;
 use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\Jivoo\Databases;
 
 /**
  * PDO PostgreSQL database driver.
@@ -45,8 +46,32 @@ class PdoPostgresqlDatabase extends PdoDatabase {
   /**
    * {@inheritdoc}
    */
+  public function rawQuery($sql, $pk = null) {
+    if (isset($pk)) {
+      $result = $this->pdo->query($sql . ' RETURNING ' . $this->quoteField($pk));
+      if (!$result) {
+        $errorInfo = $this->pdo->errorInfo();
+        throw new DatabaseQueryFailedException(
+          $errorInfo[0] . ' - ' . $errorInfo[1] . ' - ' . $errorInfo[2]);
+      }
+      $row = $result->fetch(\PDO::FETCH_NUM);
+      return $row[0];
+    }
+    return parent::rawQuery($sql);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function quoteModel($name) {
     return '"' . $this->tableName($name) . '"';
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function caseInsensitiveFields() {
+    return true;
   }
 
   /**

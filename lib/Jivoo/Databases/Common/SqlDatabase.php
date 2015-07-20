@@ -127,6 +127,15 @@ abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase, IQu
       return 'LIMIT ' . $offset . ', ' . $limit;
     return 'LIMIT ' . $limit;
   }
+  
+  /**
+   * Whether fields returned by database may be case insensitive.
+   * @todo This is a temporary solution to PostgreSQL problems.
+   * @return bool True if case insensitive.
+   */
+  public function caseInsensitiveFields() {
+    return false;
+  }
 
   /**
    * {@inheritdoc}

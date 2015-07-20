@@ -711,7 +711,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       $id = $model->getAiPrimaryKey();
       $selection = $selection->leftJoin(
         $association['model'],
-        $field .  '.' . $id . ' = {' . $this->name . '}.' . $key,
+        where('%m.%c = %c.%c', $this, $key, $field, $id),
         $field
       );
     }
@@ -720,7 +720,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       $id = $this->primaryKey;
       $selection = $selection->leftJoin(
         $association['model'],
-        $field .  '.' . $key . ' = {' . $this->name . '}.' . $id,
+        where('%m.%c = %c.%c', $this, $id, $field, $key),
         $field
       );
     }
