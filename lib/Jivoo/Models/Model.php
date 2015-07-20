@@ -509,6 +509,14 @@ abstract class Model extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
+  public function distinct($distinct = true) {
+    $select = new ReadSelection($this);
+    return $select->distinct($distinct);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function offset($offset) {
     $select = new ReadSelection($this);
     return $select->offset($offset);

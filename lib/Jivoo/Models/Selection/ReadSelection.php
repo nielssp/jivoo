@@ -14,6 +14,7 @@ use Jivoo\Models\Model;
 
 /**
  * A read selection.
+ * @property-read bool $distinct Distinct.
  * @property-read int $offset Offset.
  * @proeprty-read array $groupBy An array describing grouping.
  * @proeprty-read array[] $joins List of arrays describing joings.
@@ -21,7 +22,11 @@ use Jivoo\Models\Model;
  * @property-read array[] $additionalFields List of arrays describing fields.
  */
 class ReadSelection extends BasicSelection implements IReadSelection {
-
+  /**
+   * @var bool Distinct.
+   */
+  protected $distinct = false;
+  
   /**
    * @var string|null Alias for source.
    */
@@ -231,6 +236,14 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     $this->joins[] = array('source' => $dataSource, 'type' => 'RIGHT',
       'alias' => $alias, 'condition' => $condition
     );
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function distinct($distinct = true) {
+    $this->distinct = $distinct;
     return $this;
   }
 

@@ -206,6 +206,8 @@ class SqlTable extends Table {
    */
   private function convertReadSelection(ReadSelection $selection, $projection = null) {
     $sqlString = 'SELECT ';
+    if ($selection->distinct)
+      $sqlString .= 'DISTINCT ';
     if (isset($projection)) {
       $sqlString .= $projection;
     }

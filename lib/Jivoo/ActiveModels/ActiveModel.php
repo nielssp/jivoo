@@ -757,7 +757,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $association['model'],
         where('%m.%c = %c.%c', $this, $key, $field, $id),
         $field
-      )->groupBy(where('%c.%c', $field, $id));
+      );
     }
     else if ($association['type'] == 'hasOne') {
       $key = $association['thisKey'];
@@ -766,12 +766,12 @@ abstract class ActiveModel extends Model implements IEventListener {
         $association['model'],
         where('%m.%c = %c.%c', $this, $id, $field, $key),
         $field
-      )->groupBy(where('%c.%c', $field, $key));
+      );
     }
     else {
       throw new InvalidAssociationException(tr('Association must be of type "belongsTo" or "hasOne"'));
     }
-    $aSelection->select(where('%c.*', $field), $model)->toArray();
+    $aSelection->distinct()->select(where('%c.*', $field), $model)->toArray();
     return $selection;
   }
 
