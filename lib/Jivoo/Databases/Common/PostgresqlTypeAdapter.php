@@ -34,7 +34,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
   public function encode(DataType $type, $value) {
     $value = $type->convert($value);
     if (!isset($value)) {
-      if ($type->autoIncrement)
+      if ($type->isInteger() and $type->autoIncrement)
         return 'DEFAULT';
       return 'NULL';
     }
