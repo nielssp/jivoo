@@ -62,7 +62,7 @@ table {
         border-top: 0;
       }
       td {
-        border-top: 1px solid darken($mainBg, 10%);
+        border-top: 1px solid darken($mainBg, 5%);
       }
       &.muted, &.primary, &.light, &.dark, &.info, &.success, &.warning, &.error {
         color: $mainFg;
@@ -189,7 +189,12 @@ table {
 }
 
 .block table {
-  tr:hover td {
-    background-color: darken($blockBg, 3%);
+  tbody {
+    td {
+      border-color: darken($blockBg, 5%);
+    }
+    tr:hover td {
+      background-color: darken($blockBg, 3%);
+    }
   }
 }

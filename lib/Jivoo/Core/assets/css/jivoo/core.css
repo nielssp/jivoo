@@ -1062,7 +1062,7 @@ table {
   table tbody tr:first-child td {
     border-top: 0; }
   table tbody tr td {
-    border-top: 1px solid #e6e6e6; }
+    border-top: 1px solid #f2f2f2; }
   table tbody tr.muted, table tbody tr.primary, table tbody tr.light, table tbody tr.dark, table tbody tr.info, table tbody tr.success, table tbody tr.warning, table tbody tr.error {
     color: #333333; }
   table tbody tr.muted td {
@@ -1142,7 +1142,9 @@ table {
     table .action-links {
       display: none; } }
 
-.block table tr:hover td {
+.block table tbody td {
+  border-color: #eaeaea; }
+.block table tbody tr:hover td {
   background-color: #efefef; }
 
 .flash {

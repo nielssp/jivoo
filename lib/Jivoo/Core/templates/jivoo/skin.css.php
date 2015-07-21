@@ -207,7 +207,6 @@ $th->find('a, label')->find('&:hover, &:active')->css(array(
   'color' => $Skin->navHlFg,
   'border-color' => $Skin->navHlFg
 ));
-$Css('table tbody tr td')->borderTopColor = $Skin->inputShadow;
 $Css('table tbody tr td:hover')->backgroundColor = $Skin->tableHlBg;
 
 echo $Css;
