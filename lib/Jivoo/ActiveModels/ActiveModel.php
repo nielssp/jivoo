@@ -796,17 +796,22 @@ abstract class ActiveModel extends Model implements IEventListener {
     $thisKey = $association['thisKey'];
     $otherKey = $association['otherKey'];
     $id = $this->primaryKey;
+    $otherId = $other->primaryKey;
     
     if (isset($association['join'])) {
       $join = $association['join'];
       $otherPrimary = $association['otherPrimary'];
       $selection = $selection->leftJoin(
         $join,
-        where('%m.%c = J.%c', $join, $otherPrimary, $otherKey)
-          ->and('J.%c = %m.%c', $thisKey, $this->name, $id), 'J'
+        where('J.%c = %m.%c', $thisKey, $this->name, $id), 'J'
       );
+      $condition = where('%c.%c = J.%c', $field, $otherId, $otherKey);
+      $count = where('COUNT(J.%c)', $otherKey);
     }
-    $condition = where('%c.%c = %m.%c', $field, $thisKey, $this->name, $id);
+    else {
+      $condition = where('%c.%c = %m.%c', $field, $thisKey, $this->name, $id);
+      $count = where('COUNT(%c.%c)', $field, $thisKey);
+    }
     if (isset($association['condition']))
       $condition = $condition->and($association['condition']);
     $selection = $selection->leftJoin(
@@ -814,11 +819,11 @@ abstract class ActiveModel extends Model implements IEventListener {
       $condition,
       $field
     );
-    $selection->groupBy('{' . $this->name . '}.' . $id);
+    $selection->groupBy(where('%m.%c', $this->name, $id));
     
     return $selection->with(
       $field . '_count',
-      'COUNT(' . $field . '.' . $thisKey . ')',
+      $count,
       DataType::integer()
     );
   }
