@@ -151,6 +151,12 @@ $block('&&-success > &-header')->backgroundColor = $Skin->success;
 $block('&&-warning > &-header')->backgroundColor = $Skin->warning;
 $block('&&-error > &-header')->backgroundColor = $Skin->error;
 
+// Buttons
+
+$buttons = '.button, button, input[type=button], input[type=reset], input[type=submit]'; 
+
+$Css($buttons)->apply('button');
+
 // Layout
 
 $Css('header')->css(array(
@@ -161,8 +167,6 @@ $Css('#main')->backgroundColor = $Skin->mainBg;
 $Css('footer')->borderTopColor = $Skin->navBg;
 
 // Form
-
-$Css('.button, button, input[type=button], input[type=reset], input[type=submit]')->apply('button');
 
 $input = $Css('input[type=text], input[type=email], input[type=password], input[type=date],
 input[type=time], input[type=datetime], textarea, select');

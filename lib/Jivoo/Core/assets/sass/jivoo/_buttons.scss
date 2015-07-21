@@ -8,6 +8,7 @@ $button: '.button, button, input[type=button], input[type=reset], input[type=sub
   display: inline-block;
   vertical-align: middle;
   position: relative;
+  white-space: nowrap;
   #{$button} {
     float: left;
     &, &:hover {

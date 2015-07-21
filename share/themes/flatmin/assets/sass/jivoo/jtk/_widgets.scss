@@ -191,6 +191,23 @@ body.menu-open {
     &.density-high {
       @include table-density(6px);
     }
+
+    td.actions, th.actions {
+      width: 150px;
+      text-align: center;
+    }
+    td.actions {
+      padding: 0;
+      vertical-align: middle;
+      a {
+        visibility: hidden;
+      }
+    }
+    tr:hover {
+      td.actions a {
+        visibility: visible;
+      }
+    }
   }
 }
 

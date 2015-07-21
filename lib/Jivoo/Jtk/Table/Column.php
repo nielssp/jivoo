@@ -18,6 +18,7 @@ use Jivoo\Models\DataType;
  * @property bool $default Whether or not column is default sort option.
  * @property bool $selected Whether or not column is the selected sort option.
  * @property bool $descending If the default sorting is descending.
+ * @property int|string $size Optional width of column.
  * @property callable $cellRenderer Cell renderer with parameters
  * ({@see DataTable} $table, {@see IBasicRecord} $record) and return type
  * string.

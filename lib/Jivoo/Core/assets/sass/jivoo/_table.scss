@@ -64,6 +64,9 @@ table {
       td {
         border-top: 1px solid darken($mainBg, 10%);
       }
+      &.muted, &.primary, &.light, &.dark, &.info, &.success, &.warning, &.error {
+        color: $mainFg;
+      }
       &.muted td {
         background-color: lighten($grey, 50%);
       }
@@ -93,27 +96,31 @@ table {
         td {
           background-color: darken($mainBg, 3%);
         }
-      }
-
-      .actions {
-        a {
-          text-decoration: none;
-          margin-right: 2px;
+        &.muted td {
+          background-color: lighten($grey, 47%);
+        }
+        &.primary td {
+          background-color: lighten($primary, 47%);
+        }
+        &.light td {
+          background-color: lighten($light, 47%);
+        }
+        &.dark td {
+          background-color: lighten($dark, 47%);
+        }
+        &.info td {
+          background-color: lighten($info, 47%);
+        }
+        &.success td {
+          background-color: lighten($success, 47%);
+        }
+        &.warning td {
+          background-color: lighten($warning, 47%);
+        }
+        &.error td {
+          background-color: lighten($error, 47%);
         }
       }
-
-      @media screen and (min-width: $sm) {
-        .actions a {
-          visibility: hidden;
-          margin-right: 12px;
-        }
-        &:hover {
-          td.actions a {
-            visibility: visible;
-          }
-        }
-      }
-
     }
   }
   &.table-va-top td {
@@ -125,20 +132,28 @@ table {
   &.table-va-bottom td {
     vertical-align: bottom;
   }
-  td.primary {
-    & > a:first-child {
-      font-weight: 600;
-      font-size: 1.1em;
-    }
-    .essential > span {
-      white-space: nowrap;
-      margin-right: 8px;
-      &:last-child {
-        margin-right: 0;
+  td.main {
+    .values {
+      margin-top: 8px;
+      font-size: 0.9em;
+      dt, dd {
+        display: inline;
+        margin-right: 12px;
+        white-space: nowrap;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      dt {
+        font-weight: 600;
+        &:after {
+          content: ':';
+          display: inline;
+        }
       }
     }
     @media screen and (min-width: $sm) {
-      .essential {
+      .values {
         display: none;
       }
     }
@@ -173,5 +188,8 @@ table {
   }
 }
 
-
-
+.block table {
+  tr:hover td {
+    background-color: darken($blockBg, 3%);
+  }
+}

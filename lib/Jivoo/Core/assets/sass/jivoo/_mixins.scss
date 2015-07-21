@@ -1,3 +1,16 @@
+@mixin icon-size($size: 12px, $valign: 0px) {
+  .icon {
+    font-size: $size;
+    height: $size;
+    width: $size;
+    vertical-align: $valign;
+    & > * {
+      width: $size;
+      height: $size;
+    }
+  }
+}
+
 @mixin button-color($color) {
   background-color: desaturate(lighten($color, 10%), 20%);
   color: #fff;
@@ -21,6 +34,7 @@
     display: inline-block;
     margin: 2px 0;
     cursor: pointer;
+    white-space: nowrap;
   }
   &.active, &:hover {
     background-color: $navHlBg;

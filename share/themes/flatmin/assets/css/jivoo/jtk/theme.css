@@ -1,24 +1,28 @@
-.badge > .icon {
+.badge .icon {
   font-size: 10px;
+  height: 10px;
+  width: 10px;
   vertical-align: 0px; }
-  .badge > .icon * {
-    height: 10px;
-    width: 10px; }
+  .badge .icon > * {
+    width: 10px;
+    height: 10px; }
 
-.button > .icon,
-button > .icon,
-input[type=button] > .icon,
-input[type=reset] > .icon,
-input[type=submit] > .icon {
+.button .icon,
+button .icon,
+input[type=button] .icon,
+input[type=reset] .icon,
+input[type=submit] .icon {
   font-size: 12px;
+  height: 12px;
+  width: 12px;
   vertical-align: 0px; }
-  .button > .icon *,
-  button > .icon *,
-  input[type=button] > .icon *,
-  input[type=reset] > .icon *,
-  input[type=submit] > .icon * {
-    height: 12px;
-    width: 12px; }
+  .button .icon > *,
+  button .icon > *,
+  input[type=button] .icon > *,
+  input[type=reset] .icon > *,
+  input[type=submit] .icon > * {
+    width: 12px;
+    height: 12px; }
 
 table thead th a {
   display: block; }
@@ -89,14 +93,14 @@ table thead th a {
   .dropdown > a.active, .dropdown > a:hover {
     background-color: #dddddd; }
   .dropdown > a:focus {
-    box-shadow: 0 0 3px #6da6e7;
+    box-shadow: 0 0 2px 1px #428cdf;
     outline: none; }
   .dropdown > a:hover, .dropdown > a:active {
     color: #2272cc;
     border-color: #2272cc;
     text-decoration: none; }
   .dropdown > a.active, .dropdown > a:active {
-    box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 4px 5px 0 rgba(0, 0, 0, 0.15);
     outline: none; }
   .dropdown > a[disabled], .dropdown > a[disabled]:hover, .dropdown > a[disabled]:active {
     background-color: #f1f1f1;
@@ -107,71 +111,115 @@ table thead th a {
     outline: none; }
   .dropdown > a .icon {
     font-size: 12px;
-    vertical-align: 0px;
     height: 12px;
-    display: inline-block;
-    width: 12px; }
-    .dropdown > a .icon + .label {
-      margin-left: 6px; }
+    width: 12px;
+    vertical-align: 0px; }
+    .dropdown > a .icon > * {
+      width: 12px;
+      height: 12px; }
   .dropdown > a.button-xs, .dropdown > a.button-sm {
     font-size: 12px; }
     .dropdown > a.button-xs .icon, .dropdown > a.button-sm .icon {
       font-size: 10px;
       height: 10px;
-      width: 10px; }
+      width: 10px;
+      vertical-align: 0px; }
+      .dropdown > a.button-xs .icon > *, .dropdown > a.button-sm .icon > * {
+        width: 10px;
+        height: 10px; }
   .dropdown > a.button-xs {
-    padding: 1px 6px 0px;
-    border-width: 1px; }
+    padding: 1px 4px 0px;
+    border-width: 1px;
+    margin: 0; }
   .dropdown > a.button-sm {
-    padding: 4px 10px 2px; }
+    padding: 4px 10px 2px;
+    margin: 1px 0; }
   .dropdown > a.button-md {
     font-size: 14px; }
     .dropdown > a.button-md .icon {
       font-size: 12px;
       height: 12px;
-      width: 12px; }
+      width: 12px;
+      vertical-align: 0px; }
+      .dropdown > a.button-md .icon > * {
+        width: 12px;
+        height: 12px; }
   .dropdown > a.button-lg {
     font-size: 16px;
     padding: 6px 14px 4px; }
     .dropdown > a.button-lg .icon {
       font-size: 14px;
       height: 14px;
-      width: 14px; }
+      width: 14px;
+      vertical-align: 0px; }
+      .dropdown > a.button-lg .icon > * {
+        width: 14px;
+        height: 14px; }
   .dropdown > a.button-primary {
     font-weight: 600;
-    background-color: #cfdceb; }
+    background-color: #588dc9;
+    color: #fff;
+    border-color: #0c2949; }
     .dropdown > a.button-primary:hover, .dropdown > a.button-primary.active {
-      background-color: #a5c2e2; }
+      color: #fff;
+      background-color: #2272cc;
+      border-color: #134175; }
   .dropdown > a.button-light {
-    background-color: white; }
+    background-color: #b8cfe8;
+    color: #fff;
+    border-color: #1e66b6; }
     .dropdown > a.button-light:hover, .dropdown > a.button-light.active {
-      background-color: white; }
+      color: #fff;
+      background-color: #83b4ea;
+      border-color: #2c7fdc; }
   .dropdown > a.button-dark {
-    background-color: #759bc6; }
+    background-color: #274e7a;
+    color: #fff;
+    border-color: black; }
     .dropdown > a.button-dark:hover, .dropdown > a.button-dark.active {
-      background-color: #4480c3; }
+      color: #fff;
+      background-color: #10355f;
+      border-color: #010407; }
   .dropdown > a.button-info {
-    background-color: #cfe5eb; }
+    background-color: #58b3c9;
+    color: #fff;
+    border-color: #0c3d49; }
     .dropdown > a.button-info:hover, .dropdown > a.button-info.active {
-      background-color: #a5d6e2; }
+      color: #fff;
+      background-color: #22aacc;
+      border-color: #136175; }
   .dropdown > a.button-success {
-    background-color: #cfebcf; }
+    background-color: #58c958;
+    color: #fff;
+    border-color: #0c490c; }
     .dropdown > a.button-success:hover, .dropdown > a.button-success.active {
-      background-color: #a5e2a5; }
+      color: #fff;
+      background-color: #22cc22;
+      border-color: #137513; }
   .dropdown > a.button-warning {
-    background-color: #ebdccf; }
+    background-color: #c98d58;
+    color: #fff;
+    border-color: #49290c; }
     .dropdown > a.button-warning:hover, .dropdown > a.button-warning.active {
-      background-color: #e2c2a5; }
+      color: #fff;
+      background-color: #cc7222;
+      border-color: #754113; }
   .dropdown > a.button-error {
-    background-color: #ebcfcf; }
+    background-color: #c95858;
+    color: #fff;
+    border-color: #490c0c; }
     .dropdown > a.button-error:hover, .dropdown > a.button-error.active {
-      background-color: #e2a5a5; }
-  .dropdown > a > .icon {
+      color: #fff;
+      background-color: #cc2222;
+      border-color: #751313; }
+  .dropdown > a .icon {
     font-size: 12px;
+    height: 12px;
+    width: 12px;
     vertical-align: 0px; }
-    .dropdown > a > .icon * {
-      height: 12px;
-      width: 12px; }
+    .dropdown > a .icon > * {
+      width: 12px;
+      height: 12px; }
   .dropdown > a .icon {
     margin-right: 6px; }
   .dropdown > a:after {
@@ -248,12 +296,14 @@ table thead th a {
         padding: 6px 12px 6px 32px;
         text-align: left;
         white-space: nowrap; }
-      .dropdown ul > li a > .icon, .dropdown ul > li button > .icon {
+      .dropdown ul > li a .icon, .dropdown ul > li button .icon {
         font-size: 12px;
+        height: 12px;
+        width: 12px;
         vertical-align: -1px; }
-        .dropdown ul > li a > .icon *, .dropdown ul > li button > .icon * {
-          height: 12px;
-          width: 12px; }
+        .dropdown ul > li a .icon > *, .dropdown ul > li button .icon > * {
+          width: 12px;
+          height: 12px; }
       .dropdown ul > li a .icon, .dropdown ul > li button .icon {
         margin-left: -32px;
         width: 32px;
@@ -369,22 +419,26 @@ header {
           padding: 0 10px; }
         header > ul > li > a .label {
           display: none; }
-        header > ul > li > a > .icon {
+        header > ul > li > a .icon {
           font-size: 24px;
-          vertical-align: -2px; }
-          header > ul > li > a > .icon * {
-            height: 24px;
-            width: 24px; }
+          height: 24px;
+          width: 24px;
+          vertical-align: 0px; }
+          header > ul > li > a .icon > * {
+            width: 24px;
+            height: 24px; }
         header > ul > li > a .icon {
           margin: 0;
           width: auto; }
         @media screen and (min-width: 768px) {
-          header > ul > li > a > .icon {
+          header > ul > li > a .icon {
             font-size: 16px;
-            vertical-align: -2px; }
-            header > ul > li > a > .icon * {
-              height: 16px;
-              width: 16px; }
+            height: 16px;
+            width: 16px;
+            vertical-align: 0px; }
+            header > ul > li > a .icon > * {
+              width: 16px;
+              height: 16px; }
           header > ul > li > a .label {
             display: inline; }
           header > ul > li > a .icon {
@@ -789,6 +843,16 @@ body.menu-open .table-selection {
   .data-table table.density-high .selection label {
     padding: 6px 0 6px 8px;
     margin: -6px -8px; }
+  .data-table table td.actions, .data-table table th.actions {
+    width: 150px;
+    text-align: center; }
+  .data-table table td.actions {
+    padding: 0;
+    vertical-align: middle; }
+    .data-table table td.actions a {
+      visibility: hidden; }
+  .data-table table tr:hover td.actions a {
+    visibility: visible; }
 
 .extension-list {
   list-style-type: none;
