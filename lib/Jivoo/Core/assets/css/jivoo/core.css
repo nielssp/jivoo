@@ -1023,6 +1023,11 @@ form {
     width: auto;
     margin-left: 0; }
 
+.block table tbody td {
+  border-color: #eaeaea; }
+.block table tbody tr:hover td {
+  background-color: #efefef; }
+
 table {
   margin: 0 0 6px 0;
   border-spacing: 0;
@@ -1141,11 +1146,6 @@ table {
       display: table-cell; }
     table .action-links {
       display: none; } }
-
-.block table tbody td {
-  border-color: #eaeaea; }
-.block table tbody tr:hover td {
-  background-color: #efefef; }
 
 .flash {
   background-color: #eee;

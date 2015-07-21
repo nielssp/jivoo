@@ -1,3 +1,15 @@
+
+.block table {
+  tbody {
+    td {
+      border-color: darken($blockBg, 5%);
+    }
+    tr:hover td {
+      background-color: darken($blockBg, 3%);
+    }
+  }
+}
+
 table {
   margin: 0 0 6px 0;
   border-spacing: 0;
@@ -188,13 +200,3 @@ table {
   }
 }
 
-.block table {
-  tbody {
-    td {
-      border-color: darken($blockBg, 5%);
-    }
-    tr:hover td {
-      background-color: darken($blockBg, 3%);
-    }
-  }
-}
