@@ -141,6 +141,10 @@ nav {
               display: none;
             }
 
+            .icon + .label {
+              margin: 0;
+            }
+
             @media screen and (min-width: $md) {
               .label {
                 display: inline;

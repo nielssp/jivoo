@@ -665,6 +665,8 @@ nav {
                 box-shadow: none; } }
           nav > ul > li > ul > li > a .label {
             display: none; }
+          nav > ul > li > ul > li > a .icon + .label {
+            margin: 0; }
           @media screen and (min-width: 1010px) {
             nav > ul > li > ul > li > a .label {
               display: inline; }
