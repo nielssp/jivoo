@@ -167,24 +167,25 @@ ol {
 }
 
 dl {
+  margin-bottom: $pmargin / 2;
   dt {
     float: left;
     font-weight: 600;
-    width: 40%;
-    padding-right: 8px;
+    width: 150px;
+    text-align: right;
+    padding-right: $pmargin;
     &:after {
       content: ':';
       display: inline;
     }
   }
   dd {
-    float: left;
-    width: 60%;
+    margin-left: 150px;
     &:after {
       clear: left;
       display: block;
       content: ' ';
-      margin-bottom: $pmargin;
+      margin-bottom: $pmargin / 2;
     }
   }
   &:after {
