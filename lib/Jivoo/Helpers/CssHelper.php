@@ -167,7 +167,7 @@ class CssHelper extends Helper {
       if ($M == $b)
         $H = ($r - $g) / $C + 4;
     }
-    if ($L != 0)
+    if ($L != 0 and $L != 1)
       $S = $C / (1 - abs(2 * $L - 1));
     $h = round(60 * $H);
     if ($h < 0) $h += 360;

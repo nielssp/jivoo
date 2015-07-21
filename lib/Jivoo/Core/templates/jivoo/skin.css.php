@@ -172,11 +172,11 @@ $input = $Css('input[type=text], input[type=email], input[type=password], input[
 input[type=time], input[type=datetime], textarea, select');
 $input->css(array(
   'border-color' => $Skin->inputBorder,
-  'box-shadow' => 'inset 0 1px 2px ' . $Skin->inputShadow
+  'box-shadow' => 'inset 0 1px 2px ' . $Css->toString($Skin->inputShadow)
 ));
 $input('&:focus')->css(array(
   'border-color' => $Skin->inputHlBorder,
-  'box-shadow' => '0 0 1px ' . $Skin->inputHlBorder
+  'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $input('&[data-error], &.error')->css(array(
   'background-color' => $Skin->inputErrorBg,
@@ -186,12 +186,12 @@ $input('&[data-error], &.error')->css(array(
 $input = $Css('input[type=checkbox], input[type=radio]');
 $input->css(array(
   'border-color' => $Skin->inputBorder,
-  'box-shadow' => 'inset 0 1px 2px ' . $Skin->inputShadow
+  'box-shadow' => 'inset 0 1px 2px ' . $Css->toString($Skin->inputShadow)
 ));
 $input('&:checked:before')->color = $Skin->primaryBg;
 $input('&:focus')->css(array(
   'border-color' => $Skin->inputHlBorder,
-  'box-shadow' => '0 0 1px ' . $Skin->inputHlBorder
+  'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $Css('input[type=radio]:checked:before')->backgroundColor = $Skin->primaryBg; 
 
