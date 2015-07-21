@@ -89,7 +89,8 @@ table thead th a {
     padding: 6px 12px 4px;
     display: inline-block;
     margin: 2px 0;
-    cursor: pointer; }
+    cursor: pointer;
+    white-space: nowrap; }
   .dropdown > a.active, .dropdown > a:hover {
     background-color: #dddddd; }
   .dropdown > a:focus {
@@ -423,7 +424,7 @@ header {
           font-size: 24px;
           height: 24px;
           width: 24px;
-          vertical-align: 0px; }
+          vertical-align: -2px; }
           header > ul > li > a .icon > * {
             width: 24px;
             height: 24px; }
@@ -435,7 +436,7 @@ header {
             font-size: 16px;
             height: 16px;
             width: 16px;
-            vertical-align: 0px; }
+            vertical-align: -2px; }
             header > ul > li > a .icon > * {
               width: 16px;
               height: 16px; }
@@ -1177,6 +1178,7 @@ input[type=checkbox]:checked:before {
     left: 0;
     bottom: 0;
     width: 48px;
+    height: auto;
     display: table-cell;
     vertical-align: middle;
     background-color: rgba(0, 0, 0, 0.7); }
