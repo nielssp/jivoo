@@ -203,7 +203,7 @@ ol {
 
 .bg, .bg-muted, .bg-primary, .bg-light, .bg-dark,
 .bg-info, .bg-success, .bg-warning, .bg-error {
-  color: #fff;
+  color: $contextFg;
   background-color: $grey;
   padding: 10px 20px;
 }
@@ -238,7 +238,7 @@ ol {
 
 .badge {
   background-color: $grey;
-  color: #fff;
+  color: $contextFg;
   padding: 2px 6px;
   font-size: 0.85em;
   border-radius: 3px;
@@ -250,7 +250,7 @@ ol {
 
 a.badge {
   &, &:link, &:active, &:visited, &:hover {
-    color: #fff;
+    color: $contextFg;
     text-decoration: none;
   }
   &:hover {

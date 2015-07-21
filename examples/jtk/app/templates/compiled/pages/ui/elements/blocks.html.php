@@ -1,4 +1,5 @@
 <?php $this->view->data->title = tr('Blocks'); ?>
+<div class="block-container">
 <div class="grid-1-1 grid-sm">
 <div class="cell">
 <div class="block"><div class="block-content">This is a simple block.</div></div>
@@ -25,6 +26,7 @@
 </div><div class=" block-footer"><div>Block footer</div></div></div>
 </div>
 </div>
+<h2>Block toolbars</h2>
 <div class="grid-md grid-1-1-1">
 <div class="cell">
 <div class="block">
@@ -78,55 +80,34 @@
 </div>
 </div>
 </div>
+<h2>Block header colors</h2>
 <div class="grid-md grid-1-1-1-1">
+<?php foreach (array('default', 'primary', 'light', 'dark') as $context): ?>
 <div class="cell">
-<div class="block block-info">
-<div class="block-header">Info</div>
+<div class="<?php echo 'block ' . 'block-' . $context; ?>">
+<div class="block-header"><?php echo h(tr($context)); ?></div>
 <div class="block-content">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Donec sed pharetra lorem. Nunc auctor luctus tellus a
-          faucibus. Quisque dictum in eros sed consequat. Vestibulum
-          consequat, ipsum at porttitor iaculis, nibh neque accumsan
-          dui, sed sodales orci ligula eu mauris.</p>
+          faucibus.</p>
 </div>
 </div>
+</div><?php endforeach; ?>
+
 </div>
+<div class="grid-md grid-1-1-1-1">
+<?php foreach (array('info', 'success', 'warning', 'error') as $context): ?>
 <div class="cell">
-<div class="block block-success">
-<div class="block-header">Success</div>
+<div class="<?php echo 'block ' . 'block-' . $context; ?>">
+<div class="block-header"><?php echo h(tr($context)); ?></div>
 <div class="block-content">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Donec sed pharetra lorem. Nunc auctor luctus tellus a
-          faucibus. Quisque dictum in eros sed consequat. Vestibulum
-          consequat, ipsum at porttitor iaculis, nibh neque accumsan
-          dui, sed sodales orci ligula eu mauris.</p>
+          faucibus.</p>
 </div>
 </div>
-</div>
-<div class="cell">
-<div class="block block-warn">
-<div class="block-header">Warning</div>
-<div class="block-content">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec sed pharetra lorem. Nunc auctor luctus tellus a
-          faucibus. Quisque dictum in eros sed consequat. Vestibulum
-          consequat, ipsum at porttitor iaculis, nibh neque accumsan
-          dui, sed sodales orci ligula eu mauris.</p>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="block block-error">
-<div class="block-header">Error</div>
-<div class="block-content">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec sed pharetra lorem. Nunc auctor luctus tellus a
-          faucibus. Quisque dictum in eros sed consequat. Vestibulum
-          consequat, ipsum at porttitor iaculis, nibh neque accumsan
-          dui, sed sodales orci ligula eu mauris.</p>
-</div>
-</div>
-</div>
+</div><?php endforeach; ?>
+
 </div>
 <div class="grid-md grid-3-1">
 <div class="cell">
@@ -180,6 +161,7 @@
           faucibus. Quisque dictum in eros sed consequat. Vestibulum
           consequat, ipsum at porttitor iaculis, nibh neque accumsan
           dui, sed sodales orci ligula eu mauris.</p>
+</div>
 </div>
 </div>
 </div>

@@ -191,6 +191,18 @@ class CssHelper extends Helper {
       $l /= 100;
     return array($h, $s, $l);
   }
+  
+  /**
+   * Get CSS-output for color.
+   * @param array $color Color tuple.
+   * @return string CSS color.
+   */
+  public function toString($color) {
+    $h = $color[0];
+    $s = round($color[1] * 100);
+    $l = round($color[2] * 100);
+    return 'hsl(' . $h . ', ' . $s . '%, ' . $l . '%)';
+  }
 
   /**
    * Get hue of a color.
@@ -422,9 +434,9 @@ class CssHelper extends Helper {
       $color = $this->hex($color);
     if (is_int($amount))
       $amount /= 100;
-    $color[1] += (1 - $color[1]) * $amount;
+    $color[1] *= 1 - $amount;
     $color[2] += (1 - $color[2]) * $amount;
-    if ($color[1] > 1) $color[1] = 1.0;
+    if ($color[1] < 0) $color[1] = 0.0;
     if ($color[2] > 1) $color[2] = 1.0;
     return $color;
   }
@@ -602,12 +614,8 @@ class CssBlock {
     $out = $this->selector . '{';
     foreach ($this->declarations as $property => $value) {
       if (isset($value)) {
-        if (is_array($value)) {
-          $h = $value[0];
-          $s = round($value[1] * 100);
-          $l = round($value[2] * 100);
-          $value = 'hsl(' . $h . ', ' . $s . '%, ' . $l . '%)';
-        }
+        if (is_array($value))
+          $value = $this->helper->toString($value);
         $out .= $property . ':' . $value . ';';
       }
       else {

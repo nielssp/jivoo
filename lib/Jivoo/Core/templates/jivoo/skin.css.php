@@ -119,6 +119,18 @@ $Css('.bg-success, .badge-success')->backgroundColor = $Skin->success;
 $Css('.bg-warning, .badge-warning')->backgroundColor = $Skin->warning;
 $Css('.bg-error, .badge-error')->backgroundColor = $Skin->error;
 
+// Blocks
+
+$block = $Css('.block');
+$block('&&-default > &-header, &&-muted > &-header')->backgroundColor = $Skin->grey;
+$block('&&-primary > &-header')->backgroundColor = $Skin->primary;
+$block('&&-light > &-header')->backgroundColor = $Skin->light;
+$block('&&-dark > &-header')->backgroundColor = $Skin->dark;
+$block('&&-info > &-header')->backgroundColor = $Skin->info;
+$block('&&-success > &-header')->backgroundColor = $Skin->success;
+$block('&&-warning > &-header')->backgroundColor = $Skin->warning;
+$block('&&-error > &-header')->backgroundColor = $Skin->error;
+
 // Layout
 
 $Css('header')->css(array(

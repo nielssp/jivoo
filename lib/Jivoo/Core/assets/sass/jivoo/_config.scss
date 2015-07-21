@@ -17,10 +17,7 @@ $info: #22aacc;
 $success: #22cc22;
 $warning: #cc7222;
 $error: #cc2222;
-
-// typography
-$linkFg: $primary;
-$linkHlFg: lighten($primary, 25%);
+$contextFg: #fff;
 
 // colors
 $primaryBg: $primary;
@@ -43,8 +40,31 @@ $mainFg: #333;
 $subMenuBg: #f7f7f7;
 $subMenuFg: #333;
 
+// typography
+$linkFg: $primary;
+$linkHlFg: lighten($primary, 25%);
+
 $codeBg: $navBg;
 $codeFg: $warning;
+
+// blocks
+
+$blockBg: $subMenuBg;
+$blockShadow: darken($mainBg, 10%);
+$blockHeaderFg: #727272;
+$blockHeaderFgSmall: #939393;
+$blockFooterFg: #727272;
+$blockFooterBorder: #ddd;
+
+$blockToolbarFg: rgba(0,0,0,0.4);
+
+$blockSubBg: lighten($blockBg, 5%);
+$blockSubShadow: lighten($blockBg, 10%);
+
+$blockAcceptBorder: darken($mainBg, 50%);
+$blockDraggingBorder: darken($mainBg, 30%);
+
+$blockContainerFg: #727272;
 
 // lengths
 

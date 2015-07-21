@@ -4,9 +4,17 @@
   <div class="block-header"><h2>Dialogs</h2></div>
   <div class="block-content">
 <p class="dialogs-demo">
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Icon->button(tr('Default'), 'info', array('data-type' => '')); ?>
 
-<?php echo $Icon->button(tr('Question'), 'question', array('data-type' => 'question')); ?>
+<?php echo $Icon->button(tr('Muted'), 'info', array('data-type' => 'muted')); ?>
+
+<?php echo $Icon->button(tr('Primary'), 'info', array('data-type' => 'primary')); ?>
+
+<?php echo $Icon->button(tr('Light'), 'info', array('data-type' => 'light')); ?>
+
+<?php echo $Icon->button(tr('Dark'), 'info', array('data-type' => 'dark')); ?>
+
+<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
 
 <?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
 
@@ -21,9 +29,17 @@
   <div class="block-header"><h2>Modals</h2></div>
   <div class="block-content">
 <p class="modals-demo">
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Icon->button(tr('Default'), 'info', array('data-type' => '')); ?>
 
-<?php echo $Icon->button(tr('Question'), 'question', array('data-type' => 'question')); ?>
+<?php echo $Icon->button(tr('Muted'), 'info', array('data-type' => 'muted')); ?>
+
+<?php echo $Icon->button(tr('Primary'), 'info', array('data-type' => 'primary')); ?>
+
+<?php echo $Icon->button(tr('Light'), 'info', array('data-type' => 'light')); ?>
+
+<?php echo $Icon->button(tr('Dark'), 'info', array('data-type' => 'dark')); ?>
+
+<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
 
 <?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
 

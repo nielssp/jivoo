@@ -172,7 +172,7 @@ ol {
 
 .bg, .bg-muted, .bg-primary, .bg-light, .bg-dark,
 .bg-info, .bg-success, .bg-warning, .bg-error {
-  color: #fff;
+  color: white;
   background-color: #727272;
   padding: 10px 20px; }
 
@@ -199,7 +199,7 @@ ol {
 
 .badge {
   background-color: #727272;
-  color: #fff;
+  color: white;
   padding: 2px 6px;
   font-size: 0.85em;
   border-radius: 3px;
@@ -208,7 +208,7 @@ ol {
     margin-right: 6px; }
 
 a.badge, a.badge:link, a.badge:active, a.badge:visited, a.badge:hover {
-  color: #fff;
+  color: white;
   text-decoration: none; }
 a.badge:hover {
   opacity: 0.8; }
@@ -470,21 +470,29 @@ a.badge:hover {
       .block > .block-content .block > .block-footer {
         border-color: #eee; }
   .block > .block-footer {
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #dddddd;
     color: #727272;
     padding: 16px;
     text-align: right; }
-  .block.block-info > .block-header, .block.block-success > .block-header, .block.block-warn > .block-header, .block.block-error > .block-header {
-    color: #fff; }
-    .block.block-info > .block-header > .block-toolbar, .block.block-success > .block-header > .block-toolbar, .block.block-warn > .block-header > .block-toolbar, .block.block-error > .block-header > .block-toolbar {
+  .block.block-default > .block-header, .block.block-muted > .block-header, .block.block-primary > .block-header, .block.block-dark > .block-header, .block.block-light > .block-header, .block.block-info > .block-header, .block.block-success > .block-header, .block.block-warning > .block-header, .block.block-error > .block-header {
+    color: white; }
+    .block.block-default > .block-header > .block-toolbar, .block.block-muted > .block-header > .block-toolbar, .block.block-primary > .block-header > .block-toolbar, .block.block-dark > .block-header > .block-toolbar, .block.block-light > .block-header > .block-toolbar, .block.block-info > .block-header > .block-toolbar, .block.block-success > .block-header > .block-toolbar, .block.block-warning > .block-header > .block-toolbar, .block.block-error > .block-header > .block-toolbar {
       color: rgba(255, 255, 255, 0.4); }
-      .block.block-info > .block-header > .block-toolbar > a:hover, .block.block-success > .block-header > .block-toolbar > a:hover, .block.block-warn > .block-header > .block-toolbar > a:hover, .block.block-error > .block-header > .block-toolbar > a:hover {
+      .block.block-default > .block-header > .block-toolbar > a:hover, .block.block-muted > .block-header > .block-toolbar > a:hover, .block.block-primary > .block-header > .block-toolbar > a:hover, .block.block-dark > .block-header > .block-toolbar > a:hover, .block.block-light > .block-header > .block-toolbar > a:hover, .block.block-info > .block-header > .block-toolbar > a:hover, .block.block-success > .block-header > .block-toolbar > a:hover, .block.block-warning > .block-header > .block-toolbar > a:hover, .block.block-error > .block-header > .block-toolbar > a:hover {
         color: rgba(255, 255, 255, 0.8); }
-  .block.block-info > .block-header {
+  .block.block-default > .block-header, .block.block-muted > .block-header {
+    background-color: #727272; }
+  .block.block-primary > .block-header {
     background-color: #2272cc; }
+  .block.block-light > .block-header {
+    background-color: #83b4ea; }
+  .block.block-dark > .block-header {
+    background-color: #10355f; }
+  .block.block-info > .block-header {
+    background-color: #22aacc; }
   .block.block-success > .block-header {
     background-color: #22cc22; }
-  .block.block-warn > .block-header {
+  .block.block-warning > .block-header {
     background-color: #cc7222; }
   .block.block-error > .block-header {
     background-color: #cc2222; }

@@ -21,7 +21,7 @@ class AppController extends Controller {
   
   public function skin_css() {
     if (isset($this->request->query['color']))
-      $this->Skin->primaryBg = $this->request->query['color'];
+      $this->Skin->primary = $this->request->query['color'];
 
     $this->cache();
     return $this->render('jivoo/jtk/skin.css');
