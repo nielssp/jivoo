@@ -263,6 +263,7 @@ class CssHelper extends Helper {
    * @return float Luminance as a float between 0.0. and 1.0.
    */
   public function luminance($color) {
+    // from http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
     list($r, $g, $b) = $this->toRgb($color);
     $r = $r <= 0.03928 ? $r / 12.92 : pow(($r + 0.055) / 1.055, 2.4);
     $g = $g <= 0.03928 ? $g / 12.92 : pow(($g + 0.055) / 1.055, 2.4);
