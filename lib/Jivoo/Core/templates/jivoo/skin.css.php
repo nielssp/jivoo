@@ -58,14 +58,27 @@ $Skin->setDefault(array(
   'tableHlBg' => '#f7f7f7'
 ));
 
-$Css->addMixin('button', function($Css) use ($Skin) {
+$Css->addMixin('buttonColor', function($button, $color) use($Css) {
+  $button->css(array(
+    'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
+    'border-color' => $Css->darken($color, 30)
+  ));
+  $button('&:hover, &:active')->css(array(
+    'background-color' => $color,
+    'border-color' => $Css->darken($color, 20)
+  ));
+});
+
+$Css->addMixin('button', function($Css) use($Skin) {
   $Css('&, &:link, &:visited')->css(array(
     'background-color' => $Skin->navBg,
     'border-color' => $Skin->navFg,
     'color' => $Skin->navFg
   ));
+  $Css('&:hover, &.active')->css(array(
+    'background-color' => $Skin->navHlBg
+  ));
   $Css('&:hover, &:active')->css(array(
-    'background-color' => $Skin->navHlBg,
     'border-color' => $Skin->navHlFg,
     'color' => $Skin->navHlFg
   ));
@@ -73,7 +86,14 @@ $Css->addMixin('button', function($Css) use ($Skin) {
     'background-color' => $Skin->navDisBg,
     'border-color' => $Skin->navDisFg,
     'color' => $Skin->navDisFg
-  ));  
+  ));
+  $Css('&.button-primary')->apply('buttonColor', $Skin->primary);
+  $Css('&.button-light')->apply('buttonColor', $Skin->light);
+  $Css('&.button-dark')->apply('buttonColor', $Skin->dark);
+  $Css('&.button-info')->apply('buttonColor', $Skin->info);
+  $Css('&.button-success')->apply('buttonColor', $Skin->success);
+  $Css('&.button-warning')->apply('buttonColor', $Skin->warning);
+  $Css('&.button-error')->apply('buttonColor', $Skin->error);
 });
 
 // Base

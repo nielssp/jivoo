@@ -60,12 +60,17 @@
         </p>
 
         <p>
-          A button group of icons: 
+          Small icons: 
           <span class="button-group">
             <?php echo $Icon->button('', 'disk', array('class' => 'button-xs')); ?>
             <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
             <?php echo $Icon->button('', 'checkmark', array('class' => 'button-xs')); ?>
-            <?php echo $Jtk->button('Test', 'disk', '', 'xs'); ?>
+          </span>
+          With context:
+          <span class="button-group">
+            <?php echo $Icon->button('', 'disk', array('class' => 'button-primary button-xs')); ?>
+            <?php echo $Icon->button('', 'close', array('class' => 'button-error button-xs')); ?>
+            <?php echo $Icon->button('', 'checkmark', array('class' => 'button-success button-xs')); ?>
           </span>
         </p>
       </div>

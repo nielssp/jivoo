@@ -76,8 +76,8 @@ class CssHelper extends Helper {
   /**
    * Add a mixin function.
    * @param string $name Mixin name.
-   * @param callable $callable Mixin function accepting one parameter: a
-   * {@see CssBlock}.
+   * @param callable $callable Mixin function accepting one or more parameters:
+   * the first one a {@see CssBlock}.
    */
   public function addMixin($name, $callable) {
     $this->mixins[$name] = $callable;
@@ -540,7 +540,10 @@ class CssBlock {
    */
   public function apply($mixin) {
     $mixin = $this->helper->getMixin($mixin);
-    $mixin($this);
+    $args = func_get_args();
+    array_shift($args);
+    array_unshift($args, $this);
+    call_user_func_array($mixin, $args);
     return $this;
   }
   

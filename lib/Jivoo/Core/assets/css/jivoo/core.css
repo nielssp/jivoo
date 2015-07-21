@@ -34,7 +34,8 @@ input::-moz-focus-inner {
   display: inline-block;
   font-size: 14px;
   height: 14px;
-  width: 14px; }
+  width: 14px;
+  font-weight: normal; }
   .icon > .icon-unavailable:before {
     display: block;
     content: '?';
@@ -325,14 +326,14 @@ a.badge:hover {
 .button.active, .button:hover, button.active, button:hover, input[type=button].active, input[type=button]:hover, input[type=reset].active, input[type=reset]:hover, input[type=submit].active, input[type=submit]:hover {
   background-color: #dddddd; }
 .button:focus, button:focus, input[type=button]:focus, input[type=reset]:focus, input[type=submit]:focus {
-  box-shadow: 0 0 3px #6da6e7;
+  box-shadow: 0 0 2px 1px #428cdf;
   outline: none; }
 .button:hover, .button:active, button:hover, button:active, input[type=button]:hover, input[type=button]:active, input[type=reset]:hover, input[type=reset]:active, input[type=submit]:hover, input[type=submit]:active {
   color: #2272cc;
   border-color: #2272cc;
   text-decoration: none; }
 .button.active, .button:active, button.active, button:active, input[type=button].active, input[type=button]:active, input[type=reset].active, input[type=reset]:active, input[type=submit].active, input[type=submit]:active {
-  box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 4px 5px 0 rgba(0, 0, 0, 0.15);
   outline: none; }
 .button[disabled], .button[disabled]:hover, .button[disabled]:active, button[disabled], button[disabled]:hover, button[disabled]:active, input[type=button][disabled], input[type=button][disabled]:hover, input[type=button][disabled]:active, input[type=reset][disabled], input[type=reset][disabled]:hover, input[type=reset][disabled]:active, input[type=submit][disabled], input[type=submit][disabled]:hover, input[type=submit][disabled]:active {
   background-color: #f1f1f1;
@@ -373,33 +374,61 @@ a.badge:hover {
     width: 14px; }
 .button.button-primary, button.button-primary, input[type=button].button-primary, input[type=reset].button-primary, input[type=submit].button-primary {
   font-weight: 600;
-  background-color: #cfdceb; }
+  background-color: #588dc9;
+  color: #fff;
+  border-color: #0c2949; }
   .button.button-primary:hover, .button.button-primary.active, button.button-primary:hover, button.button-primary.active, input[type=button].button-primary:hover, input[type=button].button-primary.active, input[type=reset].button-primary:hover, input[type=reset].button-primary.active, input[type=submit].button-primary:hover, input[type=submit].button-primary.active {
-    background-color: #a5c2e2; }
+    color: #fff;
+    background-color: #2272cc;
+    border-color: #134175; }
 .button.button-light, button.button-light, input[type=button].button-light, input[type=reset].button-light, input[type=submit].button-light {
-  background-color: white; }
+  background-color: #b8cfe8;
+  color: #fff;
+  border-color: #1e66b6; }
   .button.button-light:hover, .button.button-light.active, button.button-light:hover, button.button-light.active, input[type=button].button-light:hover, input[type=button].button-light.active, input[type=reset].button-light:hover, input[type=reset].button-light.active, input[type=submit].button-light:hover, input[type=submit].button-light.active {
-    background-color: white; }
+    color: #fff;
+    background-color: #83b4ea;
+    border-color: #2c7fdc; }
 .button.button-dark, button.button-dark, input[type=button].button-dark, input[type=reset].button-dark, input[type=submit].button-dark {
-  background-color: #759bc6; }
+  background-color: #274e7a;
+  color: #fff;
+  border-color: black; }
   .button.button-dark:hover, .button.button-dark.active, button.button-dark:hover, button.button-dark.active, input[type=button].button-dark:hover, input[type=button].button-dark.active, input[type=reset].button-dark:hover, input[type=reset].button-dark.active, input[type=submit].button-dark:hover, input[type=submit].button-dark.active {
-    background-color: #4480c3; }
+    color: #fff;
+    background-color: #10355f;
+    border-color: #010407; }
 .button.button-info, button.button-info, input[type=button].button-info, input[type=reset].button-info, input[type=submit].button-info {
-  background-color: #cfe5eb; }
+  background-color: #58b3c9;
+  color: #fff;
+  border-color: #0c3d49; }
   .button.button-info:hover, .button.button-info.active, button.button-info:hover, button.button-info.active, input[type=button].button-info:hover, input[type=button].button-info.active, input[type=reset].button-info:hover, input[type=reset].button-info.active, input[type=submit].button-info:hover, input[type=submit].button-info.active {
-    background-color: #a5d6e2; }
+    color: #fff;
+    background-color: #22aacc;
+    border-color: #136175; }
 .button.button-success, button.button-success, input[type=button].button-success, input[type=reset].button-success, input[type=submit].button-success {
-  background-color: #cfebcf; }
+  background-color: #58c958;
+  color: #fff;
+  border-color: #0c490c; }
   .button.button-success:hover, .button.button-success.active, button.button-success:hover, button.button-success.active, input[type=button].button-success:hover, input[type=button].button-success.active, input[type=reset].button-success:hover, input[type=reset].button-success.active, input[type=submit].button-success:hover, input[type=submit].button-success.active {
-    background-color: #a5e2a5; }
+    color: #fff;
+    background-color: #22cc22;
+    border-color: #137513; }
 .button.button-warning, button.button-warning, input[type=button].button-warning, input[type=reset].button-warning, input[type=submit].button-warning {
-  background-color: #ebdccf; }
+  background-color: #c98d58;
+  color: #fff;
+  border-color: #49290c; }
   .button.button-warning:hover, .button.button-warning.active, button.button-warning:hover, button.button-warning.active, input[type=button].button-warning:hover, input[type=button].button-warning.active, input[type=reset].button-warning:hover, input[type=reset].button-warning.active, input[type=submit].button-warning:hover, input[type=submit].button-warning.active {
-    background-color: #e2c2a5; }
+    color: #fff;
+    background-color: #cc7222;
+    border-color: #754113; }
 .button.button-error, button.button-error, input[type=button].button-error, input[type=reset].button-error, input[type=submit].button-error {
-  background-color: #ebcfcf; }
+  background-color: #c95858;
+  color: #fff;
+  border-color: #490c0c; }
   .button.button-error:hover, .button.button-error.active, button.button-error:hover, button.button-error.active, input[type=button].button-error:hover, input[type=button].button-error.active, input[type=reset].button-error:hover, input[type=reset].button-error.active, input[type=submit].button-error:hover, input[type=submit].button-error.active {
-    background-color: #e2a5a5; }
+    color: #fff;
+    background-color: #cc2222;
+    border-color: #751313; }
 
 .button-group {
   display: inline-block;
@@ -411,6 +440,12 @@ a.badge:hover {
       border-left: 1px solid #444444; }
     .button-group .button:first-child, .button-group button:first-child, .button-group input[type=button]:first-child, .button-group input[type=reset]:first-child, .button-group input[type=submit]:first-child {
       border-left: none; }
+    .button-group .button.active, .button-group .button:active, .button-group button.active, .button-group button:active, .button-group input[type=button].active, .button-group input[type=button]:active, .button-group input[type=reset].active, .button-group input[type=reset]:active, .button-group input[type=submit].active, .button-group input[type=submit]:active {
+      box-shadow: inset 0 4px 5px 2px rgba(0, 0, 0, 0.15); }
+      .button-group .button.active:first-child, .button-group .button:active:first-child, .button-group button.active:first-child, .button-group button:active:first-child, .button-group input[type=button].active:first-child, .button-group input[type=button]:active:first-child, .button-group input[type=reset].active:first-child, .button-group input[type=reset]:active:first-child, .button-group input[type=submit].active:first-child, .button-group input[type=submit]:active:first-child {
+        box-shadow: inset -2px 4px 5px 2px rgba(0, 0, 0, 0.15); }
+      .button-group .button.active:last-child, .button-group .button:active:last-child, .button-group button.active:last-child, .button-group button:active:last-child, .button-group input[type=button].active:last-child, .button-group input[type=button]:active:last-child, .button-group input[type=reset].active:last-child, .button-group input[type=reset]:active:last-child, .button-group input[type=submit].active:last-child, .button-group input[type=submit]:active:last-child {
+        box-shadow: inset 2px 4px 5px 2px rgba(0, 0, 0, 0.15); }
 
 .grid-1-1 > .cell {
   width: 50%; }

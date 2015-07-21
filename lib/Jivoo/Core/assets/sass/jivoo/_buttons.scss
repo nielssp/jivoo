@@ -16,5 +16,14 @@ $button: '.button, button, input[type=button], input[type=reset], input[type=sub
     &:first-child {
       border-left: none;
     }
+    &.active, &:active {
+      box-shadow: inset 0 4px 5px 2px rgba(0, 0, 0, 0.15);
+      &:first-child {
+        box-shadow: inset -2px 4px 5px 2px rgba(0, 0, 0, 0.15);
+      }
+      &:last-child {
+        box-shadow: inset 2px 4px 5px 2px rgba(0, 0, 0, 0.15);
+      }
+    }
   }
 }
