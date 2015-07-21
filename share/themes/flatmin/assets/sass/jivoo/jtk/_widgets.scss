@@ -189,6 +189,7 @@ body.menu-open {
       @include table-density(9px);
     }
     &.density-high {
+      font-size: 0.95em;
       @include table-density(6px);
     }
 

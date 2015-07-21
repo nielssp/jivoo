@@ -837,14 +837,16 @@ body.menu-open .table-selection {
   .data-table table.density-medium .selection label {
     padding: 9px 0 9px 8px;
     margin: -9px -8px; }
-  .data-table table.density-high td, .data-table table.density-high th {
-    padding: 6px 8px; }
-  .data-table table.density-high thead th a, .data-table table.density-high thead th a:link, .data-table table.density-high thead th a:visited, .data-table table.density-high thead th label, .data-table table.density-high thead th label:link, .data-table table.density-high thead th label:visited, .data-table table.density-high tfoot th a, .data-table table.density-high tfoot th a:link, .data-table table.density-high tfoot th a:visited, .data-table table.density-high tfoot th label, .data-table table.density-high tfoot th label:link, .data-table table.density-high tfoot th label:visited {
-    padding: 6px 8px;
-    margin: -6px -8px; }
-  .data-table table.density-high .selection label {
-    padding: 6px 0 6px 8px;
-    margin: -6px -8px; }
+  .data-table table.density-high {
+    font-size: 0.95em; }
+    .data-table table.density-high td, .data-table table.density-high th {
+      padding: 6px 8px; }
+    .data-table table.density-high thead th a, .data-table table.density-high thead th a:link, .data-table table.density-high thead th a:visited, .data-table table.density-high thead th label, .data-table table.density-high thead th label:link, .data-table table.density-high thead th label:visited, .data-table table.density-high tfoot th a, .data-table table.density-high tfoot th a:link, .data-table table.density-high tfoot th a:visited, .data-table table.density-high tfoot th label, .data-table table.density-high tfoot th label:link, .data-table table.density-high tfoot th label:visited {
+      padding: 6px 8px;
+      margin: -6px -8px; }
+    .data-table table.density-high .selection label {
+      padding: 6px 0 6px 8px;
+      margin: -6px -8px; }
   .data-table table td.actions, .data-table table th.actions {
     width: 150px;
     text-align: center; }
