@@ -442,9 +442,8 @@ header {
               height: 16px; }
           header > ul > li > a .label {
             display: inline; }
-          header > ul > li > a .icon {
-            margin-left: 0;
-            margin-right: 10px; } }
+          header > ul > li > a .icon + .label {
+            margin-left: 10px; } }
       header > ul > li:hover {
         background-color: rgba(0, 0, 0, 0.15);
         color: white; }
