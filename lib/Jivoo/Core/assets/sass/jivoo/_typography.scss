@@ -165,6 +165,34 @@ ol {
   }
 }
 
+dl {
+  dt {
+    float: left;
+    font-weight: 600;
+    width: 40%;
+    padding-right: 8px;
+    &:after {
+      content: ':';
+      display: inline;
+    }
+  }
+  dd {
+    float: left;
+    width: 60%;
+    &:after {
+      clear: left;
+      display: block;
+      content: ' ';
+      margin-bottom: $pmargin;
+    }
+  }
+  &:after {
+    clear: left;
+    display: block;
+    content: ' ';
+  }
+}
+
 .center {
   text-align: center;
 }
@@ -243,9 +271,6 @@ ol {
   font-size: 0.8em;
   border-radius: 3px;
   font-weight: bold;
-  & > .icon {
-    margin-right: 6px;
-  }
 }
 
 a.badge {

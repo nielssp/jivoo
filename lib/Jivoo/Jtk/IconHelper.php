@@ -116,8 +116,6 @@ class IconHelper extends Helper {
       $url = $this->m->Routing->getLink($route);
       if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
         $attributes['class'] = 'current';
-      if (!isset($attributes['title']))
-        $attributes['title'] = h($label);
       if (isset($icon))
         $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
       else

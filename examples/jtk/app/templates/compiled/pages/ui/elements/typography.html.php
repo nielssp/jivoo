@@ -191,32 +191,41 @@ is an abbreviation.
 <strong>Default</strong>
 Default
 </div>
+<div class="flash flash-primary">
+<strong>Primary</strong>
+Primary
+</div>
+<div class="flash flash-light">
+<strong>Light</strong>
+Light
+</div>
+<div class="flash flash-dark">
+<strong>Dark</strong>
+Dark
+<a href="#">link</a>
+</div>
 <div class="flash flash-success">
 <strong>Success</strong>
 Success
 </div>
-<div class="flash flash-error">
-<strong>Error</strong>
-Error
+<div class="flash flash-info">
+<strong>Info</strong>
+Info
 </div>
 <div class="flash flash-warning">
 <strong>Warning</strong>
 Warning
 </div>
-<div class="flash flash-info">
-<strong>Information</strong>
-Information
-</div>
-<div class="flash flash-question">
-<strong>Question</strong>
-Question
+<div class="flash flash-error">
+<strong>Error</strong>
+Error
 </div>
 </div>
 </div>
 </div>
 </div>
 <h2>Lists</h2>
-<div class="grid-sm grid-1-1">
+<div class="grid-sm grid-1-1-1">
 <div class="cell">
 <div class="block">
 <div class="block-header">Unordered lists</div>
@@ -262,6 +271,25 @@ Question
 <li>Sit</li>
 <li>Amet</li>
 </ol>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="block">
+<div class="block-header">
+<h3>Description lists</h3>
+</div>
+<div class="block-content">
+<dl>
+<dt>Lorem</dt>
+<dd>Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit.</dd>
+<dt>Eget</dt>
+<dd>Dolor</dd>
+<dt>Amet</dt>
+<dd>Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit.</dd>
+</dl>
 </div>
 </div>
 </div>

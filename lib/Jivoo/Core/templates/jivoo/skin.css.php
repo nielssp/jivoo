@@ -58,6 +58,15 @@ $Skin->setDefault(array(
   'tableHlBg' => '#f7f7f7'
 ));
 
+$Css->addMixin('flashColor', function($flash, $color) use($Css) {
+  $flash->css(array(
+    'border-color' => $color
+  ));
+  $flash('&:before, h1, h2, h2, h3, h4, h5, h6, strong')->css(array(
+    'color' => $color
+  ));
+});
+
 $Css->addMixin('buttonColor', function($button, $color) use($Css) {
   $button->css(array(
     'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
@@ -156,6 +165,18 @@ $block('&&-error > &-header')->backgroundColor = $Skin->error;
 $buttons = '.button, button, input[type=button], input[type=reset], input[type=submit]'; 
 
 $Css($buttons)->apply('button');
+
+// Flash
+
+$flash = $Css('.flash');
+$flash('&')->apply('flashColor', $Skin->grey);
+$flash('&&-primary')->apply('flashColor', $Skin->primary);
+$flash('&&-light')->apply('flashColor', $Skin->light);
+$flash('&&-dark')->apply('flashColor', $Skin->dark);
+$flash('&&-info')->apply('flashColor', $Skin->info);
+$flash('&&-success')->apply('flashColor', $Skin->success);
+$flash('&&-warning')->apply('flashColor', $Skin->warning);
+$flash('&&-error')->apply('flashColor', $Skin->error);
 
 // Layout
 

@@ -224,6 +224,27 @@ ol {
   ol ol {
     list-style-type: lower-alpha; }
 
+dl dt {
+  float: left;
+  font-weight: 600;
+  width: 40%;
+  padding-right: 8px; }
+  dl dt:after {
+    content: ':';
+    display: inline; }
+dl dd {
+  float: left;
+  width: 60%; }
+  dl dd:after {
+    clear: left;
+    display: block;
+    content: ' ';
+    margin-bottom: 20px; }
+dl:after {
+  clear: left;
+  display: block;
+  content: ' '; }
+
 .center {
   text-align: center; }
 
@@ -285,8 +306,6 @@ ol {
   font-size: 0.8em;
   border-radius: 3px;
   font-weight: bold; }
-  .badge > .icon {
-    margin-right: 6px; }
 
 a.badge, a.badge:link, a.badge:active, a.badge:visited, a.badge:hover {
   color: white;
@@ -1152,31 +1171,58 @@ table {
   font-size: 0.9em;
   padding: 10px 20px;
   margin-bottom: 20px;
-  border-left: 4px solid #2272CC;
+  border-left: 4px solid #727272;
   box-shadow: 1px 2px 1px #e6e6e6; }
-  .flash.flash-info {
-    border-color: #cccc22; }
-    .flash.flash-info:before {
-      color: #cccc22; }
-  .flash.flash-error {
-    border-color: #cc2222; }
-    .flash.flash-error:before {
-      color: #cc2222; }
-  .flash.flash-warn {
-    border-color: #cc7222; }
-    .flash.flash-warn:before {
-      color: #cc7222; }
-  .flash.flash-success {
-    border-color: #50CC22; }
-    .flash.flash-success:before {
-      color: #50CC22; }
-  .flash.flash-question {
-    border-color: #2272CC; }
-    .flash.flash-question:before {
-      color: #2272CC; }
-  .flash h2 {
+  .flash strong:first-child {
+    margin-right: 10px; }
+  .flash:before {
+    color: #727272; }
+  .flash h1, .flash h2, .flash h2, .flash h3, .flash h4, .flash h5, .flash h6, .flash strong {
+    color: #727272;
     font-size: 1.1em;
     font-weight: 600; }
+  .flash.flash-primary {
+    border-color: #2272cc; }
+    .flash.flash-primary h1, .flash.flash-primary h2, .flash.flash-primary h2, .flash.flash-primary h3, .flash.flash-primary h4, .flash.flash-primary h5, .flash.flash-primary h6, .flash.flash-primary strong {
+      color: #2272cc; }
+    .flash.flash-primary:before {
+      color: #2272cc; }
+  .flash.flash-light {
+    border-color: #83b4ea; }
+    .flash.flash-light h1, .flash.flash-light h2, .flash.flash-light h2, .flash.flash-light h3, .flash.flash-light h4, .flash.flash-light h5, .flash.flash-light h6, .flash.flash-light strong {
+      color: #83b4ea; }
+    .flash.flash-light:before {
+      color: #83b4ea; }
+  .flash.flash-dark {
+    border-color: #10355f; }
+    .flash.flash-dark h1, .flash.flash-dark h2, .flash.flash-dark h2, .flash.flash-dark h3, .flash.flash-dark h4, .flash.flash-dark h5, .flash.flash-dark h6, .flash.flash-dark strong {
+      color: #10355f; }
+    .flash.flash-dark:before {
+      color: #10355f; }
+  .flash.flash-info {
+    border-color: #22aacc; }
+    .flash.flash-info h1, .flash.flash-info h2, .flash.flash-info h2, .flash.flash-info h3, .flash.flash-info h4, .flash.flash-info h5, .flash.flash-info h6, .flash.flash-info strong {
+      color: #22aacc; }
+    .flash.flash-info:before {
+      color: #22aacc; }
+  .flash.flash-success {
+    border-color: #22cc22; }
+    .flash.flash-success h1, .flash.flash-success h2, .flash.flash-success h2, .flash.flash-success h3, .flash.flash-success h4, .flash.flash-success h5, .flash.flash-success h6, .flash.flash-success strong {
+      color: #22cc22; }
+    .flash.flash-success:before {
+      color: #22cc22; }
+  .flash.flash-warning {
+    border-color: #cc7222; }
+    .flash.flash-warning h1, .flash.flash-warning h2, .flash.flash-warning h2, .flash.flash-warning h3, .flash.flash-warning h4, .flash.flash-warning h5, .flash.flash-warning h6, .flash.flash-warning strong {
+      color: #cc7222; }
+    .flash.flash-warning:before {
+      color: #cc7222; }
+  .flash.flash-error {
+    border-color: #cc2222; }
+    .flash.flash-error h1, .flash.flash-error h2, .flash.flash-error h2, .flash.flash-error h3, .flash.flash-error h4, .flash.flash-error h5, .flash.flash-error h6, .flash.flash-error strong {
+      color: #cc2222; }
+    .flash.flash-error:before {
+      color: #cc2222; }
 
 body.exception {
   background-color: #fff; }

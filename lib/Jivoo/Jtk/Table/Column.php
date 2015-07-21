@@ -76,10 +76,10 @@ class Column extends JtkObject {
     $cell = null;
     switch ($type) {
       case DataType::DATE:
-        $cell = fdate($record->$field);
+        $cell = '<em class="muted">' . fdate($record->$field) . '</em>';
         break;
       case DataType::DATETIME:
-        $cell = ldate($record->$field);
+        $cell = '<em class="muted">' . ldate($record->$field) . '</em>';
         break;
       case DataType::BOOLEAN:
         $cell = $record->$field ? tr('Yes') : tr('No');

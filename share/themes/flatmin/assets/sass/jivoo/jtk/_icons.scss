@@ -53,7 +53,6 @@ table thead th a {
 .flash {
   &:before {
     @include icon('\e69b');
-    color: #2272CC;
     float: right;
     margin-left: 8px;
   }
