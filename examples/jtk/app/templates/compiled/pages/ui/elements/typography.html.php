@@ -28,19 +28,17 @@
 <h3>Paragraphs</h3>
 </div>
 <div class="block-content">
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+<p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Donec sed pharetra lorem. Nunc auctor luctus tellus a
-          faucibus. Quisque dictum in eros sed consequat. Vestibulum
+          faucibus. Quisque dictum in eros sed consequat.</p>
+<p>Vestibulum
           consequat, ipsum at porttitor iaculis, nibh neque accumsan
           dui, sed sodales orci ligula eu mauris. Donec sagittis mollis
           neque, et ornare turpis elementum at. Quisque metus diam,
           volutpat vel fermentum sed, ullamcorper eu dui.</p>
 <p>Vivamus cursus lorem sed vulputate tincidunt. Vivamus
           eget nibh iaculis, semper felis nec, aliquet orci. Morbi non
-          sagittis est. Donec tincidunt ut metus sit amet fringilla.
-          Suspendisse id est ac nulla luctus aliquam ullamcorper eget
-          augue. Nam elementum pellentesque elit, ac dignissim est
-          volutpat vel.</p>
+          sagittis est. Donec tincidunt ut metus.</p>
 </div>
 </div>
 </div>
@@ -202,7 +200,6 @@ Light
 <div class="flash flash-dark">
 <strong>Dark</strong>
 Dark
-<a href="#">link</a>
 </div>
 <div class="flash flash-success">
 <strong>Success</strong>

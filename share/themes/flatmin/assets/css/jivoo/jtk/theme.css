@@ -67,7 +67,7 @@ table thead th a {
   margin-left: 8px; }
 .flash.flash-error:before {
   content: '\e685'; }
-.flash.flash-warn:before {
+.flash.flash-warning:before {
   content: '\e698'; }
 .flash.flash-success:before {
   content: '\e686'; }

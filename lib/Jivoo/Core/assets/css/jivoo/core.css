@@ -111,8 +111,9 @@ a:hover {
 p {
   margin: 0 0 20px;
   line-height: 1.6em; }
-  p.center {
-    text-align: center; }
+  p.lead {
+    font-size: 1.1em;
+    font-weight: bold; }
 
 h1 > small, h2 > small, h3 > small, h4 > small, h5 > small, h6 > small {
   font-weight: normal;

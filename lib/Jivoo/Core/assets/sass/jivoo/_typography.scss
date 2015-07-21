@@ -14,8 +14,9 @@ p {
   margin: 0 0 $pmargin;
   line-height: 1.6em;
 
-  &.center {
-    text-align: center;
+  &.lead {
+    font-size: 1.1em;
+    font-weight: bold;
   }
 }
 
