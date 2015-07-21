@@ -9,18 +9,22 @@ namespace Jivoo\Jtk;
  * An icon provider for a small number of default (Unicode-based) icons. 
  */
 class CoreIconProvider extends ClassIconProvider {
-  /**
-   * {@inheritdoc}
-   */
-  protected $classPrefix = 'jtk-icon-';
+  public function __construct() {
+    parent::__construct('jtk-icon-');
+  }
   
   /**
    * {@inheritdoc}
    */
   protected $mapping = array(
-    'checkmark' => 'checkmark',
     'ok' => 'checkmark',
     'cancel' => 'close',
-    'close' => 'close',
+  );
+  
+  protected $icons = array(
+    'checkmark', 'checkmark2', 'close', 'close2', 'star', 'star2',
+    'disk', 'folder', 'folder-open', 'file',
+    'arrow-up', 'arrow-down', 'arrow-left', 'arrow-right',
+    'arrow-up-left', 'arrow-up-right', 'arrow-down-left', 'arrow-down-right'
   );
 }
