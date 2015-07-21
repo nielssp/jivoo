@@ -15,6 +15,11 @@ class ConsoleSnippet extends Snippet {
   /**
    * {@inheritdoc}
    */
+  protected $helpers = array('Form');
+  
+  /**
+   * {@inheritdoc}
+   */
   public function before() {
     if ($this->request->isAjax() and $this->request->accepts('html'))
       $this->disableLayout();

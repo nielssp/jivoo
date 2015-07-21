@@ -38,6 +38,38 @@
         </p>
       </div>
     </div>
+    <div class="block">
+      <div class="block-header"><h3>Button groups</h3></div>
+      <div class="block-content">
+        <p>
+          A button group:
+          <span class="button-group">
+            <?php echo $Icon->button('Save'); ?>
+            <?php echo $Icon->button('Cancel'); ?>
+            <?php echo $Icon->button('OK'); ?>
+          </span>
+        </p>
+
+        <p>
+          With an active button:
+          <span class="button-group">
+            <?php echo $Icon->button('Save'); ?>
+            <?php echo $Icon->button('Cancel', null, array('class' => 'active')); ?>
+            <?php echo $Icon->button('OK'); ?>
+          </span>
+        </p>
+
+        <p>
+          A button group of icons: 
+          <span class="button-group">
+            <?php echo $Icon->button('', 'disk', array('class' => 'button-xs')); ?>
+            <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+            <?php echo $Icon->button('', 'checkmark', array('class' => 'button-xs')); ?>
+            <?php echo $Jtk->button('Test', 'disk', '', 'xs'); ?>
+          </span>
+        </p>
+      </div>
+    </div>
   </div>
   <div class="cell">
     <div class="block">
@@ -52,11 +84,36 @@
       <div class="block-header"><h3>Button contexts</h3></div>
       <div class="block-content">
         <button>Default</button>
-        <button class="primary">Primary</button>
-        <button class="info">Info</button>
-        <button class="success">Success</button>
-        <button class="warning">Warning</button>
-        <button class="error">Error</button>
+        <button class="button-primary">Primary</button>
+        <button class="button-light">Light</button>
+        <button class="button-dark">Dark</button>
+        <button class="button-info">Info</button>
+        <button class="button-success">Success</button>
+        <button class="button-warning">Warning</button>
+        <button class="button-error">Error</button>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><h3>Button sizes</h3></div>
+      <div class="block-content">
+        <p>
+          <button class="button-xs">Extra small</button>
+          <button class="button-sm">Small</button>
+          <button>Default</button>
+          <button class="button-lg">Large</button>
+        </p>
+        <p>
+          <?php echo $Icon->button('Extra small', 'plus', array('class' => 'button-xs')); ?>
+          <?php echo $Icon->button('Small', 'download', array('class' => 'button-sm')); ?>
+          <?php echo $Icon->button('Default', 'enter'); ?>
+          <?php echo $Icon->button('Large', 'flag', array('class' => 'button-lg')); ?>
+        </p>
+        <p>
+          <?php echo $Icon->button('', 'plus', array('class' => 'button-xs')); ?>
+          <?php echo $Icon->button('', 'download', array('class' => 'button-sm')); ?>
+          <?php echo $Icon->button('', 'enter'); ?>
+          <?php echo $Icon->button('', 'flag', array('class' => 'button-lg')); ?>
+        </p>
       </div>
     </div>
     <div class="block">

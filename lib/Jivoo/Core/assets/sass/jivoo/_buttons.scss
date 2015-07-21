@@ -1,0 +1,20 @@
+$button: '.button, button, input[type=button], input[type=reset], input[type=submit]';
+
+#{$button} {
+  @include button;
+}
+
+.button-group {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  #{$button} {
+    float: left;
+    &, &:hover {
+      border-left: 1px solid $navFg;
+    }
+    &:first-child {
+      border-left: none;
+    }
+  }
+}

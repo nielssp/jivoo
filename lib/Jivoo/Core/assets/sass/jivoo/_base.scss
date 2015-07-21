@@ -22,3 +22,14 @@ header, footer, section, nav {
   display: block;
 }
 
+button, input, select, textarea {
+  font-family:inherit;
+  font-size:inherit;
+  line-height:inherit;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}

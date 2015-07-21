@@ -97,8 +97,6 @@ class JtkMacros extends Macros {
   public function _grid(HtmlNode $node, $value) {
     if (isset($value))
       $node->addClass('grid-' . str_replace(':', '-', $value));
-    else
-      $node->addClass('grid');
     if ($node->hasData('jtk-size')) {
       $node->addClass('grid-' . $node->getData('jtk-size'));
       $node->removeData('jtk-size');
@@ -106,6 +104,9 @@ class JtkMacros extends Macros {
     else if ($node->hasMacro('jtk:size')) {
       $node->addClass('grid-' . $node->getMacro('jtk:size'));
       $node->removeMacro('jtk:size');
+    }
+    else {
+      $node->addClass('grid');
     }
     foreach ($node->getChildren() as $child) {
       if ($child instanceof HtmlNode)

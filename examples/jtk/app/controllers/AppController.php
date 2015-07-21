@@ -6,7 +6,7 @@ use Jivoo\Jtk\ClassIconProvider;
 
 class AppController extends Controller {
   
-  protected $helpers = array('Html', 'Jtk', 'Icon', 'Form', 'Skin', 'Css');
+  protected $helpers = array('Html', 'Jtk', 'Icon', 'Form', 'Skin', 'Css', 'Random');
   
   public function before() {
     $this->Jtk->setTheme('flatmin');

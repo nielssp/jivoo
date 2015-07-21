@@ -62,7 +62,7 @@
 </div>
 <div class="block-footer">
   <?php echo $Icon->button('Cancel', 'close'); ?>
-  <?php echo $Icon->button('OK', 'checkmark', array('class' => 'primary')); ?>
+  <?php echo $Icon->button('OK', 'checkmark', array('class' => 'button-primary')); ?>
 </div>
 </div>
 

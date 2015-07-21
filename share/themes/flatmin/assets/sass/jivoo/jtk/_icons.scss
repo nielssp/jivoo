@@ -33,9 +33,6 @@ input[type=button],
 input[type=reset],
 input[type=submit] {
   @include iconsize(12px, 0px);
-  .icon {
-    margin-right: 6px;
-  }
 }
 
 table thead th a {

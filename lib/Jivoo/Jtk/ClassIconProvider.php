@@ -11,14 +11,14 @@ namespace Jivoo\Jtk;
  */
 class ClassIconProvider implements IIconProvider {
   /**
-   * @var string
+   * @var string Icons class prefix
    */
-  private $classPrefix;
+  protected $classPrefix;
   
   /**
    * @var string[] A custom mapping from icon identifiers to class names.
    */
-  protected $mapping = array();
+  protected $mapping = null;
   
   /**
    * Construct icon provoider.
@@ -32,8 +32,11 @@ class ClassIconProvider implements IIconProvider {
    * {@inheritdoc}
    */
   public function getIcon($icon, $size = 16) {
-    if (isset($this->mapping[$icon]))
+    if (isset($this->mapping)) {
+      if (!isset($this->mapping[$icon]))
+        return null;
       $icon = $this->mapping[$icon];
+    }
     return '<span class="' . $this->classPrefix . $icon . '"></span>';
   }
 }

@@ -19,6 +19,83 @@ body {
 header, footer, section, nav {
   display: block; }
 
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit; }
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+.icon {
+  vertical-align: 0px;
+  display: inline-block;
+  font-size: 14px;
+  height: 14px;
+  width: 14px; }
+  .icon > .icon-unavailable:before {
+    display: block;
+    content: '?';
+    font-weight: bold; }
+  .icon + .label {
+    margin-left: 6px; }
+
+.jtk-icon-checkmark:before {
+  content: '\2714'; }
+
+.jtk-icon-checkmark2:before {
+  content: '\2713'; }
+
+.jtk-icon-close:before {
+  content: '\2716'; }
+
+.jtk-icon-close2:before {
+  content: '\2718'; }
+
+.jtk-icon-star:before {
+  content: '\2606'; }
+
+.jtk-icon-star2:before {
+  content: '\2605'; }
+
+.jtk-icon-arrow-left:before {
+  content: '\2190'; }
+
+.jtk-icon-arrow-up:before {
+  content: '\2191'; }
+
+.jtk-icon-arrow-right:before {
+  content: '\2192'; }
+
+.jtk-icon-arrow-down:before {
+  content: '\2193'; }
+
+.jtk-icon-arrow-up-left:before {
+  content: '\2196'; }
+
+.jtk-icon-arrow-up-right:before {
+  content: '\2197'; }
+
+.jtk-icon-arrow-down-left:before {
+  content: '\2199'; }
+
+.jtk-icon-arrow-down-right:before {
+  content: '\2198'; }
+
+.jtk-icon-disk:before {
+  content: '\1f4be'; }
+
+.jtk-icon-folder:before {
+  content: '\1f4c1'; }
+
+.jtk-icon-folder-open:before {
+  content: '\1f4c2'; }
+
+.jtk-icon-file:before {
+  content: '\1f4c4'; }
+
 a, a:link, a:active, a:visited {
   cursor: pointer;
   color: #2272cc;
@@ -201,7 +278,7 @@ ol {
   background-color: #727272;
   color: white;
   padding: 2px 6px;
-  font-size: 0.85em;
+  font-size: 0.8em;
   border-radius: 3px;
   font-weight: bold; }
   .badge > .icon {
@@ -233,6 +310,107 @@ a.badge:hover {
 
 .badge-error {
   background-color: #cc2222; }
+
+.button, .button:link, .button:visited, button, button:link, button:visited, input[type=button], input[type=button]:link, input[type=button]:visited, input[type=reset], input[type=reset]:link, input[type=reset]:visited, input[type=submit], input[type=submit]:link, input[type=submit]:visited {
+  background-color: #eeeeee;
+  border: none;
+  border-bottom: 2px solid #444444;
+  color: #444444;
+  line-height: normal;
+  text-decoration: none;
+  padding: 6px 12px 4px;
+  display: inline-block;
+  margin: 2px 0;
+  cursor: pointer; }
+.button.active, .button:hover, button.active, button:hover, input[type=button].active, input[type=button]:hover, input[type=reset].active, input[type=reset]:hover, input[type=submit].active, input[type=submit]:hover {
+  background-color: #dddddd; }
+.button:focus, button:focus, input[type=button]:focus, input[type=reset]:focus, input[type=submit]:focus {
+  box-shadow: 0 0 3px #6da6e7;
+  outline: none; }
+.button:hover, .button:active, button:hover, button:active, input[type=button]:hover, input[type=button]:active, input[type=reset]:hover, input[type=reset]:active, input[type=submit]:hover, input[type=submit]:active {
+  color: #2272cc;
+  border-color: #2272cc;
+  text-decoration: none; }
+.button.active, .button:active, button.active, button:active, input[type=button].active, input[type=button]:active, input[type=reset].active, input[type=reset]:active, input[type=submit].active, input[type=submit]:active {
+  box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.15);
+  outline: none; }
+.button[disabled], .button[disabled]:hover, .button[disabled]:active, button[disabled], button[disabled]:hover, button[disabled]:active, input[type=button][disabled], input[type=button][disabled]:hover, input[type=button][disabled]:active, input[type=reset][disabled], input[type=reset][disabled]:hover, input[type=reset][disabled]:active, input[type=submit][disabled], input[type=submit][disabled]:hover, input[type=submit][disabled]:active {
+  background-color: #f1f1f1;
+  border-color: #999999;
+  color: #999999;
+  cursor: default;
+  box-shadow: none;
+  outline: none; }
+.button .icon, button .icon, input[type=button] .icon, input[type=reset] .icon, input[type=submit] .icon {
+  font-size: 12px;
+  height: 12px;
+  width: 12px; }
+.button.button-xs, .button.button-sm, button.button-xs, button.button-sm, input[type=button].button-xs, input[type=button].button-sm, input[type=reset].button-xs, input[type=reset].button-sm, input[type=submit].button-xs, input[type=submit].button-sm {
+  font-size: 12px; }
+  .button.button-xs .icon, .button.button-sm .icon, button.button-xs .icon, button.button-sm .icon, input[type=button].button-xs .icon, input[type=button].button-sm .icon, input[type=reset].button-xs .icon, input[type=reset].button-sm .icon, input[type=submit].button-xs .icon, input[type=submit].button-sm .icon {
+    font-size: 10px;
+    height: 10px;
+    width: 10px; }
+.button.button-xs, button.button-xs, input[type=button].button-xs, input[type=reset].button-xs, input[type=submit].button-xs {
+  padding: 1px 4px 0px;
+  border-width: 1px;
+  margin: 0; }
+.button.button-sm, button.button-sm, input[type=button].button-sm, input[type=reset].button-sm, input[type=submit].button-sm {
+  padding: 4px 10px 2px;
+  margin: 1px 0; }
+.button.button-md, button.button-md, input[type=button].button-md, input[type=reset].button-md, input[type=submit].button-md {
+  font-size: 14px; }
+  .button.button-md .icon, button.button-md .icon, input[type=button].button-md .icon, input[type=reset].button-md .icon, input[type=submit].button-md .icon {
+    font-size: 12px;
+    height: 12px;
+    width: 12px; }
+.button.button-lg, button.button-lg, input[type=button].button-lg, input[type=reset].button-lg, input[type=submit].button-lg {
+  font-size: 16px;
+  padding: 6px 14px 4px; }
+  .button.button-lg .icon, button.button-lg .icon, input[type=button].button-lg .icon, input[type=reset].button-lg .icon, input[type=submit].button-lg .icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px; }
+.button.button-primary, button.button-primary, input[type=button].button-primary, input[type=reset].button-primary, input[type=submit].button-primary {
+  font-weight: 600;
+  background-color: #cfdceb; }
+  .button.button-primary:hover, .button.button-primary.active, button.button-primary:hover, button.button-primary.active, input[type=button].button-primary:hover, input[type=button].button-primary.active, input[type=reset].button-primary:hover, input[type=reset].button-primary.active, input[type=submit].button-primary:hover, input[type=submit].button-primary.active {
+    background-color: #a5c2e2; }
+.button.button-light, button.button-light, input[type=button].button-light, input[type=reset].button-light, input[type=submit].button-light {
+  background-color: white; }
+  .button.button-light:hover, .button.button-light.active, button.button-light:hover, button.button-light.active, input[type=button].button-light:hover, input[type=button].button-light.active, input[type=reset].button-light:hover, input[type=reset].button-light.active, input[type=submit].button-light:hover, input[type=submit].button-light.active {
+    background-color: white; }
+.button.button-dark, button.button-dark, input[type=button].button-dark, input[type=reset].button-dark, input[type=submit].button-dark {
+  background-color: #759bc6; }
+  .button.button-dark:hover, .button.button-dark.active, button.button-dark:hover, button.button-dark.active, input[type=button].button-dark:hover, input[type=button].button-dark.active, input[type=reset].button-dark:hover, input[type=reset].button-dark.active, input[type=submit].button-dark:hover, input[type=submit].button-dark.active {
+    background-color: #4480c3; }
+.button.button-info, button.button-info, input[type=button].button-info, input[type=reset].button-info, input[type=submit].button-info {
+  background-color: #cfe5eb; }
+  .button.button-info:hover, .button.button-info.active, button.button-info:hover, button.button-info.active, input[type=button].button-info:hover, input[type=button].button-info.active, input[type=reset].button-info:hover, input[type=reset].button-info.active, input[type=submit].button-info:hover, input[type=submit].button-info.active {
+    background-color: #a5d6e2; }
+.button.button-success, button.button-success, input[type=button].button-success, input[type=reset].button-success, input[type=submit].button-success {
+  background-color: #cfebcf; }
+  .button.button-success:hover, .button.button-success.active, button.button-success:hover, button.button-success.active, input[type=button].button-success:hover, input[type=button].button-success.active, input[type=reset].button-success:hover, input[type=reset].button-success.active, input[type=submit].button-success:hover, input[type=submit].button-success.active {
+    background-color: #a5e2a5; }
+.button.button-warning, button.button-warning, input[type=button].button-warning, input[type=reset].button-warning, input[type=submit].button-warning {
+  background-color: #ebdccf; }
+  .button.button-warning:hover, .button.button-warning.active, button.button-warning:hover, button.button-warning.active, input[type=button].button-warning:hover, input[type=button].button-warning.active, input[type=reset].button-warning:hover, input[type=reset].button-warning.active, input[type=submit].button-warning:hover, input[type=submit].button-warning.active {
+    background-color: #e2c2a5; }
+.button.button-error, button.button-error, input[type=button].button-error, input[type=reset].button-error, input[type=submit].button-error {
+  background-color: #ebcfcf; }
+  .button.button-error:hover, .button.button-error.active, button.button-error:hover, button.button-error.active, input[type=button].button-error:hover, input[type=button].button-error.active, input[type=reset].button-error:hover, input[type=reset].button-error.active, input[type=submit].button-error:hover, input[type=submit].button-error.active {
+    background-color: #e2a5a5; }
+
+.button-group {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative; }
+  .button-group .button, .button-group button, .button-group input[type=button], .button-group input[type=reset], .button-group input[type=submit] {
+    float: left; }
+    .button-group .button, .button-group .button:hover, .button-group button, .button-group button:hover, .button-group input[type=button], .button-group input[type=button]:hover, .button-group input[type=reset], .button-group input[type=reset]:hover, .button-group input[type=submit], .button-group input[type=submit]:hover {
+      border-left: 1px solid #444444; }
+    .button-group .button:first-child, .button-group button:first-child, .button-group input[type=button]:first-child, .button-group input[type=reset]:first-child, .button-group input[type=submit]:first-child {
+      border-left: none; }
 
 .grid-1-1 > .cell {
   width: 50%; }
@@ -598,93 +776,6 @@ footer {
     color: inherit;
     text-decoration: none; }
 
-button, input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit; }
-
-button::-moz-focus-inner,
-input::-moz-focus-inner {
-  border: 0;
-  padding: 0; }
-
-.button, .button:link, .button:visited,
-button,
-button:link,
-button:visited,
-input[type=button],
-input[type=button]:link,
-input[type=button]:visited,
-input[type=reset],
-input[type=reset]:link,
-input[type=reset]:visited,
-input[type=submit],
-input[type=submit]:link,
-input[type=submit]:visited {
-  background-color: #eeeeee;
-  border: none;
-  border-bottom: 2px solid #444444;
-  color: #444444;
-  line-height: normal;
-  text-decoration: none;
-  padding: 6px 12px 4px;
-  display: inline-block;
-  margin: 2px 0;
-  cursor: pointer; }
-  .button.primary, .button:link.primary, .button:visited.primary,
-  button.primary,
-  button:link.primary,
-  button:visited.primary,
-  input[type=button].primary,
-  input[type=button]:link.primary,
-  input[type=button]:visited.primary,
-  input[type=reset].primary,
-  input[type=reset]:link.primary,
-  input[type=reset]:visited.primary,
-  input[type=submit].primary,
-  input[type=submit]:link.primary,
-  input[type=submit]:visited.primary {
-    font-weight: 600; }
-.button:hover, .button:active,
-button:hover,
-button:active,
-input[type=button]:hover,
-input[type=button]:active,
-input[type=reset]:hover,
-input[type=reset]:active,
-input[type=submit]:hover,
-input[type=submit]:active {
-  background-color: #dddddd;
-  color: #2272cc;
-  border-color: #2272cc;
-  text-decoration: none; }
-.button:active,
-button:active,
-input[type=button]:active,
-input[type=reset]:active,
-input[type=submit]:active {
-  box-shadow: inset 0 4px 5px rgba(0, 0, 0, 0.15);
-  outline: none; }
-.button[disabled], .button[disabled]:hover, .button[disabled]:active,
-button[disabled],
-button[disabled]:hover,
-button[disabled]:active,
-input[type=button][disabled],
-input[type=button][disabled]:hover,
-input[type=button][disabled]:active,
-input[type=reset][disabled],
-input[type=reset][disabled]:hover,
-input[type=reset][disabled]:active,
-input[type=submit][disabled],
-input[type=submit][disabled]:hover,
-input[type=submit][disabled]:active {
-  background-color: #f1f1f1;
-  border-color: #999999;
-  color: #999999;
-  cursor: default;
-  box-shadow: none;
-  outline: none; }
-
 input[type=text],
 input[type=email],
 input[type=password],
@@ -752,7 +843,7 @@ input[type=checkbox] {
     color: #2272cc;
     font-size: 14px;
     float: left;
-    margin: -2px 0 0 2px;
+    margin: -2px 0 0 0px;
     font-family: "Open Sans", sans-serif;
     content: '\2714'; }
   input[type=checkbox]:focus {
@@ -877,25 +968,30 @@ form {
     margin-left: 0; }
 
 table {
-  font-size: 0.9em;
   margin: 0 0 6px 0;
   border-spacing: 0;
   width: 100%; }
+  table .col-xs {
+    width: 10%; }
+  table .col-sm {
+    width: 20%; }
+  table .col-md {
+    width: 30%; }
+  table .col-lg {
+    width: 40%; }
   table thead tr th, table tfoot tr th {
     text-align: left;
     font-weight: 600; }
   table td, table th {
     padding: 12px 8px;
-    vertical-align: top;
-    width: 15%; }
-    table td.primary, table th.primary {
-      width: auto; }
+    vertical-align: top; }
     table td.non-essential, table th.non-essential {
       display: none; }
   table thead th, table tfoot th {
     background-color: #eeeeee;
     color: #999999;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    vertical-align: bottom; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
       color: #444444;
       padding: 12px 8px;
@@ -911,14 +1007,22 @@ table {
     border-top: 0; }
   table tbody tr td {
     border-top: 1px solid #e6e6e6; }
-  table tbody tr.warn td {
-    background-color: #fdfdf0; }
+  table tbody tr.muted td {
+    background-color: #f2f2f2; }
+  table tbody tr.primary td {
+    background-color: #f0f6fd; }
+  table tbody tr.light td {
+    background-color: white; }
+  table tbody tr.dark td {
+    background-color: #83b4ea; }
+  table tbody tr.info td {
+    background-color: #f0fafd; }
+  table tbody tr.success td {
+    background-color: #f0fdf0; }
+  table tbody tr.warning td {
+    background-color: #fdf6f0; }
   table tbody tr.error td {
     background-color: #fdf0f0; }
-  table tbody tr.unread td {
-    background-color: #f0f6fd; }
-  table tbody tr.success td {
-    background-color: #f4fdf0; }
   table tbody tr:hover td {
     background-color: #f7f7f7; }
   table tbody tr .actions a {
@@ -930,19 +1034,23 @@ table {
       margin-right: 12px; }
     table tbody tr:hover td.actions a {
       visibility: visible; } }
-  table td.primary {
-    width: auto; }
-    table td.primary > a:first-child {
-      font-weight: 600;
-      font-size: 1.1em; }
-    table td.primary .essential > span {
-      white-space: nowrap;
-      margin-right: 8px; }
-      table td.primary .essential > span:last-child {
-        margin-right: 0; }
-    @media screen and (min-width: 768px) {
-      table td.primary .essential {
-        display: none; } }
+  table.table-va-top td {
+    vertical-align: top; }
+  table.table-va-middle td {
+    vertical-align: middle; }
+  table.table-va-bottom td {
+    vertical-align: bottom; }
+  table td.primary > a:first-child {
+    font-weight: 600;
+    font-size: 1.1em; }
+  table td.primary .essential > span {
+    white-space: nowrap;
+    margin-right: 8px; }
+    table td.primary .essential > span:last-child {
+      margin-right: 0; }
+  @media screen and (min-width: 768px) {
+    table td.primary .essential {
+      display: none; } }
   table .action-links {
     margin-top: 8px; }
     table .action-links a {

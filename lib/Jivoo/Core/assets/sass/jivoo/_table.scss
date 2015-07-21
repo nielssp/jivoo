@@ -1,8 +1,24 @@
 table {
-  font-size: 0.9em;
   margin: 0 0 6px 0;
   border-spacing: 0;
   width: 100%;
+
+  .col-xs {
+    width: 10%;
+  }
+  
+  .col-sm {
+    width: 20%;
+  }
+
+  .col-md {
+    width: 30%;
+  }
+  
+  .col-lg {
+    width: 40%;
+  }
+
   thead, tfoot {
     tr {
       th {
@@ -14,11 +30,7 @@ table {
   td, th {
     padding: 12px 8px;
     vertical-align: top;
-    width: 15%;
 
-    &.primary {
-      width: auto;
-    }
     &.non-essential {
       display: none;
     }
@@ -27,6 +39,7 @@ table {
     background-color: $navBg;
     color: $navDisFg;
     text-transform: uppercase;
+    vertical-align: bottom;
     a, label {
       &, &:link, &:visited {
         color: $navFg;
@@ -51,25 +64,29 @@ table {
       td {
         border-top: 1px solid darken($mainBg, 10%);
       }
-      &.warn {
-        td{
-          background-color: lighten(#cccc22, 50%);
-        }
+      &.muted td {
+        background-color: lighten($grey, 50%);
       }
-      &.error {
-        td{
-          background-color: lighten(#cc2222, 50%);
-        }
+      &.primary td {
+        background-color: lighten($primary, 50%);
       }
-      &.unread {
-        td {
-          background-color: lighten(#2272CC, 50%);
-        }
+      &.light td {
+        background-color: lighten($light, 50%);
       }
-      &.success {
-        td {
-          background-color: lighten(#50cc22, 50%);
-        }
+      &.dark td {
+        background-color: lighten($dark, 50%);
+      }
+      &.info td {
+        background-color: lighten($info, 50%);
+      }
+      &.success td {
+        background-color: lighten($success, 50%);
+      }
+      &.warning td {
+        background-color: lighten($warning, 50%);
+      }
+      &.error td {
+        background-color: lighten($error, 50%);
       }
 
       &:hover {
@@ -99,8 +116,16 @@ table {
 
     }
   }
+  &.table-va-top td {
+    vertical-align: top;
+  }
+  &.table-va-middle td {
+    vertical-align: middle;
+  }
+  &.table-va-bottom td {
+    vertical-align: bottom;
+  }
   td.primary {
-    width: auto;
     & > a:first-child {
       font-weight: 600;
       font-size: 1.1em;
