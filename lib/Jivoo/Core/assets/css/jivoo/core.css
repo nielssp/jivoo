@@ -1132,20 +1132,27 @@ table {
     vertical-align: middle; }
   table.table-va-bottom td {
     vertical-align: bottom; }
-  table td.main .values {
+  table td.main dl.values {
     margin-top: 8px;
     font-size: 0.9em; }
-    table td.main .values dt, table td.main .values dd {
+    table td.main dl.values dt, table td.main dl.values dd {
+      width: auto;
+      float: none;
       display: inline;
+      padding: 0;
+      text-align: left;
+      margin: 0;
       margin-right: 12px;
       white-space: nowrap; }
-      table td.main .values dt:last-child, table td.main .values dd:last-child {
+      table td.main dl.values dt:last-child, table td.main dl.values dd:last-child {
         margin-right: 0; }
-    table td.main .values dt {
+    table td.main dl.values dt {
       font-weight: 600; }
-      table td.main .values dt:after {
+      table td.main dl.values dt:after {
         content: ':';
         display: inline; }
+    table td.main dl.values dd:after {
+      display: none; }
   @media screen and (min-width: 768px) {
     table td.main .values {
       display: none; } }

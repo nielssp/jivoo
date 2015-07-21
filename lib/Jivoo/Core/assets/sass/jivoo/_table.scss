@@ -145,11 +145,16 @@ table {
     vertical-align: bottom;
   }
   td.main {
-    .values {
+    dl.values {
       margin-top: 8px;
       font-size: 0.9em;
       dt, dd {
+        width: auto;
+        float: none;
         display: inline;
+        padding: 0;
+        text-align: left;
+        margin: 0;
         margin-right: 12px;
         white-space: nowrap;
         &:last-child {
@@ -161,6 +166,11 @@ table {
         &:after {
           content: ':';
           display: inline;
+        }
+      }
+      dd {
+        &:after {
+          display: none;
         }
       }
     }
