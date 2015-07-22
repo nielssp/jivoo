@@ -8,6 +8,7 @@ namespace Jivoo\ActiveModels;
 use Jivoo\Models\IRecord;
 use Jivoo\Models\IActionRecord;
 use Jivoo\Routing\ILinkable;
+use Jivoo\Core\Logger;
 
 /**
  * An active record, see also {@see ActiveModel}.
@@ -338,8 +339,11 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
    * @return bool True if successfully saved, false on errors.
    */
   public function save($validate = true) {
-    if ($validate and !$this->isValid())
+    if ($validate and !$this->isValid()) {
+      foreach ($this->getErrors() as $field => $error)
+        Logger::notice(tr('Form error (%1): %2', $field, $error));
       return false;
+    }
     $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if ($this->isNew()) {
       foreach ($this->data as $field => $value)
