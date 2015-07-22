@@ -155,6 +155,7 @@
   </ul>
 </div>
 
+
 <div class="buttons">
   <input type="submit" class="button-primary" />
 </div>
@@ -173,6 +174,35 @@
       <div class="field">
         <label>Password</label> <input type="password"
           placeholder="Password" />
+      </div>
+      
+      <div class="field">
+        <input type="checkbox" />
+        <label>Remember</label>
+      </div>
+
+      <div class="buttons">
+        <input type="submit" />
+      </div>
+
+    </form>
+    
+    <form class="form-wide-xs" jtk:block>
+      <h2 jtk:header>Wide form</h2>
+
+      <div class="field">
+        <label>Username</label> <input type="text"
+          placeholder="Username" />
+      </div>
+
+      <div class="field">
+        <label>Password</label> <input type="password"
+          placeholder="Password" />
+      </div>
+      
+      <div class="field">
+        <input type="checkbox" />
+        <label>Remember</label>
       </div>
 
       <div class="buttons">
@@ -203,23 +233,12 @@
 
     <div jtk:block>
       <h2 jtk:header>Input groups</h2>
-      <div class="field">
-        <div class="input-group">
-          <div class="input-group-button">
-            <button>button</button>
-          </div>
-          <input type="text" placeholder="Search" />
-          <div class="input-group-text">text</div>
-        </div>
-      </div>
 
       <div class="field">
         <div class="input-group">
           <div class="input-group-text">http://</div>
           <input type="text" placeholder="domain" />
-          <div class="input-group-button">
-            <button>.com</button>
-          </div>
+          <div class="input-group-text">.com</div>
         </div>
       </div>
 
@@ -229,6 +248,18 @@
           <div class="input-group-button">
             <button>
               <span class="icon"><span class="icon-search"></span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="field" j:foreach="array('muted', 'primary', 'light', 'dark', 'info', 'success', 'warning', 'error') as $context" j:class="'field-' . $context">
+        <div class="input-group">
+          <div class="input-group-text">http://</div>
+          <input type="text" placeholder="domain" />
+          <div class="input-group-button">
+            <button>
+              Go to
             </button>
           </div>
         </div>

@@ -159,6 +159,28 @@ Radio</label></li>
 <label>Password</label>
 <input type="password" placeholder="Password" />
 </div>
+<div class="field">
+<input type="checkbox" />
+<label>Remember</label>
+</div>
+<div class="buttons">
+<input type="submit" />
+</div>
+</form></div>
+<div class="block"><div class=" block-header"><h2>Wide form</h2></div><form class="form-wide-xs block-content">
+
+<div class="field">
+<label>Username</label>
+<input type="text" placeholder="Username" />
+</div>
+<div class="field">
+<label>Password</label>
+<input type="password" placeholder="Password" />
+</div>
+<div class="field">
+<input type="checkbox" />
+<label>Remember</label>
+</div>
 <div class="buttons">
 <input type="submit" />
 </div>
@@ -186,20 +208,9 @@ Radio</label></li>
 
 <div class="field">
 <div class="input-group">
-<div class="input-group-button">
-<button>button</button>
-</div>
-<input type="text" placeholder="Search" />
-<div class="input-group-text">text</div>
-</div>
-</div>
-<div class="field">
-<div class="input-group">
 <div class="input-group-text">http://</div>
 <input type="text" placeholder="domain" />
-<div class="input-group-button">
-<button>.com</button>
-</div>
+<div class="input-group-text">.com</div>
 </div>
 </div>
 <div class="field">
@@ -212,6 +223,19 @@ Radio</label></li>
 </div>
 </div>
 </div>
+<?php foreach (array('muted', 'primary', 'light', 'dark', 'info', 'success', 'warning', 'error') as $context): ?>
+<div class="<?php echo 'field ' . 'field-' . $context; ?>">
+<div class="input-group">
+<div class="input-group-text">http://</div>
+<input type="text" placeholder="domain" />
+<div class="input-group-button">
+<button>
+              Go to
+</button>
+</div>
+</div>
+</div><?php endforeach; ?>
+
 </div></div>
 </div>
 </div>

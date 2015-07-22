@@ -1057,7 +1057,8 @@ label {
   .field input[type=time],
   .field input[type=datetime],
   .field textarea,
-  .field select {
+  .field select,
+  .field .input-group {
     margin: 0 0 6px 0; }
   .field ul, .field ol {
     margin-bottom: 6px; }
@@ -1101,6 +1102,17 @@ label {
     .field.field-muted textarea:focus,
     .field.field-muted select:focus {
       border-color: #a5a5a5; }
+  .field.field-muted .input-group-text {
+    border-color: #727272;
+    background-color: #d8d8d8; }
+  .field.field-muted .input-group-button .button, .field.field-muted .input-group-button button, .field.field-muted .input-group-button input[type=button], .field.field-muted .input-group-button input[type=reset], .field.field-muted .input-group-button input[type=submit] {
+    background-color: #8c8c8c;
+    color: #fff;
+    border-color: #262626; }
+    .field.field-muted .input-group-button .button:hover, .field.field-muted .input-group-button .button.active, .field.field-muted .input-group-button button:hover, .field.field-muted .input-group-button button.active, .field.field-muted .input-group-button input[type=button]:hover, .field.field-muted .input-group-button input[type=button].active, .field.field-muted .input-group-button input[type=reset]:hover, .field.field-muted .input-group-button input[type=reset].active, .field.field-muted .input-group-button input[type=submit]:hover, .field.field-muted .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #727272;
+      border-color: #3f3f3f; }
   .field.field-primary > label:first-child,
   .field.field-primary .help {
     color: #2272cc; }
@@ -1122,6 +1134,17 @@ label {
     .field.field-primary textarea:focus,
     .field.field-primary select:focus {
       border-color: #6da6e7; }
+  .field.field-primary .input-group-text {
+    border-color: #2272cc;
+    background-color: #c5dcf5; }
+  .field.field-primary .input-group-button .button, .field.field-primary .input-group-button button, .field.field-primary .input-group-button input[type=button], .field.field-primary .input-group-button input[type=reset], .field.field-primary .input-group-button input[type=submit] {
+    background-color: #588dc9;
+    color: #fff;
+    border-color: #0c2949; }
+    .field.field-primary .input-group-button .button:hover, .field.field-primary .input-group-button .button.active, .field.field-primary .input-group-button button:hover, .field.field-primary .input-group-button button.active, .field.field-primary .input-group-button input[type=button]:hover, .field.field-primary .input-group-button input[type=button].active, .field.field-primary .input-group-button input[type=reset]:hover, .field.field-primary .input-group-button input[type=reset].active, .field.field-primary .input-group-button input[type=submit]:hover, .field.field-primary .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #2272cc;
+      border-color: #134175; }
   .field.field-light > label:first-child,
   .field.field-light .help {
     color: #83b4ea; }
@@ -1143,6 +1166,17 @@ label {
     .field.field-light textarea:focus,
     .field.field-light select:focus {
       border-color: #dbe9f9; }
+  .field.field-light .input-group-text {
+    border-color: #83b4ea;
+    background-color: white; }
+  .field.field-light .input-group-button .button, .field.field-light .input-group-button button, .field.field-light .input-group-button input[type=button], .field.field-light .input-group-button input[type=reset], .field.field-light .input-group-button input[type=submit] {
+    background-color: #b8cfe8;
+    color: #fff;
+    border-color: #1e66b6; }
+    .field.field-light .input-group-button .button:hover, .field.field-light .input-group-button .button.active, .field.field-light .input-group-button button:hover, .field.field-light .input-group-button button.active, .field.field-light .input-group-button input[type=button]:hover, .field.field-light .input-group-button input[type=button].active, .field.field-light .input-group-button input[type=reset]:hover, .field.field-light .input-group-button input[type=reset].active, .field.field-light .input-group-button input[type=submit]:hover, .field.field-light .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #83b4ea;
+      border-color: #2c7fdc; }
   .field.field-dark > label:first-child,
   .field.field-dark .help {
     color: #10355f; }
@@ -1164,6 +1198,17 @@ label {
     .field.field-dark textarea:focus,
     .field.field-dark select:focus {
       border-color: #1e66b6; }
+  .field.field-dark .input-group-text {
+    border-color: #10355f;
+    background-color: #5799e3; }
+  .field.field-dark .input-group-button .button, .field.field-dark .input-group-button button, .field.field-dark .input-group-button input[type=button], .field.field-dark .input-group-button input[type=reset], .field.field-dark .input-group-button input[type=submit] {
+    background-color: #274e7a;
+    color: #fff;
+    border-color: black; }
+    .field.field-dark .input-group-button .button:hover, .field.field-dark .input-group-button .button.active, .field.field-dark .input-group-button button:hover, .field.field-dark .input-group-button button.active, .field.field-dark .input-group-button input[type=button]:hover, .field.field-dark .input-group-button input[type=button].active, .field.field-dark .input-group-button input[type=reset]:hover, .field.field-dark .input-group-button input[type=reset].active, .field.field-dark .input-group-button input[type=submit]:hover, .field.field-dark .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #10355f;
+      border-color: #010407; }
   .field.field-info > label:first-child,
   .field.field-info .help {
     color: #22aacc; }
@@ -1185,6 +1230,17 @@ label {
     .field.field-info textarea:focus,
     .field.field-info select:focus {
       border-color: #6dcee7; }
+  .field.field-info .input-group-text {
+    border-color: #22aacc;
+    background-color: #c5ecf5; }
+  .field.field-info .input-group-button .button, .field.field-info .input-group-button button, .field.field-info .input-group-button input[type=button], .field.field-info .input-group-button input[type=reset], .field.field-info .input-group-button input[type=submit] {
+    background-color: #58b3c9;
+    color: #fff;
+    border-color: #0c3d49; }
+    .field.field-info .input-group-button .button:hover, .field.field-info .input-group-button .button.active, .field.field-info .input-group-button button:hover, .field.field-info .input-group-button button.active, .field.field-info .input-group-button input[type=button]:hover, .field.field-info .input-group-button input[type=button].active, .field.field-info .input-group-button input[type=reset]:hover, .field.field-info .input-group-button input[type=reset].active, .field.field-info .input-group-button input[type=submit]:hover, .field.field-info .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #22aacc;
+      border-color: #136175; }
   .field.field-success > label:first-child,
   .field.field-success .help {
     color: #22cc22; }
@@ -1206,6 +1262,17 @@ label {
     .field.field-success textarea:focus,
     .field.field-success select:focus {
       border-color: #6de76d; }
+  .field.field-success .input-group-text {
+    border-color: #22cc22;
+    background-color: #c5f5c5; }
+  .field.field-success .input-group-button .button, .field.field-success .input-group-button button, .field.field-success .input-group-button input[type=button], .field.field-success .input-group-button input[type=reset], .field.field-success .input-group-button input[type=submit] {
+    background-color: #58c958;
+    color: #fff;
+    border-color: #0c490c; }
+    .field.field-success .input-group-button .button:hover, .field.field-success .input-group-button .button.active, .field.field-success .input-group-button button:hover, .field.field-success .input-group-button button.active, .field.field-success .input-group-button input[type=button]:hover, .field.field-success .input-group-button input[type=button].active, .field.field-success .input-group-button input[type=reset]:hover, .field.field-success .input-group-button input[type=reset].active, .field.field-success .input-group-button input[type=submit]:hover, .field.field-success .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #22cc22;
+      border-color: #137513; }
   .field.field-warning > label:first-child,
   .field.field-warning .help {
     color: #cc7222; }
@@ -1227,6 +1294,17 @@ label {
     .field.field-warning textarea:focus,
     .field.field-warning select:focus {
       border-color: #e7a66d; }
+  .field.field-warning .input-group-text {
+    border-color: #cc7222;
+    background-color: #f5dcc5; }
+  .field.field-warning .input-group-button .button, .field.field-warning .input-group-button button, .field.field-warning .input-group-button input[type=button], .field.field-warning .input-group-button input[type=reset], .field.field-warning .input-group-button input[type=submit] {
+    background-color: #c98d58;
+    color: #fff;
+    border-color: #49290c; }
+    .field.field-warning .input-group-button .button:hover, .field.field-warning .input-group-button .button.active, .field.field-warning .input-group-button button:hover, .field.field-warning .input-group-button button.active, .field.field-warning .input-group-button input[type=button]:hover, .field.field-warning .input-group-button input[type=button].active, .field.field-warning .input-group-button input[type=reset]:hover, .field.field-warning .input-group-button input[type=reset].active, .field.field-warning .input-group-button input[type=submit]:hover, .field.field-warning .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #cc7222;
+      border-color: #754113; }
   .field.field-error > label:first-child,
   .field.field-error .help {
     color: #cc2222; }
@@ -1248,6 +1326,17 @@ label {
     .field.field-error textarea:focus,
     .field.field-error select:focus {
       border-color: #e76d6d; }
+  .field.field-error .input-group-text {
+    border-color: #cc2222;
+    background-color: #f5c5c5; }
+  .field.field-error .input-group-button .button, .field.field-error .input-group-button button, .field.field-error .input-group-button input[type=button], .field.field-error .input-group-button input[type=reset], .field.field-error .input-group-button input[type=submit] {
+    background-color: #c95858;
+    color: #fff;
+    border-color: #490c0c; }
+    .field.field-error .input-group-button .button:hover, .field.field-error .input-group-button .button.active, .field.field-error .input-group-button button:hover, .field.field-error .input-group-button button.active, .field.field-error .input-group-button input[type=button]:hover, .field.field-error .input-group-button input[type=button].active, .field.field-error .input-group-button input[type=reset]:hover, .field.field-error .input-group-button input[type=reset].active, .field.field-error .input-group-button input[type=submit]:hover, .field.field-error .input-group-button input[type=submit].active {
+      color: #fff;
+      background-color: #cc2222;
+      border-color: #751313; }
   .field > *:last-child {
     margin-bottom: 0; }
 
@@ -1270,7 +1359,8 @@ form {
     .field input[type=time],
     .field input[type=datetime],
     .field textarea,
-    .field select {
+    .field select,
+    .field .input-group {
       margin-top: -6px;
       margin-bottom: 6px;
       width: 60%; }
@@ -1297,6 +1387,7 @@ form {
   .form-narrow .field input[type=datetime],
   .form-narrow .field textarea,
   .form-narrow .field select,
+  .form-narrow .field .input-group,
   .block .field input[type=text],
   .block .field input[type=email],
   .block .field input[type=password],
@@ -1304,7 +1395,8 @@ form {
   .block .field input[type=time],
   .block .field input[type=datetime],
   .block .field textarea,
-  .block .field select {
+  .block .field select,
+  .block .field .input-group {
     margin: 0 0 6px 0;
     width: 100%; }
   .form-narrow .field > label:first-child,
@@ -1330,7 +1422,8 @@ form {
   .form-wide .field input[type=time],
   .form-wide .field input[type=datetime],
   .form-wide .field textarea,
-  .form-wide .field select {
+  .form-wide .field select,
+  .form-wide .field .input-group {
     margin-top: -6px;
     margin-bottom: 6px;
     width: 60%; }
@@ -1355,7 +1448,8 @@ form {
   .form-wide-xs .field input[type=time],
   .form-wide-xs .field input[type=datetime],
   .form-wide-xs .field textarea,
-  .form-wide-xs .field select {
+  .form-wide-xs .field select,
+  .form-wide-xs .field .input-group {
     margin: 0 0 6px 0;
     width: 100%; }
   .form-wide-xs .field > label:first-child {
@@ -1378,10 +1472,11 @@ form {
     .form-wide-xs .field input[type=time],
     .form-wide-xs .field input[type=datetime],
     .form-wide-xs .field textarea,
-    .form-wide-xs .field select {
+    .form-wide-xs .field select,
+    .form-wide-xs .field .input-group {
       margin-top: -6px;
       margin-bottom: 6px;
-      width: 80%; }
+      width: 100%; }
     .form-wide-xs .field > label:first-child {
       float: left;
       width: 140px;
@@ -1403,7 +1498,8 @@ form {
   .form-wide-sm .field input[type=time],
   .form-wide-sm .field input[type=datetime],
   .form-wide-sm .field textarea,
-  .form-wide-sm .field select {
+  .form-wide-sm .field select,
+  .form-wide-sm .field .input-group {
     margin: 0 0 6px 0;
     width: 100%; }
   .form-wide-sm .field > label:first-child {
@@ -1426,7 +1522,8 @@ form {
     .form-wide-sm .field input[type=time],
     .form-wide-sm .field input[type=datetime],
     .form-wide-sm .field textarea,
-    .form-wide-sm .field select {
+    .form-wide-sm .field select,
+    .form-wide-sm .field .input-group {
       margin-top: -6px;
       margin-bottom: 6px;
       width: 80%; }
@@ -1451,7 +1548,8 @@ form {
   .form-wide-md .field input[type=time],
   .form-wide-md .field input[type=datetime],
   .form-wide-md .field textarea,
-  .form-wide-md .field select {
+  .form-wide-md .field select,
+  .form-wide-md .field .input-group {
     margin: 0 0 6px 0;
     width: 100%; }
   .form-wide-md .field > label:first-child {
@@ -1474,7 +1572,8 @@ form {
     .form-wide-md .field input[type=time],
     .form-wide-md .field input[type=datetime],
     .form-wide-md .field textarea,
-    .form-wide-md .field select {
+    .form-wide-md .field select,
+    .form-wide-md .field .input-group {
       margin-top: -6px;
       margin-bottom: 6px;
       width: 60%; }
@@ -1499,7 +1598,8 @@ form {
   .form-wide-lg .field input[type=time],
   .form-wide-lg .field input[type=datetime],
   .form-wide-lg .field textarea,
-  .form-wide-lg .field select {
+  .form-wide-lg .field select,
+  .form-wide-lg .field .input-group {
     margin: 0 0 6px 0;
     width: 100%; }
   .form-wide-lg .field > label:first-child {
@@ -1522,7 +1622,8 @@ form {
     .form-wide-lg .field input[type=time],
     .form-wide-lg .field input[type=datetime],
     .form-wide-lg .field textarea,
-    .form-wide-lg .field select {
+    .form-wide-lg .field select,
+    .form-wide-lg .field .input-group {
       margin-top: -6px;
       margin-bottom: 6px;
       width: 60%; }
@@ -1585,7 +1686,6 @@ form {
     vertical-align: middle; }
   .input-group-button .button, .input-group-button button, .input-group-button input[type=button], .input-group-button input[type=reset], .input-group-button input[type=submit], .field .input-group-button .button, .field .input-group-button button, .field .input-group-button input[type=button], .field .input-group-button input[type=reset], .field .input-group-button input[type=submit] {
     position: relative;
-    border: 1px solid #d9d9d9;
     font-size: 14px;
     margin: 0;
     display: block;

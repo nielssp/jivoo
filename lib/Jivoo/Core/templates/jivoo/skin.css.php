@@ -196,11 +196,16 @@ $Css('footer')->borderTopColor = $Skin->navBg;
 $inputs = 'input[type=text], input[type=email], input[type=password], input[type=date],
 input[type=time], input[type=datetime], textarea, select';
 
-$Css->addMixin('fieldColor', function($field, $color) use($Css, $inputs) {
+$Css->addMixin('fieldColor', function($field, $color) use($Css, $inputs, $buttons) {
   $field('& > label:first-child, .help')->color = $color;
   $input = $field($inputs);
   $input->borderColor = $color;
   $input('&:focus')->borderColor = $Css->lighten($color, 20);
+  $field('.input-group-text')->css(array(
+    'border-color' => $color,
+    'background-color' => $Css->lighten($color, 40)
+  ));
+  $field('.input-group-button')->find($buttons)->apply('buttonColor', $color);
 });
 
 $input = $Css($inputs);

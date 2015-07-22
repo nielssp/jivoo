@@ -18,6 +18,15 @@ select';
       border-color: lighten($color, 20%);
     }
   }
+  .input-group-text {
+    border-color: $color;
+    background-color: lighten($color, 40%);
+  }
+  .input-group-button {
+    .button, button, input[type=button], input[type=reset], input[type=submit] {
+      @include button-color($color);
+    }
+  }
 }
 
 #{$inputs} {
@@ -169,7 +178,8 @@ label {
   input[type=time],
   input[type=datetime],
   textarea,
-  select {
+  select,
+  .input-group {
     margin: 0 0 6px 0;
   }
   ul, ol {
@@ -254,7 +264,7 @@ form {
 .form-wide-xs {
   @include narrow-form;
   @media screen and (min-width: $xs) {
-    @include wide-form(140px, 80%);
+    @include wide-form(140px, 100%);
   }
 }
 .form-wide-sm {
@@ -300,7 +310,6 @@ form {
   &-button {
     .button, button, input[type=button], input[type=reset], input[type=submit] {
       position: relative;
-      border: 1px solid darken($mainBg, 15%);
       font-size: 14px;
       margin: 0;
       display: block;

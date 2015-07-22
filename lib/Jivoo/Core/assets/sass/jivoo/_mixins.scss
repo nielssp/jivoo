@@ -162,7 +162,8 @@
     input[type=time],
     input[type=datetime],
     textarea,
-    select {
+    select,
+    .input-group {
       margin-top: -6px;
       margin-bottom: 6px;
       width: $inputSize;
@@ -194,7 +195,8 @@
     input[type=time],
     input[type=datetime],
     textarea,
-    select {
+    select,
+    .input-group {
       margin: 0 0 6px 0;
       width: 100%;
     }
