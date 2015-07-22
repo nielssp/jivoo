@@ -1,6 +1,10 @@
 <!-- { $this->view->data->title = tr('Form elements'); } -->
 
-<form>
+<div jtk:grid="2:1" jtk:size="md">
+
+<form class="form-wide-sm" jtk:cell jtk:block>
+
+<h2 jtk:header>Elements</h2>
 
 <div class="field">
   <label>Static</label>
@@ -156,3 +160,80 @@
 </div>
 
 </form>
+
+  <div>
+    <form class="form-narrow" jtk:block>
+      <h2 jtk:header>Narrow form</h2>
+
+      <div class="field">
+        <label>Username</label> <input type="text"
+          placeholder="Username" />
+      </div>
+
+      <div class="field">
+        <label>Password</label> <input type="password"
+          placeholder="Password" />
+      </div>
+
+      <div class="buttons">
+        <input type="submit" />
+      </div>
+
+    </form>
+
+    <div jtk:block>
+      <h2 jtk:header>Input sizes</h2>
+
+      <div class="field">
+        <label>Extra small</label> <input type="text"
+          placeholder="Extra small" class="input-xs" />
+      </div>
+      <div class="field">
+        <label>Small</label> <input type="text" placeholder="Small"
+          class="input-sm" />
+      </div>
+      <div class="field">
+        <label>Default</label> <input type="text" placeholder="Default" />
+      </div>
+      <div class="field">
+        <label>Large</label> <input type="text" placeholder="Large"
+          class="input-lg" />
+      </div>
+    </div>
+
+    <div jtk:block>
+      <h2 jtk:header>Input groups</h2>
+      <div class="field">
+        <div class="input-group">
+          <div class="input-group-button">
+            <button>button</button>
+          </div>
+          <input type="text" placeholder="Search" />
+          <div class="input-group-text">text</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="input-group">
+          <div class="input-group-text">http://</div>
+          <input type="text" placeholder="domain" />
+          <div class="input-group-button">
+            <button>.com</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="input-group">
+          <input type="text" placeholder="Search" />
+          <div class="input-group-button">
+            <button>
+              <span class="icon"><span class="icon-search"></span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

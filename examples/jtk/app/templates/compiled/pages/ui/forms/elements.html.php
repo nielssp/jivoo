@@ -1,5 +1,7 @@
 <?php $this->view->data->title = tr('Form elements'); ?>
-<form>
+<div class="grid-2-1 grid-md">
+<div class="cell cell"><div class="block"><div class=" block-header"><h2>Elements</h2></div><form class="form-wide-sm block-content">
+
 <div class="field">
 <label>Static</label>
   Whatever
@@ -145,4 +147,71 @@ Radio</label></li>
 <div class="buttons">
 <input type="submit" class="button-primary" />
 </div>
-</form>
+</form></div></div>
+<div class="cell">
+<div class="block"><div class=" block-header"><h2>Narrow form</h2></div><form class="form-narrow block-content">
+
+<div class="field">
+<label>Username</label>
+<input type="text" placeholder="Username" />
+</div>
+<div class="field">
+<label>Password</label>
+<input type="password" placeholder="Password" />
+</div>
+<div class="buttons">
+<input type="submit" />
+</div>
+</form></div>
+<div class="block"><div class=" block-header"><h2>Input sizes</h2></div><div class="block-content">
+
+<div class="field">
+<label>Extra small</label>
+<input type="text" placeholder="Extra small" class="input-xs" />
+</div>
+<div class="field">
+<label>Small</label>
+<input type="text" placeholder="Small" class="input-sm" />
+</div>
+<div class="field">
+<label>Default</label>
+<input type="text" placeholder="Default" />
+</div>
+<div class="field">
+<label>Large</label>
+<input type="text" placeholder="Large" class="input-lg" />
+</div>
+</div></div>
+<div class="block"><div class=" block-header"><h2>Input groups</h2></div><div class="block-content">
+
+<div class="field">
+<div class="input-group">
+<div class="input-group-button">
+<button>button</button>
+</div>
+<input type="text" placeholder="Search" />
+<div class="input-group-text">text</div>
+</div>
+</div>
+<div class="field">
+<div class="input-group">
+<div class="input-group-text">http://</div>
+<input type="text" placeholder="domain" />
+<div class="input-group-button">
+<button>.com</button>
+</div>
+</div>
+</div>
+<div class="field">
+<div class="input-group">
+<input type="text" placeholder="Search" />
+<div class="input-group-button">
+<button>
+<span class="icon"><span class="icon-search"></span></span>
+</button>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</div>

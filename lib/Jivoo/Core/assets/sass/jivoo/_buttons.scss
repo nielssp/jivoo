@@ -1,6 +1,6 @@
-$button: '.button, button, input[type=button], input[type=reset], input[type=submit]';
+$buttons: '.button, button, input[type=button], input[type=reset], input[type=submit]';
 
-#{$button} {
+#{$buttons} {
   @include button;
 }
 
@@ -9,7 +9,7 @@ $button: '.button, button, input[type=button], input[type=reset], input[type=sub
   vertical-align: middle;
   position: relative;
   white-space: nowrap;
-  #{$button} {
+  #{$buttons} {
     float: left;
     margin-left: -1px;
     position: relative;

@@ -320,7 +320,8 @@ dl {
   padding: 2px 6px;
   font-size: 0.8em;
   border-radius: 3px;
-  font-weight: bold; }
+  font-weight: bold;
+  white-space: nowrap; }
 
 a.badge, a.badge:link, a.badge:active, a.badge:visited, a.badge:hover {
   color: white;
@@ -380,6 +381,10 @@ a.badge:hover {
   cursor: default;
   box-shadow: none;
   outline: none; }
+.button.button-block, button.button-block, input[type=button].button-block, input[type=reset].button-block, input[type=submit].button-block {
+  display: block;
+  text-align: center;
+  width: 100%; }
 .button .icon, button .icon, input[type=button] .icon, input[type=reset] .icon, input[type=submit] .icon {
   font-size: 12px;
   height: 12px;
@@ -927,6 +932,45 @@ select {
   textarea[disabled],
   select[disabled] {
     background-color: #f7f7f7; }
+  input[type=text].input-xs,
+  input[type=email].input-xs,
+  input[type=password].input-xs,
+  input[type=date].input-xs,
+  input[type=time].input-xs,
+  input[type=datetime].input-xs,
+  textarea.input-xs,
+  select.input-xs {
+    padding: 0px 4px 0px;
+    margin: 0; }
+  input[type=text].input-sm,
+  input[type=email].input-sm,
+  input[type=password].input-sm,
+  input[type=date].input-sm,
+  input[type=time].input-sm,
+  input[type=datetime].input-sm,
+  textarea.input-sm,
+  select.input-sm {
+    padding: 3px 8px 3px;
+    margin: 1px 0; }
+  input[type=text].input-md,
+  input[type=email].input-md,
+  input[type=password].input-md,
+  input[type=date].input-md,
+  input[type=time].input-md,
+  input[type=datetime].input-md,
+  textarea.input-md,
+  select.input-md {
+    font-size: 14px; }
+  input[type=text].input-lg,
+  input[type=email].input-lg,
+  input[type=password].input-lg,
+  input[type=date].input-lg,
+  input[type=time].input-lg,
+  input[type=datetime].input-lg,
+  textarea.input-lg,
+  select.input-lg {
+    font-size: 16px;
+    padding: 5px 14px 5px; }
 
 textarea {
   min-height: 128px;
@@ -1001,8 +1045,7 @@ label {
     margin-bottom: 4px; }
 
 .field {
-  margin-bottom: 20px;
-  padding: 6px 0; }
+  margin-bottom: 10px; }
   .field .help {
     font-style: italic;
     color: #727272;
@@ -1016,18 +1059,6 @@ label {
   .field textarea,
   .field select {
     margin: 0 0 6px 0; }
-    @media screen and (min-width: 768px) {
-      .field input[type=text],
-      .field input[type=email],
-      .field input[type=password],
-      .field input[type=date],
-      .field input[type=time],
-      .field input[type=datetime],
-      .field textarea,
-      .field select {
-        margin-top: -6px;
-        margin-bottom: 6px;
-        width: 380px; } }
   .field ul, .field ol {
     margin-bottom: 6px; }
   .field > label:first-child {
@@ -1035,17 +1066,8 @@ label {
     font-style: normal;
     font-size: 0.95em;
     display: block;
-    margin-bottom: 6px; }
-    @media screen and (min-width: 768px) {
-      .field > label:first-child {
-        float: left;
-        width: 240px;
-        margin-left: -240px;
-        text-align: right;
-        padding-right: 40px; } }
-  @media screen and (min-width: 768px) {
-    .field {
-      margin-left: 240px; } }
+    margin-bottom: 6px;
+    overflow: hidden; }
   .field.field-required label:first-child:after {
     content: '*';
     margin-left: 4px;
@@ -1234,14 +1256,38 @@ form {
   margin-bottom: 20px; }
   form .buttons {
     margin-bottom: 20px; }
-    @media screen and (min-width: 768px) {
-      form .buttons {
-        margin-left: 240px; } }
   form > *:last-child {
     margin-bottom: 0; }
 
+@media screen and (min-width: 768px) {
+  .field {
+    padding: 6px 0;
+    margin-left: 240px; }
+    .field input[type=text],
+    .field input[type=email],
+    .field input[type=password],
+    .field input[type=date],
+    .field input[type=time],
+    .field input[type=datetime],
+    .field textarea,
+    .field select {
+      margin-top: -6px;
+      margin-bottom: 6px;
+      width: 60%; }
+    .field > label:first-child {
+      float: left;
+      width: 240px;
+      margin-left: -240px;
+      text-align: right;
+      padding-right: 30px; }
+    .field > *:last-child {
+      margin-bottom: 0; }
+
+  .buttons {
+    margin-left: 240px; } }
 .form-narrow .field,
 .block .field {
+  padding: 0;
   margin-left: 0; }
   .form-narrow .field input[type=text],
   .form-narrow .field input[type=email],
@@ -1267,6 +1313,295 @@ form {
     width: auto;
     margin-left: 0;
     text-align: left; }
+  .form-narrow .field > *:last-child,
+  .block .field > *:last-child {
+    margin-bottom: 0; }
+.form-narrow .buttons,
+.block .buttons {
+  margin-left: 0; }
+
+.form-wide .field {
+  padding: 6px 0;
+  margin-left: 240px; }
+  .form-wide .field input[type=text],
+  .form-wide .field input[type=email],
+  .form-wide .field input[type=password],
+  .form-wide .field input[type=date],
+  .form-wide .field input[type=time],
+  .form-wide .field input[type=datetime],
+  .form-wide .field textarea,
+  .form-wide .field select {
+    margin-top: -6px;
+    margin-bottom: 6px;
+    width: 60%; }
+  .form-wide .field > label:first-child {
+    float: left;
+    width: 240px;
+    margin-left: -240px;
+    text-align: right;
+    padding-right: 30px; }
+  .form-wide .field > *:last-child {
+    margin-bottom: 0; }
+.form-wide .buttons {
+  margin-left: 240px; }
+
+.form-wide-xs .field {
+  padding: 0;
+  margin-left: 0; }
+  .form-wide-xs .field input[type=text],
+  .form-wide-xs .field input[type=email],
+  .form-wide-xs .field input[type=password],
+  .form-wide-xs .field input[type=date],
+  .form-wide-xs .field input[type=time],
+  .form-wide-xs .field input[type=datetime],
+  .form-wide-xs .field textarea,
+  .form-wide-xs .field select {
+    margin: 0 0 6px 0;
+    width: 100%; }
+  .form-wide-xs .field > label:first-child {
+    float: none;
+    width: auto;
+    margin-left: 0;
+    text-align: left; }
+  .form-wide-xs .field > *:last-child {
+    margin-bottom: 0; }
+.form-wide-xs .buttons {
+  margin-left: 0; }
+@media screen and (min-width: 480px) {
+  .form-wide-xs .field {
+    padding: 6px 0;
+    margin-left: 140px; }
+    .form-wide-xs .field input[type=text],
+    .form-wide-xs .field input[type=email],
+    .form-wide-xs .field input[type=password],
+    .form-wide-xs .field input[type=date],
+    .form-wide-xs .field input[type=time],
+    .form-wide-xs .field input[type=datetime],
+    .form-wide-xs .field textarea,
+    .form-wide-xs .field select {
+      margin-top: -6px;
+      margin-bottom: 6px;
+      width: 80%; }
+    .form-wide-xs .field > label:first-child {
+      float: left;
+      width: 140px;
+      margin-left: -140px;
+      text-align: right;
+      padding-right: 30px; }
+    .form-wide-xs .field > *:last-child {
+      margin-bottom: 0; }
+  .form-wide-xs .buttons {
+    margin-left: 140px; } }
+
+.form-wide-sm .field {
+  padding: 0;
+  margin-left: 0; }
+  .form-wide-sm .field input[type=text],
+  .form-wide-sm .field input[type=email],
+  .form-wide-sm .field input[type=password],
+  .form-wide-sm .field input[type=date],
+  .form-wide-sm .field input[type=time],
+  .form-wide-sm .field input[type=datetime],
+  .form-wide-sm .field textarea,
+  .form-wide-sm .field select {
+    margin: 0 0 6px 0;
+    width: 100%; }
+  .form-wide-sm .field > label:first-child {
+    float: none;
+    width: auto;
+    margin-left: 0;
+    text-align: left; }
+  .form-wide-sm .field > *:last-child {
+    margin-bottom: 0; }
+.form-wide-sm .buttons {
+  margin-left: 0; }
+@media screen and (min-width: 768px) {
+  .form-wide-sm .field {
+    padding: 6px 0;
+    margin-left: 160px; }
+    .form-wide-sm .field input[type=text],
+    .form-wide-sm .field input[type=email],
+    .form-wide-sm .field input[type=password],
+    .form-wide-sm .field input[type=date],
+    .form-wide-sm .field input[type=time],
+    .form-wide-sm .field input[type=datetime],
+    .form-wide-sm .field textarea,
+    .form-wide-sm .field select {
+      margin-top: -6px;
+      margin-bottom: 6px;
+      width: 80%; }
+    .form-wide-sm .field > label:first-child {
+      float: left;
+      width: 160px;
+      margin-left: -160px;
+      text-align: right;
+      padding-right: 30px; }
+    .form-wide-sm .field > *:last-child {
+      margin-bottom: 0; }
+  .form-wide-sm .buttons {
+    margin-left: 160px; } }
+
+.form-wide-md .field {
+  padding: 0;
+  margin-left: 0; }
+  .form-wide-md .field input[type=text],
+  .form-wide-md .field input[type=email],
+  .form-wide-md .field input[type=password],
+  .form-wide-md .field input[type=date],
+  .form-wide-md .field input[type=time],
+  .form-wide-md .field input[type=datetime],
+  .form-wide-md .field textarea,
+  .form-wide-md .field select {
+    margin: 0 0 6px 0;
+    width: 100%; }
+  .form-wide-md .field > label:first-child {
+    float: none;
+    width: auto;
+    margin-left: 0;
+    text-align: left; }
+  .form-wide-md .field > *:last-child {
+    margin-bottom: 0; }
+.form-wide-md .buttons {
+  margin-left: 0; }
+@media screen and (min-width: 1010px) {
+  .form-wide-md .field {
+    padding: 6px 0;
+    margin-left: 240px; }
+    .form-wide-md .field input[type=text],
+    .form-wide-md .field input[type=email],
+    .form-wide-md .field input[type=password],
+    .form-wide-md .field input[type=date],
+    .form-wide-md .field input[type=time],
+    .form-wide-md .field input[type=datetime],
+    .form-wide-md .field textarea,
+    .form-wide-md .field select {
+      margin-top: -6px;
+      margin-bottom: 6px;
+      width: 60%; }
+    .form-wide-md .field > label:first-child {
+      float: left;
+      width: 240px;
+      margin-left: -240px;
+      text-align: right;
+      padding-right: 30px; }
+    .form-wide-md .field > *:last-child {
+      margin-bottom: 0; }
+  .form-wide-md .buttons {
+    margin-left: 240px; } }
+
+.form-wide-lg .field {
+  padding: 0;
+  margin-left: 0; }
+  .form-wide-lg .field input[type=text],
+  .form-wide-lg .field input[type=email],
+  .form-wide-lg .field input[type=password],
+  .form-wide-lg .field input[type=date],
+  .form-wide-lg .field input[type=time],
+  .form-wide-lg .field input[type=datetime],
+  .form-wide-lg .field textarea,
+  .form-wide-lg .field select {
+    margin: 0 0 6px 0;
+    width: 100%; }
+  .form-wide-lg .field > label:first-child {
+    float: none;
+    width: auto;
+    margin-left: 0;
+    text-align: left; }
+  .form-wide-lg .field > *:last-child {
+    margin-bottom: 0; }
+.form-wide-lg .buttons {
+  margin-left: 0; }
+@media screen and (min-width: 1200px) {
+  .form-wide-lg .field {
+    padding: 6px 0;
+    margin-left: 240px; }
+    .form-wide-lg .field input[type=text],
+    .form-wide-lg .field input[type=email],
+    .form-wide-lg .field input[type=password],
+    .form-wide-lg .field input[type=date],
+    .form-wide-lg .field input[type=time],
+    .form-wide-lg .field input[type=datetime],
+    .form-wide-lg .field textarea,
+    .form-wide-lg .field select {
+      margin-top: -6px;
+      margin-bottom: 6px;
+      width: 60%; }
+    .form-wide-lg .field > label:first-child {
+      float: left;
+      width: 240px;
+      margin-left: -240px;
+      text-align: right;
+      padding-right: 30px; }
+    .form-wide-lg .field > *:last-child {
+      margin-bottom: 0; }
+  .form-wide-lg .buttons {
+    margin-left: 240px; } }
+
+.input-group, .field .input-group {
+  display: table;
+  white-space: nowrap;
+  position: relative;
+  border-collapse: separate; }
+  .input-group input[type=text],
+  .input-group input[type=email],
+  .input-group input[type=password],
+  .input-group input[type=date],
+  .input-group input[type=time],
+  .input-group input[type=datetime],
+  .input-group textarea,
+  .input-group select, .field .input-group input[type=text],
+  .field .input-group input[type=email],
+  .field .input-group input[type=password],
+  .field .input-group input[type=date],
+  .field .input-group input[type=time],
+  .field .input-group input[type=datetime],
+  .field .input-group textarea,
+  .field .input-group select {
+    position: relative;
+    width: 100%;
+    display: table-cell;
+    margin: 0; }
+    .input-group input[type=text]:focus,
+    .input-group input[type=email]:focus,
+    .input-group input[type=password]:focus,
+    .input-group input[type=date]:focus,
+    .input-group input[type=time]:focus,
+    .input-group input[type=datetime]:focus,
+    .input-group textarea:focus,
+    .input-group select:focus, .field .input-group input[type=text]:focus,
+    .field .input-group input[type=email]:focus,
+    .field .input-group input[type=password]:focus,
+    .field .input-group input[type=date]:focus,
+    .field .input-group input[type=time]:focus,
+    .field .input-group input[type=datetime]:focus,
+    .field .input-group textarea:focus,
+    .field .input-group select:focus {
+      z-index: 2; }
+  .input-group-text, .input-group-button, .field .input-group-text, .field .input-group-button {
+    position: relative;
+    display: table-cell;
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle; }
+  .input-group-button .button, .input-group-button button, .input-group-button input[type=button], .input-group-button input[type=reset], .input-group-button input[type=submit], .field .input-group-button .button, .field .input-group-button button, .field .input-group-button input[type=button], .field .input-group-button input[type=reset], .field .input-group-button input[type=submit] {
+    position: relative;
+    border: 1px solid #d9d9d9;
+    font-size: 14px;
+    margin: 0;
+    display: block;
+    width: 100%;
+    margin-right: -1px; }
+    .input-group-button .button:hover, .input-group-button .button:active, .input-group-button .button:focus, .input-group-button button:hover, .input-group-button button:active, .input-group-button button:focus, .input-group-button input[type=button]:hover, .input-group-button input[type=button]:active, .input-group-button input[type=button]:focus, .input-group-button input[type=reset]:hover, .input-group-button input[type=reset]:active, .input-group-button input[type=reset]:focus, .input-group-button input[type=submit]:hover, .input-group-button input[type=submit]:active, .input-group-button input[type=submit]:focus, .field .input-group-button .button:hover, .field .input-group-button .button:active, .field .input-group-button .button:focus, .field .input-group-button button:hover, .field .input-group-button button:active, .field .input-group-button button:focus, .field .input-group-button input[type=button]:hover, .field .input-group-button input[type=button]:active, .field .input-group-button input[type=button]:focus, .field .input-group-button input[type=reset]:hover, .field .input-group-button input[type=reset]:active, .field .input-group-button input[type=reset]:focus, .field .input-group-button input[type=submit]:hover, .field .input-group-button input[type=submit]:active, .field .input-group-button input[type=submit]:focus {
+      z-index: 2; }
+  .input-group-text, .field .input-group-text {
+    padding: 5px 12px 5px;
+    border: 1px solid #d9d9d9;
+    font-size: 14px;
+    background-color: #f7f7f7; }
+    .input-group-text:first-child, .field .input-group-text:first-child {
+      border-right: none; }
+    .input-group-text:last-child, .field .input-group-text:last-child {
+      border-left: none; }
 
 .block table tbody td {
   border-color: #eaeaea; }
