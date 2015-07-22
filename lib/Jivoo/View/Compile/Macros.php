@@ -19,6 +19,11 @@ abstract class Macros {
    * @var string Macro namespace.
    */
   protected $namespace = 'j';
+  
+  /**
+   * @var string[] List of automatic properties.
+   */
+  protected $properties = array();
 
   /**
    * Get an associative array of macro names and functions.
@@ -34,6 +39,13 @@ abstract class Macros {
         if (preg_match('/^_([a-zA-Z]+)$/', $method->getName(), $matches) === 1) {
           $macros[strtolower($matches[1])] = array($this, $matches[0]);
         }
+      }
+      $namespace = $this->namespace;
+      foreach ($this->properties as $property) {
+        $property = strtolower($property); 
+        $macros[$property] = function(HtmlNode $node, $value) use($namespace, $property) {
+          $node->setProperty($namespace . ':' . $property, $value);
+        }; 
       }
       $this->macros = $macros;
     }

@@ -88,7 +88,7 @@ class HtmlNode extends InternalNode {
   public function removeData($attribute) {
     if (isset($this->attributes['data-' . $attribute]))
       unset($htis->attributes['data-' . $attribute]);
-  }
+  } 
 
   /**
    * Set value of attribute.

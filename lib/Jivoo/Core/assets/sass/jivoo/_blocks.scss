@@ -78,6 +78,11 @@
   &.block-error {
     & > .block-header {
       color: $contextFg;
+      h1, h2, h3, h4, h5, h6 {
+        & > small {
+          color: darken($contextFg, 15%);
+        }
+      }
       & > .block-toolbar {
         color: rgba(255, 255, 255, 0.4);
         & > a:hover {

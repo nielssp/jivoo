@@ -26,11 +26,11 @@
   &, &:link, &:visited {
     background-color: $navBg;
     border: none;
-    border-bottom: 2px solid $navFg;
+    border: 1px solid $navFg;
     color: $navFg;
     line-height: normal;
     text-decoration: none;
-    padding: 6px 12px 4px;
+    padding: 5px 12px 5px;
     display: inline-block;
     margin: 2px 0;
     cursor: pointer;
@@ -40,7 +40,7 @@
     background-color: $navHlBg;
   }
   &:focus {
-    box-shadow: 0 0 2px 1px lighten($primaryBg, 10%);
+    box-shadow: 0 0 2px 1px lighten($primary, 10%);
     outline: none;
   }
   &:hover, &:active {
@@ -69,12 +69,11 @@
     @include icon-size(10px);
   }
   &.button-xs {
-    padding: 1px 4px 0px;
-    border-width: 1px;
+    padding: 0px 4px 0px;
     margin: 0;
   }
   &.button-sm {
-    padding: 4px 10px 2px;
+    padding: 3px 8px 3px;
     margin: 1px 0;
   }
   &.button-md {
@@ -83,7 +82,7 @@
   }
   &.button-lg {
     font-size: 16px;
-    padding: 6px 14px 4px;
+    padding: 5px 14px 5px;
     @include icon-size(14px);
   }
 
@@ -136,4 +135,25 @@
   }
 }
 
-
+@mixin narrow-form {
+  .field {
+    input[type=text],
+    input[type=email],
+    input[type=password],
+    input[type=date],
+    input[type=time],
+    input[type=datetime],
+    textarea,
+    select {
+      margin: 0 0 6px 0;
+      width: 100%;
+    }
+    & > label:first-child {
+      float: none;
+      width: auto;
+      margin-left: 0;
+      text-align: left;
+    }
+    margin-left: 0;
+  }
+}

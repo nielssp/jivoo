@@ -81,11 +81,11 @@ table thead th a {
   .dropdown > a, .dropdown > a:link, .dropdown > a:visited {
     background-color: #eeeeee;
     border: none;
-    border-bottom: 2px solid #444444;
+    border: 1px solid #444444;
     color: #444444;
     line-height: normal;
     text-decoration: none;
-    padding: 6px 12px 4px;
+    padding: 5px 12px 5px;
     display: inline-block;
     margin: 2px 0;
     cursor: pointer;
@@ -128,11 +128,10 @@ table thead th a {
         width: 10px;
         height: 10px; }
   .dropdown > a.button-xs {
-    padding: 1px 4px 0px;
-    border-width: 1px;
+    padding: 0px 4px 0px;
     margin: 0; }
   .dropdown > a.button-sm {
-    padding: 4px 10px 2px;
+    padding: 3px 8px 3px;
     margin: 1px 0; }
   .dropdown > a.button-md {
     font-size: 14px; }
@@ -146,7 +145,7 @@ table thead th a {
         height: 12px; }
   .dropdown > a.button-lg {
     font-size: 16px;
-    padding: 6px 14px 4px; }
+    padding: 5px 14px 5px; }
     .dropdown > a.button-lg .icon {
       font-size: 14px;
       height: 14px;
@@ -723,7 +722,7 @@ nav {
       display: inline-block;
       background: none !important; }
       .dropdown-actions > ul > li a, .dropdown-actions > ul > li a:link, .dropdown-actions > ul > li a:active, .dropdown-actions > ul > li a:visited, .dropdown-actions > ul > li a:hover, .dropdown-actions > ul > li input, .dropdown-actions > ul > li input:link, .dropdown-actions > ul > li input:active, .dropdown-actions > ul > li input:visited, .dropdown-actions > ul > li input:hover, .dropdown-actions > ul > li button, .dropdown-actions > ul > li button:link, .dropdown-actions > ul > li button:active, .dropdown-actions > ul > li button:visited, .dropdown-actions > ul > li button:hover {
-        padding: 6px 12px 4px; }
+        padding: 5px 12px 5px; }
       .dropdown-actions > ul > li a .icon, .dropdown-actions > ul > li input .icon, .dropdown-actions > ul > li button .icon {
         margin-left: 0;
         width: auto;
@@ -774,6 +773,23 @@ body.menu-open .table-selection {
   font-size: 0.9em; }
   .table-settings-box form {
     margin: 0; }
+    .table-settings-box form .field {
+      margin-left: 0; }
+      .table-settings-box form .field input[type=text],
+      .table-settings-box form .field input[type=email],
+      .table-settings-box form .field input[type=password],
+      .table-settings-box form .field input[type=date],
+      .table-settings-box form .field input[type=time],
+      .table-settings-box form .field input[type=datetime],
+      .table-settings-box form .field textarea,
+      .table-settings-box form .field select {
+        margin: 0 0 6px 0;
+        width: 100%; }
+      .table-settings-box form .field > label:first-child {
+        float: none;
+        width: auto;
+        margin-left: 0;
+        text-align: left; }
   .table-settings-box .field {
     margin-left: 0;
     margin-bottom: 0; }

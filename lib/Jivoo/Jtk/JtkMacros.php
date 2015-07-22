@@ -18,15 +18,11 @@ class JtkMacros extends Macros {
    * {@inheritdoc}
    */
   protected $namespace = 'jtk';
-  
+
   /**
-   * Set JTK size 
-   * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * {@inheritdoc}
    */
-  public function _size(HtmlNode $node, $value) {
-    $node->setData('jtk-size', new TextNode($value));
-  }
+  protected $properties = array('size', 'context', 'icon');
   
   /**
    * JTK block. 
@@ -36,6 +32,8 @@ class JtkMacros extends Macros {
   public function _block(HtmlNode $node, $value) {
     $block = new HtmlNode('div');
     $block->addClass('block');
+    if ($node->hasProperty('jtk:context'))
+      $block->addClass('block-' . $node->getProperty('jtk:context'));
     $node->replaceWith($block);
     $block->append($node);
     $node->addClass('block-content');
@@ -97,17 +95,10 @@ class JtkMacros extends Macros {
   public function _grid(HtmlNode $node, $value) {
     if (isset($value))
       $node->addClass('grid-' . str_replace(':', '-', $value));
-    if ($node->hasData('jtk-size')) {
-      $node->addClass('grid-' . $node->getData('jtk-size'));
-      $node->removeData('jtk-size');
-    }
-    else if ($node->hasMacro('jtk:size')) {
-      $node->addClass('grid-' . $node->getMacro('jtk:size'));
-      $node->removeMacro('jtk:size');
-    }
-    else {
+    if ($node->hasProperty('jtk:size'))
+      $node->addClass('grid-' . $node->getProperty('jtk:size'));
+    else
       $node->addClass('grid');
-    }
     foreach ($node->getChildren() as $child) {
       if ($child instanceof HtmlNode)
         $child->addClass('cell');

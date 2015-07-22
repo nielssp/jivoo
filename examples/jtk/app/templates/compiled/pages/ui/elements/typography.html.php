@@ -77,7 +77,6 @@ int main() {
 <div class="block-content">
 <p>
 <a href="#" title="Title">A normal link</a>
-          <?php echo $Icon->iconLink('An icon link', 'url:#', 'cog'); ?>
 <a href="#" title="Title" class="badge">A badge link</a>
           <?php echo $Icon->link('An icon link', 'url:#', 'cog', null, array('class' => 'badge badge-primary')); ?>
 </p>

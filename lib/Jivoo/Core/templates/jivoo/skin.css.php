@@ -78,31 +78,35 @@ $Css->addMixin('buttonColor', function($button, $color) use($Css) {
   ));
 });
 
-$Css->addMixin('button', function($Css) use($Skin) {
-  $Css('&, &:link, &:visited')->css(array(
+$Css->addMixin('button', function($button) use($Skin, $Css) {
+  $button('&, &:link, &:visited')->css(array(
     'background-color' => $Skin->navBg,
     'border-color' => $Skin->navFg,
     'color' => $Skin->navFg
   ));
-  $Css('&:hover, &.active')->css(array(
+  $button('&:hover, &.active')->css(array(
     'background-color' => $Skin->navHlBg
   ));
-  $Css('&:hover, &:active')->css(array(
+  $button('&:focus')->css(array(
+    'box-shadow' => '0 0 2px 1px ' . $Css->toString($Css->lighten($Skin->primary, 10))
+  ));
+  $button('&:hover, &:active')->css(array(
     'border-color' => $Skin->navHlFg,
     'color' => $Skin->navHlFg
   ));
-  $Css('&[disabled]')->css(array(
+  $button('.active, &:active')->boxShadow = 'inset 0 4px 5px 0 rgba(0, 0, 0, 0.15)';
+  $button('&[disabled]')->css(array(
     'background-color' => $Skin->navDisBg,
     'border-color' => $Skin->navDisFg,
     'color' => $Skin->navDisFg
   ));
-  $Css('&.button-primary')->apply('buttonColor', $Skin->primary);
-  $Css('&.button-light')->apply('buttonColor', $Skin->light);
-  $Css('&.button-dark')->apply('buttonColor', $Skin->dark);
-  $Css('&.button-info')->apply('buttonColor', $Skin->info);
-  $Css('&.button-success')->apply('buttonColor', $Skin->success);
-  $Css('&.button-warning')->apply('buttonColor', $Skin->warning);
-  $Css('&.button-error')->apply('buttonColor', $Skin->error);
+  $button('&.button-primary')->apply('buttonColor', $Skin->primary);
+  $button('&.button-light')->apply('buttonColor', $Skin->light);
+  $button('&.button-dark')->apply('buttonColor', $Skin->dark);
+  $button('&.button-info')->apply('buttonColor', $Skin->info);
+  $button('&.button-success')->apply('buttonColor', $Skin->success);
+  $button('&.button-warning')->apply('buttonColor', $Skin->warning);
+  $button('&.button-error')->apply('buttonColor', $Skin->error);
 });
 
 // Base

@@ -244,28 +244,6 @@ form {
   }
 }
 
-@mixin narrow-form {
-  .field {
-    input[type=text],
-    input[type=email],
-    input[type=password],
-    input[type=date],
-    input[type=time],
-    input[type=datetime],
-    textarea,
-    select {
-      margin: 0 0 6px 0;
-      width: 100%;
-    }
-    label:first-child {
-      float: none;
-      width: auto;
-      margin-left: 0;
-    }
-    margin-left: 0;
-  }
-}
-
 .form-narrow,
 .block {
   @include narrow-form;

@@ -352,11 +352,11 @@ a.badge:hover {
 .button, .button:link, .button:visited, button, button:link, button:visited, input[type=button], input[type=button]:link, input[type=button]:visited, input[type=reset], input[type=reset]:link, input[type=reset]:visited, input[type=submit], input[type=submit]:link, input[type=submit]:visited {
   background-color: #eeeeee;
   border: none;
-  border-bottom: 2px solid #444444;
+  border: 1px solid #444444;
   color: #444444;
   line-height: normal;
   text-decoration: none;
-  padding: 6px 12px 4px;
+  padding: 5px 12px 5px;
   display: inline-block;
   margin: 2px 0;
   cursor: pointer;
@@ -399,11 +399,10 @@ a.badge:hover {
       width: 10px;
       height: 10px; }
 .button.button-xs, button.button-xs, input[type=button].button-xs, input[type=reset].button-xs, input[type=submit].button-xs {
-  padding: 1px 4px 0px;
-  border-width: 1px;
+  padding: 0px 4px 0px;
   margin: 0; }
 .button.button-sm, button.button-sm, input[type=button].button-sm, input[type=reset].button-sm, input[type=submit].button-sm {
-  padding: 4px 10px 2px;
+  padding: 3px 8px 3px;
   margin: 1px 0; }
 .button.button-md, button.button-md, input[type=button].button-md, input[type=reset].button-md, input[type=submit].button-md {
   font-size: 14px; }
@@ -417,7 +416,7 @@ a.badge:hover {
       height: 12px; }
 .button.button-lg, button.button-lg, input[type=button].button-lg, input[type=reset].button-lg, input[type=submit].button-lg {
   font-size: 16px;
-  padding: 6px 14px 4px; }
+  padding: 5px 14px 5px; }
   .button.button-lg .icon, button.button-lg .icon, input[type=button].button-lg .icon, input[type=reset].button-lg .icon, input[type=submit].button-lg .icon {
     font-size: 14px;
     height: 14px;
@@ -490,11 +489,15 @@ a.badge:hover {
   position: relative;
   white-space: nowrap; }
   .button-group .button, .button-group button, .button-group input[type=button], .button-group input[type=reset], .button-group input[type=submit] {
-    float: left; }
-    .button-group .button, .button-group .button:hover, .button-group button, .button-group button:hover, .button-group input[type=button], .button-group input[type=button]:hover, .button-group input[type=reset], .button-group input[type=reset]:hover, .button-group input[type=submit], .button-group input[type=submit]:hover {
-      border-left: 1px solid #444444; }
+    float: left;
+    margin-left: -1px;
+    position: relative; }
     .button-group .button:first-child, .button-group button:first-child, .button-group input[type=button]:first-child, .button-group input[type=reset]:first-child, .button-group input[type=submit]:first-child {
-      border-left: none; }
+      margin-left: 0; }
+    .button-group .button.active, .button-group button.active, .button-group input[type=button].active, .button-group input[type=reset].active, .button-group input[type=submit].active {
+      z-index: 1; }
+    .button-group .button:hover, .button-group .button:active, .button-group button:hover, .button-group button:active, .button-group input[type=button]:hover, .button-group input[type=button]:active, .button-group input[type=reset]:hover, .button-group input[type=reset]:active, .button-group input[type=submit]:hover, .button-group input[type=submit]:active {
+      z-index: 2; }
     .button-group .button.active, .button-group .button:active, .button-group button.active, .button-group button:active, .button-group input[type=button].active, .button-group input[type=button]:active, .button-group input[type=reset].active, .button-group input[type=reset]:active, .button-group input[type=submit].active, .button-group input[type=submit]:active {
       box-shadow: inset 0 4px 5px 2px rgba(0, 0, 0, 0.15); }
       .button-group .button.active:first-child, .button-group .button:active:first-child, .button-group button.active:first-child, .button-group button:active:first-child, .button-group input[type=button].active:first-child, .button-group input[type=button]:active:first-child, .button-group input[type=reset].active:first-child, .button-group input[type=reset]:active:first-child, .button-group input[type=submit].active:first-child, .button-group input[type=submit]:active:first-child {
@@ -744,6 +747,8 @@ a.badge:hover {
     text-align: right; }
   .block.block-default > .block-header, .block.block-muted > .block-header, .block.block-primary > .block-header, .block.block-dark > .block-header, .block.block-light > .block-header, .block.block-info > .block-header, .block.block-success > .block-header, .block.block-warning > .block-header, .block.block-error > .block-header {
     color: white; }
+    .block.block-default > .block-header h1 > small, .block.block-default > .block-header h2 > small, .block.block-default > .block-header h3 > small, .block.block-default > .block-header h4 > small, .block.block-default > .block-header h5 > small, .block.block-default > .block-header h6 > small, .block.block-muted > .block-header h1 > small, .block.block-muted > .block-header h2 > small, .block.block-muted > .block-header h3 > small, .block.block-muted > .block-header h4 > small, .block.block-muted > .block-header h5 > small, .block.block-muted > .block-header h6 > small, .block.block-primary > .block-header h1 > small, .block.block-primary > .block-header h2 > small, .block.block-primary > .block-header h3 > small, .block.block-primary > .block-header h4 > small, .block.block-primary > .block-header h5 > small, .block.block-primary > .block-header h6 > small, .block.block-dark > .block-header h1 > small, .block.block-dark > .block-header h2 > small, .block.block-dark > .block-header h3 > small, .block.block-dark > .block-header h4 > small, .block.block-dark > .block-header h5 > small, .block.block-dark > .block-header h6 > small, .block.block-light > .block-header h1 > small, .block.block-light > .block-header h2 > small, .block.block-light > .block-header h3 > small, .block.block-light > .block-header h4 > small, .block.block-light > .block-header h5 > small, .block.block-light > .block-header h6 > small, .block.block-info > .block-header h1 > small, .block.block-info > .block-header h2 > small, .block.block-info > .block-header h3 > small, .block.block-info > .block-header h4 > small, .block.block-info > .block-header h5 > small, .block.block-info > .block-header h6 > small, .block.block-success > .block-header h1 > small, .block.block-success > .block-header h2 > small, .block.block-success > .block-header h3 > small, .block.block-success > .block-header h4 > small, .block.block-success > .block-header h5 > small, .block.block-success > .block-header h6 > small, .block.block-warning > .block-header h1 > small, .block.block-warning > .block-header h2 > small, .block.block-warning > .block-header h3 > small, .block.block-warning > .block-header h4 > small, .block.block-warning > .block-header h5 > small, .block.block-warning > .block-header h6 > small, .block.block-error > .block-header h1 > small, .block.block-error > .block-header h2 > small, .block.block-error > .block-header h3 > small, .block.block-error > .block-header h4 > small, .block.block-error > .block-header h5 > small, .block.block-error > .block-header h6 > small {
+      color: #d9d9d9; }
     .block.block-default > .block-header > .block-toolbar, .block.block-muted > .block-header > .block-toolbar, .block.block-primary > .block-header > .block-toolbar, .block.block-dark > .block-header > .block-toolbar, .block.block-light > .block-header > .block-toolbar, .block.block-info > .block-header > .block-toolbar, .block.block-success > .block-header > .block-toolbar, .block.block-warning > .block-header > .block-toolbar, .block.block-error > .block-header > .block-toolbar {
       color: rgba(255, 255, 255, 0.4); }
       .block.block-default > .block-header > .block-toolbar > a:hover, .block.block-muted > .block-header > .block-toolbar > a:hover, .block.block-primary > .block-header > .block-toolbar > a:hover, .block.block-dark > .block-header > .block-toolbar > a:hover, .block.block-light > .block-header > .block-toolbar > a:hover, .block.block-info > .block-header > .block-toolbar > a:hover, .block.block-success > .block-header > .block-toolbar > a:hover, .block.block-warning > .block-header > .block-toolbar > a:hover, .block.block-error > .block-header > .block-toolbar > a:hover {
@@ -1256,11 +1261,12 @@ form {
   .block .field select {
     margin: 0 0 6px 0;
     width: 100%; }
-  .form-narrow .field label:first-child,
-  .block .field label:first-child {
+  .form-narrow .field > label:first-child,
+  .block .field > label:first-child {
     float: none;
     width: auto;
-    margin-left: 0; }
+    margin-left: 0;
+    text-align: left; }
 
 .block table tbody td {
   border-color: #eaeaea; }

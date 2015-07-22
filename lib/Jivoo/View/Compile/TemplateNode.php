@@ -17,6 +17,11 @@ abstract class TemplateNode {
    * @var string[] Macros and values.
    */
   private $macros = array();
+  
+  /**
+   * @var string[]
+   */
+  private $properties = array();
 
   /**
    * @var InternalNode|null Parent node if any.
@@ -117,6 +122,56 @@ abstract class TemplateNode {
     assume(isset($this->parent));
     $this->parent->replace($this, $node);
     return $node;
+  }
+  
+  /**
+   * Get value of a property (or macro if one exists with the same name).
+   * @param string $property Property.
+   * @return string Value.
+   */
+  public function getProperty($property) {
+    if (isset($this->macros[$property])) {
+      $this->properties[$property] = $this->macros[$property];
+      unset($this->macros[$property]);
+    }
+    if (!isset($this->properties[$property]))
+      return null;
+    return $this->properties[$property];
+  }
+
+  /**
+   * Get value of a property (removes macro with same name if it exists).
+   * @param string $property Property.
+   * @param string $value Value.
+   */
+  public function setProperty($property, $value = null) {
+    if (isset($this->macros[$property]))
+      unset($this->macros[$property]);
+    $this->properties[$property] = $value;
+  }
+
+  /**
+   * Whether a property exists (or macro if one exists with the same name).
+   * @param string $property Property.
+   * @return bool True if property exists.
+   */
+  public function hasProperty($property) {
+    if (array_key_exists($property, $this->macros)) {
+      $this->properties[$property] = $this->macros[$property];
+      unset($this->macros[$property]);
+    }
+    return array_key_exists($property, $this->properties);
+  }
+
+  /**
+   * Remove a property (removes macro with same name if it exists).
+   * @param string $property Property.
+   */
+  public function removeProperty($property) {
+    if (array_key_exists($property, $this->macros))
+      unset($this->macros[$property]);
+    if (array_key_exists($property, $this->properties))
+      unset($this->properties[$property]);
   }
 
   /**
