@@ -40,6 +40,10 @@ $this->import('jivoo/core.css');
 
 <?php echo $this->block('content'); ?>
 
+<div id="install-progress" class="progress" style="display:none;">
+<div class="progress-bar" style="width:0%">0%</div>
+</div>
+
 <div id="install-status">
 </div>
 

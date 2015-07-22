@@ -350,6 +350,23 @@ a.badge:hover {
 .badge-error {
   background-color: #cc2222; }
 
+.progress {
+  background-color: #f7f7f7;
+  overflow: hidden;
+  margin-bottom: 20px;
+  height: 20px; }
+  .progress .progress-bar {
+    background-color: #2272cc;
+    line-height: 20px;
+    font-size: 0.9em;
+    height: 100%;
+    color: white;
+    text-align: center;
+    transition: width .5s ease; }
+
+.block .progress {
+  background-color: #dedede; }
+
 .button, .button:link, .button:visited, button, button:link, button:visited, input[type=button], input[type=button]:link, input[type=button]:visited, input[type=reset], input[type=reset]:link, input[type=reset]:visited, input[type=submit], input[type=submit]:link, input[type=submit]:visited {
   background-color: #eeeeee;
   border: none;
