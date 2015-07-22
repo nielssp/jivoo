@@ -219,8 +219,8 @@ $input('&:focus')->css(array(
 ));
 $input('&[data-error], &.error')->css(array(
   'border-color' => $Skin->error
-))->find('&:focus')->borderColor = $Css->lighten($error, 20);
-$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+))->find('&:focus')->borderColor = $Css->lighten($Skin->error, 20);
+$input('&:disabled')->backgroundColor = $Css->darken($Skin->mainBg, 3);
 
 
 $input = $Css('input[type=checkbox], input[type=radio]');
@@ -234,7 +234,7 @@ $input('&:focus')->css(array(
   'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $Css('input[type=radio]:checked:before')->backgroundColor = $Skin->primaryBg; 
-$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+$input('&:disabled')->backgroundColor = $Css->darken($Skin->mainBg, 3);
 
 $field = $Css('.field');
 $field('& .help')->color = $Skin->grey;

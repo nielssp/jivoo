@@ -198,6 +198,8 @@ class CssHelper extends Helper {
    * @return string CSS color.
    */
   public function toString($color) {
+    if (is_string($color))
+      return $color;
     $h = $color[0];
     $s = round($color[1] * 100);
     $l = round($color[2] * 100);
