@@ -839,29 +839,47 @@ body.menu-open .table-selection {
   .data-table table.density-low td, .data-table table.density-low th {
     padding: 12px 8px; }
   .data-table table.density-low thead th a, .data-table table.density-low thead th a:link, .data-table table.density-low thead th a:visited, .data-table table.density-low thead th label, .data-table table.density-low thead th label:link, .data-table table.density-low thead th label:visited, .data-table table.density-low tfoot th a, .data-table table.density-low tfoot th a:link, .data-table table.density-low tfoot th a:visited, .data-table table.density-low tfoot th label, .data-table table.density-low tfoot th label:link, .data-table table.density-low tfoot th label:visited {
-    padding: 12px 8px;
-    margin: -12px -8px; }
+    padding: 12px 8px 11px;
+    margin: -12px -8px -13px; }
+  .data-table table.density-low tfoot th a, .data-table table.density-low tfoot th label {
+    margin: -13px -20px; }
   .data-table table.density-low .selection label {
     padding: 12px 0 12px 8px;
     margin: -12px -8px; }
+  .data-table table.density-low thead th.selection label {
+    margin: -12px -8px -13px; }
+  .data-table table.density-low tfoot th.selection label {
+    margin: -13px -8px -12px; }
   .data-table table.density-medium td, .data-table table.density-medium th {
     padding: 9px 8px; }
   .data-table table.density-medium thead th a, .data-table table.density-medium thead th a:link, .data-table table.density-medium thead th a:visited, .data-table table.density-medium thead th label, .data-table table.density-medium thead th label:link, .data-table table.density-medium thead th label:visited, .data-table table.density-medium tfoot th a, .data-table table.density-medium tfoot th a:link, .data-table table.density-medium tfoot th a:visited, .data-table table.density-medium tfoot th label, .data-table table.density-medium tfoot th label:link, .data-table table.density-medium tfoot th label:visited {
-    padding: 9px 8px;
-    margin: -9px -8px; }
+    padding: 9px 8px 8px;
+    margin: -9px -8px -10px; }
+  .data-table table.density-medium tfoot th a, .data-table table.density-medium tfoot th label {
+    margin: -10px -17px; }
   .data-table table.density-medium .selection label {
     padding: 9px 0 9px 8px;
     margin: -9px -8px; }
+  .data-table table.density-medium thead th.selection label {
+    margin: -9px -8px -10px; }
+  .data-table table.density-medium tfoot th.selection label {
+    margin: -10px -8px -9px; }
   .data-table table.density-high {
     font-size: 0.95em; }
     .data-table table.density-high td, .data-table table.density-high th {
       padding: 6px 8px; }
     .data-table table.density-high thead th a, .data-table table.density-high thead th a:link, .data-table table.density-high thead th a:visited, .data-table table.density-high thead th label, .data-table table.density-high thead th label:link, .data-table table.density-high thead th label:visited, .data-table table.density-high tfoot th a, .data-table table.density-high tfoot th a:link, .data-table table.density-high tfoot th a:visited, .data-table table.density-high tfoot th label, .data-table table.density-high tfoot th label:link, .data-table table.density-high tfoot th label:visited {
-      padding: 6px 8px;
-      margin: -6px -8px; }
+      padding: 6px 8px 5px;
+      margin: -6px -8px -7px; }
+    .data-table table.density-high tfoot th a, .data-table table.density-high tfoot th label {
+      margin: -7px -14px; }
     .data-table table.density-high .selection label {
       padding: 6px 0 6px 8px;
       margin: -6px -8px; }
+    .data-table table.density-high thead th.selection label {
+      margin: -6px -8px -7px; }
+    .data-table table.density-high tfoot th.selection label {
+      margin: -7px -8px -6px; }
   .data-table table td.actions, .data-table table th.actions {
     width: 150px;
     text-align: center; }

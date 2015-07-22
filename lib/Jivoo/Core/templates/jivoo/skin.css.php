@@ -72,7 +72,7 @@ $Css->addMixin('buttonColor', function($button, $color) use($Css) {
     'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
     'border-color' => $Css->darken($color, 30)
   ));
-  $button('&:hover, &:active')->css(array(
+  $button('&:hover, &.active')->css(array(
     'background-color' => $color,
     'border-color' => $Css->darken($color, 20)
   ));
@@ -245,12 +245,11 @@ $field('&&-error')->apply('fieldColor', $Skin->error);
 // Table
 $th = $Css('table thead th, table tfoot th');
 $th->css(array(
-  'background-color' => $Skin->navBg,
-  'color' => $Skin->navDisFg
+  'color' => $Skin->navFg,
+  'border-color' => $Skin->navDisFg
 ));
-$th->find('a, label')->find('&, &:link, &:visited')->color = $Skin->navFg;
+$th->find('a, label')->find('&, &:link, &:visited')->color = $Skin->dark;
 $th->find('a, label')->find('&:hover, &:active')->css(array(
-  'background-color' => $Skin->navHlBg,
   'color' => $Skin->navHlFg,
   'border-color' => $Skin->navHlFg
 ));

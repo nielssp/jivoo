@@ -1303,21 +1303,28 @@ table {
     table td.non-essential, table th.non-essential {
       display: none; }
   table thead th, table tfoot th {
-    background-color: #eeeeee;
-    color: #999999;
+    color: #444444;
     text-transform: uppercase;
     vertical-align: bottom; }
     table thead th a, table thead th a:link, table thead th a:visited, table thead th label, table thead th label:link, table thead th label:visited, table tfoot th a, table tfoot th a:link, table tfoot th a:visited, table tfoot th label, table tfoot th label:link, table tfoot th label:visited {
-      color: #444444;
-      padding: 12px 8px;
-      margin: -12px -8px;
+      color: #10355f;
+      padding: 12px 8px 11px;
+      margin: -12px -8px -13px;
       text-decoration: none;
-      display: block; }
+      display: block;
+      border-bottom: 2px solid transparent; }
     table thead th a:hover, table thead th a:active, table thead th label:hover, table thead th label:active, table tfoot th a:hover, table tfoot th a:active, table tfoot th label:hover, table tfoot th label:active {
-      background-color: #dddddd;
       color: #2272cc;
       border-color: #2272cc;
       text-decoration: none; }
+  table thead th {
+    border-bottom: 1px solid #999999; }
+  table tfoot th {
+    border-top: 1px solid #999999; }
+    table tfoot th a, table tfoot th label {
+      border-bottom: none;
+      border-top: 2px solid transparent;
+      margin: -13px -8px -12px; }
   table tbody tr:first-child td {
     border-top: 0; }
   table tbody tr td {
@@ -1402,6 +1409,10 @@ table {
       margin: -12px -8px;
       display: block;
       cursor: pointer; }
+  table thead th.selection label {
+    margin: -12px -8px -13px; }
+  table tfoot th.selection label {
+    margin: -13px -8px -12px; }
   @media screen and (min-width: 768px) {
     table td.non-essential, table th.non-essential {
       display: table-cell; }

@@ -124,14 +124,25 @@
   thead th, tfoot th {
     a, label {
       &, &:link, &:visited {
-        padding: $padding 8px;
-        margin: -$padding -8px;
+        padding: $padding 8px ($padding - 1px);
+        margin: -$padding -8px (-$padding - 1px);
       }
+    }
+  }
+  tfoot th {
+    a, label {
+      margin: (-$padding - 1px) -8px -$padding;
     }
   }
   .selection label {
     padding: $padding 0 $padding 8px;
     margin: -$padding -8px;
+  }
+  thead th.selection label {
+     margin: -$padding -8px (-$padding - 1px);
+  }
+  tfoot th.selection label {
+     margin: (-$padding - 1px) (-8px) (-$padding);
   }
 }
 

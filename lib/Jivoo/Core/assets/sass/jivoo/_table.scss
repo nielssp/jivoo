@@ -63,24 +63,34 @@ table {
     }
   }
   thead th, tfoot th {
-    background-color: $navBg;
-    color: $navDisFg;
+    color: $navFg;
     text-transform: uppercase;
     vertical-align: bottom;
     a, label {
       &, &:link, &:visited {
-        color: $navFg;
-        padding: 12px 8px;
-        margin: -12px -8px;
+        color: $dark;
+        padding: 12px 8px 11px;
+        margin: -12px -8px -13px;
         text-decoration: none;
         display: block;
+        border-bottom: 2px solid transparent;
       }
       &:hover, &:active {
-        background-color: $navHlBg;
         color: $navHlFg;
         border-color: $navHlFg;
         text-decoration: none;
       }
+    }
+  }
+  thead th {
+    border-bottom: 1px solid $navDisFg;
+  }
+  tfoot th {
+    border-top: 1px solid $navDisFg;
+    a, label {
+      border-bottom: none;
+      border-top: 2px solid transparent;
+      margin: -13px -8px -12px;
     }
   }
   tbody {
@@ -214,6 +224,12 @@ table {
       display: block;
       cursor: pointer;
     }
+  }
+  thead th.selection label {
+    margin: -12px -8px -13px;
+  }
+  tfoot th.selection label {
+    margin: -13px -8px -12px;
   }
   @media screen and (min-width: $sm) {
     td.non-essential, th.non-essential {

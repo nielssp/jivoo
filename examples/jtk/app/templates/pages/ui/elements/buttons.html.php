@@ -43,7 +43,7 @@
       <div class="block-content">
         <p>
           A button group:
-          <span class="button-group">
+          <span class="button-group button-group-check">
             <?php echo $Icon->button('Save'); ?>
             <?php echo $Icon->button('Cancel'); ?>
             <?php echo $Icon->button('OK'); ?>
@@ -51,13 +51,30 @@
         </p>
 
         <p>
-          With an active button:
-          <span class="button-group">
+          Another button group:
+          <span class="button-group button-group-radio">
             <?php echo $Icon->button('Save'); ?>
             <?php echo $Icon->button('Cancel', null, array('class' => 'active')); ?>
             <?php echo $Icon->button('OK'); ?>
           </span>
         </p>
+          <script type="text/javascript">
+          $(function() {
+            $('.button-group-check').each(function() {
+              var $buttons = $(this).children();
+              $buttons.click(function() {
+                $(this).toggleClass('active');
+              });
+            });
+            $('.button-group-radio').each(function() {
+              var $buttons = $(this).children();
+              $buttons.click(function() {
+                $buttons.removeClass('active');
+                $(this).addClass('active');
+              });
+            });
+          });
+          </script>
 
         <p>
           Small icons: 

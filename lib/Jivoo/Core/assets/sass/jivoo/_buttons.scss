@@ -13,8 +13,6 @@ $button: '.button, button, input[type=button], input[type=reset], input[type=sub
     float: left;
     margin-left: -1px;
     position: relative;
-    &, &:hover {
-    }
     &:first-child {
       margin-left: 0;
     }
