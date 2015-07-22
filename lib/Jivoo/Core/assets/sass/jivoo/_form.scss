@@ -1,11 +1,26 @@
-input[type=text],
+$inputs: 'input[type=text],
 input[type=email],
 input[type=password],
 input[type=date],
 input[type=time],
 input[type=datetime],
 textarea,
-select {
+select';
+
+@mixin field-color($color) {
+  & > label:first-child,
+  .help {
+    color: $color;
+  }
+  #{$inputs} {
+    border-color: $color;
+    &:focus {
+      border-color: lighten($color, 20%);
+    }
+  }
+}
+
+#{$inputs} {
   padding: 5px 12px 5px;
   margin: 2px 0;
   display: block;
@@ -23,10 +38,15 @@ select {
     outline: 0;
   }
   
-  &[data-error],
-  &.error {
-    background-color: #fee;
-    border: 1px solid #f55;
+  &[data-error] {
+    border-color: $error;
+    &:focus {
+      border-color: lighten($error, 20%);
+    }
+
+  }
+  &[disabled] {
+    background-color: darken($mainBg, 3%);
   }
 }
 
@@ -63,6 +83,10 @@ input[type=checkbox] {
     box-shadow: 0 0 1px lighten($primaryBg, 20%);
     outline: 0;
   }
+
+  &[disabled] {
+    background-color: darken($mainBg, 3%);
+  }
 }
 
 input[type=radio] {
@@ -96,68 +120,127 @@ input[type=radio] {
     box-shadow: 0 0 1px lighten($primaryBg, 20%);
     outline: 0;
   }
+
+  &[disabled] {
+    background-color: darken($mainBg, 3%);
+  }
 }
 
-label[for] {
+label {
   cursor: pointer;
 }
 
-form {
-  display: block;
-  margin-bottom: 20px;
+.checkbox-list,
+.radio-list {
+  list-style-type: none;
+  margin-left: 0;
+  li {
+    margin-bottom: 4px;
+  }
+}
+
+.field {
+  margin-bottom: $pmargin;
+  padding: 6px 0;
+
+  .help {
+    font-style: italic;
+    color: $grey;
+    font-size: 0.95em;
+  }
+  
+  input[type=text],
+  input[type=email],
+  input[type=password],
+  input[type=date],
+  input[type=time],
+  input[type=datetime],
+  textarea,
+  select {
+    margin: 0 0 6px 0;
+    @media screen and (min-width: $sm) {
+      margin-top: -6px;
+      margin-bottom: 6px;
+      width: 380px;
+    }
+  }
+  ul, ol {
+    margin-bottom: 6px;
+  }
+  & > label:first-child {
+    font-weight: 600;
+    font-style: normal;
+    font-size: 0.95em;
+    display: block;
+    margin-bottom: 6px;
+    @media screen and (min-width: $sm) {
+      float: left;
+      width: 240px;
+      margin-left: -240px;
+      text-align: right;
+      padding-right: 40px;
+    }
+  }
+  @media screen and (min-width: $sm) {
+    margin-left: 240px;
+  }
+  &.field-required label:first-child:after {
+    content: '*';
+    margin-left: 4px;
+    color: $error;
+  }
+  input[type=checkbox],
+  input[type=radio] {
+    margin-right: 6px;
+  }
+  input + label {
+    font-weight: normal;
+    font-style: normal;
+    display: inline;
+    margin: 0 12px 0 0px;
+  }
+
+  &.field-muted {
+    @include field-color($grey);
+  }
+  &.field-primary {
+    @include field-color($primary);
+  }
+  &.field-light {
+    @include field-color($light);
+  }
+  &.field-dark {
+    @include field-color($dark);
+  }
+  &.field-info {
+    @include field-color($info);
+  }
+  &.field-success {
+    @include field-color($success);
+  }
+  &.field-warning {
+    @include field-color($warning);
+  }
+  &.field-error {
+    @include field-color($error);
+  }
+
   & > *:last-child {
     margin-bottom: 0;
   }
-  .field {
-    margin-bottom: 12px;
-    padding: 6px 0;
-    font-style: italic;
-    
-    input[type=text],
-    input[type=email],
-    input[type=password],
-    input[type=date],
-    input[type=time],
-    input[type=datetime],
-    textarea,
-    select {
-      margin: 0 0 6px 0;
-      @media screen and (min-width: $sm) {
-        margin-top: -6px;
-        margin-bottom: 6px;
-        width: 380px;
-      }
-    }
-    label:first-child {
-      font-weight: 600;
-      font-style: normal;
-      display: block;
-      margin-bottom: 6px;
-      @media screen and (min-width: $sm) {
-        float: left;
-        width: 240px;
-        margin-left: -240px;
-      }
-    }
+}
+form {
+  display: block;
+  margin-bottom: $pmargin;
+  .buttons {
+    margin-bottom: $pmargin;
     @media screen and (min-width: $sm) {
       margin-left: 240px;
     }
-    &.field-required label:first-child:after {
-      content: '*';
-      margin-left: 4px;
-      font-style: italic;
-      color: #c22;
-    }
-    input[type=checkbox],
-    input[type=radio] {
-      margin-right: 6px;
-    }
-    input + label {
-      font-weight: normal;
-      font-style: normal;
-      display: inline;
-      margin: 0 12px 0 0px;
-    }
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
   }
 }
 

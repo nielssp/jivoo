@@ -1,17 +1,32 @@
 
-.block table {
-  tbody {
-    td {
-      border-color: darken($blockBg, 5%);
+.block {
+  table {
+    tbody {
+      td {
+        border-color: darken($blockBg, 5%);
+      }
+      tr:hover td {
+        background-color: darken($blockBg, 3%);
+      }
     }
-    tr:hover td {
-      background-color: darken($blockBg, 3%);
-    }
+  }
+  .table-scrollable {
+    border-color: darken($blockBg, 5%);
+  }
+}
+
+.table-scrollable {
+  overflow-x: auto;
+  margin-bottom: $pmargin;
+  border: 1px solid darken($mainBg, 5%);
+
+  table {
+    margin-bottom: 0;
   }
 }
 
 table {
-  margin: 0 0 6px 0;
+  margin: 0 0 $pmargin 0;
   border-spacing: 0;
   width: 100%;
 

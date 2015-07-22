@@ -195,6 +195,22 @@ dl {
   }
 }
 
+.list-inline {
+  list-style-type: none;
+  li {
+    float: left;
+    margin-left: 20px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+  &:after {
+    clear: left;
+    display: block;
+    content: ' ';
+  }
+}
+
 .center {
   text-align: center;
 }

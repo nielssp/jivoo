@@ -189,8 +189,17 @@ $Css('footer')->borderTopColor = $Skin->navBg;
 
 // Form
 
-$input = $Css('input[type=text], input[type=email], input[type=password], input[type=date],
-input[type=time], input[type=datetime], textarea, select');
+$inputs = 'input[type=text], input[type=email], input[type=password], input[type=date],
+input[type=time], input[type=datetime], textarea, select';
+
+$Css->addMixin('fieldColor', function($field, $color) use($Css, $inputs) {
+  $field('& > label:first-child, .help')->color = $color;
+  $input = $field($inputs);
+  $input->borderColor = $color;
+  $input('&:focus')->borderColor = $Css->lighten($color, 20);
+});
+
+$input = $Css($inputs);
 $input->css(array(
   'border-color' => $Skin->inputBorder,
   'box-shadow' => 'inset 0 1px 2px ' . $Css->toString($Skin->inputShadow)
@@ -200,9 +209,10 @@ $input('&:focus')->css(array(
   'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $input('&[data-error], &.error')->css(array(
-  'background-color' => $Skin->inputErrorBg,
-  'border-color' => $Skin->inputErrorBorder
-));
+  'border-color' => $Skin->error
+))->find('&:focus')->borderColor = $Css->lighten($error, 20);
+$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+
 
 $input = $Css('input[type=checkbox], input[type=radio]');
 $input->css(array(
@@ -215,6 +225,18 @@ $input('&:focus')->css(array(
   'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $Css('input[type=radio]:checked:before')->backgroundColor = $Skin->primaryBg; 
+$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+
+$field = $Css('.field');
+$field('& .help')->color = $Skin->grey;
+$field('&&-primary')->apply('fieldColor', $Skin->grey);
+$field('&&-primary')->apply('fieldColor', $Skin->primary);
+$field('&&-light')->apply('fieldColor', $Skin->light);
+$field('&&-dark')->apply('fieldColor', $Skin->dark);
+$field('&&-info')->apply('fieldColor', $Skin->info);
+$field('&&-success')->apply('fieldColor', $Skin->success);
+$field('&&-warning')->apply('fieldColor', $Skin->warning);
+$field('&&-error')->apply('fieldColor', $Skin->error);
 
 // Table
 $th = $Css('table thead th, table tfoot th');
