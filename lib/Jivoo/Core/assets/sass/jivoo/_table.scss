@@ -1,8 +1,51 @@
+
+.block {
+  table {
+    tbody {
+      td {
+        border-color: darken($blockBg, 5%);
+      }
+      tr:hover td {
+        background-color: darken($blockBg, 3%);
+      }
+    }
+  }
+  .table-scrollable {
+    border-color: darken($blockBg, 5%);
+  }
+}
+
+.table-scrollable {
+  overflow-x: auto;
+  margin-bottom: $pmargin;
+  border: 1px solid darken($mainBg, 5%);
+
+  table {
+    margin-bottom: 0;
+  }
+}
+
 table {
-  font-size: 0.9em;
-  margin: 0 0 6px 0;
+  margin: 0 0 $pmargin 0;
   border-spacing: 0;
   width: 100%;
+
+  .col-xs {
+    width: 10%;
+  }
+  
+  .col-sm {
+    width: 20%;
+  }
+
+  .col-md {
+    width: 30%;
+  }
+  
+  .col-lg {
+    width: 40%;
+  }
+
   thead, tfoot {
     tr {
       th {
@@ -14,33 +57,40 @@ table {
   td, th {
     padding: 12px 8px;
     vertical-align: top;
-    width: 15%;
 
-    &.primary {
-      width: auto;
-    }
     &.non-essential {
       display: none;
     }
   }
   thead th, tfoot th {
-    background-color: $navBg;
-    color: $navDisFg;
+    color: $navFg;
     text-transform: uppercase;
+    vertical-align: bottom;
     a, label {
       &, &:link, &:visited {
-        color: $navFg;
-        padding: 12px 8px;
-        margin: -12px -8px;
+        color: $dark;
+        padding: 12px 8px 11px;
+        margin: -12px -8px -13px;
         text-decoration: none;
         display: block;
+        border-bottom: 2px solid transparent;
       }
       &:hover, &:active {
-        background-color: $navHlBg;
         color: $navHlFg;
         border-color: $navHlFg;
         text-decoration: none;
       }
+    }
+  }
+  thead th {
+    border-bottom: 1px solid $navDisFg;
+  }
+  tfoot th {
+    border-top: 1px solid $navDisFg;
+    a, label {
+      border-bottom: none;
+      border-top: 2px solid transparent;
+      margin: -13px -8px -12px;
     }
   }
   tbody {
@@ -49,71 +99,108 @@ table {
         border-top: 0;
       }
       td {
-        border-top: 1px solid darken($mainBg, 10%);
+        border-top: 1px solid darken($mainBg, 5%);
       }
-      &.warn {
-        td{
-          background-color: lighten(#cccc22, 50%);
-        }
+      &.muted, &.primary, &.light, &.dark, &.info, &.success, &.warning, &.error {
+        color: $mainFg;
       }
-      &.error {
-        td{
-          background-color: lighten(#cc2222, 50%);
-        }
+      &.muted td {
+        background-color: lighten($grey, 50%);
       }
-      &.unread {
-        td {
-          background-color: lighten(#2272CC, 50%);
-        }
+      &.primary td {
+        background-color: lighten($primary, 50%);
       }
-      &.success {
-        td {
-          background-color: lighten(#50cc22, 50%);
-        }
+      &.light td {
+        background-color: lighten($light, 50%);
+      }
+      &.dark td {
+        background-color: lighten($dark, 50%);
+      }
+      &.info td {
+        background-color: lighten($info, 50%);
+      }
+      &.success td {
+        background-color: lighten($success, 50%);
+      }
+      &.warning td {
+        background-color: lighten($warning, 50%);
+      }
+      &.error td {
+        background-color: lighten($error, 50%);
       }
 
       &:hover {
         td {
           background-color: darken($mainBg, 3%);
         }
-      }
-
-      .actions {
-        a {
-          text-decoration: none;
-          margin-right: 2px;
+        &.muted td {
+          background-color: lighten($grey, 47%);
+        }
+        &.primary td {
+          background-color: lighten($primary, 47%);
+        }
+        &.light td {
+          background-color: lighten($light, 47%);
+        }
+        &.dark td {
+          background-color: lighten($dark, 47%);
+        }
+        &.info td {
+          background-color: lighten($info, 47%);
+        }
+        &.success td {
+          background-color: lighten($success, 47%);
+        }
+        &.warning td {
+          background-color: lighten($warning, 47%);
+        }
+        &.error td {
+          background-color: lighten($error, 47%);
         }
       }
-
-      @media screen and (min-width: $sm) {
-        .actions a {
-          visibility: hidden;
-          margin-right: 12px;
-        }
-        &:hover {
-          td.actions a {
-            visibility: visible;
-          }
-        }
-      }
-
     }
   }
-  td.primary {
-    width: auto;
-    & > a:first-child {
-      font-weight: 600;
-      font-size: 1.1em;
-    }
-    .essential > span {
-      white-space: nowrap;
-      margin-right: 8px;
-      &:last-child {
-        margin-right: 0;
+  &.table-va-top td {
+    vertical-align: top;
+  }
+  &.table-va-middle td {
+    vertical-align: middle;
+  }
+  &.table-va-bottom td {
+    vertical-align: bottom;
+  }
+  td.main {
+    dl.values {
+      margin-top: 8px;
+      font-size: 0.9em;
+      dt, dd {
+        width: auto;
+        float: none;
+        display: inline;
+        padding: 0;
+        text-align: left;
+        margin: 0;
+        margin-right: 12px;
+        white-space: nowrap;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      dt {
+        font-weight: 600;
+        &:after {
+          content: ':';
+          display: inline;
+        }
+      }
+      dd {
+        &:after {
+          display: none;
+        }
       }
     }
     @media screen and (min-width: $sm) {
-      .essential {
+      .values {
         display: none;
       }
     }
@@ -138,6 +225,12 @@ table {
       cursor: pointer;
     }
   }
+  thead th.selection label {
+    margin: -12px -8px -13px;
+  }
+  tfoot th.selection label {
+    margin: -13px -8px -12px;
+  }
   @media screen and (min-width: $sm) {
     td.non-essential, th.non-essential {
       display: table-cell;
@@ -147,6 +240,4 @@ table {
     }
   }
 }
-
-
 

@@ -1,6 +1,5 @@
 {
   "name": "JTK demo",
-  "namespace": "Minimal",
   "version": "1.0",
   "modules": [
     "Routing",
@@ -14,6 +13,7 @@
     "Helpers",
     "Extensions",
     "Themes",
-    "Jtk"
+    "Jtk",
+    "Console"
   ]
 }

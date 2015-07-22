@@ -68,7 +68,7 @@ class MysqlDatabase extends SqlDatabase {
   /**
    * {@inheritdoc}
    */
-  public function rawQuery($sql) {
+  public function rawQuery($sql, $pk = null) {
     Logger::query($sql);
     $result = mysql_query($sql, $this->handle);
     if (!$result) {

@@ -22,7 +22,7 @@ foreach ($drivers as $driver) :
 ); ?>
 </td>
 <?php else : ?>
-<td colspan="2">
+<td colspan="2" class="error">
 <?php
 echo tn(
   'Unavailable. Missing the "%1{", "}{" and "}" PHP extensions',

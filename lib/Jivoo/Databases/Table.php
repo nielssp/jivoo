@@ -50,8 +50,10 @@ abstract class Table extends Model {
   /**
    * {@inheritdoc}
    */
-  public function readCustom(ReadSelection $selection) {
+  public function readCustom(ReadSelection $selection, Model $model = null) {
     $resultSet = $this->readSelection($selection);
+    if (isset($model))
+      return new ResultSetIterator($model, $resultSet, $selection);
     $result = array();
     while ($resultSet->hasRows()) {
       $result[] = $resultSet->fetchAssoc();

@@ -249,7 +249,9 @@ class App implements IEventSubject {
 
     $file = new PhpStore($this->p('user', 'config.php'));
     $this->config = new Config($file);
-//     $this->config->setVirtual('app', $this->manifest);
+    
+    // Persistent state storage
+    $this->state = new StateMap($this->p('state', ''));
   }
 
   /**
@@ -644,9 +646,6 @@ class App implements IEventSubject {
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
-    
-    // Persistent state storage
-    $this->state = new StateMap($this->p('state', ''));
 
     // Import modules
     $this->triggerEvent('beforeImportModules');

@@ -115,6 +115,13 @@ class Selection extends BasicSelection implements ISelection {
   /**
    * {@inheritdoc}
    */
+  public function distinct($distinct = true) {
+    return $this->copyBasicAttr(new ReadSelection($this->model))->distinct($distinct);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function first() {
     return $this->copyBasicAttr(new ReadSelection($this->model))->first();
   }

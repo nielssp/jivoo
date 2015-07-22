@@ -173,7 +173,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     if (isset($this->data[$key])) {
       $oldValue = $this->data[$key];
     }
-    if (isset($key) and isset($value) and $key != '') {
+    if (isset($key) and isset($value) and $key !== '') {
       $this->data[$key] = $value;
     }
     else {

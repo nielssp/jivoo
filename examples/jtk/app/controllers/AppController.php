@@ -1,16 +1,30 @@
 <?php
-namespace Minimal\Controllers;
+namespace App\Controllers;
 
 use Jivoo\Controllers\Controller;
 use Jivoo\Jtk\ClassIconProvider;
 
 class AppController extends Controller {
   
-  protected $helpers = array('Html', 'Jtk', 'Icon');
+  protected $helpers = array('Html', 'Jtk', 'Icon', 'Form', 'Skin', 'Css', 'Random');
   
   public function before() {
     $this->Jtk->setTheme('flatmin');
     $this->Icon->addProvider(new ClassIconProvider());
+    
+    $options = array();
+    if (isset($this->session['color']))
+      $options['color'] = $this->session['color'];
+    
+    $this->Skin->apply('App::skin_css', $options);
+  }
+  
+  public function skin_css() {
+    if (isset($this->request->query['color']))
+      $this->Skin->primary = $this->request->query['color'];
+
+    $this->cache();
+    return $this->render('jivoo/jtk/skin.css');
   }
 
   public function index() {
@@ -20,6 +34,10 @@ class AppController extends Controller {
 
   public function colors() {
     $this->title = tr('Colors');
+    if ($this->request->hasValidData('color')) {
+      $this->session['color'] = key($this->request->data['color']);
+      return $this->refresh();
+    }
     return $this->render();
   }
   

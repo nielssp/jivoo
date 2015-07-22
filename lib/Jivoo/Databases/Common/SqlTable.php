@@ -33,6 +33,11 @@ class SqlTable extends Table {
    * @var Schema|null Table schema if set.
    */
   private $schema = null;
+  
+  /**
+   * @var bool
+   */
+  private $caseInsensitive = false;
 
   /**
    * Construct table.
@@ -44,6 +49,7 @@ class SqlTable extends Table {
     $this->owner = $database;
     $this->name = $table;
     $this->schema = $this->owner->getSchema()->getSchema($table);
+    $this->caseInsensitive = $this->owner->caseInsensitiveFields();
     parent::__construct($app);
   }
 
@@ -77,7 +83,16 @@ class SqlTable extends Table {
     $data = array();
     $virtual = array();
     $subrecords = array();
+    if ($this->caseInsensitive) {
+      $lower = array();
+      foreach ($this->getFields() as $field)
+        $lower[strtolower($field)] = $field;
+      foreach ($additional as $field => $a)
+        $lower[strtolower($field)] = $field;
+    }
     foreach ($raw as $field => $value) {
+      if (isset($lower) and isset($lower[$field]))
+        $field = $lower[$field];
       if (isset($additional[$field])) {
         if (isset($additional[$field]['type']))
           $value = $typeAdapter->decode($additional[$field]['type'], $value);
@@ -124,28 +139,25 @@ class SqlTable extends Table {
    * @return string SQL subquery.
    */
   protected function conditionToSql(Condition $where) {
-    $sqlString = '';
-    foreach ($where->clauses as $clause) {
-      if ($sqlString != '') {
-        $sqlString .= ' ' . $clause['glue'] . ' ';
-      }
-      if ($clause['clause'] instanceof Condition) {
-        if ($clause['clause']->hasClauses()) {
-          if ($clause['clause'] instanceof NotCondition) {
-            $sqlString .= 'NOT ';
-          }
-          $sqlString .= '(' . $this->conditionToSql($clause['clause']) . ')';
-        }
-      }
-      else {
-        $sqlString .= $this->owner->escapeQuery($clause['clause'], $clause['vars']);
-      }
-    }
-    return $sqlString;
+    return $where->toString($this->owner);
   }
   
   /**
-   * For use with array_walk(), will run {@see SqlTable::owner->escapeQuery()} on
+   * Interpolate variables. See {@see Condition::interpolate}.
+   * @param string $query Query.
+   * @param array $vars Variables.
+   * @return string Interpolated query.
+   */
+  protected function escapeQuery($query, $vars = array()) {
+    if (!is_array($vars)) {
+      $vars = func_get_args();
+      array_shift($vars); 
+    }
+    return Condition::interpolate($query, $vars, $this->owner);
+  }
+  
+  /**
+   * For use with array_walk(), will run {@see SqlTable::escapeQuery()} on
    * each column in an array. The input $value should be an associative array
    * as described in the documentation for {@see SelectQuery::$columns}.
    * The resulting $value will be a string.
@@ -153,7 +165,7 @@ class SqlTable extends Table {
    * @param mixed $key Key (not used).
    */
   protected function getColumnList(&$value, $key) {
-    $expression = $this->owner->escapeQuery($value['expression'], array());
+    $expression = $this->escapeQuery($value['expression'], array());
     if (isset($value['alias'])) {
       $value = $expression . ' AS ' . $value['alias'];
     }
@@ -168,14 +180,14 @@ class SqlTable extends Table {
   public function countSelection(ReadSelection $selection) {
     if (isset($selection->groupBy)) {
       $result = $this->owner->rawQuery(
-        'SELECT COUNT(*) FROM (' . $this->convertReadSelection($selection, '1') . ') AS _selection_count'
+        'SELECT COUNT(*) as _count FROM (' . $this->convertReadSelection($selection, '1') . ') AS _selection_count'
       );
       $row = $result->fetchAssoc();
-      return $row['COUNT(*)'];
+      return $row['_count'];
     }
     else {
-      $result = $selection->select('COUNT(*)');
-      return $result[0]['COUNT(*)'];
+      $result = $selection->orderBy(null)->select('COUNT(*)', '_count');
+      return $result[0]['_count'];
     }
   }
 
@@ -194,6 +206,8 @@ class SqlTable extends Table {
    */
   private function convertReadSelection(ReadSelection $selection, $projection = null) {
     $sqlString = 'SELECT ';
+    if ($selection->distinct)
+      $sqlString .= 'DISTINCT ';
     if (isset($projection)) {
       $sqlString .= $projection;
     }
@@ -206,14 +220,14 @@ class SqlTable extends Table {
       if (isset($selection->alias))
         $sqlString .= $selection->alias . '.*';
       else
-        $sqlString .= $this->owner->quoteTableName($this->name) . '.*';
+        $sqlString .= $this->owner->quoteModel($this->name) . '.*';
       if (!empty($selection->additionalFields)) {
         $fields = $selection->additionalFields;
         array_walk($fields, array($this, 'getColumnList'));
         $sqlString .= ', ' . implode(', ', $fields);
       }
     }
-    $sqlString .= ' FROM ' . $this->owner->quoteTableName($this->name);
+    $sqlString .= ' FROM ' . $this->owner->quoteModel($this->name);
     if (isset($selection->alias))
       $sqlString .= ' AS ' . $selection->alias; 
     if (!empty($selection->sources)) {
@@ -227,7 +241,7 @@ class SqlTable extends Table {
         else {
           continue;
         }
-        $sqlString .= ', ' . $this->owner->quoteTableName($table);
+        $sqlString .= ', ' . $this->owner->quoteModel($table);
         if (isset($source['alias'])) {
           $sqlString .= ' AS ' . $source['alias'];
         }
@@ -250,7 +264,7 @@ class SqlTable extends Table {
         }
         $table = $joinSource->name;
 
-        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->quoteTableName($table);
+        $sqlString .= ' ' . $join['type'] . ' JOIN ' . $this->owner->quoteModel($table);
         if (isset($join['alias'])) {
           $sqlString .= ' AS ' . $join['alias'];
         }
@@ -265,7 +279,7 @@ class SqlTable extends Table {
     if (isset($selection->groupBy)) {
       $columns = array();
       foreach ($selection->groupBy['columns'] as $column) {
-        $columns[] = $this->owner->escapeQuery($column);
+        $columns[] = $this->escapeQuery($column);
       }
       $sqlString .= ' GROUP BY ' . implode(', ', $columns);
       if (isset($selection->groupBy['condition'])
@@ -277,14 +291,13 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->owner->escapeQuery($orderBy['column'])
+        $columns[] = $this->escapeQuery($orderBy['column'])
         . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($selection->limit)) {
-      $sqlString .= ' LIMIT ' . $selection->offset . ', ' . $selection->limit;
-    }
+    if (isset($selection->limit))
+      $sqlString .= ' ' . $this->owner->sqlLimitOffset($selection->limit, $selection->offset);
     return $sqlString;
   }
   
@@ -293,7 +306,7 @@ class SqlTable extends Table {
    */
   public function updateSelection(UpdateSelection $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
-    $sqlString = 'UPDATE ' . $this->owner->quoteTableName($this->name);
+    $sqlString = 'UPDATE ' . $this->owner->quoteModel($this->name);
     $sets = $selection->sets;
     if (!empty($sets)) {
       $sqlString .= ' SET';
@@ -307,16 +320,11 @@ class SqlTable extends Table {
           $sqlString .= ',';
         }
         if (strpos($key, '=') !== false) {
-          $sqlString .= ' ' . $this->owner->escapeQuery($key, $value);
+          $sqlString .= ' ' . $this->escapeQuery($key, $value);
         }
         else {
           $sqlString .= ' ' . $key . ' = ';
-          if (isset($value)) {
-            $sqlString .= $typeAdapter->encode($this->getType($key), $value);
-          }
-          else {
-            $sqlString .= 'NULL';
-          }
+          $sqlString .= $typeAdapter->encode($this->getType($key), $value);
         }
       }
     }
@@ -326,14 +334,13 @@ class SqlTable extends Table {
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->owner->escapeQuery($orderBy['column'])
+        $columns[] = $this->escapeQuery($orderBy['column'])
           . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($selection->limit)) {
-      $sqlString .= ' LIMIT ' . $selection->limit;
-    }
+    if (isset($selection->limit))
+      $sqlString .= ' ' . $this->owner->sqlLimitOffset($selection->limit);
     return $this->owner->rawQuery($sqlString);
   }
   
@@ -341,21 +348,20 @@ class SqlTable extends Table {
    * {@inheritdoc}
    */
   public function deleteSelection(DeleteSelection $selection) {
-    $sqlString = 'DELETE FROM ' . $this->owner->quoteTableName($this->name);
+    $sqlString = 'DELETE FROM ' . $this->owner->quoteModel($this->name);
     if ($selection->where->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);
     }
     if (!empty($selection->orderBy)) {
       $columns = array();
       foreach ($selection->orderBy as $orderBy) {
-        $columns[] = $this->owner->escapeQuery($orderBy['column'])
+        $columns[] = $this->escapeQuery($orderBy['column'])
           . ($orderBy['descending'] ? ' DESC' : ' ASC');
       }
       $sqlString .= ' ORDER BY ' . implode(', ', $columns);
     }
-    if (isset($selection->limit)) {
-      $sqlString .= ' LIMIT ' . $selection->limit;
-    }
+    if (isset($selection->limit))
+      $sqlString .= ' ' . $this->owner->sqlLimitOffset($selection->limit);
     return $this->owner->rawQuery($sqlString);
   }
 
@@ -378,7 +384,7 @@ class SqlTable extends Table {
       $sqlString = 'REPLACE';
     else
       $sqlString = 'INSERT';
-    $sqlString .= ' INTO ' . $this->owner->quoteTableName($this->name) . ' (';
+    $sqlString .= ' INTO ' . $this->owner->quoteModel($this->name) . ' (';
     $sqlString .= implode(', ', $columns);
     $sqlString .= ') VALUES ';
     $tuples = array();
@@ -390,16 +396,13 @@ class SqlTable extends Table {
           $first = false;
         else
           $tupleSql .= ', ';
-        if (isset($value))
-          $tupleSql .= $typeAdapter->encode($this->getType($column), $value);
-        else
-          $tupleSql .= 'NULL';
+        $tupleSql .= $typeAdapter->encode($this->getType($column), $value);
       }
       $tupleSql .= ')';
       $tuples[] = $tupleSql;
     }
     $sqlString .= implode(', ', $tuples);
-    return $this->owner->rawQuery($sqlString);
+    return $this->owner->rawQuery($sqlString, $this->getAiPrimaryKey());
   }
   
 }

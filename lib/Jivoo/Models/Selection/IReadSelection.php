@@ -84,6 +84,13 @@ interface IReadSelection extends IBasicSelection, \IteratorAggregate, \Countable
   public function rightJoin(IModel $other, $condition, $alias = null);
 
   /**
+   * Fetch only distinct records (i.e. prevent duplicate records in result).
+   * @param bool $distinct Whether to fetch only distinct records.
+   * @return IReadSelection A read selection.
+   */
+  public function distinct($distinct = true);
+  
+  /**
    * Return first record in selection.
    * @return IRecord|null A record if available..
   */

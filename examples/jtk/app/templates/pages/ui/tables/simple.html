@@ -1,0 +1,202 @@
+<!-- { $this->view->data->title = tr('Simple tables'); } -->
+
+<?php
+$randomUsers = function($n = 5) use($Random) {
+  $users = array();
+  $roles = array(tr('User'), tr('Mod'), tr('Admin'));
+  $roleContexts = array('info', 'warning', 'error');
+  for ($i = 0; $i < $n; $i++) {
+    if (rand(0, 3) == 1) $role = 2;
+    else if (rand(0, 1) == 1) $role = 1;
+    else $role = 0;
+    $name = $Random->name();
+    $email = strtolower(preg_replace('/^([a-z])[a-z]* ([a-z]+)$/i', '\1\2@example.com', $name));
+    $users[] = array(
+      'id' => $i + 1,
+      'name' => $name,
+      'email' => $email,
+      'role' => $roles[$role],
+      'context' => $roleContexts[$role]
+    );
+  }
+  return $users;
+};
+?>
+
+<div jtk:grid="1:1" jtk:size="sm">
+  <div>
+    <div jtk:block>
+      <h2 jtk:header j:tr>Default table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" style="width: 50px;" class="center">#</th>
+            <th scope="col">User</th>
+            <th scope="col" class="col-sm">Role</th>
+            <th scope="col" style="width: 100px;" class="center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr j:foreach="$randomUsers(5) as $user">
+            <td class="center" j:text="$user['id']">id</td>
+            <td scope="row" j:text="$user['name']">Name goes here</td>
+            <td>
+              <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+                Role goes here
+              </span>
+            </td>
+            <td class="center">
+              <div class="button-group">
+                <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
+                <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    <div jtk:block>
+      <h2 jtk:header j:tr>Contextual table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" style="width: 50px;" class="center">#</th>
+            <th scope="col">User</th>
+            <th scope="col" class="col-sm">Role</th>
+            <th scope="col" style="width: 100px;" class="center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr j:foreach="$randomUsers(5) as $user" j:class="$user['context']">
+            <td class="center" j:text="$user['id']">id</td>
+            <td scope="row" j:text="$user['name']">Name goes here</td>
+            <td>
+              <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+                Role goes here
+              </span>
+            </td>
+            <td class="center">
+              <div class="button-group">
+                <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
+                <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<div jtk:grid="1:1" jtk:size="sm">
+  <div>
+    <div jtk:block>
+      <h2 jtk:header j:tr>Checkable table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" class="selection"><label><input type="checkbox" /></label></th>
+            <th scope="col">User</th>
+            <th scope="col" class="col-sm">Role</th>
+            <th scope="col" style="width: 100px;" class="center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr j:foreach="$randomUsers(5) as $user">
+            <td class="selection"><label><input type="checkbox" /></label></td>
+            <td scope="row" j:text="$user['name']">Name goes here</td>
+            <td>
+              <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+                Role goes here
+              </span>
+            </td>
+            <td class="center">
+              <div class="button-group">
+                <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
+                <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    <div jtk:block>
+      <h2 jtk:header j:tr>Scrollable table</h2>
+      <div class="table-scrollable">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" style="width: 50px;" class="center">#</th>
+              <th scope="col" style="min-width:200px;">User</th>
+              <th scope="col" class="col-sm">Email</th>
+              <th scope="col" class="col-xs">Role</th>
+              <th scope="col" style="width: 100px;" class="center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr j:foreach="$randomUsers(5) as $user">
+              <td class="center" j:text="$user['id']">id</td>
+              <td scope="row" j:text="$user['name']">Name goes here</td>
+              <td j:text="$user['email']">Email goes here</td>
+              <td>
+                <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+                  Role goes here
+                </span>
+              </td>
+              <td class="center">
+                <div class="button-group">
+                  <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
+                  <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div jtk:block>
+  <h2 jtk:header j:tr>Responsive table</h2>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col" style="width: 50px;" class="center">#</th>
+        <th scope="col">User</th>
+        <th scope="col" class="col-md non-essential">Email</th>
+        <th scope="col" class="col-sm non-essential">Role</th>
+        <th scope="col" style="width: 100px;" class="center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr j:foreach="$randomUsers(5) as $user">
+        <td class="center" j:text="$user['id']">id</td>
+        <td class="main" scope="row">
+          <strong j:text="$user['name']">Name goes here</strong>
+          <dl class="values">
+            <dt>Email</dt>
+            <dd j:text="$user['email']">Email goes here</dd>
+            <dt>Role</dt>
+            <dd><span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+            Role goes here </span></dd>
+          </dl>
+        </td>
+        <td class="non-essential" j:text="$user['email']">Email goes here</td>
+        <td class="non-essential"><span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+            Role goes here </span></td>
+        <td class="center">
+          <div class="button-group">
+            <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
+            <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

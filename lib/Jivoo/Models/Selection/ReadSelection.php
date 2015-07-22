@@ -10,9 +10,11 @@ use Jivoo\Models\IRecord;
 use Jivoo\Models\Condition\Condition;
 use Jivoo\Models\DataType;
 use Jivoo\Models\IBasicModel;
+use Jivoo\Models\Model;
 
 /**
  * A read selection.
+ * @property-read bool $distinct Distinct.
  * @property-read int $offset Offset.
  * @proeprty-read array $groupBy An array describing grouping.
  * @proeprty-read array[] $joins List of arrays describing joings.
@@ -20,7 +22,11 @@ use Jivoo\Models\IBasicModel;
  * @property-read array[] $additionalFields List of arrays describing fields.
  */
 class ReadSelection extends BasicSelection implements IReadSelection {
-
+  /**
+   * @var bool Distinct.
+   */
+  protected $distinct = false;
+  
   /**
    * @var string|null Alias for source.
    */
@@ -104,6 +110,13 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * {@inheritdoc}
    */
   public function select($expression, $alias = null) {
+    if ($alias instanceof Model) {
+      $this->fields = array(array(
+        'expression' => $expression,
+        'alias' => null
+      ));
+      return $this->model->readCustom($this, $alias);
+    }
     $this->fields = array();
     if (is_array($expression)) {
       foreach ($expression as $exp => $alias) {
@@ -175,10 +188,11 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     if (!($condition instanceof Condition)) {
       $condition = new Condition($condition);
     }
-    if (isset($this->groupBy)) {
-      $columns = array_merge($this->groupBy['columns'], $columns);
-      $condition = where($this->groupBy['condition'])->and($condition);
-    }
+//     if (isset($this->groupBy)) {
+//       $columns = array_merge($this->groupBy['columns'], $columns);
+//       if ($this->groupBy['condition']->hasClauses())
+//         $condition = where($this->groupBy['condition'])->and($condition);
+//     }
     $this->groupBy = array('columns' => $columns, 'condition' => $condition,);
     return $this;
   }
@@ -222,6 +236,14 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     $this->joins[] = array('source' => $dataSource, 'type' => 'RIGHT',
       'alias' => $alias, 'condition' => $condition
     );
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function distinct($distinct = true) {
+    $this->distinct = $distinct;
     return $this;
   }
 

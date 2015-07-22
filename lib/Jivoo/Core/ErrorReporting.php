@@ -54,6 +54,9 @@ class ErrorReporting {
         $line = $backtrace[2]['line'];
       case E_WARNING:
       case E_DEPRECATED:
+      case E_PARSE:
+      case E_NOTICE:
+      case E_STRICT:
         if (self::$warningBehavior == 'log')
           Logger::log($message, Logger::WARNING, $file, $line);
         else if (self::$warningBehavior == 'exception')
@@ -63,9 +66,6 @@ class ErrorReporting {
         $backtrace = debug_backtrace();
         $file = $backtrace[2]['file'];
         $line = $backtrace[2]['line'];
-      case E_PARSE:
-      case E_NOTICE:
-      case E_STRICT:
         if (self::$noticeBehavior == 'log')
           Logger::log($message, Logger::NOTICE, $file, $line);
         else if (self::$noticeBehavior == 'exception')

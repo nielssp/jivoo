@@ -124,7 +124,7 @@ class DispatcherCollection {
    * @return array A route array.
    */
   public function toRoute($routeString) {
-    if (preg_match('/^([^:]+):/', $routeString, $matches) === 1) {
+    if (preg_match('/^([a-zA-Z0-9_]+):/', $routeString, $matches) === 1) {
       $prefix = $matches[1];
       if (isset($this->dispatchers[$prefix])) {
         $route = $this->dispatchers[$prefix]->toRoute($routeString);
@@ -139,7 +139,9 @@ class DispatcherCollection {
       $prefixes = $route['dispatcher']->getPrefixes();
       return $this->toRoute($prefixes[0] . ':' . $routeString);
     }
-    throw new InvalidRouteException(tr('Unknown route prefix.'));
+    if (isset($prefix))
+      throw new InvalidRouteException(tr('Unknown route prefix: %1.', $prefix));
+    throw new InvalidRouteException(tr('Missing route prefix.'));
   }
   
 }

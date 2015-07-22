@@ -12,19 +12,8 @@
   content: $icon;
 }
 
-@mixin iconsize($size: 16px, $valign: -2px) {
-  & > .icon {
-    font-size: $size;
-    vertical-align: $valign;
-    * {
-      height: $size;
-      width: $size;
-    }
-  }
-}
-
 .badge {
-  @include iconsize(10px, 0px);
+  @include icon-size(10px);
 }
 
 .button,
@@ -32,10 +21,7 @@ button,
 input[type=button],
 input[type=reset],
 input[type=submit] {
-  @include iconsize(12px, 0px);
-  .icon {
-    margin-right: 6px;
-  }
+  @include icon-size(12px);
 }
 
 table thead th a {
@@ -67,14 +53,13 @@ table thead th a {
 .flash {
   &:before {
     @include icon('\e69b');
-    color: #2272CC;
     float: right;
     margin-left: 8px;
   }
   &.flash-error:before {
     content: '\e685';
   }
-  &.flash-warn:before {
+  &.flash-warning:before {
     content: '\e698';
   }
   &.flash-success:before {

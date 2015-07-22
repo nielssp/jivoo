@@ -22,11 +22,18 @@ class IconHelper extends Helper {
   private $providers = array();
   
   /**
+   * {@inheritdoc}
+   */
+  protected function init() {
+    $this->addProvider(new CoreIconProvider());
+  } 
+   
+  /**
    * Add an icon provider.
    * @param IIconProvider $provider Icon provider.
    */
   public function addProvider(IIconProvider $provider) {
-    $this->providers[] = $provider;
+    array_unshift($this->providers, $provider);
   }
   
   /**
@@ -56,9 +63,12 @@ class IconHelper extends Helper {
       $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
     else
       $icon = '';
-    return '<button' .
-           $this->Html->addAttributes($attributes) . '>' . $icon .
-           '<span class="label">' . $label . '</span></button>';
+    if (isset($label) and $label != '')
+      $label = '<span class="label">' . $label . '</span>';
+    else
+      $label = '';
+    return '<button' . $this->Html->addAttributes($attributes) . '>'
+      . $icon . $label . '</button>';
   }
 
   /**
@@ -106,8 +116,6 @@ class IconHelper extends Helper {
       $url = $this->m->Routing->getLink($route);
       if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
         $attributes['class'] = 'current';
-      if (!isset($attributes['title']))
-        $attributes['title'] = h($label);
       if (isset($icon))
         $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
       else
@@ -143,6 +151,6 @@ class IconHelper extends Helper {
     else
       $icon = '';
     return '<span class="' . $class . '">' . $icon .
-           '<span class="label">' . $label . '</span>' . $count . '</span>';
+           '<span class="label">' . $label . '</span></span>';
   }
 }

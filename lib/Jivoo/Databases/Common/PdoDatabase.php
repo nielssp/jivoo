@@ -33,7 +33,7 @@ abstract class PdoDatabase extends SqlDatabase {
   /**
    * {@inheritdoc}
    */
-  public function rawQuery($sql) {
+  public function rawQuery($sql, $pk = null) {
     Logger::query($sql);
 //     Logger::logException(new \Exception());
     $result = $this->pdo->query($sql);

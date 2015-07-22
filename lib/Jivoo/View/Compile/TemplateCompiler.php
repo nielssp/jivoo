@@ -22,7 +22,7 @@ class TemplateCompiler {
    */
   public function __construct($defaultMacros = true) {
     if ($defaultMacros)
-      $this->addMacros(DefaultMacros::getMacros());
+      $this->addMacros(new DefaultMacros());
   }
   
   /**
@@ -30,26 +30,24 @@ class TemplateCompiler {
    * @param string $name Lowercase macro name.
    * @param callable $function A function accepting two parameters: the target
    * {@see HtmlNode}, and the value of the macro attribute (string or null).
+   * @param string $namepsace Macro namespace, default is 'j'.
    */
-  public function addMacro($name, $function) {
-    $this->macros[strtolower($name)] = $function;
+  public function addMacro($name, $function, $namespace = 'j') {
+    $this->macros[$namespace . ':' . strtolower($name)] = $function;
   }
   
   /**
    * Add multiple macros.
-   * @param callable[] $macros Mapping of macro names to functions.
+   * @param callable[]|Macros $macros Mapping of macro names to functions.
+   * @param string $namepsace Macro namespace, default is 'j'.
    */
-  public function addMacros($macros) {
+  public function addMacros($macros, $namespace = 'j') {
+    if ($macros instanceof Macros) {
+      $this->addMacros($macros->getMacros(), $macros->getNamespace());
+      return;
+    }
     foreach ($macros as $name => $function)
-      $this->addMacro($name, $function);
-  }
-  
-  /**
-   * Adds macros from a {@see Macros} class. 
-   * @param string $class Class name.
-   */
-  public function addMacrosFrom($class) {
-    $this->addMacros(Macros::getMacros($class));
+      $this->addMacro($name, $function, $namespace);
   }
   
   /**
@@ -103,13 +101,14 @@ class TemplateCompiler {
     else {
       $output = new HtmlNode($node->tag);
       foreach ($node->attr as $name => $value) {
-        if ($name[0] == 'j' and $name[1] == ':') {
-          if ($value === true)
-            $value = null;
-          $output->addMacro(substr($name, 2), $value);
+        if (strpos($name, ':') === false) {
+          $output->setAttribute($name, new TextNode($value));
         }
         else {
-          $output->setAttribute($name, new TextNode($value));
+//           list($ns, $name) = explode(':', $name, 2);
+          if ($value === true)
+            $value = null;
+          $output->addMacro($name, $value);
         }
       }
       foreach ($node->nodes as $child)
@@ -129,6 +128,8 @@ class TemplateCompiler {
         $this->transform($child);
     }
     foreach ($node->macros as $macro => $value) {
+      if (!$node->hasMacro($macro))
+        continue;
       if (!isset($this->macros[$macro]))
         throw new \Exception(tr('Undefined macro: %1', $macro));
       call_user_func($this->macros[$macro], $node, $value);

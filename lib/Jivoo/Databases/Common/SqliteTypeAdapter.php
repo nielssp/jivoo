@@ -9,6 +9,7 @@ use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
+use Jivoo\Models\Condition\Condition;
 
 /**
  * Type and migration adapter for SQLite database drivers.
@@ -131,7 +132,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $column .= ' NOT';
     $column .= ' NULL';
     if (isset($type->default))
-      $column .= $this->db->escapeQuery(' DEFAULT ?', $type->default);
+      $column .= Condition::interpolate(' DEFAULT %_', array($type, $type->default), $this->db);
     return $column;
   }
   
@@ -281,8 +282,8 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $this->db->beginTransaction();
       $newSchema = $current->copy($newName);
       $this->createTable($newSchema);
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($newSchema->getName());
-      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($newSchema->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteModel($table);
       $this->db->rawQuery($sql);
       $this->dropTable($table);
       $this->db->commit();
@@ -319,15 +320,15 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $this->db->beginTransaction();
       $temp = $current->copy($table . '_MigrationBackup');
       $this->createTable($temp);
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($temp->getName());
-      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($temp->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteModel($table);
       $this->db->rawQuery($sql);
       $this->dropTable($table);
       $newSchema = $current->copy($table);
       unset($newSchema->$column);
       $this->createTable($newSchema);
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($table);
-      $sql .= ' SELECT ' . implode(', ', $newSchema->getFields()) . ' FROM ' . $this->db->quoteTableName($temp->getName());
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($table);
+      $sql .= ' SELECT ' . implode(', ', $newSchema->getFields()) . ' FROM ' . $this->db->quoteModel($temp->getName());
       $this->db->rawQuery($sql);
       $this->dropTable($temp->getName());
       $this->db->commit();
@@ -347,15 +348,15 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $this->db->beginTransaction();
       $temp = $current->copy($table . '_MigrationBackup');
       $this->createTable($temp);
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($temp->getName());
-      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($temp->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteModel($table);
       $this->db->rawQuery($sql);
       $this->dropTable($table);
       $newSchema = $current->copy($table);
       $newSchema->$column = $type;
       $this->createTable($newSchema);
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($table);
-      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($temp->getName());
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($table);
+      $sql .= ' SELECT * FROM ' . $this->db->quoteModel($temp->getName());
       $this->db->rawQuery($sql);
       $this->dropTable($temp->getName());
       $this->db->commit();
@@ -375,8 +376,8 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $this->db->beginTransaction();
       $temp = $current->copy($table . '_MigrationBackup');
       $this->createTable($temp);
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($temp->getName());
-      $sql .= ' SELECT * FROM ' . $this->db->quoteTableName($table);
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($temp->getName());
+      $sql .= ' SELECT * FROM ' . $this->db->quoteModel($table);
       $this->db->rawQuery($sql);
       $this->dropTable($table);
       $newSchema = $current->copy($table);
@@ -390,8 +391,8 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
           $columns[] = $field;
       }
       $columns[] = $column;
-      $sql = 'INSERT INTO ' . $this->db->quoteTableName($table);
-      $sql .= ' SELECT ' . implode(', ', $columns) . ' FROM ' . $this->db->quoteTableName($temp->getName());
+      $sql = 'INSERT INTO ' . $this->db->quoteModel($table);
+      $sql .= ' SELECT ' . implode(', ', $columns) . ' FROM ' . $this->db->quoteModel($temp->getName());
       $this->db->rawQuery($sql);
       $this->dropTable($temp->getName());
       $this->db->commit();

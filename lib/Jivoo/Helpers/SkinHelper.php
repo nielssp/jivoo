@@ -14,6 +14,11 @@ use Jivoo\Routing\Http;
  */
 class SkinHelper extends Helper {
   /**
+   * {@inheritdoc}
+   */
+  protected $helpers = array('Css');
+  
+  /**
    * @var array
    */
   private $variables = array();

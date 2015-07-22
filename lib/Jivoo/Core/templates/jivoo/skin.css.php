@@ -1,9 +1,25 @@
 <?php
 
 $Skin->setDefault(array(
-  'primaryBg' => '#2272cc',
-  'primaryHlBg' => '#6da6e7',
-  'primaryFg' => '#fff'
+  'primary' => '#2272cc',
+  'grey' => '#727272',
+  'info' => '#22aacc',
+  'success' => '#22cc22',
+  'warning' => '#cc7222',
+  'error' => '#cc2222'
+));
+$Skin->setDefault(array(
+  'dark' => $Css->shade($Skin->primary, 40),
+  'light' => $Css->tint($Skin->primary, 40)
+));
+
+$Skin->setDefault(array(
+  'primaryBg' => $Skin->primary
+));
+
+$Skin->setDefault(array(
+  'primaryFg' => $Css->contrasted($Skin->primaryBg, '#222', '#fff'),
+  'primaryHlBg' => $Css->lighten($Skin->primaryBg, 25)
 ));
 
 $Skin->setDefault(array(
@@ -17,8 +33,8 @@ $Skin->setDefault(array(
 ));
 
 $Skin->setDefault(array(
-  'linkFg' => $Skin->primaryBg,
-  'linkHlFg' => $Skin->primaryHlBg,
+  'linkFg' => $Skin->primary,
+  'linkHlFg' => $Skin->light,
   'navBg' => '#eee',
   'navFg' => '#444',
   'navHlBg' => '#ddd',
@@ -37,25 +53,60 @@ $Skin->setDefault(array(
   'inputHlBorder' => $Skin->primaryHlBg,
   'inputErrorBg' => '#fee',
   'inputErrorBorder' => '#f55',
+  'codeBg' => $Skin->navBg,
+  'codeFg' => $Skin->warning,
   'tableHlBg' => '#f7f7f7'
 ));
 
-$Css->addMixin('button', function($Css) use ($Skin) {
-  $Css('&, &:link, &:visited')->css(array(
+$Css->addMixin('flashColor', function($flash, $color) use($Css) {
+  $flash->css(array(
+    'border-color' => $color
+  ));
+  $flash('&:before, h1, h2, h2, h3, h4, h5, h6, strong')->css(array(
+    'color' => $color
+  ));
+});
+
+$Css->addMixin('buttonColor', function($button, $color) use($Css) {
+  $button->css(array(
+    'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
+    'border-color' => $Css->darken($color, 30)
+  ));
+  $button('&:hover, &.active')->css(array(
+    'background-color' => $color,
+    'border-color' => $Css->darken($color, 20)
+  ));
+});
+
+$Css->addMixin('button', function($button) use($Skin, $Css) {
+  $button('&, &:link, &:visited')->css(array(
     'background-color' => $Skin->navBg,
     'border-color' => $Skin->navFg,
     'color' => $Skin->navFg
   ));
-  $Css('&:hover, &:active')->css(array(
-    'background-color' => $Skin->navHlBg,
+  $button('&:hover, &.active')->css(array(
+    'background-color' => $Skin->navHlBg
+  ));
+  $button('&:focus')->css(array(
+    'box-shadow' => '0 0 2px 1px ' . $Css->toString($Css->lighten($Skin->primary, 10))
+  ));
+  $button('&:hover, &:active')->css(array(
     'border-color' => $Skin->navHlFg,
     'color' => $Skin->navHlFg
   ));
-  $Css('&[disabled]')->css(array(
+  $button('.active, &:active')->boxShadow = 'inset 0 4px 5px 0 rgba(0, 0, 0, 0.15)';
+  $button('&[disabled]')->css(array(
     'background-color' => $Skin->navDisBg,
     'border-color' => $Skin->navDisFg,
     'color' => $Skin->navDisFg
-  ));  
+  ));
+  $button('&.button-primary')->apply('buttonColor', $Skin->primary);
+  $button('&.button-light')->apply('buttonColor', $Skin->light);
+  $button('&.button-dark')->apply('buttonColor', $Skin->dark);
+  $button('&.button-info')->apply('buttonColor', $Skin->info);
+  $button('&.button-success')->apply('buttonColor', $Skin->success);
+  $button('&.button-warning')->apply('buttonColor', $Skin->warning);
+  $button('&.button-error')->apply('buttonColor', $Skin->error);
 });
 
 // Base
@@ -65,8 +116,71 @@ $Css('body')->css(array(
   'color' => $Skin->mainFg
 ));
 
-$Css('a:link, a:active, a:visited')->color = $Skin->linkFg;
+// Typography
+
+$Css('a, a:link, a:active, a:visited')->color = $Skin->linkFg;
 $Css('a:hover')->color = $Skin->linkHlFg;
+
+$Css('h1, h2, h3, h4, h5, h6')->find('& > small')->color = $Css->lighten($Skin->mainFg, 40);
+
+$Css('mark')->backgroundColor = '#ffffcc';
+$Css('del')->color = '#722222';
+$Css('ins')->color = '#227222';
+
+$Css('pre, code')->backgroundColor = $Skin->codeBg;
+$Css('pre, code')->color = $Skin->codeFg;
+
+$Css('.muted')->color = $Skin->grey;
+$Css('.primary')->color = $Skin->primary;
+$Css('.light')->color = $Skin->light;
+$Css('.dark')->color = $Skin->dark;
+$Css('.info')->color = $Skin->info;
+$Css('.success')->color = $Skin->success;
+$Css('.warning')->color = $Skin->warning;
+$Css('.error')->color = $Skin->error;
+
+$Css('.badge, .bg, .bg-muted, .bg-primary, .bg-light, .bg-dark, .bg-info, .bg-success, .bg-warning, .bg-error')->css(array(
+  'background-color' => $Skin->grey,
+  'color' => '#fff'
+));
+
+$Css('.bg-primary, .badge-primary')->backgroundColor = $Skin->primary;
+$Css('.bg-light, .badge-light')->backgroundColor = $Skin->light;
+$Css('.bg-dark, .badge-dark')->backgroundColor = $Skin->dark;
+$Css('.bg-info, .badge-info')->backgroundColor = $Skin->info;
+$Css('.bg-success, .badge-success')->backgroundColor = $Skin->success;
+$Css('.bg-warning, .badge-warning')->backgroundColor = $Skin->warning;
+$Css('.bg-error, .badge-error')->backgroundColor = $Skin->error;
+
+// Blocks
+
+$block = $Css('.block');
+$block('&&-default > &-header, &&-muted > &-header')->backgroundColor = $Skin->grey;
+$block('&&-primary > &-header')->backgroundColor = $Skin->primary;
+$block('&&-light > &-header')->backgroundColor = $Skin->light;
+$block('&&-dark > &-header')->backgroundColor = $Skin->dark;
+$block('&&-info > &-header')->backgroundColor = $Skin->info;
+$block('&&-success > &-header')->backgroundColor = $Skin->success;
+$block('&&-warning > &-header')->backgroundColor = $Skin->warning;
+$block('&&-error > &-header')->backgroundColor = $Skin->error;
+
+// Buttons
+
+$buttons = '.button, button, input[type=button], input[type=reset], input[type=submit]'; 
+
+$Css($buttons)->apply('button');
+
+// Flash
+
+$flash = $Css('.flash');
+$flash('&')->apply('flashColor', $Skin->grey);
+$flash('&&-primary')->apply('flashColor', $Skin->primary);
+$flash('&&-light')->apply('flashColor', $Skin->light);
+$flash('&&-dark')->apply('flashColor', $Skin->dark);
+$flash('&&-info')->apply('flashColor', $Skin->info);
+$flash('&&-success')->apply('flashColor', $Skin->success);
+$flash('&&-warning')->apply('flashColor', $Skin->warning);
+$flash('&&-error')->apply('flashColor', $Skin->error);
 
 // Layout
 
@@ -79,48 +193,71 @@ $Css('footer')->borderTopColor = $Skin->navBg;
 
 // Form
 
-$Css('.button, button, input[type=button], input[type=reset], input[type=submit]')->apply('button');
+$inputs = 'input[type=text], input[type=email], input[type=password], input[type=date],
+input[type=time], input[type=datetime], textarea, select';
 
-$input = $Css('input[type=text], input[type=email], input[type=password], input[type=date],
-input[type=time], input[type=datetime], textarea, select');
+$Css->addMixin('fieldColor', function($field, $color) use($Css, $inputs, $buttons) {
+  $field('& > label:first-child, .help')->color = $color;
+  $input = $field($inputs);
+  $input->borderColor = $color;
+  $input('&:focus')->borderColor = $Css->lighten($color, 20);
+  $field('.input-group-text')->css(array(
+    'border-color' => $color,
+    'background-color' => $Css->lighten($color, 40)
+  ));
+  $field('.input-group-button')->find($buttons)->apply('buttonColor', $color);
+});
+
+$input = $Css($inputs);
 $input->css(array(
   'border-color' => $Skin->inputBorder,
-  'box-shadow' => 'inset 0 1px 2px ' . $Skin->inputShadow
+  'box-shadow' => 'inset 0 1px 2px ' . $Css->toString($Skin->inputShadow)
 ));
 $input('&:focus')->css(array(
   'border-color' => $Skin->inputHlBorder,
-  'box-shadow' => '0 0 1px ' . $Skin->inputHlBorder
+  'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $input('&[data-error], &.error')->css(array(
-  'background-color' => $Skin->inputErrorBg,
-  'border-color' => $Skin->inputErrorBorder
-));
+  'border-color' => $Skin->error
+))->find('&:focus')->borderColor = $Css->lighten($error, 20);
+$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+
 
 $input = $Css('input[type=checkbox], input[type=radio]');
 $input->css(array(
   'border-color' => $Skin->inputBorder,
-  'box-shadow' => 'inset 0 1px 2px ' . $Skin->inputShadow
+  'box-shadow' => 'inset 0 1px 2px ' . $Css->toString($Skin->inputShadow)
 ));
 $input('&:checked:before')->color = $Skin->primaryBg;
 $input('&:focus')->css(array(
   'border-color' => $Skin->inputHlBorder,
-  'box-shadow' => '0 0 1px ' . $Skin->inputHlBorder
+  'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $Css('input[type=radio]:checked:before')->backgroundColor = $Skin->primaryBg; 
+$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+
+$field = $Css('.field');
+$field('& .help')->color = $Skin->grey;
+$field('&&-primary')->apply('fieldColor', $Skin->grey);
+$field('&&-primary')->apply('fieldColor', $Skin->primary);
+$field('&&-light')->apply('fieldColor', $Skin->light);
+$field('&&-dark')->apply('fieldColor', $Skin->dark);
+$field('&&-info')->apply('fieldColor', $Skin->info);
+$field('&&-success')->apply('fieldColor', $Skin->success);
+$field('&&-warning')->apply('fieldColor', $Skin->warning);
+$field('&&-error')->apply('fieldColor', $Skin->error);
 
 // Table
 $th = $Css('table thead th, table tfoot th');
 $th->css(array(
-  'background-color' => $Skin->navBg,
-  'color' => $Skin->navDisFg
+  'color' => $Skin->navFg,
+  'border-color' => $Skin->navDisFg
 ));
-$th->find('a, label')->find('&, &:link, &:visited')->color = $Skin->navFg;
+$th->find('a, label')->find('&, &:link, &:visited')->color = $Skin->dark;
 $th->find('a, label')->find('&:hover, &:active')->css(array(
-  'background-color' => $Skin->navHlBg,
   'color' => $Skin->navHlFg,
   'border-color' => $Skin->navHlFg
 ));
-$Css('table tbody tr td')->borderTopColor = $Skin->inputShadow;
 $Css('table tbody tr td:hover')->backgroundColor = $Skin->tableHlBg;
 
 echo $Css;

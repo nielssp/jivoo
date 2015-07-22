@@ -13,6 +13,11 @@ coverage:
     enabled: true
     include:
         - lib/*
+    exclude:
+        - lib/Jivoo/Core/assets/*
+        - lib/Jivoo/Core/default/*
+        - lib/Jivoo/Core/languages/*
+        - lib/Jivoo/Core/templates/*
 modules:
     config:
         Db:

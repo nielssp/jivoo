@@ -21,7 +21,25 @@ class JtkHelper extends Helper {
    * {@inheritdoc}
    */
   protected $helpers = array('Snippet');
+  
+  /**
+   * @var int[] Preferred icon sizes.
+   */
+  private $iconSizes = array(
+    'xs' => 10,
+    'sm' => 10,
+    'md' => 12,
+    'lg' => 14
+  );
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function init() {
+    if (isset($this->view->compiler))
+      $this->view->compiler->addMacros(new JtkMacros());
+  }
+  
   /**
    * Get a JTK tool.
    * @param string $toolName Tool name.
@@ -52,6 +70,10 @@ class JtkHelper extends Helper {
       return $response;
     }
     throw new \InvalidMethodException(tr('Invalid method: %1', $tool));
+  }
+  
+  public function button($label = null, $icon = null, $context = null, $size = null) {
+    
   }
   
   /**

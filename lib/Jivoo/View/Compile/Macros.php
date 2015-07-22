@@ -6,38 +6,57 @@
 namespace Jivoo\View\Compile;
 
 /**
- * A class that statically defines one or more macros. All macros are static
- * functions in all lowercase prefixed with an underscore. 
+ * A class that implements one or more macros. All macros are public methods in
+ * all lowercase prefixed with an underscore. 
  */
 abstract class Macros {
   /**
-   * @var array Macros.
+   * @var callable[] Macros.
    */
-  private static $macros = array();
-
-  private final function __construct() { }
+  private $macros = null;
   
+  /**
+   * @var string Macro namespace.
+   */
+  protected $namespace = 'j';
+  
+  /**
+   * @var string[] List of automatic properties.
+   */
+  protected $properties = array();
+
   /**
    * Get an associative array of macro names and functions.
    * @param string $class Class name of Macros-class.
    * @return callable[] Associative array mapping macro names to callables.
    */
-  public static function getMacros($class = null) {
-    if (!isset($class))
-      $class = get_called_class();
-
-    if (!isset(self::$macros[$class])) {
-      Lib::assumeSubclassOf($class, 'Jivoo\View\Compile\Macros');
-      $ref = new \ReflectionClass($class);
-      $methods = $ref->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC);
+  public function getMacros() {
+    if (!isset($this->macros)) {
+      $ref = new \ReflectionClass($this);
+      $methods = $ref->getMethods(\ReflectionMethod::IS_PUBLIC);
       $macros = array();
       foreach ($methods as $method) {
         if (preg_match('/^_([a-zA-Z]+)$/', $method->getName(), $matches) === 1) {
-          $macros[strtolower($matches[1])] = array($class, $matches[0]);
+          $macros[strtolower($matches[1])] = array($this, $matches[0]);
         }
       }
-      self::$macros[$class] = $macros;
+      $namespace = $this->namespace;
+      foreach ($this->properties as $property) {
+        $property = strtolower($property); 
+        $macros[$property] = function(HtmlNode $node, $value) use($namespace, $property) {
+          $node->setProperty($namespace . ':' . $property, $value);
+        }; 
+      }
+      $this->macros = $macros;
     }
-    return self::$macros[$class];
+    return $this->macros;
+  }
+  
+  /**
+   * Get macro namespace.
+   * @return string Macro namespace.
+   */
+  public function getNamespace() {
+    return $this->namespace;
   }
 }

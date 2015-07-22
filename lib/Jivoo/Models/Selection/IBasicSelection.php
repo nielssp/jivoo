@@ -13,7 +13,8 @@ use Jivoo\Models\Condition\ICondition;
 interface IBasicSelection extends ICondition {
   /**
    * Order selection by a column or expression.
-   * @param string $expression Expression or column.
+   * @param string|null $expression Expression or column. If null all ordering
+   * will be removed from selection.
    * @return IBasicSelection A selection.
    */
   public function orderBy($expression);

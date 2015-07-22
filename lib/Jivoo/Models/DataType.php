@@ -238,11 +238,13 @@ class DataType {
    */
   public function createValidationRules(ValidatorField $validator) {
     $validator = $validator->ruleDataType;
-    if (!$this->null && $this->type != self::INTEGER && !$this->autoIncrement)
+    if (!$this->null and $this->type != self::INTEGER and !$this->autoIncrement)
       $validator->null = false;
     switch ($this->type) {
       case self::INTEGER:
         $validator->integer = true;
+        if (!$this->null and !$this->autoIncrement)
+          $validator->presence = true;
         if ($this->signed) {
           switch ($this->size) {
             case self::BIG:
@@ -285,10 +287,14 @@ class DataType {
         $validator->boolean = true;
         return;
       case self::FLOAT:
+        if (!$this->null)
+          $validator->presence = true;
         $validator->float = true;
         return;
       case self::DATE:
       case self::DATETIME:
+        if (!$this->null)
+          $validator->presence = true;
         $validator->date = true;
         return;
       case self::TEXT:

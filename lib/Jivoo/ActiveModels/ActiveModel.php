@@ -26,6 +26,7 @@ use Jivoo\Models\Selection\BasicSelection;
 use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\Record;
+use Jivoo\Core\Logger;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -669,8 +670,8 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function readCustom(ReadSelection $selection) {
-    return $this->source->readCustom($selection);
+  public function readCustom(ReadSelection $selection, $model = null) {
+    return $this->source->readCustom($selection, $model);
   }
 
   /**
@@ -711,7 +712,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       $id = $model->getAiPrimaryKey();
       $selection = $selection->leftJoin(
         $association['model'],
-        $field .  '.' . $id . ' = {' . $this->name . '}.' . $key,
+        where('%m.%c = %c.%c', $this, $key, $field, $id),
         $field
       );
     }
@@ -720,7 +721,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       $id = $this->primaryKey;
       $selection = $selection->leftJoin(
         $association['model'],
-        $field .  '.' . $key . ' = {' . $this->name . '}.' . $id,
+        where('%m.%c = %c.%c', $this, $id, $field, $key),
         $field
       );
     }
@@ -728,6 +729,50 @@ abstract class ActiveModel extends Model implements IEventListener {
       throw new InvalidAssociationException(tr('Association must be of type "belongsTo" or "hasOne"'));
     }
     return $selection->withRecord($field, $model);
+  }
+  
+  /**
+   * Prefect associated records.tion Name of association.
+   * @param string $association Name of association.
+   * @param IReadSelection $selection Optional selection.
+   * @return IReadSelection Original selection.
+   * @throws InvalidAssociationException If association is undefined or not of
+   * the correct type ("belongsTo" or "hasOne").
+   */
+  public function prefetchAssociated($association, IReadSelection $selection = null) {
+    if (!isset($selection))
+      $selection = new Selection($this);
+    if (!isset($this->associations))
+      $this->createAssociations();
+    if (!isset($this->associations[$association]))
+      throw new InvalidAssociationException(tr('Unknown association: %1', $association));
+    $field = $association;
+    $association = $this->associations[$field];
+    $model = $association['model'];
+    $aSelection = clone $selection;
+    if ($association['type'] == 'belongsTo') {
+      $key = $association['otherKey'];
+      $id = $model->getAiPrimaryKey();
+      $aSelection = $aSelection->leftJoin(
+        $association['model'],
+        where('%m.%c = %c.%c', $this, $key, $field, $id),
+        $field
+      );
+    }
+    else if ($association['type'] == 'hasOne') {
+      $key = $association['thisKey'];
+      $id = $this->primaryKey;
+      $aSelection = $aSelection->leftJoin(
+        $association['model'],
+        where('%m.%c = %c.%c', $this, $id, $field, $key),
+        $field
+      );
+    }
+    else {
+      throw new InvalidAssociationException(tr('Association must be of type "belongsTo" or "hasOne"'));
+    }
+    $aSelection->distinct()->select(where('%c.*', $field), $model)->toArray();
+    return $selection;
   }
 
   /**
@@ -751,17 +796,22 @@ abstract class ActiveModel extends Model implements IEventListener {
     $thisKey = $association['thisKey'];
     $otherKey = $association['otherKey'];
     $id = $this->primaryKey;
+    $otherId = $other->primaryKey;
     
     if (isset($association['join'])) {
       $join = $association['join'];
       $otherPrimary = $association['otherPrimary'];
       $selection = $selection->leftJoin(
         $join,
-        where('%m.%c = J.%c', $join, $otherPrimary, $otherKey)
-          ->and('J.%c = %m.%c', $thisKey, $this->name, $id), 'J'
+        where('J.%c = %m.%c', $thisKey, $this->name, $id), 'J'
       );
+      $condition = where('%c.%c = J.%c', $field, $otherId, $otherKey);
+      $count = where('COUNT(J.%c)', $otherKey);
     }
-    $condition = where('%c.%c = %m.%c', $field, $thisKey, $this->name, $id);
+    else {
+      $condition = where('%c.%c = %m.%c', $field, $thisKey, $this->name, $id);
+      $count = where('COUNT(%c.%c)', $field, $thisKey);
+    }
     if (isset($association['condition']))
       $condition = $condition->and($association['condition']);
     $selection = $selection->leftJoin(
@@ -769,11 +819,11 @@ abstract class ActiveModel extends Model implements IEventListener {
       $condition,
       $field
     );
-    $selection->groupBy('{' . $this->name . '}.' . $id);
+    $selection->groupBy(where('%m.%c', $this->name, $id));
     
     return $selection->with(
       $field . '_count',
-      'COUNT(' . $field . '.' . $thisKey . ')',
+      $count,
       DataType::integer()
     );
   }
@@ -792,7 +842,14 @@ abstract class ActiveModel extends Model implements IEventListener {
         $key = $association['otherKey'];
         if (!isset($record->$key))
           return null;
-        return $association['model']->find($record->$key);
+        $associated = $association['model']->find($record->$key);
+        if (!isset($associated)) {
+          // TODO: Orphan!! do something here ... following is only possible if
+          // key is nullable
+//           $record->$key = null;
+//           $record->save(false);
+        }
+        return $associated;
       case 'hasOne':
         $key = $association['thisKey'];
         $id = $this->primaryKey;

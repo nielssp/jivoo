@@ -169,6 +169,27 @@ class Utilities {
   }
   
   /**
+   * Attempt to create a directory.
+   * @param string $dir Directory path.
+   * @param bool $recursive Whether to recursively create parent directories.
+   * @return bool True if directory could be created.
+   */
+  public static function createDir($dir, $recursive = false) {
+    if (mkdir($dir))
+      return true;
+    if (!$recursive)
+      return false;
+    $dir = explode('/', self::convertPath($dir));
+    $path = array_shift($dir);
+    foreach ($dir as $comp) {
+      $path .= '/' . $comp;
+      if (!(is_dir($path) or mkdir($path)))
+        return false;
+    }
+    return true;
+  }
+  
+  /**
    * Get lower case file extension from file name.
    * @param string $file File name.
    * @return string File extension.

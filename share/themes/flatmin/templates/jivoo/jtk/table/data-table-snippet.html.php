@@ -102,11 +102,17 @@ echo $menu();
 
 <th<?php
 if ($column->primary)
-  echo ' class="primary"';
+  echo ' class="main"';
 else
   echo ' class="non-essential"';
-if (isset($column->size))
+if (isset($column->size)) {
+  if (is_int($column->size))
+    $column->size = $column->size . 'px';
   echo ' style="width: ' . $column->size . ';"';
+}
+else if (!$column->primary) {
+  echo ' style="width: 15%;"';
+}
 ?>
  scope="col">
 <?php $sortOption = $object->sortOptions->find(function($b) use($column) {
@@ -161,7 +167,7 @@ if (isset($column->size))
 <?php foreach ($object->columns as $column): ?>
 <th<?php
 if ($column->primary)
-  echo ' class="primary"';
+  echo ' class="main"';
 else
   echo ' class="non-essential"';
 ?>

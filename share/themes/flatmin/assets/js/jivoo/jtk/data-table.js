@@ -104,7 +104,7 @@ $(function() {
     
 
     // ROW ACTIONS
-    $table.find('td.actions a').click(function(e) {
+    $table.find('td.actions a, td.main .action-links a').click(function(e) {
       var $link = $(this);
       var method = $link.data('method');
       var action = $link.attr('href');

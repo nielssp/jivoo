@@ -4,13 +4,21 @@
   <div class="block-header"><h2>Dialogs</h2></div>
   <div class="block-content">
 <p class="dialogs-demo">
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Icon->button(tr('Default'), 'info', array('data-type' => '')); ?>
 
-<?php echo $Icon->button(tr('Question'), 'question', array('data-type' => 'question')); ?>
+<?php echo $Icon->button(tr('Muted'), 'info', array('data-type' => 'muted')); ?>
+
+<?php echo $Icon->button(tr('Primary'), 'info', array('data-type' => 'primary')); ?>
+
+<?php echo $Icon->button(tr('Light'), 'info', array('data-type' => 'light')); ?>
+
+<?php echo $Icon->button(tr('Dark'), 'info', array('data-type' => 'dark')); ?>
+
+<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
 
 <?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
 
-<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warn')); ?>
+<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warning')); ?>
 
 <?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
 </p>
@@ -21,13 +29,21 @@
   <div class="block-header"><h2>Modals</h2></div>
   <div class="block-content">
 <p class="modals-demo">
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Icon->button(tr('Default'), 'info', array('data-type' => '')); ?>
 
-<?php echo $Icon->button(tr('Question'), 'question', array('data-type' => 'question')); ?>
+<?php echo $Icon->button(tr('Muted'), 'info', array('data-type' => 'muted')); ?>
+
+<?php echo $Icon->button(tr('Primary'), 'info', array('data-type' => 'primary')); ?>
+
+<?php echo $Icon->button(tr('Light'), 'info', array('data-type' => 'light')); ?>
+
+<?php echo $Icon->button(tr('Dark'), 'info', array('data-type' => 'dark')); ?>
+
+<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
 
 <?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
 
-<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warn')); ?>
+<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warning')); ?>
 
 <?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
 </p>
@@ -37,7 +53,7 @@
 <div class="block dialog" id="block" style="display: none">
 <div class="block-header">A dialog 
   <div class="block-toolbar">
-    <?php echo $Icon->iconLink('Close', 'null:', 'close', array('class' => 'close')); ?>
+    <?php echo $Icon->iconLink('Close', 'void:', 'close', array('class' => 'close')); ?>
   </div>
 </div>
 <div class="block-content">
@@ -46,7 +62,7 @@
 </div>
 <div class="block-footer">
   <?php echo $Icon->button('Cancel', 'close'); ?>
-  <?php echo $Icon->button('OK', 'checkmark', array('class' => 'primary')); ?>
+  <?php echo $Icon->button('OK', 'checkmark', array('class' => 'button-primary')); ?>
 </div>
 </div>
 

@@ -54,7 +54,7 @@ header {
           display: none;
         }
 
-        @include iconsize(24px);
+        @include icon-size(24px, -2px);
 
         .icon {
           margin: 0;
@@ -63,15 +63,16 @@ header {
 
         @media screen and (min-width: $sm) {
 
-          @include iconsize(16px);
+          @include icon-size(16px, -2px);
 
           .label {
             display: inline;
           }
 
           .icon {
-            margin-left: 0;
-            margin-right: 10px;
+            & + .label {
+              margin-left: 10px;
+            }
           }
         }
       }

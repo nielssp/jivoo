@@ -32,6 +32,11 @@ class CssHelper extends Helper {
   private $useRgbOutput = false;
   
   /**
+   * @var array[]
+   */
+  private $colors = array();
+  
+  /**
    * Whether to clear rules after converting to string with {@see __toString()}. 
    * @param string $clear Clears if true.
    */
@@ -71,8 +76,8 @@ class CssHelper extends Helper {
   /**
    * Add a mixin function.
    * @param string $name Mixin name.
-   * @param callable $callable Mixin function accepting one parameter: a
-   * {@see CssBlock}.
+   * @param callable $callable Mixin function accepting one or more parameters:
+   * the first one a {@see CssBlock}.
    */
   public function addMixin($name, $callable) {
     $this->mixins[$name] = $callable;
@@ -117,23 +122,29 @@ class CssHelper extends Helper {
    */
   public function hex($hex) {
     $hex = ltrim($hex, '#');
-    if (strlen($hex) == 3) {
-      $rgb = str_split($hex, 1);
+    if (!isset($this->colors[$hex])) {
+      if (strlen($hex) == 3) {
+        $rgb = str_split($hex, 1);
+        $rgb[0] .= $rgb[0]; 
+        $rgb[1] .= $rgb[1];
+        $rgb[2] .= $rgb[2];
+      }
+      else {
+        $rgb = str_split($hex, 2);
+      }
+      $this->colors[$hex] = $this->rgb(intval($rgb[0], 16), intval($rgb[1], 16), intval($rgb[2], 16));
     }
-    else {
-      $rgb = str_split($hex, 2);
-    }
-    return $this->rgb(intval($rgb[0], 16), intval($rgb[1], 16), intval($rgb[2], 16));
+    return $this->colors[$hex]; 
   }
   
   /**
    * Converts RGB to an HSL-array which can be used for color manipulation.
    * @param int|float $r Red: An integer between 0 and 100 or a float between
-   * 0.0 and 1.1. 
+   * 0.0 and 1.0. 
    * @param int|float $g Green: An integer between 0 and 100 or a float between
-   * 0.0 and 1.1.
+   * 0.0 and 1.0.
    * @param int|float $b Blue: An integer between 0 and 100 or a float between
-   * 0.0 and 1.1.
+   * 0.0 and 1.0.
    * @return array A 3-tuple of hue, saturation and lightness.
    */
   public function rgb($r, $g, $b) {
@@ -156,7 +167,7 @@ class CssHelper extends Helper {
       if ($M == $b)
         $H = ($r - $g) / $C + 4;
     }
-    if ($L != 0)
+    if ($L != 0 and $L != 1)
       $S = $C / (1 - abs(2 * $L - 1));
     $h = round(60 * $H);
     if ($h < 0) $h += 360;
@@ -168,9 +179,9 @@ class CssHelper extends Helper {
    * Create a color tuple from HSL values.
    * @param int $h Hue: An integer between 0 and 360.
    * @param int|float $s Saturation: An integer between 0 and 100 or a float
-   * between 0.0 and 1.1.
+   * between 0.0 and 1.0.
    * @param int|float $l Ligthness: An integer between 0 and 100 or a float
-   * between 0.0 and 1.1.
+   * between 0.0 and 1.0.
    * @return multitype:unknown number
    */
   public function hsl($h, $s, $l) {
@@ -182,31 +193,276 @@ class CssHelper extends Helper {
   }
   
   /**
+   * Get CSS-output for color.
+   * @param array $color Color tuple.
+   * @return string CSS color.
+   */
+  public function toString($color) {
+    $h = $color[0];
+    $s = round($color[1] * 100);
+    $l = round($color[2] * 100);
+    return 'hsl(' . $h . ', ' . $s . '%, ' . $l . '%)';
+  }
+
+  /**
+   * Get hue of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @return int Hue in degrees.
+   */
+  public function hue($color) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    return $color[0];
+  }
+
+  /**
+   * Get saturation (in HSL) of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @return float Saturation as a float between 0.0. and 1.0.
+   */
+  public function saturation($color) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    return $color[1];
+  }
+
+  /**
+   * Get lightness of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @return float Lightness as a float between 0.0. and 1.0.
+   */
+  public function lightness($color) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    return $color[2];
+  }
+  
+
+  /**
+   * Get RGB components for a color..
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @return float[] RGB color.
+   */
+  public function toRgb($color) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    $h = $color[0];
+    $s = $color[1];
+    $l = $color[2];
+    if ($s == 0)
+      return array($l, $l, $l);
+    $C = (1 - abs(2 * $l - 1)) * $s;
+    $H = $h / 60;
+    $m = $l - 0.5 * $C;
+    $X = $C * (1 - abs(fmod($H, 2) - 1)) + $m;
+    $C += $m;
+    if ($H < 1)
+      return array($C, $X, $m);
+    if ($H < 2)
+      return array($X, $C, $m);
+    if ($H < 3)
+      return array($m, $C, $X);
+    if ($H < 4)
+      return array($m, $X, $C);
+    if ($H < 5)
+      return array($X, $m, $C);
+    return array($C, $m, $X);
+  }
+
+  /**
+   * Get perceived brightness of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @return float Luminance as a float between 0.0. and 1.0.
+   */
+  public function luminance($color) {
+    // from http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+    list($r, $g, $b) = $this->toRgb($color);
+    $r = $r <= 0.03928 ? $r / 12.92 : pow(($r + 0.055) / 1.055, 2.4);
+    $g = $g <= 0.03928 ? $g / 12.92 : pow(($g + 0.055) / 1.055, 2.4);
+    $b = $b <= 0.03928 ? $b / 12.92 : pow(($b + 0.055) / 1.055, 2.4);
+    return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+  }
+  
+  /**
+   * Set hue of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int $hue New hue in degrees.
+   * @return array Color.
+   */
+  public function setHue($color, $hue) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    $color[0] = $hue;
+    return $color;
+  }
+  
+  /**
+   * Set saturation of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $s Saturation: An integer between 0 and 100 or a float
+   * between 0.0 and 1.0.
+   * @return array Color.
+   */
+  public function setSaturation($color, $s) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($s))
+      $s /= 100;
+    $color[1] = $s;
+    return $color;
+  }
+  
+  /**
+   * Set lightness of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $l Lightness: An integer between 0 and 100 or a float
+   * between 0.0 and 1.0.
+   * @return array Color.
+   */
+  public function setLightness($color, $l) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($l))
+      $l /= 100;
+    $color[2] = $$l;
+    return $color;
+  }
+  
+  /**
+   * Adjust hue of a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int $amount Amount to increase (or decrease) hue by in degrees.
+   * @return array Color.
+   */
+  public function adjustHue($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    $color[0] = ($color[0] + $amount) % 360;
+    return $color;
+  }
+  
+  /**
+   * Saturate a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to increase saturation by.
+   * @return array Color.
+   */
+  public function saturate($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($amount))
+      $amount /= 100;
+    $color[1] += $amount;
+    if ($color[1] > 1) $color[1] = 1.0;
+    return $color;
+  }
+  
+  /**
+   * Desaturate a color.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to decrease saturation by.
+   * @return array Color.
+   */
+  public function desaturate($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($amount))
+      $amount /= 100;
+    $color[1] -= $amount;
+    if ($color[1] < 0) $color[1] = 0.0;
+    return $color;
+  }
+  
+  /**
    * Ligthen a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
-   * @param float $amount Amount to increase ligthness by.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to increase ligthness by.
    * @return array Color.
    */
   public function lighten($color, $amount) {
     if (is_string($color))
       $color = $this->hex($color);
-    $color[2] *= 1 + $amount;
+    if (is_int($amount))
+      $amount /= 100;
+    $color[2] += $amount;
     if ($color[2] > 1) $color[2] = 1.0;
     return $color;
   }
   
   /**
    * Darken a color.
-   * @param array $color Color tuple, e.g. from {@see rgb()}.
-   * @param float $amount Amount to decrease ligthness by.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to decrease ligthness by.
    * @return array Color.
    */
   public function darken($color, $amount) {
     if (is_string($color))
       $color = $this->hex($color);
-    $color[2] *= 1 - $amount;
+    if (is_int($amount))
+      $amount /= 100;
+    $color[2] -= $amount;
     if ($color[2] < 0) $color[2] = 0.0;
     return $color;
+  }
+  
+  /**
+   * Darken a color by mixing with black.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to darken by.
+   * @return array Color.
+   */
+  public function shade($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($amount))
+      $amount /= 100;
+    $color[1] *= 1 - $amount;
+    $color[2] *= 1 - $amount;
+    if ($color[1] < 0) $color[1] = 0.0;
+    if ($color[2] < 0) $color[2] = 0.0;
+    return $color;
+  }
+  
+  /**
+   * Lighten a color by mixing with white.
+   * @param string|array $color Color tuple, e.g. from {@see rgb()}.
+   * @param int|float $amount Amount to lighten by.
+   * @return array Color.
+   */
+  public function tint($color, $amount) {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_int($amount))
+      $amount /= 100;
+    $color[1] *= 1 - $amount;
+    $color[2] += (1 - $color[2]) * $amount;
+    if ($color[1] < 0) $color[1] = 0.0;
+    if ($color[2] > 1) $color[2] = 1.0;
+    return $color;
+  }
+  
+  /**
+   * Returns the light or dark color depending on the relative luminance of the
+   * background color. 
+   * @param string|array $color Background color, e.g. from {@see rgb()}.
+   * @param string|array $dark Dark color, e.g. from {@see rgb()}.
+   * @param string|array $light Lightcolor, e.g. from {@see rgb()}.
+   * @return array Color.
+   */
+  public function contrasted($color, $dark = '#000', $light = '#fff') {
+    if (is_string($color))
+      $color = $this->hex($color);
+    if (is_string($dark))
+      $dark = $this->hex($dark);
+    if (is_string($light))
+      $light = $this->hex($light);
+    $lum1 = $this->luminance($color);
+    $lum2 = $this->luminance($dark);
+    $lum3 = $this->luminance($light);
+    if (abs($lum1 - $lum2) > abs($lum1 - $lum3))
+      return $dark;
+    else
+      return $light;
   }
 }
 
@@ -284,7 +540,10 @@ class CssBlock {
    */
   public function apply($mixin) {
     $mixin = $this->helper->getMixin($mixin);
-    $mixin($this);
+    $args = func_get_args();
+    array_shift($args);
+    array_unshift($args, $this);
+    call_user_func_array($mixin, $args);
     return $this;
   }
   
@@ -358,12 +617,8 @@ class CssBlock {
     $out = $this->selector . '{';
     foreach ($this->declarations as $property => $value) {
       if (isset($value)) {
-        if (is_array($value)) {
-          $h = $value[0];
-          $s = round($value[1] * 100);
-          $l = round($value[2] * 100);
-          $value = 'hsl(' . $h . ', ' . $s . '%, ' . $l . '%)';
-        }
+        if (is_array($value))
+          $value = $this->helper->toString($value);
         $out .= $property . ':' . $value . ';';
       }
       else {

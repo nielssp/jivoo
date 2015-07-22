@@ -7,12 +7,21 @@ namespace Jivoo\View\Compile;
 
 /**
  * A template node.
+ * @property-read string[] $macros Macros and values.
+ * @property-read InternalNode|null $parent Parent node if any.
+ * @property-read TemplateNode|null $next Next sibling if any.
+ * @property-read TemplateNode|null $prev Previous sibling if any.
  */
 abstract class TemplateNode {
   /**
    * @var string[] Macros and values.
    */
   private $macros = array();
+  
+  /**
+   * @var string[]
+   */
+  private $properties = array();
 
   /**
    * @var InternalNode|null Parent node if any.
@@ -114,6 +123,56 @@ abstract class TemplateNode {
     $this->parent->replace($this, $node);
     return $node;
   }
+  
+  /**
+   * Get value of a property (or macro if one exists with the same name).
+   * @param string $property Property.
+   * @return string Value.
+   */
+  public function getProperty($property) {
+    if (isset($this->macros[$property])) {
+      $this->properties[$property] = $this->macros[$property];
+      unset($this->macros[$property]);
+    }
+    if (!isset($this->properties[$property]))
+      return null;
+    return $this->properties[$property];
+  }
+
+  /**
+   * Get value of a property (removes macro with same name if it exists).
+   * @param string $property Property.
+   * @param string $value Value.
+   */
+  public function setProperty($property, $value = null) {
+    if (isset($this->macros[$property]))
+      unset($this->macros[$property]);
+    $this->properties[$property] = $value;
+  }
+
+  /**
+   * Whether a property exists (or macro if one exists with the same name).
+   * @param string $property Property.
+   * @return bool True if property exists.
+   */
+  public function hasProperty($property) {
+    if (array_key_exists($property, $this->macros)) {
+      $this->properties[$property] = $this->macros[$property];
+      unset($this->macros[$property]);
+    }
+    return array_key_exists($property, $this->properties);
+  }
+
+  /**
+   * Remove a property (removes macro with same name if it exists).
+   * @param string $property Property.
+   */
+  public function removeProperty($property) {
+    if (array_key_exists($property, $this->macros))
+      unset($this->macros[$property]);
+    if (array_key_exists($property, $this->properties))
+      unset($this->properties[$property]);
+  }
 
   /**
    * Add a macro.
@@ -122,5 +181,35 @@ abstract class TemplateNode {
    */
   public function addMacro($macro, $value = null) {
     $this->macros[$macro] = $value;
+  }
+  
+  /**
+   * Whether node has macro.
+   * @param string $macro Macro name.
+   * @return bool True if node has macro.
+   */
+  public function hasMacro($macro) {
+    return array_key_exists($macro, $this->macros);
+  }
+  
+  /**
+   * Get parameter of a macro, returns null if macro doesn't hava a parameter,
+   * use {@see hasMacro} to check for existence of macro.
+   * @param string $macro Macro name.
+   * @return string|null Macro parameter.
+   */
+  public function getMacro($macro) {
+    if (isset($this->macros[$macro]))
+      return $this->macros[$macro];
+    return null;
+  }
+  
+  /**
+   * Remove a macro.
+   * @param string $macro Macro name.
+   */
+  public function removeMacro($macro) {
+    if (isset($this->macros[$macro]))
+      unset($this->macros[$macro]);
   }
 }

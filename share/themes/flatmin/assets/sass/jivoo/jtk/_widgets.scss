@@ -1,4 +1,5 @@
 .toolbar {
+  margin-bottom: $pmargin;
   @media screen and (min-width: $sm) {
     position: absolute;
     top: 52px;
@@ -55,7 +56,7 @@
         background: none !important;
         a, input, button {
           &, &:link, &:active, &:visited, &:hover {
-            padding: 6px 12px 4px;
+            padding: 5px 12px 5px;
           }
           .icon {
             margin-left: 0;
@@ -68,7 +69,6 @@
     }
   }
 }
-
 
 .table-operations {
   @media screen and (min-width: $sm) {
@@ -121,11 +121,11 @@ body.menu-open {
   padding: 12px;
   display: none;
   font-size: 0.9em;
-  
+
   form {
+    @include narrow-form;
     margin: 0
   }
-
   .field {
     margin-left: 0;
     margin-bottom: 0;
@@ -189,7 +189,25 @@ body.menu-open {
       @include table-density(9px);
     }
     &.density-high {
+      font-size: 0.95em;
       @include table-density(6px);
+    }
+
+    td.actions, th.actions {
+      width: 150px;
+      text-align: center;
+    }
+    td.actions {
+      padding: 0;
+      vertical-align: middle;
+      a {
+        visibility: hidden;
+      }
+    }
+    tr:hover {
+      td.actions a {
+        visibility: visible;
+      }
     }
   }
 }
