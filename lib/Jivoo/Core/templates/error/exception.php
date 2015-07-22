@@ -63,29 +63,22 @@ if (isset($exception)) {
 
 <h2><?php echo tr('System'); ?></h2>
 
-<table class="trace">
-<tbody>
-<tr>
-<td><?php echo tr('Operating system'); ?></td>
-<td><?php echo php_uname(); ?></td>
-</tr>
-<tr>
-<td><?php echo tr('PHP version'); ?></td>
-<td><?php echo phpversion(); ?></td>
-</tr>
-<tr>
-<td><?php echo tr('Server API'); ?></td>
-<td><?php echo php_sapi_name(); ?></td>
-</tr>
-<tr>
-<td><?php echo tr('%1 version', 'Jivoo'); ?></td>
-<td><?php echo Jivoo\Core\VERSION; ?></td>
-<tr>
-<td><?php echo tr('%1 version', $app); ?></td>
-<td><?php echo $version; ?></td>
-</tr>
-</tbody>
-</table>
+<dl>
+<dt><?php echo tr('%1 version', $app); ?></dt>
+<dd><?php echo $version; ?></dd>
+
+<dt><?php echo tr('%1 version', 'Jivoo'); ?></dt>
+<dd><?php echo \Jivoo\CORE\VERSION; ?></dd>
+
+<dt><?php echo tr('PHP version'); ?></dt>
+<dd><?php echo phpversion(); ?></dd>
+
+<dt><?php echo tr('Server API'); ?></dt>
+<dd><?php echo php_sapi_name(); ?></dd>
+
+<dt><?php echo tr('Operating system'); ?></dt>
+<dd><?php echo php_uname(); ?></dd>
+</dl>
 
 <h2><?php echo tr('Log messages')?></h2>
 

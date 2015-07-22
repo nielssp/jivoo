@@ -284,8 +284,6 @@ class DataType {
         $validator->maxLength = $this->length;
         return;
       case self::BOOLEAN:
-        if (!$this->null)
-          $validator->presence = true;
         $validator->boolean = true;
         return;
       case self::FLOAT:
