@@ -69,14 +69,26 @@ select';
     font-size: 14px;
   }
   &.input-lg {
-    font-size: 16px;
+    font-size: 18px;
     padding: 5px 14px 5px;
   }
 }
 
 textarea {
-  min-height: 128px;
+  min-height: 200px;
   max-width: 100%;
+  &.textarea-xs {
+    min-height: 100px;
+  }
+  &.textarea-sm {
+    min-height: 200px;
+  }
+  &.textarea-md {
+    min-height: 300px;
+  }
+  &.textarea-lg {
+    min-height: 400px;
+  }
 }
 
 input[type=checkbox] {

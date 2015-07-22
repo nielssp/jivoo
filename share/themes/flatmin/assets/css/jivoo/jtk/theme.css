@@ -109,6 +109,10 @@ table thead th a {
     cursor: default;
     box-shadow: none;
     outline: none; }
+  .dropdown > a.button-block {
+    display: block;
+    text-align: center;
+    width: 100%; }
   .dropdown > a .icon {
     font-size: 12px;
     height: 12px;
@@ -144,7 +148,7 @@ table thead th a {
         width: 12px;
         height: 12px; }
   .dropdown > a.button-lg {
-    font-size: 16px;
+    font-size: 18px;
     padding: 5px 14px 5px; }
     .dropdown > a.button-lg .icon {
       font-size: 14px;
@@ -680,25 +684,27 @@ nav {
   #main {
     margin-left: 220px; } }
 
-@media screen and (min-width: 768px) {
-  .toolbar {
-    position: absolute;
-    top: 52px;
-    right: 24px;
-    text-align: right; }
-    .toolbar input[type=text],
-    .toolbar input[type=email],
-    .toolbar input[type=password],
-    .toolbar input[type=date],
-    .toolbar input[type=time],
-    .toolbar input[type=datetime],
-    .toolbar textarea,
-    .toolbar select {
-      display: inline-block;
-      width: 250px; }
-    .toolbar .dropdown > ul {
-      left: auto;
-      right: 0; } }
+.toolbar {
+  margin-bottom: 20px; }
+  @media screen and (min-width: 768px) {
+    .toolbar {
+      position: absolute;
+      top: 52px;
+      right: 24px;
+      text-align: right; }
+      .toolbar input[type=text],
+      .toolbar input[type=email],
+      .toolbar input[type=password],
+      .toolbar input[type=date],
+      .toolbar input[type=time],
+      .toolbar input[type=datetime],
+      .toolbar textarea,
+      .toolbar select {
+        display: inline-block;
+        width: 250px; }
+      .toolbar .dropdown > ul {
+        left: auto;
+        right: 0; } }
 
 @media screen and (max-width: 767px) {
   .dropdown-actions > ul > li input, .dropdown-actions > ul > li button {
@@ -774,6 +780,7 @@ body.menu-open .table-selection {
   .table-settings-box form {
     margin: 0; }
     .table-settings-box form .field {
+      padding: 0;
       margin-left: 0; }
       .table-settings-box form .field input[type=text],
       .table-settings-box form .field input[type=email],
@@ -782,7 +789,8 @@ body.menu-open .table-selection {
       .table-settings-box form .field input[type=time],
       .table-settings-box form .field input[type=datetime],
       .table-settings-box form .field textarea,
-      .table-settings-box form .field select {
+      .table-settings-box form .field select,
+      .table-settings-box form .field .input-group {
         margin: 0 0 6px 0;
         width: 100%; }
       .table-settings-box form .field > label:first-child {
@@ -790,6 +798,10 @@ body.menu-open .table-selection {
         width: auto;
         margin-left: 0;
         text-align: left; }
+      .table-settings-box form .field > *:last-child {
+        margin-bottom: 0; }
+    .table-settings-box form .buttons {
+      margin-left: 0; }
   .table-settings-box .field {
     margin-left: 0;
     margin-bottom: 0; }
@@ -1125,59 +1137,10 @@ input[type=checkbox]:checked:before {
         float: left;
         padding-top: 6px; }
 
-@media screen and (min-width: 768px) {
-  .publish {
-    margin-right: 270px; } }
-.publish .save-buttons {
-  margin-bottom: 20px; }
-  @media screen and (min-width: 768px) {
-    .publish .save-buttons {
-      float: right;
-      margin-top: -48px;
-      margin-right: -270px; } }
-@media screen and (min-width: 768px) {
-  .publish .article {
-    float: left;
-    clear: right;
-    width: 100%; } }
-.publish .article .title {
-  font-size: 1.6em;
-  padding: 2px 12px;
-  margin-bottom: 20px; }
-.publish .article .content {
-  height: 300px;
-  margin-bottom: 20px;
-  max-width: 100%; }
-@media screen and (min-width: 768px) {
-  .publish .settings {
-    float: right;
-    width: 250px;
-    margin-right: -270px; }
-    .publish .settings .field {
-      margin-left: 0; }
-      .publish .settings .field label:first-child {
-        margin-left: 0;
-        width: 0;
-        float: none; }
-      .publish .settings .field input[type=text],
-      .publish .settings .field input[type=email],
-      .publish .settings .field input[type=password],
-      .publish .settings .field input[type=date],
-      .publish .settings .field input[type=time],
-      .publish .settings .field input[type=datetime],
-      .publish .settings .field textarea,
-      .publish .settings .field select {
-        margin: 0 0 6px 0;
-        width: 100%; } }
-.publish .permalink {
-  color: #999;
-  font-size: 0.9em; }
-  .publish .permalink input {
-    padding: 2px; }
-.publish .tags {
+.tag-list {
   font-style: normal;
-  margin: 0; }
-  .publish .tags .tag {
+  margin-bottom: 10px; }
+  .tag-list .tag {
     display: inline-block;
     padding: 2px 8px;
     margin-right: 4px;
@@ -1185,13 +1148,13 @@ input[type=checkbox]:checked:before {
     background-color: #eeeeee;
     color: #444444;
     cursor: default; }
-    .publish .tags .tag:hover {
+    .tag-list .tag:hover {
       background-color: #dddddd; }
-    .publish .tags .tag a, .publish .tags .tag a:link, .publish .tags .tag a:visited {
+    .tag-list .tag a, .tag-list .tag a:link, .tag-list .tag a:visited {
       margin-left: 4px;
       color: #444444;
       text-decoration: none; }
-    .publish .tags .tag a:hover {
+    .tag-list .tag a:hover {
       color: #2272cc; }
 
 .amaran-wrapper.top {

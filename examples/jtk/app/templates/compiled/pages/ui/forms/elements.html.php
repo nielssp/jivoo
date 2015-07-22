@@ -21,7 +21,7 @@
 </div>
 <div class="field">
 <label>Textarea</label>
-<textarea placeholder="Textarea"></textarea>
+<textarea placeholder="Textarea" class="textarea-xs"></textarea>
 </div>
 <div class="field">
 <label>Disabled</label>

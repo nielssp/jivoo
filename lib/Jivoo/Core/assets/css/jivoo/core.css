@@ -420,7 +420,7 @@ a.badge:hover {
       width: 12px;
       height: 12px; }
 .button.button-lg, button.button-lg, input[type=button].button-lg, input[type=reset].button-lg, input[type=submit].button-lg {
-  font-size: 16px;
+  font-size: 18px;
   padding: 5px 14px 5px; }
   .button.button-lg .icon, button.button-lg .icon, input[type=button].button-lg .icon, input[type=reset].button-lg .icon, input[type=submit].button-lg .icon {
     font-size: 14px;
@@ -969,12 +969,20 @@ select {
   input[type=datetime].input-lg,
   textarea.input-lg,
   select.input-lg {
-    font-size: 16px;
+    font-size: 18px;
     padding: 5px 14px 5px; }
 
 textarea {
-  min-height: 128px;
+  min-height: 200px;
   max-width: 100%; }
+  textarea.textarea-xs {
+    min-height: 100px; }
+  textarea.textarea-sm {
+    min-height: 200px; }
+  textarea.textarea-md {
+    min-height: 300px; }
+  textarea.textarea-lg {
+    min-height: 400px; }
 
 input[type=checkbox] {
   -webkit-appearance: none;

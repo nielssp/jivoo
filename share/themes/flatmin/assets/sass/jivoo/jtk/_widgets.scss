@@ -1,4 +1,5 @@
 .toolbar {
+  margin-bottom: $pmargin;
   @media screen and (min-width: $sm) {
     position: absolute;
     top: 52px;
