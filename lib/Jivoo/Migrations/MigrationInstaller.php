@@ -117,6 +117,11 @@ class CreateTask extends AsyncTask {
    * @var string[]
    */
   private $tables = array();
+
+  /**
+   * @var int
+   */
+  private $count = 0;
   
   /**
    * Construct task.
@@ -131,13 +136,18 @@ class CreateTask extends AsyncTask {
    * {@inheritdoc}
    */
   public function suspend() {
-    return array('tables' => $this->tables);
+    return array(
+      'tables' => $this->tables,
+      'count' => $this->count
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function resume(array $data) {
+    if (isset($data['count']))
+      $this->count = $data['count'];
     if (isset($data['tables'])) {
       $this->tables = $data['tables'];
     }
@@ -157,10 +167,12 @@ class CreateTask extends AsyncTask {
    * {@inheritdoc}
    */
   public function run() {
+    $this->progress($this->count / ($this->count + count($this->tables)) * 100);
     $table = array_shift($this->tables);
     if (!isset($this->db->$table)) {
       $this->status(tr('Creating table "%1"...', $table));
       $this->db->createTable($this->schema->getSchema($table));
     }
+    $this->count++;
   }
 }
