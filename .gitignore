@@ -15,3 +15,4 @@
 /examples/*/user/state/*
 /examples/*/user/media/*
 /tests/_output
+/vendor/*
