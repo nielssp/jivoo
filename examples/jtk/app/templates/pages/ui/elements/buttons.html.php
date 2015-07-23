@@ -44,7 +44,7 @@
       <div class="block-content">
         <p>
           A button group:
-          <span class="button-group button-group-check">
+          <span class="button-group button-group-toggle">
             <?php echo $Jtk->button('Save'); ?>
             <?php echo $Jtk->button('Cancel'); ?>
             <?php echo $Jtk->button('OK'); ?>
@@ -53,30 +53,13 @@
 
         <p>
           Another button group:
-          <span class="button-group button-group-radio">
+          <span class="button-group button-group-choice">
             <?php echo $Jtk->button('Save'); ?>
             <?php echo $Jtk->button('Cancel', 'class=active'); ?>
             <?php echo $Jtk->button('OK'); ?>
           </span>
         </p>
-          <script type="text/javascript">
-          $(function() {
-            $('.button-group-check').each(function() {
-              var $buttons = $(this).children();
-              $buttons.click(function() {
-                $(this).toggleClass('active');
-              });
-            });
-            $('.button-group-radio').each(function() {
-              var $buttons = $(this).children();
-              $buttons.click(function() {
-                $buttons.removeClass('active');
-                $(this).addClass('active');
-              });
-            });
-          });
-          </script>
-
+        
         <p>
           Small icons: 
           <span class="button-group">

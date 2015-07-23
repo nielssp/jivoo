@@ -168,6 +168,22 @@ $(function() {
         at: 'right-4 middle+4'
       }
     });
+    
+    $(element).find('.button-group-toggle').each(function() {
+      var $buttons = $(this).children();
+      $buttons.click(function() {
+        $(this).toggleClass('active');
+      });
+    });
+    
+    $(element).find('.button-group-choice').each(function() {
+      var $buttons = $(this).children();
+      $buttons.click(function() {
+        $buttons.removeClass('active');
+        $(this).addClass('active');
+      });
+    });
+    
     old(element);
   };
   $.fn.jtkInit = function() {
