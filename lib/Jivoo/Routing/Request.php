@@ -145,8 +145,9 @@ class Request {
     }
     Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
     $this->path = array();
-    if ($path != '/') {
-      $path = explode('/', ltrim($path, '/'));
+    $path = substr($path, 1);
+    if ($path != '') {
+      $path = explode('/', $path);
       foreach ($path as $dir)
         $this->path[] = $dir;
     }
