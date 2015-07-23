@@ -44,7 +44,7 @@
       <div class="block-content">
         <p>
           A button group:
-          <span class="button-group button-group-toggle">
+          <span class="button-group" data-toggle="button">
             <?php echo $Jtk->button('Save'); ?>
             <?php echo $Jtk->button('Cancel'); ?>
             <?php echo $Jtk->button('OK'); ?>
@@ -53,7 +53,7 @@
 
         <p>
           Another button group:
-          <span class="button-group button-group-choice">
+          <span class="button-group" data-choice="button">
             <?php echo $Jtk->button('Save'); ?>
             <?php echo $Jtk->button('Cancel', 'class=active'); ?>
             <?php echo $Jtk->button('OK'); ?>

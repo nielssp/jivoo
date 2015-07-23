@@ -169,15 +169,15 @@ $(function() {
       }
     });
     
-    $(element).find('.button-group-toggle').each(function() {
-      var $buttons = $(this).children();
+    $(element).find('[data-toggle]').each(function() {
+      var $buttons = $(this).find($(this).data('toggle'));
       $buttons.click(function() {
         $(this).toggleClass('active');
       });
     });
     
-    $(element).find('.button-group-choice').each(function() {
-      var $buttons = $(this).children();
+    $(element).find('[data-choice]').each(function() {
+      var $buttons = $(this).find($(this).data('choice'));
       $buttons.click(function() {
         $buttons.removeClass('active');
         $(this).addClass('active');
