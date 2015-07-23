@@ -75,6 +75,8 @@ class JtkHelper extends Helper {
   /**
    * Create a JTK link with an optional icon and badge.
    * @param string $label Link label.
+   * @param array|\Jivoo\Routing\ILinkable|string|null $route Route for link,
+   * default is frontpage, see {@see \Jivoo\Routing\Routing}.
    * @param string[]|string $attributes Attributes, see
    * {@see \Jivoo\Helpers\Html::readAttributes}.
    * @return string Link html.
@@ -97,6 +99,8 @@ class JtkHelper extends Helper {
    * Create a JTK link with an icon. Unlike {@see link}
    * the label is not shown and is used as a title tooltip instead.
    * @param string $label Link label.
+   * @param array|\Jivoo\Routing\ILinkable|string|null $route Route for link,
+   * default is frontpage, see {@see \Jivoo\Routing\Routing}.
    * @param string[]|string $attributes Attributes, see
    * {@see \Jivoo\Helpers\Html::readAttributes}.
    * @return string Button or link html.

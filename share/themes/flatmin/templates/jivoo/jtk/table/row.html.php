@@ -18,19 +18,16 @@
 </dl>
 <div class="action-links">
 <?php foreach ($row->actions as $action): ?>
-<?php echo $Icon->link(
-  $action->label,
-  $this->mergeRoutes($action->route, array($row->id)),
-  $action->icon, null,
-  array(
-    'class' => 'button button-sm',
-    'data' => array(
-      'method' => $action->method,
-      'data' => json_encode($action->data),
-      'confirm' => $action->confirmation
-    )
+<?php echo $Jtk->button($action->label, array(
+  'route' => $this->mergeRoutes($action->route, array($row->id)),
+  'icon' => $action->icon,
+  'size' => 'sm',
+  'data' => array(
+    'method' => $action->method,
+    'data' => json_encode($action->data),
+    'confirm' => $action->confirmation
   )
-); ?> 
+)); ?> 
 <?php endforeach; ?>
 </div>
 </td>
@@ -43,19 +40,16 @@
 <td class="actions non-essential">
 <div class="button-group">
 <?php foreach ($row->actions as $action): ?>
-<?php echo $Icon->iconLink(
-  $action->label,
-  $this->mergeRoutes($action->route, array($row->id)),
-  $action->icon,
-  array(
-    'class' => 'button button-sm',
-    'data' => array(
-      'method' => $action->method,
-      'data' => json_encode($action->data),
-      'confirm' => $action->confirmation
-    )
+<?php echo $Jtk->iconButton($action->label, array(
+  'route' => $this->mergeRoutes($action->route, array($row->id)),
+  'icon' => $action->icon,
+  'size' => 'sm',
+  'data' => array(
+    'method' => $action->method,
+    'data' => json_encode($action->data),
+    'confirm' => $action->confirmation
   )
-); ?>
+)); ?> 
 <?php endforeach; ?>
 </div>
 </td>

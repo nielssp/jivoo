@@ -25,7 +25,7 @@ echo '>';
 <span class="icon"><?php echo $Icon->icon($item->icon); ?></span><?php endif; ?>
 <span class="label"><?php echo $item->label; ?></span>
 <?php if (isset($item->badge)): ?>
-<span class="count"><?php echo $item->badge; ?></span>
+<span class="badge"><?php echo $item->badge; ?></span>
 <?php endif; ?>
 </a>
 <?php echo $submenu; ?>

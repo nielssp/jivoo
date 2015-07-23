@@ -79,8 +79,8 @@ class HtmlHelper extends Helper {
   /**
    * Create a link
    * @param string $label Label for link
-   * @param array|ILinkable|string|null $route Route for link, default is
-   *        frontpage, see {@see \Jivoo\Routing\Routing}.
+   * @param array|\Jivoo\Routing\ILinkable|string|null $route Route for link,
+   * default is frontpage, see {@see \Jivoo\Routing\Routing}.
    * @param string[] $attributes Attributes, see {@see Html::readAttributes}.
    * @return string HTML link.
    */
@@ -411,7 +411,9 @@ class Html implements \ArrayAccess {
    * Read an associative array of HTML attributes and convert all elements
    * without string keys using {@see readAttributeString}.
    * 
-   * E.g. <code>array('class' => 'test', 'href="#"')</code> is converted to
+   * E.g.
+   * <code>array('class' => 'test', 'href="#"')</code>
+   * is converted to
    * <code>array('class' => 'test', 'href' => '#')</code>
    * @param string[] $attributes Attribute array.
    * @return string[] Output attribute array.

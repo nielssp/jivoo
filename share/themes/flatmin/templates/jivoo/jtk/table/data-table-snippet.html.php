@@ -13,7 +13,7 @@ $this->import('jquery.js', 'jivoo/jtk/data-table.js');
 
 <?php echo $Form->text('filter', array('placeholder' => tr('Filter'))); ?>
 
-<?php echo $Icon->button(tr('Search'), 'search'); ?>
+<?php echo $Jtk->iconButton(tr('Search'), 'icon=search'); ?>
 
 <?php if (count($object->filters) == 0): ?>
 <button>Reset</button>
@@ -40,7 +40,7 @@ echo $menu();
 <div class="table-operations">
 
 <?php if (isset($object->addRoute)): ?>
-<?php echo $Icon->link(h('Add'), $object->addRoute, 'plus', null, array('class' => 'button')); ?>
+<?php echo $Jtk->button(h('Add'), array('icon=plus context=primary', 'route' => $object->addRoute)); ?>
 <?php endif; ?>
 
 <?php if (count($object->bulkActions) > 0): ?>
@@ -48,7 +48,8 @@ echo $menu();
 <a href="#"><?php echo tr('With selection'); ?></a>
 <ul>
 <?php foreach($object->bulkActions as $action): ?>
-<li><?php echo $Icon->button(h($action->label), $action->icon, array(
+<li><?php echo $Jtk->button(h($action->label), array(
+  'icon' => $action->icon,
   'data' => array(
     'action' => $this->link($this->mergeRoutes($action->route, array('?'))),
     'method' => $action->method,
