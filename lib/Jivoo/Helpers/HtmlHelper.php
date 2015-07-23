@@ -6,6 +6,8 @@
 namespace Jivoo\Helpers;
 
 use Jivoo\Core\Utilities;
+use Jivoo\Routing\InvalidRouteException;
+use Jivoo\Core\Logger;
 
 /**
  * HTML helper. Adds some useful methods when working with HTML views.
@@ -85,19 +87,21 @@ class HtmlHelper extends Helper {
    * @return string HTML link.
    */
   public function link($label, $route = null, $attributes = array()) {
+    $a = $this->create('a', $attributes);
+    $a->html($label);
     try {
       $url = $this->m->Routing->getLink($route);
-      $a = $this->create('a', $attributes);
       if ($url != '')
         $a->attr('href', $url);
       if ($this->m->Routing->isCurrent($route))
         $a->addClass('current');
-      $a->html($label);
       return $a->toString();
     }
     catch (InvalidRouteException $e) {
       Logger::logException($e);
-      return '<a href="#invalid-route" class="invalid">' . $label . '</a>';
+      $a->attr('href', '#invalid-route');
+      $a->addClass('invalid');
+      return $a->toString();
     }
   }
 
