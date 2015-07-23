@@ -96,16 +96,18 @@ var JTK = (function(parent, $) {
       type: 'html',
       showLoading: false,
       success: function(content) {
-        var $content = $(content).children();
+        var $content = $(content);
+        $content.addClass('dialog');
+        $dialog.stopLoading();
+        $dialog.replaceWith($content);
+        $dialog = $content;
+        $content = $content.children();
         $content.hide();
-        $dialog.find('.block-content').replaceWith($content);
         if (modal)
           $content.find('.block-toolbar [data-close="dialog"]').hide();
         parent.init($content);
         $content.filter('.block-content').slideDown(400);
-        $content.fadeIn(400, function() {
-          $dialog.stopLoading();
-        });
+        $content.fadeIn(400);
       },
       error: function() {
         my.close();

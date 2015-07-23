@@ -134,6 +134,10 @@ class JtkMacros extends Macros {
   
   public function _button(HtmlNode $node, $value) {
     $node->addClass('button');
+    if ($node->hasProperty('jtk:size'))
+      $node->addClass('button-' . $node->getProperty('jtk:size'));
+    if ($node->hasProperty('jtk:context'))
+      $node->addClass('button-' . $node->getProperty('jtk:context'));
   }
   
   public function _icon(HtmlNode $node, $value) {
