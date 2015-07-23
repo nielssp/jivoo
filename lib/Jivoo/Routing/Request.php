@@ -144,10 +144,12 @@ class Request {
       }
     }
     Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
-    $path = explode('/', ltrim($path, '/'));
     $this->path = array();
-    foreach ($path as $dir)
-      $this->path[] = $dir;
+    if ($path != '/') {
+      $path = explode('/', ltrim($path, '/'));
+      foreach ($path as $dir)
+        $this->path[] = $dir;
+    }
 
     $this->realPath = $this->path;
 
