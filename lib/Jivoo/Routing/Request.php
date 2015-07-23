@@ -136,7 +136,7 @@ class Request {
     if (isset($request['fragment'])) {
       $this->fragment = $request['fragment'];
     }
-    $path = urldecode($request['path']);
+    $path = $request['path'];
     if ($basePath != '/') {
       $l = strlen($basePath);
       if (substr($path, 0, $l) == $basePath) {
@@ -149,7 +149,7 @@ class Request {
     if ($path != '') {
       $path = explode('/', $path);
       foreach ($path as $dir)
-        $this->path[] = $dir;
+        $this->path[] = urldecode($dir);
     }
 
     $this->realPath = $this->path;
