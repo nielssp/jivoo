@@ -327,6 +327,8 @@ class Routing extends LoadableModule {
       $basePath = $basePath . '/' . $this->app->entryScript; 
     $path = $basePath . '/' . implode('/', array_map('urlencode', $path));
     $path = rtrim($path, '/');
+    if ($path == '')
+      $path = '/';
     if (is_array($query) and count($query) > 0) {
       $queryStrings = array();
       foreach ($query as $key => $value) {
