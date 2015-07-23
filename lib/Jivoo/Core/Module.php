@@ -160,15 +160,6 @@ abstract class Module implements IEventSubject {
   }
 
   /**
-   * Get the absolute path of a file relative to the public directory.
-   * @param string $path File name.
-   * @return string Path.
-   */
-  public function w($path = '') {
-    return $this->app->w($path);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function attachEventHandler($name, $callback) {

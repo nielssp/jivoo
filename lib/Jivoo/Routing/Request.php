@@ -142,16 +142,12 @@ class Request {
       if (substr($path, 0, $l) == $basePath) {
         $path = substr($path, $l);
       }
-//       $path = str_replace($basePath, '', $path);
     }
     Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
-    $path = explode('/', $path);
+    $path = explode('/', ltrim($path, '/'));
     $this->path = array();
-    foreach ($path as $dir) {
-      if ($dir != '') {
-        $this->path[] = $dir;
-      }
-    }
+    foreach ($path as $dir)
+      $this->path[] = $dir;
 
     $this->realPath = $this->path;
 

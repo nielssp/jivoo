@@ -358,18 +358,6 @@ class App implements IEventSubject {
   public function p($key, $path = '') {
     return $this->paths->$key . '/' . $path;
   }
-
-  /**
-   * Get the absolute path of a file relative to the public directory.
-   * @param string $path File.
-   * @return string Path.
-   */
-  public function w($path = '') {
-    if ($this->basePath == '/') {
-      return '/' . $path;
-    }
-    return $this->basePath . '/' . $path;
-  }
   
   /**
    * Prepend application namespace to a name.
