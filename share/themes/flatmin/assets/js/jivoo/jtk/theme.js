@@ -120,8 +120,12 @@ var JTK = (function(parent, $) {
     $(element).find('[data-open="dialog"]').each(function() {
       var url = $(this).attr('href');
       var modal = $(this).is('[data-modal]');
+      var isAjax = !url.match(/^#/); 
       $(this).click(function() {
-        my.ajax(url, modal);
+        if (isAjax)
+          my.ajax(url, modal);
+        else
+          my.open($(url), modal);
         return false;
       });
     });

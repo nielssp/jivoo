@@ -55,7 +55,7 @@
   <div class="block-header"><h2>Ajax content</h2></div>
   <div class="block-content">
     <p>
-    <?php echo $Html->link(tr('Fetch'), 'path:ui/elements/dialog', 'data-open=dialog'); ?>
+    <?php echo $Jtk->button(tr('Open remote'), array('route' => 'path:ui/elements/dialog', 'data-open=dialog')); ?>
     </p>
   </div>
 </div>
