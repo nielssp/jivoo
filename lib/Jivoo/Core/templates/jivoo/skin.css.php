@@ -70,11 +70,13 @@ $Css->addMixin('flashColor', function($flash, $color) use($Css) {
 $Css->addMixin('buttonColor', function($button, $color) use($Css) {
   $button->css(array(
     'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
-    'border-color' => $Css->darken($color, 30)
+    'border-color' => $Css->darken($color, 30),
+    'color' => '#fff'
   ));
   $button('&:hover, &.active')->css(array(
     'background-color' => $color,
-    'border-color' => $Css->darken($color, 20)
+    'border-color' => $Css->darken($color, 20),
+    'color' => '#fff'
   ));
 });
 

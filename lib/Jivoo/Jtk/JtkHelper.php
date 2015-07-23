@@ -96,7 +96,7 @@ class JtkHelper extends Helper {
       $options['class'] .= ' button-' . $options['context'];
       unset($options['context']);
     }
-    if (isset($options['route'])) {
+    if (array_key_exists('route', $options)) {
       $route = $options['route'];
       unset($options['route']);
       $options['class'] .= ' button';
