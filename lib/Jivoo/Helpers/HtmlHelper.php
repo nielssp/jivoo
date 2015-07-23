@@ -56,6 +56,14 @@ class HtmlHelper extends Helper {
     }
     return $html;
   }
+  
+  /**
+   * Create an HTML tag.
+   * @param string $tag Tag.
+   * @return HtmlNode Html node.
+   */
+  public function create($tag) {
+  }
 
   /**
    * Insert an image.

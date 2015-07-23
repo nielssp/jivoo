@@ -20,7 +20,7 @@ class JtkHelper extends Helper {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Snippet');
+  protected $helpers = array('Snippet', 'Icon', 'Html');
   
   /**
    * @var int[] Preferred icon sizes.
@@ -50,7 +50,7 @@ class JtkHelper extends Helper {
   public function __get($toolName) {
     $tool = $this->m->Jtk->getTool($toolName);
     if (!isset($tool))
-      throw new \Exception(tr('Tool not found: %1', $toolName));
+      return parent::__get($toolName);
     return new PartialJtkSnippet($tool, $tool->getObject());
   }
   
@@ -72,8 +72,59 @@ class JtkHelper extends Helper {
     throw new \InvalidMethodException(tr('Invalid method: %1', $tool));
   }
   
-  public function button($label = null, $icon = null, $context = null, $size = null) {
-    
+  public function button($label = null, $options = array()) {
+    $icon = '';
+    if (isset($options['icon'])) {
+      $icon = '<span class="icon">' . $this->Icon->icon($options['icon']) . '</span>';
+      unset($options['icon']);
+    }
+    if (isset($label))
+      $label = '<span class="label">' . $label . '</span>';
+    else
+      $label = '';
+    if (isset($options['badge'])) {
+      $label .= '<span class="badge">' . $options['badge'] . '</span>';
+      unset($options['badge']);
+    }
+    if (!isset($options['class']))
+      $options['class'] = '';
+    if (isset($options['size'])) {
+      $options['class'] .= ' button-' . $options['size'];
+      unset($options['size']);
+    }
+    if (isset($options['context'])) {
+      $options['class'] .= ' button-' . $options['context'];
+      unset($options['context']);
+    }
+    if (isset($options['route'])) {
+      $route = $options['route'];
+      unset($options['route']);
+      $options['class'] .= ' button';
+      return $this->Html->link($icon . $label, $route, $options);
+    }
+    else {
+      if (!isset($options['type']))
+        $options['type'] = 'button';
+      return '<button' . $this->Html->addAttributes($options) . '>'
+        . $icon . $label . '</button>'; 
+    }
+  }
+  
+  public function iconButton($label = null, $options = array()) {
+    $options['title'] = $label;
+    return $this->button(null, $options);
+  }
+  
+  public function badge($label, $options) {
+    $class = 'badge';
+    if (isset($context))
+      $class .= ' badge-' . $context;
+    if (isset($icon))
+      $icon = '<span class="icon">' . $this->Icon->icon($icon) . '</span>';
+    else
+      $icon = '';
+    return '<span class="' . $class . '">' . $icon .
+           '<span class="label">' . $label . '</span></span>';
   }
   
   /**

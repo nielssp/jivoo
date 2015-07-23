@@ -28,6 +28,8 @@
           <?php echo $Icon->button('A button', 'plus'); ?>
           <?php echo $Icon->button('A button', 'download'); ?>
           <?php echo $Icon->button('A button', 'enter'); ?>
+          <?php echo $Jtk->button('A button',
+            array('icon' => 'plus', 'context' => 'primary')); ?>
         </p>
 
         <p>
