@@ -72,59 +72,77 @@ class JtkHelper extends Helper {
     throw new \InvalidMethodException(tr('Invalid method: %1', $tool));
   }
   
-  public function button($label = null, $options = array()) {
-    $icon = '';
-    if (isset($options['icon'])) {
-      $icon = '<span class="icon">' . $this->Icon->icon($options['icon']) . '</span>';
-      unset($options['icon']);
-    }
+  /**
+   * Create a JTK button with optional icon, context, size and badge. If the
+   * 'route'-attribute is set, the button will be a link.
+   * @param string $label Button label.
+   * @param string[]|string $attributes Attributes, see
+   * {@see \Jivoo\Helpers\Html::readAttributes}.
+   * @return string Button or link html.
+   */
+  public function button($label = null, $attributes = array()) {
+    $button = $this->Html->create('button', $attributes);
     if (isset($label))
-      $label = '<span class="label">' . $label . '</span>';
-    else
-      $label = '';
-    if (isset($options['badge'])) {
-      $label .= '<span class="badge">' . $options['badge'] . '</span>';
-      unset($options['badge']);
-    }
-    if (!isset($options['class']))
-      $options['class'] = '';
-    if (isset($options['size'])) {
-      $options['class'] .= ' button-' . $options['size'];
-      unset($options['size']);
-    }
-    if (isset($options['context'])) {
-      $options['class'] .= ' button-' . $options['context'];
-      unset($options['context']);
-    }
-    if (array_key_exists('route', $options)) {
-      $route = $options['route'];
-      unset($options['route']);
-      $options['class'] .= ' button';
-      return $this->Html->link($icon . $label, $route, $options);
+      $button->html('<span class="label">' . $label . '</span>');
+    
+    if ($button->hasProp('icon'))
+      $button->prepend('<span class="icon">' . $this->Icon->icon($button['icon']) . '</span>');
+    
+    if ($button->hasProp('badge'))
+      $button->append('<span class="badge">' . $button['badge'] . '</span>');
+    
+    if ($button->hasProp('size'))
+      $button->addClass('button-' . $button['size']);
+    
+    if ($button->hasProp('context'))
+      $button->addClass('button-' . $button['context']);
+    
+    if ($button->hasProp('route')) {
+      $button->addClass('button');
+      return $this->Html->link($button->html(), $button['route'], $button->attr());
     }
     else {
-      if (!isset($options['type']))
-        $options['type'] = 'button';
-      return '<button' . $this->Html->addAttributes($options) . '>'
-        . $icon . $label . '</button>'; 
+      if (!isset($button['type']))
+        $button['type'] = 'button';
+      return $button->toString();
     }
   }
-  
-  public function iconButton($label = null, $options = array()) {
-    $options['title'] = $label;
-    return $this->button(null, $options);
+
+  /**
+   * Create a JTK button with optional link, context, size and badge. If the
+   * 'route'-attribute is set, the button will be a link. Unlike {@see button}
+   * the label is not shown and is used as a title tooltip instead.
+   * @param string $label Button label.
+   * @param string[]|string $attributes Attributes, see
+   * {@see \Jivoo\Helpers\Html::readAttributes}.
+   * @return string Button or link html.
+   */
+  public function iconButton($label = null, $attributes = array()) {
+    $attributes['title'] = $label;
+    return $this->button(null, $attributes);
   }
-  
-  public function badge($label, $options) {
-    $class = 'badge';
-    if (isset($context))
-      $class .= ' badge-' . $context;
-    if (isset($icon))
-      $icon = '<span class="icon">' . $this->Icon->icon($icon) . '</span>';
-    else
-      $icon = '';
-    return '<span class="' . $class . '">' . $icon .
-           '<span class="label">' . $label . '</span></span>';
+
+  /**
+   * Create a JTK badge with optional icon, context, and size. If the
+   * 'route'-attribute is set, the badge will be a link.
+   * @param string $label Badge label.
+   * @param string[]|string $attributes Attributes, see
+   * {@see \Jivoo\Helpers\Html::readAttributes}.
+   * @return string Badge or link html.
+   */
+  public function badge($label, $attributes = array()) {
+    $badge = $this->Html->create('span', $attributes);
+    if (isset($label))
+      $badge->html('<span class="label">' . $label . '</span>');
+    $badge->addClass('badge');
+    if ($badge->hasProp('context'))
+      $badge->addClass('badge-' . $badge['context']);
+    if ($badge->hasProp('icon'))
+      $badge->prepend('<span class="icon">' . $this->Icon->icon($badge['icon']) . '</span>');
+
+    if ($badge->hasProp('route'))
+      return $this->Html->link($badge->html(), $badge['route'], $badge->attr());
+    return $badge->toString();
   }
   
   /**

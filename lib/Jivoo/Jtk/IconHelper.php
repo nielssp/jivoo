@@ -70,6 +70,7 @@ class IconHelper extends Helper {
    * @deprecated
    */
   public function button($label, $icon = null, $attributes = array()) {
+    trigger_error('IconHelper::button is deprecated', E_USER_DEPRECATED);
     if (isset($icon))
       $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
     else
@@ -93,6 +94,7 @@ class IconHelper extends Helper {
    * @deprecated
    */
   public function iconLink($label, $route, $icon = null, $attributes = array()) {
+    trigger_error('IconHelper::iconLink is deprecated', E_USER_DEPRECATED);
     try {
       $url = $this->m->Routing->getLink($route);
       if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
@@ -125,6 +127,7 @@ class IconHelper extends Helper {
    * @deprecated
    */
   public function link($label, $route, $icon = null, $count = null, $attributes = array()) {
+    trigger_error('IconHelper::link is deprecated', E_USER_DEPRECATED);
     try {
       $url = $this->m->Routing->getLink($route);
       if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
@@ -157,6 +160,7 @@ class IconHelper extends Helper {
    * @deprecated
    */
   public function badge($label, $icon = null, $context = null) {
+    trigger_error('IconHelper::badge is deprecated', E_USER_DEPRECATED);
     $class = 'badge';
     if (isset($context))
       $class .= ' badge-' . $context;

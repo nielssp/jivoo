@@ -2,7 +2,7 @@
 var JTK = (function(parent, $) {
   var my = parent.notifications = parent.notifications || {};
   
-  var themeTemplate = function(notification) {
+  my.themeTemplate = function(notification) {
     return function(data) {
       return '<div class="icon"></div><div class="message">' + data.message + '</div>';
     };
@@ -14,7 +14,7 @@ var JTK = (function(parent, $) {
         themeName: 'notification ' + notification.type,
         message: notification.message
       },
-      themeTemplate: themeTemplate(notification),
+      themeTemplate: my.themeTemplate(notification),
       position: 'top right',
       inEffect: 'slideTop',
       delay: 6000,
@@ -31,7 +31,7 @@ var JTK = (function(parent, $) {
         message: $('body').data('loadmsg')
       },
       sticky: true,
-      themeTemplate: themeTemplate(true),
+      themeTemplate: my.themeTemplate(true),
       position: 'top right',
       inEffect: 'slideTop',
       closeOnClick: false

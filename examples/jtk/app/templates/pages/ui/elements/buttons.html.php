@@ -25,11 +25,10 @@
       <div class="block-header"><h3>Buttons with icons</h3></div>
       <div class="block-content">
         <p>
-          <?php echo $Icon->button('A button', 'plus'); ?>
-          <?php echo $Icon->button('A button', 'download'); ?>
-          <?php echo $Icon->button('A button', 'enter'); ?>
-          <?php echo $Jtk->button('A button',
-            array('icon' => 'plus', 'context' => 'primary')); ?>
+          <?php echo $Jtk->button('A button', 'icon=plus'); ?>
+          <?php echo $Jtk->button('A button', 'icon=download'); ?>
+          <?php echo $Jtk->button('A button', 'icon=enter'); ?>
+          <?php echo $Jtk->button('A button', 'icon=plus context=primary'); ?>
         </p>
 
         <p>
