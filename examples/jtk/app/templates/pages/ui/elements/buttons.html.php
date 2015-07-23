@@ -28,14 +28,14 @@
           <?php echo $Jtk->button('A button', 'icon=plus'); ?>
           <?php echo $Jtk->button('A button', 'icon=download'); ?>
           <?php echo $Jtk->button('A button', 'icon=enter'); ?>
-          <?php echo $Jtk->button('A button', 'icon=plus context=primary'); ?>
+          <?php echo $Jtk->button('A button', 'icon=plus ctx=primary'); ?>
         </p>
 
         <p>
           Disabled:
-          <?php echo $Icon->button('A button', 'plus', array('disabled' => 'disabled')); ?>
-          <?php echo $Icon->button('A button', 'download', array('disabled' => 'disabled')); ?>
-          <?php echo $Icon->button('A button', 'enter', array('disabled' => 'disabled')); ?>
+          <?php echo $Jtk->button('A button', 'icon=plus disabled'); ?>
+          <?php echo $Jtk->button('A button', 'icon=download disabled'); ?>
+          <?php echo $Jtk->button('A button', 'icon=enter disabled'); ?>
         </p>
       </div>
     </div>
@@ -45,18 +45,18 @@
         <p>
           A button group:
           <span class="button-group button-group-check">
-            <?php echo $Icon->button('Save'); ?>
-            <?php echo $Icon->button('Cancel'); ?>
-            <?php echo $Icon->button('OK'); ?>
+            <?php echo $Jtk->button('Save'); ?>
+            <?php echo $Jtk->button('Cancel'); ?>
+            <?php echo $Jtk->button('OK'); ?>
           </span>
         </p>
 
         <p>
           Another button group:
           <span class="button-group button-group-radio">
-            <?php echo $Icon->button('Save'); ?>
-            <?php echo $Icon->button('Cancel', null, array('class' => 'active')); ?>
-            <?php echo $Icon->button('OK'); ?>
+            <?php echo $Jtk->button('Save'); ?>
+            <?php echo $Jtk->button('Cancel', 'class=active'); ?>
+            <?php echo $Jtk->button('OK'); ?>
           </span>
         </p>
           <script type="text/javascript">
@@ -80,15 +80,15 @@
         <p>
           Small icons: 
           <span class="button-group">
-            <?php echo $Icon->button('', 'disk', array('class' => 'button-xs')); ?>
-            <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
-            <?php echo $Icon->button('', 'checkmark', array('class' => 'button-xs')); ?>
+            <?php echo $Jtk->iconButton('Save', 'icon=disk size=xs'); ?>
+            <?php echo $Jtk->iconButton('Cancel', 'icon=close size=xs'); ?>
+            <?php echo $Jtk->iconButton('Ok', 'icon=checkmark size=xs'); ?>
           </span>
           With context:
           <span class="button-group">
-            <?php echo $Icon->button('', 'disk', array('class' => 'button-primary button-xs')); ?>
-            <?php echo $Icon->button('', 'close', array('class' => 'button-error button-xs')); ?>
-            <?php echo $Icon->button('', 'checkmark', array('class' => 'button-success button-xs')); ?>
+            <?php echo $Jtk->iconButton('Save', 'icon=disk size=xs context=primary'); ?>
+            <?php echo $Jtk->iconButton('Cancel', 'icon=close size=xs context=error'); ?>
+            <?php echo $Jtk->iconButton('Ok', 'icon=checkmark size=xs context=success'); ?>
           </span>
         </p>
       </div>
@@ -126,16 +126,16 @@
           <button class="button-lg">Large</button>
         </p>
         <p>
-          <?php echo $Icon->button('Extra small', 'plus', array('class' => 'button-xs')); ?>
-          <?php echo $Icon->button('Small', 'download', array('class' => 'button-sm')); ?>
-          <?php echo $Icon->button('Default', 'enter'); ?>
-          <?php echo $Icon->button('Large', 'flag', array('class' => 'button-lg')); ?>
+          <?php echo $Jtk->button('Extra small', 'icon=plus size=xs'); ?>
+          <?php echo $Jtk->button('Small', 'icon=download size=sm'); ?>
+          <?php echo $Jtk->button('Default', 'icon=enter'); ?>
+          <?php echo $Jtk->button('Large', 'icon=flag size=lg'); ?>
         </p>
         <p>
-          <?php echo $Icon->button('', 'plus', array('class' => 'button-xs')); ?>
-          <?php echo $Icon->button('', 'download', array('class' => 'button-sm')); ?>
-          <?php echo $Icon->button('', 'enter'); ?>
-          <?php echo $Icon->button('', 'flag', array('class' => 'button-lg')); ?>
+          <?php echo $Jtk->iconButton('Extra small', 'icon=plus size=xs'); ?>
+          <?php echo $Jtk->iconButton('Small', 'icon=download size=sm'); ?>
+          <?php echo $Jtk->iconButton('Default', 'icon=enter'); ?>
+          <?php echo $Jtk->iconButton('Large', 'icon=flag size=lg'); ?>
         </p>
       </div>
     </div>

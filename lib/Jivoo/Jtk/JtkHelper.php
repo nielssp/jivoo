@@ -73,6 +73,41 @@ class JtkHelper extends Helper {
   }
   
   /**
+   * Create a JTK link with an optional icon and badge.
+   * @param string $label Link label.
+   * @param string[]|string $attributes Attributes, see
+   * {@see \Jivoo\Helpers\Html::readAttributes}.
+   * @return string Link html.
+   */
+  public function link($label = null, $route = null, $attributes = array()) {
+    $link = $this->Html->create('a', $attributes);
+    if (isset($label))
+      $link->html('<span class="label">' . $label . '</span>');
+    
+    if ($link->hasProp('icon'))
+      $link->prepend('<span class="icon">' . $this->Icon->icon($link['icon']) . '</span>');
+    
+    if ($link->hasProp('badge'))
+      $link->append('<span class="badge">' . $link['badge'] . '</span>');
+
+    return $this->Html->link($link->html(), $route, $link->attr());
+  }
+
+  /**
+   * Create a JTK link with an icon. Unlike {@see link}
+   * the label is not shown and is used as a title tooltip instead.
+   * @param string $label Link label.
+   * @param string[]|string $attributes Attributes, see
+   * {@see \Jivoo\Helpers\Html::readAttributes}.
+   * @return string Button or link html.
+   */
+  public function iconLink($label = null, $route = null, $attributes = array()) {
+    $link = $this->Html->create('a', $attributes);
+    $link['title'] = $label;
+    return $this->link(null, $route, $link->attr());
+  }
+  
+  /**
    * Create a JTK button with optional icon, context, size and badge. If the
    * 'route'-attribute is set, the button will be a link.
    * @param string $label Button label.
@@ -97,6 +132,9 @@ class JtkHelper extends Helper {
     if ($button->hasProp('context'))
       $button->addClass('button-' . $button['context']);
     
+    if ($button->hasProp('ctx'))
+      $button->addClass('button-' . $button['ctx']);
+    
     if ($button->hasProp('route')) {
       $button->addClass('button');
       return $this->Html->link($button->html(), $button['route'], $button->attr());
@@ -118,8 +156,9 @@ class JtkHelper extends Helper {
    * @return string Button or link html.
    */
   public function iconButton($label = null, $attributes = array()) {
-    $attributes['title'] = $label;
-    return $this->button(null, $attributes);
+    $button = $this->Html->create('button', $attributes);
+    $button['title'] = $label;
+    return $this->button(null, $button->attr());
   }
 
   /**
@@ -137,6 +176,8 @@ class JtkHelper extends Helper {
     $badge->addClass('badge');
     if ($badge->hasProp('context'))
       $badge->addClass('badge-' . $badge['context']);
+    if ($badge->hasProp('ctx'))
+      $badge->addClass('badge-' . $badge['ctx']);
     if ($badge->hasProp('icon'))
       $badge->prepend('<span class="icon">' . $this->Icon->icon($badge['icon']) . '</span>');
 

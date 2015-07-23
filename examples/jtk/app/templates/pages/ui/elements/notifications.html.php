@@ -1,32 +1,32 @@
 <?php $this->view->data->title = tr('Notifications'); ?>
  
 <p class="notification-demo">
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Jtk->button(tr('Info'), 'icon=info data-type=info'); ?>
 
-<?php echo $Icon->button(tr('Question'), 'question', array('data-type' => 'question')); ?>
+<?php echo $Jtk->button(tr('Question'), 'icon=question data-type=question'); ?>
 
-<?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
+<?php echo $Jtk->button(tr('Success'), 'icon=checkmark data-type=success'); ?>
 
-<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warning')); ?>
+<?php echo $Jtk->button(tr('Warning'), 'icon=warning data-type=warning'); ?>
 
-<?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
+<?php echo $Jtk->button(tr('Error'), 'icon=close data-type=error'); ?>
 </p>
 
 <p>
 Loading notification:
-<?php echo $Icon->button(tr('Start'), null, array('class' => 'load-start')); ?>
+<?php echo $Jtk->button(tr('Start'), 'class=load-start'); ?>
 
-<?php echo $Icon->button(tr('Stop'), null, array('class' => 'load-stop')); ?>
+<?php echo $Jtk->button(tr('Stop'), 'class=load-stop'); ?>
 </p>
 
 <p>
 Apply loading screen:
 
-<?php echo $Icon->button(tr('Apply to block'), null, array('class' => 'load-block')); ?>
+<?php echo $Jtk->button(tr('Apply to block'), 'class=load-block'); ?>
 
-<?php echo $Icon->button(tr('Apply to content'), null, array('class' => 'load-content')); ?>
+<?php echo $Jtk->button(tr('Apply to content'), 'class=load-content'); ?>
 
-<?php echo $Icon->button(tr('Apply to body'), null, array('class' => 'load-body')); ?>
+<?php echo $Jtk->button(tr('Apply to body'), 'class=load-body'); ?>
 </p>
 
 <div class="grid-sm grid-1-1-1">

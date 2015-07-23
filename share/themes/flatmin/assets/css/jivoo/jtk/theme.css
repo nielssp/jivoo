@@ -1216,7 +1216,7 @@ input[type=checkbox]:checked:before {
     clear: left; }
   .amaran.notification.error > .icon:before {
     content: '\e685'; }
-  .amaran.notification.warn > .icon:before {
+  .amaran.notification.warning > .icon:before {
     content: '\e698'; }
   .amaran.notification.success > .icon:before {
     content: '\e686'; }

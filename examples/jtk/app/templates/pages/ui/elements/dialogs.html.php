@@ -4,23 +4,23 @@
   <div class="block-header"><h2>Dialogs</h2></div>
   <div class="block-content">
 <p class="dialogs-demo">
-<?php echo $Icon->button(tr('Default'), 'info', array('data-type' => '')); ?>
+<?php echo $Jtk->button(tr('Default'), 'icon=info data-type=""'); ?>
 
-<?php echo $Icon->button(tr('Muted'), 'info', array('data-type' => 'muted')); ?>
+<?php echo $Jtk->button(tr('Muted'), 'icon=info data-type=muted'); ?>
 
-<?php echo $Icon->button(tr('Primary'), 'info', array('data-type' => 'primary')); ?>
+<?php echo $Jtk->button(tr('Primary'), 'icon=info data-type=primary'); ?>
 
-<?php echo $Icon->button(tr('Light'), 'info', array('data-type' => 'light')); ?>
+<?php echo $Jtk->button(tr('Light'), 'icon=info data-type=light'); ?>
 
-<?php echo $Icon->button(tr('Dark'), 'info', array('data-type' => 'dark')); ?>
+<?php echo $Jtk->button(tr('Dark'), 'icon=info data-type=dark'); ?>
 
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Jtk->button(tr('Info'), 'icon=info data-type=info'); ?>
 
-<?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
+<?php echo $Jtk->button(tr('Success'), 'icon=info data-type=success'); ?>
 
-<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warning')); ?>
+<?php echo $Jtk->button(tr('Warning'), 'icon=info data-type=warning'); ?>
 
-<?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
+<?php echo $Jtk->button(tr('Error'), 'icon=info data-type=error'); ?>
 </p>
   </div>
 </div>
@@ -29,23 +29,23 @@
   <div class="block-header"><h2>Modals</h2></div>
   <div class="block-content">
 <p class="modals-demo">
-<?php echo $Icon->button(tr('Default'), 'info', array('data-type' => '')); ?>
+<?php echo $Jtk->button(tr('Default'), 'icon=info data-type=""'); ?>
 
-<?php echo $Icon->button(tr('Muted'), 'info', array('data-type' => 'muted')); ?>
+<?php echo $Jtk->button(tr('Muted'), 'icon=info data-type=muted'); ?>
 
-<?php echo $Icon->button(tr('Primary'), 'info', array('data-type' => 'primary')); ?>
+<?php echo $Jtk->button(tr('Primary'), 'icon=info data-type=primary'); ?>
 
-<?php echo $Icon->button(tr('Light'), 'info', array('data-type' => 'light')); ?>
+<?php echo $Jtk->button(tr('Light'), 'icon=info data-type=light'); ?>
 
-<?php echo $Icon->button(tr('Dark'), 'info', array('data-type' => 'dark')); ?>
+<?php echo $Jtk->button(tr('Dark'), 'icon=info data-type=dark'); ?>
 
-<?php echo $Icon->button(tr('Info'), 'info', array('data-type' => 'info')); ?>
+<?php echo $Jtk->button(tr('Info'), 'icon=info data-type=info'); ?>
 
-<?php echo $Icon->button(tr('Success'), 'checkmark', array('data-type' => 'success')); ?>
+<?php echo $Jtk->button(tr('Success'), 'icon=info data-type=success'); ?>
 
-<?php echo $Icon->button(tr('Warning'), 'warning', array('data-type' => 'warning')); ?>
+<?php echo $Jtk->button(tr('Warning'), 'icon=info data-type=warning'); ?>
 
-<?php echo $Icon->button(tr('Error'), 'close', array('data-type' => 'error')); ?>
+<?php echo $Jtk->button(tr('Error'), 'icon=info data-type=error'); ?>
 </p>
   </div>
 </div>
@@ -55,7 +55,7 @@
   <div class="block-header"><h2>Ajax content</h2></div>
   <div class="block-content">
     <p>
-<?php echo $Icon->link(tr('Fetch'), 'path:ui/elements/dialog', null, null, array('data-open' => 'dialog')); ?>
+    <?php echo $Html->link(tr('Fetch'), 'path:ui/elements/dialog', 'data-open=dialog'); ?>
     </p>
   </div>
 </div>
@@ -63,7 +63,7 @@
 <div class="block dialog" id="dialog" style="display: none">
 <div class="block-header">A dialog 
   <div class="block-toolbar">
-    <?php echo $Icon->iconLink('Close', 'void:', 'close', array('data-close' => 'dialog')); ?>
+    <?php echo $Jtk->iconLink('Close', 'void:', 'icon=close data-close=dialog'); ?>
   </div>
 </div>
 <div class="block-content">
@@ -71,8 +71,8 @@
 <p>Vestibulum consequat, ipsum at porttitor iaculis, nibh neque accumsan dui, sed sodales orci ligula eu mauris.</p>
 </div>
 <div class="block-footer">
-  <?php echo $Icon->button('Cancel', 'close'); ?>
-  <?php echo $Icon->button('OK', 'checkmark', array('class' => 'button-primary')); ?>
+  <?php echo $Jtk->button('Cancel', 'icon=close'); ?>
+  <?php echo $Jtk->button('OK', 'icon=checkmark context=primary'); ?>
 </div>
 </div>
 

@@ -33,10 +33,10 @@
 <div class="block-header">
         A block
 <div class="block-toolbar">
-          <?php echo $Icon->link('Undo', 'url:#', 'undo'); ?>
-          <?php echo $Icon->iconLink('Redo', 'url:#', 'redo'); ?>
-          <?php echo $Icon->iconLink('Spell check', 'url:#', 'spell-check'); ?>
-          <?php echo $Icon->iconLink('Settings', 'url:#', 'cog'); ?>
+          <?php echo $Jtk->link('Undo', 'url:#', 'icon=undo'); ?>
+          <?php echo $Jtk->iconLink('Redo', 'url:#', 'icon=redo'); ?>
+          <?php echo $Jtk->iconLink('Spell check', 'url:#', 'icon=spell-check'); ?>
+          <?php echo $Jtk->iconLink('Settings', 'url:#', 'icon=cog'); ?>
 </div>
 </div>
 <div class="block-content">
@@ -53,8 +53,8 @@
 <div class="block-header">
         A block
 <div class="block-toolbar">
-          <?php echo $Icon->iconLink('Refresh', 'url:#', 'loop'); ?>
-          <?php echo $Icon->iconLink('Close', 'url:#', 'close'); ?>
+          <?php echo $Jtk->iconLink('Refresh', 'url:#', 'icon=loop'); ?>
+          <?php echo $Jtk->iconLink('Close', 'url:#', 'icon=close'); ?>
 </div>
 </div>
 <div class="block-content">
