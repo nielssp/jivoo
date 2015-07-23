@@ -41,10 +41,10 @@ Apply loading screen:
 <script type="text/javascript">
 $(function() {
   $('.notification-demo button').click(function() {
-    JIVOO.notifications.send('This is a notification!', $(this).data('type'));
+    JTK.notify('This is a notification!', $(this).data('type'));
   });
-  $('.load-start').click(JIVOO.notifications.startLoading);
-  $('.load-stop').click(JIVOO.notifications.stopLoading);
+  $('.load-start').click(JTK.notifications.startLoading);
+  $('.load-stop').click(JTK.notifications.stopLoading);
 
   $.fn.testLoadScreen = function() {
     var $screen = $('<div class="loading-screen">');

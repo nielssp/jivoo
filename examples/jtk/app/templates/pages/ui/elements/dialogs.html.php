@@ -50,10 +50,20 @@
   </div>
 </div>
 
-<div class="block dialog" id="block" style="display: none">
+
+<div class="block">
+  <div class="block-header"><h2>Ajax content</h2></div>
+  <div class="block-content">
+    <p>
+<?php echo $Icon->link(tr('Fetch'), 'path:ui/elements/dialog', null, null, array('data-open' => 'dialog')); ?>
+    </p>
+  </div>
+</div>
+
+<div class="block dialog" id="dialog" style="display: none">
 <div class="block-header">A dialog 
   <div class="block-toolbar">
-    <?php echo $Icon->iconLink('Close', 'void:', 'close', array('class' => 'close')); ?>
+    <?php echo $Icon->iconLink('Close', 'void:', 'close', array('data-close' => 'dialog')); ?>
   </div>
 </div>
 <div class="block-content">
@@ -69,43 +79,19 @@
 
 <script type="text/javascript">
 $(function() {
-  var $popup = $('#block').clone();
+  var $popup = $('#dialog').clone();
   $popup.show();
   $('.dialogs-demo button').click(function() {
     var $this = $popup.clone();
     $this.addClass('block-' + $(this).data('type'));
-    $this.find('button').click($.magnificPopup.close);
-    $this.find('.block-toolbar a.close').click(function() {
-      $.magnificPopup.close();
-      return false;
-    });
-    $.magnificPopup.open({
-      closeBtnInside: false,
-      showCloseBtn: false,
-      prependTo: $('#main'),
-      alignTop: true,
-      items: {
-        src: $this,
-        type: 'inline'
-      }
-    });
+    $this.find('button').click(JTK.dialog.close);
+    JTK.dialog.open($this);
   });
   $('.modals-demo button').click(function() {
     var $this = $popup.clone();
     $this.addClass('block-' + $(this).data('type'));
-    $this.find('button').click($.magnificPopup.close);
-    $this.find('.block-toolbar a.close').remove();
-    $.magnificPopup.open({
-      closeBtnInside: false,
-      showCloseBtn: false,
-      modal: true,
-      prependTo: $('#main'),
-      alignTop: true,
-      items: {
-        src: $this,
-        type: 'inline'
-      }
-    });
+    $this.find('button').click(JTK.dialog.close);
+    JTK.dialog.open($this, true);
   });
 });
 </script>

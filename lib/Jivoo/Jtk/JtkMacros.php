@@ -7,6 +7,7 @@ namespace Jivoo\Jtk;
 
 use Jivoo\View\Compile\Macros;
 use Jivoo\View\Compile\HtmlNode;
+use Jivoo\View\Compile\PhpNode;
 use Jivoo\View\Compile\TextNode;
 use Jivoo\View\Compile\Jivoo\View\Compile;
 
@@ -22,7 +23,7 @@ class JtkMacros extends Macros {
   /**
    * {@inheritdoc}
    */
-  protected $properties = array('size', 'context', 'icon');
+  protected $properties = array('size', 'context');
   
   /**
    * JTK block. 
@@ -31,28 +32,54 @@ class JtkMacros extends Macros {
    */
   public function _block(HtmlNode $node, $value) {
     $block = new HtmlNode('div');
+    if ($node->hasProperty('jtk:dialog'))
+      $block->addClass('dialog');
     $block->addClass('block');
     if ($node->hasProperty('jtk:context'))
       $block->addClass('block-' . $node->getProperty('jtk:context'));
     $node->replaceWith($block);
     $block->append($node);
     $node->addClass('block-content');
+    $header = null;
+    $toolbar = null;
+    $footer = null;
     foreach ($node->getChildren() as $child) {
       if ($child instanceof HtmlNode and $child->hasClass('header')) {
         $child->removeClass('header');
         $child->addClass('block-header');
-        $block->prepend($child->detach());
+        $header = $child;
+      }
+      if ($child instanceof HtmlNode and $child->hasClass('toolbar')) {
+        $child->removeClass('toolbar');
+        $child->addClass('block-toolbar');
+        $toolbar = $child;
       }
       if ($child instanceof HtmlNode and $child->hasClass('footer')) {
         $child->removeClass('footer');
         $child->addClass('block-footer');
-        $block->append($child->detach());
+        $footer = $child;
       }
     }
+    if (isset($header)) {
+      $block->prepend($header->detach());
+      if (isset($toolbar))
+        $header->prepend($toolbar->detach());
+    }
+    if (isset($footer))
+      $block->append($footer->detach());
   }
   
   /**
    * JTK block. 
+   * @param HtmlNode $node Node.
+   * @param string|null $value Macro parameter (string).
+   */
+  public function _toolbar(HtmlNode $node, $value) {
+    $node->addClass('toolbar');
+  }
+  
+  /**
+   * JTK header. 
    * @param HtmlNode $node Node.
    * @param string|null $value Macro parameter (string).
    */
@@ -64,7 +91,7 @@ class JtkMacros extends Macros {
   }
   
   /**
-   * JTK block. 
+   * JTK footer. 
    * @param HtmlNode $node Node.
    * @param string|null $value Macro parameter (string).
    */
@@ -76,7 +103,7 @@ class JtkMacros extends Macros {
   }
   
   /**
-   * JTK block. 
+   * JTK grid cell. 
    * @param HtmlNode $node Node.
    * @param string|null $value Macro parameter (string).
    */
@@ -88,7 +115,7 @@ class JtkMacros extends Macros {
   }
   
   /**
-   * JTK block. 
+   * JTK grid. 
    * @param HtmlNode $node Node.
    * @param string|null $value Macro parameter (string).
    */
@@ -103,5 +130,16 @@ class JtkMacros extends Macros {
       if ($child instanceof HtmlNode)
         $child->addClass('cell');
     }
+  }
+  
+  public function _button(HtmlNode $node, $value) {
+    $node->addClass('button');
+  }
+  
+  public function _icon(HtmlNode $node, $value) {
+    $icon = new HtmlNode('span');
+    $icon->addClass('icon');
+    $icon->append(new PhpNode('$Icon->icon("' . $value . '")'));
+    $node->prepend($icon);
   }
 }

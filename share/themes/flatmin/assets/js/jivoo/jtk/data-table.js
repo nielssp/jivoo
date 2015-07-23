@@ -6,7 +6,7 @@ $(function() {
       message: ''
     },
     sticky: true,
-    themeTemplate: JIVOO.notifications.themeTemplate(true),
+    themeTemplate: JTK.notifications.themeTemplate(true),
     position: 'top right',
     inEffect: 'slideTop',
     closeOnClick: false
@@ -90,7 +90,7 @@ $(function() {
         if (confirmation !== undefined && !confirm(confirmation)) {
           return false;
         }
-        JIVOO.ajax({
+        JTK.ajax({
           url: action,
           type: 'POST',
           data: data,
@@ -116,7 +116,7 @@ $(function() {
         var data = $.extend(true, {
           access_token: $('input[name=access_token]').val()
           }, $link.data('data'));
-        JIVOO.ajax({
+        JTK.ajax({
           url: action,
           type: 'POST',
           data: data,
