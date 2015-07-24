@@ -149,7 +149,7 @@ class Http {
   public function encodeQuery(array $query, $associative = true) {
     $queryString = array();
     foreach ($query as $key => $value) {
-      if ($withKeys) {
+      if ($associative) {
         if ($value === '')
           $queryString[] = urlencode($key);
         else
@@ -179,12 +179,12 @@ class Http {
     foreach ($queryString as $string) {
       if (strpos($string, '=') !== false) {
         list($key, $value) = explode('=', $string, 2);
-        if ($withKeys)
+        if ($associative)
           $query[urldecode($key)] = urldecode($value);
         else
           $query[] = urldecode($value);
       }
-      else if ($withKeys) {
+      else if ($associative) {
         $query[urldecode($string)] = '';
       }
       else {
