@@ -71,13 +71,13 @@ $(function() {
       var action = $button.data('action');
       if (allSelected) {
         var filter = $dataTable.find('#filter_filter').val();
-        var action = action.replace('%3F', '') + '?filter=' + filter;
+        var action = action.replace('%24id', '') + '?filter=' + filter;
       }
       else {
         var ids = $table.find('td input[type=checkbox]:checked').map(function() {
           return $(this).val();
         }).get().join();
-        action = action.replace('%3F', ids);
+        action = action.replace('%24id', ids);
       }
       if (method == 'get') {
         location.href = action;

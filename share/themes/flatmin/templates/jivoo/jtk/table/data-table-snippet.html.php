@@ -51,7 +51,7 @@ echo $menu();
 <li><?php echo $Jtk->button(h($action->label), array(
   'icon' => $action->icon,
   'data' => array(
-    'action' => $this->link($this->mergeRoutes($action->route, array('?'))),
+    'action' => $this->link($this->mergeRoutes($action->route, array('$id'))),
     'method' => $action->method,
     'data' => json_encode($action->data),
     'confirm' => $action->confirmation

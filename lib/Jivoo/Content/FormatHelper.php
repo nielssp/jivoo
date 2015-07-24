@@ -118,7 +118,7 @@ class FormatHelper extends Helper {
         return $routing->getLink($matches[1]);
       }
       catch (InvalidRouteException $e) {
-        return '<a href="#invalid-link">invalid link</a>';
+        return '#invalid-link';
       }
     }, $content);
     return $content;
