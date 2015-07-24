@@ -78,6 +78,11 @@ $Css->addMixin('buttonColor', function($button, $color) use($Css) {
     'border-color' => $Css->darken($color, 20),
     'color' => '#fff'
   ));
+  $button('&[disabled]')->find('&, &:hover, &:active')->css(array(
+    'background-color' => $Css->desaturate($Css->lighten($color, 20), 50),
+    'border-color' => $Css->desaturate($color, 50),
+    'color' => '#eee'
+  ));
 });
 
 $Css->addMixin('button', function($button) use($Skin, $Css) {

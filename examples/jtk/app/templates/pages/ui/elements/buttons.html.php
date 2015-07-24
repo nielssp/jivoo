@@ -79,14 +79,6 @@
   </div>
   <div class="cell">
     <div class="block">
-      <div class="block-header"><h3>Disabled buttons</h3></div>
-      <div class="block-content">
-        <button disabled>Button</button>
-        <input type="submit" value="Submit button" disabled />
-        <input type="button" value="Input button" disabled />
-      </div>
-    </div>
-    <div class="block">
       <div class="block-header"><h3>Button contexts</h3></div>
       <div class="block-content">
         <button>Default</button>
@@ -97,6 +89,21 @@
         <button class="button-success">Success</button>
         <button class="button-warning">Warning</button>
         <button class="button-error">Error</button>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><h3>Disabled buttons</h3></div>
+      <div class="block-content">
+          <button disabled>Button</button>
+          <input type="submit" value="Submit button" disabled />
+          <input type="button" value="Input button" disabled /><br/>
+          <button disabled class="button-primary">Primary</button>
+          <button disabled class="button-light">Light</button>
+          <button disabled class="button-dark">Dark</button>
+          <button disabled class="button-info">Info</button>
+          <button disabled class="button-success">Success</button>
+          <button disabled class="button-warning">Warning</button>
+          <button disabled class="button-error">Error</button>
       </div>
     </div>
     <div class="block">
