@@ -40,7 +40,7 @@ class DataType {
   /** @var int Type: Generic array/object, can be encoded as JSON. */
   const OBJECT = 9;
   /** @var int Type: Enumerated type. */
-  const ENUM = 0;
+  const ENUM = 10;
 
   /** @var int Flag: Unsigned (integers only). */
   const UNSIGNED = 0x02;

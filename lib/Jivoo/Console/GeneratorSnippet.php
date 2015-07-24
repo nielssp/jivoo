@@ -9,5 +9,8 @@ namespace Jivoo\Console;
  * Snippet class for generators.
  */
 abstract class GeneratorSnippet extends ConsoleSnippet {
-
+  /**
+   * {@inheritdoc}
+   */
+  protected $helpers = array('Jtk', 'Icon');
 }
