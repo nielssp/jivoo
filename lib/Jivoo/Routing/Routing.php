@@ -329,16 +329,8 @@ class Routing extends LoadableModule {
     $path = rtrim($path, '/');
     if ($path == '')
       $path = '/';
-    if (is_array($query) and count($query) > 0) {
-      $queryStrings = array();
-      foreach ($query as $key => $value) {
-        if ($value === '')
-          $queryStrings[] = urlencode($key);
-        else
-          $queryStrings[] = urlencode($key) . '=' . urlencode($value);
-      }
-      $path .= '?' . implode('&', $queryStrings);
-    }
+    if (is_array($query) and count($query) > 0)
+      $path .= '?' . Http::encodeQuery($query);
     if (isset($fragment))
       $path .= '#' . urlencode($fragment);
     return $path;

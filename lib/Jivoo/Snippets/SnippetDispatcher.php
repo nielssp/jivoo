@@ -13,7 +13,6 @@ use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
-use Jivoo\Core\Json;
 use Jivoo\Core\ClassNotFoundException;
 
 /**
@@ -75,13 +74,13 @@ class SnippetDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    if (preg_match('/^snippet:([a-z0-9_\\\\]+)(\[.*\])?$/i', $routeString, $matches) !== 1)
+    if (preg_match('/^snippet:([a-z0-9_\\\\]+)(?:\?(.*))?$/i', $routeString, $matches) !== 1)
       throw new InvalidRouteException(tr('Invalid route string for snippet dispatcher'));
     $route = array(
       'parameters' => array()
     );
     if (isset($matches[2])) {
-      $route['parameters'] = Json::decode($matches[2]);
+      $route['parameters'] = Http::decodeQuery($matches[2], false);
       if (!is_array($route['parameters']))
         throw new InvalidRouteException(tr('Invalid JSON parameters in route string'));
     }

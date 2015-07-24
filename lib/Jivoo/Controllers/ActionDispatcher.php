@@ -12,8 +12,8 @@ use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Json;
 use Jivoo\Core\ClassNotFoundException;
+use Jivoo\Routing\Http;
 
 /**
  * Action based routing.
@@ -138,13 +138,13 @@ class ActionDispatcher implements IDispatcher {
    * {@inheritdoc}
    */
   public function toRoute($routeString) {
-    if (preg_match('/^action:(?:([a-z0-9_\\\\]+)::)?([a-z0-9_\\\\]+)(\[.*\])?$/i', $routeString, $matches) !== 1)
+    if (preg_match('/^action:(?:([a-z0-9_\\\\]+)::)?([a-z0-9_\\\\]+)(?:\?(.*))?$/i', $routeString, $matches) !== 1)
       throw new InvalidRouteException(tr('Invalid route string for action dispatcher'));
     $route = array(
       'parameters' => array()
     );
     if (isset($matches[3])) {
-      $route['parameters'] = Json::decode($matches[3]);
+      $route['parameters'] = Http::decodeQuery($matches[3], false);
       if (!is_array($route['parameters']))
         throw new InvalidRouteException(tr('Invalid JSON parameters in route string'));
     }
