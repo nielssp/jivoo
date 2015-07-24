@@ -146,7 +146,7 @@ class Http {
    * {@see $_GET}-array. 
    * @return string Query string without leading '?'. 
    */
-  public function encodeQuery(array $query, $associative = true) {
+  public static function encodeQuery(array $query, $associative = true) {
     $queryString = array();
     foreach ($query as $key => $value) {
       if ($associative) {
@@ -173,7 +173,7 @@ class Http {
    * to match the format of PHP's global {@see $_GET}-array. 
    * @return string[] Query array.
    */
-  public function decodeQuery($query, $associative = true) {
+  public static function decodeQuery($query, $associative = true) {
     $queryString = explode('&', ltrim($query, '?'));
     $query = array();
     foreach ($queryString as $string) {
