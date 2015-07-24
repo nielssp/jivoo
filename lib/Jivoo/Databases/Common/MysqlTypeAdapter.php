@@ -167,25 +167,25 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
     switch ($actualType) {
       case 'bigint':
         $intFlags |= DataType::BIG;
-        return DataType::integer($intFlags, $null, intval($default));
+        return DataType::integer($intFlags, $null, isset($default) ? intval($default) : null);
       case 'smallint':
         $intFlags |= DataType::SMALL;
-        return DataType::integer($intFlags, $null, intval($default));
+        return DataType::integer($intFlags, $null, isset($default) ? intval($default) : null);
       case 'tinyint':
         $intFlags |= DataType::TINY;
-        return DataType::integer($intFlags, $null, intval($default));
+        return DataType::integer($intFlags, $null, isset($default) ? intval($default) : null);
       case 'int':
-        return DataType::integer($intFlags, $null, intval($default));
+        return DataType::integer($intFlags, $null, isset($default) ? intval($default) : null);
       case 'double':
-        return DataType::float($null, floatval($default));
+        return DataType::float($null, isset($default) ? floatval($default) : null);
       case 'varchar':
         return DataType::string($length, $null, $default);
       case 'blob':
         return DataType::binary($null, $default);
       case 'date':
-        return DataType::date($null, strtotime($default . ' UTC'));
+        return DataType::date($null, isset($default) ? strtotime($default . ' UTC') : null);
       case 'datetime':
-        return DataType::dateTime($null, strtotime($default . ' UTC'));
+        return DataType::dateTime($null, isset($default) ? strtotime($default . ' UTC') : null);
       case 'text':
         return DataType::text($null, $default);
     }

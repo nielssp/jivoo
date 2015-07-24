@@ -107,7 +107,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
           $column .= 'int';
         break;
       case DataType::FLOAT:
-        $column = 'double';
+        $column = 'float';
         break;
       case DataType::STRING:
         $column = 'varchar(' . $type->length . ')';
@@ -150,53 +150,50 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * @return DataType The type.
    */
   private function toDataType($row) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $null = (isset($row['Null']) and $row['Null'] != 'NO');
+    $null = ($row['is_nullable'] != 'NO');
     $default = null;
-    if (isset($row['Default']))
-      $default = $row['Default'];
+    if (isset($row['column_default']))
+      $default = $row['column_default'];
     
-    if (preg_match('/enum\((.+)\)/i', $row['Type'], $matches) === 1) {
-      preg_match_all('/\'([^\']+)\'/', $matches[1], $matches);
-      $values = $matches[1];
-      return DataType::enum($values, $null, $default);
+    $type = $row['data_type'];
+    if (strpos($type, 'int') !== false) {
+      $intFlags = 0;
+      if (preg_match('/^nextval\(/', $default) === 1) {
+        $intFlags = DataType::AUTO_INCREMENT;
+        $default = null;
+      }
+      else if (isset($default)) {
+        $default = intval($default);
+      }
+      if (strpos($type, 'bigint') !== false)
+        return DataType::integer($intFlags | DataType::BIG, $null, $default);
+      if (strpos($type, 'smallint') !== false)
+        return DataType::integer($intFlags | DataType::SMALL, $null, $default);
+      return DataType::integer($intFlags, $null, $default);
     }
-    preg_match('/ *([^ (]+) *(\(([0-9]+)\))? *(unsigned)? *?/i', $row['Type'], $matches);
-    $actualType = strtolower($matches[1]);
-    $length = isset($matches[3]) ? intval($matches[3]) : 0;
-    $intFlags = 0;
-    if (isset($matches[4]))
-      $intFlags |= DataType::UNSIGNED;
-    if (strpos($row['Extra'], 'auto_increment') !== false)
-      $intFlags |= DataType::AUTO_INCREMENT;
-    switch ($actualType) {
-      case 'bigint':
-        $intFlags |= DataType::BIG;
-        return DataType::integer($intFlags, $null, intval($default));
-      case 'smallint':
-        $intFlags |= DataType::SMALL;
-        return DataType::integer($intFlags, $null, intval($default));
-      case 'tinyint':
-        $intFlags |= DataType::TINY;
-        return DataType::integer($intFlags, $null, intval($default));
-      case 'int':
-        return DataType::integer($intFlags, $null, intval($default));
-      case 'double':
-        return DataType::float($null, floatval($default));
-      case 'varchar':
-        return DataType::string($length, $null, $default);
-      case 'blob':
-        return DataType::binary($null, $default);
-      case 'date':
-        return DataType::date($null, strtotime($default . ' UTC'));
-      case 'datetime':
-        return DataType::dateTime($null, strtotime($default . ' UTC'));
-      case 'text':
-        return DataType::text($null, $default);
+    if (strpos($type, 'double') !== false)
+      return DataType::float($null, isset($default) ? floatval($default) : null);
+    if (strpos($type, 'bool') !== false)
+      return DataType::boolean($null, isset($default) ? boolval($default) : null);
+    
+    if (preg_match("/^'(.*)'::[a-z ]+$/", $default, $matches) === 1)
+      $default = $matches[1];
+    else
+      $default = null;
+    
+    if (strpos($type, 'character') !== false) {
+      $length = $row['character_maximum_length'];
+      return DataType::string($length, $null, $default);
     }
+    if (strpos($type, 'date') !== false)
+      return DataType::date($null, isset($default) ? strtotime($default . ' UTC') : null);
+    if (strpos($type, 'timestamp') !== false)
+      return DataType::dateTime($null, isset($default) ? strtotime($default . ' UTC') : null);
+    if (strpos($type, 'text') !== false)
+      return DataType::text($null, $default);
+    
     throw new \Exception(tr(
-      'Unsupported PostgreSQL type for column: %1', $row['Field']
+      'Unsupported PostgreSQL type "%1" for column: %2', $row['data_type'], $row['column_name']
     ));
   }
 
@@ -204,20 +201,24 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function getTableSchema($table) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $result = $this->db->rawQuery('SHOW COLUMNS FROM `' . $this->db->tableName($table) . '`');
+    $result = $this->db->rawQuery("SELECT * FROM information_schema.columns WHERE table_name = '" . $this->db->tableName($table) . "'");
     $schema = new Schema($table);
     while ($row = $result->fetchAssoc()) {
-      $column = $row['Field'];
+      $column = $row['column_name'];
       $schema->addField($column, $this->toDataType($row));
     }
-    $result = $this->db->rawQuery('SHOW INDEX FROM `' . $this->db->tableName($table) . '`');
+    
+    $sql = 'SELECT i.relname AS index_name, a.attname AS column_name, indisunique, indisprimary FROM';
+    $sql .= ' pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE';
+    $sql .= ' t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid';
+    $sql .= " AND a.attnum = ANY(ix.indkey) AND t.relkind = 'r'";
+    $sql .= " AND t.relname = '" . $this->db->tableName($table) . "'";
+    $result = $this->db->rawQuery($sql);
     $indexes = array();
     while ($row = $result->fetchAssoc()) {
-      $index = $row['Key_name'];
-      $column = $row['Column_name'];
-      $unique = $row['Non_unique'] == 0 ? true : false;
+      $index = $row['index_name'];
+      $column = $row['column_name'];
+      $unique = $row['indisunique'] == 0 ? true : false;
       if (isset($indexes[$index]))
         $indexes[$index]['columns'][] = $column;
       else
@@ -227,6 +228,12 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
         );
     }
     foreach ($indexes as $name => $index) {
+      $name = preg_replace(
+        '/^' . preg_quote($this->db->tableName($table) . '_', '/') . '/',
+        '', $name, 1, $count
+      );
+      if ($count == 0)
+        continue;
       if ($index['unique'])
         $schema->addUnique($name, $index['columns']);
       else
@@ -269,39 +276,37 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function createTable(Schema $schema) {
-    $sql = 'CREATE TABLE "' . $this->db->tableName($schema->getName()) . '" (';
+    $table = $schema->getName();
+    $sql = 'CREATE TABLE ' . $this->db->quoteModel($table) . ' (';
     $columns = $schema->getFields();
     $first = true;
     foreach ($columns as $column) {
       $type = $schema->$column;
-      if (!$first) {
+      if (!$first)
         $sql .= ', ';
-      }
-      else {
+      else
         $first = false;
-      }
-      $sql .= $column;
+      $sql .= $this->db->quoteField($column);
       $sql .= ' ' . $this->fromDataType($type);
     }
-    $createIndex = array();
-    foreach ($schema->getIndexes() as $index => $options) {
-      if ($index == 'PRIMARY') {
-        $sql .= ', PRIMARY KEY (';
-      }
-      else if ($options['unique']) {
-        $sql .= ', UNIQUE (';
-      }
-      else {
-        $createIndex[$index] = $options['columns'];
-        continue;
-      }
-      $sql .= implode(', ', $options['columns']) . ')';
+    $pk = $schema->getPrimaryKey();
+    if (count($pk) > 0) {
+      $sql .= ', CONSTRAINT "' . $this->db->tableName($table) . '_PRIMARY" PRIMARY KEY (';
+      $pk = array_map(array($this->db, 'quoteField'), $pk);
+      $sql .= implode(', ', $pk) . ')';
     }
     $sql .= ')';
     $this->db->rawQuery($sql);
-    foreach ($createIndex as $index => $columns) {
-      $sql = 'CREATE INDEX ON "' . $this->db->tableName($schema->getName()) . '" (';
-      $sql .= implode(', ', $columns) . ')';
+    foreach ($schema->getIndexes() as $index => $options) {
+      if ($index == 'PRIMARY')
+        continue;
+      $sql = 'CREATE';
+      if ($options['unique'])
+        $sql .= ' UNIQUE';
+      $sql .= ' INDEX "' . $this->db->tableName($table) . '_' . $index . '"';
+      $sql .= ' ON ' . $this->db->quoteModel($table);
+      $columns = array_map(array($this->db, 'quoteField'), $options['columns']);
+      $sql .= ' (' . implode(', ', $columns) . ')';
       $this->db->rawQuery($sql);
     }
   }
@@ -310,10 +315,8 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function renameTable($table, $newName) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'RENAME TABLE `' . $this->db->tableName($table) . '` TO `';
-    $sql .= $this->db->tableName($newName) . '`';
+    $sql = 'ALTER TABLE ' . $this->db->quoteModel($table) . ' RENAME TO ';
+    $sql .= $this->db->quoteModel($newName);
     $this->db->rawQuery($sql);
   }
 
@@ -321,7 +324,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function dropTable($table) {
-    $sql = 'DROP TABLE "' . $this->db->tableName($table) . '"';
+    $sql = 'DROP TABLE ' . $this->db->quoteModel($table);
     $this->db->rawQuery($sql);
   }
 
@@ -329,9 +332,8 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function addColumn($table, $column, DataType $type) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` ADD ' . $column;
+    $sql = 'ALTER TABLE ' . $this->db->quoteModel($table);
+    $sql .= ' ADD ' . $this->db->quoteField($column);
     $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
@@ -340,9 +342,8 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function deleteColumn($table, $column) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` DROP ' . $column;
+    $sql = 'ALTER TABLE ' . $this->db->quoteModel($table);
+    $sql .= ' DROP ' . $this->db->quoteField($column);
     $this->db->rawQuery($sql);
   }
 
@@ -350,11 +351,10 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function alterColumn($table, $column, DataType $type) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
-        . ' ' . $column;
-    $sql .= ' ' . $this->fromDataType($type);
+    // TODO: fix
+    $sql = 'ALTER TABLE ' . $this->db->quoteModel($table);
+    $sql .= ' ALTER ' . $this->db->quoteField($column);
+    $sql .= ' TYPE ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 
@@ -362,12 +362,10 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function renameColumn($table, $column, $newName) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
+    $sql = 'ALTER TABLE ' . $this->db->quoteModel($table);
+    $sql .= ' RENAME ' . $this->db->quoteField($column);
+    $sql .= ' TO ' . $this->db->quoteField($newName);
     $type = $this->db->$table->getSchema()->$column;
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '` CHANGE ' . $column
-        . ' ' . $newName;
-    $sql .= ' ' . $this->fromDataType($type);
     $this->db->rawQuery($sql);
   }
 
@@ -375,21 +373,21 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function createIndex($table, $index, $options = array()) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
+    $columns = array_map(array($this->db, 'quoteField'), $options['columns']);
+    $columns = '(' . implode(', ', $columns) . ')';
+    
     if ($index == 'PRIMARY') {
-      $sql .= ' ADD PRIMARY KEY';
+      $sql = 'ALTER TABLE ' . $this->db->quoteModel($table);
+      $sql .= 'ADD CONSTRAINT "' . $this->db->tableName($table) . '_PRIMARY" PRIMARY KEY ' . $columns;
+      $this->db->rawQuery($sql);
+      return;
     }
-    else if ($options['unique']) {
-      $sql .= ' ADD UNIQUE ' . $index;
-    }
-    else {
-      $sql .= ' ADD INDEX ' . $index;
-    }
-    $sql .= ' (';
-    $sql .= implode(', ', $options['columns']);
-    $sql .= ')';
+    $sql = 'CREATE';
+    if ($options['unique'])
+      $sql .= ' UNIQUE';
+    $sql .= ' INDEX "' . $this->db->tableName($table) . '_' . $index . '"';
+    $sql .= ' ON ' . $this->db->quoteModel($schema->getName());
+    $sql .= ' ' . $columns;
     $this->db->rawQuery($sql);
   }
 
@@ -397,15 +395,15 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function deleteIndex($table, $index) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
     if ($index == 'PRIMARY') {
-      $sql .= ' DROP PRIMARY KEY';
+      $sql = 'ALTER TABLE ' . $this->db->quoteModel($table);
+      $sql .= 'DROP CONSTRAINT "' . $this->db->tableName($table) . '_PRIMARY"';
+      $this->db->rawQuery($sql);
+      return;
     }
-    else {
-      $sql .= ' DROP INDEX ' . $index;
-    }
+
+    $sql = 'DROP INDEX ';
+    $sql .= '"' . $this->db->tableName($table) . '_' . $index . '"';
     $this->db->rawQuery($sql);
   }
 
@@ -413,28 +411,15 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function alterIndex($table, $index, $options = array()) {
-    // TODO: implement
-    throw new \Exception('not yet implemented');
-    $sql = 'ALTER TABLE `' . $this->db->tableName($table) . '`';
-    if ($index == 'PRIMARY') {
-      $sql .= ' DROP PRIMARY KEY';
+    try {
+      $this->db->beginTransaction();
+      $this->deleteIndex($table, $index);
+      $this->createIndex($table, $index, $options);
+      $this->db->commit();
     }
-    else {
-      $sql .= ' DROP INDEX ' . $index;
+    catch (\Exception $e) {
+      $this->db->rollback();
+      throw $e;
     }
-    $sql .= ', ';
-    if ($index == 'PRIMARY') {
-      $sql .= ' ADD PRIMARY KEY';
-    }
-    else if ($options['unique']) {
-      $sql .= ' ADD UNIQUE ' . $index;
-    }
-    else {
-      $sql .= ' ADD INDEX ' . $index;
-    }
-    $sql .= ' (';
-    $sql .= implode(', ', $options['columns']);
-    $sql .= ')';
-    $this->db->rawQuery($sql);
   }
 }
