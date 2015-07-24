@@ -78,8 +78,8 @@ class DataType {
    * @throws InvalidDataTypeException When type is invalid.
    */
   protected function __construct($type, $null = false, $default = null, $flags = 0, $length = null) {
-    if ($type < 0 or $type > 9)
-      throw new InvalidDataTypeException(tr('%1 is not a valid type'), $type);
+    if ($type < 1 or $type > 10)
+      throw new InvalidDataTypeException(tr('%1 is not a valid type', $type));
     $this->type = $type;
     $this->length = $length;
     $this->default = $default;
