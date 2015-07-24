@@ -150,12 +150,16 @@ class Http {
     $queryString = array();
     foreach ($query as $key => $value) {
       if ($associative) {
+        if ($key === '')
+          continue;
         if ($value === '')
           $queryString[] = urlencode($key);
         else
           $queryString[] = urlencode($key) . '=' . urlencode($value);
       }
       else {
+        if ($value === '')
+          continue;
         $queryString[] = urlencode($value);
       }
     }
@@ -174,15 +178,24 @@ class Http {
    * @return string[] Query array.
    */
   public static function decodeQuery($query, $associative = true) {
-    $queryString = explode('&', ltrim($query, '?'));
+    if ($query == '' or $query == '?')
+      return array();
+    if ($query[0] == '?')
+      $query = substr($query, 1);
+    $queryString = explode('&', $query);
     $query = array();
     foreach ($queryString as $string) {
       if (strpos($string, '=') !== false) {
         list($key, $value) = explode('=', $string, 2);
+        if ($key === '')
+          continue;
         if ($associative)
           $query[urldecode($key)] = urldecode($value);
         else
           $query[] = urldecode($value);
+      }
+      else if ($string === '') {
+        continue;
       }
       else if ($associative) {
         $query[urldecode($string)] = '';
