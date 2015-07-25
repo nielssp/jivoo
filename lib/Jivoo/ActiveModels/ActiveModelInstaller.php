@@ -104,7 +104,7 @@ class InstallTask extends AsyncTask {
    */
   public function run() {
     $this->progress($this->count / ($this->count + count($this->models)) * 100);
-    $name = array_shift($this->models);
+    $name = $this->models[0];
     $model = $this->ActiveModels->getModel($name);
     if (isset($model)) {
       if ($model->count() === 0) {
@@ -112,6 +112,7 @@ class InstallTask extends AsyncTask {
         $model->install();
       }
     }
+    array_shift($this->models);
     $this->count++;
   }
 }

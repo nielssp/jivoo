@@ -255,7 +255,15 @@ abstract class ActiveModel extends Model implements IEventListener {
     }
 
     $this->database->$table = $this;
+    
+    $this->init();
   }
+  
+  /**
+   * Use this method to add additional initialization code to model, e.g.
+   * adding virtual collections or configuring mixins.
+   */
+  protected function init() { }
 
   /**
    * {@inheritdoc}
@@ -459,7 +467,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     if ($type == 'hasAndBelongsToMany') {
       if (!($options['model'] instanceof ActiveModel)) { 
         throw new InvalidModelException(tr(
-          '%1 invalid for joining with %2, must extend ActivModel',
+          '%1 invalid for joining with %2, must extend ActiveModel',
           $otherModel, $this->name
         ));
       }
