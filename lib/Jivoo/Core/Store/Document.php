@@ -167,7 +167,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
    * @param mixed $value The value to associate with the key.
    */
   public function set($key, $value) {
-    assume(is_string($key));
+    assume(is_scalar($key));
     if (isset($this->emptySubset))
       $this->createTrueSubset();
     $oldValue = null;

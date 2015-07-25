@@ -35,9 +35,6 @@ class ModuleTest extends \Codeception\TestCase\Test {
       ->method('p')
       ->willReturn('ptest');
     $this->assertEquals('ptest', $m->p('a', 'b'));
-    $app->expects($this->once())
-      ->method('w')
-      ->willReturn('wtest');
     $this->assertEmpty($m->getEvents());
     $this->assertFalse($m->hasEvent('someEvent'));
     $l = $this->getMockBuilder('Jivoo\Core\IEventListener')
