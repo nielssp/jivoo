@@ -31,26 +31,28 @@ class ActiveModels extends LoadableModule {
    */
   protected function init() {
     $classes = $this->m->Models->getModelClasses();
-    foreach ($classes as $class) {
+    foreach ($classes as $class)
       $this->addActiveModel($class);
-    }
-    $this->m->Routing->attachEventHandler('beforeFollowRoute', array($this, 'installModels'));
   }
-
+  
   /**
-   * Installs new models.
-   * @param Event Empty event.
+   * Get all active models.
+   * @return ActiveModel[] Array of active models.
    */
-  public function installModels(RenderEvent $event) {
-    foreach ($this->models as $name => $model) {
-      if ($model instanceof ActiveModel
-        and !(isset($this->config['installed'][$name])
-          and $this->config['installed'][$name])) {
-        $model->triggerEvent('install', new ActiveModelEvent($this));
-        $this->config['installed'][$name] = true;
-      }
-    }
-  } 
+  public function getModels() {
+    return $this->models;
+  }
+  
+  /**
+   * Get a single active model if it exists.
+   * @param sring $model Model name.
+   * @return ActiveModel|null Active model or null if undefined.
+   */
+  public function getModel($model) {
+    if (!isset($this->models[$model]))
+      return null;
+    return $this->models[$model];
+  }
   
   /**
    * Add an active model.
@@ -61,25 +63,9 @@ class ActiveModels extends LoadableModule {
     if (is_subclass_of($class, 'Jivoo\ActiveModels\ActiveModel')) {
       $model = new $class($this->app, $this->m->Databases);
       $this->m->Models->setModel($model->getName(), $model);
-      $this->models[$class] = $model;
+      $this->models[$model->getName()] = $model;
       return true;
     }
     return false;
-  }
-
-  /**
-   * Add an active model if it has not already been added.
-   * @param string $class Class name of active model.
-   * @param string $file Path to model class file.
-   * @return True if missing and added successfully, false otherwise.
-   */
-  public function addActiveModelIfMissing($name, $file) {
-    if (isset($this->m->Models->$name)) {
-      return false;
-    }
-    if (!Lib::classExists($name, false)) {
-      include $file;
-    }
-    return $this->addActiveModel($name);
   }
 }

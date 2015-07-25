@@ -21,6 +21,8 @@ class DefaultInstaller extends InstallerSnippet {
       $this->appendInstaller('Jivoo\Databases\DatabaseInstaller');
     if ($this->app->hasImport('Migrations'))
       $this->appendInstaller('Jivoo\Migrations\MigrationInstaller');
+    if ($this->app->hasImport('ActiveModels'))
+      $this->appendInstaller('Jivoo\ActiveModels\ActiveModelInstaller');
     $this->appendStep('unlock');
   }
   

@@ -103,7 +103,7 @@ class MigrationInstaller extends MigrationUpdater {
  * Asynchronous task for creating tables.
  */
 class CreateTask extends AsyncTask {
-  /*
+  /**
    * @var IMigratableDatabase
    */
   private $db;
