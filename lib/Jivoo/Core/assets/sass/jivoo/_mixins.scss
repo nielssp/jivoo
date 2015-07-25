@@ -20,6 +20,13 @@
     background-color: $color;
     border-color: darken($color, 20%);
   }
+  &[disabled] {
+    &, &:hover, &:active {
+      background-color: desaturate(lighten($color, 20%), 50%);
+      border-color: desaturate($color, 50%);
+      color: #eee;
+    }
+  }
 }
 
 @mixin button {

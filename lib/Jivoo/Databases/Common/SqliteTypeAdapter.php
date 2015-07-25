@@ -153,9 +153,9 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $default = stripslashes(preg_replace('/^\'|\'$/', '', $row['dflt_value']));
     switch ($actualType) {
       case 'integer':
-        return DataType::integer(DataType::BIG, $null, intval($default));
+        return DataType::integer(DataType::BIG, $null, isset($default) ? intval($default) : null);
       case 'real':
-        return DataType::float($null, floatval($default));
+        return DataType::float($null, isset($default) ? floatval($default) : null);
       case 'text':
         return DataType::text($null, $default);
       case 'blob':

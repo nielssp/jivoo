@@ -50,6 +50,16 @@ class IconHelper extends Helper {
     }
     return '<span class="icon-unavailable"></span>';
   }
+
+  /**
+   * Fetch and output an icon
+   * @param string $icon Icon identifier.
+   * @param int $size Requested icon size.
+   * @return string HTML source for icon.
+   */
+  public function __invoke($icon, $size = 16) {
+    return $this->icon($icon, $size);
+  }
   
   /**
    * Create a button with a label and an icon.
@@ -57,8 +67,10 @@ class IconHelper extends Helper {
    * @param string $icon Button icon.
    * @param string[] $attributes Additional attributes for button.
    * @return string HTML source for button.
+   * @deprecated
    */
   public function button($label, $icon = null, $attributes = array()) {
+    trigger_error('IconHelper::button is deprecated', E_USER_DEPRECATED);
     if (isset($icon))
       $icon = '<span class="icon">' . $this->icon($icon) . '</span>';
     else
@@ -79,8 +91,10 @@ class IconHelper extends Helper {
    * @param string $icon Icon identifier.
    * @param string[] $attributes Additional attributes for link.
    * @return string HTML source for link.
+   * @deprecated
    */
   public function iconLink($label, $route, $icon = null, $attributes = array()) {
+    trigger_error('IconHelper::iconLink is deprecated', E_USER_DEPRECATED);
     try {
       $url = $this->m->Routing->getLink($route);
       if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
@@ -110,8 +124,10 @@ class IconHelper extends Helper {
    * @param string $count Optional number.
    * @param string[] $attributes Additional attributes for link.
    * @return string HTML source for link.
+   * @deprecated
    */
   public function link($label, $route, $icon = null, $count = null, $attributes = array()) {
+    trigger_error('IconHelper::link is deprecated', E_USER_DEPRECATED);
     try {
       $url = $this->m->Routing->getLink($route);
       if (!isset($attributes['class']) and $this->m->Routing->isCurrent($route))
@@ -141,8 +157,10 @@ class IconHelper extends Helper {
    * @param string $icon Icon identifier.
    * @param string $context Badge context (e.g. 'success', 'primary', 'error', etc.)
    * @return string HTML source for badge.
+   * @deprecated
    */
   public function badge($label, $icon = null, $context = null) {
+    trigger_error('IconHelper::badge is deprecated', E_USER_DEPRECATED);
     $class = 'badge';
     if (isset($context))
       $class .= ' badge-' . $context;

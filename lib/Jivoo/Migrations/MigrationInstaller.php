@@ -103,7 +103,7 @@ class MigrationInstaller extends MigrationUpdater {
  * Asynchronous task for creating tables.
  */
 class CreateTask extends AsyncTask {
-  /*
+  /**
    * @var IMigratableDatabase
    */
   private $db;
@@ -117,6 +117,11 @@ class CreateTask extends AsyncTask {
    * @var string[]
    */
   private $tables = array();
+
+  /**
+   * @var int
+   */
+  private $count = 0;
   
   /**
    * Construct task.
@@ -131,13 +136,18 @@ class CreateTask extends AsyncTask {
    * {@inheritdoc}
    */
   public function suspend() {
-    return array('tables' => $this->tables);
+    return array(
+      'tables' => $this->tables,
+      'count' => $this->count
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function resume(array $data) {
+    if (isset($data['count']))
+      $this->count = $data['count'];
     if (isset($data['tables'])) {
       $this->tables = $data['tables'];
     }
@@ -157,10 +167,13 @@ class CreateTask extends AsyncTask {
    * {@inheritdoc}
    */
   public function run() {
-    $table = array_shift($this->tables);
+    $this->progress($this->count / ($this->count + count($this->tables)) * 100);
+    $table = $this->tables[0];
     if (!isset($this->db->$table)) {
       $this->status(tr('Creating table "%1"...', $table));
       $this->db->createTable($this->schema->getSchema($table));
     }
+    array_shift($this->tables);
+    $this->count++;
   }
 }

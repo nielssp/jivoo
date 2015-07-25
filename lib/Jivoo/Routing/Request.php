@@ -136,21 +136,20 @@ class Request {
     if (isset($request['fragment'])) {
       $this->fragment = $request['fragment'];
     }
-    $path = urldecode($request['path']);
+    $path = $request['path'];
     if ($basePath != '/') {
       $l = strlen($basePath);
       if (substr($path, 0, $l) == $basePath) {
         $path = substr($path, $l);
       }
-//       $path = str_replace($basePath, '', $path);
     }
     Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
-    $path = explode('/', $path);
     $this->path = array();
-    foreach ($path as $dir) {
-      if ($dir != '') {
-        $this->path[] = $dir;
-      }
+    $path = substr($path, 1);
+    if ($path != '') {
+      $path = explode('/', $path);
+      foreach ($path as $dir)
+        $this->path[] = urldecode($dir);
     }
 
     $this->realPath = $this->path;

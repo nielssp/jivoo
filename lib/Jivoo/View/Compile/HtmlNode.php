@@ -7,6 +7,7 @@ namespace Jivoo\View\Compile;
 
 /**
  * An HTML node.
+ * @property-read string $tag HTML tag.
  */
 class HtmlNode extends InternalNode {
   /**
@@ -50,6 +51,15 @@ class HtmlNode extends InternalNode {
     parent::__construct();
     $this->tag = $tag;
     $this->selfClosing = isset(self::$selfClosingTags[$tag]);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function __get($property) {
+    if ($property == 'tag')
+      return $this->tag;
+    return parent::__get($property);
   }
   
   /**

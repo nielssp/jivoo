@@ -78,6 +78,11 @@ class MigrateTask extends AsyncTask {
   private $missing = array();
   
   /**
+   * @var int
+   */
+  private $count = 0;
+  
+  /**
    * Construct migration task.
    * @param Migrations $migrations Migrations module.
    * @param string $dbName Name of database to migrate.
@@ -91,13 +96,18 @@ class MigrateTask extends AsyncTask {
    * {@inheritdoc}
    */
   public function suspend() {
-    return array('missing' => $this->missing);
+    return array(
+      'missing' => $this->missing,
+      'count' => $this->count
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function resume(array $data) {
+    if (isset($data['count']))
+      $this->count = $data['count'];
     if (isset($data['waiting'])) {
       $this->missing = $data['missing'];
     }
@@ -117,8 +127,11 @@ class MigrateTask extends AsyncTask {
    * {@inheritdoc}
    */
   public function run() {
-    $migration = array_shift($this->missing);
+    $this->progress($this->count / ($this->count + count($this->missing)) * 100);
+    $migration = $this->missing[0];
     $this->status(tr('Running migration "%1"...', $migration));
     $this->migrations->run($this->name, $migration);
+    $migration = array_shift($this->missing);
+    $this->count++;
   }
 }

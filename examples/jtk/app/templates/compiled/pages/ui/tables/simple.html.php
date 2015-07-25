@@ -46,8 +46,8 @@ $randomUsers = function($n = 5) use($Random) {
 </td>
 <td class="center">
 <div class="button-group">
-                <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
-                <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+                <?php echo $Jtk->iconButton('Edit', 'icon=pencil size=xs'); ?>
+                <?php echo $Jtk->iconButton('Remove', 'icon=close size=xs'); ?>
 </div>
 </td>
 </tr><?php endforeach; ?>
@@ -78,8 +78,8 @@ $randomUsers = function($n = 5) use($Random) {
 </td>
 <td class="center">
 <div class="button-group">
-                <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
-                <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+                <?php echo $Jtk->iconButton('Edit', 'icon=pencil size=xs'); ?>
+                <?php echo $Jtk->iconButton('Remove', 'icon=close size=xs'); ?>
 </div>
 </td>
 </tr><?php endforeach; ?>
@@ -112,8 +112,8 @@ $randomUsers = function($n = 5) use($Random) {
 </td>
 <td class="center">
 <div class="button-group">
-                <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
-                <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+                <?php echo $Jtk->iconButton('Edit', 'icon=pencil size=xs'); ?>
+                <?php echo $Jtk->iconButton('Remove', 'icon=close size=xs'); ?>
 </div>
 </td>
 </tr><?php endforeach; ?>
@@ -147,8 +147,8 @@ $randomUsers = function($n = 5) use($Random) {
 </td>
 <td class="center">
 <div class="button-group">
-                  <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
-                  <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+                <?php echo $Jtk->iconButton('Edit', 'icon=pencil size=xs'); ?>
+                <?php echo $Jtk->iconButton('Remove', 'icon=close size=xs'); ?>
 </div>
 </td>
 </tr><?php endforeach; ?>
@@ -188,8 +188,8 @@ $randomUsers = function($n = 5) use($Random) {
 <td class="non-essential"><span class="<?php echo 'badge ' . 'badge-' . $user['context']; ?>"><?php echo h($user['role']); ?></span></td>
 <td class="center">
 <div class="button-group">
-            <?php echo $Icon->button('', 'pencil', array('class' => 'button-xs')); ?>
-            <?php echo $Icon->button('', 'close', array('class' => 'button-xs')); ?>
+            <?php echo $Jtk->iconButton('Edit', 'icon=pencil size=xs'); ?>
+            <?php echo $Jtk->iconButton('Remove', 'icon=close size=xs'); ?>
 </div>
 </td>
 </tr><?php endforeach; ?>

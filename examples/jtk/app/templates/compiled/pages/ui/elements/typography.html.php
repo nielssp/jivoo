@@ -77,8 +77,8 @@ int main() {
 <div class="block-content">
 <p>
 <a href="#" title="Title">A normal link</a>
-<a href="#" title="Title" class="badge">A badge link</a>
-          <?php echo $Icon->link('An icon link', 'url:#', 'cog', null, array('class' => 'badge badge-primary')); ?>
+          <?php echo $Jtk->badge('A badge link', 'route="url:#"'); ?>
+          <?php echo $Jtk->badge('An icon link', 'route="url:#" icon=cog context=primary'); ?>
 </p>
 </div>
 </div>
@@ -98,14 +98,14 @@ int main() {
 <span class="badge badge-error">Error</span>
 </p>
 <p>
-          <?php echo $Icon->badge('Default', 'home'); ?>
-          <?php echo $Icon->badge('Primary', 'flag', 'primary'); ?>
-          <?php echo $Icon->badge('Light', 'flag', 'light'); ?>
-          <?php echo $Icon->badge('Dark', 'flag', 'dark'); ?>
-          <?php echo $Icon->badge('Info', 'info', 'info'); ?>
-          <?php echo $Icon->badge('Success', 'checkmark', 'success'); ?>
-          <?php echo $Icon->badge('Warning', 'warning', 'warning'); ?>
-          <?php echo $Icon->badge('Error', 'close', 'error'); ?>
+          <?php echo $Jtk->badge('Default', 'icon=home'); ?>
+          <?php echo $Jtk->badge('Primary', 'icon=flag context=primary'); ?>
+          <?php echo $Jtk->badge('Light', 'icon=flag context=light'); ?>
+          <?php echo $Jtk->badge('Dark', 'icon=flag context=dark'); ?>
+          <?php echo $Jtk->badge('Info', 'icon=info context=info'); ?>
+          <?php echo $Jtk->badge('Success', 'icon=checkmark context=success'); ?>
+          <?php echo $Jtk->badge('Warning', 'icon=warning context=warning'); ?>
+          <?php echo $Jtk->badge('Error', 'icon=close context=error'); ?>
 </p>
 </div>
 </div>

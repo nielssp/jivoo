@@ -70,11 +70,18 @@ $Css->addMixin('flashColor', function($flash, $color) use($Css) {
 $Css->addMixin('buttonColor', function($button, $color) use($Css) {
   $button->css(array(
     'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
-    'border-color' => $Css->darken($color, 30)
+    'border-color' => $Css->darken($color, 30),
+    'color' => '#fff'
   ));
   $button('&:hover, &.active')->css(array(
     'background-color' => $color,
-    'border-color' => $Css->darken($color, 20)
+    'border-color' => $Css->darken($color, 20),
+    'color' => '#fff'
+  ));
+  $button('&[disabled]')->find('&, &:hover, &:active')->css(array(
+    'background-color' => $Css->desaturate($Css->lighten($color, 20), 50),
+    'border-color' => $Css->desaturate($color, 50),
+    'color' => '#eee'
   ));
 });
 
@@ -219,8 +226,8 @@ $input('&:focus')->css(array(
 ));
 $input('&[data-error], &.error')->css(array(
   'border-color' => $Skin->error
-))->find('&:focus')->borderColor = $Css->lighten($error, 20);
-$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+))->find('&:focus')->borderColor = $Css->lighten($Skin->error, 20);
+$input('&:disabled')->backgroundColor = $Css->darken($Skin->mainBg, 3);
 
 
 $input = $Css('input[type=checkbox], input[type=radio]');
@@ -234,7 +241,7 @@ $input('&:focus')->css(array(
   'box-shadow' => '0 0 1px ' . $Css->toString($Skin->inputHlBorder)
 ));
 $Css('input[type=radio]:checked:before')->backgroundColor = $Skin->primaryBg; 
-$input('&:disabled')->backgroundColor = $Css->darken($mainBg, 3);
+$input('&:disabled')->backgroundColor = $Css->darken($Skin->mainBg, 3);
 
 $field = $Css('.field');
 $field('& .help')->color = $Skin->grey;

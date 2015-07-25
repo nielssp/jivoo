@@ -73,7 +73,7 @@ $this->import(
 <script type="text/javascript">
 $(function() {
 <?php foreach ($flash as $message): ?>
-  JIVOO.notifications.send(<?php echo Jivoo\Core\Json::encode($message->message); ?>, '<?php echo $message->type; ?>');
+  JTK.notify(<?php echo Jivoo\Core\Json::encode($message->message); ?>, '<?php echo $message->type; ?>');
 <?php endforeach; ?>
 });
 </script>

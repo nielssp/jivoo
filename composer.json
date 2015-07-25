@@ -1,0 +1,23 @@
+{
+  "name": "jivoo/jivoo",
+  "description": "Jivoo web application framework.",
+  "homepage": "http://nielssp.dk",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Niels Sonnich Poulsen",
+      "email": "niels@nielssp.dk",
+      "homepage": "http://nielssp.dk",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "jivoo@nielssp.dk"
+  },
+  "autoload": {
+      "psr-4": {"Jivoo\\": "lib/Jivoo/"}
+  },
+  "require-dev": {
+    "codeception/codeception": "*"
+  }
+}

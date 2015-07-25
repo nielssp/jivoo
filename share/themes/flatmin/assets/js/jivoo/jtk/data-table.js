@@ -6,7 +6,7 @@ $(function() {
       message: ''
     },
     sticky: true,
-    themeTemplate: JIVOO.notifications.themeTemplate(true),
+    themeTemplate: JTK.notifications.themeTemplate(true),
     position: 'top right',
     inEffect: 'slideTop',
     closeOnClick: false
@@ -71,13 +71,13 @@ $(function() {
       var action = $button.data('action');
       if (allSelected) {
         var filter = $dataTable.find('#filter_filter').val();
-        var action = action.replace('%3F', '') + '?filter=' + filter;
+        var action = action.replace('%24id', '') + '?filter=' + filter;
       }
       else {
         var ids = $table.find('td input[type=checkbox]:checked').map(function() {
           return $(this).val();
         }).get().join();
-        action = action.replace('%3F', ids);
+        action = action.replace('%24id', ids);
       }
       if (method == 'get') {
         location.href = action;
@@ -90,7 +90,7 @@ $(function() {
         if (confirmation !== undefined && !confirm(confirmation)) {
           return false;
         }
-        JIVOO.ajax({
+        JTK.ajax({
           url: action,
           type: 'POST',
           data: data,
@@ -116,7 +116,7 @@ $(function() {
         var data = $.extend(true, {
           access_token: $('input[name=access_token]').val()
           }, $link.data('data'));
-        JIVOO.ajax({
+        JTK.ajax({
           url: action,
           type: 'POST',
           data: data,

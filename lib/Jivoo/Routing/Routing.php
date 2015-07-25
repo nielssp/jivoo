@@ -151,7 +151,7 @@ class Routing extends LoadableModule {
     // Determine if the current URL is correct
     if ($this->config['reroute']) {
       if ($this->config['rewrite']) {
-        if (isset($this->request->path[0]) AND $this->request->path[0] == $this->app->entryScript) {;
+        if (isset($this->request->path[0]) and $this->request->path[0] == $this->app->entryScript) {;
           if (count($this->request->path) <= 1) {
             $this->redirectPath(array(), $this->request->query);
           }
@@ -162,17 +162,18 @@ class Routing extends LoadableModule {
         }
       }
       else {
-        if (!isset($this->request->path[0]) OR $this->request->path[0] != $this->app->entryScript) {
+        if (!isset($this->request->path[0]) or $this->request->path[0] != $this->app->entryScript) {
           $this->redirectPath($this->request->path, $this->request->query);
         }
         $path = $this->request->path;
         array_shift($path);
         $this->request->path = $path;
       }
-    }
-
-    if (isset($this->config['root'])) {
-      $this->setRoot($this->config['root'], 10);
+      // Remove trailing slash
+      $path = $this->request->path;
+      if (count($path) > 0 and $path[count($path) - 1] === '') {
+        $this->redirectPath($this->request->path, $this->request->query);
+      }
     }
 
     $this->app->attachEventHandler('afterLoadModules', array($this, 'loadRoutes'));
@@ -317,43 +318,22 @@ class Routing extends LoadableModule {
    * @return string A URL.
    */
   public function getLinkFromPath($path = null, $query = null, $fragment = null, $rewrite = false) {
-    if (!isset($path)) {
+    if (!isset($path))
       $path = $this->request->path;
-    }
-    $path = array_map('urlencode', $path);
-    if (isset($fragment)) {
-      $fragment = '#' . urlencode($fragment);
-    }
-    else {
-      $fragment = '';
-    }
-    if (is_array($query) and count($query) > 0) {
-      $queryStrings = array();
-      foreach ($query as $key => $value) {
-        if ($value === '') {
-          $queryStrings[] = urlencode($key);
-        }
-        else {
-          $queryStrings[] = urlencode($key) . '=' . urlencode($value);
-        }
-      }
-      $combined = implode('/', $path) . '?' . implode('&', $queryStrings) .
-                   $fragment;
-      if ($this->config['rewrite'] or $rewrite) {
-        return $this->w($combined);
-      }
-      else {
-        return $this->w($this->app->entryScript . '/' . $combined);
-      }
-    }
-    else {
-      if ($this->config['rewrite'] or $rewrite) {
-        return $this->w(implode('/', $path) . $fragment);
-      }
-      else {
-        return $this->w($this->app->entryScript . '/' . implode('/', $path) . $fragment);
-      }
-    }
+    $basePath = $this->app->basePath;
+    if ($basePath == '/')
+      $basePath = '';
+    if (!($this->config['rewrite'] or $rewrite))
+      $basePath = $basePath . '/' . $this->app->entryScript; 
+    $path = $basePath . '/' . implode('/', array_map('urlencode', $path));
+    $path = rtrim($path, '/');
+    if ($path == '')
+      $path = '/';
+    if (is_array($query) and count($query) > 0)
+      $path .= '?' . Http::encodeQuery($query);
+    if (isset($fragment))
+      $path .= '#' . urlencode($fragment);
+    return $path;
   }
   
   /**

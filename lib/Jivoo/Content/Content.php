@@ -10,6 +10,7 @@ use Jivoo\Models\IModel;
 use Jivoo\Models\IBasicModel;
 use Jivoo\Models\IBasicRecord;
 use Jivoo\ActiveModels\ActiveModel;
+use Jivoo\Routing\InvalidRouteException;
 
 /**
  * Content editing and presentation module.
