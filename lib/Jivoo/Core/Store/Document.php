@@ -37,7 +37,8 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   protected $saveDefaults = true;
   
   /**
-   * @var bool True if document has been changed.
+   * @var bool True if document has been changed (only has meaning in the
+   * root document).
    */
   protected $updated = false;
   
@@ -47,7 +48,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   protected $root;
   
   /**
-   * @var Document|null Parent document.
+   * @var Document|null Parent document if any.
    */
   protected $parent = null;
   
@@ -182,8 +183,15 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     }
     if (!$this->root->updated and $oldValue !== $value) {
       $this->root->updated = true;
+      $this->root->update();
     }
   }
+  
+  /**
+   * This method is called (on the root document) whenever changes are
+   * made in the document.
+   */
+  protected function update() { }
   
   /**
    * Update a subdocument recursively.
@@ -230,6 +238,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     if (isset($this->data[$key])) {
       unset($this->data[$key]);
       $this->root->updated = true;
+      $this->root->update();
     }
   }
   
