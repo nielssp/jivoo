@@ -128,9 +128,10 @@ class MigrateTask extends AsyncTask {
    */
   public function run() {
     $this->progress($this->count / ($this->count + count($this->missing)) * 100);
-    $migration = array_shift($this->missing);
+    $migration = $this->missing[0];
     $this->status(tr('Running migration "%1"...', $migration));
     $this->migrations->run($this->name, $migration);
+    $migration = array_shift($this->missing);
     $this->count++;
   }
 }

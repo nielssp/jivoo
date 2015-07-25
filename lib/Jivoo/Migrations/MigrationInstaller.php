@@ -168,11 +168,12 @@ class CreateTask extends AsyncTask {
    */
   public function run() {
     $this->progress($this->count / ($this->count + count($this->tables)) * 100);
-    $table = array_shift($this->tables);
+    $table = $this->tables[0];
     if (!isset($this->db->$table)) {
       $this->status(tr('Creating table "%1"...', $table));
       $this->db->createTable($this->schema->getSchema($table));
     }
+    array_shift($this->tables);
     $this->count++;
   }
 }
