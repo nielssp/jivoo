@@ -187,7 +187,7 @@ class SqlTable extends Table {
     }
     else {
       $result = $selection->orderBy(null)->select('COUNT(*)', '_count');
-      return $result[0]['_count'];
+      return intval($result[0]['_count']);
     }
   }
 

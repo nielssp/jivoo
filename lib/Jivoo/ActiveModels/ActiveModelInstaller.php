@@ -107,7 +107,7 @@ class InstallTask extends AsyncTask {
     $name = $this->models[0];
     $model = $this->ActiveModels->getModel($name);
     if (isset($model)) {
-      if ($model->count() === 0) {
+      if ($model->count() == 0) {
         $this->status(tr('Installing data into "%1"...', $name));
         $model->install();
       }

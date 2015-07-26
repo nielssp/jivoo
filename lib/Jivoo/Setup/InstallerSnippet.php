@@ -336,6 +336,7 @@ abstract class InstallerSnippet extends Snippet {
         header('Content-Type: text/plain');
         header('Cache-Control: no-cache');
         if ($task->isDone()) {
+          echo 'status: ' . tr('Done!') . "\n";
           echo "done:\n";
           $this->app->stop();
         }
@@ -355,6 +356,7 @@ abstract class InstallerSnippet extends Snippet {
           if (isset($progress))
             echo 'progress: ' . intval($progress) . "\n";
           if ($task->isDone()) {
+            echo 'status: ' . tr('Done!') . "\n";
             echo "done:\n";
             break;
           }

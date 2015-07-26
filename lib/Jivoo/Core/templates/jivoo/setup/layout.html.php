@@ -40,12 +40,13 @@ $this->import('jivoo/core.css');
 
 <?php echo $this->block('content'); ?>
 
-<div id="install-progress" class="progress" style="display:none;">
+<div id="install-progress" class="progress primary" style="display:none;">
 <div class="progress-bar" style="width:0%">0%</div>
+<div class="label"></div>
 </div>
 
-<div id="install-status">
-</div>
+<pre id="install-status" style="display:none;">
+</pre>
 
 <?php
 if (!$Form->isOpen())
