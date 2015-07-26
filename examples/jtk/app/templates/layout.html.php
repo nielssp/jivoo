@@ -32,6 +32,7 @@ $sub->appendAction(tr('Icons'))->setRoute('path:ui/elements/icons');
 $sub->appendAction(tr('Blocks'))->setRoute('path:ui/elements/blocks');
 $sub->appendAction(tr('Grid'))->setRoute('path:ui/elements/grid');
 $sub->appendAction(tr('Notifications'))->setRoute('path:ui/elements/notifications');
+$sub->appendAction(tr('Progress'))->setRoute('path:ui/elements/progress');
 $sub->appendAction(tr('Dialogs'))->setRoute('path:ui/elements/dialogs');
 $sub->appendAction(tr('Tooltips'))->setRoute('path:ui/elements/tooltips');
 

@@ -329,23 +329,3 @@ a.badge {
 .badge-error {
   background-color: $error;
 }
-
-.progress {
-  background-color: $blockBg;
-  overflow: hidden;
-  margin-bottom: $pmargin;
-  height: 20px;
-  .progress-bar {
-    background-color: $primary;
-    line-height: 20px;
-    font-size: 0.9em;
-    height: 100%;
-    color: $contextFg;
-    text-align: center;
-    transition: width .5s ease;
-  }
-}
-
-.block .progress {
-  background-color: darken($blockBg, 10%);
-}

@@ -189,6 +189,18 @@ $flash('&&-success')->apply('flashColor', $Skin->success);
 $flash('&&-warning')->apply('flashColor', $Skin->warning);
 $flash('&&-error')->apply('flashColor', $Skin->error);
 
+// Progress
+
+$Css('.progress .progress-bar')->backgroundColor = $Skin->grey;
+$progress = $Css('.progress');
+$progress('&.primary .progress-bar')->backgroundColor = $Skin->primary;
+$progress('&.light .progress-bar')->backgroundColor = $Skin->light;
+$progress('&.dark .progress-bar')->backgroundColor = $Skin->dark;
+$progress('&.info .progress-bar')->backgroundColor = $Skin->info;
+$progress('&.success .progress-bar')->backgroundColor = $Skin->success;
+$progress('&.warning .progress-bar')->backgroundColor = $Skin->warning;
+$progress('&.error .progress-bar')->backgroundColor = $Skin->error;
+
 // Layout
 
 $Css('header')->css(array(
