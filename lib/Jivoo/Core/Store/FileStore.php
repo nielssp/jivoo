@@ -6,6 +6,7 @@
 namespace Jivoo\Core\Store;
 
 use Jivoo\Core\Logger;
+
 /**
  * Stores data in files. See subclasses for implementations of file formats.
  */
@@ -41,7 +42,7 @@ abstract class FileStore implements IStore {
   protected $defaultContent = '';
   
   /**
-   * Construct PHP file store.
+   * Construct file store.
    * @param string $file File path.
    */
   public function __construct($file) {
