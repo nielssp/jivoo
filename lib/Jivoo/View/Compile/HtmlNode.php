@@ -5,24 +5,13 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+use Jivoo\Helpers\Html;
+
 /**
  * An HTML node.
  * @property-read string $tag HTML tag.
  */
 class HtmlNode extends InternalNode {
-  /**
-   * HTML5 tags that should not be closed.
-   *
-   * Source: http://xahlee.info/js/html5_non-closing_tag.html
-   * @var array Associative array of lowercase tag-names and true-values.
-   */
-  private static $selfClosingTags = array('area' => true, 'base' => true,
-    'br' => true, 'col' => true, 'command' => true, 'embed' => true,
-    'hr' => true, 'img' => true, 'input' => true, 'keygen' => true,
-    'link' => true, 'meta' => true, 'param' => true, 'source' => true,
-    'track' => true, 'wbr' => true
-  );
-  
   /**
    * @var string HTML tag.
    */
@@ -50,7 +39,7 @@ class HtmlNode extends InternalNode {
   public function __construct($tag) {
     parent::__construct();
     $this->tag = $tag;
-    $this->selfClosing = isset(self::$selfClosingTags[$tag]);
+    $this->selfClosing = Html::isSelfClosing($tag);
   }
   
   /**

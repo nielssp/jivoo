@@ -450,7 +450,26 @@ class FormHelper extends Helper {
   public function checkboxLabel($field, $value, $label, $attributes = array()) {
     return $this->radioLabel($field, $value, $label, $attributes);
   }
-
+  
+  public function field($field, $attributes = array()) {
+    $div = $this->Html->create('div', $attributes);
+    $div->addClass('field');
+    if ($this->isInvalid($field))
+      $div->addClass('field-error');
+    $div->append($this->label($field));
+    $div->append($this->input($field));
+    $helpDiv = $this->Html->create('div', 'class=help');
+    if ($this->isInvalid($field)) {
+      $helpDiv->html($this->error($field));
+      $div->append($helpDiv->toString());
+    }
+    else if ($div->hasProp('description')) {
+      $helpDiv->html($div['description']);
+      $div->append($helpDiv->toString());
+    }
+    return $div->toString();
+  }
+  
   /**
    * Output an input element. The type of the element is based on the field
    * type.
@@ -458,7 +477,7 @@ class FormHelper extends Helper {
    * @param array $attributes Additional element attributes.
    * @return string HTML input element.
    */
-  public function field($field, $attributes = array()) {
+  public function input($field, $attributes = array()) {
     if ($field instanceof IFormExtension) {
       $attributes = array_merge(array(
         'name' => $this->name($field),

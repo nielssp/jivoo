@@ -1,17 +1,11 @@
 <?php echo $Form->formFor($comment, array('fragment' => 'comment', 'mergeQuery' => true)); ?>
 
-<div class="field">
-<?php echo $Form->label('author'); ?>
-<?php echo $Form->text('author'); ?>
-<?php echo $Form->error('author'); ?>
-</div>
+<?php echo $Form->field('author', array('description' => tr('Your name'))); ?>
 
-<div class="field">
-<?php echo $Form->label('content'); ?>
-<?php echo $Form->textarea('content'); ?>
-<?php echo $Form->error('content'); ?>
-</div>
+<?php echo $Form->field('content'); ?>
 
+<div class="buttons">
 <?php echo $Form->submit(tr('Save')); ?>
+</div>
 
 <?php echo $Form->end(); ?>
