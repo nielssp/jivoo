@@ -411,9 +411,6 @@ body.menu-open {
 .skin-list {
   list-style-type: none;
   margin-bottom: 20px;
-    content: ' ';
-    display: block;
-    clear: left;
 
   &:after {
     content: ' ';
@@ -430,6 +427,7 @@ body.menu-open {
       background-color: #eee;
     }
     .skin-name {
+      display: block;
       margin-bottom: 8px;
       input {
         margin-right: 8px;
