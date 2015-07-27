@@ -211,8 +211,12 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
         $this->saved = false;
       }
     }
-    else if (array_key_exists($field, $this->virtualData))
-      $this->virtualData[$field] = $value;
+    else if (array_key_exists($field, $this->virtualData)) {
+      if ($this->virtualData[$field] instanceof IRecord)
+        $this->virtualData[$field]->addData($value);
+      else
+        $this->virtualData[$field] = $value;
+    }
     else
       throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
   }

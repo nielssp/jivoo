@@ -219,6 +219,8 @@ class FormHelper extends Helper {
   public function id($field, $value = null) {
     if ($field instanceof IFormExtension)
       $field = $field->getName();
+    if (strpos($field, '.') !== false)
+      $field = str_replace('.', '_', $field);
     if (isset($this->id))
       $field = $this->id . '_' . $field;
     if (isset($value))
@@ -237,10 +239,19 @@ class FormHelper extends Helper {
   public function name($field, $value = null) {
     if ($field instanceof IFormExtension)
       $field = $field->getName();
-    if (isset($this->name))
-      $field = $this->name . '[' . $field . ']';
+    $elements = array();
+    if (strpos($field, '.') !== false) {
+      $elements = explode('.', $field);
+      $field = array_shift($elements);
+    }
+    if (isset($this->name)) {
+      array_unshift($elements, $field);
+      $field = $this->name;
+    }
     if (isset($value) and !is_bool($value))
-      $field .= '[' . $value . ']';
+      $elements[] = $value;
+    foreach ($elements as $element)
+      $field .= '[' . $element . ']';
     return $field;
   }
   
@@ -253,10 +264,26 @@ class FormHelper extends Helper {
   public function value($field) {
     if ($field instanceof IFormExtension)
       return $field->getValue($this->record);
-    else if (isset($this->record))
+    else if (isset($this->record)) {
+      if (strpos($field, '.') !== false) {
+        $elements = explode('.', $field);
+        $value = $this->record;
+        foreach ($elements as $element)
+          $value = $value[$element];
+        return $value;
+      }
       return $this->record->$field;
-    else if (isset($this->data[$field]))
+    }
+    else if (isset($this->data[$field])) {
+      if (strpos($field, '.') !== false) {
+        $elements = explode('.', $field);
+        $value = $this->data;
+        foreach ($elements as $element)
+          $value = $value[$element];
+        return $value;
+      }
       return $this->data[$field];
+    }
     return null;
   }
   
@@ -268,7 +295,7 @@ class FormHelper extends Helper {
   public function isRequired($field) {
     if ($field instanceof IFormExtension)
       return $field->isRequired();
-    if (isset($this->model))
+    if (isset($this->model) and $this->model->hasField($field))
       return $this->model->isRequired($field);
     return false;
   }
@@ -456,6 +483,8 @@ class FormHelper extends Helper {
     $div->addClass('field');
     if ($this->isInvalid($field))
       $div->addClass('field-error');
+    if ($this->isRequired($field))
+      $div->addClass('field-required');
     $div->append($this->label($field));
     $div->append($this->input($field));
     $helpDiv = $this->Html->create('div', 'class=help');
@@ -486,7 +515,7 @@ class FormHelper extends Helper {
       ), $attributes);
       return $field->getField($attributes);
     }
-    if (isset($this->model)) {
+    if (isset($this->model) and $this->model->hasField($field)) {
       $type = $this->model->getType($field);
       if (isset($type)) {
         switch ($type->type) {
@@ -553,9 +582,6 @@ class FormHelper extends Helper {
    * @return string HTML input element.
    */
   public function datetime($field, $attributes = array()) {
-    $attributes = array_merge(array(
-      'name' => $this->name($field) . '[datetime]',
-    ), $attributes);
     return $this->inputElement('datetime', $field, $attributes);
   }
 

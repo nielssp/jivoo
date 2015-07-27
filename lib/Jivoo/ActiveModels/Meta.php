@@ -6,11 +6,12 @@
 namespace Jivoo\ActiveModels;
 
 use Jivoo\Models\IModel;
+use Jivoo\Models\IRecord;
 
 /**
  * Record meta data object.
  */
-class Meta {
+class Meta implements IRecord {
   /**
    * @var IModel Meta model.
    */
@@ -59,11 +60,39 @@ class Meta {
     $this->id = $record->$id;
     $this->record = $record;
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getData() {
+    if (!isset($this->data))
+      $this->fetch();
+    return $data;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function addData($data, $allowedFields = null) {
+    assume(is_array($data));
+    if (is_array($allowedFields)) {
+      $allowedFields = array_flip($allowedFields);
+      $data = array_intersect_key($data, $allowedFields);
+    }
+    foreach ($data as $field => $value) {
+      $this->__set($field, $data[$field]);
+    }
+  }
 
   /**
-   * Get value of a variable.
-   * @param string $variable Meta variable.
-   * @return string Value.
+   * {@inheritdoc}
+   */
+  public function getVirtualData() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function __get($variable) {
     if (isset($this->deletions[$variable]))
@@ -78,9 +107,7 @@ class Meta {
   }
 
   /**
-   * Set value of a variable.
-   * @param string $variable Meta variable.
-   * @param string $value Meta value.
+   * {@inheritdoc}
    */
   public function __set($variable, $value) {
     if (!isset($value)) {
@@ -95,9 +122,15 @@ class Meta {
   }
 
   /**
-   * Whether a variable is set.
-   * @param string $variable Meta variable.
-   * @return bool Whether variable exists.
+   * {@inheritdoc}
+   */
+  public function set($variable, $value) {
+    $this->__set($variable, $value);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function __isset($variable) {
     if (isset($this->deletions[$variable]))
@@ -110,8 +143,7 @@ class Meta {
   }
 
   /**
-   * Unset a variable
-   * @param string $variable Meta variable.
+   * {@inheritdoc}
    */
   public function __unset($variable) {
     $this->__set($variable, null);
@@ -134,7 +166,7 @@ class Meta {
   }
 
   /**
-   * Save variables to model.
+   * {@inheritdoc}
    */
   public function save() {
     if ($this->record->isNew())
@@ -162,5 +194,88 @@ class Meta {
       $this->model->insertMultiple($rows, true);
       $this->changes = array();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getModel() {
+    return null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getErrors() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValid() {
+    return true;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isNew() {
+    return $this->record->isNew();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSaved() {
+    return empty($this->changes) and empty($this->deletions);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    foreach ($this->data as $key => $value)
+      $this->__unset($key);
+    return $this->save();
+  }
+
+  /**
+   * Determine if a field is set.
+   * @param string $field Field name.
+   * @return bool True if not null, false otherwise.
+   * @throws InvalidPropertyException If the field does not exist.
+   */
+  public function offsetExists($field) {
+    return $this->__isset($field);
+  }
+
+  /**
+   * Get value of a field.
+   * @param string $field Field name.
+   * @return mixed Value.
+   * @throws InvalidPropertyException If the field does not exist.
+   */
+  public function offsetGet($field) {
+    return $this->__get($field);
+  }
+
+  /**
+   * Set value of a field.
+   * @param string $field Field name.
+   * @param mixed $value Value.
+   * @throws InvalidPropertyException If the field does not exist.
+   */
+  public function offsetSet($field, $value) {
+    $this->__set($field, $value);
+  }
+
+  /**
+   * Set a field value to null.
+   * @param string $field Field name.
+   * @throws InvalidPropertyException If the field does not exist.
+   */
+  public function offsetUnset($field) {
+    $this->__unset($field);
   }
 }
