@@ -485,7 +485,10 @@ class FormHelper extends Helper {
       $div->addClass('field-error');
     if ($this->isRequired($field))
       $div->addClass('field-required');
-    $div->append($this->label($field));
+    $label = null;
+    if ($div->hasProp('label'))
+      $label = $div['label'];
+    $div->append($this->label($field, $label));
     $div->append($this->input($field));
     $helpDiv = $this->Html->create('div', 'class=help');
     if ($this->isInvalid($field)) {

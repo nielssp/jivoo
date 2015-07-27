@@ -411,6 +411,8 @@ body.menu-open {
 .skin-list {
   list-style-type: none;
   margin-bottom: 20px;
+  position: relative;
+  top: -8px;
 
   &:after {
     content: ' ';
