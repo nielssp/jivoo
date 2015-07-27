@@ -81,6 +81,14 @@ class MigrationInstaller extends MigrationUpdater {
     $this->m->Migrations->initialize($this->dbName);
     return $this->jump('create');
   }
+  
+  /**
+   * Undo initialization step.
+   * @return \Jivoo\Routing\Response|string Response.
+   */
+  public function undoInitialize() {
+    return $this->jump('check');
+  }
 
   /**
    * Installer step: Create missing tables.

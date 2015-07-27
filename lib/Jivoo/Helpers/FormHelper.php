@@ -15,6 +15,11 @@ use Jivoo\Models\EnumDataType;
  */
 class FormHelper extends Helper {
   /**
+   * {@inheritdoc}
+   */
+  protected $helpers = array('Html'); 
+  
+  /**
    * @var string[] Element stack for option-elements and nested optgroups.
    */
   private $stack = array();
