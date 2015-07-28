@@ -121,7 +121,6 @@ class FormHelper extends Helper {
       else
         $this->data = array();
     }
-    return $form;
   }
 
   /**
@@ -130,7 +129,6 @@ class FormHelper extends Helper {
    * @param array|ILinkable|string|null $route Form route, see {@see Routing}.
    * @param array $attributes Additional attributes for form, see {@see form()}.
    * used to create the hidden access token field when the method is 'get'.
-   * @return string The HTML for the start of the form.
    */
   public function formFor(IBasicRecord $record, $route = array(), $attributes = array()) {
     $this->record = $record;
