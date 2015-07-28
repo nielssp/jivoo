@@ -160,6 +160,7 @@
 
 @mixin wide-form($labelSize: 240px, $inputSize: 60%) {
   .field {
+    margin-bottom: $pmargin / 2;
     padding: 6px 0;
     margin-left: $labelSize;
     input[type=text],
@@ -193,6 +194,7 @@
 
 @mixin narrow-form {
   .field {
+    margin-bottom: $pmargin;
     padding: 0;
     margin-left: 0;
     input[type=text],

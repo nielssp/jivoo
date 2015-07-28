@@ -155,19 +155,6 @@ $(function() {
         }
       }
     });
-
-    $(element).tooltip({
-      items: '[data-error]',
-      content: function() {
-        return $(this).data('error');
-      },
-      show: false,
-      hide: false,
-      position: {
-        my: 'right middle',
-        at: 'right-4 middle+4'
-      }
-    });
     
     $(element).find('[data-toggle]').each(function() {
       var $buttons = $(this).find($(this).data('toggle'));

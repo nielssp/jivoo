@@ -162,7 +162,7 @@ input[type=radio] {
   }
 }
 
-label {
+label[for] {
   cursor: pointer;
 }
 

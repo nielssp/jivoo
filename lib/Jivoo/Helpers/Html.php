@@ -340,6 +340,8 @@ class Html implements \ArrayAccess {
     if (is_string($attributes))
       return self::readAttributeString($attributes);
     $result = array();
+    if (!isset($attributes))
+      return array();
     if (isset($attributes['data'])) {
       foreach ($attributes['data'] as $key => $value)
         $result['data-' . $key] = $value;

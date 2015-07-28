@@ -1135,7 +1135,7 @@ input[type=radio] {
   input[type=radio][disabled] {
     background-color: #f7f7f7; }
 
-label {
+label[for] {
   cursor: pointer; }
 
 .checkbox-list,
@@ -1484,6 +1484,7 @@ form {
 
 @media screen and (min-width: 768px) {
   .field {
+    margin-bottom: 10px;
     padding: 6px 0;
     margin-left: 240px; }
     .field input[type=text],
@@ -1511,6 +1512,7 @@ form {
     margin-left: 240px; } }
 .form-narrow .field,
 .block .field {
+  margin-bottom: 20px;
   padding: 0;
   margin-left: 0; }
   .form-narrow .field input[type=text],
@@ -1547,6 +1549,7 @@ form {
   margin-left: 0; }
 
 .form-wide .field {
+  margin-bottom: 10px;
   padding: 6px 0;
   margin-left: 240px; }
   .form-wide .field input[type=text],
@@ -1573,6 +1576,7 @@ form {
   margin-left: 240px; }
 
 .form-wide-xs .field {
+  margin-bottom: 20px;
   padding: 0;
   margin-left: 0; }
   .form-wide-xs .field input[type=text],
@@ -1597,6 +1601,7 @@ form {
   margin-left: 0; }
 @media screen and (min-width: 480px) {
   .form-wide-xs .field {
+    margin-bottom: 10px;
     padding: 6px 0;
     margin-left: 140px; }
     .form-wide-xs .field input[type=text],
@@ -1623,6 +1628,7 @@ form {
     margin-left: 140px; } }
 
 .form-wide-sm .field {
+  margin-bottom: 20px;
   padding: 0;
   margin-left: 0; }
   .form-wide-sm .field input[type=text],
@@ -1647,6 +1653,7 @@ form {
   margin-left: 0; }
 @media screen and (min-width: 768px) {
   .form-wide-sm .field {
+    margin-bottom: 10px;
     padding: 6px 0;
     margin-left: 160px; }
     .form-wide-sm .field input[type=text],
@@ -1673,6 +1680,7 @@ form {
     margin-left: 160px; } }
 
 .form-wide-md .field {
+  margin-bottom: 20px;
   padding: 0;
   margin-left: 0; }
   .form-wide-md .field input[type=text],
@@ -1697,6 +1705,7 @@ form {
   margin-left: 0; }
 @media screen and (min-width: 1010px) {
   .form-wide-md .field {
+    margin-bottom: 10px;
     padding: 6px 0;
     margin-left: 240px; }
     .form-wide-md .field input[type=text],
@@ -1723,6 +1732,7 @@ form {
     margin-left: 240px; } }
 
 .form-wide-lg .field {
+  margin-bottom: 20px;
   padding: 0;
   margin-left: 0; }
   .form-wide-lg .field input[type=text],
@@ -1747,6 +1757,7 @@ form {
   margin-left: 0; }
 @media screen and (min-width: 1200px) {
   .form-wide-lg .field {
+    margin-bottom: 10px;
     padding: 6px 0;
     margin-left: 240px; }
     .form-wide-lg .field input[type=text],

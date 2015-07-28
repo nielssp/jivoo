@@ -9,6 +9,7 @@ use Jivoo\Models\IBasicRecord;
 use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\DataType;
 use Jivoo\Models\EnumDataType;
+use Jivoo\Helpers\Form\Field;
 
 /**
  * A helper for creating HTML forms
@@ -18,12 +19,6 @@ class FormHelper extends Helper {
    * {@inheritdoc}
    */
   protected $helpers = array('Html'); 
-  
-  /**
-   * @var string[] Element stack for option-elements and nested optgroups.
-   * @deprecated
-   */
-  private $stack = array();
 
   /**
    * @var IBasicRecord Associated record.
@@ -54,19 +49,6 @@ class FormHelper extends Helper {
    * @var string[] Associative array of field names and error messages.
    */
   private $errors = array();
-  
-  /**
-   * @var mixed Value of current select-element.
-   * @deprecated
-   */
-  private $selectValue = null;
-  
-  /**
-   * 
-   * @var unknown
-   * @deprecated
-   */
-  private $startTag = null;
 
   /**
    * Begin a form. End it with {@see end()}.
@@ -150,6 +132,8 @@ class FormHelper extends Helper {
     $form = $this->Html->peek();
     if (!isset($form))
       throw new FormHelperException(tr('No form or form element is open.'));
+    if ($form instanceof Field)
+      return $form;
     if (array_search($form->tag, array('form', 'select', 'optgroup')) === false)
       throw new FormHelperException(tr('No form or form element is open.'));
     return $form;
@@ -158,12 +142,14 @@ class FormHelper extends Helper {
   /**
    * End the current element, e.g. a form opened with {@see form()}.
    * @throws FormHelperException If no form or element is open.
-   * @return string The HTML for the end of the form or element.
+   * @return Html The HTML element for the end of the form or element.
    */
   public function end() {
     $form = $this->Html->end();
     if (!isset($form))
-      throw new FormHelperException(tr('No form or form element is open.'));
+      return null;
+    if ($form instanceof Field)
+      return $form;
     switch ($form->tag) {
       case 'form':
         $this->errors = array();
@@ -178,7 +164,7 @@ class FormHelper extends Helper {
       default:
         throw new FormHelperException(tr('Top element "%1" is not a form element.', $form->tag));
     }
-    return $form->toString();
+    return $form;
   }
   
   /**
@@ -187,8 +173,8 @@ class FormHelper extends Helper {
    */
   public function isOpen() {
     $form = $this->Html->peek();
-    return isset($form) and
-      array_search($form->tag, array('form', 'select', 'optgroup')) !== false;
+    return isset($form) and ($form instanceof Field or
+      array_search($form->tag, array('form', 'select', 'optgroup')) !== false);
   }
   
   /**
@@ -482,42 +468,10 @@ class FormHelper extends Helper {
    * @return strinf Form field HTML.
    */
   public function field($field, $attributes = array()) {
-    $div = $this->Html->create('div', $attributes);
-    $div->addClass('field');
-    if ($this->isInvalid($field))
-      $div->addClass('field-error');
-    if ($this->isRequired($field))
-      $div->addClass('field-required');
-    $label = null;
-    if ($div->hasProp('label')) {
-      $label = $div['label'];
-      if (is_array($label))
-        $div->append($this->label($field, null, $label));
-      else
-        $div->append($this->label($field, $label));
-    }
-    else {
-      $div->append($this->label($field));
-    }
-    if ($div->hasProp('type')) {
-      $type = $div['type'];
-      $div->append($this->$type($field, $div->prop('input')));
-    }
-    else {
-      $div->append($this->input($field, $div->prop('input')));
-    }
-    $helpDiv = $this->Html->create('div', 'class=help');
-    if ($div->hasProp('help'))
-      $helpDiv->attr($div['help']);
-    if ($this->isInvalid($field)) {
-      $helpDiv->html($this->error($field));
-      $div->append($helpDiv->toString());
-    }
-    else if ($div->hasProp('description')) {
-      $helpDiv->html($div['description']);
-      $div->append($helpDiv->toString());
-    }
-    return $div->toString();
+    $div = new Field($this, $field);
+    $this->Html->begin($div);
+    $div->attr($attributes);
+    return $div;
   }
   
   /**
@@ -687,7 +641,7 @@ class FormHelper extends Helper {
         $elem->attr('checked', true);
       if ($withHidden) {
         $hidden = $this->Html->create('input', array(
-          'type=hidden', 'name' => $this->name($field, $value), 'value' => ''
+          'type=hidden', 'name' => $this->name($field, $value), 'value' => false
         ))->toString();
       }
     }
@@ -916,35 +870,5 @@ class FormHelper extends Helper {
       'data-error' => $this->error($field, null),
     ), $attributes);
     return $this->Html->create('input', $attributes)->toString();
-  }
-  
-  /**
-   * Create an HTML element.
-   * @param string $tag HTML tag.
-   * @param array $attributes HTML attributes.
-   * @param string $content Content.
-   * @return string HTML element.
-   * @deprecated
-   */
-  private function element($tag, $attributes, $content = null) {
-    if (isset($content))
-      return '<' . $tag . $this->addAttributes($attributes) . '>' . $content . '</' . $tag . '>' . PHP_EOL;
-    return '<' . $tag . $this->addAttributes($attributes) . ' />' . PHP_EOL;
-  }
-
-  /**
-   * Add additional attributes.
-   * @param array $options An associative array of additional attributes to add
-   * to field.
-   * @return string HTML attributes.
-   * @deprecated
-   */
-  private function addAttributes($attributes) {
-    $html = '';
-    foreach ($attributes as $attribute => $value) {
-      if (is_scalar($value))
-        $html .= ' ' . $attribute . '="' . h($value) . '"';
-    }
-    return $html;
   }
 }

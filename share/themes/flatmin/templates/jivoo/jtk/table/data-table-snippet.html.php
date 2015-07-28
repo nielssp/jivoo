@@ -13,7 +13,7 @@ $this->import('jquery.js', 'jivoo/jtk/data-table.js');
 
 <?php echo $Form->text('filter', array('placeholder' => tr('Filter'))); ?>
 
-<?php echo $Jtk->iconButton(tr('Search'), 'icon=search'); ?>
+<?php echo $Jtk->iconButton(tr('Search'), 'type=submit icon=search'); ?>
 
 <?php if (count($object->filters) == 0): ?>
 <button>Reset</button>
