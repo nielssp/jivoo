@@ -679,8 +679,6 @@ class FormHelper extends Helper {
    * @throws FormHelperException If inappropriate location of element.
    */
   public function select($field, $attributes = array()) {
-    if ($this->peek()->tag != 'form')
-      throw new FormHelperException('Must be in a form before using select.');
     $attributes = Html::mergeAttributes(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
@@ -786,7 +784,8 @@ class FormHelper extends Helper {
   public function option($value, $text, $attributes = array()) {
     $elem = $this->Html->create('option', $attributes);
     $elem->attr('value', $value);
-    if ($value == $this->selectValue)
+    $select = $this->peek();
+    if ($select->tag == 'select' and $value == $select->prop('value'))
       $elem->attr('selected', true);
     $elem->html(h($text));
     return $elem->toString();
