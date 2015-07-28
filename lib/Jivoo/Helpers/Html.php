@@ -21,7 +21,7 @@ class Html implements \ArrayAccess {
     'link' => true, 'meta' => true, 'param' => true, 'source' => true,
     'track' => true, 'wbr' => true
   );
-
+  
   /**
    * @var string HTML tag.
   */

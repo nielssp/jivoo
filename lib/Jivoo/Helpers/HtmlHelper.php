@@ -17,6 +17,11 @@ class HtmlHelper extends Helper {
    * @var string Class to put on current links
    */
   private $classIfCurrent = 'current';
+  
+  /**
+   * @var Html[]
+   */
+  private $stack = array();
 
   /**
    * Get end tag for a begin tag
@@ -51,7 +56,7 @@ class HtmlHelper extends Helper {
   }
   
   /**
-   * Create an HTML tag.
+   * Create an HTML element.
    * @param string $tag Tag.
    * @param string[] $attributes Attributes, see {@see Html::readAttributes}.
    * @return Html Html node.
@@ -60,6 +65,47 @@ class HtmlHelper extends Helper {
     $html = new Html($tag);
     $html->attr($attributes);
     return $html;
+  }
+
+  /**
+   * Create an HTML element and put it on a stack. Uses output buffering to fill
+   * the content of element, use {@see end} to pop the element from the stack
+   * and end the current output buffer.
+   * @param string|Html $tag Tag or element.
+   * @param string[] $attributes Attributes, see {@see Html::readAttributes}.
+   * @return Html Html node.
+   */
+  public function begin($tag, $attributes = array()) {
+    if (!($tag instanceof Html)) {
+      $tag = $this->create($tag, $attributes);
+    }
+    ob_start();
+    array_push($this->stack, $tag);
+    return $tag;
+  }
+  
+  /**
+   * Get the current HTML element (as initialized by {@see begin}) if any.
+   * @return Html|null Element or null if stack is empty. 
+   */
+  public function peek() {
+    $elem = end($this->stack);
+    if ($elem === false)
+      return null;
+    return $elem;
+  }
+
+  /**
+   * Get the current HTML element (as initialized by {@see begin}) if any. Stops
+   * the current output buffer and appends its content to the element.
+   * @return Html|null Element or null if stack is empty.
+   */
+  public function end() {
+    if (!count($this->stack))
+      return null;
+    $elem = array_pop($this->stack);
+    $elem->append(ob_get_clean());
+    return $elem;
   }
 
   /**

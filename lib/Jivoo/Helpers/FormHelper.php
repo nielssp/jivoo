@@ -21,6 +21,7 @@ class FormHelper extends Helper {
   
   /**
    * @var string[] Element stack for option-elements and nested optgroups.
+   * @deprecated
    */
   private $stack = array();
 
@@ -56,9 +57,15 @@ class FormHelper extends Helper {
   
   /**
    * @var mixed Value of current select-element.
+   * @deprecated
    */
   private $selectValue = null;
   
+  /**
+   * 
+   * @var unknown
+   * @deprecated
+   */
   private $startTag = null;
 
   /**
@@ -70,65 +77,51 @@ class FormHelper extends Helper {
    * "method" is created with the requested method.
    * 
    * @param array|ILinkable|string|null $route Form route, see {@see Routing}.
-   * @param array $attributes Additional attributes for form, e.g. "method",
-   * "id", "class", "name", etc. A special attribute "hiddenToken", can be
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}. A special attribute "hiddenToken", can be
    * used to create the hidden access token field when the method is 'get'.
-   * @throws FormHelperException If a form is already open.
-   * @return string The HTML for the start of the form.
    */
   public function form($route = array(), $attributes = array()) {
-    if (!empty($this->stack))
-      throw new FormHelperException(tr('A form is already open.'));
-    array_push($this->stack, 'form');
-    $attributes = array_merge(array(
-      'method' => 'post',
-    ), $attributes);
+    $form = $this->Html->begin('form', 'method=post');
+    $form->attr('action', $this->getLink($route));
+    $form->attr($attributes);
+    
     $specialMethod = null;
-    if ($attributes['method'] != 'post' and
-        $attributes['method'] != 'get') {
-      $specialMethod = $attributes['method'];
-      $attributes['method'] = 'post';
+    if ($form['method'] != 'post' and
+        $form['method'] != 'get') {
+      $specialMethod = $form['method'];
+      $form['method'] = 'post';
     }
-    if (isset($attributes['id']))
-      $this->id = $attributes['id'];
-    if (isset($attributes['name']))
-      $this->name = $attributes['name'];
-    $hiddenToken = $attributes['method'] != 'get';
-    if (isset($attributes['hiddenToken'])) {
-      $hiddenToken = $attributes['hiddenToken'];
-      unset($attributes['hiddenToken']);
-    }
-    $html = '<form action="' . $this->getLink($route) . '"';
-    $html .= $this->addAttributes($attributes) . '>' . PHP_EOL;
+    
+    if (isset($form['id']))
+      $this->id = $form['id'];
+    if (isset($form['name']))
+      $this->name = $form['name'];
+    
+    $hiddenToken = $form['method'] != 'get';
+    if ($form->hasProp('hiddenToken'))
+      $hiddenToken = $form['hiddenToken'];
+    
     if ($hiddenToken)
-      $html .= $this->hiddenToken();
+      $form->append($this->hiddenToken());
+    
     if (isset($specialMethod)) {
-      $html .= $this->element('input', array(
-        'type' => 'hidden',
-        'name' => 'method',
-        'value' => $specialMethod
+      $form->append($this->html->create('input'), array(
+        'type=hidden name=method', 'value' => $specialMethod
       ));
     }
-    if ($attributes['method'] == 'post')
+    if ($form['method'] == 'post')
       $this->data = $this->request->data;
     else
       $this->data = $this->request->query;
+
     if (isset($this->name)) {
       if (isset($this->data[$this->name]))
         $this->data = $this->data[$this->name];
       else
         $this->data = array();
     }
-    $this->startTag = $html;
-    return $html;
-  }
-  
-  /**
-   * Get the opening tag of the current form.
-   * @return string The HTML for the start of the form.
-   */
-  public function begin() {
-    return $this->startTag;
+    return $form;
   }
 
   /**
@@ -142,7 +135,7 @@ class FormHelper extends Helper {
   public function formFor(IBasicRecord $record, $route = array(), $attributes = array()) {
     $this->record = $record;
     $this->model = $record->getModel();
-    $attributes = array_merge(array(
+    $attributes = Html::mergeAttributes(array(
       'id' => $this->model->getName(),
       'name' => $this->model->getName(),
     ), $attributes);
@@ -151,28 +144,43 @@ class FormHelper extends Helper {
   }
 
   /**
+   * Get the current form element, e.g. a form opened with {@see form()}.
+   * @throws FormHelperException If no form or element is open.
+   * @return Html The HTML element for the form element.
+   */
+  public function peek() {
+    $form = $this->Html->peek();
+    if (!isset($form))
+      throw new FormHelperException(tr('No form or form element is open.'));
+    if (array_search($form->tag, array('form', 'select', 'optgroup')) === false)
+      throw new FormHelperException(tr('No form or form element is open.'));
+    return $form;
+  }
+
+  /**
    * End the current element, e.g. a form opened with {@see form()}.
    * @throws FormHelperException If no form or element is open.
    * @return string The HTML for the end of the form or element.
    */
   public function end() {
-    if (empty($this->stack))
+    $form = $this->Html->end();
+    if (!isset($form))
       throw new FormHelperException(tr('No form or form element is open.'));
-    $element = array_pop($this->stack);
-    switch ($element) {
+    switch ($form->tag) {
       case 'form':
         $this->errors = array();
         $this->record = null;
         $this->model = null;
         $this->name = null;
         $this->id = null;
-        return '</form>' . PHP_EOL;
+        break;
       case 'select':
-        $this->selectValue = null;
-        return '</select>' . PHP_EOL;
       case 'optgroup':
-        return '</optgroup>' . PHP_EOL;
+        break;
+      default:
+        throw new FormHelperException(tr('Top element "%1" is not a form element.', $form->tag));
     }
+    return $form->toString();
   }
   
   /**
@@ -180,7 +188,9 @@ class FormHelper extends Helper {
    * @return boolean True if open.
    */
   public function isOpen() {
-    return !empty($this->stack);
+    $form = $this->Html->peek();
+    return isset($form) and
+      array_search($form->tag, array('form', 'select', 'optgroup')) !== false;
   }
   
   /**
@@ -408,7 +418,7 @@ class FormHelper extends Helper {
   /**
    * Output a label element.
    * @param string|IFormExtension $field Field name.
-   * @param string $label Label, default is to look up the label in the model..
+   * @param string $label Label, default is to look up the label in the model.
    * @param string|string[] $attributes Attributes, see
    * {@see Html::readAttributes}.
    * @return string HTML label element.
@@ -715,23 +725,18 @@ class FormHelper extends Helper {
    * @param string|string[] $attributes Attributes, see
    * {@see Html::readAttributes}.. 
    * @throws FormHelperException If inappropriate location of element.
-   * @return string Start of an HTML select element.
    */
   public function select($field, $attributes = array()) {
-    if (end($this->stack) != 'form')
+    if ($this->peek()->tag != 'form')
       throw new FormHelperException('Must be in a form before using select.');
-    $attributes = array_merge(array(
+    $attributes = Html::mergeAttributes(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
       'value' => $this->value($field),
       'size' => 1
     ), $attributes);
-    $value = $attributes['value'];
-    unset($attributes['value']);
-    $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
-    array_push($this->stack, 'select');
-    $this->selectValue = $value;
-    return $html;
+    $elem = $this->Html->begin('select', $attributes);
+    $value = $elem->prop('value');
   }
   
   /**
@@ -740,14 +745,12 @@ class FormHelper extends Helper {
    * @param string|string[] $attributes Attributes, see
    * {@see Html::readAttributes}.
    * @throws FormHelperException If inappropriate location of element.
-   * @return string Start of an HTML optgroup element.
    */
   public function optgroup($label, $attributes = array()) {
-    if (end($this->stack) != 'select')
+    if ($this->peek()->tag != 'select')
       throw new FormHelperException('Must be in a select-field before using optgroup.');
-    $attributes['label'] = $label;
-    array_push($this->stack, 'optgroup');
-    return '<optgroup' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    $elem = $this->Html->begin('optgroup', $attributes);
+    $elem->attr('label', $label);
   }
 
   /**
