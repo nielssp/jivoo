@@ -296,6 +296,34 @@ class Html implements \ArrayAccess {
       return true;
     return array_key_exists($attribute, $this->attributes);
   }
+  
+  /**
+   * Merges two attribute sets, attributes in the first parameter is overriden
+   * by attributes in the second.
+   * @param string|string[] $defaults Default attributes.
+   * @param string|string[] $attributes Attributes to merge.
+   * @return string[] Output attribute array.
+   */
+  public static function mergeAttributes($defaults, $attributes) {
+    $defaults = self::readAttributes($defaults);
+    $attributes = self::readAttributes($attributes);
+    if (isset($defaults['data'])) {
+      if (!isset($attributes['data'])) {
+        $attributes['data'] = $defaults['data'];
+      }
+      else {
+        foreach ($defaults['data'] as $key => $value) {
+          if (!isset($attributes['data'][$key]))
+            $attributes['data'][$key] = $value;
+        }
+      } 
+    }
+    foreach ($defaults as $key => $value) {
+      if (!isset($attributes[$key]))
+        $attributes[$key] = $value;
+    }
+    return $attributes;
+  }
 
   /**
    * Read an associative array of HTML attributes and convert all elements
@@ -305,7 +333,7 @@ class Html implements \ArrayAccess {
    * <code>array('class' => 'test', 'href="#"')</code>
    * is converted to
    * <code>array('class' => 'test', 'href' => '#')</code>
-   * @param string[] $attributes Attribute array.
+   * @param string|string[] $attributes Attribute array or string.
    * @return string[] Output attribute array.
    */
   public static function readAttributes($attributes) {

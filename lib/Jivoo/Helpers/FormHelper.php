@@ -404,37 +404,13 @@ class FormHelper extends Helper {
       return $output;
     return '';
   }
-  
-  /**
-   * Output a labelled field with an optional description.
-   * @param string|IFormExtension $field Field name.
-   * @param string $type Field type, can be any of 'text', 'password', 'date',
-   * 'time', 'dateTime', or 'file'.
-   * @param string $label Label, default is to look up the label in the model.
-   * @param string $description Optional description;
-   * @param array $attributes Addtional element attributes for the field.
-   * @return string HTML code.
-   */
-  public function standardField($field, $type = 'field', $label = null, $description = '', $attributes = array()) {
-    if ($this->isRequired($field))
-      $divAttributes = array('class' => 'field field-required');
-    else
-      $divAttributes = array('class' => 'field');
-    $description = $this->error($field, $description);
-    return $this->element(
-      'div',
-      $divAttributes,
-      $this->label($field, $label) . PHP_EOL
-        . $this->$type($field, $attributes) . PHP_EOL
-        . $description
-    );
-  }
 
   /**
    * Output a label element.
    * @param string|IFormExtension $field Field name.
-   * @param string $label Label, default is to look up the label in the model.
-   * @param array $attributes Addtional element attributes.
+   * @param string $label Label, default is to look up the label in the model..
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML label element.
    */
   public function label($field, $label = null, $attributes = array()) {
@@ -445,39 +421,58 @@ class FormHelper extends Helper {
       else if (isset($this->model))
         $label = $this->model->getLabel($field);
     }
-    $attributes = array_merge(array(
-      'for' => $this->id($field)
-    ), $attributes);
-    return $this->element('label', $attributes, $label);
+    $elem = $this->Html->create('label');
+    $elem->attr('for', $this->id($field));
+    $elem->attr($attributes);
+    $elem->html($label);
+    return $elem->toString();
   }
 
   /**
    * Output a label element for a radio field.
    * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
-   * @param string $label Label.
-   * @param array $attributes Additional element attributes.
+   * @param string $label Label..
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML label element.
    */
   public function radioLabel($field, $value, $label, $attributes = array()) {
-    $attributes = array_merge(array(
-      'for' => $this->id($field, $value)
-    ), $attributes);
-    return $this->element('label', $attributes, $label);
+    $elem = $this->Html->create('label');
+    $elem->attr('for', $this->id($field, $value));
+    $elem->attr($attributes);
+    $elem->html($label);
+    return $elem->toString();
   }
 
   /**
    * Output a label element for a checkbox field.
    * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
-   * @param string $label Label.
-   * @param array $attributes Additional element attributes.
+   * @param string $label Label..
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML label element.
    */
   public function checkboxLabel($field, $value, $label, $attributes = array()) {
     return $this->radioLabel($field, $value, $label, $attributes);
   }
   
+  /**
+   * Output a form field (div with label, input element and optional help text
+   * (or error message)).
+   * 
+   * Special attributes:
+   *  * label: A label (string), attributes for label element (array), or null
+   *      for no label.
+   *  * input: Attributes for input-element, see {@see input}.
+   *  * help: Attributes for help-element.
+   *  * description: Description string.
+   * @param string|IFormExtension $field Field name.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
+   * @return strinf Form field HTML.
+   */
   public function field($field, $attributes = array()) {
     $div = $this->Html->create('div', $attributes);
     $div->addClass('field');
@@ -486,11 +481,26 @@ class FormHelper extends Helper {
     if ($this->isRequired($field))
       $div->addClass('field-required');
     $label = null;
-    if ($div->hasProp('label'))
+    if ($div->hasProp('label')) {
       $label = $div['label'];
-    $div->append($this->label($field, $label));
-    $div->append($this->input($field));
+      if (is_array($label))
+        $div->append($this->label($field, null, $label));
+      else
+        $div->append($this->label($field, $label));
+    }
+    else {
+      $div->append($this->label($field));
+    }
+    if ($div->hasProp('type')) {
+      $type = $div['type'];
+      $div->append($this->$type($field, $div->prop('input')));
+    }
+    else {
+      $div->append($this->input($field, $div->prop('input')));
+    }
     $helpDiv = $this->Html->create('div', 'class=help');
+    if ($div->hasProp('help'))
+      $helpDiv->attr($div['help']);
     if ($this->isInvalid($field)) {
       $helpDiv->html($this->error($field));
       $div->append($helpDiv->toString());
@@ -506,12 +516,13 @@ class FormHelper extends Helper {
    * Output an input element. The type of the element is based on the field
    * type.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Input attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function input($field, $attributes = array()) {
     if ($field instanceof IFormExtension) {
-      $attributes = array_merge(array(
+      $attributes = Html::mergeAttributes(array(
         'name' => $this->name($field),
         'id' => $this->id($field),
         'value' => $this->value($field)
@@ -545,7 +556,8 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a text input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function text($field, $attributes = array()) {
@@ -555,11 +567,12 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a date input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function date($field, $attributes = array()) {
-    $attributes = array_merge(array(
+    $attributes = Html::mergeAttributes(array(
       'name' => $this->name($field) . '[date]',
     ), $attributes);
     return $this->inputElement('date', $field, $attributes);
@@ -568,11 +581,12 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a time input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function time($field, $attributes = array()) {
-    $attributes = array_merge(array(
+    $attributes = Html::mergeAttributes(array(
       'name' => $this->name($field) . '[time]',
     ), $attributes);
     return $this->inputElement('time', $field, $attributes);
@@ -581,7 +595,8 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a datet/time input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function datetime($field, $attributes = array()) {
@@ -591,7 +606,8 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a password input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function password($field, $attributes = array()) {
@@ -601,7 +617,8 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a file input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function file($field, $attributes = array()) {
@@ -611,7 +628,8 @@ class FormHelper extends Helper {
   /**
    * Output an input element for a hidden input.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function hidden($field, $attributes = array()) {
@@ -622,13 +640,15 @@ class FormHelper extends Helper {
    * Output an input element for a radio input.
    * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function radio($field, $value, $attributes = array()) {
-    $attributes = array_merge(array(
+    $attributes = Html::mergeAttributes(array(
       'type' => 'radio',
-      'name' => $this->name($field)
+      'name' => $this->name($field),
+      'hidden' => false
     ), $attributes);
     return $this->checkbox($field, $value, $attributes);
   }
@@ -637,30 +657,40 @@ class FormHelper extends Helper {
    * Output an input element for a checkbox input.
    * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function checkbox($field, $value, $attributes = array()) {
-    $attributes = array_merge(array(
+    $elem = $this->Html->create('input', 'type=checkbox');
+    $elem->attr(array(
       'type' => 'checkbox',
       'name' => $this->name($field, $value),
-      'value' => $value,
-      'id' => $this->id($field, $value)
-    ), $attributes);
-    $attributes['value'] = $value;
+      'value' => strval($value),
+      'id' => $this->id($field, $value),
+      'hidden' => true
+    ));
+    $elem->attr($attributes);
     $currentValue = $this->value($field);
+    $withHidden = $elem->prop('hidden');
+    $hidden = '';
     if (is_bool($value)) {
       if ($currentValue)
-        $attributes['checked'] = 'checked';
+        $elem->attr('checked', true);
+      if ($withHidden) {
+        $hidden = $this->Html->create('input', array(
+          'type=hidden', 'name' => $this->name($field, $value), 'value' => ''
+        ))->toString();
+      }
     }
     else if (is_array($currentValue) and (isset($currentValue[$value])
-      or array_search($value, $currentValue) !== false)) {
-      $attributes['checked'] = 'checked';
+        or array_search($value, $currentValue) !== false)) {
+      $elem->attr('checked', true);
     }
     else if ($currentValue === $value) {
-      $attributes['checked'] = 'checked';
+      $elem->attr('checked', true);
     }
-    return $this->element('input', $attributes);
+    return $hidden . $elem->toString();
   }
   
   /**
@@ -668,7 +698,8 @@ class FormHelper extends Helper {
    * @param string|IFormExtension $field Field name.
    * @param mixed $value Field value.
    * @param string $label Checkbox label.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML input element.
    */
   public function checkboxAndLabel($field, $value, $label = null, $attributes = array()) {
@@ -681,7 +712,8 @@ class FormHelper extends Helper {
   /**
    * Begin a select element. End with {@see end()}.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes. 
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.. 
    * @throws FormHelperException If inappropriate location of element.
    * @return string Start of an HTML select element.
    */
@@ -705,7 +737,8 @@ class FormHelper extends Helper {
   /**
    * Begin an optgroup element. End with {@see end()}.
    * @param string $label Group label.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @throws FormHelperException If inappropriate location of element.
    * @return string Start of an HTML optgroup element.
    */
@@ -722,20 +755,21 @@ class FormHelper extends Helper {
    * @param string|IFormExtension $field Field name.
    * @param string[]|null $value Associative array of values and labels, or null
    * in which case the field type must be an enum.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML select element.
    * @throws FormHelperException If unexpected field type.
    */
   public function selectOf($field, $options = null, $attributes = array()) {
-    $attributes = array_merge(array(
+    $elem = $this->Html->create('select');
+    $elem->attr(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
       'value' => $this->value($field),
       'size' => 1
-    ), $attributes);
-    $currentValue = $attributes['value'];
-    unset($attributes['value']);
-    $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    ));
+    $elem->attr($attributes);
+    $currentValue = $elem->prop('value');
     if (!is_array($options)) {
       $type = $this->model->getType($field);
       if (!$type->isEnum())
@@ -743,13 +777,14 @@ class FormHelper extends Helper {
       $options = array_combine($type->values, $type->values);
     }
     foreach ($options as $value => $text) {
-      $html .= '<option value="' . h($value) . '"';
+      $optElem = $this->Html->create('option');
+      $optElem->attr('value', $value);
+      $optElem->html(h($text));
       if ($currentValue == $value)
-        $html .= ' selected="selected"';
-      $html .= '>' . h($text) . '</option>' . PHP_EOL;
+        $optElem->attr('selected', true);
+      $elem->append($optElem->toString());
     }
-    $html .= '</select>';
-    return $html;
+    return $elem->toString();
   }
   
   /**
@@ -758,93 +793,103 @@ class FormHelper extends Helper {
    * @param IReadSelection $selection Selection of records.
    * @param string $valueField Field to use for values.
    * @param string $labelField Field to use for labels.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML select element.
    */
   public function selectFromSelection($field, IReadSelection $selection, $valueField, $labelField, $attributes = array()) {
-    $attributes = array_merge(array(
+    $elem = $this->Html->create('select');
+    $elem->attr(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
       'value' => $this->value($field),
       'size' => 1
-    ), $attributes);
-    $currentValue = $attributes['value'];
-    unset($attributes['value']);
-    $html = '<select' . $this->addAttributes($attributes) . '>' . PHP_EOL;
+    ));
+    $elem->attr($attributes);
+    $currentValue = $elem->prop('value');
     foreach ($selection as $record) {
       $value = $record->$valueField;
       $label = $record->$labelField;
-      $html .= '<option value="' . h($value) . '"';
+      $optElem = $this->Html->create('option');
+      $optElem->attr('value', $value);
+      $optElem->html(h($label));
       if ($currentValue == $value)
-        $html .= ' selected="selected"';
-      $html .= '>' . h($label) . '</option>' . PHP_EOL;
+        $optElem->attr('selected', true);
+      $elem->append($optElem->toString());
     }
-    $html .= '</select>';
-    return $html;
+    return $elem->toString();
   }
   
   /**
    * Output an option element.
    * @param string $value Option value.
    * @param string $text Option label.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML option element.
    */
   public function option($value, $text, $attributes = array()) {
-    $attributes['value'] = $value;
+    $elem = $this->Html->create('option', $attributes);
+    $elem->attr('value', $value);
     if ($value == $this->selectValue)
-      $attributes['selected'] = 'selected';
-    return $this->element('option', $attributes, $text);
+      $elem->attr('selected', true);
+    $elem->html(h($text));
+    return $elem->toString();
   }
   
   /**
    * Output a textarea element.
    * @param string|IFormExtension $field Field name.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML textarea element.
    */
   public function textarea($field, $attributes = array()) {
-    $attributes = array_merge(array(
+    $elem = $this->Html->create('textarea');
+    $elem->attr(Html::mergeAttributes(array(
       'name' => $this->name($field),
       'id' => $this->id($field),
       'value' => $this->value($field),
       'data-error' => $this->error($field, null),
-    ), $attributes);
-    $content = '';
-    if (isset($attributes['value'])) {
-      $content = $attributes['value'];
-      unset($attributes['value']);
-    }
-    if (isset($attributes['size'])) {
-      $size = explode('x', $attributes['size']);
-      unset($attributes['size']);
+    ), $attributes));
+    
+    if ($elem->hasProp('value'))
+      $elem->html($elem['value']);
+
+    if ($elem->hasProp('size')) {
+      $size = explode('x', $elem['size']);
       if (count($size) == 2) {
-        $attributes['cols'] = $size[0]; 
-        $attributes['rows'] = $size[1];
+        $elem->attr('cols', $size[0]);
+        $elem->attr('row', $size[1]);
+      }
+      else {
+        $elem->attr('row', $size);
       }
     }
-    return $this->element('textarea', $attributes, $content);
+    
+    return $elem->toString();
   }
 
   /**
    * Output a submit button.
    * @param string $label Button label.
-   * @param array $attributes Additional element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML submit element.
    */
   public function submit($label, $attributes = array()) {
-    $attributes = array_merge(array(
-      'type' => 'submit',
-      'value' => $label
-    ), $attributes);
-    return $this->element('input', $attributes);
+    $button = $this->Html->create('input', 'type=submit');
+    $button->attr('value', $label);
+    $button->attr($attributes);
+    return $button->toString();
   }
   
   /**
    * Output a form containing only a submit button.
    * @param string $label Button label.
    * @param array|ILinkable|string|null $route Form route, see {@see Routing}.
-   * @param array $attributes Additional element attributes for button.
+   * @param string|string[] $attributes Attributes for button, see
+   * {@see Html::readAttributes}.
    * @return string HTML form element.
    */
   public function actionButton($label, $route = array(), $attributes = array()) {
@@ -857,18 +902,19 @@ class FormHelper extends Helper {
    * Create an input element.
    * @param string $type Type.
    * @param string $field Field name.
-   * @param array $attributes Element attributes.
+   * @param string|string[] $attributes Attributes, see
+   * {@see Html::readAttributes}.
    * @return string HTML element.
    */
   private function inputElement($type, $field, $attributes) {
-    $attributes = array_merge(array(
+    $attributes = Html::mergeAttributes(array(
       'type' => $type,
       'name' => $this->name($field),
       'id' => $this->id($field),
       'value' => $type != 'password' ? $this->value($field) : null,
       'data-error' => $this->error($field, null),
     ), $attributes);
-    return $this->element('input', $attributes);
+    return $this->Html->create('input', $attributes)->toString();
   }
   
   /**
@@ -877,6 +923,7 @@ class FormHelper extends Helper {
    * @param array $attributes HTML attributes.
    * @param string $content Content.
    * @return string HTML element.
+   * @deprecated
    */
   private function element($tag, $attributes, $content = null) {
     if (isset($content))
@@ -889,6 +936,7 @@ class FormHelper extends Helper {
    * @param array $options An associative array of additional attributes to add
    * to field.
    * @return string HTML attributes.
+   * @deprecated
    */
   private function addAttributes($attributes) {
     $html = '';
