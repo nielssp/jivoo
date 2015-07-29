@@ -66,9 +66,9 @@
 
 <?php echo $Form->form(array('mergeQuery' => true), array('name' => 'new')); ?>
 
-<?php echo $Form->standardField('code', 'text', tr('Language code (IETF)')); ?>
-<?php echo $Form->standardField('language', 'text', tr('Language')); ?>
-<?php echo $Form->standardField('region', 'text', tr('Region')); ?>
+<?php echo $Form->field('code', array('label' => tr('Language code (IETF)'))); ?>
+<?php echo $Form->field('language', array('label' => tr('Language'))); ?>
+<?php echo $Form->field('region', array('label' => tr('Region'))); ?>
 
 <div class="field">
 <?php echo $Form->label('extend', tr('Inherit from')); ?>

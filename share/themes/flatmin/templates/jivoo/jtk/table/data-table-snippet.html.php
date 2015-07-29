@@ -203,7 +203,9 @@ else
   'low' => tr('Comfortable'),
 )); ?>
 </div>
+<div class="buttons">
 <?php echo $Form->submit(tr('Save')); ?>
+</div>
 <?php echo $Form->end(); ?>
 </div>
 
