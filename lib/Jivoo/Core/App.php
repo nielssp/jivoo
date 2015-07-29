@@ -252,6 +252,11 @@ class App implements IEventSubject {
     
     // Persistent state storage
     $this->state = new StateMap($this->p('state', ''));
+    
+    if (php_sapi_name() == "cli") {
+      echo tr('%1 %2: CLI support not yet implemented', $this->name, $this->version);
+      exit;
+    }
   }
 
   /**
@@ -295,6 +300,14 @@ class App implements IEventSubject {
         return;
     }
     throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  /**
+   * Whether application is running from the command line.
+   * @return bool True if CLI.
+   */
+  public function isCli() {
+    return php_sapi_name() == 'cli';
   }
   
   /**
@@ -394,27 +407,70 @@ class App implements IEventSubject {
    */
   public function import($module) {
     if (strpos($module, '\\') === false) {
-      $name = $module;
-      $module = 'Jivoo\\' . $name . '\\' . $name;
-      $pathName = $name;
+      $class = 'Jivoo\\' . $module . '\\' . $module;
+      $pathName = $module;
     }
     else {
-      $segments = explode('\\', $module);
-      $name = array_pop($segments);
-      if ($segments == array('Jivoo', $name))
-        $pathName = $name;
-      else
+      $class = $module;
+      $components = explode('\\', $class);
+      $module = array_pop($components);
+      if ($components == array('Jivoo', $module))
         $pathName = $module;
+      else
+        $pathName = $class;
     }
-    $this->paths->$pathName = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $module));
-    $this->imports[$name] = $module;
-    $this->optionalDependencies = LoadableModule::getLoadOrder($module, $this->optionalDependencies);
+    $this->paths->$pathName = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $class));
+    $this->imports[$module] = $class;
+    
+    $loadOrder = LoadableModule::getLoadOrder($class);
+    
+    foreach ($loadOrder['before'] as $dependency) {
+      if (isset($this->m->$dependency)) {
+        throw new \Exception(tr('%1 must load before %2', $dependency, $module));
+      }
+      if (!isset($this->optionalDependencies[$module]))
+        $this->optionalDependencies[$module] = array();
+      $this->optionalDependencies[$module][] = $dependency;
+    }
+
+    foreach ($loadOrder['after'] as $dependency) {
+      if (!isset($this->optionalDependencies[$dependency]))
+        $this->optionalDependencies[$dependency] = array();
+      $this->optionalDependencies[$dependency][] = $module;
+    }
+  }
+  
+  public function load($module) {
+    if (!isset($this->m->$module)) {
+      $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
+      if (!isset($this->imports[$module]))
+        $this->import($module);
+      $class = $this->imports[$module];
+      if (isset($this->optionalDependencies[$module])) {
+        foreach ($this->optionalDependencies[$module] as $dependency) {
+          if (isset($this->imports[$dependency]))
+            $this->load($dependency);
+        }
+      }
+      Lib::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
+      $this->m->$module = new $class($this);
+      $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->m->$module));
+      $this->m->$module->afterLoad();
+      if (isset($this->waitingCalls[$module])) {
+        foreach ($this->waitingCalls[$module] as $tuple) {
+          list($method, $args) = $tuple;
+          call_user_func_array(array($this->m->$module, $method), $args);
+        }
+      }
+    }
+    return $this->m->$module;
   }
   
   /**
    * Get a module, or load it if not yet loaded (must be imported however).
    * @param string $name Name of module class.
    * @return LoadableModule Module object.
+   * @deprecated
    */
   public function getModule($name) {
     if (!isset($this->m->$name)) {
@@ -449,7 +505,7 @@ class App implements IEventSubject {
    */
   public function getModules($modules) {
     foreach ($modules as $name) {
-      $this->getModule($name);
+      $this->load($name);
     }
     return $this->m;
   }
@@ -577,7 +633,7 @@ class App implements IEventSubject {
    * 'production' or 'development'. Environments are stored in
    * 'app/config/environments'.
    */
-  public function run($environment = 'production') {
+  public function run($environment = 'production', $dasBoot = false) {
     $this->environment = $environment;
 
     if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
@@ -586,6 +642,17 @@ class App implements IEventSubject {
       echo $this->minPhpVersion . '. ';
       echo 'You are currently using version ' . phpversion() . '. ';
       echo 'You should update PHP or contact your hosting provider. ';
+      return;
+    }
+
+    // Error handling
+    ErrorReporting::setHandler(array($this, 'handleError'));
+    
+    if ($dasBoot) {
+      $boot = new Boot($this);
+      $this->triggerEvent('beforeBoot');
+      $boot->boot($environment);
+      $this->triggerEvent('afterBoot');
       return;
     }
 
@@ -631,9 +698,6 @@ class App implements IEventSubject {
 
     // I18n system
     I18n::setup($this->config['core'], $this->paths->languages);
-
-    // Error handling
-    ErrorReporting::setHandler(array($this, 'handleError'));
 
     // Import modules
     $this->triggerEvent('beforeImportModules');
