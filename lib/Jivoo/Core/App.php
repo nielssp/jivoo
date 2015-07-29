@@ -252,11 +252,6 @@ class App implements IEventSubject {
     
     // Persistent state storage
     $this->state = new StateMap($this->p('state', ''));
-    
-    if (php_sapi_name() == "cli") {
-      echo tr('%1 %2: CLI support not yet implemented', $this->name, $this->version);
-      exit;
-    }
   }
 
   /**
@@ -423,20 +418,20 @@ class App implements IEventSubject {
     $this->imports[$module] = $class;
     
     $loadOrder = LoadableModule::getLoadOrder($class);
-    
+
     foreach ($loadOrder['before'] as $dependency) {
       if (isset($this->m->$dependency)) {
-        throw new \Exception(tr('%1 must load before %2', $dependency, $module));
+        throw new \Exception(tr('%1 must load before %2', $module, $dependency));
       }
-      if (!isset($this->optionalDependencies[$module]))
-        $this->optionalDependencies[$module] = array();
-      $this->optionalDependencies[$module][] = $dependency;
-    }
-
-    foreach ($loadOrder['after'] as $dependency) {
       if (!isset($this->optionalDependencies[$dependency]))
         $this->optionalDependencies[$dependency] = array();
       $this->optionalDependencies[$dependency][] = $module;
+    }
+
+    foreach ($loadOrder['after'] as $dependency) {
+      if (!isset($this->optionalDependencies[$module]))
+        $this->optionalDependencies[$module] = array();
+      $this->optionalDependencies[$module][] = $dependency;
     }
   }
   
@@ -574,6 +569,10 @@ class App implements IEventSubject {
    * @param \Exception $exception The exception.
    */
   public function handleError(\Exception $exception) {
+    if ($this->isCli()) {
+      echo 'Exception: ' . $exception->getMessage();
+      $this->stop();
+    }
     if ($this->config['core']['createCrashReports']) {
       $file = $exception->getFile();
       $line = $exception->getLine();
@@ -647,12 +646,23 @@ class App implements IEventSubject {
 
     // Error handling
     ErrorReporting::setHandler(array($this, 'handleError'));
+
+    Logger::attachFile(
+      $this->p('log', $this->environment . '.log'),
+      $this->config['core']['logLevel']
+    );
+    register_shutdown_function(array('Jivoo\Core\Logger', 'saveAll'));
     
     if ($dasBoot) {
-      $boot = new Boot($this);
+      $class = $this->n('Boot');
+      if (!class_exists($class))
+        $class = 'Jivoo\Core\Boot';
+      $boot = new $class($this);
       $this->triggerEvent('beforeBoot');
       $boot->boot($environment);
       $this->triggerEvent('afterBoot');
+      $this->triggerEvent('afterLoadModules');
+      $this->triggerEvent('afterInit');
       return;
     }
 
@@ -690,14 +700,8 @@ class App implements IEventSubject {
     
     $this->config->defaults = $this->defaultConfig;
 
-    Logger::attachFile(
-      $this->p('log', $this->environment . '.log'),
-      $this->config['core']['logLevel']
-    );
-    register_shutdown_function(array('Jivoo\Core\Logger', 'saveAll'));
-
     // I18n system
-    I18n::setup($this->config['core'], $this->paths->languages);
+    I18n::setup($this->config['core'], $this->p('app', 'languages'));
 
     // Import modules
     $this->triggerEvent('beforeImportModules');
@@ -716,7 +720,7 @@ class App implements IEventSubject {
     // Load modules
     $this->triggerEvent('beforeLoadModules');
     foreach ($this->imports as $name => $module) {
-      $object = $this->getModule($name);
+      $object = $this->load($name);
     }
     $this->triggerEvent('afterLoadModules');
     

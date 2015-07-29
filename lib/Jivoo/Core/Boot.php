@@ -34,6 +34,11 @@ class Boot extends Module {
   }
   
   public function boot($environment) {
+    if ($this->app->isCli()) {
+      $this->cli();
+      return;
+    }
+    
     if (!in_array($environment, $this->environments))
       throw new \DomainException(tr('Undefined environment: %1', $environment));
     
@@ -65,11 +70,29 @@ class Boot extends Module {
         'showReference' => true
       )
     );
-    
-    $this->load('Routing');
+
+    I18n::setup($this->config['core'], $this->p('app', 'languages'));
+
+    $modules = $this->modules;
+    if (isset($this->app->manifest['modules']))
+      $modules = $this->app->manifest['modules'];
+
+    foreach ($modules as $module)
+      $this->import($module);
+
+    if (isset($this->app->manifest['listeners'])) {
+      foreach ($this->app->manifest['listeners'] as $listener) {
+        $listener = $this->app->n($listener);
+        Lib::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
+        $this->app->attachEventListener(new $listener($this->app));
+      }
+    }
+
+    foreach ($modules as $module)
+      $this->load($module);
   }
   
   protected function cli() {
-    
+    echo tr('%1 %2: CLI support not implemented', $this->app->name, $this->app->version);
   }
 }

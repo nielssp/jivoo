@@ -19,6 +19,11 @@ class Migrations extends LoadableModule {
   /**
    * {@inheritdoc}
    */
+  protected static $loadAfter = array('Setup');
+  
+  /**
+   * {@inheritdoc}
+   */
   protected $modules = array('Databases');
   
   /**
@@ -89,7 +94,7 @@ class Migrations extends LoadableModule {
     assume($db instanceof IMigratableDatabase);
     $this->migrationDirs[$name] = $migrationDir;
     $this->connections[$name] = $db;
-    if ($this->config['automigrate']) {
+    if ($this->config['automigrate'] and isset($this->m->Setup)) {
       if (!$this->m->Setup->isActive() and is_dir($this->migrationDirs[$name])) {
         $mtime = filemtime($this->migrationDirs[$name] . '/.');
         if (!isset($this->config['mtimes'][$name]) or $this->config['mtimes'][$name] != $mtime) {

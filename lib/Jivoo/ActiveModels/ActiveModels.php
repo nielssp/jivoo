@@ -13,7 +13,9 @@ use Jivoo\Routing\RenderEvent;
  * Active record/model system.
  */
 class ActiveModels extends LoadableModule {
-
+  /**
+   * {@inheritdoc}
+   */
   protected static $loadAfter = array('Migrations');
 
   /**
