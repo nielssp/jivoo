@@ -70,7 +70,16 @@ class Boot extends Module {
         'showReference' => true
       )
     );
-
+    
+    if (!isset($this->config['core']['timeZone'])) {
+      $defaultTimeZone = 'UTC';
+      try {
+        $defaultTimeZone = @date_default_timezone_get();
+      }
+      catch (\ErrorException $e) { }
+      $this->config['core']['timeZone'] = $defaultTimeZone;
+    }
+    
     I18n::setup($this->config['core'], $this->p('app', 'languages'));
 
     $modules = $this->modules;
