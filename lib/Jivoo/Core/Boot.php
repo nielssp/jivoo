@@ -79,8 +79,12 @@ class Boot extends Module {
       catch (\ErrorException $e) { }
       $this->config['core']['timeZone'] = $defaultTimeZone;
     }
-    
-    I18n::setup($this->config['core'], $this->p('app', 'languages'));
+
+    if (isset($this->config['core']['language']))
+      I18n::setLanguage($this->config['core']['language']);
+
+    I18n::loadFrom($this->p('Core', 'languages'));
+    I18n::loadFrom($this->p('app', 'languages'));
 
     $modules = $this->modules;
     if (isset($this->app->manifest['modules']))

@@ -12,54 +12,78 @@ use Jivoo\Core\Store\Document;
  * @see Localization
  */
 class I18n {
-  /**
-   * @var Config Configuration.
-   */
-  private static $config = null;
-
-  /**
-   * @var Localization Current localization.
-   */
-  private static $language = null;
   
   /**
-   * Configure I18n system with a configuration.
-   * @param Document $config Configuration document.
-   * @param string $location Path of language directory.
-   * @throws I18nException If language file does not return an instance of
-   * {@see Localization}.
+   * @var string
    */
-  public static function setup(Document $config, $location) {
-    self::$config = $config;
-    if (!date_default_timezone_set(self::$config['timeZone'])) {
-      date_default_timezone_set('UTC');
+  private static $language = 'en';
+  
+  /**
+   * @var Localization
+   */
+  private static $localization = null;
+  
+  /**
+   * Set current language.
+   * @param string $language IETF language tag, e.g. 'en' or 'en-US'.
+   */
+  public static function setLanguage($language) {
+    self::$language = $language;
+  }
+
+
+  /**
+   * Get language code of current language.
+   * @return string A language code, e.g. 'en', 'en-GB', 'da-DK', etc.
+   */
+  public static function getLanguage() {
+    return self::$language;
+  }
+  
+  /**
+   * Get current localization object.
+   * @return Localization Localization object.
+   */
+  public static function getLocalization() {
+    if (!isset(self::$localization))
+      self::$localization = new Localization();
+    return self::$localization;
+  }
+  
+  /**
+   * Load a localization.
+   * @param bool $extend Whether to extend the existing localization object
+   * (true) or replace it (false).
+   */
+  public static function load(Localization $localization, $extend = true) {
+    self::getLocalization()->extend($localization);
+  }
+
+  /**
+   * Load a localization for the current language from a directory.
+   * @param string $dir Directory path.
+   * @param bool $extend Whether to extend the existing localization object
+   * (true) or replace it (false).
+   * @return bool True if language file found, false otherwise.
+   */
+  public static function loadFrom($dir, $extend = true) {
+    $file = $dir . '/' . self::$language . '.lng.php';
+    if (!file_exists($file)) {
+      Logger::notice(tr('Language not found: %1', $file));
+      return false;
     }
-    if (isset(self::$config['language'])) {
-      $languageFile = $location . '/' . self::$config['language'] . '.lng.php';
-      if (file_exists($languageFile)) {
-        self::$language = include $languageFile;
-        if (!(self::$language instanceof Localization)) {
-          self::$language = null;
-          throw new I18nException(tr('Language file must return an instance of Localization.'));
-        }
-        if (isset(self::$config['dateFormat']))
-          self::$language->dateFormat = self::$config['dateFormat'];
-        if (isset(self::$config['timeFormat']))
-          self::$language->timeFormat = self::$config['timeFormat'];
-      }
-    }
-    if (!isset(self::$language))
-      self::$language = new Localization();
+    $localization = include $file;
+    self::load($localization, $extend);
+    return true;
   }
   
   /**
    * Get language code of current language.
    * @return string A language code, e.g. 'en', 'en-GB', 'da-DK', etc.
+   * @deprecated
    */
   public static function getLanguageCode() {
-    if (isset(self::$config['language']))
-      return self::$config['language'];
-    return 'en';
+    return self::$language;
   }
 
   /**
@@ -69,11 +93,8 @@ class I18n {
    * @return string Translated string.
    */
   public static function get($message) {
-    if (!isset(self::$language)) {
-      self::$language = new Localization();
-    }
     $args = func_get_args();
-    return call_user_func_array(array(self::$language, 'get'), $args);
+    return call_user_func_array(array(self::getLocalization(), 'get'), $args);
   }
 
   /**
@@ -91,11 +112,8 @@ class I18n {
    * @return Translated string.
    */
   public static function getNumeric($message, $singular, $number) {
-    if (!isset(self::$language)) {
-      self::$language = new Localization();
-    }
     $args = func_get_args();
-    return call_user_func_array(array(self::$language, 'getNumeric'), $args);
+    return call_user_func_array(array(self::getLocalization(), 'getNumeric'), $args);
   }
 
   /**
@@ -103,7 +121,7 @@ class I18n {
    * @return string Format string used with date().
    */
   public static function dateFormat() {
-    return self::$language->dateFormat;
+    return self::getLocalization()->dateFormat;
   }
 
   /**
@@ -111,7 +129,7 @@ class I18n {
    * @return string Format string used with date().
    */
   public static function timeFormat() {
-    return self::$language->timeFormat;
+    return self::getLocalization()->timeFormat;
   }
 
   /**
@@ -119,7 +137,7 @@ class I18n {
    * @return string Format string used with date().
    */
   public static function longFormat() {
-    return self::$language->longFormat;
+    return self::getLocalization()->longFormat;
   }
 
   /**
@@ -137,7 +155,7 @@ class I18n {
    * @return string Formatted date and time.
    */
   public static function shortDate($timestamp = null) {
-    $l = self::$language;
+    $l = self::getLocalization();
     $cYear = date('Y');
     $date = date('Y-m-d', $timestamp);
     if (date('Y-m-d') == $date) {

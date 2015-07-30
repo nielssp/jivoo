@@ -701,7 +701,11 @@ class App implements IEventSubject {
     $this->config->defaults = $this->defaultConfig;
 
     // I18n system
-    I18n::setup($this->config['core'], $this->p('app', 'languages'));
+    if (isset($this->config['core']['language']))
+      I18n::setLanguage($this->config['core']['language']);
+
+    I18n::loadFrom($this->p('Core', 'languages'));
+    I18n::loadFrom($this->p('app', 'languages'));
 
     // Import modules
     $this->triggerEvent('beforeImportModules');
