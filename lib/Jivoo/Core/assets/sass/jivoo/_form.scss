@@ -1,11 +1,4 @@
-$inputs: 'input[type=text],
-input[type=email],
-input[type=password],
-input[type=date],
-input[type=time],
-input[type=datetime],
-textarea,
-select';
+$inputs: 'input[type=text], input[type=email], input[type=password], input[type=date], input[type=time], input[type=datetime], textarea, select';
 
 @mixin field-color($color) {
   & > label:first-child,
