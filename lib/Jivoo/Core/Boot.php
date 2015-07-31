@@ -107,6 +107,7 @@ class Boot extends Module {
   }
   
   protected function cli() {
+    // TODO: Load subset of modules (e.g. not Routing?) 
     $shell = new Shell($this->app);
     $shell->parseArguments();
     $shell->run();

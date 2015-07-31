@@ -19,15 +19,29 @@ class Shell extends Module {
   
   private $commands = array();
   
+  private $options = array();
+  
+  private $availableOptions = array();
+  
+  private $shortOptions = array();
+  
   public function __construct(App $app) {
     parent::__construct($app);
     $this->addCommand('version', array($this, 'showVersion'));
     $this->addCommand('help', array($this, 'showHelp'));
     $this->addCommand('trace', array($this, 'showTrace'));
+    $this->addOption('help', 'h');
+    $this->addOption('trace', 't');
   }
   
   public function addCommand($command, $function) {
     $this->commands[$command] = $function;
+  }
+  
+  public function addOption($option, $short = null, $hasParameter = false) {
+    $this->availableOptions[$option] = $hasParameter;
+    if (isset($short))
+      $this->shortOptions[$short] = $option;
   }
   
   public function parseArguments() {
@@ -35,24 +49,65 @@ class Shell extends Module {
     $this->name = array_shift($argv);
     
     $command = array();
+
+    $option = null;
     
     foreach ($argv as $arg) {
       if (preg_match('/^--(.*)$/', $arg, $matches) === 1) {
-        $this->put('unknown option: ' . $matches[1]);
-        $this->stop();
+        $o = $matches[1];
+        if ($o == '')
+          continue;
+        if (!isset($this->availableOptions[$o])) {
+          $this->put(tr('Unknown option: %1', '--' . $o));
+          $this->stop();
+        }
+        if ($this->availableOptions[$o])
+          $option = $o;
+        else
+          $this->options[$o] = true;
       }
-      else if (preg_match('/^-(.*)$/', $arg, $matches) === 1) {
-        $this->put('unknown option: ' . $matches[1]);
-        $this->stop();
+      else if (preg_match('/^-(.+)$/', $arg, $matches) === 1) {
+        $options = $matches[1];
+        while ($options != '') {
+          $o = $options[0];
+          if (!isset($this->shortOptions[$o])) {
+            $this->put(tr('Unknown option: %1', '-' . $o));
+            $this->stop();
+          }
+          $options = substr($options, 1);
+          $o = $this->shortOptions[$o];
+          if ($this->availableOptions[$o]) {
+            if ($options == '')
+              $option = $o;
+            else 
+              $this->options[$o] = $options;
+            break;
+          }
+          else {
+            $this->options[$o] = true;
+          }
+        }
+      }
+      else if (isset($option)) {
+        $this->options[$option] = $arg;
+        $option = null;
       }
       else {
         $command[] = $arg;
       }
     }
+    if (isset($this->options['help'])) {
+      $this->showHelp();
+      exit;
+    }
     if (count($command)) {
       $this->evalCommand($command);
       $this->stop();
     }
+  }
+  
+  public function hasOption($option) {
+    return isset($this->options[$option]);
   }
   
   public function evalCommand($command) {
@@ -120,9 +175,15 @@ class Shell extends Module {
   
   public function handleException(\Exception $exception) {
     $this->lastError = $exception;
-    $this->put(tr('Uncaught %1: %2', get_class($exception), $exception->getMessage()));
-    $this->put();
-    $this->put(tr('Call "trace" to show stack trace'));
+    if ($this->hasOption('trace')) {
+      $this->put(tr('Uncaught exception'));
+      $this->dumpException($exception);
+    }
+    else {
+      $this->put(tr('Uncaught %1: %2', get_class($exception), $exception->getMessage()));
+      $this->put();
+      $this->put(tr('Call "trace" to show stack trace'));
+    }
   }
   
   public function dump($value) {
