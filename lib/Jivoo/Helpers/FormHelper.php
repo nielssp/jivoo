@@ -88,9 +88,9 @@ class FormHelper extends Helper {
       $form->append($this->hiddenToken());
     
     if (isset($specialMethod)) {
-      $form->append($this->html->create('input'), array(
+      $form->append($this->Html->create('input', array(
         'type=hidden name=method', 'value' => $specialMethod
-      ));
+      )));
     }
     if ($form['method'] == 'post')
       $this->data = $this->request->data;

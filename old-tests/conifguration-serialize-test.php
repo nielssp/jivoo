@@ -1,4 +1,6 @@
 <?php
+use Jivoo\Core\Store\Config;
+use Jivoo\Core\Store\PhpStore;
 function var_import($data) {
   return eval('return ' . $data . ';');
 }
@@ -51,18 +53,12 @@ function eval_config() {
   return eval($content);
 }
 
-function eval_config2() {
-  $content = file_get_contents('../app/jivoo/app.php');
-  $content = str_replace('<?php', '', $content);
-  return eval($content);
-}
-
 function decode_config() {
   $content = file_get_contents('./config/test-config.json');
   return json_decode($content, true);
 }
 function decode_config2() {
-  $content = file_get_contents('../app/jivoo/app.json');
+  $content = file_get_contents('../../jivoocms/app/app.json');
   return json_decode($content, true);
 }
 
@@ -82,23 +78,17 @@ function unserialize_config2() {
   return include 'config/cached2.php';
 }
 
-function decode_yaml_config() {
-  return spyc_load_file('./config/test-config.yaml');
-}
-
 function new_appconfig() {
-  $config = new AppConfig('./config/test-config.php');
+  $config = new Config(new PhpStore('./config/test-config.php'));
   return $config;
 }
 
 include '../lib/Jivoo/Core/bootstrap.php';
 include '../../LAB/LabTest.php';
 
-include './spyc-master/Spyc.php';
 
-
-$config = new AppConfig('../user/jivoo/config.php');
-$testData = $config->getArray();
+$config = new Config(new PhpStore('../../jivoocms/user/config.php'));
+$testData = $config->toArray();
 
 $rounds = 50;
 
@@ -117,8 +107,6 @@ $file = fopen("./config/test-config.php", "w");
 fwrite($file, "<?php\nreturn " . $php_encoded . ";\n");
 fclose($file);
 $test->dumpResult();
-$yaml_encoded = $test->testFunction($rounds, 'spyc_dump', $testData);
-$test->dumpResult();
 $file = fopen('./config/test-config.yaml', 'w');
 fwrite($file, $yaml_encoded);
 fclose($file);
@@ -132,7 +120,6 @@ $test->testFunction($rounds, 'new_appconfig');
 $r1 = $test->testFunction($rounds, 'include_config');
 $r2 = $test->testFunction($rounds, 'eval_config');
 $r3 = $test->testFunction($rounds, 'decode_config');
-$r4 = $test->testFunction($rounds, 'decode_yaml_config');
 $test->testFunction($rounds, 'include_config2');
 $test->testFunction($rounds, 'eval_config2');
 $test->testFunction($rounds, 'decode_config2');
@@ -142,7 +129,6 @@ $test->testFunction($rounds, 'serialize_config2', $testData);
 $test->testFunction($rounds, 'unserialize_config2');
 $test->dump($r1 == $r2, 'r1 == r2');
 $test->dump($r2 == $r3, 'r2 == r3');
-$test->dump($r3 == $r4, 'r3 == r4');
 
 $test->report();
 
