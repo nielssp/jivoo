@@ -5,6 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\Console\Shell;
 /**
  * The default application initialization class. Extend this class and override
  * the {@see boot} method to customize the initialization process. The defeault
@@ -106,6 +107,9 @@ class Boot extends Module {
   }
   
   protected function cli() {
-    echo tr('%1 %2: CLI support not implemented', $this->app->name, $this->app->version);
+    $shell = new Shell($this->app);
+    $shell->parseArguments();
+    $shell->run();
+    echo tr('%1 %2: CLI support disabled', $this->app->name, $this->app->version);
   }
 }
