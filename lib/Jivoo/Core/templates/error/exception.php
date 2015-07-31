@@ -76,6 +76,9 @@ if (isset($exception)) {
 <dt><?php echo tr('Server API'); ?></dt>
 <dd><?php echo php_sapi_name(); ?></dd>
 
+<dt><?php echo tr('Web server'); ?></dt>
+<dd><?php echo $_SERVER['SERVER_SOFTWARE']; ?></dd>
+
 <dt><?php echo tr('Operating system'); ?></dt>
 <dd><?php echo php_uname(); ?></dd>
 </dl>
