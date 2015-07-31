@@ -23,9 +23,9 @@ echo '>';
 ?>
 <?php if (isset($item->icon)): ?>
 <span class="icon"><?php echo $Icon->icon($item->icon); ?></span><?php endif; ?>
-<span class="label"><?php echo $item->label; ?></span>
+<span class="label"><?php echo h($item->label); ?></span>
 <?php if (isset($item->badge)): ?>
-<span class="badge"><?php echo $item->badge; ?></span>
+<span class="badge"><?php echo h($item->badge); ?></span>
 <?php endif; ?>
 </a>
 <?php echo $submenu; ?>

@@ -26,8 +26,9 @@ class PhpStore extends FileStore {
    * {@inheritdoc}
    */
   protected function decode($content) {
-    $content = str_replace('<?php', '', $content);
-    return eval($content);
+    if (substr($content, 0, 5) !== '<?php')
+      throw new StoreReadFailedException(tr('Invalid file format'));
+    return eval(substr($content, 5));
   }
   
   /**

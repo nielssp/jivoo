@@ -129,6 +129,7 @@ abstract class FileStore implements IStore {
    * Decode file content.
    * @param string $content File content.
    * @return array Data.
+   * @throws StoreReadFailedException If data format is invalid.
    */
   protected abstract function decode($content);
 

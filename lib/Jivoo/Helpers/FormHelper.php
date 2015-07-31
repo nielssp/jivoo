@@ -808,7 +808,7 @@ class FormHelper extends Helper {
     ), $attributes));
     
     if ($elem->hasProp('value'))
-      $elem->html($elem['value']);
+      $elem->html(h($elem['value']));
 
     if ($elem->hasProp('size')) {
       $size = explode('x', $elem['size']);
