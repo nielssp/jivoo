@@ -655,7 +655,7 @@ class App implements IEventSubject {
     
     if ($dasBoot) {
       $class = $this->n('Boot');
-      if (!class_exists($class))
+      if (!Lib::classExists($class))
         $class = 'Jivoo\Core\Boot';
       $boot = new $class($this);
       $this->triggerEvent('beforeBoot');
