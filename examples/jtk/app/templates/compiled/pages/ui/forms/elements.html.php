@@ -178,11 +178,12 @@ Radio</label></li>
 <input type="password" placeholder="Password" />
 </div>
 <div class="field">
+<label>
 <input type="checkbox" />
-<label>Remember</label>
+        Remember</label>
+<input type="submit" />
 </div>
 <div class="buttons">
-<input type="submit" />
 </div>
 </form></div>
 <div class="block"><div class=" block-header"><h2>Input sizes</h2></div><div class="block-content">

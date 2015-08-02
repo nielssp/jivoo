@@ -72,6 +72,7 @@ class Config extends Document {
     $this->store->open(true);
     $this->store->write($this->data);
     $this->store->close();
+    $this->updated = false;
     return true;
   }
   
