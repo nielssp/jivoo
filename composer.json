@@ -15,7 +15,8 @@
     "email": "jivoo@nielssp.dk"
   },
   "autoload": {
-      "psr-4": {"Jivoo\\": "lib/Jivoo/"}
+      "psr-4": {"Jivoo\\": "lib/Jivoo/"},
+      "files": ["lib/Jivoo/Core/bootstrap.php"]
   },
   "require-dev": {
     "codeception/codeception": "*"
