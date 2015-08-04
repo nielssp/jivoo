@@ -697,9 +697,11 @@ class FormHelper extends Helper {
    * @throws FormHelperException If inappropriate location of element.
    */
   public function optgroup($label, $attributes = array()) {
-    if ($this->peek()->tag != 'select')
+    $select = $this->peek();
+    if ($select->tag != 'select')
       throw new FormHelperException('Must be in a select-field before using optgroup.');
     $elem = $this->Html->begin('optgroup', $attributes);
+    $elem->prop('value', $select->prop('value'));
     $elem->attr('label', $label);
   }
 
@@ -785,7 +787,7 @@ class FormHelper extends Helper {
     $elem = $this->Html->create('option', $attributes);
     $elem->attr('value', $value);
     $select = $this->peek();
-    if ($select->tag == 'select' and $value == $select->prop('value'))
+    if (($select->tag == 'select' or $select->tag == 'optgroup') and $value == $select->prop('value'))
       $elem->attr('selected', true);
     $elem->html(h($text));
     return $elem->toString();

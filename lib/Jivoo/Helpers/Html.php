@@ -232,7 +232,7 @@ class Html implements \ArrayAccess {
   public function toString() {
     $output = '<' . $this->tag;
     foreach ($this->attr() as $name => $value) {
-      if (is_string($value) or $value === true) {
+      if (is_scalar($value) and $value !== false) {
         $output .= ' ' . $name;
         if ($value !== true)
           $output .= '="' . h($value) . '"';
