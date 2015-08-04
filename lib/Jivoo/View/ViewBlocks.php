@@ -35,7 +35,16 @@ class ViewBlocks {
    */
   public function block($block, $default = '') {
     if (isset($this->blocks[$block])) {
-      return $this->blocks[$block];
+      $output = '';
+      foreach ($this->blocks[$block] as $content) {
+        if (is_string($content)) {
+          $output .= $content;
+        }
+        else {
+          $output .= $content();
+        }
+      }
+      return $output;
     }
     return $default;
   }
@@ -55,7 +64,7 @@ class ViewBlocks {
    * @param string $value Content.
    */
   public function assign($block, $value) {
-    $this->blocks[$block] = $value;
+    $this->blocks[$block] = array($value);
   }
   
   /**
@@ -65,8 +74,8 @@ class ViewBlocks {
    */
   public function append($block, $value) {
     if (!isset($this->blocks[$block]))
-      $this->blocks[$block] = '';
-    $this->blocks[$block] .= $value;
+      $this->blocks[$block] = array();
+    $this->blocks[$block][] = $value;
   }
 
   /**
@@ -76,8 +85,8 @@ class ViewBlocks {
    */
   public function prepend($block, $value) {
     if (!isset($this->blocks[$block]))
-      $this->blocks[$block] = '';
-    $this->blocks[$block] = $value . $this->blocks[$block];
+      $this->blocks[$block] = array();
+    $this->blocks[$block] = array_merge($this->blocks[$block], array($value));
   }
   
   /**

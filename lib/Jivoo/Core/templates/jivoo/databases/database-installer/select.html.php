@@ -1,6 +1,6 @@
 <?php $this->layout('jivoo/setup/layout.html'); ?>
 
-<?php echo $Form->form(null); ?>
+<?php $Form->form(null); ?>
 
 <p><?php echo tr('Please select your desired database driver from the list below.'); ?></p>
 
@@ -37,3 +37,4 @@ echo tn(
 </tbody>
 </table>
 
+<?php $this->data->form = $Form->end(); ?>

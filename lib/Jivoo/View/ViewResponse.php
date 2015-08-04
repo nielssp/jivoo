@@ -83,6 +83,11 @@ class ViewResponse extends Response {
    * {@inheritdoc}
    */
   public function getBody() {
-    return $this->view->render($this->template, $this->data, $this->withLayout);
+    $obLevel = ob_get_level();
+    $body = $this->view->render($this->template, $this->data, $this->withLayout);
+    if (ob_get_level() > $obLevel) {
+      throw new \Exception(tr('Ouput buffer not closed in template: %1.', $this->template));
+    }
+    return $body;
   }
 }

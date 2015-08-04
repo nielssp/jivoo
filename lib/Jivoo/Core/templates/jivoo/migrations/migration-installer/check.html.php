@@ -1,7 +1,7 @@
 <?php $this->layout('jivoo/setup/layout.html'); ?>
 
 
-<?php echo $Form->form(null); ?>
+<?php $Form->form(null); ?>
 
 
 <?php if (!isset($existing)): ?>
@@ -11,7 +11,7 @@
 </p>
 
 <p>
-<?php echo $Form->submit(tr('Migrate existing tables'), array('name' => 'migrate')); ?>
+<?php echo $Form->submit(tr('Migrate existing tables'), 'name=migrate'); ?>
 </p>
 
 <p>
@@ -27,5 +27,7 @@
 <?php endif; ?>
 
 <p>
-<?php echo $Form->submit(tr('Clean install'), array('name' => 'clean')); ?>
+<?php echo $Form->submit(tr('Clean install'), 'name=clean'); ?>
 </p>
+
+<?php $this->data->form = $Form->end(); ?>

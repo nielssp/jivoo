@@ -2,7 +2,7 @@
 <?php echo tr('Choose a name for you application and select the modules that you want to use.')?>
 </p>
 
-<?php echo $Form->formFor($configForm, null); ?>
+<?php $Form->formFor($configForm, null); ?>
 
 <div class="field">
 <?php echo $Form->label('name'); ?>
@@ -54,3 +54,5 @@ Assets, Helpers, Models, Routing, View
 <label>Development</label>
 <?php echo $Form->checkboxAndLabel('modules', 'Console'); ?>
 </div>
+
+<?php $this->data->form = $Form->end(); ?>

@@ -1,6 +1,6 @@
 <?php $this->layout('jivoo/setup/layout.html'); ?>
 
-<?php echo $Form->formFor($form, null); ?>
+<?php echo $Form->formFor($driverForm, null); ?>
 
 <p><?php echo tr(
   'You have selected the %1 database driver.',
@@ -9,28 +9,21 @@
  <?php echo tr('The following information is required.'); ?>
 </p>
 
-<?php foreach ($form->getFields() as $field) : ?>
-<div class="field<?php echo $Form->ifRequired($field, ' field-required'); ?>">
-<?php echo $Form->label($field); ?>
-<?php if ($field == 'password'): ?>
-<?php echo $Form->password($field); ?>
-<?php else: ?>
-<?php echo $Form->text($field); ?>
-<?php endif; ?>
-<?php if ($Form->isValid($field)) : ?> 
+<?php foreach ($driverForm->getFields() as $field) : ?>
 <?php
 switch ($field) {
   case 'filename':
-    echo tr('The location of the database.');
+    $description = tr('The location of the database.');
     break;
   case 'tablePrefix':
-    echo tr(
+    $description = tr(
       'Can be used to prevent conflict with other tables in the database.');
     break;
+  default:
+    $description = null;
 }
 ?>
-<?php else : ?>
-<?php echo $Form->error($field); ?>
-<?php endif; ?>
-</div>
+<?php echo $Form->field($field, array('description' => $description)); ?>
 <?php endforeach; ?>
+
+<?php $this->data->form = $Form->end(); ?>

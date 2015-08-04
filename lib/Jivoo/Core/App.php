@@ -503,6 +503,7 @@ class App implements IEventSubject {
    * Load several modules.
    * @param string[] $modules List of module names.
    * @return ModuleMap A map of all loaded modules.
+   * @deprecated
    */
   public function getModules($modules) {
     foreach ($modules as $name) {
@@ -641,7 +642,7 @@ class App implements IEventSubject {
    * 'production' or 'development'. Environments are stored in
    * 'app/config/environments'.
    */
-  public function run($environment = 'production', $dasBoot = false) {
+  public function run($environment = 'production') {
     $this->environment = $environment;
 
     if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
@@ -662,82 +663,15 @@ class App implements IEventSubject {
     );
     register_shutdown_function(array('Jivoo\Core\Logger', 'saveAll'));
     
-    if ($dasBoot) {
-      $class = $this->n('Boot');
-      if (!Lib::classExists($class))
-        $class = 'Jivoo\Core\Boot';
-      $boot = new $class($this);
-      $this->triggerEvent('beforeBoot');
-      $boot->boot($environment);
-      $this->triggerEvent('afterBoot');
-      $this->triggerEvent('afterLoadModules');
-      $this->triggerEvent('afterInit');
-      return;
-    }
-
-    $environmentConfigFile = $this->p('app', 'config/environments/' . $environment . '.php');
-    if (file_exists($environmentConfigFile)) {
-      $this->config->override = include $environmentConfigFile;
-    }
-    else {
-      if (isset($this->defaultEnvironments[$environment])) {
-        $this->config->override = $this->defaultEnvironments[$environment];
-      }
-      Logger::notice(
-        'Configuration file for environment "' . $environment . '" not found'
-      );
-    }
-
-    $this->config->defaults = array(
-      'core' => array(
-        'language' => $this->manifest['defaultLanguage'],
-        'showExceptions' => false,
-        'logLevel' => Logger::ALL,
-        'createCrashReports' => true,
-        'showReference' => true
-      ),
-    );
-    
-    if (!isset($this->config['core']['timeZone'])) {
-      $defaultTimeZone = 'UTC';
-      try {
-        $defaultTimeZone = @date_default_timezone_get();
-      }
-      catch (\ErrorException $e) { }
-      $this->config['core']['timeZone'] = $defaultTimeZone;
-    }
-    
-    $this->config->defaults = $this->defaultConfig;
-
-    // I18n system
-    if (isset($this->config['core']['language']))
-      I18n::setLanguage($this->config['core']['language']);
-
-    I18n::loadFrom($this->p('Core', 'languages'));
-    I18n::loadFrom($this->p('app', 'languages'));
-
-    // Import modules
-    $this->triggerEvent('beforeImportModules');
-    foreach ($this->modules as $module) {
-      $this->import($module);
-    }
-    $this->triggerEvent('afterImportModules');
-    
-    // Load application listeners
-    foreach ($this->listenerNames as $listener) {
-      $listener = $this->n($listener);
-      Lib::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
-      $this->attachEventListener(new $listener($this));
-    }
-    
-    // Load modules
-    $this->triggerEvent('beforeLoadModules');
-    foreach ($this->imports as $name => $module) {
-      $object = $this->load($name);
-    }
-    $this->triggerEvent('afterLoadModules');
-    
-    $this->triggerEvent('afterInit');
+    $class = $this->n('Boot');
+    if (!Lib::classExists($class))
+      $class = 'Jivoo\Core\Boot';
+    $boot = new $class($this);
+    $this->triggerEvent('beforeBoot');
+    $boot->boot($environment);
+    $this->triggerEvent('afterBoot');
+    $this->triggerEvent('afterLoadModules'); // TODO: legacy event
+    $this->triggerEvent('afterInit'); // TODO: legacy event
     
     Logger::warning(tr('Application not stopped'));
   }

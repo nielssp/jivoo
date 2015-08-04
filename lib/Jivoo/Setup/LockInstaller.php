@@ -66,7 +66,7 @@ class LockInstaller extends InstallerSnippet {
         }
       }
     }
-    $this->viewData['form'] = $form;
+    $this->viewData['user'] = $form;
     return $this->render();
   }
 }

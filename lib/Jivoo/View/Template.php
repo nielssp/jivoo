@@ -80,11 +80,17 @@ class Template {
   private $view;
   
   /**
+   * @var ViewData View data.
+   */
+  protected $data;
+  
+  /**
    * Construct template handler.
    * @param View $view The view.
    */
   public function __construct(View $view) {
     $this->view = $view;
+    $this->data = $view->data;
   }
   
   /**

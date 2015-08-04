@@ -49,30 +49,34 @@ $this->import('jivoo/core.css');
 </pre>
 
 <?php
-if (!$Form->isOpen())
-  echo $Form->form(null);
+if (!isset($form)) {
+  $Form->form(null);
+  $form = $Form->end(); 
+}
 ?>
 
-<div class="install-buttons">
+<?php $Html->begin('div', 'class=install-buttons'); ?>
+
 <?php
 if (isset($enableNext)) {
   if ($enableNext)
-    echo $Form->submit(tr('Next'), array('name' => 'next', 'class' => 'primary'));
+    echo $Form->submit(tr('Next'), 'class=primary name=next');
   else
-    echo $Form->submit(tr('Next'), array('disabled' => 'disabled', 'class' => 'primary'));
+    echo $Form->submit(tr('Next'), 'class=primary disabled');
 }
 ?>
 <?php
 if (isset($enableBack)) {
   if ($enableBack)
-    echo $Form->submit(tr('Back'), array('name' => 'back'));
+    echo $Form->submit(tr('Back'), 'name=back');
   else
-    echo $Form->submit(tr('Back'), array('disabled' => 'disabled'));
+    echo $Form->submit(tr('Back'), 'disabled');
 }
 ?>
-</div>
 
-<?php echo $Form->end(); ?>
+<?php $form->append($Html->end()); ?>
+
+<?php echo $form; ?>
 
 </div>
 

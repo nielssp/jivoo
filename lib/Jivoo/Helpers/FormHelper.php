@@ -120,7 +120,7 @@ class FormHelper extends Helper {
       'name' => $this->model->getName(),
     ), $attributes);
     $this->errors = $this->record->getErrors();
-    return $this->form($route, $attributes);
+    $this->form($route, $attributes);
   }
 
   /**
@@ -836,7 +836,7 @@ class FormHelper extends Helper {
   public function submit($label, $attributes = array()) {
     $button = $this->Html->create('input', 'type=submit');
     $button->attr('value', $label);
-    $button->attr($attributes);
+    $button->attr(Html::readAttributes($attributes));
     return $button->toString();
   }
   
