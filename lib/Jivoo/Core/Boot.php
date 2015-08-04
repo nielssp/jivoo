@@ -80,9 +80,12 @@ class Boot extends Module {
       catch (\ErrorException $e) { }
       $this->config['core']['timeZone'] = $defaultTimeZone;
     }
+    if (!date_default_timezone_set($this->config['core']['timeZone']))
+      date_default_timezone_set('UTC');
 
     if (isset($this->config['core']['language']))
       I18n::setLanguage($this->config['core']['language']);
+    
 
     I18n::loadFrom($this->p('Core', 'languages'));
     I18n::loadFrom($this->p('app', 'languages'));

@@ -383,6 +383,7 @@ class App implements IEventSubject {
   /**
    * Add a module to the module load list.
    * @param string $name Module name.
+   * @deprecated
    */
   public function addModule($name) {
     $this->modules[] = $name;
@@ -391,6 +392,7 @@ class App implements IEventSubject {
   /**
    * Stop a module from loading.
    * @param string $name Module name.
+   * @deprecated
    */
   public function removeModule($name) {
     $this->modules = array_diff($this->modules, array($name));
@@ -399,6 +401,7 @@ class App implements IEventSubject {
   /**
    * Import module.
    * @param string $module Module name.
+   * @deprecated
    */
   public function import($module) {
     if (strpos($module, '\\') === false) {
@@ -435,6 +438,9 @@ class App implements IEventSubject {
     }
   }
   
+  /**
+   * @deprecated
+   */
   public function load($module) {
     if (!isset($this->m->$module)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
@@ -509,6 +515,7 @@ class App implements IEventSubject {
    * Whether or not a module has been loaded.
    * @param string $name Module name.
    * @return bool True if loaded, false otherwise.
+   * @deprecated
    */
   public function hasModule($name) {
     return isset($this->m->$name);
@@ -518,6 +525,7 @@ class App implements IEventSubject {
    * Whether or not a module will be loaded.
    * @param string $name Module name.
    * @return bool True if on import list, false otherwise.
+   * @deprecated
    */
   public function hasImport($name) {
     return isset($this->imports[$name]);
@@ -530,6 +538,7 @@ class App implements IEventSubject {
    * @param string $method Method name.
    * @param mixed $parameters,... Paremeters to method.
    * @return mixed|null Returned value, or null if module not yet loaded.
+   * @deprecated
    */
   public function call($module, $method) {
     $args = func_get_args();

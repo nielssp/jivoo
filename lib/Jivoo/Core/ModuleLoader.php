@@ -6,7 +6,7 @@
 namespace Jivoo\Core;
 
 /**
- * Loads and keeps track of Jivoo modules.
+ * Loads and keeps track of Jivoo modules (subclasses of {@see LoadableModule}).
  * @property-read \Jivoo\AccessControl\AccessControl $AccessControl
  * @property-read \Jivoo\ActiveModels\ActiveModels $ActiveModels
  * @property-read \Jivoo\Assets\Assets $Assets
@@ -27,14 +27,14 @@ namespace Jivoo\Core;
  */
 class ModuleLoader {
   /**
-   * $var App
-   */
-  private $app;
-  
-  /**
    * @var LoadableModule[]
    */
   private $modules = array();
+
+  /**
+   * @var ObjectMacro[]
+   */
+  private $lazyModules = array();
   
   /**
    * @var string[]
@@ -52,14 +52,6 @@ class ModuleLoader {
   private $after = array();
   
   /**
-   * Construct module loader.
-   * @param App $app Application.
-   */
-  public function __construct(App $app) {
-    $this->app = $app;
-  }
-  
-  /**
    * Load a module.
    * @param string $module Module name.
    * @return LoadableModule Module.
@@ -70,11 +62,26 @@ class ModuleLoader {
   
   /**
    * Whether a module has been loaded.
-   * @param strin $module Module name.
+   * @param string $module Module name.
    * @return bool True if module is loaded.
    */
   public function __isset($module) {
     return isset($this->modules[$module]);
+  }
+  
+  /**
+   * Get a lazy instance of a module if the module has not already been loaded.
+   * The lazy instance will record uses of setters and methods.
+   * @param string $module Module name.
+   * @return ObjectMacro|LoadableModule A lazy module (see {@see ObjectMacro})
+   * or a module if already loaded.
+   */
+  public function lazy($module) {
+    if (isset($this->modules[$module]))
+      return $this->modules[$module];
+    if (!isset($this->lazyModules[$module]))
+      $this->lazyModules[$module] = new ObjectMacro();
+    return $this->lazyModules[$module];
   }
   
   /**
@@ -97,6 +104,13 @@ class ModuleLoader {
    * @param string $module Module name.
    */
   public function import($module) {
+    if (is_array($module)) {
+      foreach ($module as $m)
+        $this->import($m);
+      return;
+    }
+    if (isset($this->classes[$module]))
+      return;
     if (strpos($module, '\\') === false) {
       $class = 'Jivoo\\' . $module . '\\' . $module;
       $pathName = $module;
@@ -110,7 +124,6 @@ class ModuleLoader {
       else
         $pathName = $class;
     }
-    $this->app->paths->$pathName = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $class));
     $this->classes[$module] = $class;
     
     $loadOrder = LoadableModule::getLoadOrder($class);
@@ -128,6 +141,12 @@ class ModuleLoader {
    * @return LoadableModule Module.
    */
   public function load($module) {
+    if (is_array($module)) {
+      $this->import($module);
+      foreach ($module as $m)
+        $this->load($m);
+      return;
+    }
     if (!isset($this->modules[$module])) {
 //       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
       if (!isset($this->classes[$module]))
@@ -150,12 +169,8 @@ class ModuleLoader {
       $this->modules[$module] = new $class($this->app);
 //       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->m->$module));
       $this->modules[$module]->afterLoad();
-//       if (isset($this->waitingCalls[$module])) {
-//         foreach ($this->waitingCalls[$module] as $tuple) {
-//           list($method, $args) = $tuple;
-//           call_user_func_array(array($this->m->$module, $method), $args);
-//         }
-//       }
+      if (isset($this->lazyModules[$module]))
+        $this->lazyModules[$module]->playMacro($this->modules[$module], false);
     }
     return $this->modules[$module];
   }
