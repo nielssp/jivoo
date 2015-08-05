@@ -209,7 +209,7 @@ class App implements IEventSubject {
     $this->manifest = $manifest;
     $this->e = new EventManager($this);
     $this->m = new ModuleMap();
-    $this->paths = new PathMap(
+    $this->paths = new Paths(
       dirname($_SERVER['SCRIPT_FILENAME']),
       $userPath
     );
