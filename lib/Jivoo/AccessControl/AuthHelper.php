@@ -465,7 +465,7 @@ class AuthHelper extends Helper {
   
   /**
    * Check user authorization for the current route. 
-   * @param CallActionEvent $event The action event.
+   * @param RenderEvent $event The action event.
    */
   public function checkAuthorization(RenderEvent $event) {
     if (!$this->hasAuthorization($event->route))

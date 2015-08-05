@@ -791,6 +791,8 @@ class Routing extends LoadableModule {
       Http::setStatus($status);
     else
       Http::setStatus($response->status);
+    // TODO: to remove or not to remove PHP version from response?
+    header_remove('X-Powered-By');
     Http::setContentType($response->type);
     if (isset($response->modified)) {
       header('Modified: ' . Http::date($response->modified));
@@ -888,41 +890,6 @@ class RenderEvent extends Event {
     $this->route = $route;
     $this->response = $response;
     $this->body = $body;
-  }
-}
-
-/**
- * The event of calling an action.
- */
-class CallActionEvent extends Event {
-  /**
-   * @var Controller The controller.
-   */
-  public $controller;
-  
-  /**
-   * @var string The name of the action.
-   */
-  public $action;
-  
-  /**
-   * @var Response|null Response returned by action if any.
-   */
-  public $response;
-  
-  /**
-   * Construct call action event.
-   * @param object $sender Sender object.
-   * @param Controller $controller The controller.
-   * @param string $action Name of the action.
-   * @param string[] $parameters Parameters for action.
-   * @param Response|null $response Response returned by action if any.
-   */
-  public function __construct($sender, Controller $controller, $action, $parameters, Response $response = null) {
-    parent::__construct($sender, $parameters);
-    $this->controller = $controller;
-    $this->action = $action;
-    $this->response = $response;
   }
 }
 
