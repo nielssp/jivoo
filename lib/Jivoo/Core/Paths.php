@@ -99,7 +99,7 @@ class Paths implements \ArrayAccess {
     if (!isset($context))
       $context = $this->basePath;
     if ($ipath == '')
-      return $basePath;
+      return $context;
     $splits = explode('/', $ipath, 2);
     $key = $splits[0];
     $path = '';

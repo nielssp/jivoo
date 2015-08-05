@@ -364,7 +364,7 @@ class App implements IEventSubject {
    * @return string Absolute path.
    */
   public function p($key, $path = '') {
-    return $this->paths->$key . '/' . $path;
+    return $this->paths->p($key . '/' . $path);
   }
   
   /**

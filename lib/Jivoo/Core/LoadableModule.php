@@ -42,20 +42,6 @@ abstract class LoadableModule extends Module {
    * Called after the module has been loaded.
    */
   public function afterLoad() { }
-
-  /**
-   * Get the absolute path of a file.
-   * If called with a single parameter, then the name of the current module
-   * is used as location identifier.
-   * @param string $key Location-identifier
-   * @param string $path File
-   * @return string Absolute path
-   */
-  public function p($key, $path = null) {
-    if (isset($path))
-      return parent::p($key, $path);
-    return parent::p(get_class($this), $key);
-  }
   
   /**
    * Get load order for optional dependencies of module and modify a list of
