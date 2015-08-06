@@ -21,6 +21,7 @@ class AccessControl extends LoadableModule {
    * @var string[] List of built-in hashing algorithms.
    */
   private $builtIn = array(
+    'Jivoo\AccessControl\Hashing\BcryptHasher',
     'Jivoo\AccessControl\Hashing\Sha512Hasher',
     'Jivoo\AccessControl\Hashing\Sha256Hasher',
     'Jivoo\AccessControl\Hashing\BlowfishHasher',

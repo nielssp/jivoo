@@ -7,6 +7,7 @@ namespace Jivoo\AccessControl\Hashing;
 
 use Jivoo\AccessControl\IPasswordHasher;
 use Jivoo\Core\Utilities;
+use Jivoo\AccessControl\UnsupportedHashTypeException;
 
 /**
  * A password hasher using the PHP {@see crypt} function.
