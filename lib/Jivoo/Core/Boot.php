@@ -100,11 +100,18 @@ class Boot extends Module {
     foreach ($modules as $module)
       $this->import($module);
 
-    if (isset($this->app->manifest['listeners'])) {
-      foreach ($this->app->manifest['listeners'] as $listener) {
-        $listener = $this->app->n($listener);
-        Lib::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
-        $this->app->attachEventListener(new $listener($this->app));
+    $listeners = $this->p('app/Listeners');
+    if (is_dir($listeners)) {
+      $files = scandir($listeners);
+      if ($files !== false) {
+        foreach ($files as $file) {
+          $split = explode('.', $file);
+          if (isset($split[1]) and $split[1] == 'php') {
+            $listener = $this->app->n('Listeners\\' . $split[0]);
+            Lib::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
+            $this->app->attachEventListener(new $listener($this->app));
+          }
+        }
       }
     }
 

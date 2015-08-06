@@ -33,8 +33,6 @@ class Controllers extends LoadableModule {
    */
   protected function init() {
     $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing, $this));
-    if (is_dir($this->p('app', 'controllers')))
-      Lib::import($this->p('app', 'controllers'), $this->app->n('Controllers'));
   }
   
   /**

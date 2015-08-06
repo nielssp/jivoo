@@ -64,11 +64,11 @@ class Migrations extends LoadableModule {
 
     if (isset($this->app->manifest['migrations'])) {
       foreach ($this->app->manifest['migrations'] as $name) {
-        $this->attachDatabase($name, $this->p('app', 'schemas/' . $name . '/migrations'));
+        $this->attachDatabase($name, $this->p('app', 'migrations/' . $name));
       }
     }
     else if (isset($this->m->Databases->default)) {
-      $this->attachDatabase('default', $this->p('app', 'schemas/migrations'));
+      $this->attachDatabase('default', $this->p('app', 'migrations'));
     }
   }
   

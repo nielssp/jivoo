@@ -27,12 +27,10 @@ class Models extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    Enum::addSearchPrefix($this->app->n() . '\\');
     Enum::addSearchPrefix($this->app->n('Enums') . '\\');
     
-    $modelsDir = $this->p('app', 'models');
+    $modelsDir = $this->p('app/Models');
     if (is_dir($modelsDir)) {
-      Lib::import($modelsDir, $this->app->n('Models'));
       $files = scandir($modelsDir);
       if ($files !== false) {
         foreach ($files as $file) {

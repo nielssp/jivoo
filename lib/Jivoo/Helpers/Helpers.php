@@ -33,8 +33,6 @@ class Helpers extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    Lib::import($this->p('app', 'helpers'), $this->app->n('Helpers'));
-    
     $this->app->call('View', 'addFunction', 'helper', array($this, 'getHelper'));
   }
   

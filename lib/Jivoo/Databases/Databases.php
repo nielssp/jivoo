@@ -40,14 +40,12 @@ class Databases extends LoadableModule {
     
     if (isset($this->app->manifest['databases'])) {
       foreach ($this->app->manifest['databases'] as $name) {
-        $this->attachDatabase($name, $this->p('app', 'schemas/' . $name));
+        $this->attachDatabase($name, $this->p('app/Schemas/' . $name));
       }
     }
     else {
-      $this->attachDatabase('default', $this->p('app', 'schemas'));
+      $this->attachDatabase('default', $this->p('app/Schemas'));
     }
-    
-    $schemasDir = $this->p('app', 'schemas');
   }
 
   /**
