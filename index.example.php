@@ -9,7 +9,7 @@
 $root = '.';
 
 // Path to Jivoo framework bootstrap script.
-require_once $root . '/lib/Jivoo/Core/bootstrap.php';
+require_once $root . '/lib/Jivoo/bootstrap.php';
 
 $app = new \Jivoo\Core\App(
   'app', // Path to application directory containing the manifest (app.json).
