@@ -119,6 +119,7 @@ class Utilities {
    * @param int $min Lowest value.
    * @param int $max Highest value.
    * @return int Random number.
+   * @deprecated see {@see \Jivoo\AccessControl\Random}.
    */
   public static function randomInt($min, $max) {
     return mt_rand($min, $max);
@@ -129,6 +130,7 @@ class Utilities {
    * @param int $length Length of random string.
    * @param string $allowedChars Allowed characters.
    * @return string Random string.
+   * @deprecated see {@see \Jivoo\AccessControl\Random}.
    */
   public static function randomString($length, $allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
     $max = strlen($allowedChars) - 1;
