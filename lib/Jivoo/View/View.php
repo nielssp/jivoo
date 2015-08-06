@@ -277,8 +277,13 @@ class View extends LoadableModule {
       if ($this->autoCompile) {
         if (file_exists($dir . $name)) {
           if (Utilities::getFileExtension($name) === 'html') {
-             $result['file'] = $this->compileTemplate($dir, $name);
-             $result['compiled'] = true;
+             try {
+               $result['file'] = $this->compileTemplate($dir, $name);
+               $result['compiled'] = true;
+             }
+             catch (\Exception $e) {
+               trigger_error($e->getMessage(), E_USER_ERROR);
+             }
              break;
           }
         }
