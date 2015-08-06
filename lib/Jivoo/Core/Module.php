@@ -155,7 +155,7 @@ abstract class Module implements IEventSubject {
    * @param string $path File or directory name.
    * @return string Absolute path.
    */
-  public function p($key, $path) {
+  public function p($key, $path = '') {
     return $this->app->p($key, $path);
   }
 
