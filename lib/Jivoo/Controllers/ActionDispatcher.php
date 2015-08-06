@@ -12,7 +12,7 @@ use Jivoo\Routing\Response;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Core\Utilities;
-use Jivoo\Core\ClassNotFoundException;
+use Jivoo\InvalidClassException;
 use Jivoo\Routing\Http;
 
 /**
@@ -92,7 +92,7 @@ class ActionDispatcher implements IDispatcher {
         $action = $route['action'];
         $class = $this->controllers->getClass($controller);
         if (!$class) {
-          throw new \Exception(tr('Invalid controller: %1', $controller));
+          throw new InvalidClassException(tr('Invalid controller: %1', $controller));
         }
         $route = array(
           'controller' => $controller,
@@ -123,7 +123,7 @@ class ActionDispatcher implements IDispatcher {
       else {
         $actions = $this->controllers->getActions($controller);
         if ($actions === false) {
-          throw new \Exception(tr('Invalid controller: %1', $controller));
+          throw new InvalidClassException(tr('Invalid controller: %1', $controller));
         }
         foreach ($actions as $action) {
           $route['action'] = $action;

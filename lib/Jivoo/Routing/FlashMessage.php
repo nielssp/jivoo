@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
+use Jivoo\InvalidPropertyException;
+
 /**
  * A message to flash to the user.
  * @property-read string $message Message.
@@ -35,6 +37,7 @@ class FlashMessage {
    * Get value of property.
    * @param string $property Property name.
    * @return mixed Value.
+   * @throws InvalidPropertyException If property is undefined.
    */
   public function __get($property) {
     switch ($property) {
@@ -42,7 +45,7 @@ class FlashMessage {
       case 'message':
         return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**

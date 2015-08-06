@@ -10,6 +10,7 @@ use Jivoo\Helpers\Filtering\Ast\NotTermNode;
 use Jivoo\Helpers\Filtering\Ast\ComparisonNode;
 use Jivoo\Helpers\Filtering\Ast\StringNode;
 use Jivoo\Helpers\Filtering\Ast\Node;
+use Jivoo\InvalidArgumentException;
 
 /**
  * A visitor for abstract syntax trees produced by {@see FilterParser}.
@@ -46,7 +47,7 @@ abstract class FilterVisitor {
   /**
    * Visit an AST node.
    * @param Node $node Node.
-   * @throws \Exception If node class is unknown.
+   * @throws InvalidArgumentException If node class is unknown.
    * @return mixed Output.
    */
   public function visit(Node $node) {
@@ -62,6 +63,6 @@ abstract class FilterVisitor {
     if ($node instanceof StringNode) {
       return $this->visitString($node);
     }
-    throw new \Exception('Unknown node: ' . get_class($node));
+    throw new InvalidArgumentException('Unknown node: ' . get_class($node));
   }
 }

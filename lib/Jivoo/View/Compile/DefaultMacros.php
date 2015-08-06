@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+use Jivoo\View\InvalidTemplateException;
+
 /**
  * Implements the default template macros.
  */
@@ -182,7 +184,7 @@ class DefaultMacros extends Macros {
         $between[] = $prev;
         $prev = $prev->prev;
       } while (isset($prev));
-      throw new \Exception(tr('Empty if-node must follow another if-node.'));
+      throw new InvalidTemplateException(tr('Empty if-node must follow another if-node.'));
     }
     $ifNode = new IfNode($value);
     $node->replaceWith($ifNode);
@@ -211,7 +213,7 @@ class DefaultMacros extends Macros {
       $between[] = $prev;
       $prev = $prev->prev;
     } while (isset($prev));
-    throw new \Exception(tr('Else-node must follow an if-node or another else-node.'));
+    throw new InvalidTemplateException(tr('Else-node must follow an if-node or another else-node.'));
   }
 
   /**
@@ -227,7 +229,7 @@ class DefaultMacros extends Macros {
         $foreachNode->append($node);
         return;
       }
-      throw new \Exception(tr('Empty foreach-node must folow another foreach-node'));
+      throw new InvalidTemplateException(tr('Empty foreach-node must folow another foreach-node'));
     }
     $foreachNode = new ForeachNode($value);
     $node->replaceWith($foreachNode);
@@ -303,7 +305,7 @@ class DefaultMacros extends Macros {
         $num++;
       }
       else {
-        throw new \Exception('not implemented');
+        throw new InvalidTemplateException('not implemented');
       }
     }
     if (count($params) == 0)
@@ -337,7 +339,7 @@ class DefaultMacros extends Macros {
         $num++;
       }
       else {
-        throw new \Exception('not implemented');
+        throw new InvalidTemplateException('not implemented');
       }
     }
     if (count($params) == 0)

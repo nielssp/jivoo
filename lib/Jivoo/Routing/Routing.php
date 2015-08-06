@@ -765,7 +765,7 @@ class Routing extends LoadableModule {
     catch (ResponseOverrideException $e) {
       $response = $this->validateResponse($e->getResponse());
     }
-    catch (ClientErrorException $e) {
+    catch (ClientException $e) {
       return $this->followRoute($this->error, $e->status);
     }
     if (!isset($response)) {
@@ -783,7 +783,7 @@ class Routing extends LoadableModule {
    */
   public function respond(Response $response, $status = null) {
     if (headers_sent($file, $line))
-      throw new \Exception(tr('Headers already sent in %1 on line %2', $file, $line));
+      throw new HeadersSentException(tr('Headers already sent in %1 on line %2', $file, $line));
     $event = new RenderEvent($this, $this->selection, $response);
     $this->triggerEvent('beforeRender', $event);
     Logger::debug(tr('Rendering response %1 (%2 %3)', get_class($response), $response->status, $response->type));

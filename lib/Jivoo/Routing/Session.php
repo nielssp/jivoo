@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
+use Jivoo\InvalidPropertyException;
+
 /**
  * Session key-value store.
  *
@@ -78,7 +80,7 @@ class Session implements \ArrayAccess {
       case 'flash':
         return $this->flash;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

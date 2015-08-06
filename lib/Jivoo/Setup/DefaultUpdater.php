@@ -28,7 +28,7 @@ class DefaultUpdater extends InstallerSnippet {
   public function welcome($data = null) {
     if (!$this->m->Setup->isLocked()) {
       if (!$this->m->Setup->lock())
-        throw new \Exception(tr('Update required. Could not enter maintenance mode.'));
+        throw new SetupException(tr('Update required. Could not enter maintenance mode.'));
       return $this->refresh();
     }
     $this->viewData['to'] = $this->app->version;

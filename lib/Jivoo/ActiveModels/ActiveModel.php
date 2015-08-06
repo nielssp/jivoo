@@ -23,6 +23,7 @@ use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\Record;
 use Jivoo\Core\Logger;
+use Jivoo\Databases\InvalidTableException;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -174,11 +175,9 @@ abstract class ActiveModel extends Model implements IEventListener {
    * Construct active model.
    * @param App $app Associated application.
    * @param Databases $databases Databases module.
-   * @throws DataSourceNotFoundException If database not configured.
-   * @throws TableNotFoundException If table not found.
-   * @throws InvalidPrimaryKeyException If primary key is invalid.
-   * @throws InvalidRecordClassException If record class is invalid.
-   * @throws ClassNotFoundException If association models are not found.
+   * @throws InvalidActiveModelException If model is incorrectly defined.
+   * @throws InvalidTableException If table not found.
+   * @throws InvalidAssociationException If association models are invalid.
    * @throws InvalidMixinException If a mixin is invalid.
    */
   public final function __construct(App $app, Databases $databases) {
@@ -187,7 +186,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     $database = $databases->$databaseName;
     $this->name = Lib::getClassName(get_class($this));
     if (!isset($database))
-      throw new DataSourceNotFoundException(tr(
+      throw new InvalidActiveModelException(tr(
         'Database "%1" not found in model %2', $this->database, $this->name
       ));
     $this->database = $database;
@@ -195,7 +194,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       $this->table = $this->name;
     $table = $this->table;
     if (!isset($this->database->$table))
-      throw new TableNotFoundException(tr(
+      throw new InvalidTableException(tr(
         'Table "%1" not found in model %2', $table, $this->name
       ));
     $this->source = $this->database->$table;
@@ -210,7 +209,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $this->aiPrimaryKey = $pk;
     }
     else {
-      throw new InvalidPrimaryKeyException(tr(
+      throw new InvalidActiveModelException(tr(
         'ActiveModel does not support multi-field primary keys'
       ));
     }
@@ -242,7 +241,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       }
       $mixin = 'Jivoo\ActiveModels\\' . $mixin . 'Mixin';
       if (!Lib::classExists($mixin))
-        throw new ClassNotFoundException(tr('Mixin class not found: %1', $mixin));
+        throw new InvalidMixinException(tr('Mixin class not found: %1', $mixin));
       if (!is_subclass_of($mixin, 'Jivoo\ActiveModels\ActiveModelMixin'))
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
       $mixin = new $mixin($this->app, $this, $options);
@@ -440,16 +439,14 @@ abstract class ActiveModel extends Model implements IEventListener {
    * @param string $type Type of association.
    * @param string $name Name of association
    * @param array $options Array of options for association.
-   * @throws ModelNotFoundException If other model not found.
-   * @throws InvalidModelException If other model not an active model.
-   * @throws DataSourceNotFoundException If join source not found.
+   * @throws InvalidAssociationException
    */
   private function createAssociation($type, $name, $options) {
     $options['type'] = $type;
     $options['name'] = $name;
     $otherModel = $options['model'];
     if (!isset($this->database->$otherModel)) {
-      throw new ModelNotFoundException(tr(
+      throw new InvalidAssociationException(tr(
         'Model %1 not found in  %2', $otherModel, $this->name
       ));
     }
@@ -462,7 +459,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     }
     if ($type == 'hasAndBelongsToMany') {
       if (!($options['model'] instanceof ActiveModel)) { 
-        throw new InvalidModelException(tr(
+        throw new InvalidAssociationException(tr(
           '%1 invalid for joining with %2, must extend ActiveModel',
           $otherModel, $this->name
         ));
@@ -475,7 +472,7 @@ abstract class ActiveModel extends Model implements IEventListener {
           $options['join'] = $this->table .  $otherTable;
       }
       if (!isset($this->database->$options['join'])) {
-        throw new DataSourceNotFoundException(tr(
+        throw new InvalidAssociationException(tr(
           'Association data source "%1" not found', $options['join']
         ));
       }

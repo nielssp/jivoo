@@ -13,7 +13,6 @@ use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
-use Jivoo\Core\ClassNotFoundException;
 
 /**
  * Snippet based routing.

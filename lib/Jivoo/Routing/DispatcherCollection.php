@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
+use Jivoo\InvalidPropertyException;
+
 /**
  * A collection of dispatcher objects.
  */
@@ -30,13 +32,13 @@ class DispatcherCollection {
   /**
    * Get dispatcher for prefix.
    * @param string $prefix Prefix.
-   * @throws \InvalidPropertyException If no dispatcher found.
+   * @throws InvalidPropertyException If no dispatcher found.
    * @return IDispatcher Dispatcher.
    */
   public function __get($prefix) {
     if (isset($this->dispatchers[$prefix]))
       return $this->dispatchers[$prefix];
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $prefix));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $prefix));
   }
   
   /**

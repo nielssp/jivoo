@@ -40,14 +40,13 @@ class Http {
   /**
    * Redirect the user to another page.
    *
-   * @todo Might require an absolute URI in some cases? Look into that.
-   *
    * @param int $status HTTP status code, should be 3xx e.g. 301 for Moved Permanently.
    * @param string $location The page to redirect to.
+   * @throws InvalidStatusException IF status code is undefined.
    */
   public static function redirect($status, $location) {
     if (!Http::setStatus($status)) {
-      throw new \Exception(
+      throw new InvalidStatusException(
         tr('An invalid status code was provided: %1.', '<strong>' . $status . '</strong>')
       );
     }
@@ -218,11 +217,11 @@ class Http {
   
   /**
    * Throw an exception if headers have already been sent and can't be changed.
-   * @throws HeadersAlreadySentException If headers already sent.
+   * @throws HeadersSentException If headers already sent.
    */
   public static function assumeHeadersNotSent() {
     if (headers_sent($file, $line)) {
-      throw new HeadersAlreadySentException(tr(
+      throw new HeadersSentException(tr(
         'Headers already sent in file %1 on line %2', $file, $line
       ));
     }

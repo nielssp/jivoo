@@ -9,6 +9,8 @@ use Jivoo\Models\IRecord;
 use Jivoo\Models\IActionRecord;
 use Jivoo\Routing\ILinkable;
 use Jivoo\Core\Logger;
+use Jivoo\InvalidMethodException;
+use Jivoo\InvalidPropertyException;
 
 /**
  * An active record, see also {@see ActiveModel}.
@@ -191,7 +193,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       return $this->data[$field];
     if (array_key_exists($field, $this->virtualData))
       return $this->virtualData[$field];
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**
@@ -218,7 +220,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
         $this->virtualData[$field] = $value;
     }
     else
-      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**
@@ -235,7 +237,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       return isset($this->data[$field]);
     if (array_key_exists($field, $this->virtualData))
       return isset($this->virtualData[$field]);
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**
@@ -255,7 +257,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       $this->virtualData[$field] = null;
     }
     else
-      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));;
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));;
   }
 
   /**
@@ -271,7 +273,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
     array_unshift($parameters, $this);
     if (is_callable($function))
       return call_user_func_array($function, $parameters);
-    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
   /**

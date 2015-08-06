@@ -6,6 +6,7 @@
 namespace Jivoo\Routing;
 
 use Jivoo\Core\Utilities;
+use Jivoo\InvalidPropertyException;
 
 /**
  * Base class for HTTP responses.
@@ -70,7 +71,7 @@ abstract class Response {
       case 'body':
         return $this->getBody();
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -90,7 +91,7 @@ abstract class Response {
         $this->type = Utilities::convertType($value);
         return;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
 

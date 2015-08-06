@@ -188,8 +188,6 @@ class Setup extends LoadableModule {
     unset($state['current']);
     $state['current']['install'] = $installerClass;
     $state->close();
-//     if (!$this->config->save())
-//       throw new \Exception(tr('Could not start installer, config could not be saved.'));
     $this->m->Routing->refresh();
   }
   

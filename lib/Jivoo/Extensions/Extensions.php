@@ -11,7 +11,7 @@ use Jivoo\Core\Map;
 use Jivoo\Core\Json;
 use Jivoo\Core\Lib;
 use Jivoo\Core\Logger;
-use Jivoo\Core\JsonDecodeException;
+use Jivoo\Core\JsonException;
 
 /**
  * Extension system.
@@ -226,7 +226,7 @@ class Extensions extends LoadableModule {
       try {
         $info = Json::decodeFile($dir . '/' . $manifest);
       }
-      catch (JsonDecodeException $e) {
+      catch (JsonException $e) {
         Logger::warning(tr('Error decoding JSON: %1', $dir . '/' . $manifest));
         return null;
       }
@@ -237,7 +237,7 @@ class Extensions extends LoadableModule {
   
   /**
    * Import extensions and load extension modules.
-   * @throws ExtensionNotFoundException If an extension was not found or invalid.
+   * @throws InvalidExtension If an extension was not found or invalid.
    * @throws \Exception If "disableBuggy" is not enabled and importing an
    * extension causes an exception to be thrown.
    */
@@ -292,7 +292,7 @@ class Extensions extends LoadableModule {
     $this->imported[$extension] = false;
     $extensionInfo = $this->getInfo($extension);
     if (!isset($extensionInfo))
-      throw new ExtensionNotFoundException(tr('Extension not found or invalid: "%1"', $extension));
+      throw new InvalidExtensionException(tr('Extension not found or invalid: "%1"', $extension));
     if (isset($extensionInfo->namespace))
       Lib::import($extensionInfo->p($this->app, ''), $extensionInfo->namespace);
     else
@@ -317,14 +317,14 @@ class Extensions extends LoadableModule {
    * loaded.
    * @param string $name Name of module.
    * @return ExtensionModule Module.
-   * @throws ExtensionNotFoundException If extension module not found in the
+   * @throws InvalidExtensionException If extension module not found in the
    * load list, i.e. if the extension that provides the module has not been 
    * imported.
    */
   public function getModule($name) {
     if (!isset($this->e->$name)) {
       if (!isset($this->loadList[$name]))
-        throw new ExtensionNotFoundException(tr('Extension not in load list: "%1"', $name));
+        throw new InvalidExtensionException(tr('Extension not in load list: "%1"', $name));
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
       Lib::assumeSubclassOf($name, 'Jivoo\Extensions\ExtensionModule');
       $info = $this->loadList[$name];

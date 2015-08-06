@@ -224,6 +224,7 @@ class View extends LoadableModule {
    * @param string $dir Template dir.
    * @param string $template Absolute path to template.
    * @return string Absolute path to compiled template.
+   * @throws InvalidTemplateException If template could not be compiled.
    */
   public function compileTemplate($dir, $template) {
     if (!isset($this->compiled[$template])) {
@@ -232,11 +233,11 @@ class View extends LoadableModule {
       $compiled = $dir . 'compiled/' . $template . '.php';
       $dir = dirname($compiled);
       if (!Utilities::dirExists($dir) and !Utilities::createDir($dir, true)) {
-        throw new \Exception(tr('Could not create directory: %1', $dir));
+        throw new InvalidTemplateException(tr('Could not create directory: %1', $dir));
       }
       $file = fopen($compiled, 'w');
       if (!$file)
-        throw new \Exception(tr('Could not write compiled template: %1', $compiled));
+        throw new \InvalidTemplateException(tr('Could not write compiled template: %1', $compiled));
       fwrite($file, $this->compiler->compile($source));
       fclose($file);
       $this->compiled[$template] = $compiled;
@@ -282,7 +283,7 @@ class View extends LoadableModule {
                $result['compiled'] = true;
                break;
              }
-             catch (\Exception $e) {
+             catch (InvalidTemplateException $e) {
                trigger_error($e->getMessage(), E_USER_WARNING);
              }
           }

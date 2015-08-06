@@ -75,13 +75,13 @@ class Migrations extends LoadableModule {
   /**
    * Get an attached database.
    * @param string $name Database name.
-   * @throws \Exception If the database is not attached.
+   * @throws MigrationException If the database is not attached.
    * @return IMigratableDatabase Database/
    */
   public function getDatabase($name) {
     if (isset($this->connections[$name]))
       return $this->connections[$name];
-    throw new \Exception(tr('"%1 is not a migratable database', $name));
+    throw new MigrationException(tr('"%1 is not a migratable database', $name));
   }
 
   /**
@@ -216,7 +216,7 @@ class Migrations extends LoadableModule {
    * Run a migration on a database. Will attempt to revert if migration fails.
    * @param string $dbName Name of database.
    * @param string $migrationName Name of migration.
-   * @throws Exception If migration fails.
+   * @throws MigrationException If migration fails.
    */
   public function run($dbName, $migrationName) {
     $db = $this->getDatabase($dbName);
@@ -235,7 +235,7 @@ class Migrations extends LoadableModule {
     }
     catch (\Exception $e) {
       $migration->revert();
-      throw new \Exception(tr('Migration failed: ' . $migrationName), null, $e);
+      throw new MigrationException(tr('Migration failed: ' . $migrationName), null, $e);
     }
   }
   

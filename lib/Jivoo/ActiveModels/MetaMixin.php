@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\ActiveModels;
 
+use Jivoo\Models\InvalidModelException;
+
 /**
  * Mixin for adding meta data stored in a separate model to records.
  *
@@ -42,7 +44,7 @@ class MetaMixin extends ActiveModelMixin {
     $other = $this->options['model'];
     $db = $this->model->getDatabase();
     if (!isset($db->$other)) {
-      throw new ModelNotFoundException(tr(
+      throw new InvalidModelException(tr(
         'Model %1 not found in %2', $other, $this->model->getName()
       ));
     }

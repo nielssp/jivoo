@@ -253,7 +253,7 @@ class SqlTable extends Table {
       foreach ($selection->joins as $join) {
         $joinSource = $join['source']->asInstanceOf('Jivoo\Databases\Common\SqlTable');
         if (!isset($joinSource)) {
-          throw new \Exception(tr(
+          throw new InvalidTableException(tr(
             'Unable to join SqlTable with data source of type "%1"',
             get_class($join['source'])
           ));

@@ -6,6 +6,8 @@
 namespace Jivoo\Routing;
 
 use Jivoo\Core\App;
+use Jivoo\InvalidPropertyException;
+
 /**
  * Used for pushing data to the client side using Server-Sent Events.
  * @property int $lastId Last event id.
@@ -44,7 +46,7 @@ class EventSource {
       case 'padding':
         return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -61,7 +63,7 @@ class EventSource {
         $this->$property = $value;
         return;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

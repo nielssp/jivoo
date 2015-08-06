@@ -8,6 +8,7 @@ namespace Jivoo\Jtk;
 use Jivoo\Snippets\Snippet;
 use Jivoo\View\ViewResponse;
 use Jivoo\Core\Lib;
+use Jvioo\InvalidArgumentException;
 
 /**
  * A toolkit snippet.
@@ -50,7 +51,7 @@ class JtkSnippet extends Snippet {
     if (isset($object))
       Lib::assumeSubclassOf($object, $this->objectType);
     else
-      throw new \Exception(tr('JTK object is null'));
+      throw new InvalidArgumentException(tr('JTK object is null'));
     $this->viewData['object'] = $object;
     $response = parent::__invoke($parameters);
     if ($response instanceof ViewResponse)

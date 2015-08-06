@@ -423,7 +423,7 @@ class App implements IEventSubject {
 
     foreach ($loadOrder['before'] as $dependency) {
       if (isset($this->m->$dependency)) {
-        throw new \Exception(tr('%1 must load before %2', $module, $dependency));
+        throw new LoadOrderException(tr('%1 must load before %2', $module, $dependency));
       }
       if (!isset($this->optionalDependencies[$dependency]))
         $this->optionalDependencies[$dependency] = array();
@@ -476,7 +476,7 @@ class App implements IEventSubject {
     if (!isset($this->m->$name)) {
       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
       if (!isset($this->imports[$name]))
-        throw new \Exception(tr('Module not imported: %1', $name));
+        throw new LoadOrderException(tr('Module not imported: %1', $name));
       $module = $this->imports[$name];
       if (isset($this->optionalDependencies[$name])) {
         foreach ($this->optionalDependencies[$name] as $dependency) {

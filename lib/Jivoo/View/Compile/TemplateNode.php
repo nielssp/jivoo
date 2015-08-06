@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
+use Jivoo\InvalidPropertyException;
+
 /**
  * A template node.
  * @property-read string[] $macros Macros and values.
@@ -57,7 +59,7 @@ abstract class TemplateNode {
       case 'prev':
         return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**

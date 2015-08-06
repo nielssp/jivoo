@@ -22,7 +22,7 @@ abstract class MetaSchema extends Schema {
   protected function getId() {
     $class = Lib::getClassName($this);
     if (preg_match('/^(.+)MetaSchema$/', $class, $matches) !== 1)
-      throw new \Exception(tr('Invalid meta class name format.'));
+      throw new InvalidMixinException(tr('Invalid meta class name format.'));
     return lcfirst($matches[1]) . 'Id';
   }
 

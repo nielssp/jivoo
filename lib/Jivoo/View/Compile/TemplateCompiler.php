@@ -6,6 +6,9 @@
 namespace Jivoo\View\Compile;
 
 use Jivoo\Core\Logger;
+use Jivoo\View\InvalidMacroException;
+use Jivoo\View\InvalidTemplateException;
+
 /**
  * Converts HTML templates to PHP templates.
  */
@@ -55,15 +58,16 @@ class TemplateCompiler {
    * {@see convert()}, then applying macros using {@see transform()}.
    * @param string $template Template file path.
    * @return string PHP template content. 
+   * @throws InvalidTemplateException If template is inaccessible or invalid.
    */
   public function compile($template) {
     Logger::debug('Compiling template: ' . $template);
     $dom = new \simple_html_dom();
     $file = file_get_contents($template);
     if ($file === false)
-      throw new \Exception(tr('Could not read template: %1', $template));
+      throw new InvalidTemplateException(tr('Could not read template: %1', $template));
     if (!$dom->load($file, true, false))
-      throw new \Exception(tr('Could not parse template: %1', $template));
+      throw new InvalidTemplateException(tr('Could not parse template: %1', $template));
     
     $root = new InternalNode();
     
@@ -120,7 +124,7 @@ class TemplateCompiler {
   /**
    * Apply macros to a template node.
    * @param TemplateNode $node Node.
-   * @throws \Exception If unknown macro.
+   * @throws InvalidMacroException If macro is unknown.
    */
   public function transform(TemplateNode $node) {
     if ($node instanceof InternalNode) {
@@ -131,7 +135,7 @@ class TemplateCompiler {
       if (!$node->hasMacro($macro))
         continue;
       if (!isset($this->macros[$macro]))
-        throw new \Exception(tr('Undefined macro: %1', $macro));
+        throw new InvalidMacroException(tr('Undefined macro: %1', $macro));
       call_user_func($this->macros[$macro], $node, $value);
       if (!isset($node->parent))
         return;

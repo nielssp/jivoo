@@ -38,7 +38,7 @@ class Themes extends LoadableModule {
   /**
    * Get the name of a theme associated with the given zone.
    * @param string $zone Zone name, e.g. "frontend", "admin", etc.
-   * @throws ThemeNotFoundException If no theme could be found for the
+   * @throws InvalidThemeException If no theme could be found for the
    * sepcified zone.
    * @return Config
    */
@@ -52,7 +52,7 @@ class Themes extends LoadableModule {
         }
       }
       if (!isset($this->config[$zone]))
-        throw new ThemeNotFoundException(tr('No theme found for "%1"', $zone));
+        throw new InvalidThemeException(tr('No theme found for "%1"', $zone));
     }
     return $this->config[$zone];
   }
@@ -102,12 +102,12 @@ class Themes extends LoadableModule {
    * @param string $theme Theme name.
    * @param int $priority Priority of templates, if the theme has one or more
    * parent themes, those themes will be loaded with a lower priority.
-   * @throws ThemeNotFoundException If the theme was not found or invalid.
+   * @throws InvalidThemeException If the theme was not found or invalid.
    */
   public function load($theme, $priority = 10) {
     $info = $this->getInfo($theme);
     if (!isset($info))
-      throw new ThemeNotFoundException(tr('Theme not found or invalid: "%1"', $theme));
+      throw new InvalidThemeException(tr('Theme not found or invalid: "%1"', $theme));
     foreach ($info->extend as $parent) {
       $this->load($parent, $priority - 1);
     }

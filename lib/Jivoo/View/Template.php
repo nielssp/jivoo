@@ -147,7 +147,7 @@ class Template {
    * Embed another template into the current template.
    * @param string $_template Name of template.
    * @param array $_data Additional data for template.
-   * @throws TemplateNotFoundException If template could not be found.
+   * @throws InvalidTemplateException If template could not be found.
    */
   protected function embed($_template, $_data = array()) {
     assume(is_string($_template));
@@ -156,7 +156,7 @@ class Template {
     extract($this->view->data[$_template]->toArray(), EXTR_SKIP);
     $_templateInfo = $this->view->findTemplate($_template);
     if (!isset($_templateInfo)) {
-      throw new TemplateNotFoundException(tr('Template not found: %1', $_template));
+      throw new InvalidTemplateException(tr('Template not found: %1', $_template));
     }
     if (isset($_templateInfo['init']) and !$_templateInfo['init']) {
       $_init = $this->view->getInitFile($_templateInfo['key'], $_templateInfo['path']);

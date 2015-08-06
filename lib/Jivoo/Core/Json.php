@@ -86,12 +86,12 @@ class Json {
    * Decode a JSON string.
    * @param string $json JSON.
    * @return mixed Decoded JSON.
-   * @throw InvalidJsonException If decoding fails.
+   * @throw JsonException If decoding fails.
    */
   public static function decode($json) {
     $object = json_decode($json, true);
     if (json_last_error() !== JSON_ERROR_NONE)
-      throw new InvalidJsonException(json_last_error_msg());
+      throw new JsonException(json_last_error_msg());
     return $object;
   }
   

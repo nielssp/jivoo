@@ -35,7 +35,7 @@ class LockInstaller extends InstallerSnippet {
       if ($this->m->Setup->lock())
         return $this->end();
       else
-        throw new \Exception(tr('Installation required. Could not enter maintenance mode.'));
+        throw new SetupException(tr('Installation required. Could not enter maintenance mode.'));
     }
     return $this->next();
   }

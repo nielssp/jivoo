@@ -7,6 +7,7 @@ namespace Jivoo\Routing;
 
 use Jivoo\Core\Logger;
 use Jivoo\Core\Utilities;
+use Jivoo\InvalidPropertyException;
 
 /**
  * A class representing an HTTP request.
@@ -222,7 +223,7 @@ class Request {
       case 'userAgent':
         return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $name));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
   /**
@@ -240,7 +241,7 @@ class Request {
         $this->$name = $value;
         return;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $name));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $name));
   }
 
   /**
