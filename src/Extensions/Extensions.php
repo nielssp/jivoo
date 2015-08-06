@@ -319,14 +319,14 @@ class Extensions extends LoadableModule {
    * imported.
    */
   public function getModule($name) {
-    if (!isset($this->e->$name)) {
+    if (!isset($this->e[$name])) {
       if (!isset($this->loadList[$name]))
         throw new InvalidExtensionException(tr('Extension not in load list: "%1"', $name));
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
       Utilities::assumeSubclassOf($name, 'Jivoo\Extensions\ExtensionModule');
       $info = $this->loadList[$name];
       $this->e[$name] = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
-      $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e->$name));
+      $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e[$name]));
     }
     return $this->e[$name];
   }

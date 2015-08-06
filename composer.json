@@ -17,8 +17,8 @@
     "email": "jivoo@nielssp.dk"
   },
   "autoload": {
-    "psr-4": {"Jivoo\\": "lib/Jivoo/"},
-    "files": ["lib/Jivoo/Core/bootstrap.php"]
+    "psr-4": {"Jivoo\\": "src/"},
+    "files": ["src/bootstrap.php"]
   },
   "require": {
     "php": ">=5.3.0"

@@ -1,2 +1,2 @@
 <?php
-require 'lib/Jivoo/bootstrap.php';
+require 'src/bootstrap.php';

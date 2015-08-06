@@ -1,5 +1,5 @@
 <?php
-require_once '../../lib/Jivoo/bootstrap.php';
+require_once '../../src/bootstrap.php';
 
 $app = new Jivoo\Core\App(
   'app',

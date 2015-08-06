@@ -1,29 +1,4 @@
 <?php
-// Jivoo
-// Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
-// Licensed under the MIT license.
-// See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo;
+require dirname(dirname(dirname(__FILE__))) . '/src/bootstrap.php';
 
-if (defined('Jivoo\VERSION'))
-  return;
-
-/**
- * @var string Jivoo framework version string.
- */
-const VERSION = '0.21.0-dev';
-
-/**
- * @var string Absolute path to library containing Jivoo.
- */
-define('Jivoo\PATH', str_replace('\\', '/', dirname(__FILE__)));
-
-require PATH . '/functions.php';
-require PATH . '/exceptions.php';
-require PATH . '/Autoloader.php';
-
-Autoloader::getInstance()->register();
-Autoloader::getInstance()->addPath('Jivoo\\', PATH);
-
-error_reporting(-1);
-set_error_handler(array('Jivoo\Core\ErrorReporting', 'handleError'));
+trigger_error(tr('Using old Jivoo library path'), E_USER_DEPRECATED);
