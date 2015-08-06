@@ -280,11 +280,11 @@ class View extends LoadableModule {
              try {
                $result['file'] = $this->compileTemplate($dir, $name);
                $result['compiled'] = true;
+               break;
              }
              catch (\Exception $e) {
                trigger_error($e->getMessage(), E_USER_WARNING);
              }
-             break;
           }
         }
       }
