@@ -97,6 +97,7 @@ class Utilities {
    * @TODO Unicode support?
    * @param string $char A single ascii character
    * @return boolean True if uppercase, false otherwise
+   * @deprecated See {@see Unicode}
    */
   public static function isUpper($char) {
     $ascii = ord($char);
@@ -108,6 +109,7 @@ class Utilities {
    * @TODO Unicode support?
    * @param string $char A single ascii character
    * @return boolean True if lowercase, false otherwise
+   * @deprecated See {@see Unicode}
    */
   public static function isLower($char) {
     $ascii = ord($char);
@@ -148,6 +150,7 @@ class Utilities {
    * @param int $length Length of substring.
    * @param bool $mb Whether to use mb_substr if available.
    * @return string Returns the extracted part of string; or FALSE on failure, or an empty string.
+   * @deprecated See {@see Unicode}
    */
   public static function substr($string, $start, $length = null, $mb = true) {
     if ($mb and function_exists('mb_substr')) {

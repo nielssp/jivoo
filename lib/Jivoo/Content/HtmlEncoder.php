@@ -11,6 +11,7 @@ use Jivoo\Core\Store\Config;
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
  * and automatically closing tags and stripping invalid HTML.
+ * @deprecated TODO: find replacement
  */
 class HtmlEncoder {
   /**

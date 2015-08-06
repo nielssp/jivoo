@@ -9,6 +9,7 @@ use Jivoo\AccessControl\IPasswordHasher;
 use Jivoo\Core\Utilities;
 use Jivoo\AccessControl\UnsupportedHashTypeException;
 use Jivoo\AccessControl\Random;
+use Jivoo\Core\Binary;
 
 /**
  * A password hasher using the PHP {@see crypt} function.
@@ -54,7 +55,7 @@ abstract class CryptHasher implements IPasswordHasher {
   public function genSalt() {
     $bytes = Random::bytes($this->saltLength);
     $b64 = rtrim(base64_encode($bytes), '=');
-    $salt = Random::slice(str_replace('+', '.', $b64), 0, $this->saltLength);
+    $salt = Binary::slice(str_replace('+', '.', $b64), 0, $this->saltLength);
     return $this->prefix . $salt;
   }
   
