@@ -6,7 +6,7 @@
 namespace Jivoo\Core;
 
 /**
- * Iterator for use with {@see Map}, but can be used with any associative array.
+ * Iterator for use with associative arrays.
  */
 class MapIterator implements \Iterator {
   /**

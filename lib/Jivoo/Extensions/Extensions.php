@@ -7,7 +7,6 @@ namespace Jivoo\Extensions;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadEvent;
-use Jivoo\Core\Map;
 use Jivoo\Core\Json;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Logger;
@@ -76,9 +75,9 @@ class Extensions extends LoadableModule {
   private $viewExtensions = array();
   
   /**
-   * @var map Map of extension modules.
+   * @var ExtensionModule[] Map of extension modules.
    */
-  private $e = null;
+  private $e = array();
   
   /**
    * @var array[] Array of 2-tuples of feature name and handler callback.
@@ -115,8 +114,6 @@ class Extensions extends LoadableModule {
       }
     }
     
-    $this->e = new Map();
-
     // Load installed extensions when all modules are loaded and initialized
     $this->app->attachEventHandler('afterLoadModules', array($this, 'run'));
     
@@ -133,7 +130,7 @@ class Extensions extends LoadableModule {
   public function addViewExtensions() {
     foreach ($this->viewExtensions as $module => $veInfo) {
       $this->view->extensions->add(
-        $veInfo['template'], $this->e->$module, $veInfo['hook']
+        $veInfo['template'], $this->e[$module], $veInfo['hook']
       );
     }
   }
@@ -328,16 +325,16 @@ class Extensions extends LoadableModule {
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
       Utilities::assumeSubclassOf($name, 'Jivoo\Extensions\ExtensionModule');
       $info = $this->loadList[$name];
-      $this->e->$name = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
+      $this->e[$name] = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
       $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e->$name));
     }
-    return $this->e->$name;
+    return $this->e[$name];
   }
   
   /**
    * Get several extension modules.
    * @param string[] $modules List of module names.
-   * @return Map Map of module names and objects.
+   * @return ExtensionModule[] Map of module names and objects.
    */
   public function getModules($modules) {
     foreach ($modules as $name)
@@ -351,7 +348,7 @@ class Extensions extends LoadableModule {
    * @return bool True if loaded, false otherwise.
    */
   public function hasModule($name) {
-    return isset($this->e->$name);
+    return isset($this->e[$name]);
   }
 
   /**

@@ -24,7 +24,7 @@ abstract class ExtensionModule extends Module {
   protected $info;
   
   /**
-   * @var Map Map of loaded extension modules.
+   * @var ExtensionModule[] Map of loaded extension modules.
    */
   protected $e = null;
   

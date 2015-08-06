@@ -11,12 +11,13 @@ use Jivoo\Core\Store\Config;
 use Jivoo\Core\Store\StateMap;
 use Jivoo\Core\Store\Jivoo\Core\Store;
 use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidClassException;
 use Jivoo\Autoloader;
 
 /**
  * Application class for initiating Jivoo applications.
  * @property string $basePath Web base path.
- * @property-read PathDictionary $paths Paths.
+ * @property-read Paths $paths Application and framework paths.
  * @property-read string $name Application name.
  * @property-read string $version Application version.
  * @property-read string $namespace Application namespace.
@@ -71,7 +72,7 @@ class App implements IEventSubject {
   private $defaultConfig = array();
 
   /**
-   * @var PathMap Paths.
+   * @var Paths Application and framework paths.
    */
   private $paths = null;
 
@@ -116,7 +117,7 @@ class App implements IEventSubject {
   private $listenerNames = array();
 
   /**
-   * @var ModuleMap Map of modules.
+   * @var ModuleLoader Module loader.
    */
   private $m = null;
   
@@ -209,7 +210,7 @@ class App implements IEventSubject {
     }
     $this->manifest = $manifest;
     $this->e = new EventManager($this);
-    $this->m = new ModuleMap();
+    $this->m = new ModuleLoader();
     $this->paths = new Paths(
       dirname($_SERVER['SCRIPT_FILENAME']),
       $userPath
@@ -655,7 +656,14 @@ class App implements IEventSubject {
     }
 
     // Error handling
-    ErrorReporting::setHandler(array($this, 'handleError'));
+    
+    // Throw exceptions instead of fatal errors on class not found
+    spl_autoload_register(function($class) {
+      throw new InvalidClassException(tr('Class not found: %1', $class));
+    });
+    
+    // Set exception handler
+    set_exception_handler(array($this, 'handleError'));
 
     Logger::attachFile(
       $this->p('log', $this->environment . '.log'),

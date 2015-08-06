@@ -51,6 +51,7 @@ class PhpStoreTest extends \Codeception\TestCase\Test {
       'b' => array('c' => 'bar'),
       'd' => array(1, 2, array(1, 2), 4)
     );
+    
     $this->store->open(true);
     $this->assertTrue($this->store->isOpen());
     $this->assertTrue($this->store->isMutable());
