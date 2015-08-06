@@ -7,6 +7,7 @@ namespace Jivoo\Core\Store;
 
 use Jivoo\Core\Logger;
 use Jivoo\Core\Utilities;
+use Jivoo\InvalidMethodException;
 
 /**
  * An object allowing for the creation and reading of state-files in a directoy.
@@ -54,12 +55,13 @@ class StateMap implements \ArrayAccess {
    * on the object when done!
    * @param string $key State document key.
    * @return State State document.
+   * @throws AccessException If state file is missing or inaccessible.
    */
   public function read($key) {
     if (isset($this->states[$key]) and $this->states[$key]->isOpen())
       return $this->states[$key];
     if (!isset($this->files[$key]) and !$this->touch($key))
-      throw new StateInvalidException(tr('State file missing or inaccessible: %1', $key));
+      throw new AccessException(tr('State file missing or inaccessible: %1', $key));
     $this->states[$key] = new State($this->files[$key], false);
     Logger::debug(tr('Open state (read): %1', $key));
     return $this->states[$key];
@@ -140,12 +142,12 @@ class StateMap implements \ArrayAccess {
    * Get an already opened state document (for reading).
    * @param string $key State document key.
    * @return State State document.
-   * @throws StateClosedException If the specified state has not been opened.
+   * @throws NotOpenException If the specified state has not been opened.
    */
   public function offsetGet($key) {
     if (isset($this->states[$key]) and $this->states[$key]->isOpen())
       return $this->states[$key];
-    throw new StateClosedException(tr('State not open: %1', $key));
+    throw new NotOpenException(tr('State not open: %1', $key));
   }
   
   /**
@@ -154,7 +156,7 @@ class StateMap implements \ArrayAccess {
    * @param mixed $value Value.
    */
   public function offsetSet($key, $value) {
-    throw new \InvalidMethodException(tr('Method not implemented.'));
+    throw new InvalidMethodException(tr('Method not applicable.'));
   }
   
   /**

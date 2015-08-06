@@ -7,8 +7,6 @@ namespace Jivoo\Databases;
 
 use Jivoo\Models\Form;
 use Jivoo\Core\Lib;
-use Jivoo\Databases\DatabaseConnectionFailedException;
-use Jivoo\Databases\DatabaseSelectFailedException;
 use Jivoo\Setup\InstallerSnippet;
 
 /**
@@ -129,12 +127,7 @@ class DatabaseInstaller extends InstallerSnippet {
           unset($this->config['migration']);
           return $this->saveConfigAndContinue();
         }
-        catch (DatabaseConnectionFailedException $exception) {
-          $this->session->flash->error = tr(
-            'An error occured: %1', $exception->getMessage()
-          );
-        }
-        catch (DatabaseSelectFailedException $exception) {
+        catch (ConnectionException $exception) {
           $this->session->flash->error = tr(
             'An error occured: %1', $exception->getMessage()
           );

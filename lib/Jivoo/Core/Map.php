@@ -7,6 +7,7 @@ namespace Jivoo\Core;
 
 /**
  * A collection of key/value pairs.
+ * @deprecated TODO: remove
  */
 class Map implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**

@@ -107,18 +107,18 @@ class Databases extends LoadableModule {
    * @param string $name An optional name for database connection, if the name
    * is provided, the connection and the associated tables will be added to 
    * this Databases-object .
-   * @throws DatabaseNotConfiguredException If the $options-array does not
+   * @throws ConfigurationException If the $options-array does not
    * contain the necessary information for a connection to be made.
-   * @throws DatabaseMissingSchemaException If one of the schema names listed
+   * @throws InvalidSchemaException If one of the schema names listed
    * in the $schemas-parameter is unknown.
-   * @throws DatabaseConnectionFailedException If the connection fails.
+   * @throws ConnectionException If the connection fails.
    * @return LoadableDatabase A database object.
    */
   public function connect($options, $schemas, $name = null) {
     if (is_string($options)) {
       $name = $options;
       if (!isset($this->config[$name])) {
-        throw new DatabaseNotConfiguredException(
+        throw new ConfigurationException(
           tr('Database "%1" not configured', $name)
         );
       }
@@ -126,17 +126,17 @@ class Databases extends LoadableModule {
     }
     $driver = $options->get('driver', null);
     if (!isset($driver))
-      throw new DatabaseConnectionFailedException(tr(
+      throw new ConfigurationException(tr(
         'Database driver not set'
       ));
     $driverInfo = $this->drivers->checkDriver($driver);
     if (!isset($driverInfo))
-      throw new DatabaseConnectionFailedException(tr(
+      throw new ConnectionException(tr(
         'Invalid database driver: %1', $driver
       ));
     foreach ($driverInfo['requiredOptions'] as $option) {
       if (!isset($options[$option])) {
-        throw new DatabaseNotConfiguredException(
+        throw new ConfigurationException(
           tr('Database option missing: "%1"', $option)
         );
       }
@@ -150,7 +150,7 @@ class Databases extends LoadableModule {
           $name = $schema;
           $schema = $this->getSchema($name);
           if (!isset($schema)) {
-            throw new DatabaseMissingSchemaException(
+            throw new InvalidSchemaException(
               tr('Missing schema: "%1"', $name)
             );
           }
@@ -163,8 +163,8 @@ class Databases extends LoadableModule {
       }
       return $object;
     }
-    catch (DatabaseConnectionFailedException $exception) {
-      throw new DatabaseConnectionFailedException(
+    catch (ConnectionException $exception) {
+      throw new ConnectionException(
         tr('Database connection failed (%1): %2', $driver, $exception->getMessage()),
         0, $exception
       );

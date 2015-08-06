@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\InvalidPropertyException;
+
 /**
  * A localization, e.g. translation strings and date formats.
  * @property string $name Language name (in English).
@@ -99,7 +101,7 @@ class Localization {
           $this->$property
         );
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -122,7 +124,7 @@ class Localization {
         $this->$property = $value;
         return;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -150,7 +152,7 @@ class Localization {
       case 'weekDay':
         return isset($this->$property);
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**

@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Vendor;
 
+use Jivoo\Core\VendorException;
+
 /**
  * Imports third-party libraries (e.g. packages installed using Composer) from
  * one or more directories. 
@@ -51,7 +53,7 @@ class VendorLoader {
       }
     }
     if (!isset($manifest))
-      throw new \Exception(tr('Could not import library: %1', $name));
+      throw new VendorException(tr('Could not import library: %1', $name));
     $manifest->registerAutoloader();
   }
   

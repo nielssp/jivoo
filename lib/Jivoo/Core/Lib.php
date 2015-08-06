@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\InvalidClassException;
+
 /**
  * Library system for importing directories and autoloading classes.
  */
@@ -85,7 +87,6 @@ class Lib {
    * @param string|object $class Class name or object.
    * @param string $parent Expected parent class of $class
    * @throws ClassInvalidException if $class does not extend $parent
-   * @throws ClassNotFoundException if $class does not exist
    */
   public static function assumeSubclassOf($class, $parent) {
     if (!is_subclass_of($class, $parent)) {
@@ -93,7 +94,7 @@ class Lib {
         $class = get_class($class);
       if ($class === $parent)
         return;
-      throw new ClassInvalidException(tr(
+      throw new InvalidClassException(tr(
         'Class "%1" should extend "%2"', $class, $parent
       ));
     }
@@ -125,7 +126,7 @@ class Lib {
   /**
    * Auto loader
    * @param string $className Name of class
-   * @throws ClassNotFoundException if class not found (and {@see $throwExceptions}
+   * @throws InvalidClassException if class not found (and {@see $throwExceptions}
    * is true)
    * @return boolean True on success false on failure
    */
@@ -134,7 +135,7 @@ class Lib {
       $fileName = str_replace('\\', '/', self::getNamespace($className)) . '/exceptions.php';
       if (self::loadFile($fileName)) {
         if (self::$throwExceptions and !class_exists($className, false)) {
-          throw new ClassNotFoundException(tr('Class not found: "%1"', $className));
+          throw new InvalidClassException(tr('Class not found: "%1"', $className));
         }
         return true;
       }
@@ -143,7 +144,7 @@ class Lib {
     if (self::loadFile($fileName))
       return true;
     if (self::$throwExceptions) {
-      throw new ClassNotFoundException(tr('Class not found: "%1"', $className));
+      throw new InvalidClassException(tr('Class not found: "%1"', $className));
     }
     return false;
   }

@@ -15,7 +15,7 @@ class Session extends State {
    */
   protected function update() {
     if (!isset($this->store))
-      throw new StateClosedException(tr('State already closed.'));
+      throw new NotOpenException(tr('State already closed.'));
     if ($this->updated or !$this->store->isMutable())
       return;
     $this->store->write($this->data);

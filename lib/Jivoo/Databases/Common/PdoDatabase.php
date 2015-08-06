@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
-use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Databases\QueryException;
 use Jivoo\Core\Logger;
 
 /**
@@ -35,11 +35,10 @@ abstract class PdoDatabase extends SqlDatabase {
    */
   public function rawQuery($sql, $pk = null) {
     Logger::query($sql);
-//     Logger::logException(new \Exception());
     $result = $this->pdo->query($sql);
     if (!$result) {
       $errorInfo = $this->pdo->errorInfo();
-      throw new DatabaseQueryFailedException(
+      throw new QueryException(
         $errorInfo[0] . ' - ' . $errorInfo[1] . ' - ' . $errorInfo[2]);
     }
     if (preg_match('/^\\s*(select|show|explain|describe|pragma) /i', $sql)) {

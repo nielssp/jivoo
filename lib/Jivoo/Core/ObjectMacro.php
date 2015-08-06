@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\InvalidMethodException;
+
 /**
  * An object that can record method and setter calls and play them back later in
  * the same order.
@@ -49,19 +51,19 @@ class ObjectMacro implements \ArrayAccess {
   /**
    * Not supported.
    * @param mixed $offset Offset.
-   * @throws \InvalidMethodException When called.
+   * @throws InvalidMethodException When called.
    */
   public function offsetExists($offset) {
-    throw new \InvalidMethodException(tr('Macro is write-only.'));
+    throw new InvalidMethodException(tr('Macro is write-only.'));
   }
 
   /**
    * Not supported.
    * @param mixed $offset Offset.
-   * @throws \InvalidMethodException When called.
+   * @throws InvalidMethodException When called.
    */
   public function offsetGet($offset) {
-    throw new \InvalidMethodException(tr('Macro is write-only.'));
+    throw new InvalidMethodException(tr('Macro is write-only.'));
   }
   
   /**

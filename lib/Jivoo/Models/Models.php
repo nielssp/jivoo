@@ -93,7 +93,7 @@ class Models extends LoadableModule {
     foreach ($names as $name) {
       $models[$name] = $this->getModel($name);
       if (!isset($models[$name]))
-        throw new ModelNotFoundException(tr('Model "%1" not found', $name));
+        throw new InvalidModelException(tr('Model "%1" not found', $name));
     }
     return $models;
   }
@@ -105,7 +105,7 @@ class Models extends LoadableModule {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
-    throw new ModelNotfoundException(tr('Model "%1" not found', $name));
+    throw new InvalidModelException(tr('Model "%1" not found', $name));
   }
 
   /**

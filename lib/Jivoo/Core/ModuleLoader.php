@@ -161,7 +161,7 @@ class ModuleLoader {
       if (isset($this->before[$module])) {
         foreach ($this->before[$module] as $dependency) {
           if (isset($this->modules[$dependency])) {
-            throw new \Exception(tr('%1 must load before %2', $module, $dependency));
+            throw new LoadOrderException(tr('%1 must load before %2', $module, $dependency));
           }
         }
       }

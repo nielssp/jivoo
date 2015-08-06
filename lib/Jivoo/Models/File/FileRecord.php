@@ -6,6 +6,7 @@
 namespace Jivoo\Models\File;
 
 use Jivoo\Models\IBasicRecord;
+use Jivoo\InvalidPropertyException;
 
 /**
  * A file record.
@@ -85,7 +86,7 @@ class FileRecord implements IBasicRecord {
           $this->created = filectime($this->path);
         return $this->created;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**

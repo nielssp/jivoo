@@ -6,7 +6,6 @@
 namespace Jivoo\Models;
 
 use Jivoo\Core\Lib;
-use Jivoo\Core\ClassNotFoundException;
 
 /**
  * Used for creating enum types.
@@ -69,7 +68,8 @@ abstract class Enum {
   /**
    * Get values of an enum class.
    * @param string $class Class name.
-   * @throws InvalidEnumException If the class does not contain constants.
+   * @throws InvalidEnumException If the class invalid or  does not contain
+   * constants.
    * @return string[] Enum values.
    */
   public static function getValues($class = null) {
@@ -77,7 +77,7 @@ abstract class Enum {
       $class = get_called_class();
     if (!isset(self::$values[$class])) {
       if (!self::classExists($class))
-        throw new ClassNotFoundException(tr('Enum class not found: %1', $class));
+        throw new InvalidEnumException(tr('Enum class not found: %1', $class));
       $class = self::$classes[$class];
       Lib::assumeSubclassOf($class, 'Jivoo\Models\Enum');
       $ref = new \ReflectionClass($class);

@@ -7,17 +7,14 @@ namespace Jivoo\Databases\Drivers\PdoSqlite;
 
 use Jivoo\Databases\Common\PdoDatabase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
-use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\ConnectionException;
 
 /**
  * PDO SQLite database driver.
  */
 class PdoSqliteDatabase extends PdoDatabase {
   /**
-   * Construct database.
-   * @param array $options An associative array with options for at least
-   * 'filename'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException If connection fails.
+   * {@inheritdoc}
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new SqliteTypeAdapter($this));
@@ -27,7 +24,7 @@ class PdoSqliteDatabase extends PdoDatabase {
       $this->pdo = new \PDO('sqlite:' . $options['filename']);
     }
     catch (\PDOException $exception) {
-      throw new DatabaseConnectionFailedException(
+      throw new ConnectionException(
         tr('SQLite database does not exist and could not be created: %1',
           $options['filename']),
         0, $exception

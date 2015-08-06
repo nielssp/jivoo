@@ -6,6 +6,7 @@
 namespace Jivoo\Models;
 
 use Jivoo\Models\Validation\ValidatorField;
+use Jivoo\InvalidPropertyException;
 
 /**
  * The data type of {@see Enum}s.
@@ -29,7 +30,7 @@ class EnumDataType extends DataType {
    * enum values.
    * @param string $null Is nullable.
    * @param string $default Default value.
-   * @throws InvalidArgumentException If default values is not part of enum.
+   * @throws InvalidEnumException If default values is not part of enum.
    */
   protected function __construct($valuesOrClass, $null = false, $default = null) {
     parent::__construct(DataType::ENUM, $null, $default);
@@ -41,7 +42,7 @@ class EnumDataType extends DataType {
       $this->values = Enum::getValues($this->class);
     }
     if (isset($default) and !in_array($default, $this->values)) {
-      throw new \InvalidArgumentException(tr(
+      throw new InvalidEnumException(tr(
         'Default value must be part of enum'
       ));
     }
@@ -55,7 +56,7 @@ class EnumDataType extends DataType {
       return $this->values;
     if ($property === 'placeholder') {
       if (!isset($this->class))
-        throw new \Exception(tr('Invalid use of anonymous enum type'));
+        throw new InvalidPropertyException(tr('Invalid use of anonymous enum type'));
       return '%' . $this->class;
     }
     return parent::__get($property);

@@ -10,6 +10,7 @@ use Jivoo\Core\Store\PhpStore;
 use Jivoo\Core\Store\Config;
 use Jivoo\Core\Store\StateMap;
 use Jivoo\Core\Store\Jivoo\Core\Store;
+use Jivoo\InvalidPropertyException;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -190,7 +191,6 @@ class App implements IEventSubject {
    * 'app.json' configuration file.
    * @param string $userPath Path to user-directory.
    * @param string $entryScript Name of entry script, e.g. 'index.php'.
-   * @throws \Exception In application configuration is missing or invalid.
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $appPath = Utilities::convertPath($appPath);
@@ -278,7 +278,7 @@ class App implements IEventSubject {
       case 'eventManager':
         return $this->e;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -293,7 +293,7 @@ class App implements IEventSubject {
         $this->$property = $value;
         return;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

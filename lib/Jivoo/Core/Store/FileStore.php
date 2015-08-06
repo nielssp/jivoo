@@ -94,11 +94,11 @@ abstract class FileStore implements IStore {
   public function open($mutable = false) {
     $handle = @fopen($this->file, $mutable ? 'c+' : 'r');
     if (!$handle)
-      throw new StoreReadFailedException(tr('Could not open file: %1', $this->file));
+      throw new AccessException(tr('Could not open file: %1', $this->file));
     $noBlock = $this->blocking ? 0 : LOCK_NB;
     if (!flock($handle, ($mutable ? LOCK_EX : LOCK_SH) | $noBlock)) {
       fclose($handle);
-      throw new StoreLockException(tr('Could not lock file: %1', $this->file));
+      throw new LockException(tr('Could not lock file: %1', $this->file));
     }
     $this->handle = $handle;
     $this->mutable = $mutable;
@@ -129,7 +129,7 @@ abstract class FileStore implements IStore {
    * Decode file content.
    * @param string $content File content.
    * @return array Data.
-   * @throws StoreReadFailedException If data format is invalid.
+   * @throws AccessException If data format is invalid.
    */
   protected abstract function decode($content);
 
@@ -145,7 +145,7 @@ abstract class FileStore implements IStore {
     $this->data = $this->decode($content);
     if (!is_array($this->data)) {
       $this->data = null;
-      throw new StoreReadFailedException(tr('Invalid file format: %1', $this->file));
+      throw new AccessException(tr('Invalid file format: %1', $this->file));
     }
     return $this->data;
   }
@@ -157,7 +157,7 @@ abstract class FileStore implements IStore {
     if (!isset($this->handle))
       return;
     if (!$this->mutable)
-      throw new StoreWriteFailedException(tr('Not mutable'));
+      throw new AccessException(tr('Not mutable'));
     Logger::debug(tr('Write file: %1', $this->file));
     $this->data = $data;
     ftruncate($this->handle, 0);

@@ -13,7 +13,7 @@ interface IBasicRecord extends \ArrayAccess {
    * Get value of a field.
    * @param string $field Field name.
    * @return mixed Value.
-   * @throws InvalidPropertyException If the field does not exist.
+   * @throws \Jivoo\InvalidPropertyException If the field does not exist.
    */
   public function __get($field);
   
@@ -21,7 +21,7 @@ interface IBasicRecord extends \ArrayAccess {
    * Determine if a field is set.
    * @param string $field Field name.
    * @return bool True if not null, false otherwise.
-   * @throws InvalidPropertyException If the field does not exist.
+   * @throws \Jivoo\InvalidPropertyException If the field does not exist.
    */
   public function __isset($field);
   

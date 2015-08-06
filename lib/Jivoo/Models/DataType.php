@@ -7,6 +7,8 @@ namespace Jivoo\Models;
 
 use Jivoo\Models\Validation\ValidatorField;
 use Jivoo\Core\Lib;
+use Jivoo\InvalidPropertyException;
+
 /**
  * Model field data type.
  * @property-read int $type Type (see type constants).
@@ -133,7 +135,7 @@ class DataType {
           return !$this->signed;
       }
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -585,6 +587,6 @@ class DataType {
     }
     if (Enum::classExists($placeholder))
       return self::enum($placeholder);
-    throw new \DomainException(tr('Invalid data type placeholder: %1', '%' . $placeholder));
+    throw new InvalidDataTypeException(tr('Invalid data type placeholder: %1', '%' . $placeholder));
   }
 }

@@ -7,6 +7,9 @@ namespace Jivoo\Models\Condition;
 
 use Jivoo\Models\DataType;
 use Jivoo\Models\IBasicModel;
+use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidMethodException;
+
 /**
  * A condition for selecting records in a model.
  * @property-read array[] $clauses A list of clauses in the form of arrays of the format
@@ -42,7 +45,7 @@ class Condition implements ICondition {
     if (isset($this->$property)) {
       return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -55,7 +58,7 @@ class Condition implements ICondition {
       case 'or':
         return call_user_func_array(array($this, 'orWhere'), $args);
     }
-    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
   /**

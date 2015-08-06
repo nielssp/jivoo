@@ -7,9 +7,9 @@ namespace Jivoo\Databases\Drivers\Sqlite3;
 
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
-use Jivoo\Databases\DatabaseQueryFailedException;
+use Jivoo\Databases\QueryException;
 use Jivoo\Core\Logger;
-use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\ConnectionException;
 
 /**
  * SQLite3 database driver.
@@ -21,10 +21,7 @@ class Sqlite3Database extends SqlDatabase {
   private $handle;
 
   /**
-   * Construct database.
-   * @param array $options An associative array with options for at least
-   * 'filename'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException If connection fails.
+   * {@inheritdoc}
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new SqliteTypeAdapter($this));
@@ -34,7 +31,7 @@ class Sqlite3Database extends SqlDatabase {
       $this->handle = new \SQLite3($options['filename']);
     }
     catch (\Exception $exception) {
-      throw new DatabaseConnectionFailedException(
+      throw new ConnectionException(
         tr('SQLite database does not exist and could not be created: %1',
           $options['filename']),
         0, $exception
@@ -64,7 +61,7 @@ class Sqlite3Database extends SqlDatabase {
     $result = $this->handle
       ->query($sql);
     if (!$result) {
-      throw new DatabaseQueryFailedException($this->handle
+      throw new QueryException($this->handle
         ->lastErrorMsg());
     }
     if (preg_match('/^\\s*(pragma|select|show|explain|describe) /i', $sql)) {

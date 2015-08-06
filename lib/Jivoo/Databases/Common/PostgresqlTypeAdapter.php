@@ -10,6 +10,7 @@ use Jivoo\Models\DataType;
 use Jivoo\Databases\Schema;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Json;
+use Jivoo\Databases\TypeException;
 
 /**
  * Type adapter for PostgreSQL database drivers.
@@ -146,7 +147,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
   /**
    * Convert output of SHOW COLUMN to DataType.
    * @param array $row Row result.
-   * @throws \Exception If type unsupported.
+   * @throws TypeException If type unsupported.
    * @return DataType The type.
    */
   private function toDataType($row) {
@@ -192,7 +193,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
     if (strpos($type, 'text') !== false)
       return DataType::text($null, $default);
     
-    throw new \Exception(tr(
+    throw new TypeException(tr(
       'Unsupported PostgreSQL type "%1" for column: %2', $row['data_type'], $row['column_name']
     ));
   }

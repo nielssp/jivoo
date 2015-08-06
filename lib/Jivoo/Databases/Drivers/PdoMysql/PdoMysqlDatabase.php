@@ -7,18 +7,14 @@ namespace Jivoo\Databases\Drivers\PdoMysql;
 
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Databases\Common\PdoDatabase;
-use Jivoo\Databases\DatabaseQueryFailedException;
-use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\ConnectionException;
 
 /**
  * PDO MySQL database driver.
  */
 class PdoMysqlDatabase extends PdoDatabase {
   /**
-   * Construct database.
-   * @param array $options An associative array with options for at least
-   * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException If connection fails.
+   * {@inheritdoc}
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new MysqlTypeAdapter($this));
@@ -38,7 +34,7 @@ class PdoMysqlDatabase extends PdoDatabase {
       }
     }
     catch (\PDOException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage(), 0, $exception);
+      throw new ConnectionException($exception->getMessage(), 0, $exception);
     }
   }
 }

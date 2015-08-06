@@ -6,6 +6,7 @@
 namespace Jivoo\AccessControl;
 
 use Jivoo\Controllers\Controller;
+use Jivoo\InvalidPropertyException;
 
 /**
  * Represents a request for authorization
@@ -45,6 +46,6 @@ class AuthorizationRequest {
       case 'user':
         return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 }

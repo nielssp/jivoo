@@ -97,14 +97,14 @@ namespace {
    * function parameters.
    * @param bool $condition Condition.
    * @param string $message Failure message.
-   * @throws InvalidArgumentException If condition is false.
+   * @throws \Jivoo\InvalidArgumentException If condition is false.
    */
   function assume($condition, $message = null) {
     if ($condition === true) {
       return;
     }
     if (isset($message))
-      throw new InvalidArgumentException($message);
+      throw new Jivoo\InvalidArgumentException($message);
     $bt = debug_backtrace();
     $call = $bt[0];
     $lines = file($call['file']);
@@ -113,20 +113,10 @@ namespace {
       $lines[$call['line'] - 1],
       $matches
     );
-    throw new InvalidArgumentException(tr('Assumption failed: %1', $matches[1]));
+    throw new Jivoo\InvalidArgumentException(tr('Assumption failed: %1', $matches[1]));
   }
   
-  
-  /**
-   * Thrown when a magic method is undefined.
-   */
-  class InvalidMethodException extends \LogicException { }
-  
-  /**
-   * Thrown when a magic property is undefined.
-   */
-  class InvalidPropertyException extends \LogicException { }
-  
+  require Jivoo\PATH . '/Jivoo/exceptions.php';
   require Jivoo\PATH . '/Jivoo/Core/Lib.php';
   spl_autoload_register(array('Jivoo\Core\Lib', 'autoload'));
   Jivoo\Core\Lib::import(Jivoo\PATH);

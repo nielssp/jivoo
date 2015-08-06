@@ -168,7 +168,7 @@ abstract class Model extends Module implements IModel {
     sort($primaryKey);
     $selection = $this;
     if (count($args) != count($primaryKey)) {
-      throw new InvalidPrimaryKeyException(tn(
+      throw new InvalidSelectionException(tn(
         'find() must be called with %1 parameters',
         'find() must be called with %1 parameter',
         count($primaryKey)
@@ -241,12 +241,12 @@ abstract class Model extends Module implements IModel {
    * must be ordered.
    * @param ReadSelection $selection A read selection.
    * @param IRecord $record A record.
-   * @throws \Exception If the selection is not ordered.
+   * @throws InvalidSelectionException If the selection is not ordered.
    * @return int Row number.
    */
   public function rowNumberSelection(ReadSelection $selection, IRecord $record) {
     if (empty($selection->orderBy)) {
-      throw new \Exception(tr('Can\'t find row number in selection without ordering'));
+      throw new InvalidSelectionException(tr('Can\'t find row number in selection without ordering'));
     }
     $condition = new Condition();
     foreach ($selection->orderBy as $orderBy) {

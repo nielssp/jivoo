@@ -7,8 +7,8 @@ namespace Jivoo\Databases\Drivers\PdoPostgresql;
 
 use Jivoo\Databases\Common\PostgresqlTypeAdapter;
 use Jivoo\Databases\Common\PdoDatabase;
-use Jivoo\Databases\DatabaseQueryFailedException;
-use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\QueryException;
+use Jivoo\Databases\ConnectionException;
 use Jivoo\Databases\Jivoo\Databases;
 
 /**
@@ -16,10 +16,7 @@ use Jivoo\Databases\Jivoo\Databases;
  */
 class PdoPostgresqlDatabase extends PdoDatabase {
   /**
-   * Construct database.
-   * @param array $options An associative array with options for at least
-   * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException If connection fails.
+   * {@inheritdoc}
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new PostgresqlTypeAdapter($this));
@@ -39,7 +36,7 @@ class PdoPostgresqlDatabase extends PdoDatabase {
       }
     }
     catch (\PDOException $exception) {
-      throw new DatabaseConnectionFailedException($exception->getMessage(), 0, $exception);
+      throw new ConnectionException($exception->getMessage(), 0, $exception);
     }
   }
 
@@ -51,7 +48,7 @@ class PdoPostgresqlDatabase extends PdoDatabase {
       $result = $this->pdo->query($sql . ' RETURNING ' . $this->quoteField($pk));
       if (!$result) {
         $errorInfo = $this->pdo->errorInfo();
-        throw new DatabaseQueryFailedException(
+        throw new QueryException(
           $errorInfo[0] . ' - ' . $errorInfo[1] . ' - ' . $errorInfo[2]);
       }
       $row = $result->fetch(\PDO::FETCH_NUM);

@@ -9,6 +9,7 @@ use Jivoo\Models\ISchema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Lib;
 use Jivoo\Models\Validation\Validator;
+use Jivoo\InvalidPropertyException;
 
 /**
  * Represents a database table schema.
@@ -63,7 +64,7 @@ class Schema implements ISchema {
     if (isset($this->_fields[$field])) {
       return $this->_fields[$field];
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $field));
   }
 
   /**

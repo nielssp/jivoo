@@ -6,6 +6,7 @@
 namespace Jivoo\Core\Store;
 
 use Jivoo\Core\MapIterator;
+use Jivoo\InvalidPropertyException;
 
 /**
  * Representation of semi-structured data such as a configuration ({@see Config})
@@ -71,7 +72,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
       case 'root':
         return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**
@@ -95,7 +96,7 @@ class Document implements \ArrayAccess, \IteratorAggregate {
           $this->setRecursive($key, $value);
         return;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**

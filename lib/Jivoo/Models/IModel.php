@@ -58,6 +58,8 @@ interface IModel extends Selection\ISelection, IBasicModel {
    * @param mixed $primary Value of primary key.
    * @param mixed ...$primary For multifield primary key.
    * @return IRecord|null A single matching record or null if it doesn't exist.
+   * @throws InvalidSelectionException If number of parameters does not
+   * match size of primary key.
    */
   public function find($primary);
 

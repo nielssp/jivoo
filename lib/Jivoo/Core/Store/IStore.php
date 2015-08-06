@@ -14,8 +14,8 @@ interface IStore {
    * Open store for reading and optionally writing.
    * @param bool $mutable Whether writing should be enabled (with exclusive
    * locking).
-   * @throws StoreReadFailedException If the store could not be opened.
-   * @throws StoreLockException If the store is locked.
+   * @throws AccessException If the store could not be opened.
+   * @throws LockException If the store is locked.
    */
   public function open($mutable = false);
   
@@ -27,14 +27,14 @@ interface IStore {
   /**
    * Read data ("document") from store.
    * @return array Data.
-   * @throws StoreReadFailedException If the data could not be read.
+   * @throws AccessException If the data could not be read.
    */
   public function read();
   
   /**
    * Write data to store.
    * @param array $data Data.
-   * @throws StoreWriteFailedException If the data could not be saved.
+   * @throws AccessException If the data could not be saved.
    */
   public function write(array $data);
 

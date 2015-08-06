@@ -57,7 +57,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
    */
   public function __get($table) {
     if (!isset($this->tables[$table])) {
-      throw new TableNotFoundException(
+      throw new InvalidTableException(
         tr('Table not found: "%1"', $table)
       );
     }
@@ -76,6 +76,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   /**
    * Database driver initialization.
    * @param array $options Associative array of options for driver.
+   * @throws ConnectionException If connection fails.
    */
   protected abstract function init($options);
   

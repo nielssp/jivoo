@@ -10,6 +10,7 @@ use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\Condition\Condition;
+use Jivoo\Databases\TypeException;
 
 /**
  * Type and migration adapter for SQLite database drivers.
@@ -139,12 +140,12 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   /**
    * Convert output of PRAGMA to DataType.
    * @param array $row Row result.
-   * @throws \Exception If type unsupported.
+   * @throws TypeException If type unsupported.
    * @return DataType The type.
    */
   private function toDataType($row) {
     if (preg_match('/ *([^ (]+) *(\(([0-9]+)\))? */i', $row['type'], $matches) !== 1)
-      throw new \Exception(tr('Cannot read type "%1" for column: %2', $row['type'], $row['name']));
+      throw new TypeException(tr('Cannot read type "%1" for column: %2', $row['type'], $row['name']));
     $actualType = strtolower($matches[1]);
     $length = isset($matches[3]) ? $matches[3] : 0;
     $null = (isset($row['notnull']) and $row['notnull'] != '1');
@@ -161,7 +162,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       case 'blob':
         return DataType::binary($null, $default);
     }
-    throw new \Exception(tr(
+    throw new TypeException(tr(
       'Unsupported SQLite type for column: %1', $row['name']
     ));
   }
@@ -276,7 +277,6 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    * {@inheritdoc}
    */
   public function renameTable($table, $newName) {
-    throw new \Exception('Not implemented');
     try {
       $current = $this->db->getSchema()->getSchema($table);
       $this->db->beginTransaction();

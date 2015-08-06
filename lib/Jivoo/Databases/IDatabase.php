@@ -13,7 +13,7 @@ interface IDatabase {
    * Get table.
    * @param string $table Table name
    * @return Table Table.
-   * @throws TableNotFoundException If the table doesn't exist.
+   * @throws InvalidTableException If the table doesn't exist.
    */
   public function __get($table);
   

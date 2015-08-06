@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models;
 
+use Jivoo\InvalidPropertyException;
+
 /**
  * A record associated with a {@see IModel}.
  */
@@ -130,7 +132,7 @@ class Record implements IRecord {
     if (array_key_exists($field, $this->virtual))
       return $this->virtual[$field];
     if (!array_key_exists($field, $this->data))
-      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     return $this->data[$field];
   }
 
@@ -139,7 +141,7 @@ class Record implements IRecord {
    */
   public function __set($field, $value) {
     if (!array_key_exists($field, $this->data))
-      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     $this->data[$field] = $value;
     $this->updatedData[$field] = $value;
     $this->saved = false;
@@ -152,7 +154,7 @@ class Record implements IRecord {
     if (array_key_exists($field, $this->virtual))
       return isset($this->virtual[$field]);
     if (!array_key_exists($field, $this->data))
-      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     return isset($this->data[$field]);
   }
 
@@ -161,7 +163,7 @@ class Record implements IRecord {
    */
   public function __unset($field) {
     if (!array_key_exists($field, $this->data))
-      throw new \InvalidPropertyException(tr('Invalid property: %1', $field));
+      throw new InvalidPropertyException(tr('Invalid property: %1', $field));
     $this->data[$field] = null;
     $this->updatedData[$field] = null;
     $this->saved = false;

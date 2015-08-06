@@ -14,6 +14,8 @@ use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Record;
 use Jivoo\Models\Condition\NotCondition;
+use Jivoo\Databases\InvalidTableException;
+use Jivoo\Databases\QueryException;
 
 /**
  * A table in an SQL database.
@@ -116,7 +118,7 @@ class SqlTable extends Table {
       else {
         $type = $this->getType($field);
         if (!isset($type))
-          throw new \Exception(tr(
+          throw new QueryException(tr(
             'Schema %1 does not contain field %2', $this->getName(), $field
           ));
         $data[$field] = $typeAdapter->decode($this->getType($field), $value);
@@ -258,7 +260,7 @@ class SqlTable extends Table {
         }
 
         if ($joinSource->owner !== $this->owner) {
-          throw new \Exception(tr(
+          throw new InvalidTableException(tr(
             'Unable to join SqlTable with table of different database'
           ));
         }

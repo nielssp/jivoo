@@ -41,7 +41,7 @@ class Boot extends Module {
     }
     
     if (!in_array($environment, $this->environments))
-      throw new \DomainException(tr('Undefined environment: %1', $environment));
+      throw new InvalidEnvironmentException(tr('Undefined environment: %1', $environment));
 
     if (isset($this->app->manifest['defaultConfig']))
       $this->config->defaults = $this->app->manifest['defaultConfig'];

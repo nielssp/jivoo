@@ -57,7 +57,7 @@ class PhpSessionStore implements IStore {
     );
     session_name($this->name);
     if (!session_start())
-      throw new StoreReadFailedException(tr('Could not start PHP session'));
+      throw new AccessException(tr('Could not start PHP session'));
     $this->open = true;
     $this->mutable = $mutable;
     if (isset($this->key)) {
@@ -100,7 +100,7 @@ class PhpSessionStore implements IStore {
     if (!$this->open)
       return;
     if (!$this->mutable)
-      throw new StoreWriteFailedException(tr('Not mutable'));
+      throw new AccessException(tr('Not mutable'));
     $this->data = $data;
   }
 

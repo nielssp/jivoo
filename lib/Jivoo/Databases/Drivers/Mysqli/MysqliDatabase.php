@@ -8,7 +8,8 @@ namespace Jivoo\Databases\Drivers\Mysqli;
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Core\Logger;
-use Jivoo\Databases\DatabaseConnectionFailedException;
+use Jivoo\Databases\ConnectionException;
+use Jivoo\Databases\QueryException;
 
 /**
  * MySQLi database driver.
@@ -20,11 +21,7 @@ class MysqliDatabase extends SqlDatabase {
   private $handle;
 
   /**
-   * Construct database.
-   * @param array $options An associative array with options for at least
-   * 'server', 'username', 'password' and 'database'. 'tablePrefix' is optional.
-   * @throws DatabaseConnectionFailedException If connection fails.
-   * @throws DatabaseSelectFailedException If database selection fails.
+   * {@inheritdoc}
    */
   public function init($options = array()) {
     $this->setTypeAdapter(new MysqlTypeAdapter($this));
@@ -34,7 +31,7 @@ class MysqliDatabase extends SqlDatabase {
     $this->handle = new \mysqli($options['server'], $options['username'],
       $options['password'], $options['database']);
     if ($this->handle->connect_error) {
-      throw new DatabaseConnectionFailedException($this->handle->connect_error);
+      throw new ConnectionException($this->handle->connect_error);
     }
 //     try {
 //       $this->initTables($this->rawQuery('SHOW TABLES'));
@@ -65,7 +62,7 @@ class MysqliDatabase extends SqlDatabase {
     Logger::query($sql);
     $result = $this->handle->query($sql);
     if (!$result) {
-      throw new DatabaseQueryFailedException($this->handle->error);
+      throw new QueryException($this->handle->error);
     }
     if (preg_match('/^\\s*(select|show|explain|describe) /i', $sql)) {
       return new MysqliResultSet($result);

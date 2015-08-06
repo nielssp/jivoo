@@ -25,6 +25,7 @@ class State extends Document {
    * Construct state.
    * @param IStore $store Store to load/save data from/to.
    * @param bool $mutable Whether state is mutable (true) or read-only (false).
+   * @throws AccessException If state could not be read.
    */
   public function __construct(IStore $store, $mutable = true) {
     parent::__construct();
@@ -33,8 +34,8 @@ class State extends Document {
       $this->store->open($mutable);
       $this->data = $this->store->read();
     }
-    catch (StoreException $e) {
-      throw new StateInvalidException(tr('Could not read state: %1', $e->getMessage()), null, $e);
+    catch (AccessException $e) {
+      throw new AccessException(tr('Could not read state: %1', $e->getMessage()), null, $e);
     }
   }
   
@@ -56,11 +57,11 @@ class State extends Document {
   
   /**
    * Close, save (if mutable), and unlock state data.
-   * @throws StateClosedException If the state has already been closed.
+   * @throws NotOpenException If the state has already been closed.
    */
   public function close() {
     if (!isset($this->store))
-      throw new StateClosedException(tr('State already closed.'));
+      throw new NotOpenException(tr('State already closed.'));
     if ($this->updated and $this->store->isMutable())
       $this->store->write($this->data);
     $this->store->close();

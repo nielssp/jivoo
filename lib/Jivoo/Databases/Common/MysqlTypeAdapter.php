@@ -10,6 +10,7 @@ use Jivoo\Models\DataType;
 use Jivoo\Databases\Schema;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Json;
+use Jivoo\Databases\TypeException;
 
 /**
  * Type adapter for MySQL database drivers.
@@ -142,7 +143,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   /**
    * Convert output of SHOW COLUMN to DataType.
    * @param array $row Row result.
-   * @throws \Exception If type unsupported.
+   * @throws TypeException If type unsupported.
    * @return DataType The type.
    */
   private function toDataType($row) {
@@ -189,7 +190,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
       case 'text':
         return DataType::text($null, $default);
     }
-    throw new \Exception(tr(
+    throw new TypeException(tr(
       'Unsupported MySQL type for column: %1', $row['Field']
     ));
   }

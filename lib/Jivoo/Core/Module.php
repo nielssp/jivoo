@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidMethodException;
+
 /**
  * A module is part of an application.
  */
@@ -88,7 +91,7 @@ abstract class Module implements IEventSubject {
    * @throws InvalidPropertyException If property is not defined.
    */
   public function __get($property) {
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
     return null;
   }
   
@@ -99,7 +102,7 @@ abstract class Module implements IEventSubject {
    * @throws InvalidPropertyException If property is not defined.
    */
   public function __set($property, $value) {
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**
@@ -130,7 +133,7 @@ abstract class Module implements IEventSubject {
    * @throws InvalidMethodException If method is not defined.
    */
   public function __call($method, $parameters) {
-    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
   
   /**

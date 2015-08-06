@@ -27,7 +27,7 @@ class PhpStore extends FileStore {
    */
   protected function decode($content) {
     if (substr($content, 0, 5) !== '<?php')
-      throw new StoreReadFailedException(tr('Invalid file format'));
+      throw new AccessException(tr('Invalid file format'));
     return eval(substr($content, 5));
   }
   

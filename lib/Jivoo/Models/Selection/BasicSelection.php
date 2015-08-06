@@ -7,6 +7,8 @@ namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\Model;
 use Jivoo\Models\Condition\Condition;
+use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidMethodException;
 
 /**
  * A basic selection. Base class for other selections.
@@ -64,7 +66,7 @@ abstract class BasicSelection implements IBasicSelection {
     if (isset($this->$property)) {
       return $this->$property;
     }
-    throw new \InvalidPropertyException(tr('Invalid property: %1', $property));
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
@@ -92,7 +94,7 @@ abstract class BasicSelection implements IBasicSelection {
       array_push($args, $this);
       return call_user_func_array(array($this->model, $method), $args);
     }
-    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
 
 
