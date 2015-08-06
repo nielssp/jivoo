@@ -53,7 +53,7 @@ $fg: #FFF;
       margin: 0;
       padding: 0;
       display: inline-block;
-      li {
+      & > div {
         margin: 0;
         padding: 0;
         display: inline-block;
@@ -85,7 +85,7 @@ $fg: #FFF;
       margin: 0;
       padding: 0;
       display: block;
-      li {
+      & > div {
         margin: 0;
         padding: 0;
         display: inline-block;

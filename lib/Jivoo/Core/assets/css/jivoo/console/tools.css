@@ -38,20 +38,20 @@
       margin: 0;
       padding: 0;
       display: inline-block; }
-      #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li {
+      #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools > div {
         margin: 0;
         padding: 0;
         display: inline-block; }
-        #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a {
+        #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools > div a {
           text-decoration: none;
           color: inherit;
           padding: 4px 8px;
           font-size: 13px;
           display: block;
           cursor: pointer; }
-          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a:hover {
+          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools > div a:hover {
             background-color: #a01b1b; }
-          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools li a .jivoo-devbar-count {
+          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-tools > div a .jivoo-devbar-count {
             color: #C22;
             background-color: #FFF;
             margin-left: 5px;
@@ -64,18 +64,18 @@
       margin: 0;
       padding: 0;
       display: block; }
-      #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li {
+      #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings > div {
         margin: 0;
         padding: 0;
         display: inline-block; }
-        #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li label {
+        #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings > div label {
           text-decoration: none;
           color: inherit;
           padding: 4px 8px;
           font-size: 13px;
           display: block;
           cursor: pointer; }
-          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings li label:hover {
+          #jivoo-dev-tools > .jivoo-devbar > .jivoo-devbar-settings > div label:hover {
             background-color: #a01b1b; }
   #jivoo-dev-tools > .jivoo-dev-frame-container {
     background-color: #fff; }
