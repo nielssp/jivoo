@@ -28,7 +28,7 @@ abstract class LoadableModule extends Module {
    */
   public final function __construct(App $app) {
     parent::__construct($app);
-    $name = Lib::getClassName($this);
+    $name = Utilities::getClassName($this);
     $this->config = $this->config[$name];
     $this->init();
   }

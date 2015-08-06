@@ -10,7 +10,7 @@ use Jivoo\Core\Event;
 use Jivoo\Models\Model;
 use Jivoo\Core\App;
 use Jivoo\Databases\Databases;
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 use Jivoo\Models\Selection\UpdateSelection;
 use Jivoo\Models\Selection\DeleteSelection;
 use Jivoo\Models\Selection\ReadSelection;
@@ -184,7 +184,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     parent::__construct($app);
     $databaseName = $this->database;
     $database = $databases->$databaseName;
-    $this->name = Lib::getClassName(get_class($this));
+    $this->name = Utilities::getClassName(get_class($this));
     if (!isset($database))
       throw new InvalidActiveModelException(tr(
         'Database "%1" not found in model %2', $this->database, $this->name
@@ -231,7 +231,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     }
 
     if (isset($this->record))
-      Lib::assumeSubclassOf($this->record, 'Jivoo\ActiveModels\ActiveRecord');
+      Utilities::assumeSubclassOf($this->record, 'Jivoo\ActiveModels\ActiveRecord');
     
     $this->attachEventListener($this);
     foreach ($this->mixins as $mixin => $options) {
@@ -240,7 +240,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $options = array();
       }
       $mixin = 'Jivoo\ActiveModels\\' . $mixin . 'Mixin';
-      if (!Lib::classExists($mixin))
+      if (!Utilities::classExists($mixin))
         throw new InvalidMixinException(tr('Mixin class not found: %1', $mixin));
       if (!is_subclass_of($mixin, 'Jivoo\ActiveModels\ActiveModelMixin'))
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));

@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\InvalidClassException;
+use Jivoo\Autoloader;
+
 /**
  * Collection of useful utility functions.
  */
@@ -162,6 +165,65 @@ class Utilities {
       ));
     }
   }
+  
+  
+  /**
+   * Get namespace part of a class name.
+   * @param string|object $className Class or object, e.g. 'Jivoo\Core\Utilities'.
+   * @return string Namespace, e.g. 'Jivoo\Core'.
+   */
+  public static function getNamespace($className) {
+    if (is_object($className))
+      $className = get_class($className);
+    if (strpos($className, '\\') === false)
+      return '';
+    return preg_replace('/\\\\[^\\\\]+$/', '', $className);
+  }
+  
+  /**
+   * Get class name part of a qualified class name.
+   * @param string|object $className Class or object, e.g. 'Jivoo\Core\Utilities'.
+   * @return string Class name, e.g. 'Utilities'.
+   */
+  public static function getClassName($className) {
+    if (is_object($className))
+      $className = get_class($className);
+    $className = array_slice(explode('\\', $className), -1);
+    return $className[0];
+  }
+
+  /**
+   * Check if a class exists.
+   * @param string $className Name of class.
+   * @param bool $autoload Whether or not to autoload it if it does.
+   * @return bool True if it exists, false otherwise.
+   */
+  public static function classExists($className, $autoload = true) {
+    if (class_exists($className, false))
+      return true;
+    if (!$autoload)
+      return false;
+    return Autoloader::getInstance()->load($className);
+  }
+  
+  /**
+   * Check whether or not $class extends $parent, and throw an exception if
+   * it does not.
+   * @param string|object $class Class name or object.
+   * @param string $parent Expected parent class of $class.
+   * @throws InvalidClassException if $class does not extend $parent.
+   */
+  public static function assumeSubclassOf($class, $parent) {
+    if (!is_subclass_of($class, $parent)) {
+      if (is_object($class))
+        $class = get_class($class);
+      if ($class === $parent)
+        return;
+      throw new InvalidClassException(tr(
+        'Class "%1" should extend "%2"', $class, $parent
+      ));
+    }
+  } 
   
   /**
    * Check whether a directory exists or create it if it doesn't.

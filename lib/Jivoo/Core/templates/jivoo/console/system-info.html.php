@@ -49,7 +49,7 @@
 </div>
 <div class="jivoo-system-info-entry">
 <strong><?php echo tr('%1 version', 'Jivoo'); ?></strong>
-<?php echo h(Jivoo\Core\VERSION); ?>
+<?php echo h(Jivoo\VERSION); ?>
 </div>
 </div>
 

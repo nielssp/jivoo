@@ -6,7 +6,6 @@
 namespace Jivoo\Models;
 
 use Jivoo\Models\Validation\ValidatorField;
-use Jivoo\Core\Lib;
 use Jivoo\InvalidPropertyException;
 
 /**

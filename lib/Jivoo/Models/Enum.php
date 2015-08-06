@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models;
 
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * Used for creating enum types.
@@ -52,12 +52,12 @@ abstract class Enum {
       return true;
     if (isset(self::$classes[$class]))
       return true;
-    if (Lib::classExists($class)) {
+    if (Utilities::classExists($class)) {
       self::$classes[$class] = $class;
       return true;
     }
     foreach (self::$searchPrefixes as $prefix) {
-      if (Lib::classExists($prefix . $class)) {
+      if (Utilities::classExists($prefix . $class)) {
         self::$classes[$class] = $prefix . $class;
         return true;
       }
@@ -79,7 +79,7 @@ abstract class Enum {
       if (!self::classExists($class))
         throw new InvalidEnumException(tr('Enum class not found: %1', $class));
       $class = self::$classes[$class];
-      Lib::assumeSubclassOf($class, 'Jivoo\Models\Enum');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Models\Enum');
       $ref = new \ReflectionClass($class);
       self::$values[$class] = array_flip($ref->getConstants());
       if (count(self::$values[$class]) < 1)

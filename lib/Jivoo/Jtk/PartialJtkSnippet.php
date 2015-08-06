@@ -6,7 +6,6 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Snippets\Snippet;
-use Jivoo\Core\Lib;
 
 /**
  * A toolkit snippet builder. All methods calls, getters, and setters are

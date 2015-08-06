@@ -6,7 +6,6 @@
 namespace Jivoo\Models;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Core\Lib;
 
 /**
  * Models module, finds all models in application.

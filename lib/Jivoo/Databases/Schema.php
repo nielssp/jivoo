@@ -7,7 +7,7 @@ namespace Jivoo\Databases;
 
 use Jivoo\Models\ISchema;
 use Jivoo\Models\DataType;
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 use Jivoo\Models\Validation\Validator;
 use Jivoo\InvalidPropertyException;
 
@@ -45,7 +45,7 @@ class Schema implements ISchema {
     $className = get_class($this);
     if ($className != __CLASS__) {
       if (!isset($name)) {
-        $name = preg_replace('/Schema$/', '', Lib::getClassName($className));
+        $name = preg_replace('/Schema$/', '', Utilities::getClassName($className));
       }
       if (defined($className . '::REVISION'))
         $this->_revision = constant($className . '::REVISION');

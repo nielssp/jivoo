@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Jtk;
 
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * An ordered collection of other JTK objects.
@@ -44,7 +44,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
       }
     }
     else {
-      Lib::assumeSubclassOf($item, $this->type);
+      Utilities::assumeSubclassOf($item, $this->type);
       if (isset($id))
         $this->items[$id] = $item;
       else
@@ -68,7 +68,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
       }
     }
     else {
-      Lib::assumeSubclassOf($item, $this->type);
+      Utilities::assumeSubclassOf($item, $this->type);
       if (isset($id))
         $itemArray = array($id => $item);
       else
@@ -94,7 +94,7 @@ class JtkCollection extends JtkObject implements \Countable, \IteratorAggregate,
       }
     }
     else {
-      Lib::assumeSubclassOf($item, $this->type);
+      Utilities::assumeSubclassOf($item, $this->type);
       if (isset($id))
         $itemArray = array($id => $item);
       else

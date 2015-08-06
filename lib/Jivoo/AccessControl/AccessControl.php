@@ -6,7 +6,7 @@
 namespace Jivoo\AccessControl;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * Access control module for authentication and authorization.
@@ -61,7 +61,7 @@ class AccessControl extends LoadableModule {
    * @param IPasswordHasher $hasher Password hasher.
    */
   public function addPasswordHasher(IPasswordHasher $hasher) {
-    $this->hashers[Lib::getClassName($hasher)] = $hasher;
+    $this->hashers[Utilities::getClassName($hasher)] = $hasher;
   }
   
   /**

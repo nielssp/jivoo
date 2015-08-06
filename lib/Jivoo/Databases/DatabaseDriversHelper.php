@@ -31,10 +31,10 @@ class DatabaseDriversHelper extends Helper {
    * not found
    */
   public function checkDriver($driver) {
-    if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
+    if (!file_exists($this->p('Databases/Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
       return null;
     }
-    if (!file_exists($this->p('Databases', 'Drivers/' . $driver . '/driver.json'))) {
+    if (!file_exists($this->p('Databases/Drivers/' . $driver . '/driver.json'))) {
       return null;
     }
     $info = Json::decodeFile($this->p('Databases', 'Drivers/' . $driver . '/driver.json'));

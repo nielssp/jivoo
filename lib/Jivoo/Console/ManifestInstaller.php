@@ -113,7 +113,7 @@ class ManifestInstaller extends InstallerSnippet {
    */
   private function installFile($module, $file) {
     copy(
-      \Jivoo\PATH . '/Jivoo/' . $module . '/default/' . $file,
+      \Jivoo\PATH . '/' . $module . '/default/' . $file,
       $this->p('app', $file)
     );
   }
@@ -123,13 +123,13 @@ class ManifestInstaller extends InstallerSnippet {
    * @return string Module names.
    */
   private function getModules() {
-    $files = scandir(\Jivoo\PATH . '/Jivoo');
+    $files = scandir(\Jivoo\PATH);
     $modules = array();
     if ($files !== false) {
       foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
-        if (file_exists(\Jivoo\PATH . '/Jivoo/' . $file . '/' . $file . '.php')) {
+        if (file_exists(\Jivoo\PATH . '/' . $file . '/' . $file . '.php')) {
           $modules[] = $file;
         }
       }

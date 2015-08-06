@@ -6,7 +6,6 @@
 namespace Jivoo\Controllers;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Core\Lib;
 use Jivoo\Core\Utilities;
 
 /**
@@ -44,7 +43,7 @@ class Controllers extends LoadableModule {
     if (isset($this->instances[$name]))
       return get_class($this->instances[$name]);
     $class = $name . 'Controller';
-    if (!Lib::classExists($class))
+    if (!Utilities::classExists($class))
       $class = $this->app->n('Controllers\\' . $class);
     return $class;
   }
@@ -78,11 +77,11 @@ class Controllers extends LoadableModule {
   public function getController($name, $singleton = true) {
     if (!$singleton or !isset($this->instances[$name])) {
       $class = $name . 'Controller';
-      if (!Lib::classExists($class))
+      if (!Utilities::classExists($class))
         $class = $this->app->n('Controllers\\' . $class);
-      if (!Lib::classExists($class))
+      if (!Utilities::classExists($class))
         return null;
-      Lib::assumeSubclassOf($class, 'Jivoo\Controllers\Controller');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Controllers\Controller');
       $object = new $class($this->app);
       if (!$singleton)
         return $object;

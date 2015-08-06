@@ -11,7 +11,6 @@ use Jivoo\Routing\NotFoundException;
 use Jivoo\Routing\Http;
 use Jivoo\Core\Utilities;
 use Jivoo\View\ViewResponse;
-use Jivoo\Core\Lib;
 
 /**
  * A loadable snippet.
@@ -75,9 +74,6 @@ class Snippet extends Module implements ISnippet {
     $this->inheritElements('helpers');
     $this->inheritElements('models');
     parent::__construct($app);
-    
-//     if (!isset($this->dataKey))
-//       $this->dataKey = Lib::getClassName($this);
     
     if (isset($this->m->Helpers)) {
       $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);

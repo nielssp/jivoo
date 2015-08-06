@@ -8,7 +8,6 @@ namespace Jivoo\Setup;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadModuleEvent;
 use Jivoo\Routing\TextResponse;
-use Jivoo\Core\Lib;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
 use Jivoo\Core\Store\Config;
@@ -82,7 +81,7 @@ class Setup extends LoadableModule {
     $state = $this->state->read('setup');
     if (isset($this->app->manifest['install'])) {
       $installer = $this->app->manifest['install'];
-      if (!Lib::classExists($installer))
+      if (!Utilities::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       if (!$state[$installer]->get('done', false)) {
         $state = $this->state->write('setup');
@@ -97,7 +96,7 @@ class Setup extends LoadableModule {
       else if ($state['version'] !== $this->app->version) {
         $state = $this->state->write('setup');
         $installer = $this->app->manifest['update'];
-        if (!Lib::classExists($installer))
+        if (!Utilities::classExists($installer))
           $installer = $this->app->n('Snippets\\' . $installer);
         $installerState = $state['updates'][$this->app->version][$installer];
         if ($installerState->get('done', false)) {
@@ -111,7 +110,7 @@ class Setup extends LoadableModule {
     if (isset($state['current']['install'])) {
       $state = $this->state->write('setup');
       $installer = $state['current']->get('install', null);
-      if (!Lib::classExists($installer))
+      if (!Utilities::classExists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       $installerState = $state['current'][$installer];
       if ($installerState->get('done', false)) {
@@ -180,7 +179,7 @@ class Setup extends LoadableModule {
    * @throws \Exception If the installer could not be started.
    */
   public function trigger($installerClass) {
-    if (!Lib::classExists($installerClass))
+    if (!Utilities::classExists($installerClass))
       $installerClass = $this->app->n('Snippets\\' . $installerClass);
     Logger::notice(tr('Trigger installer: %1', $installerClass));
     $this->getInstaller($installerClass);

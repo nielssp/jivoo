@@ -6,7 +6,7 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * The Jivoo toolkit. Module for creating web application user interfaces.
@@ -47,7 +47,7 @@ class Jtk extends LoadableModule {
    * $class . 'Snippet'.
    */
   public function addTool($class, $snippetClass = null) {
-    $name = Lib::getClassName($class);
+    $name = Utilities::getClassName($class);
     if (!isset($snippetClass))
       $snippetClass = $class . 'Snippet';
     $this->tools[$name] = $snippetClass;
@@ -63,7 +63,7 @@ class Jtk extends LoadableModule {
 //       return $this->toolInstances[$name];
     if (isset ($this->tools[$name])) {
       $class = $this->tools[$name];
-      Lib::assumeSubclassOf($class, 'Jivoo\Jtk\JtkSnippet');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Jtk\JtkSnippet');
       return new $class($this->app);
     }
     return null;

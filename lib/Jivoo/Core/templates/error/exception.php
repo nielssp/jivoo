@@ -68,7 +68,7 @@ if (isset($exception)) {
 <dd><?php echo $version; ?></dd>
 
 <dt><?php echo tr('%1 version', 'Jivoo'); ?></dt>
-<dd><?php echo \Jivoo\CORE\VERSION; ?></dd>
+<dd><?php echo \Jivoo\VERSION; ?></dd>
 
 <dt><?php echo tr('PHP version'); ?></dt>
 <dd><?php echo phpversion(); ?></dd>

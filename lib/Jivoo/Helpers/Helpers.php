@@ -7,7 +7,7 @@ namespace Jivoo\Helpers;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadEvent;
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * Helpers module. All helpers added to the module, can be accessed as
@@ -59,20 +59,20 @@ class Helpers extends LoadableModule {
   public function getHelper($name) {
     if (!isset($this->helpers[$name])) {
       $class = $this->app->n('Helpers\\' . $name . 'Helper');
-      if (!Lib::classExists($class)) {
+      if (!Utilities::classExists($class)) {
         if (isset($this->helperClasses[$name])) {
           $class = $this->helperClasses[$name];
         }
         else if (strpos($name, '\\') !== false) {
           $class = $name . 'Helper';
-          $name = Lib::getClassName($name);
+          $name = Utilities::getClassName($name);
         }
         else {
           $class = 'Jivoo\Helpers\\' . $name . 'Helper';
         }
       }
       $this->triggerEvent('beforeLoadHelper', new LoadHelperEvent($this, $name));
-      Lib::assumeSubclassOf($class, 'Jivoo\Helpers\Helper');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Helpers\Helper');
       $this->helpers[$name] = new $class($this->app);
       $this->triggerEvent('afterLoadHelper', new LoadHelperEvent($this, $name, $this->helpers[$name]));
     }
@@ -89,7 +89,7 @@ class Helpers extends LoadableModule {
     foreach ($names as $name) {
       $helper = $this->getHelper($name);
       if (strpos($name, '\\') !== false)
-        $name = Lib::getClassName($name);
+        $name = Utilities::getClassName($name);
       $helpers[$name] = $helper;
     }
     return $helpers;

@@ -11,7 +11,6 @@ use Jivoo\Core\Utilities;
 use Jivoo\View\ViewResponse;
 use Jivoo\Routing\Response;
 use Jivoo\Routing\Http;
-use Jivoo\Core\Lib;
 
 /**
  * A controller, the C of MVC.

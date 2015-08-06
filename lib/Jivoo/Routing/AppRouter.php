@@ -6,7 +6,6 @@
 namespace Jivoo\Routing;
 
 use Jivoo\Core\AppListener;
-use Jivoo\Core\Lib;
 
 /**
  * An application listener that can be used to implement custom routing.

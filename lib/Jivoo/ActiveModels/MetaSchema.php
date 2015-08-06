@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\ActiveModels;
 
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 
@@ -20,7 +20,7 @@ abstract class MetaSchema extends Schema {
    * @return string Name of id field.
    */
   protected function getId() {
-    $class = Lib::getClassName($this);
+    $class = Utilities::getClassName($this);
     if (preg_match('/^(.+)MetaSchema$/', $class, $matches) !== 1)
       throw new InvalidMixinException(tr('Invalid meta class name format.'));
     return lcfirst($matches[1]) . 'Id';

@@ -108,7 +108,7 @@ class Boot extends Module {
           $split = explode('.', $file);
           if (isset($split[1]) and $split[1] == 'php') {
             $listener = $this->app->n('Listeners\\' . $split[0]);
-            Lib::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
+            Utilities::assumeSubclassOf($listener, 'Jivoo\Core\AppListener');
             $this->app->attachEventListener(new $listener($this->app));
           }
         }

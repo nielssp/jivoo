@@ -6,7 +6,6 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Models\Form;
-use Jivoo\Core\Lib;
 use Jivoo\Setup\InstallerSnippet;
 
 /**

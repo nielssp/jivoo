@@ -11,6 +11,7 @@ use Jivoo\Core\Store\Config;
 use Jivoo\Core\Store\StateMap;
 use Jivoo\Core\Store\Jivoo\Core\Store;
 use Jivoo\InvalidPropertyException;
+use Jivoo\Autoloader;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -242,15 +243,16 @@ class App implements IEventSubject {
     $this->listenerNames = $manifest['listeners'];
     $this->defaultConfig = $manifest['defaultConfig'];
 
-    Lib::import($this->p('app'), $this->namespace);
-    
-    $this->paths->Core = \Jivoo\PATH . '/Jivoo/Core';
+    Autoloader::getInstance()->addPath($this->namespace, $this->p('app'));
 
-    $file = new PhpStore($this->p('user', 'config.php'));
+    $this->paths->Jivoo = \Jivoo\PATH;
+    $this->paths->Core = \Jivoo\PATH . '/Core';
+
+    $file = new PhpStore($this->p('user/config.php'));
     $this->config = new Config($file);
     
     // Persistent state storage
-    $this->state = new StateMap($this->p('state', ''));
+    $this->state = new StateMap($this->p('state'));
   }
 
   /**
@@ -358,12 +360,16 @@ class App implements IEventSubject {
 
   /**
    * Get the absolute path of a file.
-   * @param string $key Location-identifier.
+   * @param string $ipath Internal path, see {@see Paths}.
    * @param string $path File.
    * @return string Absolute path.
    */
-  public function p($key, $path = '') {
-    return $this->paths->p($key . '/' . $path);
+  public function p($ipath, $path = null) {
+    if (isset($path)) {
+//       trigger_error(tr('The second parameter of p() is no longer needed'), E_USER_DEPRECATED);
+      return $this->paths->p($ipath . '/' . $path);
+    }
+    return $this->paths->p($ipath);
   }
   
   /**
@@ -405,18 +411,13 @@ class App implements IEventSubject {
   public function import($module) {
     if (strpos($module, '\\') === false) {
       $class = 'Jivoo\\' . $module . '\\' . $module;
-      $pathName = $module;
+      $this->paths->$module = \Jivoo\PATH . '/' . $module;
     }
     else {
       $class = $module;
       $components = explode('\\', $class);
       $module = array_pop($components);
-      if ($components == array('Jivoo', $module))
-        $pathName = $module;
-      else
-        $pathName = $class;
     }
-    $this->paths->$pathName = dirname(\Jivoo\PATH . '/' . str_replace('\\', '/', $class));
     $this->imports[$module] = $class;
     
     $loadOrder = LoadableModule::getLoadOrder($class);
@@ -452,7 +453,7 @@ class App implements IEventSubject {
             $this->load($dependency);
         }
       }
-      Lib::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
       $this->m->$module = new $class($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->m->$module));
       $this->m->$module->afterLoad();
@@ -484,7 +485,7 @@ class App implements IEventSubject {
             $this->getModule($dependency);
         }
       }
-      Lib::assumeSubclassOf($module, 'Jivoo\Core\LoadableModule');
+      Utilities::assumeSubclassOf($module, 'Jivoo\Core\LoadableModule');
       $this->m->$name = new $module($this);
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
       $this->m->$name->afterLoad();
@@ -570,7 +571,7 @@ class App implements IEventSubject {
     }
     catch (\Exception $e) { }
     if (!isset($custom))
-      include \Jivoo\PATH . '/Jivoo/Core/templates/error/exception.php';
+      include \Jivoo\PATH . '/Core/templates/error/exception.php';
   }
   
   /**
@@ -630,7 +631,7 @@ class App implements IEventSubject {
       }
       catch (\Exception $e) { }
       if (!isset($custom))
-        include \Jivoo\PATH . '/Jivoo/Core/templates/error/error.php';
+        include \Jivoo\PATH . '/Core/templates/error/error.php';
       $this->stop();
     }
   }
@@ -663,7 +664,7 @@ class App implements IEventSubject {
     register_shutdown_function(array('Jivoo\Core\Logger', 'saveAll'));
     
     $class = $this->n('Boot');
-    if (!Lib::classExists($class))
+    if (!Utilities::classExists($class))
       $class = 'Jivoo\Core\Boot';
     $boot = new $class($this);
     $this->triggerEvent('beforeBoot');

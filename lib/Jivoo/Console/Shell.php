@@ -166,7 +166,7 @@ class Shell extends Module {
   
   public function showVersion() {
     $this->put($this->app->name . ' ' . $this->app->version);
-    $this->put('Jivoo ' . \Jivoo\Core\VERSION);
+    $this->put('Jivoo ' . \Jivoo\VERSION);
   }
   
   public function showHelp() {

@@ -165,7 +165,7 @@ class ModuleLoader {
           }
         }
       }
-      Lib::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
       $this->modules[$module] = new $class($this->app);
 //       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->m->$module));
       $this->modules[$module]->afterLoad();

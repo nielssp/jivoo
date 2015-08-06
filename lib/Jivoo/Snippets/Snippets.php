@@ -6,7 +6,7 @@
 namespace Jivoo\Snippets;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Core\Lib;
+use Jivoo\Core\Utilities;
 
 /**
  * Snippets module.
@@ -40,11 +40,11 @@ class Snippets extends LoadableModule {
   public function getSnippet($name, $singleton = true) {
     if (!$singleton or !isset($this->instances[$name])) {
       $class = $name;
-      if (!Lib::classExists($class))
+      if (!Utilities::classExists($class))
         $class = $this->app->n('Snippets\\' . $class);
-      if (!Lib::classExists($class))
+      if (!Utilities::classExists($class))
         return null;
-      Lib::assumeSubclassOf($class, 'Jivoo\Snippets\Snippet');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Snippets\Snippet');
       $object = new $class($this->app);
       if (!$singleton)
         return $object;
