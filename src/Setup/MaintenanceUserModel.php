@@ -5,9 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Setup;
 
-use Jivoo\Core\Utilities;
 use Jivoo\Core\Store\Config;
 use Jivoo\AccessControl\IUserModel;
+use Jivoo\AccessControl\Random;
 
 /**
  * User model for the maintenance user
@@ -48,7 +48,7 @@ class MaintenanceUserModel implements IUserModel {
    * {@inheritdoc}
    */
   public function createSession($userData, $validUntil) {
-    $sessionId = Utilities::randomString(32);
+    $sessionId = base64_encode(Random::bytes(32));
     $this->lock['session'] = $sessionId;
     $this->lock->save();
     return $sessionId;

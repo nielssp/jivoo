@@ -5,8 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Content;
 
-use Jivoo\Core\Utilities;
 use Jivoo\Core\Store\Config;
+use Jivoo\Core\Unicode;
 
 /**
  * Encoder for encoding HTML, allowing/disallowing certain tags and attributes,
@@ -367,7 +367,7 @@ class HtmlEncoder {
     }
     $shortened = false;
     if ($maxLength > 0 AND strlen($text) > $maxLength) {
-      $text = Utilities::substr($text, 0, $maxLength);
+      $text = Unicode::slice($text, 0, $maxLength);
       $shortened = true;
     }
     $text = preg_replace_callback(

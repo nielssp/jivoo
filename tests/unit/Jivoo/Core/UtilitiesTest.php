@@ -45,32 +45,6 @@ class UtilitiesTest extends \Codeception\TestCase\Test {
     $this->assertEquals('my-post-title', Utilities::stringToDashes('My Post-Title1234'));
   }
   
-  public function testUpperLower() {
-    $this->assertTrue(Utilities::isUpper('A'));
-    $this->assertTrue(Utilities::isUpper('Z'));
-    $this->assertFalse(Utilities::isUpper('a'));
-    $this->assertFalse(Utilities::isUpper('z'));
-    $this->assertFalse(Utilities::isLower('A'));
-    $this->assertFalse(Utilities::isLower('Z'));
-    $this->assertTrue(Utilities::isLower('a'));
-    $this->assertTrue(Utilities::isLower('z'));
-  }
-  
-  public function testRandom() {
-    $this->assertTrue(is_int(Utilities::randomInt(0, 100)));
-    
-    $this->assertTrue(is_string(Utilities::randomString(10)));
-    $this->assertEquals(10, strlen(Utilities::randomString(10)));
-  }
-  
-  public function testSubstrings() {
-    $this->assertEquals('World', Utilities::substr('Hello, World!', 7, 5));
-    $this->assertEquals('World', Utilities::substr('Hello, World!', 7, 5, false));
-
-    $this->assertEquals('æ', Utilities::substr('ååæøø', 2, 1));
-    $this->assertEquals('æ', Utilities::substr('ååæøø', 2, 1, false));
-  }
-  
   public function testFileExtensions() {
     $this->assertEquals('html', Utilities::getFileExtension('/some/dir/test.html'));
     $this->assertEquals('html', Utilities::getFileExtension('test.html'));
