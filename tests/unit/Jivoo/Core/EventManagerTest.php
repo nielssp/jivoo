@@ -16,7 +16,11 @@ class EventManagerTest extends \Codeception\TestCase\Test {
   
   public function testAttachAndDetach() {
     $subject1 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject1->method('getEvents')
+      ->willReturn(array('someEvent'));
     $subject2 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject2->method('getEvents')
+      ->willReturn(array('someEvent'));
     $em1 = new EventManager($subject1);
     $em2 = new EventManager($subject2, $em1);
     $c = function() { return false; };
@@ -32,7 +36,11 @@ class EventManagerTest extends \Codeception\TestCase\Test {
   
   public function testListener() {
     $subject1 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject1->method('getEvents')
+      ->willReturn(array('someEvent'));
     $subject2 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject2->method('getEvents')
+      ->willReturn(array('someEvent'));
     $em1 = new EventManager($subject1);
     $em2 = new EventManager($subject2, $em1);
     $l = $this->getMockBuilder('Jivoo\Core\IEventListener')

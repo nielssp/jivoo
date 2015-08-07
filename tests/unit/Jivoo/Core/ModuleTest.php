@@ -21,25 +21,39 @@ class ModuleTest extends \Codeception\TestCase\Test {
     $app = $this->getMockBuilder('Jivoo\Core\App')
       ->disableOriginalConstructor()
       ->getMock();
-    $app->method('getModules')
-      ->wilLReturn((object)array(
-        'Routing' => (object)array(
-          'request' => (object)array(
-            'session' => 'session'
-          )
-        ),
-        'View' => 'view'
-      ));
-    $m = $this->getMockForAbstractClass('Jivoo\Core\Module', array($app));
+    $mloader = $this->getMockBuilder('Jivoo\Core\ModuleLoader')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $mloader->method('__isset')
+      ->willReturn(true);
+    $mloader->method('__get')
+      ->will($this->returnCallback(function($property) {
+        if ($property == 'View')
+          return 'view';
+        if ($property == 'Routing')
+          return (object)array(
+            'request' => (object)array(
+              'session' => 'session'
+            )
+          );
+      }));
+    $app->method('__get')
+      ->will($this->returnCallback(function($property) use($mloader) {
+        if ($property == 'm')
+          return $mloader;
+      }));
+
+    $m = new A($app);
+    
     $this->assertAttributeEquals('session', 'session', $m);
     $this->assertAttributeEquals('view', 'view', $m);
     
     $app->expects($this->once())
       ->method('p')
       ->willReturn('ptest');
-    $this->assertEquals('ptest', $m->p('a', 'b'));
-    $this->assertEmpty($m->getEvents());
-    $this->assertFalse($m->hasEvent('someEvent'));
+    $this->assertEquals('ptest', $m->p('a/b'));
+    $this->assertEquals($m->getEvents(), array('someEvent'));
+    $this->assertTrue($m->hasEvent('someEvent'));
     $l = $this->getMockBuilder('Jivoo\Core\IEventListener')
       ->setMethods(array('getEventHandlers', 'someEvent'))
       ->getMock();
@@ -48,6 +62,7 @@ class ModuleTest extends \Codeception\TestCase\Test {
     $l->expects($this->once())
       ->method('someEvent')
       ->willReturn(false);
+    
     $m->attachEventListener($l);
     $e = new Event($this);
     $this->assertfalse($m->triggerEvent('someEvent', $e));
@@ -64,8 +79,13 @@ class ModuleTest extends \Codeception\TestCase\Test {
     $app = $this->getMockBuilder('Jivoo\Core\App')
       ->disableOriginalConstructor()
       ->getMock();
-    $app->method('getModules')
-      ->wilLReturn(array());
+    $moduleLoader = $this->getMockBuilder('Jivoo\Core\ModuleLoader')
+      ->disableOriginalConstructor()->getMock();
+    $app->method('__get')
+      ->will($this->returnCallback(function($property) use($moduleLoader) {
+        if ($property == 'm')
+          return $moduleLoader;
+      }));;
     $m = new A($app);
     try {
       $m->invalidProp;
@@ -98,9 +118,13 @@ class ModuleTest extends \Codeception\TestCase\Test {
     $app = $this->getMockBuilder('Jivoo\Core\App')
       ->disableOriginalConstructor()
       ->getMock();
-    $app->expects($this->once())
-      ->method('getModules')
-      ->wilLReturn(array());
+    $moduleLoader = $this->getMockBuilder('Jivoo\Core\ModuleLoader')
+      ->disableOriginalConstructor()->getMock();
+    $app->method('__get')
+      ->will($this->returnCallback(function($property) use($moduleLoader) {
+        if ($property == 'm')
+          return $moduleLoader;
+      }));;
     $b = new B($app);
     $this->assertAttributeCount(4, 'modules', $b);
     $this->assertAttributeContains('A', 'modules', $b);
@@ -112,6 +136,8 @@ class ModuleTest extends \Codeception\TestCase\Test {
 
 class A extends Module {
   protected $modules = array('A', 'B');
+  
+  protected $events = array('someEvent');
   public function __construct(App $app) {
     parent::__construct($app);
     $this->inheritElements('modules');
