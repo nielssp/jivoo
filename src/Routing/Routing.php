@@ -126,7 +126,8 @@ class Routing extends LoadableModule {
    */
   protected $events = array('beforeLoadRoutes', 'afterLoadRoutes', 
     'beforeFindRoute', 'beforeRender', 'afterRender', 'beforeRedirect', 
-    'beforeDispatch', 'afterDispatch');
+    'beforeDispatch', 'afterDispatch', 'beforeFollowRoute',
+    'beforeCreateDispatch', 'afterCreateDispatch');
 
   /**
    * {@inheritdoc}

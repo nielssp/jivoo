@@ -23,14 +23,24 @@ abstract class Module implements IEventSubject {
   protected $app = null;
   
   /**
-   * @var ModuleMap Collection of loaded modules.
+   * @var ModuleLoader Collection of loaded modules.
    */
   protected $m;
+  
+  /**
+   * @var \Jivoo\Core\Vendor\VendorLoader Third-party library loader.
+   */
+  protected $vendor;
   
   /**
    * @var \Jivoo\Core\Store\StateMap Application persistent state storage.
    */
   protected $state;
+  
+  /**
+   * @var \Psr\Log\LoggerInterface Application logger.
+   */
+  protected $logger;
 
   /**
    * @var Config Module configuration.
@@ -73,7 +83,10 @@ abstract class Module implements IEventSubject {
     $this->app = $app;
     $this->config = $app->config;
     $this->state = $app->state;
-    $this->m = $app->getModules($this->modules);
+    $this->m = $app->m;
+    $this->m->load($this->modules);
+    $this->vendor = $app->vendor;
+    $this->logger = $app->logger;
     if (isset($this->m->Routing)) {
       $this->request = $this->m->Routing->request;
       $this->session = $this->request->session;

@@ -25,7 +25,12 @@ namespace Jivoo\Core;
  * @property-read \Jivoo\Themes\Themes $Themes
  * @property-read \Jivoo\View\View $View
  */
-class ModuleLoader {
+class ModuleLoader implements IEventSubject {
+  /**
+   * @var App
+   */
+  private $app;
+
   /**
    * @var LoadableModule[]
    */
@@ -52,6 +57,76 @@ class ModuleLoader {
   private $after = array();
   
   /**
+   * @var EventManager Application event manager.
+   */
+  private $e = null;
+  
+  /**
+   * @var string[]
+   */
+  private $events = array('beforeLoadModule', 'afterLoadModule');
+  
+  /**
+   * Construct module loader.
+   * @param App $app Application.
+   */
+  public function __construct(App $app) {
+    $this->app = $app;
+    $this->e = new EventManager($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEvents() {
+    return $this->events;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function attachEventHandler($name, $callback) {
+    $this->e->attachHandler($name, $callback);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function attachEventListener(IEventListener $listener) {
+    $this->e->attachListener($listener);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function detachEventHandler($name, $callback) {
+    $this->e->detachHandler($name, $callback);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function detachEventListener(IEventListener $listener) {
+    $this->e->detachListener($listener);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function hasEvent($name) {
+    return in_array($name, $this->events);
+  }
+  
+  /**
+   * @param string $name
+   * @param Event $event
+   * @return bool
+   */
+  private function triggerEvent($name, Event $event = null) {
+    return $this->e->trigger($name, $event);
+  }
+  
+  /**
    * Load a module.
    * @param string $module Module name.
    * @return LoadableModule Module.
@@ -67,6 +142,15 @@ class ModuleLoader {
    */
   public function __isset($module) {
     return isset($this->modules[$module]);
+  }
+  
+  /**
+   * Whether a module has been imported (but not necessarily loaded).
+   * @param string $module Module name.
+   * @return bool True if module is imported.
+   */
+  public function hasImport($module) {
+    return isset($this->classes[$module]);
   }
   
   /**
@@ -101,7 +185,7 @@ class ModuleLoader {
   /**
    * Import a module. Importing all modules before they are loaded ensures
    * correct load order.
-   * @param string $module Module name.
+   * @param string|string[] $module Module name or list of module names.
    */
   public function import($module) {
     if (is_array($module)) {
@@ -114,6 +198,7 @@ class ModuleLoader {
     if (strpos($module, '\\') === false) {
       $class = 'Jivoo\\' . $module . '\\' . $module;
       $pathName = $module;
+      $this->app->paths->$module = \Jivoo\PATH . '/' . $module;
     }
     else {
       $class = $module;
@@ -126,6 +211,7 @@ class ModuleLoader {
     }
     $this->classes[$module] = $class;
     
+    assume(Utilities::classExists($class));
     $loadOrder = LoadableModule::getLoadOrder($class);
 
     foreach ($loadOrder['before'] as $dependency)
@@ -137,7 +223,7 @@ class ModuleLoader {
 
   /**
    * Load a module.
-   * @param string $module Module name.
+   * @param string|string[] $module Module name or list of module names.
    * @return LoadableModule Module.
    */
   public function load($module) {
@@ -148,7 +234,7 @@ class ModuleLoader {
       return;
     }
     if (!isset($this->modules[$module])) {
-//       $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
+      $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
       if (!isset($this->classes[$module]))
         $this->import($module);
       $class = $this->classes[$module];
@@ -167,7 +253,7 @@ class ModuleLoader {
       }
       Utilities::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
       $this->modules[$module] = new $class($this->app);
-//       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->m->$module));
+      $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->modules[$module]));
       $this->modules[$module]->afterLoad();
       if (isset($this->lazyModules[$module]))
         $this->lazyModules[$module]->playMacro($this->modules[$module], false);
@@ -175,3 +261,8 @@ class ModuleLoader {
     return $this->modules[$module];
   }
 }
+
+/**
+ * Event sent before and after a module has been loaded
+ */
+class LoadModuleEvent extends LoadEvent { }

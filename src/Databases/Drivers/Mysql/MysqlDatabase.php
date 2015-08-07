@@ -38,12 +38,6 @@ class MysqlDatabase extends SqlDatabase {
     if (!mysql_select_db($options['database'], $this->handle)) {
       throw new ConnectionException(mysql_error());
     }
-//     try {
-//       $this->initTables($this->rawQuery('SHOW TABLES'));
-//     }
-//     catch (DatabaseQueryFailedException $exception) {
-//       throw new DatabaseConnectionFailedException($exception->getMessage());
-//     }
   }
 
   /**

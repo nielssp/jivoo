@@ -104,6 +104,12 @@ namespace Jivoo\Core {
     implements CoreException {}
   
   /**
+   * Thrown when an event is undefined.
+   */
+  class EventException extends \DomainException
+    implements CoreException {}
+  
+  /**
    * Thrown when a JSON string is invalid.
    */
   class JsonException extends \RuntimeException
@@ -187,6 +193,12 @@ namespace Jivoo\Databases  {
    * Thrown when unsupported types are encountered in a database.
    */
   class TypeException extends QueryException {}
+  
+  /**
+   * Thrown when a database driver is invalid.
+   */
+  class InvalidDriverException extends InvalidClassException
+    implements DatabasesException {}
   
   /**
    * Thrown when a database connection fails.

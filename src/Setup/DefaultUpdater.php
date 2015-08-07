@@ -15,7 +15,7 @@ class DefaultUpdater extends InstallerSnippet {
    */  
   public function setup() {
     $this->appendStep('welcome');
-    if ($this->app->hasImport('Migrations'))
+    if ($this->m->hasImport('Migrations'))
       $this->appendInstaller('Jivoo\Migrations\MigrationUpdater');
     $this->appendStep('unlock');
   }

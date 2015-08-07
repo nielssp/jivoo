@@ -7,6 +7,7 @@ namespace Jivoo\Databases;
 
 use Jivoo\Helpers\Helper;
 use Jivoo\Core\Json;
+use Jivoo\Core\JsonException;
 
 /**
  * Helper for listing database drivers.
@@ -27,19 +28,22 @@ class DatabaseDriversHelper extends Helper {
    * )
    * </code>
    * @param string $driver Driver name
-   * @return array|nulll Driver information as an associative array or null if
-   * not found
+   * @return array Driver information as an associative array.
+   * @throws InvalidDriverException If driver is missing or invalid.
    */
   public function checkDriver($driver) {
     if (!file_exists($this->p('Databases/Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
-      return null;
+      throw new InvalidDriverException(tr('Driver class not found: %1', $driver));
     }
     if (!file_exists($this->p('Databases/Drivers/' . $driver . '/driver.json'))) {
-      return null;
+      throw new InvalidDriverException(tr('Driver manifest not found: %1', $driver));
     }
-    $info = Json::decodeFile($this->p('Databases', 'Drivers/' . $driver . '/driver.json'));
-    if (!isset($info))
-      return null;
+    try {
+      $info = Json::decodeFile($this->p('Databases/Drivers/' . $driver . '/driver.json'));
+    }
+    catch (JsonException $e) {
+      throw new InvalidDriverException(tr('Invalid driver manifest: %1 (%2)', $driver, $e->getMessage()), 0, $e);
+    }
     if (!isset($info['required']))
       $info['required'] = array();
     if (!isset($info['optional']))
@@ -73,8 +77,11 @@ class DatabaseDriversHelper extends Helper {
     if ($files !== false) {
       foreach ($files as $driver) {
         if (is_dir($this->p('Databases', 'Drivers/' . $driver))) {
-          if ($driverInfo = $this->checkDriver($driver)) {
-            $drivers[$driver] = $driverInfo;
+          try {
+            $drivers[$driver] = $this->checkDriver($driver);
+          }
+          catch (InvalidDriverException $e) {
+            $this->logger->warning($e->getMessage(), array('exception' => $e));
           }
         }
       }

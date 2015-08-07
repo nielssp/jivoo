@@ -24,7 +24,7 @@ class ActiveModelInstaller extends InstallerSnippet {
    * {@inheritdoc}
    */
   public function before() {
-    $this->app->getModule('ActiveModels');
+    $this->m->load('ActiveModels');
   }
 
   /**

@@ -128,11 +128,12 @@ class Databases extends LoadableModule {
       throw new ConfigurationException(tr(
         'Database driver not set'
       ));
-    $driverInfo = $this->drivers->checkDriver($driver);
-    if (!isset($driverInfo))
-      throw new ConnectionException(tr(
-        'Invalid database driver: %1', $driver
-      ));
+    try {
+      $driverInfo = $this->drivers->checkDriver($driver);
+    }
+    catch (InvalidDriverException $e) {
+      throw new ConnectionException(tr('Invalid database driver: %1', $e->getMessage()), 0, $e);
+    }
     foreach ($driverInfo['requiredOptions'] as $option) {
       if (!isset($options[$option])) {
         throw new ConfigurationException(

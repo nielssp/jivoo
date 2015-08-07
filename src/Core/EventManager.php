@@ -14,7 +14,7 @@ class EventManager {
    * is an array of callbacks.
    */
   private $events = array();
-
+  
   /**
    * @var IEventSubject The object that triggers events in this collection.
   */
@@ -40,6 +40,8 @@ class EventManager {
   public function __construct(IEventSubject $subject, EventManager $parent = null) {
     $this->subject = $subject;
     $this->subjectClass = get_class($subject);
+    foreach ($this->subject->getEvents() as $name)
+      $this->events[$name] = array();
     $this->parent = $parent;
   }
   
@@ -50,8 +52,11 @@ class EventManager {
    * {@see Event} as its first parameter.
    */
   public function attachHandler($name, $callback) {
-    if (!isset($this->events[$name]))
+    if (!isset($this->events[$name])) {
+      if (strpos($name, '.') === false)
+        throw new EventException(tr('Event subject "%1" does not have event "%2"', $this->subjectClass, $name));
       $this->events[$name] = array();
+    }
     $this->events[$name][] = $callback;
   }
   
@@ -126,6 +131,9 @@ class EventManager {
         if ($event->stopped or $continue === false)
           return false;
       }
+    }
+    else if (strpos($name, '.') === false) {
+      throw new EventException(tr('Event subject "%1" does not have event "%2"', $this->subjectClass, $name));
     }
     return true;
   }

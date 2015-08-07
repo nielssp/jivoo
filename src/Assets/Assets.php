@@ -86,7 +86,7 @@ class Assets extends LoadableModule {
             $key = $this->getPathKey(array_shift($path));
             $file = $this->p($key, implode('/', $path));
             if (!$this->returnAsset($file)) {
-              $this->app->call('Routing', 'attachEventHandler', 'beforeFindRoute', array($this, 'findDynamicAsset'));
+              $this->m->Routing->attachEventHandler('beforeFindRoute', array($this, 'findDynamicAsset'));
             }
           }
         }
@@ -94,7 +94,7 @@ class Assets extends LoadableModule {
     }
     
     // lazy call to Extensions module
-    $this->app->call('Extensions', 'attachFeature', 'resources', array($this, 'handleResources'));
+    $this->m->lazy('Extensions')->attachFeature('resources', array($this, 'handleResources'));
   }
   
   /**

@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Jivoo\Core\Log\FileLogger;
 use Jivoo\Core\Log\LogException;
+use Jivoo\Core\Vendor\VendorLoader;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -36,6 +37,8 @@ use Jivoo\Core\Log\LogException;
  * @property-read EventManager $eventManager Application event manager.
  * @property-read StateMap $state Application persistent state storage.
  * @property-read LoggerInterface $logger Application logger.
+ * @property-read ModuleLoader $m Module loader.
+ * @property-read VendorLoader $vendor Third-party library loader.
  */
 class App implements IEventSubject, LoggerAwareInterface {
   /**
@@ -56,7 +59,6 @@ class App implements IEventSubject, LoggerAwareInterface {
       'View', 'Models', 'Helpers', 'Extensions',
       'Themes', 'Jtk', 'Setup', 'Console'
     ),
-    'listeners' => array(),
     'defaultLanguage' => 'en',
     'sessionPrefix' => '',
     'defaultConfig' => array()
@@ -72,11 +74,6 @@ class App implements IEventSubject, LoggerAwareInterface {
    */
   private $config = null;
   
-  /**
-   * @var array Default user configuration.
-   */
-  private $defaultConfig = array();
-
   /**
    * @var Paths Application and framework paths.
    */
@@ -111,32 +108,11 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @var string Minimum PHP version.
    */
   private $minPhpVersion;
-
-  /**
-   * @var string[] List of modules to load.
-   */
-  private $modules;
   
-  /**
-   * @var string[] List of application listener names.
-   */
-  private $listenerNames = array();
-
   /**
    * @var ModuleLoader Module loader.
    */
   private $m = null;
-  
-  /**
-   * @var string[] Module load list.
-   */
-  private $imports = array();
-
-  /**
-   * @var callback[][] Associative array mapping module names to a list of
-   * callbacks.
-   */
-  private $waitingCalls = array();
   
   /**
    * @var string Environment name.
@@ -147,26 +123,6 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @var StateMap
    */
   private $state = null;
-  
-  /**
-   * @var array Associative array of default environment configurations.
-   */
-  private $defaultEnvironments = array(
-    'production' => array(
-      'core' => array(
-        'showExceptions' => false,
-        'logLevel' => LogLevel::WARNING,
-        'createCrashReports' => true,
-      )
-    ),
-    'development' => array(
-      'core' => array(
-        'showExceptions' => true,
-        'logLevel' => LogLevel::DEBUG,
-        'createCrashReports' => false,
-      )
-    )
-  );
 
   /**
    * @var string Application session prefix.
@@ -177,21 +133,21 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @var string[] Names of events produced by this object.
    */
   private $events = array(
+    'beforeBoot', 'afterBoot',
     'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
-    'beforeLoadModule', 'afterLoadModule', 'afterLoadModules', 'afterInit',
+    'afterLoadModules', 'afterInit',
     'beforeShowException', 'beforeStop'
   );
-  
-  /**
-   * @var string[][] Associative array of module names and lists of optional
-   * dependencies.
-   */
-  private $optionalDependencies = array();
   
   /**
    * @var EventManager Application event manager.
    */
   private $e = null;
+  
+  /**
+   * @var VendorLoader Third-party library loader.
+   */
+  private $vendor;
   
   /**
    * @var LoggerInterface Application logger.
@@ -213,7 +169,6 @@ class App implements IEventSubject, LoggerAwareInterface {
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
     $manifestFile = $appPath . '/app.json';
-    $manifest = array();
     if (file_exists($manifestFile)) {
       $manifest = Json::decodeFile($manifestFile);
       $manifest = array_merge($this->defaultManifest, $manifest);
@@ -225,7 +180,7 @@ class App implements IEventSubject, LoggerAwareInterface {
     }
     $this->manifest = $manifest;
     $this->e = new EventManager($this);
-    $this->m = new ModuleLoader();
+    $this->m = new ModuleLoader($this);
     $this->paths = new Paths(
       dirname($_SERVER['SCRIPT_FILENAME']),
       $userPath
@@ -254,10 +209,7 @@ class App implements IEventSubject, LoggerAwareInterface {
     $this->version = $manifest['version'];
     $this->namespace = $manifest['namespace'];
     $this->minPhpVersion = $manifest['minPhpVersion'];
-    $this->modules = $manifest['modules'];
     $this->sessionPrefix = $manifest['sessionPrefix'];
-    $this->listenerNames = $manifest['listeners'];
-    $this->defaultConfig = $manifest['defaultConfig'];
 
     Autoloader::getInstance()->addPath($this->namespace, $this->p('app'));
 
@@ -293,6 +245,8 @@ class App implements IEventSubject, LoggerAwareInterface {
       case 'entryScript':
       case 'state':
       case 'logger':
+      case 'm':
+      case 'vendor':
         return $this->$property;
       case 'eventManager':
         return $this->e;
@@ -407,173 +361,6 @@ class App implements IEventSubject, LoggerAwareInterface {
     if ($name == '')
       return $this->namespace;
     return $this->namespace . '\\' . $name;
-  }
-  
-  /**
-   * Add a module to the module load list.
-   * @param string $name Module name.
-   * @deprecated
-   */
-  public function addModule($name) {
-    $this->modules[] = $name;
-  }
-  
-  /**
-   * Stop a module from loading.
-   * @param string $name Module name.
-   * @deprecated
-   */
-  public function removeModule($name) {
-    $this->modules = array_diff($this->modules, array($name));
-  }
-  
-  /**
-   * Import module.
-   * @param string $module Module name.
-   * @deprecated
-   */
-  public function import($module) {
-    if (strpos($module, '\\') === false) {
-      $class = 'Jivoo\\' . $module . '\\' . $module;
-      $this->paths->$module = \Jivoo\PATH . '/' . $module;
-    }
-    else {
-      $class = $module;
-      $components = explode('\\', $class);
-      $module = array_pop($components);
-    }
-    $this->imports[$module] = $class;
-    
-    $loadOrder = LoadableModule::getLoadOrder($class);
-
-    foreach ($loadOrder['before'] as $dependency) {
-      if (isset($this->m->$dependency)) {
-        throw new LoadOrderException(tr('%1 must load before %2', $module, $dependency));
-      }
-      if (!isset($this->optionalDependencies[$dependency]))
-        $this->optionalDependencies[$dependency] = array();
-      $this->optionalDependencies[$dependency][] = $module;
-    }
-
-    foreach ($loadOrder['after'] as $dependency) {
-      if (!isset($this->optionalDependencies[$module]))
-        $this->optionalDependencies[$module] = array();
-      $this->optionalDependencies[$module][] = $dependency;
-    }
-  }
-  
-  /**
-   * @deprecated
-   */
-  public function load($module) {
-    if (!isset($this->m->$module)) {
-      $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
-      if (!isset($this->imports[$module]))
-        $this->import($module);
-      $class = $this->imports[$module];
-      if (isset($this->optionalDependencies[$module])) {
-        foreach ($this->optionalDependencies[$module] as $dependency) {
-          if (isset($this->imports[$dependency]))
-            $this->load($dependency);
-        }
-      }
-      Utilities::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
-      $this->m->$module = new $class($this);
-      $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->m->$module));
-      $this->m->$module->afterLoad();
-      if (isset($this->waitingCalls[$module])) {
-        foreach ($this->waitingCalls[$module] as $tuple) {
-          list($method, $args) = $tuple;
-          call_user_func_array(array($this->m->$module, $method), $args);
-        }
-      }
-    }
-    return $this->m->$module;
-  }
-  
-  /**
-   * Get a module, or load it if not yet loaded (must be imported however).
-   * @param string $name Name of module class.
-   * @return LoadableModule Module object.
-   * @deprecated
-   */
-  public function getModule($name) {
-    if (!isset($this->m->$name)) {
-      $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $name));
-      if (!isset($this->imports[$name]))
-        throw new LoadOrderException(tr('Module not imported: %1', $name));
-      $module = $this->imports[$name];
-      if (isset($this->optionalDependencies[$name])) {
-        foreach ($this->optionalDependencies[$name] as $dependency) {
-          if (isset($this->imports[$dependency]))
-            $this->getModule($dependency);
-        }
-      }
-      Utilities::assumeSubclassOf($module, 'Jivoo\Core\LoadableModule');
-      $this->m->$name = new $module($this);
-      $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $name, $this->m->$name));
-      $this->m->$name->afterLoad();
-      if (isset($this->waitingCalls[$name])) {
-        foreach ($this->waitingCalls[$name] as $tuple) {
-          list($method, $args) = $tuple;
-          call_user_func_array(array($this->m->$name, $method), $args);
-        }
-      }
-    }
-    return $this->m->$name;
-  }
-  
-  /**
-   * Load several modules.
-   * @param string[] $modules List of module names.
-   * @return ModuleMap A map of all loaded modules.
-   * @deprecated
-   */
-  public function getModules($modules) {
-    foreach ($modules as $name) {
-      $this->load($name);
-    }
-    return $this->m;
-  }
-  
-  /**
-   * Whether or not a module has been loaded.
-   * @param string $name Module name.
-   * @return bool True if loaded, false otherwise.
-   * @deprecated
-   */
-  public function hasModule($name) {
-    return isset($this->m->$name);
-  }
-  
-  /**
-   * Whether or not a module will be loaded.
-   * @param string $name Module name.
-   * @return bool True if on import list, false otherwise.
-   * @deprecated
-   */
-  public function hasImport($name) {
-    return isset($this->imports[$name]);
-  }
-
-  /**
-   * Call a method in a module immediately if the module has been loaded, or
-   * whenever the module is loaded if it has not.
-   * @param string $module Module name.
-   * @param string $method Method name.
-   * @param mixed $parameters,... Paremeters to method.
-   * @return mixed|null Returned value, or null if module not yet loaded.
-   * @deprecated
-   */
-  public function call($module, $method) {
-    $args = func_get_args();
-    $args = array_slice($args, 2);
-    if (isset($this->m->$module))
-      return call_user_func_array(array($this->m->$module, $method), $args);
-    if (!isset($this->waitingCalls[$module]))
-      $this->waitingCalls[$module] = array();
-    $this->waitingCalls[$module][] = array($method, $args);
-    return null;
   }
   
   /**
@@ -742,11 +529,6 @@ class App implements IEventSubject, LoggerAwareInterface {
     exit($status);
   }
 }
-
-/**
- * Event sent before and after a module has been loaded
- */
-class LoadModuleEvent extends LoadEvent { }
 
 /**
  * Event sent before an exception page is sent to the client.

@@ -33,12 +33,6 @@ class MysqliDatabase extends SqlDatabase {
     if ($this->handle->connect_error) {
       throw new ConnectionException($this->handle->connect_error);
     }
-//     try {
-//       $this->initTables($this->rawQuery('SHOW TABLES'));
-//     }
-//     catch (DatabaseQueryFailedException $exception) {
-//       throw new DatabaseConnectionFailedException($exception->getMessage());
-//     }
   }
 
   /**

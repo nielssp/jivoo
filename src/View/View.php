@@ -228,7 +228,8 @@ class View extends LoadableModule {
    */
   public function compileTemplate($dir, $template) {
     if (!isset($this->compiled[$template])) {
-      $this->app->getModule('Extensions')->import('simplehtmldom');
+      // TODO: $this->vendor->import('[someone]/simplehtmldom');
+      $this->m->load('Extensions')->import('simplehtmldom');
       $source = $dir . $template;
       $compiled = $dir . 'compiled/' . $template . '.php';
       $dir = dirname($compiled);

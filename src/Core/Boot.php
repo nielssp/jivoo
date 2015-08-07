@@ -29,11 +29,11 @@ class Boot extends Module {
   }
   
   protected function load($module) {
-    return $this->app->load($module);
+    return $this->m->load($module);
   }
   
   protected function import($module) {
-    return $this->app->import($module);
+    return $this->m->import($module);
   }
   
   public function boot($environment) {
@@ -99,8 +99,7 @@ class Boot extends Module {
     if (isset($this->app->manifest['modules']))
       $modules = $this->app->manifest['modules'];
 
-    foreach ($modules as $module)
-      $this->import($module);
+    $this->m->import($modules);
 
     $listeners = $this->p('app/Listeners');
     if (is_dir($listeners)) {
@@ -117,8 +116,7 @@ class Boot extends Module {
       }
     }
 
-    foreach ($modules as $module)
-      $this->load($module);
+    $this->m->load($modules);
   }
   
   protected function cli() {
