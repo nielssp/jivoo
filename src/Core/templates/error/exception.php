@@ -26,9 +26,9 @@
 if (isset($exception)) {
   $file = $exception->getFile();
   $line = $exception->getLine();
-  $message = $exception->getMessage();
+  $record = $exception->getMessage();
 ?>
-<h2><?php echo $message; ?></h2>
+<h2><?php echo $record; ?></h2>
 
 <p><?php echo tr(
   'An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request.',
@@ -85,10 +85,6 @@ if (isset($exception)) {
 
 <h2><?php echo tr('Log messages')?></h2>
 
-<?php
-$log = Jivoo\Core\Logger::getLog()
-?>
-
 <table class="trace">
 <thead>
 <tr>
@@ -98,19 +94,26 @@ $log = Jivoo\Core\Logger::getLog()
 </tr>
 </thead>
 <tbody>
-<?php foreach ($log as $message): ?>
+<?php foreach ($log as $record): ?>
+<?php $context = $record['context']; ?>
 <tr>
 <td>
-[<?php echo Jivoo\Core\Logger::getType($message['type']); ?>]
-<?php echo h($message['message']); ?>
+[<?php echo $record['level']; ?>]
+<?php echo h($record['message']); ?>
 </td>
 <td>
-<span title="<?php echo (isset($message['file']) ? $message['file'] : '') ?>">
-<?php echo (isset($message['file']) ? basename($message['file']) : '') ?>
-<?php echo (isset($message['line']) ? ' : ' . $message['line'] : '') ?>
+<span title="<?php echo (isset($context['file']) ? $context['file'] : '') ?>">
+<?php echo (isset($context['file']) ? basename($context['file']) : '') ?>
+<?php echo (isset($context['line']) ? ' : ' . $context['line'] : '') ?>
 </span>
 </td>
-<td><?php echo date('Y-m-d H:i:s', $message['time']); ?></td>
+<td>
+<?php 
+$seconds = (int) $record['time'];
+$millis = floor(($record['time'] - $seconds) * 1000);
+echo date('Y-m-d H:i:s', $seconds) . sprintf('.%03d ', $millis) . date('P');
+?>
+</td>
 </tr>
 <?php endforeach; ?>
 </tbody>

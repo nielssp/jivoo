@@ -20,6 +20,12 @@ define('Jivoo\PATH', str_replace('\\', '/', dirname(__FILE__)));
 
 require PATH . '/Autoloader.php';
 
+if (version_compare(phpversion(), '5.3.0') < 0) {
+  echo 'The Jivoo web application framework does not support PHP ' . phpversion()
+    . '. PHP 5.3.0 or above is required.';
+  exit(1);
+}
+
 Autoloader::getInstance()->register();
 Autoloader::getInstance()->addPath('Jivoo\\', PATH);
 

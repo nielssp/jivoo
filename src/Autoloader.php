@@ -5,8 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo;
 
-use Jivoo\Core\Paths;
-
 /**
  * A PSR-4 autoloader implementation. A singleton instance of this class is
  * used by Jivoo.

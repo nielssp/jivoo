@@ -585,6 +585,9 @@ class App implements IEventSubject, LoggerAwareInterface {
     $app = $this->name;
     $version = $this->version;
     $title = tr('Uncaught exception');
+    $log = array();
+    if ($this->logger instanceof \Jivoo\Core\Log\FileLogger)
+      $log = $this->logger->getLog();
     $custom = null;
     try {
       $custom = $this->p('app', 'templates/error/exception.php');
@@ -603,6 +606,10 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @param \Exception $exception The exception.
    */
   public function handleError(\Exception $exception) {
+    $this->logger->critical(
+      tr('Uncaught exception: %1', $exception->getMessage()),
+      array('exception' => $exception)
+    );
     if ($this->isCli()) {
       echo 'Exception: ' . $exception->getMessage();
       $this->stop();
@@ -669,15 +676,6 @@ class App implements IEventSubject, LoggerAwareInterface {
   public function run($environment = 'production') {
     $this->environment = $environment;
 
-    if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
-      echo 'Sorry, but ' . $this->name
-        . ' does not support PHP versions below ';
-      echo $this->minPhpVersion . '. ';
-      echo 'You are currently using version ' . phpversion() . '. ';
-      echo 'You should update PHP or contact your hosting provider. ';
-      return;
-    }
-
     // Error handling
     
     // Throw exceptions instead of fatal errors on class not found
@@ -704,7 +702,16 @@ class App implements IEventSubject, LoggerAwareInterface {
       }
       register_shutdown_function(array($this->logger, 'save'));
     }
+
+    // Check PHP version
+    if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
+      throw new AppException(tr(
+        '%1 does not support PHP %2. PHP %3 or above is required',
+        $this->name, phpversion(), $this->minPhpVersion
+      ));
+    }
     
+    // Find initialization class
     $class = $this->n('Boot');
     if (!Utilities::classExists($class))
       $class = 'Jivoo\Core\Boot';

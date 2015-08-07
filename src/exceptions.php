@@ -98,6 +98,12 @@ namespace Jivoo\Core {
     implements CoreException {}
   
   /**
+   * Thrown when an application fails to load.
+   */
+  class AppException extends \RuntimeException
+    implements CoreException {}
+  
+  /**
    * Thrown when a JSON string is invalid.
    */
   class JsonException extends \RuntimeException
