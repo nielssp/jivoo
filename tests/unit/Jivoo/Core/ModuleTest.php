@@ -2,6 +2,9 @@
 
 namespace Jivoo\Core;
 
+use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidMethodException;
+
 class ModuleTest extends \Codeception\TestCase\Test {
 
   /**
@@ -68,27 +71,27 @@ class ModuleTest extends \Codeception\TestCase\Test {
       $m->invalidProp;
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
     try {
       $m->invalidProp =  true;
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
     try {
       unset($m->invalidProp);
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
     try {
       isset($m->invalidProp);
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
     try {
       $m->invalidMethod();
       $this->fail('InvalidMethodException not thrown');
     }
-    catch (\InvalidMethodException $e) {}
+    catch (InvalidMethodException $e) {}
   }
   
   public function testInheritElements() {

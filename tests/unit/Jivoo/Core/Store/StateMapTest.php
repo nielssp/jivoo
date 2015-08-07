@@ -24,9 +24,9 @@ class StateMapTest extends \Codeception\TestCase\Test {
   public function testRead() {
     try {
       $this->state['test'];
-      $this->fail('StateClosedException not thrown');
+      $this->fail('NotOpenException not thrown');
     }
-    catch (StateClosedException $e) { }
+    catch (NotOpenException $e) { }
     
     $s = $this->state->read('test');
     $this->assertEquals(array(), $s->toArray());

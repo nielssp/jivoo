@@ -200,7 +200,8 @@ class Logger {
       $context['file'] = $file;
     if (isset($file))
       $context['line'] = $line;
-    self::$logger->log($level, $message, $context);
+    if (isset(self::$logger))
+      self::$logger->log($level, $message, $context);
   }
   
   /**
@@ -248,6 +249,7 @@ class Logger {
    * @param \Exception $exception \Exception.
    */
   public static function logException(\Exception $exception) {
-    self::$logger->error($exception->getMessage(), array('exception' => $exception));
+    if (isset(self::$logger))
+      self::$logger->error($exception->getMessage(), array('exception' => $exception));
   }
 }

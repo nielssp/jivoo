@@ -12,12 +12,11 @@ coverage:
     remote: false
     enabled: true
     include:
-        - lib/*
+        - src/*
     exclude:
-        - lib/Jivoo/Core/assets/*
-        - lib/Jivoo/Core/default/*
-        - lib/Jivoo/Core/languages/*
-        - lib/Jivoo/Core/templates/*
+        - src/Core/assets/*
+        - src/Core/languages/*
+        - src/Core/templates/*
 modules:
     config:
         Db:

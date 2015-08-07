@@ -25,9 +25,9 @@ class StateTest extends \Codeception\TestCase\Test {
   public function testRead() {
     try {
       $state = new State($this->store, false);
-      $this->fail('StateInvalidException not thrown');
+      $this->fail('AccessException not thrown');
     }
-    catch (StateInvalidException $e) { }
+    catch (AccessException $e) { }
     $this->store->touch();
     $state = new State($this->store, false);
     $this->assertEquals(array(), $state->toArray());
@@ -44,9 +44,9 @@ class StateTest extends \Codeception\TestCase\Test {
     $this->assertFalse($state->isOpen());
     try {
       $state->close();
-      $this->fail('StateClosedException not thrown');
+      $this->fail('NotOpenException not thrown');
     }
-    catch (StateClosedException $e) { }
+    catch (NotOpenException $e) { }
   }
   
   public function testWrite() {

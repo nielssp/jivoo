@@ -2,6 +2,8 @@
 
 namespace Jivoo\Core;
 
+use Jivoo\InvalidPropertyException;
+
 class LocalizationTest extends \Codeception\TestCase\Test {
 
   /**
@@ -106,16 +108,16 @@ class LocalizationTest extends \Codeception\TestCase\Test {
       $l->notAProperty = true;
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
     try {
       $l->notAProperty;
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
     try {
       isset($l->notAProperty);
       $this->fail('InvalidPropertyException not thrown');
     }
-    catch (\InvalidPropertyException $e) {}
+    catch (InvalidPropertyException $e) {}
   }
 }

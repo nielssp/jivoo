@@ -39,9 +39,9 @@ class PhpStoreTest extends \Codeception\TestCase\Test {
     $this->store->open(false);
     try {
       $this->store->read();
-      $this->fail('StoreReadFailedException not thrown');
+      $this->fail('AccessException not thrown');
     }
-    catch (StoreReadFailedException $e) { }
+    catch (AccessException $e) { }
   } 
   
   public function testWrite() {
@@ -80,21 +80,21 @@ class PhpStoreTest extends \Codeception\TestCase\Test {
     $this->store->open(true);
     try {
       $store2->open(true);
-      $this->fail('StoreLockException not thrown');
+      $this->fail('LockException not thrown');
     }
-    catch (StoreLockException $e) { }
+    catch (LockException $e) { }
     try {
       $store2->open(false);
-      $this->fail('StoreLockException not thrown');
+      $this->fail('LockException not thrown');
     }
-    catch (StoreLockException $e) { }
+    catch (LockException $e) { }
     $this->store->close();
     $this->store->open(false);
     try {
       $store2->open(true);
-      $this->fail('StoreLockException not thrown');
+      $this->fail('LockException not thrown');
     }
-    catch (StoreLockException $e) { }
+    catch (LockException $e) { }
     $store2->open(false);
     $store2->close();
     $this->store->close();
