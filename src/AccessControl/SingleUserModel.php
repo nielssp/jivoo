@@ -62,7 +62,7 @@ class SingleUserModel implements IUserModel {
    * {@inheritdoc}
    */
   public function createSession($userData, $validUntil) {
-    $sessionId = Utilities::randomString(32);
+    $sessionId = base64_encode(Random::bytes(32));
     $this->session['user_session'] = $sessionId;
     return $sessionId;
   }
