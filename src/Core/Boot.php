@@ -6,6 +6,8 @@
 namespace Jivoo\Core;
 
 use Jivoo\Console\Shell;
+use Psr\Log\LogLevel;
+
 /**
  * The default application initialization class. Extend this class and override
  * the {@see boot} method to customize the initialization process. The defeault
@@ -46,7 +48,7 @@ class Boot extends Module {
     if (isset($this->app->manifest['defaultConfig']))
       $this->config->defaults = $this->app->manifest['defaultConfig'];
     
-    $envConf = $this->p('app', 'environments/' . $environment . '.php');
+    $envConf = $this->p('app/environments/' . $environment . '.php');
     if (file_exists($envConf))
       $this->config->override = include $envConf;
 
@@ -57,7 +59,7 @@ class Boot extends Module {
     $this->config->defaults = array(
       'core' => array(
         'showExceptions' => true,
-        'logLevel' => Logger::ALL,
+        'logLevel' => LogLevel::DEBUG,
         'createCrashReports' => false
       )
     );
@@ -69,7 +71,7 @@ class Boot extends Module {
     $this->config->defaults = array(
       'core' => array(
         'showExceptions' => false,
-        'logLevel' => Logger::ERROR | Logger::WARNING,
+        'logLevel' => LogLevel::WARNING,
         'createCrashReports' => true,
         'showReference' => true
       )

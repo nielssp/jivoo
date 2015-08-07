@@ -13,6 +13,11 @@ use Jivoo\Core\Store\Jivoo\Core\Store;
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidClassException;
 use Jivoo\Autoloader;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Jivoo\Core\Log\FileLogger;
+use Jivoo\Core\Log\LogException;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -30,8 +35,9 @@ use Jivoo\Autoloader;
  * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
  * @property-read EventManager $eventManager Application event manager.
  * @property-read StateMap $state Application persistent state storage.
+ * @property-read LoggerInterface $logger Application logger.
  */
-class App implements IEventSubject {
+class App implements IEventSubject, LoggerAwareInterface {
   /**
    * @var array Application configuration.
    */
@@ -149,14 +155,14 @@ class App implements IEventSubject {
     'production' => array(
       'core' => array(
         'showExceptions' => false,
-        'logLevel' => Logger::ERROR,
+        'logLevel' => LogLevel::WARNING,
         'createCrashReports' => true,
       )
     ),
     'development' => array(
       'core' => array(
         'showExceptions' => true,
-        'logLevel' => Logger::ALL,
+        'logLevel' => LogLevel::DEBUG,
         'createCrashReports' => false,
       )
     )
@@ -186,6 +192,11 @@ class App implements IEventSubject {
    * @var EventManager Application event manager.
    */
   private $e = null;
+  
+  /**
+   * @var LoggerInterface Application logger.
+   */
+  private $logger;
 
   /**
    * Create application.
@@ -195,6 +206,10 @@ class App implements IEventSubject {
    * @param string $entryScript Name of entry script, e.g. 'index.php'.
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
+    $this->logger = ErrorHandler::getInstance()->getLogger();
+    // TODO: deprecated static logger
+    Logger::setLogger($this->logger);
+
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
     $manifestFile = $appPath . '/app.json';
@@ -204,7 +219,7 @@ class App implements IEventSubject {
       $manifest = array_merge($this->defaultManifest, $manifest);
     }
     else {
-      Logger::error('Invalid application. "app.json" not found. Configuring default application.');
+      $this->logger->error('Invalid application. "app.json" not found. Configuring default application.');
       $this->noManifest = true;
       $manifest = $this->defaultManifest;
     }
@@ -277,6 +292,7 @@ class App implements IEventSubject {
       case 'basePath':
       case 'entryScript':
       case 'state':
+      case 'logger':
         return $this->$property;
       case 'eventManager':
         return $this->e;
@@ -297,6 +313,13 @@ class App implements IEventSubject {
         return;
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setLogger(LoggerInterface $logger) {
+    $this->logger = $logger;
   }
   
   /**
@@ -665,11 +688,22 @@ class App implements IEventSubject {
     // Set exception handler
     set_exception_handler(array($this, 'handleError'));
 
-    Logger::attachFile(
-      $this->p('log', $this->environment . '.log'),
-      $this->config['core']['logLevel']
-    );
-    register_shutdown_function(array('Jivoo\Core\Logger', 'saveAll'));
+    if ($this->logger instanceof FileLogger) {
+      try {
+        $this->logger->addFile(
+          $this->p('log/' . $this->environment . '.log'),
+          $this->config['core']['logLevel']
+        );
+      }
+      catch (LogException $e) {
+        $this->logger->warning($e->getMessage(), array('exception' => $e));
+        $this->logger->addFile(
+          $this->p('log/' . $this->environment . '.log'),
+          LogLevel::WARNING
+        );
+      }
+      register_shutdown_function(array($this->logger, 'save'));
+    }
     
     $class = $this->n('Boot');
     if (!Utilities::classExists($class))
@@ -681,7 +715,7 @@ class App implements IEventSubject {
     $this->triggerEvent('afterLoadModules'); // TODO: legacy event
     $this->triggerEvent('afterInit'); // TODO: legacy event
     
-    Logger::warning(tr('Application not stopped'));
+    $this->logger->warning(tr('Application not stopped'));
   }
   
   /**
@@ -693,7 +727,11 @@ class App implements IEventSubject {
     
     $open = $this->state->closeAll();
     if (!empty($open))
-      Logger::warning(tr('The following state documents were not properly closed: %1{, }{ and }', $open));
+      $this->logger->warning(tr(
+        'The following state documents were not properly closed: %1{, }{ and }',
+        $open
+      ));
+    
     exit($status);
   }
 }

@@ -122,6 +122,16 @@ namespace Jivoo\Core {
     implements CoreException {}
 }
 
+namespace Jivoo\Core\Log  {
+  use Jivoo\Core\CoreException;
+
+  /**
+   * Thrown when a log level is undefined.
+   */
+  class LogException extends \Psr\Log\InvalidArgumentException
+    implements CoreException {}
+}
+
 namespace Jivoo\Core\Store  {
   /**
    * Store exception. 

@@ -18,12 +18,18 @@ const VERSION = '0.21.0-dev';
  */
 define('Jivoo\PATH', str_replace('\\', '/', dirname(__FILE__)));
 
-require PATH . '/functions.php';
-require PATH . '/exceptions.php';
 require PATH . '/Autoloader.php';
 
 Autoloader::getInstance()->register();
 Autoloader::getInstance()->addPath('Jivoo\\', PATH);
 
+if (!interface_exists('Psr\Log\LoggerInterface')) {
+  require PATH . '/psrlog.php';
+}
+
+require PATH . '/functions.php';
+require PATH . '/exceptions.php';
+
 error_reporting(-1);
 set_error_handler(array('Jivoo\Core\ErrorReporting', 'handleError'));
+

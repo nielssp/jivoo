@@ -5,8 +5,13 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Jivoo\Core\Log\FileLogger;
+
 /**
  * Jivoo logging.
+ * @deprecated Use {@see App::$logger}
  */
 class Logger {
   /**
@@ -45,46 +50,10 @@ class Logger {
   const NONE = 0;
 
   /**
-   * @var array[] List of log messages.
+   * @var LoggerInterface
    */
-  private static $log = array();
+  private static $logger;
 
-  /**
-   * @var Logger[] List of active loggers.
-   */
-  private static $files = array();
-
-  /**
-   * @var string File path.
-   */
-  private $file;
-  
-  /**
-   * @var int Log level bit mask.
-   */
-  private $level;
-  
-  /**
-   * @var bool Whether to append messages to file.
-   */
-  private $append;
-
-  /**
-   * Constructor.
-   * @param string $logFile Log file path.
-   * @param int $level Log level bit mask.
-   * @param string $append Whether to append messages to file.
-   */
-  private function __construct($logFile, $level = Logger::ALL, $append = true) {
-    if (!file_exists($logFile)) {
-      if (!touch($logFile)) {
-        Logger::error(tr('Could not create log file: %1', $logFile));
-      }
-    }
-    $this->file = realpath($logFile);
-    $this->level = $level;
-    $this->append = $append;
-  }
 
   /**
    * Attempt to save the log.
@@ -115,6 +84,10 @@ class Logger {
       return true;
     }
     return false;
+  }
+  
+  public static function setLogger(LoggerInterface $logger) {
+    self::$logger = $logger;
   }
 
   /**
@@ -154,7 +127,9 @@ class Logger {
    * @return array[] List of log messages.
    */
   public static function getLog() {
-    return self::$log;
+    if (self::$logger instanceof FileLogger)
+      return self::$logger->getLog();
+    return array();
   }
   
   /**
@@ -162,12 +137,8 @@ class Logger {
    * @return boolean True if all files saved successfully, false otherwise.
    */
   public static function saveAll() {
-    $status = true;
-    foreach (self::$files as $file) {
-      if (!$file->save())
-        $status = false;
-    }
-    return $status;
+    if (self::$logger instanceof FileLogger)
+      return self::$logger->save();
   }
 
   /**
@@ -177,7 +148,26 @@ class Logger {
    * @param string $append Whether or not to append messages to file.
    */
   public static function attachFile($logFile, $level = Logger::ALL, $append = true) {
-    self::$files[] = new Logger($logFile, $level, $append);
+    if (self::$logger instanceof FileLogger) {
+      switch ($level) {
+        case Logger::QUERY:
+        case Logger::DEBUG:
+        case Logger::ALL:
+          $level = LogLevel::DEBUG;
+          break;
+        case Logger::NOTICE:
+          $level = LogLevel::NOTICE;
+          break;
+        case Logger::ERROR:
+          $level = LogLevel::ERROR;
+          break;
+        case Logger::WARNING:
+        default:
+          $level = LogLevel::WARNING;
+          break;
+      }
+      return self::$logger->addFile($logFile, $level);
+    }
   }
 
   /**
@@ -188,14 +178,29 @@ class Logger {
    * @param int $line Line if applicable.
    */
   public static function log($message, $type = Logger::NOTICE, $file = null, $line = null) {
-    $entry = array(
-      'time' => time(),
-      'message' => $message,
-      'type' => $type,
-      'file' => $file,
-      'line' => $line
-    );
-    self::$log[] = $entry;
+    $context = array();
+    switch ($type) {
+      case Logger::QUERY:
+        $context['query'] = true;
+      case Logger::DEBUG:
+        $level = LogLevel::DEBUG;
+        break;
+      case Logger::NOTICE:
+        $level = LogLevel::NOTICE;
+        break;
+      case Logger::ERROR:
+        $level = LogLevel::ERROR;
+        break;
+      case Logger::WARNING:
+      default:
+        $level = LogLevel::WARNING;
+        break;
+    }
+    if (isset($file))
+      $context['file'] = $file;
+    if (isset($file))
+      $context['line'] = $line;
+    self::$logger->log($level, $message, $context);
   }
   
   /**
@@ -243,45 +248,6 @@ class Logger {
    * @param \Exception $exception \Exception.
    */
   public static function logException(\Exception $exception) {
-    $file = $exception->getFile();
-    $line = $exception->getLine();
-    $message = tr(
-      'An uncaught %1 was thrown in file %2 on line %3 and caused execution to be terminated.',
-      get_class($exception),
-      basename($file),
-      $line
-    ) . PHP_EOL;
-    $message .= 'Message: ' . $exception->getMessage() . PHP_EOL;
-    $message .= 'File: ' . $file . PHP_EOL;
-    $message .= 'Line: ' . $line . PHP_EOL;
-    $message .= 'Stack trace:' . PHP_EOL;
-    foreach ($exception->getTrace() as $i => $trace) {
-      if (isset($trace['file'])) {
-        $message .=  $trace['file'] . ':';
-        $message .=  $trace['line'] . ' ';
-      }
-      if (isset($trace['class'])) {
-        $message .=  $trace['class'] . '::';
-      }
-      $message .=  $trace['function'] . '(';
-      $arglist = array();
-      foreach ($trace['args'] as $arg) {
-        $arglist[] = (is_scalar($arg) ? var_export($arg, true) : gettype($arg));
-      }
-      $message .=  implode(', ', $arglist);
-      $message .=  ')' . PHP_EOL;
-    }
-    self::$log[] = array(
-      'time' => time(),
-      'message' => $message,
-      'type' => Logger::ERROR,
-      'file' => null,
-      'line' => null
-    );
-    $previous = $exception->getPrevious();
-    if (isset($previous)) {
-      self::error(tr('The above exception was caused by:')); 
-      self::logException($previous);
-    }
+    self::$logger->error($exception->getMessage(), array('exception' => $exception));
   }
 }
