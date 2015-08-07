@@ -32,6 +32,16 @@ class EventManagerTest extends \Codeception\TestCase\Test {
     $this->assertFalse($em2->trigger(get_class($subject1) . '.someEvent'));
     $em2->detachHandler(get_class($subject1) . '.someEvent', $c);
     $this->assertTrue($em2->trigger(get_class($subject1) . '.someEvent'));
+    try {
+      $em1->attachHandler('someOtherEvent', null);
+      $this->fail('EventException not thrown');
+    }
+    catch (EventException $e) {}
+    try {
+      $em1->trigger('someOtherEvent');
+      $this->fail('EventException not thrown');
+    }
+    catch (EventException $e) {}
   }
   
   public function testListener() {

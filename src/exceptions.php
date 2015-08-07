@@ -100,7 +100,7 @@ namespace Jivoo\Core {
   /**
    * Thrown when an application fails to load.
    */
-  class AppException extends \RuntimeException
+  class AppException extends \UnexpectedValueException
     implements CoreException {}
   
   /**
@@ -112,7 +112,7 @@ namespace Jivoo\Core {
   /**
    * Thrown when a JSON string is invalid.
    */
-  class JsonException extends \RuntimeException
+  class JsonException extends \UnexpectedValueException
     implements CoreException {}
   
   /**
@@ -124,13 +124,13 @@ namespace Jivoo\Core {
   /**
    * Thrown when a third-party library could not be imported.
    */
-  class VendorException extends \RuntimeException
+  class VendorException extends \UnexpectedValueException
     implements CoreException {}
   
   /**
    * Thrown when configuration is invalid or missing.
    */
-  class ConfigurationException extends \RuntimeException 
+  class ConfigurationException extends \UnexpectedValueException
     implements CoreException {}
 }
 
@@ -153,7 +153,7 @@ namespace Jivoo\Core\Store  {
   /**
    * Thrown when a store is unreadable or unwritable.
    */
-  class AccessException extends \RuntimeException
+  class AccessException extends \UnexpectedValueException
     implements StoreException {}
 
   /**
@@ -165,7 +165,7 @@ namespace Jivoo\Core\Store  {
   /**
    * Thrown when a state has already been closed (or hasn't been opened). 
    */
-  class NotOpenException extends \LogicException
+  class NotOpenException extends \DomainException
     implements StoreException {}
 }
 
@@ -186,7 +186,7 @@ namespace Jivoo\Databases  {
   /**
    * Thrown when a database query fails.
    */
-  class QueryException extends \RuntimeException
+  class QueryException extends \UnexpectedValueException
     implements DatabasesException {}
   
   /**
@@ -203,7 +203,7 @@ namespace Jivoo\Databases  {
   /**
    * Thrown when a database connection fails.
    */
-  class ConnectionException extends \RuntimeException
+  class ConnectionException extends \UnexpectedValueException
     implements DatabasesException {}
   
   /**
@@ -241,7 +241,7 @@ namespace Jivoo\Migrations  {
   /**
    * Thrown when a migration fails.
    */
-  class MigrationException extends \RuntimeException
+  class MigrationException extends \UnexpectedValueException
     implements \Jivoo\Exception {}
 }
 
@@ -290,7 +290,7 @@ namespace Jivoo\Routing  {
   /**
    * Thrown when HTTP response headers have already been sent.
    */
-  class HeadersSentException extends \RuntimeException
+  class HeadersSentException extends \UnexpectedValueException
     implements RoutingException {}
   
   /**
@@ -375,7 +375,7 @@ namespace Jivoo\Setup {
   /**
    * Thrown when an installer or updaer fails.
    */
-  class SetupException extends \RuntimeException implements Exception {}
+  class SetupException extends \UnexpectedValueException implements Exception {}
 }
 
 namespace Jivoo\Themes {
