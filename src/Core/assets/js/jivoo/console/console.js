@@ -386,26 +386,30 @@ $(function() {
     $.each(jivooLog, function(i, entry) {
       var $entry = $('<div class="jivoo-console-log-entry"></div>');
       var message = entry.message;
-      if (entry.file)
-        message += ' in <em>' + entry.file + '</em> on line <strong>' + entry.line + '</strong>';
+      if (entry.context.file)
+        message += ' in <em>' + entry.context.file + '</em> on line <strong>'
+                 + entry.context.line + '</strong>';
       $entry.html(message);
-      switch (entry.type) {
-      case 1: // QUERY
-        $entry.css('color', '#999');
-        break;
-      case 2: // DEBUG
-        $entry.css('color', '#99f');
-        break;
-      case 4: // NOTICE
-        $entry.css('color', '#aa2');
-        break;
-      case 8: // WARNING
-        $entry.css('color', '#f90');
-        break;
-      case 16: // ERROR
-        $entry.css('color', '#f00');
-        break;
+      switch (entry.level) {
+        case 'info':
+        case 'notice':
+          $entry.css('color', '#aa2');
+          break;
+        case 'warning':
+          $entry.css('color', '#f90');
+          break;
+        case 'emergency':
+        case 'alert':
+        case 'critical':
+        case 'error':
+          $entry.css('color', '#f00');
+          break;
+        default:
+          $entry.css('color', '#99f');
+          break;
       }
+      if (entry.context.query)
+        $entry.css('color', '#999');
       $log.append($entry);
     });
     $content.append($log);
@@ -454,24 +458,25 @@ $(function() {
   for (var i = 0; i < jivooLog.length; i++) {
     var entry = jivooLog[i];
     var message = entry.message;
-    if (entry.file)
-      message += ' in ' + entry.file + ' on line ' + entry.line;
-    switch (entry.type) {
-    case 1: // QUERY
-      console.debug(message);
-      break;
-    case 2: // DEBUG
-      console.log(message);
-      break;
-    case 4: // NOTICE
-      console.log(message);
-      break;
-    case 8: // WARNING
-      console.warn(message);
-      break;
-    case 16: // ERROR
-      console.error(message);
-      break;
+    if (entry.context.file)
+      message += ' in ' + entry.context.file + ' on line ' + entry.context.line;
+    switch (entry.level) {
+      case 'info':
+      case 'notice':
+        console.info(message);
+        break;
+      case 'warning':
+        console.warn(message);
+        break;
+      case 'emergency':
+      case 'alert':
+      case 'critical':
+      case 'error':
+        console.error(message);
+        break;
+      default:
+        console.log(message);
+        break;
     }
   }
 });
