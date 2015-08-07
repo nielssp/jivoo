@@ -690,7 +690,7 @@ class App implements IEventSubject, LoggerAwareInterface {
       try {
         $this->logger->addFile(
           $this->p('log/' . $this->environment . '.log'),
-          $this->config['core']['logLevel']
+          $this->config['core']->get('logLevel', LogLevel::WARNING)
         );
       }
       catch (LogException $e) {
