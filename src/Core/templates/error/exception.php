@@ -96,10 +96,11 @@ if (isset($exception)) {
 <tbody>
 <?php foreach ($log as $record): ?>
 <?php $context = $record['context']; ?>
+<?php $message = \Jivoo\Core\Log\Logger::interpolate($record['message'], $context); ?>
 <tr>
 <td>
 [<?php echo $record['level']; ?>]
-<?php echo h($record['message']); ?>
+<?php echo h($message); ?>
 </td>
 <td>
 <span title="<?php echo (isset($context['file']) ? $context['file'] : '') ?>">

@@ -156,6 +156,11 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @var LoggerInterface Application logger.
    */
   private $logger;
+  
+  /**
+   * @var string[]
+   */
+  private $errorPaths = array();
 
   /**
    * Create application.
@@ -378,11 +383,8 @@ class App implements IEventSubject, LoggerAwareInterface {
       $log = $this->logger->getLog();
     $custom = null;
     try {
-      $custom = $this->p('app', 'templates/error/exception.php');
-      if (!file_exists($custom))
-        $custom = null;
-      else
-        include $custom;
+      if (isset($this->errorPaths['exceptionTemplate']))
+        include $this->errorPaths['exceptionTemplate'];
     }
     catch (\Exception $e) { }
     if (!isset($custom))
@@ -408,8 +410,11 @@ class App implements IEventSubject, LoggerAwareInterface {
       $message = $exception->getMessage();
       $hash = substr(md5($file . $line . $message), 0, 10);
       $name = date('Y-m-d') . '_crash_' . $hash . '.html';
-      if (!file_exists($this->p('log', $name))) {
-        $file = fopen($this->p('log', $name), 'w');
+      if (!isset($this->errorPaths['log'])) {
+        $this->logger->alert(tr('Could not create crash report: Log directory is missing'));
+      }
+      else if (!file_exists($this->errorPaths['log'] . '/' . $name)) {
+        $file = fopen($this->errorPaths['log'] . '/' . $name, 'w');
         if ($file !== false) {
           ob_start();
           $this->crashReport($exception);
@@ -442,11 +447,8 @@ class App implements IEventSubject, LoggerAwareInterface {
     else {
       $custom = null;
       try {
-        $custom = $this->p('app', 'templates/error/error.php');
-        if (!file_exists($custom))
-          $custom = null;
-        else
-          include $custom;
+        if (isset($this->errorPaths['errorTemplate']))
+          include $this->errorPaths['errorTemplate'];
       }
       catch (\Exception $e) { }
       if (!isset($custom))
@@ -487,6 +489,17 @@ class App implements IEventSubject, LoggerAwareInterface {
     spl_autoload_register(function($class) {
       throw new InvalidClassException(tr('Class not found: %1', $class));
     });
+    
+    // Precompute paths used for error handling
+    $logDir = $this->p('log');
+    if (Utilities::dirExists($logDir))
+      $this->errorPaths['log'] = realpath($logDir);
+    $errorTemplate = $this->p('app/templates/error/error.php');
+    if (file_exists($errorTemplate))
+      $this->errorPaths['errorTemplate'] = realpath($errorTemplate);
+    $exceptionTemplate = $this->p('app/templates/error/exception.php');
+    if (file_exists($exceptionTemplate))
+      $this->errorPaths['exceptionTemplate'] = realpath($exceptionTemplate);
     
     // Set exception handler
     set_exception_handler(array($this, 'handleError'));
