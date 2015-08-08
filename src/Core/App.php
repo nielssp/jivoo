@@ -374,7 +374,7 @@ class App implements IEventSubject, LoggerAwareInterface {
     $version = $this->version;
     $title = tr('Uncaught exception');
     $log = array();
-    if ($this->logger instanceof \Jivoo\Core\Log\FileLogger)
+    if ($this->logger instanceof \Jivoo\Core\Log\Logger)
       $log = $this->logger->getLog();
     $custom = null;
     try {
@@ -400,7 +400,7 @@ class App implements IEventSubject, LoggerAwareInterface {
     );
     if ($this->isCli()) {
       echo 'Exception: ' . $exception->getMessage();
-      $this->stop();
+      $this->stop(1);
     }
     if ($this->config['core']['createCrashReports']) {
       $file = $exception->getFile();
@@ -437,7 +437,7 @@ class App implements IEventSubject, LoggerAwareInterface {
       $event = new ShowExceptionEvent($this, $exception, $body);
       $this->triggerEvent('beforeShowException', $event);
       echo $event->body;
-      $this->stop();
+      $this->stop(1);
     }
     else {
       $custom = null;
@@ -451,7 +451,7 @@ class App implements IEventSubject, LoggerAwareInterface {
       catch (\Exception $e) { }
       if (!isset($custom))
         include \Jivoo\PATH . '/Core/templates/error/error.php';
-      $this->stop();
+      $this->stop(1);
     }
   }
   
@@ -461,8 +461,16 @@ class App implements IEventSubject, LoggerAwareInterface {
   public function handleFatalError() {
     $error = error_get_last();
     if ($error) {
-      echo 'lol fatal: ';
-      echo $error['message'];
+      switch ($error['type']) {
+        case E_ERROR:
+        case E_PARSE:
+        case E_CORE_ERROR:
+        case E_COMPILE_ERROR:
+        case E_USER_ERROR:
+          $this->handleError(new ErrorException(
+            $error['message'], 0, $error['type'], $error['file'], $error['line']
+          ));
+      }
     }
   }
 
@@ -482,6 +490,9 @@ class App implements IEventSubject, LoggerAwareInterface {
     
     // Set exception handler
     set_exception_handler(array($this, 'handleError'));
+    
+    // Set fatal error handler
+    register_shutdown_function(array($this, 'handleFatalError'));
     
     // Set timezone (required by file logger)
     if (!isset($this->config['i18n']['timeZone'])) {

@@ -180,7 +180,6 @@ class ErrorHandler implements LoggerAwareInterface {
               'code' => $error['type']
             )
           );
-            
       }
     }
   }
