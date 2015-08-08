@@ -507,6 +507,9 @@ class App implements IEventSubject, LoggerAwareInterface {
     // Set fatal error handler
     register_shutdown_function(array($this, 'handleFatalError'));
     
+    // Force output buffereing (so that error-pages can clear it)
+    ob_start();
+    
     // Set timezone (required by file logger)
     if (!isset($this->config['i18n']['timeZone'])) {
       $defaultTimeZone = 'UTC';
