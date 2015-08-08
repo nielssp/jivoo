@@ -486,10 +486,9 @@ class App implements IEventSubject, LoggerAwareInterface {
     // Set timezone (required by file logger)
     if (!isset($this->config['i18n']['timeZone'])) {
       $defaultTimeZone = 'UTC';
-      try {
+      $error = ErrorHandler::catchError(function() use($defaultTimeZone) {
         $defaultTimeZone = @date_default_timezone_get();
-      }
-      catch (\ErrorException $e) { }
+      });
       $this->config['i18n']['timeZone'] = $defaultTimeZone;
     }
     if (!date_default_timezone_set($this->config['i18n']['timeZone']))
