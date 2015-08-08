@@ -126,6 +126,17 @@ class ErrorHandler implements LoggerAwareInterface {
   }
   
   /**
+   * Convert PHP error code to string.
+   * @param int $type Error code.
+   * @return string Error code as a string.
+   */
+  public static function toString($type) {
+    if (!isset(self::$strings[$type]))
+      return $type;
+    return self::$strings[$type];
+  }
+  
+  /**
    * Handle error.
    * @param int $type Error type.
    * @param string $message Error message.

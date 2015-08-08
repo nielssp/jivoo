@@ -22,6 +22,7 @@ use Jivoo\Core\Vendor\VendorLoader;
 use Jivoo\Core\Log\ErrorHandler;
 use Jivoo\Core\Log\Logger;
 use Jivoo\Core\Log\FileHandler;
+use Jivoo\Core\Log\ErrorException;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -377,7 +378,10 @@ class App implements IEventSubject, LoggerAwareInterface {
   public function crashReport(\Exception $exception) {
     $app = $this->name;
     $version = $this->version;
-    $title = tr('Uncaught exception');
+    if ($exception instanceof \ErrorException)
+      $title = tr('Fatal error (%1)', ErrorHandler::toString($exception->getSeverity()));
+    else
+      $title = tr('Uncaught exception');
     $log = array();
     if ($this->logger instanceof \Jivoo\Core\Log\Logger)
       $log = $this->logger->getLog();

@@ -116,12 +116,6 @@ namespace Jivoo\Core {
     implements CoreException {}
   
   /**
-   * Thrown when a PHP error is caught.
-   */
-  class ErrorException extends \ErrorException
-    implements CoreException {}
-  
-  /**
    * Thrown when a third-party library could not be imported.
    */
   class VendorException extends \UnexpectedValueException
@@ -141,6 +135,12 @@ namespace Jivoo\Core\Log  {
    * Thrown when a log level is undefined.
    */
   class LogException extends \Psr\Log\InvalidArgumentException
+    implements CoreException {}
+  
+  /**
+   * Thrown when a PHP error is caught.
+   */
+  class ErrorException extends \ErrorException
     implements CoreException {}
 }
 
