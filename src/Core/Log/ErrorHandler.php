@@ -184,4 +184,19 @@ class ErrorHandler implements LoggerAwareInterface {
       }
     }
   }
+  
+  /**
+   * Catch a PHP error or warning message.
+   * @param callable $callable Function to catch error in.
+   * @return string|null Error message or null if no error was triggered.
+   */
+  public static function catchError($callable) {
+    $error = null;
+    set_error_handler(function($type, $message) use($error) {
+      $error = $message;
+    });
+    $callable();
+    restore_error_handler();
+    return $error;
+  }
 }

@@ -6,6 +6,7 @@
 namespace Jivoo\Core\Log;
 
 use Jivoo\Core\Utilities;
+use Psr\Log\LogLevel;
 
 /**
  * File log handler.
@@ -44,7 +45,7 @@ class FileHandler extends Handler {
         trigger_error(tr('Could not create log file: %1', $filePath), E_USER_WARNING);
       }
     }
-    $this->file = realpath($filePath);
+    $this->file = $filePath;
     $this->useLocking = false;
   }
   
