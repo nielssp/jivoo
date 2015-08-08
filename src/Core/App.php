@@ -475,8 +475,6 @@ class App implements IEventSubject, LoggerAwareInterface {
   public function run($environment = 'production') {
     $this->environment = $environment;
 
-    // Error handling
-    
     // Throw exceptions instead of fatal errors on class not found
     spl_autoload_register(function($class) {
       throw new InvalidClassException(tr('Class not found: %1', $class));
@@ -484,7 +482,20 @@ class App implements IEventSubject, LoggerAwareInterface {
     
     // Set exception handler
     set_exception_handler(array($this, 'handleError'));
+    
+    // Set timezone (required by file logger)
+    if (!isset($this->config['i18n']['timeZone'])) {
+      $defaultTimeZone = 'UTC';
+      try {
+        $defaultTimeZone = @date_default_timezone_get();
+      }
+      catch (\ErrorException $e) { }
+      $this->config['i18n']['timeZone'] = $defaultTimeZone;
+    }
+    if (!date_default_timezone_set($this->config['i18n']['timeZone']))
+      date_default_timezone_set('UTC');
 
+    // Set up the default file loger    
     if ($this->logger instanceof Logger) {
       try {
         $this->logger->addHandler(new FileHandler(

@@ -76,20 +76,9 @@ class Boot extends Module {
         'showReference' => true
       )
     );
-    
-    if (!isset($this->config['core']['timeZone'])) {
-      $defaultTimeZone = 'UTC';
-      try {
-        $defaultTimeZone = @date_default_timezone_get();
-      }
-      catch (\ErrorException $e) { }
-      $this->config['core']['timeZone'] = $defaultTimeZone;
-    }
-    if (!date_default_timezone_set($this->config['core']['timeZone']))
-      date_default_timezone_set('UTC');
 
-    if (isset($this->config['core']['language']))
-      I18n::setLanguage($this->config['core']['language']);
+    if (isset($this->config['i18n']['language']))
+      I18n::setLanguage($this->config['i18n']['language']);
     
 
     I18n::loadFrom($this->p('Core', 'languages'));

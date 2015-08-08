@@ -76,15 +76,6 @@ class I18n {
     self::load($localization, $extend);
     return true;
   }
-  
-  /**
-   * Get language code of current language.
-   * @return string A language code, e.g. 'en', 'en-GB', 'da-DK', etc.
-   * @deprecated
-   */
-  public static function getLanguageCode() {
-    return self::$language;
-  }
 
   /**
    * Translate a string.
