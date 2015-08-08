@@ -7,6 +7,7 @@ namespace Jivoo\Routing;
 
 use Jivoo\Core\Utilities;
 use Jivoo\InvalidPropertyException;
+use Jivoo\AccessControl\Random;
 
 /**
  * A class representing an HTTP request.
@@ -316,7 +317,7 @@ class Request {
    */
   public function getToken() {
     if (!isset($this->session['access_token'])) {
-      $this->session['access_token'] = sha1(mt_rand());
+      $this->session['access_token'] = base64_encode(Random::bytes(32));
     }
     return $this->session['access_token'];
   }
