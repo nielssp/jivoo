@@ -8,7 +8,6 @@ namespace Jivoo\AccessControl\Authorization;
 use Jivoo\AccessControl\LoadableAuthorization;
 use Jivoo\AccessControl\AuthorizationRequest;
 use Jivoo\Controllers\ActionDispatcher;
-use Jivoo\Core\Logger;
 
 /**
  * Authorize based on name of controller and action, e.g. checks permission

@@ -5,8 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
-use Jivoo\Core\Logger;
-
 /**
  * Provides functions related to redirects and HTTP status codes.
  */
@@ -51,7 +49,6 @@ class Http {
       );
     }
     Http::assumeHeadersNotSent();
-    Logger::debug('Redirect: ' . $location);
     header('Location: ' . $location);
     exit();
   }

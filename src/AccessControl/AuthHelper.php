@@ -9,7 +9,6 @@ use Jivoo\Helpers\Helper;
 use Jivoo\AccessControl\Acl\DefaultAcl;
 use Jivoo\Core\Utilities;
 use Jivoo\Routing\RenderEvent;
-use Jivoo\Core\Logger;
 
 /**
  * Helper class for authentication and autorization.

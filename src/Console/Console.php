@@ -7,10 +7,10 @@ namespace Jivoo\Console;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Json;
-use Jivoo\Core\Logger;
 use Jivoo\Routing\RenderEvent;
 use Jivoo\Core\Event;
 use Jivoo\Core\ShowExceptionEvent;
+use Jivoo\Core\Log\Logger;
 
 /**
  * Developer console module.
@@ -122,7 +122,12 @@ class Console extends LoadableModule {
     $pos = strripos($body, '</body');
     if ($pos === false)
       return;
-    $this->setVariable('jivooLog', Logger::getLog());
+    
+    // TODO: maybe app logger should not be replacable?
+    if ($this->logger instanceof Logger)
+      $this->setVariable('jivooLog', $this->logger->getLog());
+    else
+      $this->setVariable('jivooLog', array());
     $this->setVariable('jivooRequest', $this->request->toArray());
     $this->setVariable('jivooSession', $this->request->session->toArray());
     $this->setVariable('jivooCookies', $this->request->cookies->toArray());

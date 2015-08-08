@@ -5,7 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Store;
 
-use Jivoo\Core\Logger;
 use Jivoo\Core\Utilities;
 use Jivoo\InvalidMethodException;
 
@@ -63,7 +62,7 @@ class StateMap implements \ArrayAccess {
     if (!isset($this->files[$key]) and !$this->touch($key))
       throw new AccessException(tr('State file missing or inaccessible: %1', $key));
     $this->states[$key] = new State($this->files[$key], false);
-    Logger::debug(tr('Open state (read): %1', $key));
+//     Logger::debug(tr('Open state (read): %1', $key));
     return $this->states[$key];
   }
 
@@ -82,7 +81,7 @@ class StateMap implements \ArrayAccess {
     if (!isset($this->files[$key]))
       $this->touch($key);
     $this->states[$key] = new State($this->files[$key], true);
-    Logger::debug(tr('Open state (write): %1', $key));
+//     Logger::debug(tr('Open state (write): %1', $key));
     return $this->states[$key];
   }
   

@@ -10,7 +10,6 @@ use Jivoo\Core\Utilities;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
 use Jivoo\Extensions\ExtensionInfo;
-use Jivoo\Core\Logger;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Controllers\ActionDispatcher;
 use Jivoo\Snippets\SnippetDispatcher;

@@ -166,8 +166,6 @@ class App implements IEventSubject, LoggerAwareInterface {
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $this->logger = ErrorHandler::getInstance()->getLogger();
-    // TODO: deprecated static logger
-    \Jivoo\Core\Logger::setLogger($this->logger);
 
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
@@ -417,11 +415,11 @@ class App implements IEventSubject, LoggerAwareInterface {
           $this->crashReport($exception);
           fwrite($file, ob_get_clean());
           fclose($file);
-          Logger::error(tr('A crash report has been generated: "%1"', $name));
+          $this->logger->critical(tr('A crash report has been generated: "%1"', $name));
         }
         else {
           $hash = null;
-          Logger::error(tr('Failed to create crash report "%1"', $name));
+          $this->logger->alert(tr('Failed to create crash report "%1"', $name));
         }
       }
       if (!$this->config['core']['showReference'])

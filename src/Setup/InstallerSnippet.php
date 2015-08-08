@@ -11,7 +11,6 @@ use Jivoo\Models\Form;
 use Jivoo\Routing\ResponseOverrideException;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Core\Store\Config;
-use Jivoo\Core\Logger;
 use Jivoo\Core\Store\Document;
 
 /**
@@ -266,7 +265,7 @@ abstract class InstallerSnippet extends Snippet {
     $current = $this->current;
     if (isset($current->installer))
       return $current->installer->__invoke();
-    Logger::debug(tr('Installer step: %1::%2', get_class($this), $current->name));
+    $this->logger->debug(tr('Installer step: %1::%2', get_class($this), $current->name));
     $this->viewData['enableBack'] = $this->isUndoable();
     return call_user_func($current->do, null);
   }
@@ -345,7 +344,10 @@ abstract class InstallerSnippet extends Snippet {
             $task->run();
           }
           catch (\Exception $e) {
-            Logger::logException($e);
+            $this->logger->error(
+              tr('Asynchronous task failed: %1', $e->getMessage()),
+              array('exception' => $e)
+            );
             echo 'error: ' . $e->getMessage() . "\n";
             break;
           }

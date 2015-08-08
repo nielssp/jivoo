@@ -14,7 +14,6 @@ use Jivoo\Core\Store\Config;
 use Jivoo\Core\Store\PhpStore;
 use Jivoo\AccessControl\AuthHelper;
 use Jivoo\AccessControl\SingleUserModel;
-use Jivoo\Core\Logger;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\Event;
 use Jivoo\Core\Utilities;
@@ -181,7 +180,7 @@ class Setup extends LoadableModule {
   public function trigger($installerClass) {
     if (!Utilities::classExists($installerClass))
       $installerClass = $this->app->n('Snippets\\' . $installerClass);
-    Logger::notice(tr('Trigger installer: %1', $installerClass));
+    $this->logger->info(tr('Trigger installer: %1', $installerClass));
     $this->getInstaller($installerClass);
     $state = $this->state->write('setup');
     unset($state['current']);
@@ -207,7 +206,7 @@ class Setup extends LoadableModule {
         $auth->createSession(array('user' => $username));
       }
     }
-    Logger::notice(tr('Enable lock'));
+    $this->logger->info(tr('Enable lock'));
     return $this->lock->save();
   }
   
@@ -224,7 +223,7 @@ class Setup extends LoadableModule {
       unset($this->lock['username']);
       unset($this->lock['password']);
     }
-    Logger::notice(tr('Disable lock'));
+    $this->logger->info(tr('Disable lock'));
     return $this->lock->save();
   }
   

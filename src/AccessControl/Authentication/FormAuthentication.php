@@ -8,7 +8,6 @@ namespace Jivoo\AccessControl\Authentication;
 use Jivoo\AccessControl\LoadableAuthentication;
 use Jivoo\AccessControl\IUserModel;
 use Jivoo\AccessControl\IPasswordHasher;
-use Jivoo\Core\Logger;
 
 /**
  * Authentication using a POST-method form. Expects fields named "username" and

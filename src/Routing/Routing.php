@@ -8,7 +8,6 @@ namespace Jivoo\Routing;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Event;
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Logger;
 
 /**
  * Module for handling routes and HTTP requests.
@@ -141,6 +140,13 @@ class Routing extends LoadableModule {
     );
 
     $this->request = new Request($this->config['sessionPrefix'], $this->app->basePath);
+    $this->logger->debug(
+      'Request for {path} from {ip}',
+      array(
+        'path' => implode('/', $this->request->path), 
+        'ip' => $this->request->ip
+      )
+    );
     
     $this->dispatchers = new DispatcherCollection($this);
     $this->dispatchers->add(new VoidDispatcher());
@@ -698,7 +704,7 @@ class Routing extends LoadableModule {
       $this->request->query = array_merge($route['query'], $this->request->query);
     }
     
-    Logger::debug(tr('Dispatch: %1', $route['dispatcher']->fromRoute($route)));
+    $this->logger->debug(tr('Dispatch: %1', $route['dispatcher']->fromRoute($route)));
 
     $event->route = $route;
     $this->triggerEvent('beforeCreateDispatch', $event);
@@ -787,7 +793,7 @@ class Routing extends LoadableModule {
       throw new HeadersSentException(tr('Headers already sent in %1 on line %2', $file, $line));
     $event = new RenderEvent($this, $this->selection, $response);
     $this->triggerEvent('beforeRender', $event);
-    Logger::debug(tr('Rendering response %1 (%2 %3)', get_class($response), $response->status, $response->type));
+    $this->logger->debug(tr('Rendering response %1 (%2 %3)', get_class($response), $response->status, $response->type));
     if (isset($status))
       Http::setStatus($status);
     else

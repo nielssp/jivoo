@@ -6,7 +6,6 @@
 namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\QueryException;
-use Jivoo\Core\Logger;
 
 /**
  * A generic PDO SQL database.
@@ -34,7 +33,7 @@ abstract class PdoDatabase extends SqlDatabase {
    * {@inheritdoc}
    */
   public function rawQuery($sql, $pk = null) {
-    Logger::query($sql);
+    $this->logger->debug('PDO query: {query}', array('query' => $sql));
     $result = $this->pdo->query($sql);
     if (!$result) {
       $errorInfo = $this->pdo->errorInfo();

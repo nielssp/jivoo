@@ -5,7 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View;
 
-use Jivoo\Core\Logger;
 /**
  * Template system.
  * @method string link(array|ILinkable|string|null $route = null) Alias for

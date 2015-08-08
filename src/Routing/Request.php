@@ -5,7 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
-use Jivoo\Core\Logger;
 use Jivoo\Core\Utilities;
 use Jivoo\InvalidPropertyException;
 
@@ -144,7 +143,6 @@ class Request {
         $path = substr($path, $l);
       }
     }
-    Logger::debug('Request for ' . $url . ' [' . $path . '] from ' . $this->ip);
     $this->path = array();
     $path = substr($path, 1);
     if ($path != '') {

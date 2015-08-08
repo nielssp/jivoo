@@ -7,7 +7,6 @@ namespace Jivoo\Databases\Drivers\Mysqli;
 
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
-use Jivoo\Core\Logger;
 use Jivoo\Databases\ConnectionException;
 use Jivoo\Databases\QueryException;
 
@@ -53,7 +52,7 @@ class MysqliDatabase extends SqlDatabase {
    * {@inheritdoc}
    */
   public function rawQuery($sql, $pk = null) {
-    Logger::query($sql);
+    $this->logger->debug('MySQLi query: {query}', array('query' => $sql));
     $result = $this->handle->query($sql);
     if (!$result) {
       throw new QueryException($this->handle->error);

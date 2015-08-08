@@ -386,6 +386,10 @@ $(function() {
     $.each(jivooLog, function(i, entry) {
       var $entry = $('<div class="jivoo-console-log-entry"></div>');
       var message = entry.message;
+      for (var p in entry.context) {
+        if (entry.context.hasOwnProperty(p))
+          message = message.replace('{' + p + '}', entry.context[p]);
+      }
       if (entry.context.file)
         message += ' in <em>' + entry.context.file + '</em> on line <strong>'
                  + entry.context.line + '</strong>';
@@ -458,6 +462,10 @@ $(function() {
   for (var i = 0; i < jivooLog.length; i++) {
     var entry = jivooLog[i];
     var message = entry.message;
+    for (var p in entry.context) {
+      if (entry.context.hasOwnProperty(p))
+        message = message.replace('{' + p + '}', entry.context[p]);
+    }
     if (entry.context.file)
       message += ' in ' + entry.context.file + ' on line ' + entry.context.line;
     switch (entry.level) {

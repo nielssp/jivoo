@@ -7,7 +7,6 @@ namespace Jivoo\Themes;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Json;
-use Jivoo\Core\Logger;
 
 /**
  * Theming module.
@@ -78,7 +77,7 @@ class Themes extends LoadableModule {
       }
       $info = Json::decodeFile($dir . '/theme.json');
       if (!$info) {
-        Logger::warning(tr('The theme "%1" has an invalid json file.', $theme));
+        $this->logger->warning(tr('The theme "%1" has an invalid json file.', $theme));
         return null;
       }
       $this->info[$theme] = new ThemeInfo($theme, $info, array(), $library);

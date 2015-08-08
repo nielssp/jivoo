@@ -69,7 +69,7 @@ class I18n {
   public static function loadFrom($dir, $extend = true) {
     $file = $dir . '/' . self::$language . '.lng.php';
     if (!file_exists($file)) {
-      Logger::notice(tr('Language not found: %1', $file));
+//    TODO:   Logger::notice(tr('Language not found: %1', $file));
       return false;
     }
     $localization = include $file;

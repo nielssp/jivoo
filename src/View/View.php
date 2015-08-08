@@ -239,6 +239,7 @@ class View extends LoadableModule {
       $file = fopen($compiled, 'w');
       if (!$file)
         throw new InvalidTemplateException(tr('Could not write compiled template: %1', $compiled));
+      $this->logger->info(tr('Compiling template %1', $source));
       fwrite($file, $this->compiler->compile($source));
       fclose($file);
       $this->compiled[$template] = $compiled;

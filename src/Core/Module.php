@@ -7,11 +7,13 @@ namespace Jivoo\Core;
 
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidMethodException;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * A module is part of an application.
  */
-abstract class Module implements IEventSubject {
+abstract class Module implements IEventSubject, LoggerAwareInterface {
   /**
    * @var string[] Names of modules required by this module.
    */
@@ -38,7 +40,7 @@ abstract class Module implements IEventSubject {
   protected $state;
   
   /**
-   * @var \Psr\Log\LoggerInterface Application logger.
+   * @var LoggerInterface Application logger.
    */
   protected $logger;
 
@@ -147,6 +149,21 @@ abstract class Module implements IEventSubject {
    */
   public function __call($method, $parameters) {
     throw new InvalidMethodException(tr('Invalid method: %1', $method));
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setLogger(LoggerInterface $logger) {
+    $this->logger = $logger;
+  }
+  
+  /**
+   * Get logger.
+   * @return LoggerInterface Logger.
+   */
+  public function getLogger() {
+    return $this->logger;
   }
   
   /**

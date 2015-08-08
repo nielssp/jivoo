@@ -109,7 +109,10 @@ class IconHelper extends Helper {
         $this->Html->addAttributes($attributes) . '>' . $icon . '</a>';
     }
     catch (InvalidRouteException $e) {
-      Logger::logException($e);
+      $this->logger->error(
+        tr('Invalid route: %1', $e->getMessage()),
+        array('exception' => $e)
+      );
       return '<a href="#invalid-route" class="invalid"><span class="label">' .
              $label . '</span></a>';
     }
@@ -145,7 +148,10 @@ class IconHelper extends Helper {
              '<span class="label">' . $label . '</span>' . $count . '</a>';
     }
     catch (InvalidRouteException $e) {
-      Logger::logException($e);
+      $this->logger->error(
+        tr('Invalid route: %1', $e->getMessage()),
+        array('exception' => $e)
+      );
       return '<a href="#invalid-route" class="invalid"><span class="label">' .
              $label . '</span></a>';
     }

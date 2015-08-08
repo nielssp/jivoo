@@ -22,7 +22,6 @@ use Jivoo\Models\Selection\BasicSelection;
 use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\Record;
-use Jivoo\Core\Logger;
 use Jivoo\Databases\InvalidTableException;
 
 /**

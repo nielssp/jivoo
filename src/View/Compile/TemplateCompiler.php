@@ -5,7 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View\Compile;
 
-use Jivoo\Core\Logger;
 use Jivoo\View\InvalidMacroException;
 use Jivoo\View\InvalidTemplateException;
 
@@ -61,7 +60,6 @@ class TemplateCompiler {
    * @throws InvalidTemplateException If template is inaccessible or invalid.
    */
   public function compile($template) {
-    Logger::debug('Compiling template: ' . $template);
     $dom = new \simple_html_dom();
     $file = file_get_contents($template);
     if ($file === false)

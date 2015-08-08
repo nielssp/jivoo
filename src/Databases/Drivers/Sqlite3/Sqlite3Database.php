@@ -8,7 +8,6 @@ namespace Jivoo\Databases\Drivers\Sqlite3;
 use Jivoo\Databases\Common\SqlDatabase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
 use Jivoo\Databases\QueryException;
-use Jivoo\Core\Logger;
 use Jivoo\Databases\ConnectionException;
 
 /**
@@ -57,9 +56,8 @@ class Sqlite3Database extends SqlDatabase {
    * {@inheritdoc}
    */
   public function rawQuery($sql, $pk = null) {
-    Logger::query($sql);
-    $result = $this->handle
-      ->query($sql);
+    $this->logger->debug('SQLite3 query: {query}', array('query' => $sql));
+    $result = $this->handle->query($sql);
     if (!$result) {
       throw new QueryException($this->handle
         ->lastErrorMsg());

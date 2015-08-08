@@ -8,7 +8,6 @@ namespace Jivoo\ActiveModels;
 use Jivoo\Models\IRecord;
 use Jivoo\Models\IActionRecord;
 use Jivoo\Routing\ILinkable;
-use Jivoo\Core\Logger;
 use Jivoo\InvalidMethodException;
 use Jivoo\InvalidPropertyException;
 
@@ -347,7 +346,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
   public function save($validate = true) {
     if ($validate and !$this->isValid()) {
       foreach ($this->getErrors() as $field => $error)
-        Logger::notice(tr('Form error (%1): %2', $field, $error));
+        $this->model->getLogger()->info(tr('Form error (%1): %2', $field, $error));
       return false;
     }
     $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));

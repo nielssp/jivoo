@@ -5,8 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Store;
 
-use Jivoo\Core\Logger;
-
 /**
  * Stores data in files. See subclasses for implementations of file formats.
  */
@@ -158,7 +156,7 @@ abstract class FileStore implements IStore {
       return;
     if (!$this->mutable)
       throw new AccessException(tr('Not mutable'));
-    Logger::debug(tr('Write file: %1', $this->file));
+//     Logger::debug(tr('Write file: %1', $this->file));
     $this->data = $data;
     ftruncate($this->handle, 0);
     rewind($this->handle);

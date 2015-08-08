@@ -9,7 +9,6 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadEvent;
 use Jivoo\Core\Json;
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Logger;
 use Jivoo\Core\JsonException;
 use Jivoo\Autoloader;
 
@@ -224,7 +223,7 @@ class Extensions extends LoadableModule {
         $info = Json::decodeFile($dir . '/' . $manifest);
       }
       catch (JsonException $e) {
-        Logger::warning(tr('Error decoding JSON: %1', $dir . '/' . $manifest));
+        $this->logger->error(tr('Error decoding JSON: %1', $dir . '/' . $manifest));
         return null;
       }
       $this->info[$extension] = new ExtensionInfo($extension, $info, $library, $this->isEnabled($extension));
@@ -249,8 +248,10 @@ class Extensions extends LoadableModule {
       catch (\Exception $e) {
         if ($this->config['disableBuggy']) {
           $this->disable($extension);
-          Logger::error(tr('Extension "%1" disabled, caused by:', $extension));
-          Logger::logException($e);
+          $this->logger->error(
+            tr('Extension "%1" disabled, caused by: %2', $extension, $e->getMessage()),
+            array('exception' => $e)
+          );
         }
         else {
           throw $e;
@@ -268,8 +269,10 @@ class Extensions extends LoadableModule {
       catch (\Exception $e) {
         if ($this->config['disableBuggy']) {
           $this->disable($info->canonicalName);
-          Logger::error(tr('Extension "%1" disabled, caused by:', $info->canonicalName));
-          Logger::logException($e);
+          $this->logger->error(
+            tr('Extension "%1" disabled, caused by: %2', $extension, $e->getMessage()),
+            array('exception' => $e)
+          );
         }
         else {
           throw $e;
@@ -527,7 +530,7 @@ class Extensions extends LoadableModule {
           if (isset($info))
             $extensions[] = $info;
           else
-            Logger::error(tr('Invalid extension: %1', $file));
+            $this->logger->error(tr('Invalid extension: %1', $file));
         }
       }
     }

@@ -100,7 +100,7 @@ class Logger implements LoggerInterface {
    */
   public static function interpolate($message, array $context = array()) {
     foreach ($context as $key => $value)
-      str_replace('{' . $key . '}', $value, $message);
+      $message = str_replace('{' . $key . '}', $value, $message);
     return $message;
   }
   

@@ -9,7 +9,6 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
-use Jivoo\Core\Logger;
 use Jivoo\Databases\IMigratableDatabase;
 use Jivoo\Autoloader;
 
@@ -160,7 +159,7 @@ class Migrations extends LoadableModule {
    */
   public function initialize($name) {
     $db = $this->getDatabase($name);
-    Logger::debug('Creating SchemaRevision table for ' . $name);
+    $this->logger->info('Creating SchemaRevision table for ' . $name);
     $db->createTable($this->schema);
     $records = array();
     foreach ($this->getMigrations($name) as $migration)
@@ -221,7 +220,7 @@ class Migrations extends LoadableModule {
    */
   public function run($dbName, $migrationName) {
     $db = $this->getDatabase($dbName);
-    Logger::debug('Initializing migration ' . $migrationName);
+    $this->logger->info('Initializing migration ' . $migrationName);
     Utilities::assumeSubclassOf($migrationName, 'Jivoo\Migrations\Migration');
 
     // The migration schema keeps track of the state of the database

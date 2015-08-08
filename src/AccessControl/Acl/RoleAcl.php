@@ -8,7 +8,6 @@ namespace Jivoo\AccessControl\Acl;
 use Jivoo\AccessControl\LoadableAcl;
 use Jivoo\Models\IBasicRecord;
 use Jivoo\AccessControl\IPermissionList;
-use Jivoo\Core\Logger;
 use Jivoo\AccessControl\PermissionList;
 use Jivoo\AccessControl\Jivoo\AccessControl;
 use Jivoo\AccessControl\InvalidRoleException;
@@ -41,7 +40,7 @@ class RoleAcl extends LoadableAcl {
     if (isset($user) and isset($user[$field]))
       $role = $user[$field];
     if (!isset($this->roles[$role])) {
-      Logger::log(tr('Undefined role: %1', $role));
+      $this->logger->warning(tr('Undefined role: %1', $role));
       return false;
     }
     return $this->roles[$role]->hasPermission($permission);

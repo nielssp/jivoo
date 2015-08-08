@@ -93,8 +93,6 @@ class FileHandler extends Handler {
     $timestamp .= date('P');
     $level = '[' . $record['level'] . ']';
     $message = '';
-    if (isset($record['context']['query']))
-      $message .= '(query) ';
     $message .= Logger::interpolate($record['message'], $record['context']);
     if (isset($record['context']['file']))
       $message .= ' in ' . $record['context']['file'];
