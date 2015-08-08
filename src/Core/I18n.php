@@ -28,7 +28,13 @@ class I18n {
    * @param string $language IETF language tag, e.g. 'en' or 'en-US'.
    */
   public static function setLanguage($language) {
-    self::$language = $language;
+    // regex source: http://www.w3.org/TR/xmlschema11-2/#language
+    if (preg_match('/[a-z]{1,8}(-[a-z0-9]{1,8})*/i', $language) === 1) {
+      self::$language = $language;
+    }
+    else {
+      trigger_error(tr('Invalid language tag: %1', $language), E_USER_WARNING);
+    }
   }
 
 
@@ -69,7 +75,7 @@ class I18n {
   public static function loadFrom($dir, $extend = true) {
     $file = $dir . '/' . self::$language . '.lng.php';
     if (!file_exists($file)) {
-//    TODO:   Logger::notice(tr('Language not found: %1', $file));
+      trigger_error(tr('Language not found: %1', $file), E_USER_NOTICE);
       return false;
     }
     $localization = include $file;
