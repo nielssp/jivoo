@@ -233,7 +233,7 @@ class View extends LoadableModule {
       $source = $dir . $template;
       $compiled = $dir . 'compiled/' . $template . '.php';
       $dir = dirname($compiled);
-      if (!Utilities::dirExists($dir) and !Utilities::createDir($dir, true)) {
+      if (!Utilities::dirExists($dir)) {
         throw new InvalidTemplateException(tr('Could not create directory: %1', $dir));
       }
       $file = fopen($compiled, 'w');

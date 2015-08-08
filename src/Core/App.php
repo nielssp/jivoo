@@ -19,6 +19,9 @@ use Psr\Log\LogLevel;
 use Jivoo\Core\Log\FileLogger;
 use Jivoo\Core\Log\LogException;
 use Jivoo\Core\Vendor\VendorLoader;
+use Jivoo\Core\Log\ErrorHandler;
+use Jivoo\Core\Log\Logger;
+use Jivoo\Core\Log\FileHandler;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -164,7 +167,7 @@ class App implements IEventSubject, LoggerAwareInterface {
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
     $this->logger = ErrorHandler::getInstance()->getLogger();
     // TODO: deprecated static logger
-    Logger::setLogger($this->logger);
+    \Jivoo\Core\Logger::setLogger($this->logger);
 
     $appPath = Utilities::convertPath($appPath);
     $userPath = Utilities::convertPath($userPath);
@@ -392,7 +395,7 @@ class App implements IEventSubject, LoggerAwareInterface {
    * Handler for uncaught exceptions.
    * @param \Exception $exception The exception.
    */
-  public function handleError(\Exception $exception) {
+  public function handleError($exception) {
     $this->logger->critical(
       tr('Uncaught exception: %1', $exception->getMessage()),
       array('exception' => $exception)
@@ -453,6 +456,17 @@ class App implements IEventSubject, LoggerAwareInterface {
       $this->stop();
     }
   }
+  
+  /**
+   * 
+   */
+  public function handleFatalError() {
+    $error = error_get_last();
+    if ($error) {
+      echo 'lol fatal: ';
+      echo $error['message'];
+    }
+  }
 
   /**
    * Run the application.
@@ -473,21 +487,20 @@ class App implements IEventSubject, LoggerAwareInterface {
     // Set exception handler
     set_exception_handler(array($this, 'handleError'));
 
-    if ($this->logger instanceof FileLogger) {
+    if ($this->logger instanceof Logger) {
       try {
-        $this->logger->addFile(
+        $this->logger->addHandler(new FileHandler(
           $this->p('log/' . $this->environment . '.log'),
           $this->config['core']->get('logLevel', LogLevel::WARNING)
-        );
+        ));
       }
       catch (LogException $e) {
         $this->logger->warning($e->getMessage(), array('exception' => $e));
-        $this->logger->addFile(
+        $this->logger->addHandler(new FileHandler(
           $this->p('log/' . $this->environment . '.log'),
           LogLevel::WARNING
-        );
+        ));
       }
-      register_shutdown_function(array($this->logger, 'save'));
     }
 
     // Check PHP version

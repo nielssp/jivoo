@@ -7,7 +7,6 @@ namespace Jivoo\Core;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Jivoo\Core\Log\FileLogger;
 
 /**
  * Jivoo logging.
@@ -127,7 +126,7 @@ class Logger {
    * @return array[] List of log messages.
    */
   public static function getLog() {
-    if (self::$logger instanceof FileLogger)
+    if (self::$logger instanceof Log\Logger)
       return self::$logger->getLog();
     return array();
   }
@@ -137,8 +136,6 @@ class Logger {
    * @return boolean True if all files saved successfully, false otherwise.
    */
   public static function saveAll() {
-    if (self::$logger instanceof FileLogger)
-      return self::$logger->save();
   }
 
   /**
@@ -148,7 +145,7 @@ class Logger {
    * @param string $append Whether or not to append messages to file.
    */
   public static function attachFile($logFile, $level = Logger::ALL, $append = true) {
-    if (self::$logger instanceof FileLogger) {
+    if (self::$logger instanceof Log\Logger) {
       switch ($level) {
         case Logger::QUERY:
         case Logger::DEBUG:
@@ -166,7 +163,7 @@ class Logger {
           $level = LogLevel::WARNING;
           break;
       }
-      return self::$logger->addFile($logFile, $level);
+      return self::$logger->addHandler(new FileHandler($logFile, $level));
     }
   }
 

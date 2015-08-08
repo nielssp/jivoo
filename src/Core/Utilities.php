@@ -157,31 +157,13 @@ class Utilities {
    * Check whether a directory exists or create it if it doesn't.
    * @param string $file File path.
    * @param bool $create Attempt to create directory if it doesn't exist.
+   * @param bool $recursive Whether to recursively create parent directories
+   * as well.
+   * @param int $mode Directory permission, default is 0777.
    * @return bool True if directory exists.
    */
-  public static function dirExists($file, $create = true) {
-    return is_dir($file) or ($create and mkdir($file));
-  }
-  
-  /**
-   * Attempt to create a directory.
-   * @param string $dir Directory path.
-   * @param bool $recursive Whether to recursively create parent directories.
-   * @return bool True if directory could be created.
-   */
-  public static function createDir($dir, $recursive = false) {
-    if (mkdir($dir))
-      return true;
-    if (!$recursive)
-      return false;
-    $dir = explode('/', self::convertPath($dir));
-    $path = array_shift($dir);
-    foreach ($dir as $comp) {
-      $path .= '/' . $comp;
-      if (!(is_dir($path) or mkdir($path)))
-        return false;
-    }
-    return true;
+  public static function dirExists($file, $create = true, $recursive = true, $mode = 0777) {
+    return is_dir($file) or ($create and mkdir($file, $mode, $recursive));
   }
   
   /**
