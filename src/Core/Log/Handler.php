@@ -18,7 +18,7 @@ abstract class Handler implements IHandler {
    * @param string $level Minimum log level, see {@see LogLevel}.
    */
   public function __construct($level = LogLevel::DEBUG) {
-    $this->level = LogLeveL::DEBUG;
+    $this->level = $level;
   }
   
   /**
