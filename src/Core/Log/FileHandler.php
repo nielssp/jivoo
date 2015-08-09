@@ -40,13 +40,17 @@ class FileHandler extends Handler {
       $dir = dirname($filePath);
       if (!Utilities::dirExists($dir)) {
         trigger_error(tr('Could not create log directory: %1', $dir), E_USER_WARNING);
+        $this->stream = false;
+        return;
       }
       if (!touch($filePath)) {
         trigger_error(tr('Could not create log file: %1', $filePath), E_USER_WARNING);
+        $this->stream = false;
+        return;
       }
     }
-    $this->file = $filePath;
-    $this->useLocking = false;
+    $this->file = realpath($filePath);
+    $this->useLocking = $useLocking
   }
   
   /**
