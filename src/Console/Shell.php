@@ -207,6 +207,8 @@ class Shell extends Module {
   }
   
   public function run() {
+    while (ob_get_level() > 0)
+      ob_end_clean();
     while (true) {
       try {
         $line = $this->get($this->app->name . '> ');
