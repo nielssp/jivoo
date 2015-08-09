@@ -1,5 +1,5 @@
 <p>
-<?php echo tr('Choose a name for you application and select the modules that you want to use.')?>
+<?php echo tr('Choose a name for your application and select the modules that you want to use.')?>
 </p>
 
 <?php $Form->formFor($configForm, null); ?>
