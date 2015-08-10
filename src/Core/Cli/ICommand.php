@@ -21,19 +21,26 @@ interface ICommand {
   public function getOptions();
   
   /**
-   * Get associative array of short options mapped to long options (defined by
-   * {@see getOptions}.
-   * 
-   * A short option is a shorter alternative to a long option.
-   * @return string[] An associative array where the key is a short option,
-   * e.g. 'h' or 'f', and the value is the long option, e.g. 'help' or 'file'.
+   * Get the short version of an option if any.
+   * @param string $option The long option (as returned by {@see getOptions}),
+   * e.g. 'help' or 'file'.
+   * @return string|null The short option if available, e.g. 'h' or 'f'.
    */
-  public function getShortOptions();
+  public function getShort($option);
   
   /**
-   * Run command.
-   * @param string[] $args List of parameters for command.
+   * Get description of command or option.
+   * @param string|null $option Option to describe, if null, the method should
+   * return a description of the command.
+   * @return string|null Description of command or option, or null if not
+   * available.
+   */
+  public function getDescription($option = null);
+  
+  /**
+   * Invoke command.
+   * @param string[] $parameters List of parameters for command.
    * @param string[] $options Associative array of options for command,
    */
-  public function run($args, $options);
+  public function __invoke(array $parameters, array $options);
 }

@@ -18,7 +18,7 @@ class Boot extends Module {
    * @var string[] List of valid environments used by {@see boot} to select a
    * method.
    */
-  protected $environments = array('production', 'development');
+  protected $environments = array('production', 'development', 'cli');
   
   /**
    * Construct boot object.
@@ -110,9 +110,7 @@ class Boot extends Module {
   
   protected function cli() {
     // TODO: Load subset of modules (e.g. not Routing?) 
-    $shell = new Shell($this->app);
-    $shell->parseArguments();
-    $shell->run();
-    echo tr('%1 %2: CLI support disabled', $this->app->name, $this->app->version);
+    $this->shell->parseArguments();
+    $this->shell->run();
   }
 }

@@ -37,5 +37,5 @@ require PATH . '/functions.php';
 require PATH . '/exceptions.php';
 
 error_reporting(-1);
-\Jivoo\Core\Log\ErrorHandler::getInstance()->register();
+Core\Log\ErrorHandler::getInstance()->register();
 

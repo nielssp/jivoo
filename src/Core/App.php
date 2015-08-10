@@ -23,6 +23,7 @@ use Jivoo\Core\Log\ErrorHandler;
 use Jivoo\Core\Log\Logger;
 use Jivoo\Core\Log\FileHandler;
 use Jivoo\Core\Log\ErrorException;
+use Jivoo\Core\Cli\Shell;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -43,6 +44,8 @@ use Jivoo\Core\Log\ErrorException;
  * @property-read LoggerInterface $logger Application logger.
  * @property-read ModuleLoader $m Module loader.
  * @property-read VendorLoader $vendor Third-party library loader.
+ * @property-read Shell|null $shell The command-line shell if application is
+ * running in the CLI.  
  */
 class App implements IEventSubject, LoggerAwareInterface {
   /**
@@ -162,6 +165,11 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @var string[]
    */
   private $errorPaths = array();
+  
+  /**
+   * @var Shell
+   */
+  private $shell = null;
 
   /**
    * Create application.
@@ -228,6 +236,9 @@ class App implements IEventSubject, LoggerAwareInterface {
     
     // Persistent state storage
     $this->state = new StateMap($this->p('state'));
+    
+    if ($this->isCli())
+      $this->shell = new Shell($this);
   }
 
   /**
@@ -254,6 +265,7 @@ class App implements IEventSubject, LoggerAwareInterface {
       case 'logger':
       case 'm':
       case 'vendor':
+      case 'shell':
         return $this->$property;
       case 'eventManager':
         return $this->e;

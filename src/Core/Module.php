@@ -35,6 +35,11 @@ abstract class Module implements IEventSubject, LoggerAwareInterface {
   protected $vendor;
   
   /**
+   * @var \Jivoo\Core\Cli\Shell Command-line shell (if running in CLI mode).
+   */
+  protected $shell;
+  
+  /**
    * @var \Jivoo\Core\Store\StateMap Application persistent state storage.
    */
   protected $state;
@@ -88,6 +93,7 @@ abstract class Module implements IEventSubject, LoggerAwareInterface {
     $this->m = $app->m;
     $this->m->load($this->modules);
     $this->vendor = $app->vendor;
+    $this->shell = $app->shell;
     $this->logger = $app->logger;
     if (isset($this->m->Routing)) {
       $this->request = $this->m->Routing->request;

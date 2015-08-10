@@ -3,45 +3,31 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Console;
+namespace Jivoo\Core\Cli;
 
-use Jivoo\Core\Module;
 use Jivoo\Core\App;
 
 /**
  * Command-line interface for Jivoo applications.
  */
-class Shell extends Module {
+class Shell extends Command {
   
   private $name;
   
   private $lastError = null;
-  
-  private $commands = array();
-  
+
   private $options = array();
-  
-  private $availableOptions = array();
-  
-  private $shortOptions = array();
   
   public function __construct(App $app) {
     parent::__construct($app);
-    $this->addCommand('version', array($this, 'showVersion'));
-    $this->addCommand('help', array($this, 'showHelp'));
-    $this->addCommand('trace', array($this, 'showTrace'));
+    $this->shell = $this;
+    $this->addCommand('version', array($this, 'showVersion'), tr('Show the application and framework version'));
+    $this->addCommand('help', array($this, 'showHelp'), tr('Show this help'));
+    $this->addCommand('trace', array($this, 'showTrace'), tr('Show stack trace for most recent exception'));
+    $this->addCommand('exit', array($this, 'stop'), tr('Ends the shell session'));
     $this->addOption('help', 'h');
+    $this->addOption('version', 'v');
     $this->addOption('trace', 't');
-  }
-  
-  public function addCommand($command, $function) {
-    $this->commands[$command] = $function;
-  }
-  
-  public function addOption($option, $short = null, $hasParameter = false) {
-    $this->availableOptions[$option] = $hasParameter;
-    if (isset($short))
-      $this->shortOptions[$short] = $option;
   }
   
   public function parseArguments() {
@@ -100,14 +86,14 @@ class Shell extends Module {
       $this->showHelp();
       exit;
     }
+    if (isset($this->options['version'])) {
+      $this->showVersion();
+      exit;
+    }
     if (count($command)) {
       $this->evalCommand($command);
       $this->stop();
     }
-  }
-  
-  public function hasOption($option) {
-    return isset($this->options[$option]);
   }
   
   public function evalCommand($command) {
@@ -119,10 +105,26 @@ class Shell extends Module {
     if ($command == 'exit')
       $this->stop();
     if (!isset($this->commands[$command])) {
-      $this->put(tr('Unknown command or subsystem: %1', $command));
+      $this->error(tr('Unknown command: %1', $command));
+      $best = null;
+      $bestDist = PHP_INT_MAX;
+      foreach ($this->commands as $name => $c) {
+        $dist = levenshtein($command, $name);
+        if ($dist < $bestDist) {
+          $best = $name;
+          $bestDist = $dist;
+        }
+      }
+      if ($bestDist < 5)
+        $this->put(tr('Did you mean "%1"?', $best));
       return;
     }
-    call_user_func_array($this->commands[$command], $parameters);
+    try {
+      call_user_func($this->commands[$command], $parameters, $this->options);
+    }
+    catch (\Exception $e) {
+      $this->handleException($e);
+    }
   }
   
   public function showTrace() {
@@ -132,12 +134,12 @@ class Shell extends Module {
   }
   
   public function dumpException(\Exception $exception) {
-    $this->put(tr(
+    $this->error(tr(
       '%1: %2 in %3:%4', get_class($exception),
       $exception->getMessage(), $exception->getFile(), $exception->getLine()
     ));
-    $this->put();
-    $this->put(tr('Stack trace:'));
+    $this->error();
+    $this->error(tr('Stack trace:'));
     $trace = $exception->getTrace();
     foreach ($trace as $i => $call) {
       $message = '  ' . sprintf('% 2d', $i) . '. ';
@@ -155,11 +157,11 @@ class Shell extends Module {
       }
       $message .=  implode(', ', $arglist);
       $message .=  ')';
-      $this->put($message);
+      $this->error($message);
     }
     $previous = $exception->getPrevious();
     if (isset($previous)) {
-      $this->put(tr('Caused by:')); 
+      $this->error(tr('Caused by:')); 
       $this->dumpException($previous);
     }
   }
@@ -170,38 +172,70 @@ class Shell extends Module {
   }
   
   public function showHelp() {
-    $this->put('usage: ' . $this->name . ' [COMMAND(S)]');
+    $this->put('usage: ' . $this->name . ' [options] [command] [args...]');
+    $this->help();
   }
   
   public function handleException(\Exception $exception) {
     $this->lastError = $exception;
-    if ($this->hasOption('trace')) {
-      $this->put(tr('Uncaught exception'));
+    if (isset($this->options['trace'])) {
+      $this->error(tr('Uncaught exception'));
       $this->dumpException($exception);
     }
     else {
-      $this->put(tr('Uncaught %1: %2', get_class($exception), $exception->getMessage()));
+      $this->error(tr('Uncaught %1: %2', get_class($exception), $exception->getMessage()));
       $this->put();
       $this->put(tr('Call "trace" to show stack trace'));
     }
   }
   
+  /**
+   * Create a string representation of any PHP value.
+   * @param mixed $value Any value.
+   * @return string String representation. 
+   */
   public function dump($value) {
     if (is_object($value)) {
       return get_class($value);
     }
     return var_export($value, true);
   }
-  
-  public function put($line = '') {
-    echo $line . PHP_EOL;
+
+  /**
+   * Print a line of text to standard error.
+   * @param string $line Line.
+   * @param string $eol Line ending, set to '' to prevent line break.
+   */
+  public function error($line, $eol = PHP_EOL) {
+    fwrite(STDERR, $line . $eol);
+    fflush(STDERR);
   }
   
+  /**
+   * Print a line of text to standard output.
+   * @param string $line Line.
+   * @param string $eol Line ending, set to '' to prevent line break.
+   */
+  public function put($line = '', $eol = PHP_EOL) {
+    echo $line . $eol;
+    flush();
+    fflush(STDOUT);
+  }
+  
+  /**
+   * Get a line of user input from standard input.
+   * @param string $prompt Optional prompt.
+   * @return string User input.
+   */
   public function get($prompt = '') {
-    echo $prompt;
+    $this->put($prompt, '');
     return trim(fgets(STDIN));
   }
   
+  /**
+   * Stop shell.
+   * @param int $status Status code, 0 for success.
+   */
   public function stop($status = 0) {
     $this->app->stop($status);
   }
