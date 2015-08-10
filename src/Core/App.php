@@ -497,8 +497,18 @@ class App implements IEventSubject, LoggerAwareInterface {
    * @param string $environment Configuration environment to use, e.g.
    * 'production' or 'development'. Environments are stored in
    * 'app/config/environments'.
+   * @param bool $enableCli Whether to enable the command-line interface. If
+   * enabled, the environment will be set to 'cli' when the application is run
+   * from the command-line.
    */
-  public function run($environment = 'production') {
+  public function run($environment = 'production', $enableCli = true) {
+    if ($this->isCli()) {
+      if (!$enableCli) {
+        echo tr('The command-line interface is disabled.');
+        $this->stop();
+      }
+      $environment = 'cli';
+    }
     $this->environment = $environment;
 
     // Precompute paths used for error handling

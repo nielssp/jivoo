@@ -11,7 +11,8 @@ use Psr\Log\LogLevel;
 /**
  * The default application initialization class. Extend this class and override
  * the {@see boot} method to customize the initialization process. The defeault
- * implementation supports the environments 'production' and 'development'.
+ * implementation supports the environments 'production', 'development', and
+ * 'cli'.
  */
 class Boot extends Module {
   /**
@@ -36,12 +37,7 @@ class Boot extends Module {
     return $this->m->import($module);
   }
   
-  public function boot($environment) {
-    if ($this->app->isCli()) {
-      $this->cli();
-      return;
-    }
-    
+  public function boot($environment) {    
     if (!in_array($environment, $this->environments))
       throw new InvalidEnvironmentException(tr('Undefined environment: %1', $environment));
 

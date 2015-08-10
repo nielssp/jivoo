@@ -60,11 +60,6 @@ abstract class Command extends Module implements ICommand {
       $this->shortOptions[$short] = $option;
   }
   
-  
-  public function hasOption($option) {
-    return isset($this->options[$option]);
-  }
-  
   public function evalCommand($command) {
     if (is_string($command))
       $parameters = explode(' ', $command); // TODO: use regex
