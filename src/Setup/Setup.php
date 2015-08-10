@@ -18,6 +18,7 @@ use Jivoo\Core\Store\Document;
 use Jivoo\Core\Event;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Store\StateInvalidException;
+use Jivoo\Routing\Http;
 
 /**
  * Installation, setup, maintenance, update and recovery system..
@@ -67,6 +68,7 @@ class Setup extends LoadableModule {
             array($this->view, 'render'),
             'jivoo/setup/maintenance.html'
           );
+          $response->status = Http::SERVICE_UNAVAILABLE;
         }
         $this->m->Routing->respond($response);
       }
