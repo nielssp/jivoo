@@ -88,13 +88,14 @@ class Console extends LoadableModule {
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\SystemInfo');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');
+      $this->m->Routing->routes->auto('snippet:Jivoo\Console\ControlPanel');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\I18nInfo');
 
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators\SchemaGenerator');
       
       $this->addTool('system', tr('System'), 'snippet:Jivoo\Console\SystemInfo', true);
       
-      $this->addTool('generate', tr('Generate'), 'snippet:Jivoo\Console\Generators', false);
+      $this->addTool('control-panel', tr('Control panel'), 'snippet:Jivoo\Console\ControlPanel', false);
       $this->addTool('i18n', tr('I18n'), 'snippet:Jivoo\Console\I18nInfo', false);
       $this->addTool('release', tr('Release'), 'snippet:Jivoo\Console\SystemInfo', false);
     }
