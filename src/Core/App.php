@@ -489,11 +489,6 @@ class App implements IEventSubject, LoggerAwareInterface {
   public function run($environment = 'production') {
     $this->environment = $environment;
 
-    // Throw exceptions instead of fatal errors on class not found
-    spl_autoload_register(function($class) {
-      throw new InvalidClassException(tr('Class not found: %1', $class));
-    });
-    
     // Precompute paths used for error handling
     $logDir = $this->p('log');
     if (Utilities::dirExists($logDir))

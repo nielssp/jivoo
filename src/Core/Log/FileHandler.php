@@ -50,7 +50,7 @@ class FileHandler extends Handler {
       }
     }
     $this->file = realpath($filePath);
-    $this->useLocking = $useLocking
+    $this->useLocking = $useLocking;
   }
   
   /**
