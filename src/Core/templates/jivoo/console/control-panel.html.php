@@ -35,6 +35,12 @@
 </tbody>
 </table>
 </div>
+<div class="block-footer">
+<div class="button-group">
+<?php echo $Html->link('Create', null, 'class="button"'); ?>
+<?php echo $Html->link('Migrate', null, 'class="button"'); ?>
+</div>
+</div>
 </div>
 
 </div>
@@ -70,6 +76,11 @@
 <?php endforeach; ?>
 </tbody>
 </table>
+</div>
+<div class="block-footer">
+<div class="button-group">
+<?php echo $Html->link('Create', null, 'class="button"'); ?>
+</div>
 </div>
 </div>
 
@@ -112,6 +123,11 @@
 </tbody>
 </table>
 </div>
+<div class="block-footer">
+<div class="button-group">
+<?php echo $Html->link('Create', null, 'class="button"'); ?>
+</div>
+</div>
 </div>
 
 </div>
@@ -146,6 +162,11 @@
 <?php endforeach; ?>
 </tbody>
 </table>
+</div>
+<div class="block-footer">
+<div class="button-group">
+<?php echo $Html->link('Create', null, 'class="button"'); ?>
+</div>
 </div>
 </div>
 
