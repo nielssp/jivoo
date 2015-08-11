@@ -128,7 +128,7 @@ class I18nInfo extends ConsoleSnippet {
   /**
    * Finds language files (*.lng.php) in a directory. 
    * @param string $dir Directory path.
-   * @return \Jivoo\Core\Localization[] Array of localizations indexed by their
+   * @return \Jivoo\Core\I18n\Locale[] Array of localizations indexed by their
    * language code.
    */
   public function findLanguages($dir) {

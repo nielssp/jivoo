@@ -15,11 +15,11 @@ function tr($message) {
 
 /**
  * Translate function alias.
- * @see I18n::getNumeric()
+ * @see I18n::nget()
  */
 function tn($message, $singular, $number) {
   $args = func_get_args();
-  return call_user_func_array(array('Jivoo\Core\I18n\I18n', 'getNumeric'), $args);
+  return call_user_func_array(array('Jivoo\Core\I18n\I18n', 'nget'), $args);
 }
 
 /**

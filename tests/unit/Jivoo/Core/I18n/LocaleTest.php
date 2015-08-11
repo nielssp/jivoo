@@ -41,7 +41,8 @@ class LocaleTest extends \Codeception\TestCase\Test {
     $this->assertEquals('Der er 1 bruger', $l->nget('There are %1 users', 'There is %1 user', 1));
 //     $this->assertEquals('Der er -1 bruger', $l->getn('There are %1 users', 'There is %1 user', -1));
 
-    // from https://www.gnu.org/software/gettext/manual/html_node/Translating-plural-forms.html
+    // The following test casees are from
+    // https://www.gnu.org/software/gettext/manual/html_node/Translating-plural-forms.html
 
     $l->pluralForms = 'nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 &&'
                     . ' n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;';

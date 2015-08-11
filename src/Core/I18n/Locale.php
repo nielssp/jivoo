@@ -223,7 +223,7 @@ class Locale {
 
   /**
    * Extend this localization with additional messages from another one.
-   * @param Localization $l Other localization object.
+   * @param Locale $l Other localization object.
    */
   public function extend(Locale $l) {
     $this->messages = array_merge($this->messages, $l->messages);
@@ -272,7 +272,7 @@ class Locale {
 
   /**
    * Translate a string containing a numeric value, e.g.
-   * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
+   * <code>$l->nget('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
    * @param string $plural Message in english (plural).
    * @param string $singular Singular version of message in english.
    * @param int|array $n The integer to test, replaces the %1-placeholder in the
@@ -339,7 +339,7 @@ class Locale {
   /**
    * Read a gettext PO-file.
    * @param string $file PO-file.
-   * @return Localization Localization object.
+   * @return Locale Localization object.
    */
   public static function readPo($file) {
     $file = file($file, FILE_IGNORE_NEW_LINES);
@@ -371,19 +371,30 @@ class Locale {
     if (count($message))
       $messages[] = $message;
     
-    $l = new Localization();
+    $l = new Locale();
     foreach ($messages as $message) {
       if (!isset($message['msgid']))
         continue;
+      if ($message['msgid'] == '') {
+        $properties = explode("\n", $message);
+        foreach ($properties as $property) {
+          list($property, $value) = explode(':', $property, 2);
+          if (trim(strtolower($property)) == 'plural-forms') {
+            $l->pluralForms = $value;
+            break;
+          }
+        }
+      }
       $id = $message['msgid'];
       if (isset($message['msgid_plural'])) {
-        trigger_error(tr('plural not yet fully supported'), E_USER_NOTICE);
         $id = $message['msgid_plural'];
-        if (isset($message['msgstr[1]'])) {
-          $message = $message['msgstr[1]'];
-          if ($message != '')
-            $l->set($id, $message);
+        $plurals = array();
+        foreach ($message as $property => $value) {
+          if ($value != '' and strncmp($property, 'msgstr', 5) == 0)
+            $plurals[intval(substr($property, 7, -1))] = $value;
         }
+        if (count($plurals))
+          $l->set($id, $plurals);
       }
       else if (isset($message['msgstr'])) {
         $message = $message['msgstr'];

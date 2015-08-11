@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Console;
 
-use Jivoo\Core\I18n\Localization;
+use Jivoo\Core\I18n\Locale;
 use Jivoo\Core\Json;
 
 /**
@@ -128,22 +128,21 @@ class LanguageGenerator {
   
   /**
    * Create a localization object from the scanned strings.
-   * @return Localization Localization.
+   * @return Locale Localization.
    */
   public function getLocalization() {
-    $l = new Localization();
-    foreach ($this->stringLiterals as $literal)
-      $l->set($literal, $literal);
-    foreach ($this->pluralLiterals as $array) {
-      list($plural, $singular) = $array;
-      $l->set($plural, $singular, '/^-?1$/');
-      $l->set($plural, $plural);
+    $l = new Locale();
+    foreach ($this->stringLiterals as $message => $literal)
+      $l->set($message, $message);
+    foreach ($this->pluralLiterals as $message => $array) {
+      list($plural, $singular, $smessage) = $array;
+      $l->set($message, array($smessage, $message));
     }
     return $l;
   }
   
   /**
-   * Create a PHP file that returns a {@see Localization} object for the Core
+   * Create a PHP file that returns a {@see Locale} object for the Core
    * language.
    * @return string PHP file content.
    */
@@ -152,7 +151,7 @@ class LanguageGenerator {
     foreach ($this->warnings as $warning)
       $php .= '// [WARNING] ' . $warning . PHP_EOL;
     $php .= PHP_EOL;
-    $php .= '$l = new \Jivoo\Core\I18n\Localization()';
+    $php .= '$l = new \Jivoo\Core\I18n\Locale()';
     $php .= ';' . PHP_EOL . PHP_EOL;
     $php .= '$l->name = "English";' . PHP_EOL;
     $php .= '$l->localName = "English";' . PHP_EOL;
@@ -163,8 +162,7 @@ class LanguageGenerator {
         $php .= '//: ' . implode(':', $source) . PHP_EOL; 
       $php .= '$l->set(' . PHP_EOL
         . '  ' . $literal . ',' . PHP_EOL
-        . '  ' . $literal . PHP_EOL
-        . ');' . PHP_EOL;
+        . '  ' . $literal . ');' . PHP_EOL;
     }
 
     foreach ($this->pluralLiterals as $message => $array) {
@@ -173,13 +171,8 @@ class LanguageGenerator {
         $php .= '//: ' . implode(':', $source) . PHP_EOL;
       $php .= '$l->set(' . PHP_EOL
       . '  ' . $plural . ',' . PHP_EOL
-      . '  ' . $singular . ',' . PHP_EOL
-      . "  '/^-?1$/'" . PHP_EOL
-      . ');' . PHP_EOL;
-      $php .= '$l->set(' . PHP_EOL
-      . '  ' . $plural . ',' . PHP_EOL
-      . '  ' . $plural . PHP_EOL
-      . ');' . PHP_EOL;
+      . '  array(' . $singular . ',' . PHP_EOL
+      . '        ' . $plural . '));' . PHP_EOL
     }
 
     $php .= PHP_EOL;

@@ -9,7 +9,7 @@ use Jivoo\Core\Unicode;
 
 /**
  * Internationalization and localization.
- * @see Localization
+ * @see Locale
  */
 class I18n {
   
@@ -19,9 +19,9 @@ class I18n {
   private static $language = 'en';
   
   /**
-   * @var Localization
+   * @var Locale
    */
-  private static $localization = null;
+  private static $locale = null;
   
   /**
    * Set current language.
@@ -48,12 +48,23 @@ class I18n {
   
   /**
    * Get current localization object.
-   * @return Localization Localization object.
+   * @return Locale Localization object.
+   * @deprecated
    */
   public static function getLocalization() {
-    if (!isset(self::$localization))
-      self::$localization = new Localization();
-    return self::$localization;
+    if (!isset(self::$locale))
+      self::$locale = new Locale();
+    return self::$locale;
+  }
+
+  /**
+   * Get current locale object.
+   * @return Locale Locale object.
+   */
+  public static function getLocale() {
+    if (!isset(self::$locale))
+      self::$locale = new Locale();
+    return self::$locale;
   }
   
   /**
@@ -61,8 +72,11 @@ class I18n {
    * @param bool $extend Whether to extend the existing localization object
    * (true) or replace it (false).
    */
-  public static function load(Localization $localization, $extend = true) {
-    self::getLocalization()->extend($localization);
+  public static function load(Locale $locale, $extend = true) {
+    if (!isset(self::$locale))
+      self::$locale = $locale;
+    else
+      self::$locale->extend($locale);
   }
 
   /**
@@ -78,7 +92,7 @@ class I18n {
       trigger_error(tr('Language not found: %1', $file), E_USER_NOTICE);
       return false;
     }
-    $localization = Localization::readPo($file);
+    $localization = Locale::readPo($file);
     self::load($localization, $extend);
     return true;
   }
@@ -91,7 +105,7 @@ class I18n {
    */
   public static function get($message) {
     $args = func_get_args();
-    return call_user_func_array(array(self::getLocalization(), 'get'), $args);
+    return call_user_func_array(array(self::getLocale(), 'get'), $args);
   }
 
   /**
@@ -99,7 +113,7 @@ class I18n {
    * 
    * For instance:
    * <code>
-   * $l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);
+   * $l->nget('This post has %1 comments', 'This post has %1 comment', $numcomments);
    * </code>
    * 
    * @param string $message Message in english (plural).
@@ -108,9 +122,9 @@ class I18n {
    * numeral to test.
    * @return Translated string.
    */
-  public static function getNumeric($message, $singular, $number) {
+  public static function nget($message, $singular, $number) {
     $args = func_get_args();
-    return call_user_func_array(array(self::getLocalization(), 'getNumeric'), $args);
+    return call_user_func_array(array(self::getLocale(), 'nget'), $args);
   }
 
   /**
@@ -118,7 +132,7 @@ class I18n {
    * @return string Format string used with date().
    */
   public static function dateFormat() {
-    return self::getLocalization()->dateFormat;
+    return self::getLocale()->dateFormat;
   }
 
   /**
@@ -126,7 +140,7 @@ class I18n {
    * @return string Format string used with date().
    */
   public static function timeFormat() {
-    return self::getLocalization()->timeFormat;
+    return self::getLocale()->timeFormat;
   }
 
   /**
@@ -134,7 +148,7 @@ class I18n {
    * @return string Format string used with date().
    */
   public static function longFormat() {
-    return self::getLocalization()->longFormat;
+    return self::getLocale()->longFormat;
   }
 
   /**
@@ -152,7 +166,7 @@ class I18n {
    * @return string Formatted date and time.
    */
   public static function shortDate($timestamp = null) {
-    $l = self::getLocalization();
+    $l = self::getLocale();
     $cYear = date('Y');
     $date = date('Y-m-d', $timestamp);
     if (date('Y-m-d') == $date) {

@@ -12,7 +12,7 @@
 // [WARNING] Invalid use of tr() on line 150 in /home/www/GOTUN/jivoo/lib/Jivoo/Models/Form.php
 // [WARNING] Invalid use of tr() on line 32 in /home/www/GOTUN/jivoo/lib/Jivoo/Models/Validation/ValidatorRule.php
 
-$l = new \Jivoo\Core\I18n\Localization();
+$l = new \Jivoo\Core\I18n\Locale();
 
 $l->name = "English";
 $l->localName = "English";
