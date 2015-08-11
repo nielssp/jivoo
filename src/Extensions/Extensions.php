@@ -11,6 +11,7 @@ use Jivoo\Core\Json;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\JsonException;
 use Jivoo\Autoloader;
+use Jivoo\Core\I18n\I18n;
 
 /**
  * Extension system.
@@ -298,6 +299,8 @@ class Extensions extends LoadableModule {
     else
       Autoloader::getInstance()->addPath('', $extensionInfo->p($this->app, ''));
     $extensionInfo->imported = true;
+    if (is_dir($extensionInfo->p($this->app, 'languages')))
+      I18n::loadFrom($extensionInfo->p($this->app, 'languages'));
 
     foreach ($extensionInfo->loadAfter as $dependency) {
       $this->import($dependency);
