@@ -24,33 +24,42 @@ class ControlPanel extends ConsoleSnippet {
   }
   
   private function findSchemas() {
+    if (!is_dir($this->p('app/Schemas')))
+      return array();
     $dir = new \DirectoryIterator($this->p('app/Schemas'));
     $schemas = array();
     foreach ($dir as $file) {
       if (!$file->isDot()) {
-        $class = $this->app->n('Schemas\\' . preg_replace('/\.php$/', '', $file->getFilename()));
-        $object = new $class();
-        $schemas[] = $object;
+        if (preg_match('/^(.+)\.php$/', $file->getFilename(), $matches) === 1) {
+          $class = $this->app->n('Schemas\\' . $matches[1]);
+          $object = new $class();
+          $schemas[] = $object;
+        }
       }
     }
     return $schemas;
   }
   
   private function findModels() {
+    if (!is_dir($this->p('app/Models')))
+      return array();
     $dir = new \DirectoryIterator($this->p('app/Models'));
     $models = array();
     foreach ($dir as $file) {
       if (!$file->isDot()) {
-        $model = preg_replace('/\.php$/', '', $file->getFilename());
-        $models[] = $model;
+        if (preg_match('/^(.+)\.php$/', $file->getFilename(), $matches) === 1)
+          $models[] = $matches[1];
       }
     }
     return $models;
   }
   
   private function findControllers(\RecursiveDirectoryIterator $dir = null, $prefix = '') {
-    if (!isset($dir))
+    if (!isset($dir)) {
+      if (!is_dir($this->p('app/Controllers')))
+        return array();
       $dir = new \RecursiveDirectoryIterator($this->p('app/Controllers'));
+    }
     $controllers = array();
     foreach ($dir as $file) {
       if ($dir->hasChildren()) {
@@ -60,27 +69,30 @@ class ControlPanel extends ConsoleSnippet {
         );
       }
       else if($file->isFile()){
-        $controller = preg_replace('/Controller\.php$/', '', $file->getFilename());
-        $controllers[] = $prefix . $controller;
+        if (preg_match('/^(.+)Controller\.php$/', $file->getFilename(), $matches) === 1)
+          $controllers[] = $prefix . $matches[1];
       }
     }
     return $controllers;
   }
   
   private function findSnippets(\RecursiveDirectoryIterator $dir = null, $prefix = '') {
-    if (!isset($dir))
+    if (!isset($dir)) {
+      if (!is_dir($this->p('app/Snippets')))
+        return array();
       $dir = new \RecursiveDirectoryIterator($this->p('app/Snippets'));
+    }
     $snippets = array();
     foreach ($dir as $file) {
       if ($dir->hasChildren()) {
         $snippets = array_merge(
           $snippets,
-          $this->findControllers($dir->getChildren(), $file->getFilename() . '\\')
+          $this->findSnippets($dir->getChildren(), $file->getFilename() . '\\')
         );
       }
       else if($file->isFile()){
-        $snippet = preg_replace('/\.php$/', '', $file->getFilename());
-        $snippets[] = $prefix . $snippet;
+        if (preg_match('/^(.+)\.php$/', $file->getFilename(), $matches) === 1)
+          $snippets[] = $prefix . $matches[1];
       }
     }
     return $snippets;
