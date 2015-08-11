@@ -19,7 +19,7 @@ class Locale {
   /**
    * @var array Messages in english and their local translation.
    */
-  private $messages = array();
+  protected $messages = array();
     
   /**
    * @var int
@@ -34,7 +34,7 @@ class Locale {
   /**
    * @var string[]
    */
-  private static $properties = array(
+  protected static $properties = array(
     'name', 'localName', 'region', 'dateFormat', 'timeFormat',
     'dateTimeFormat', 'longFormat', 'decimalPoint', 'thousandsSep',
     'monthYear', 'monthDay', 'weekDay'
@@ -398,63 +398,73 @@ class Locale {
   
   /**
    * Read a gettext MO-file.
-   * @todo Make lazy
    * @param string $file MO-file.
    * @return Locale Localization object.
    */
   public static function readMo($file) {
-    $f = fopen($file, 'r');
-    
+    $f = file_get_contents($file);
+  
     if (!$f) {
       trigger_error('Could not open file: ' . $file, E_USER_ERROR);
       return null;
     }
-    
-    $magic = bin2hex(fread($f, 4));
+  
+    $magic = bin2hex(substr($f, 0, 4));
     if ($magic === '950412de') { // Big endian
       $header = 'Nrev/NN/NO/NT/NS/NH';
-      $row = 'Nlength/Noffset';
+      $format = 'N';
     }
     else if ($magic === 'de120495') { // Little endian
       $header = 'Vrev/VN/VO/VT/VS/VH';
-      $row = 'Vlength/Voffset';
+      $format = 'V';
     }
     else {
       trigger_error('Not a valid MO file: incorrect magic number: ' . $magic, E_USER_ERROR);
       return null;
     }
-    
-    $data = unpack($header, fread($f, 6 * 4));
+    $o = 4;
+  
+    $data = unpack($header, substr($f, $o, 24));
     $num = $data['N'];
     $oOffset = $data['O'];
     $tOffset = $data['T'];
-    fseek($f, $oOffset);
+    
+    if ($num == 0)
+      return new Locale();
+    
+    $format = $format . ($num * 2);
+  
+    $o = $oOffset;
+    $oTable = unpack($format, substr($f, $o, 8 * $num));
+    $o = $tOffset;
+    $tTable = unpack($format, substr($f, $o, 8 * $num));
     
     $offsets = array();
-    for ($i = 0; $i < $num; $i++) {
-      $offsets[$i] = array('message' => unpack($row, fread($f, 8)));
-    }
-    fseek($f, $tOffset);
-    for ($i = 0; $i < $num; $i++) {
-      $offsets[$i]['translation'] = unpack($row, fread($f, 8));
-    }
-    
+    $n = $num * 2;
+    $o = $oTable[2];
     $messages = array();
-    foreach ($offsets as $i => $offset) {
-      fseek($f, $offset['message']['offset']);
-      $message = '';
-      if ($offset['message']['length'] > 0)
-        $message = fread($f, $offset['message']['length']);
-      $hasNul = strpos($message, "\0");
-      if ($hasNul !== false)
-        $message = substr($message, $hasNul + 1); // gets plural
+    for ($i = 1; $i <= $n; $i += 2) {
+      $length = $oTable[$i];
+      if ($length == 0) {
+        $message = '';
+        $o += 1;
+      }
+      else {
+        $message = substr($f, $o, $length);
+        $o += $length + 1;
+        $hasNul = strpos($message, "\0");
+        if ($hasNul !== false)
+          $message = substr($message, $hasNul + 1); // gets plural
+      }
       $messages[$i] = $message;
     }
+    $o = $tTable[2];
     $l = new Locale();
-    foreach ($offsets as $i => $offset) {
-      fseek($f, $offset['translation']['offset']);
-      if ($offset['translation']['length'] > 0) {
-        $translation = fread($f, $offset['translation']['length']);
+    for ($i = 1; $i <= $n; $i += 2) {
+      $length = $tTable[$i];
+      if ($length > 0) {
+        $translation = substr($f, $o, $length);
+        $o += $length + 1;
         if ($messages[$i] == '') {
           $properties = explode("\n", $translation);
           foreach ($properties as $property) {
@@ -469,9 +479,10 @@ class Locale {
           $translation = explode("\0", $translation);
         $l->set($messages[$i], $translation);
       }
+      else {
+        $o += 1;
+      }
     }
-    fclose($f);
-    
     foreach (self::$properties as $property) {
       if ($l->hasProperty($property))
         $l->$property = $l->getProperty($property);
