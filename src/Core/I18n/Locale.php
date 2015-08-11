@@ -10,17 +10,6 @@ use Jivoo\InvalidArgumentException;
 
 /**
  * A localization, e.g. translation strings and date formats.
- * @property string $name Language name (in English).
- * @property string $localName Language name.
- * @property string $region Region name.
- * @property string $dateFormat Preferred date format.
- * @property string $timeFormat Preferred time format.
- * @property string $longFormat Preferred long format, can use special
- * placeholders "%DATE" and "%TIME" to refer to already defined date and
- * time formats.
- * @property string $monthYear Month and year format.
- * @property string $monthDay Month and day format.
- * @property string $weekDay Week day and time format.
  * @property-read int $plurals Number of plural forms.
  * @property-read string $pluralExpr Plural expression (PHP).
  * @property-write string $pluralForms gettext-style C-expression for plurals,
@@ -28,54 +17,9 @@ use Jivoo\InvalidArgumentException;
  */
 class Locale {
   /**
-   * @var string
-   */
-  private $name = '';
-
-  /**
-   * @var string
-   */
-  private $localName = '';
-  
-  /**
-   * @var string
-   */
-  private $region = '';
-  
-  /**
    * @var array Messages in english and their local translation.
    */
   private $messages = array();
-
-  /**
-   * @var string Preferred date format.
-   */
-  private $dateFormat = 'Y-m-d';
-  
-  /**
-   * @var string Preferred time format.
-   */
-  private $timeFormat = 'H:i';
-
-  /**
-   * @var string Preferred long date format.
-   */
-  private $longFormat = '%DATE %TIME';
-  
-  /**
-   * @var string Month+year format
-   */
-  private $monthYear = 'F Y';
-  
-  /**
-   * @var string Month+day format.
-   */
-  private $monthDay = 'F j';
-  
-  /**
-   * @var string Week day+time format
-   */
-  private $weekDay = 'l %TIME';
     
   /**
    * @var int
@@ -86,6 +30,75 @@ class Locale {
    * @var string
    */
   private $pluralExpr = 'return ($n != 1);';
+  
+  /**
+   * @var string[]
+   */
+  private static $properties = array(
+    'name', 'localName', 'region', 'dateFormat', 'timeFormat',
+    'dateTimeFormat', 'longFormat', 'decimalPoint', 'thousandsSep',
+    'monthYear', 'monthDay', 'weekDay'
+  );
+  
+  /**
+   * @var string Language name (in English).
+   */
+  public $name = ''; // tr('[Locale::name]')
+
+  /**
+   * @var string Language name.
+   */
+  public $localName = ''; // tr('[Locale::localName]')
+  
+  /**
+   * @var string Region name.
+   */
+  public $region = ''; // tr('[Locale::region]')
+
+  /**
+   * @var string Preferred date format.
+   */
+  public $dateFormat = 'Y-m-d'; // tr('[Locale::dateFormat]')
+  
+  /**
+   * @var string Preferred time format.
+   */
+  public $timeFormat = 'H:i'; // tr('[Locale::timeFormat]')
+
+  /**
+   * @var string Preferred long date format.
+   */
+  public $dateTimeFormat = 'Y-m-d H:i'; // tr('[Locale::dateTimeFormat]')
+
+  /**
+   * @var string Preferred long date format.
+   */
+  public $longFormat = 'Y-m-d H:i'; // tr('[Locale::longFormat]')
+  
+  /**
+   * @var string Month+year format
+   */
+  public $monthYear = 'F Y'; // tr('[Locale::monthYear]')
+  
+  /**
+   * @var string Month+day format.
+   */
+  public $monthDay = 'F j'; // tr('[Locale::monthDay]')
+  
+  /**
+   * @var string Week day+time format
+   */
+  public $weekDay = 'l H:i'; // tr('[Locale::weekDay]')
+  
+  /**
+   * @var string Preferred decimal point.
+   */
+  public $decimalPoint = '.'; // tr('[Locale::decimalPoint]')
+
+  /**
+   * @var string Preferred thousands separator.
+   */
+  public $thousandsSep = ','; // tr('[Locale::thousandsSep]')
 
   /**
    * Construct new localization.
@@ -100,23 +113,9 @@ class Locale {
    */
   public function __get($property) {
     switch ($property) {
-      case 'name':
-      case 'localName':
-      case 'region':
-      case 'dateFormat':
-      case 'timeFormat':
       case 'plurals':
       case 'pluralExpr':
         return $this->$property;
-      case 'longFormat':
-      case 'monthYear':
-      case 'monthDay':
-      case 'weekDay':
-        return str_replace(
-          array('%DATE', '%TIME'),
-          array($this->dateFormat, $this->timeFormat),
-          $this->$property
-        );
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
@@ -129,17 +128,6 @@ class Locale {
    */
   public function __set($property, $value) {
     switch ($property) {
-      case 'name':
-      case 'localName':
-      case 'region':
-      case 'dateFormat':
-      case 'timeFormat':
-      case 'longFormat':
-      case 'monthYear':
-      case 'monthDay':
-      case 'weekDay':
-        $this->$property = $value;
-        return;
       case 'pluralForms':
         if (preg_match('/^nplurals *= *([0-9]+) *; *plural *=(.+);$/', trim($value), $matches) !== 1)
           throw new InvalidArgumentException('Invalid pluralForms format');
@@ -202,30 +190,15 @@ class Locale {
   }
 
   /**
-   * Whether or not a property is set, i.e. not null.
-   * @param string $property Property name.
-   * @return bool True if not null, false otherwise.
-   * @throws InvalidPropertyException If property is not defined.
-   */
-  public function __isset($property) {
-    switch ($property) {
-      case 'dateFormat':
-      case 'timeFormat':
-      case 'longFormat':
-      case 'monthYear':
-      case 'monthDay':
-      case 'weekDay':
-        return isset($this->$property);
-    }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
-  }
-
-  /**
    * Extend this localization with additional messages from another one.
    * @param Locale $l Other localization object.
    */
   public function extend(Locale $l) {
     $this->messages = array_merge($this->messages, $l->messages);
+    foreach (self::$properties as $property) {
+      if ($l->hasProperty($property))
+        $this->$property = $l->getProperty($property);
+    }
   }
 
   /**
@@ -267,6 +240,16 @@ class Locale {
       $message = $this->messages[$message][0];
     }
     return $this->replacePlaceholders($message, array_slice(func_get_args(), 1));
+  }
+  
+  public function hasProperty($property) {
+    return isset($this->messages['[Locale::' . $property . ']'])
+      and $this->messages['[Locale::' . $property . ']'][0] != ''
+      and $this->messages['[Locale::' . $property . ']'][0] != '[Locale::' . $property . ']';
+  }
+  
+  public function getProperty($property) {
+    return $this->messages['[Locale::' . $property . ']'][0];
   }
 
   /**
@@ -405,6 +388,10 @@ class Locale {
         if ($message != '')
           $l->set($id, $message);
       }
+    }
+    foreach (self::$properties as $property) {
+      if ($l->hasProperty($property))
+        $l->$property = $l->getProperty($property);
     }
     return $l;
   }

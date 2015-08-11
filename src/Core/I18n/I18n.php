@@ -128,36 +128,13 @@ class I18n {
   }
 
   /**
-   * Returns the preferred date format.
-   * @return string Format string used with date().
-   */
-  public static function dateFormat() {
-    return self::getLocale()->dateFormat;
-  }
-
-  /**
-   * Returns the preferred time format.
-   * @return string Format string used with date().
-   */
-  public static function timeFormat() {
-    return self::getLocale()->timeFormat;
-  }
-
-  /**
-   * Return the preferred long format.
-   * @return string Format string used with date().
-   */
-  public static function longFormat() {
-    return self::getLocale()->longFormat;
-  }
-
-  /**
    * Format a timestamp using preferred long format.
    * @param string $timestamp Timestamp, default is now.
    * @return string Formatted date and time.
    */
   public static function longDate($timestamp = null) {
-    return self::date(self::longFormat(), $timestamp);
+    $l = self::getLocale();
+    return self::date($l->longFormat, $timestamp);
   }
 
   /**
@@ -187,21 +164,28 @@ class I18n {
   }
 
   /**
-   * Format date using I18n::dateFormat() 
+   * Format date using the preferred date format of the current locale. 
    * @param int|null $timestamp UNIX timestamp or null for now 
    * @return string Formatted date string
    */
   public static function formatDate($timestamp = null) {
-    return self::date(self::dateFormat(), $timestamp);
+    $l = self::getLocale();
+    return self::date($l->dateFormat, $timestamp);
   }
 
   /**
-   * Format time using I18n::timeFormat() 
+   * Format time using the preferred timeformat of the current locale. 
    * @param int|null $timestamp UNIX timestamp or null for now 
    * @return string Formatted time string
    */
   public static function formatTime($timestamp = null) {
-    return self::date(self::timeFormat(), $timestamp);
+    $l = self::getLocale();
+    return self::date($l->timeFormat, $timestamp);
+  }
+  
+  public static function number($number, $decimals = 0) {
+    $l = self::getLocale();
+    return number_format($number, $decimals, $l->decimalPoint, $l->thousandsSep);
   }
 
   /**
@@ -274,7 +258,8 @@ class I18n {
    * @return int|null A UNIX timestamp or null on failure.
    */
   public static function stringToTime($str) {
-    $date = \DateTime::createFromFormat(self::longFormat(), $str);
+    $l = self::getLocale();
+    $date = \DateTime::createFromFormat($l->dateTimeFormat, $str);
     if (isset($date))
       return $date->getTimestamp();
     $time = strtotime($str);

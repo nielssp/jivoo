@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Jivoo 0.22.0-dev\n"
-"POT-Creation-Date: 2015-08-11 15:46+0000\n"
+"POT-Creation-Date: 2015-08-11 16:52+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,9 +29,9 @@ msgstr "Unauthorized"
 #: ../ActiveModels/ActiveRecord.php:259
 #: ../Core/App.php:278
 #: ../Core/App.php:293
-#: ../Core/I18n/Locale.php:121
-#: ../Core/I18n/Locale.php:151
-#: ../Core/I18n/Locale.php:220
+#: ../Core/I18n/Locale.php:119
+#: ../Core/I18n/Locale.php:138
+#: ../Core/I18n/Locale.php:207
 #: ../Core/I18n/Localization.php:104
 #: ../Core/I18n/Localization.php:127
 #: ../Core/I18n/Localization.php:155
@@ -410,93 +410,141 @@ msgstr "Invalid language tag: %1"
 msgid "Language not found: %1"
 msgstr "Language not found: %1"
 
-#: ../Core/I18n/I18n.php:173
+#: ../Core/I18n/I18n.php:150
 msgid "Today %1"
 msgstr "Today %1"
 
-#: ../Core/I18n/I18n.php:176
+#: ../Core/I18n/I18n.php:153
 msgid "Yesterday %1"
 msgstr "Yesterday %1"
 
-#: ../Core/I18n/I18n.php:179
+#: ../Core/I18n/I18n.php:156
 msgid "Tomorrow %1"
 msgstr "Tomorrow %1"
 
-#: ../Core/I18n/I18n.php:221
+#: ../Core/I18n/I18n.php:205
 msgid "January"
 msgstr "January"
 
-#: ../Core/I18n/I18n.php:223
+#: ../Core/I18n/I18n.php:207
 msgid "February"
 msgstr "February"
 
-#: ../Core/I18n/I18n.php:225
+#: ../Core/I18n/I18n.php:209
 msgid "March"
 msgstr "March"
 
-#: ../Core/I18n/I18n.php:227
+#: ../Core/I18n/I18n.php:211
 msgid "April"
 msgstr "April"
 
-#: ../Core/I18n/I18n.php:229
+#: ../Core/I18n/I18n.php:213
 msgid "May"
 msgstr "May"
 
-#: ../Core/I18n/I18n.php:231
+#: ../Core/I18n/I18n.php:215
 msgid "June"
 msgstr "June"
 
-#: ../Core/I18n/I18n.php:233
+#: ../Core/I18n/I18n.php:217
 msgid "July"
 msgstr "July"
 
-#: ../Core/I18n/I18n.php:235
+#: ../Core/I18n/I18n.php:219
 msgid "August"
 msgstr "August"
 
-#: ../Core/I18n/I18n.php:237
+#: ../Core/I18n/I18n.php:221
 msgid "September"
 msgstr "September"
 
-#: ../Core/I18n/I18n.php:239
+#: ../Core/I18n/I18n.php:223
 msgid "October"
 msgstr "October"
 
-#: ../Core/I18n/I18n.php:241
+#: ../Core/I18n/I18n.php:225
 msgid "November"
 msgstr "November"
 
-#: ../Core/I18n/I18n.php:243
+#: ../Core/I18n/I18n.php:227
 msgid "December"
 msgstr "December"
 
-#: ../Core/I18n/I18n.php:248
+#: ../Core/I18n/I18n.php:232
 msgid "Sunday"
 msgstr "Sunday"
 
-#: ../Core/I18n/I18n.php:250
+#: ../Core/I18n/I18n.php:234
 msgid "Monday"
 msgstr "Monday"
 
-#: ../Core/I18n/I18n.php:252
+#: ../Core/I18n/I18n.php:236
 msgid "Tuesday"
 msgstr "Tuesday"
 
-#: ../Core/I18n/I18n.php:254
+#: ../Core/I18n/I18n.php:238
 msgid "Wednesday"
 msgstr "Wednesday"
 
-#: ../Core/I18n/I18n.php:256
+#: ../Core/I18n/I18n.php:240
 msgid "Thursday"
 msgstr "Thursday"
 
-#: ../Core/I18n/I18n.php:258
+#: ../Core/I18n/I18n.php:242
 msgid "Friday"
 msgstr "Friday"
 
-#: ../Core/I18n/I18n.php:260
+#: ../Core/I18n/I18n.php:244
 msgid "Saturday"
 msgstr "Saturday"
+
+#: ../Core/I18n/Locale.php:45
+msgid "[Locale::name]"
+msgstr "[Locale::name]"
+
+#: ../Core/I18n/Locale.php:50
+msgid "[Locale::localName]"
+msgstr "[Locale::localName]"
+
+#: ../Core/I18n/Locale.php:55
+msgid "[Locale::region]"
+msgstr "[Locale::region]"
+
+#: ../Core/I18n/Locale.php:60
+msgid "[Locale::dateFormat]"
+msgstr "[Locale::dateFormat]"
+
+#: ../Core/I18n/Locale.php:65
+msgid "[Locale::timeFormat]"
+msgstr "[Locale::timeFormat]"
+
+#: ../Core/I18n/Locale.php:70
+msgid "[Locale::dateTimeFormat]"
+msgstr "[Locale::dateTimeFormat]"
+
+#: ../Core/I18n/Locale.php:75
+msgid "[Locale::longFormat]"
+msgstr "[Locale::longFormat]"
+
+#: ../Core/I18n/Locale.php:80
+msgid "[Locale::monthYear]"
+msgstr "[Locale::monthYear]"
+
+#: ../Core/I18n/Locale.php:85
+msgid "[Locale::monthDay]"
+msgstr "[Locale::monthDay]"
+
+#: ../Core/I18n/Locale.php:90
+msgid "[Locale::weekDay]"
+msgstr "[Locale::weekDay]"
+
+#: ../Core/I18n/Locale.php:95
+msgid "[Locale::decimalPoint]"
+msgstr "[Locale::decimalPoint]"
+
+#: ../Core/I18n/Locale.php:100
+msgid "[Locale::thousandsSep]"
+msgstr "[Locale::thousandsSep]"
 
 #: ../Core/I18n/Localization.php:326
 msgid "plural not yet fully supported"
