@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Core;
+namespace Jivoo\Core\I18n;
 
 use Jivoo\InvalidPropertyException;
 
@@ -280,6 +280,57 @@ class Localization {
       $i++;
     }
     return $message;
+  }
+  
+  /**
+   * Read a gettext PO-file.
+   * @param string $file PO-file.
+   * @return Localization Localization object.
+   */
+  public static function readPo($file) {
+    $file = file($file, FILE_IGNORE_NEW_LINES);
+    
+    $messages = array();
+    $message = array();
+    $property = null;
+    
+    foreach ($file as $line) {
+      $line = trim($line);
+      if ($line == '')
+        continue;
+      if ($line[0] == '#')
+        continue;
+      if ($line[0] == '"') {
+        if (!isset($property))
+          continue;
+        $message[$property] .= stripcslashes(substr($line, 1, -1));
+        continue;
+      }
+      list($property, $msg) = explode(' ', $line, 2);
+      if ($property == 'msgid') {
+        if (count($message))
+          $messages[] = $message;
+        $message = array();
+      }
+      $message[$property] = stripcslashes(substr($msg, 1, -1));
+    }
+    
+    $l = new Localization();
+    foreach ($messages as $message) {
+      if (!isset($message['msgid']))
+        continue;
+      $id = $message['msgid'];
+      if (isset($message['msgid_plural'])) {
+        trigger_error(tr('plural not yet supported'), E_USER_NOTICE);
+        continue;
+      }
+      if (isset($message['msgstr'])) {
+        $message = $message['msgstr'];
+        if ($message != '')
+          $l->set($id, $message);
+      }
+    }
+    return $l;
   }
 }
 

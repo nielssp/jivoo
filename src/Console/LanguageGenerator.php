@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Console;
 
-use Jivoo\Core\Localization;
+use Jivoo\Core\I18n\Localization;
 use Jivoo\Core\Json;
 
 /**
@@ -33,10 +33,12 @@ class LanguageGenerator {
   
   /**
    * Scan a single file.
+   * @param string $scope Scope.
    * @param string $file File path.
    */
-  public function scanFile($file) {
-    $content = file_get_contents($file);
+  public function scanFile($scope, $file) {
+    $content = file_get_contents($scope . '/' . $file);
+    $file = '../' . $file;
     preg_match_all('/\btr\(/', $content, $matchesTest, PREG_OFFSET_CAPTURE);
     preg_match_all('/\btr\(\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")/s', $content, $matches, PREG_OFFSET_CAPTURE);
     if (count($matchesTest[0]) != count($matches[0])) {
@@ -57,7 +59,9 @@ class LanguageGenerator {
       $message = eval('return ' . $stringLiteral . ';');
       $this->stringLiterals[$message] = $stringLiteral;
       $line = substr_count($content, "\n", 0, $match[1]) + 1;
-      $this->sourceRefs[$message] = array($file, $line);
+      if (!isset($this->sourceRefs[$message]))
+        $this->sourceRefs[$message] = array();
+      $this->sourceRefs[$message][] = array($file, $line);
     }
     preg_match_all('/\btn\(/', $content, $matchesTest, PREG_OFFSET_CAPTURE);
     preg_match_all('/\btn\(\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")\s*,\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")/s', $content, $matches, PREG_OFFSET_CAPTURE);
@@ -82,29 +86,32 @@ class LanguageGenerator {
       $smessage = eval('return ' . $singularLiteral . ';');
       $this->pluralLiterals[$message] = array($pluralLiteral, $singularLiteral, $smessage);
       $line = substr_count($content, "\n", 0, $matches[0][$i][1]) + 1;
-      $this->sourceRefs[$message] = array($file, $line);
+      if (!isset($this->sourceRefs[$message]))
+        $this->sourceRefs[$message] = array();
+      $this->sourceRefs[$message][] = array($file, $line);
     }
   }
   
   /**
    * Scan a directory tree recursively.
+   * @param string $scope Scope.
    * @param string $dir Directory path.
    */
-  public function scanDir($dir) {
-    $files = scandir($dir);
+  public function scanDir($scope, $dir = '') {
+    $files = scandir($scope . '/' . $dir);
     if ($files !== false) {
       foreach ($files as $file) {
         if ($file[0] == '.')
           continue;
-        $file = $dir . '/' . $file;
-        if (is_dir($file)) {
-          $this->scanDir($file);
+        if ($dir != '')
+          $file = $dir . '/' . $file;
+        $path = $scope . '/' . $file;
+        if (is_dir($path)) {
+          $this->scanDir($scope, $file);
         }
         else {
-          $ext = explode('.', $file);
-          if ($ext[count($ext) - 1] == 'php') {
-            $this->scanFile($file);
-          }
+          if (preg_match('/\.php$/', $file) === 1)
+            $this->scanFile($scope, $file);
         }
       }
       closedir($dir);
@@ -145,14 +152,15 @@ class LanguageGenerator {
     foreach ($this->warnings as $warning)
       $php .= '// [WARNING] ' . $warning . PHP_EOL;
     $php .= PHP_EOL;
-    $php .= '$l = new \Jivoo\Core\Localization()';
+    $php .= '$l = new \Jivoo\Core\I18n\Localization()';
     $php .= ';' . PHP_EOL . PHP_EOL;
     $php .= '$l->name = "English";' . PHP_EOL;
     $php .= '$l->localName = "English";' . PHP_EOL;
     $php .= PHP_EOL;
 
     foreach ($this->stringLiterals as $message => $literal) {
-      $php .= '//: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL; 
+      foreach ($this->sourceRefs[$message] as $source)
+        $php .= '//: ' . implode(':', $source) . PHP_EOL; 
       $php .= '$l->set(' . PHP_EOL
         . '  ' . $literal . ',' . PHP_EOL
         . '  ' . $literal . PHP_EOL
@@ -161,7 +169,8 @@ class LanguageGenerator {
 
     foreach ($this->pluralLiterals as $message => $array) {
       list($plural, $singular, $smessage) = $array;
-      $php .= '//: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
+      foreach ($this->sourceRefs[$message] as $source)
+        $php .= '//: ' . implode(':', $source) . PHP_EOL;
       $php .= '$l->set(' . PHP_EOL
       . '  ' . $plural . ',' . PHP_EOL
       . '  ' . $singular . ',' . PHP_EOL
@@ -193,13 +202,15 @@ class LanguageGenerator {
   public function createPotFile() {
     $pot = '';
     foreach ($this->stringLiterals as $message => $literal) {
-      $pot .= '#: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
+      foreach ($this->sourceRefs[$message] as $source)
+        $pot .= '#: ' . implode(':', $source) . PHP_EOL;
       $pot .= 'msgid ' . $this->quote($message) . PHP_EOL;
       $pot .= 'msgstr ' . $this->quote($message) . PHP_EOL . PHP_EOL;
     }
     foreach ($this->pluralLiterals as $message => $array) {
       list($plural, $singular, $smessage) = $array;
-      $pot .= '#: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
+      foreach ($this->sourceRefs[$message] as $source)
+        $pot .= '#: ' . implode(':', $source) . PHP_EOL;
       $pot .= 'msgid ' . $this->quote($smessage) . PHP_EOL;
       $pot .= 'msgid_plural ' . $this->quote($message) . PHP_EOL;
       $pot .= 'msgstr[0] ' . $this->quote($smessage) . PHP_EOL;

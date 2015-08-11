@@ -6,6 +6,7 @@
 namespace Jivoo\Core;
 
 use Jivoo\Console\Shell;
+use Jivoo\Core\I18n\I18n;
 use Psr\Log\LogLevel;
 
 /**

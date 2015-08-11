@@ -3,9 +3,9 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\Core;
+namespace Jivoo\Core\I18n;
 
-use Jivoo\Core\Store\Document;
+use Jivoo\Core\Unicode;
 
 /**
  * Internationalization and localization.
@@ -73,12 +73,12 @@ class I18n {
    * @return bool True if language file found, false otherwise.
    */
   public static function loadFrom($dir, $extend = true) {
-    $file = $dir . '/' . self::$language . '.lng.php';
+    $file = $dir . '/' . self::$language . '.po';
     if (!file_exists($file)) {
       trigger_error(tr('Language not found: %1', $file), E_USER_NOTICE);
       return false;
     }
-    $localization = include $file;
+    $localization = Localization::readPo($file);
     self::load($localization, $extend);
     return true;
   }

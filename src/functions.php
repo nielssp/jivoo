@@ -10,7 +10,7 @@
  */
 function tr($message) {
   $args = func_get_args();
-  return call_user_func_array(array('Jivoo\Core\I18n', 'get'), $args);
+  return call_user_func_array(array('Jivoo\Core\I18n\I18n', 'get'), $args);
 }
 
 /**
@@ -19,7 +19,7 @@ function tr($message) {
  */
 function tn($message, $singular, $number) {
   $args = func_get_args();
-  return call_user_func_array(array('Jivoo\Core\I18n', 'getNumeric'), $args);
+  return call_user_func_array(array('Jivoo\Core\I18n\I18n', 'getNumeric'), $args);
 }
 
 /**
@@ -47,35 +47,35 @@ function where($condition) {
  * @see I18n::formatDate()
  */
 function fdate($timestamp = null) {
-  return Jivoo\Core\I18n::formatDate($timestamp);
+  return Jivoo\Core\I18n\I18n::formatDate($timestamp);
 }
 
 /**
  * @see I18n::formatTime()
  */
 function ftime($timestamp = null) {
-  return Jivoo\Core\I18n::formatTime($timestamp);
+  return Jivoo\Core\I18n\I18n::formatTime($timestamp);
 }
 
 /**
  * @see I18n::longDate()
  */
 function ldate($timestamp = null) {
-  return Jivoo\Core\I18n::longDate($timestamp);
+  return Jivoo\Core\I18n\I18n::longDate($timestamp);
 }
 
 /**
  * @see I18n::shortDate()
  */
 function sdate($timestamp = null) {
-  return Jivoo\Core\I18n::shortDate($timestamp);
+  return Jivoo\Core\I18n\I18n::shortDate($timestamp);
 }
 
 /**
  * @see I18n::date()
  */
 function tdate($format, $timestamp = null) {
-  return Jivoo\Core\I18n::date($format, $timestamp);
+  return Jivoo\Core\I18n\I18n::date($format, $timestamp);
 }
 
 /**

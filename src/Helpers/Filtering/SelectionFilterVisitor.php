@@ -13,7 +13,7 @@ use Jivoo\Helpers\Filtering\Ast\FilterNode;
 use Jivoo\Helpers\Filtering\Ast\NotTermNode;
 use Jivoo\Helpers\Filtering\Ast\ComparisonNode;
 use Jivoo\Helpers\Filtering\Ast\StringNode;
-use Jivoo\Core\I18n;
+use Jivoo\Core\I18n\I18n;
 
 /**
  * A visitor that applies a filter to a model and produces a {@see Condition} for
