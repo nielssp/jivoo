@@ -87,12 +87,17 @@ class I18n {
    * @return bool True if language file found, false otherwise.
    */
   public static function loadFrom($dir, $extend = true) {
-    $file = $dir . '/' . self::$language . '.po';
-    if (!file_exists($file)) {
-      trigger_error(tr('Language not found: %1', $file), E_USER_NOTICE);
+    $file = $dir . '/' . self::$language . '.';
+    if (file_exists($file . 'mo')) {
+      $localization = Locale::readMo($file . 'mo');
+    }
+    else if (file_exists($file . 'po')) {
+      $localization = Locale::readPo($file . 'po');
+    }
+    else {
+      trigger_error(tr('Language not found: %1', $file . 'mo'), E_USER_NOTICE);
       return false;
     }
-    $localization = Locale::readPo($file);
     self::load($localization, $extend);
     return true;
   }

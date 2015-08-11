@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Jtk;
 
+use Jivoo\InvalidMethodException;
+
 /**
  * A JTK object contains information and logic used when rendering JTK snippets.
  * All JTK objects can be extended with custom properties
@@ -68,7 +70,7 @@ class JtkObject {
       $this->properties[$property] = $parameters[0];
       return $this;
     }
-    throw new \InvalidMethodException(tr('Invalid method: %1', $method));
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
   
 }
