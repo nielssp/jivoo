@@ -172,7 +172,7 @@ class LanguageGenerator {
       $php .= '$l->set(' . PHP_EOL
       . '  ' . $plural . ',' . PHP_EOL
       . '  array(' . $singular . ',' . PHP_EOL
-      . '        ' . $plural . '));' . PHP_EOL
+      . '        ' . $plural . '));' . PHP_EOL;
     }
 
     $php .= PHP_EOL;
@@ -192,8 +192,16 @@ class LanguageGenerator {
    * Create a gettext POT-file.
    * @return string POT file content.
    */
-  public function createPotFile() {
-    $pot = '';
+  public function createPotFile($project = '') {
+    $pot = 'msgid ""' . PHP_EOL
+         . 'msgstr ""' . PHP_EOL
+         . '"Project-Id-Version: ' . $project . '\n"' . PHP_EOL
+         . '"Language: en\n"' . PHP_EOL
+         . '"MIME-Version: 1.0\n"' . PHP_EOL
+         . '"Content-Type: text/plain; charset=UTF-8\n"' . PHP_EOL
+         . '"Content-Transfer-Encoding: 8bit\n"' . PHP_EOL
+         . '"X-Generator: Jivoo ' . \Jivoo\VERSION . '\n"' . PHP_EOL
+         . '"Plural-Forms: nplurals=2; plural=(n != 1);\n"' . PHP_EOL . PHP_EOL;
     foreach ($this->stringLiterals as $message => $literal) {
       foreach ($this->sourceRefs[$message] as $source)
         $pot .= '#: ' . implode(':', $source) . PHP_EOL;

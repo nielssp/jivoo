@@ -7,6 +7,7 @@ namespace Jivoo\Themes;
 
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Json;
+use Jivoo\Core\I18n\I18n;
 
 /**
  * Theming module.
@@ -119,6 +120,8 @@ class Themes extends LoadableModule {
     list($key, $path) = $info->getKeyPath('templates');
     $this->view->addTemplateDir($key, $path, $priority);
     $info->addAssetDir($this->m->Assets, 'assets');
+    if (is_dir($info->p($this->app, 'languages')))
+      I18n::loadFrom($info->p($this->app, 'languages'));
   }
   
   /**

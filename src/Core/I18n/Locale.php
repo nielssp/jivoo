@@ -20,7 +20,11 @@ use Jivoo\InvalidArgumentException;
  * time formats.
  * @property string $monthYear Month and year format.
  * @property string $monthDay Month and day format.
- * @property string $weekDay Week day and time format. 
+ * @property string $weekDay Week day and time format.
+ * @property-read int $plurals Number of plural forms.
+ * @property-read string $pluralExpr Plural expression (PHP).
+ * @property-write string $pluralForms gettext-style C-expression for plurals,
+ * e.g.: <code>nplurals=1; plural=(n!=1);</code>
  */
 class Locale {
   /**
@@ -72,12 +76,7 @@ class Locale {
    * @var string Week day+time format
    */
   private $weekDay = 'l %TIME';
-  
-  /**
-   * @var string
-   */
-  private $pluralForms = 'nplurals=2; plural=(n != 1);';
-  
+    
   /**
    * @var int
    */
@@ -376,7 +375,7 @@ class Locale {
       if (!isset($message['msgid']))
         continue;
       if ($message['msgid'] == '') {
-        $properties = explode("\n", $message);
+        $properties = explode("\n", $message['msgstr']);
         foreach ($properties as $property) {
           list($property, $value) = explode(':', $property, 2);
           if (trim(strtolower($property)) == 'plural-forms') {

@@ -57,12 +57,14 @@ class I18nInfo extends ConsoleSnippet {
     }
     
     $this->viewData['dir'] = $this->p('app/languages');
+    $this->viewData['project'] = $this->app->name . ' ' . $this->app->version;
     $this->rootDir = $this->p('app');
     if (isset($this->request->query['scope'])) {
       $scope = $this->request->query['scope'];
       if ($scope === 'lib') {
         $this->scope = 'lib';
         $this->viewData['dir'] = $this->p('Core/languages');
+        $this->viewData['project'] = 'Jivoo ' . \Jivoo\VERSION;
         $this->rootDir = \Jivoo\PATH;
       }
       else if (strpos($scope, '-') !== false) {
@@ -72,6 +74,7 @@ class I18nInfo extends ConsoleSnippet {
             $this->scope = 'extension';
             $this->extension = $this->viewData['extensions'][$scope[1]];
             $this->viewData['dir'] = $this->extension->p($this->app, 'languages');
+            $this->viewData['project'] = $this->extension->name . ' ' . $this->extension->version;
             $this->rootDir = $this->extension->p($this->app, '');
           }
         }
@@ -80,6 +83,7 @@ class I18nInfo extends ConsoleSnippet {
             $this->scope = 'theme';
             $this->theme = $this->viewData['themes'][$scope[1]];
             $this->viewData['dir'] = $this->theme->p($this->app, 'languages');
+            $this->viewData['project'] = $this->theme->name . ' ' . $this->theme->version;
             $this->rootDir = $this->theme->p($this->app, '');
           }
         }
@@ -103,7 +107,7 @@ class I18nInfo extends ConsoleSnippet {
       $fileName = $this->viewData['dir'] . '/en.pot';
       $file = fopen($fileName, 'w');
       if ($file) {
-        fwrite($file, $gen->createPotFile());
+        fwrite($file, $gen->createPotFile($this->viewData['project']));
         fclose($file);
         $this->session->flash->success = tr('Language created: %1', $fileName);
         return $this->refresh();

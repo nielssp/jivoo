@@ -1,0 +1,1707 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Jivoo 0.22.0-dev\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Jivoo 0.22.0-dev\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../AccessControl/Acl/RoleAcl.php:43
+#: ../AccessControl/Acl/RoleAcl.php:89
+msgid "Undefined role: %1"
+msgstr "Undefined role: %1"
+
+#: ../AccessControl/AuthHelper.php:440
+msgid "Unauthenticated"
+msgstr "Unauthenticated"
+
+#: ../AccessControl/AuthHelper.php:461
+msgid "Unauthorized"
+msgstr "Unauthorized"
+
+#: ../AccessControl/AuthorizationRequest.php:49
+#: ../ActiveModels/ActiveRecord.php:195
+#: ../ActiveModels/ActiveRecord.php:222
+#: ../ActiveModels/ActiveRecord.php:239
+#: ../ActiveModels/ActiveRecord.php:259
+#: ../Core/App.php:278
+#: ../Core/App.php:293
+#: ../Core/I18n/Locale.php:121
+#: ../Core/I18n/Locale.php:151
+#: ../Core/I18n/Locale.php:220
+#: ../Core/I18n/Localization.php:104
+#: ../Core/I18n/Localization.php:127
+#: ../Core/I18n/Localization.php:155
+#: ../Core/Module.php:115
+#: ../Core/Module.php:126
+#: ../Core/Store/Document.php:75
+#: ../Core/Store/Document.php:99
+#: ../Databases/Schema.php:67
+#: ../Models/Condition/Condition.php:48
+#: ../Models/DataType.php:137
+#: ../Models/Expression/Condition.php:45
+#: ../Models/File/FileRecord.php:89
+#: ../Models/Record.php:135
+#: ../Models/Record.php:144
+#: ../Models/Record.php:157
+#: ../Models/Record.php:166
+#: ../Models/Selection/BasicSelection.php:69
+#: ../Routing/DispatcherCollection.php:41
+#: ../Routing/EventSource.php:49
+#: ../Routing/EventSource.php:66
+#: ../Routing/FlashMessage.php:48
+#: ../Routing/Request.php:225
+#: ../Routing/Request.php:243
+#: ../Routing/Response.php:74
+#: ../Routing/Response.php:94
+#: ../Routing/Session.php:83
+#: ../View/Compile/TemplateNode.php:62
+msgid "Invalid property: %1"
+msgstr "Invalid property: %1"
+
+#: ../AccessControl/Hashing/BcryptHasher.php:27
+#: ../AccessControl/Hashing/CryptHasher.php:46
+msgid "Unsupported password hasher: \"%1\""
+msgstr "Unsupported password hasher: \"%1\""
+
+#: ../ActiveModels/ActiveModel.php:189
+msgid "Database \"%1\" not found in model %2"
+msgstr "Database \"%1\" not found in model %2"
+
+#: ../ActiveModels/ActiveModel.php:197
+msgid "Table \"%1\" not found in model %2"
+msgstr "Table \"%1\" not found in model %2"
+
+#: ../ActiveModels/ActiveModel.php:212
+msgid "ActiveModel does not support multi-field primary keys"
+msgstr "ActiveModel does not support multi-field primary keys"
+
+#: ../ActiveModels/ActiveModel.php:243
+msgid "Mixin class not found: %1"
+msgstr "Mixin class not found: %1"
+
+#: ../ActiveModels/ActiveModel.php:245
+msgid "Mixin class %1 must extend ActiveModelMixin"
+msgstr "Mixin class %1 must extend ActiveModelMixin"
+
+#: ../ActiveModels/ActiveModel.php:400
+#: ../ActiveModels/ActiveModel.php:706
+#: ../ActiveModels/ActiveModel.php:748
+#: ../ActiveModels/ActiveModel.php:791
+msgid "Unknown association: %1"
+msgstr "Unknown association: %1"
+
+#: ../ActiveModels/ActiveModel.php:419
+msgid "Invalid \"%1\"-association in %2"
+msgstr "Invalid \"%1\"-association in %2"
+
+#: ../ActiveModels/ActiveModel.php:449
+msgid "Model %1 not found in  %2"
+msgstr "Model %1 not found in  %2"
+
+#: ../ActiveModels/ActiveModel.php:462
+msgid "%1 invalid for joining with %2, must extend ActiveModel"
+msgstr "%1 invalid for joining with %2, must extend ActiveModel"
+
+#: ../ActiveModels/ActiveModel.php:475
+msgid "Association data source \"%1\" not found"
+msgstr "Association data source \"%1\" not found"
+
+#: ../ActiveModels/ActiveModel.php:729
+#: ../ActiveModels/ActiveModel.php:772
+msgid "Association must be of type \"belongsTo\" or \"hasOne\""
+msgstr "Association must be of type \"belongsTo\" or \"hasOne\""
+
+#: ../ActiveModels/ActiveModel.php:866
+#: ../ActiveModels/ActiveModel.php:891
+#: ../ActiveModels/ActiveModel.php:918
+#: ../ActiveModels/ActiveModel.php:972
+msgid "Unknown association type: %1"
+msgstr "Unknown association type: %1"
+
+#: ../ActiveModels/ActiveModelInstaller.php:36
+msgid "Installing default data"
+msgstr "Installing default data"
+
+#: ../ActiveModels/ActiveModelInstaller.php:111
+msgid "Installing data into \"%1\"..."
+msgstr "Installing data into \"%1\"..."
+
+#: ../ActiveModels/ActiveRecord.php:275
+#: ../Core/Module.php:157
+#: ../Jtk/JtkHelper.php:72
+#: ../Jtk/JtkObject.php:71
+#: ../Models/Condition/Condition.php:61
+#: ../Models/Expression/Condition.php:58
+#: ../Models/Selection/BasicSelection.php:97
+msgid "Invalid method: %1"
+msgstr "Invalid method: %1"
+
+#: ../ActiveModels/ActiveRecord.php:349
+msgid "Form error (%1): %2"
+msgstr "Form error (%1): %2"
+
+#: ../ActiveModels/MetaMixin.php:48
+msgid "Model %1 not found in %2"
+msgstr "Model %1 not found in %2"
+
+#: ../ActiveModels/MetaSchema.php:25
+msgid "Invalid meta class name format."
+msgstr "Invalid meta class name format."
+
+#: ../Console/Console.php:67
+msgid "Could not create user directory: %1"
+msgstr "Could not create user directory: %1"
+
+#: ../Console/Console.php:96
+#: ../Core/templates/error/exception.php:64
+#: ../Core/templates/jivoo/console/system-info.html.php:58
+msgid "System"
+msgstr "System"
+
+#: ../Console/Console.php:98
+#: ../Console/ControlPanel.php:18
+msgid "Control panel"
+msgstr "Control panel"
+
+#: ../Console/Console.php:99
+#: ../Console/I18nInfo.php:44
+msgid "I18n"
+msgstr "I18n"
+
+#: ../Console/Console.php:100
+msgid "Release"
+msgstr "Release"
+
+#: ../Console/Generators/SchemaGenerator.php:31
+msgid "Schema generator"
+msgstr "Schema generator"
+
+#: ../Console/Generators/SchemaGenerator.php:33
+msgid "Integer"
+msgstr "Integer"
+
+#: ../Console/Generators/SchemaGenerator.php:34
+msgid "String"
+msgstr "String"
+
+#: ../Console/Generators/SchemaGenerator.php:35
+msgid "Text"
+msgstr "Text"
+
+#: ../Console/Generators/SchemaGenerator.php:36
+msgid "Bool"
+msgstr "Bool"
+
+#: ../Console/Generators/SchemaGenerator.php:37
+msgid "Float"
+msgstr "Float"
+
+#: ../Console/Generators/SchemaGenerator.php:38
+msgid "Date"
+msgstr "Date"
+
+#: ../Console/Generators/SchemaGenerator.php:39
+msgid "Date/time"
+msgstr "Date/time"
+
+#: ../Console/Generators/SchemaGenerator.php:40
+msgid "Binary"
+msgstr "Binary"
+
+#: ../Console/Generators/SchemaGenerator.php:41
+msgid "Object"
+msgstr "Object"
+
+#: ../Console/Generators/SchemaGenerator.php:42
+msgid "Enum"
+msgstr "Enum"
+
+#: ../Console/Generators.php:18
+msgid "Generators"
+msgstr "Generators"
+
+#: ../Console/I18nInfo.php:112
+msgid "Language created: %1"
+msgstr "Language created: %1"
+
+#: ../Console/I18nInfo.php:116
+msgid "Unable to create file: %1"
+msgstr "Unable to create file: %1"
+
+#: ../Console/LanguageGenerator.php:53
+#: ../Console/LanguageGenerator.php:77
+msgid "Invalid use of %1 on line %2 in %3"
+msgstr "Invalid use of %1 on line %2 in %3"
+
+#: ../Console/ManifestInstaller.php:41
+msgid "Application name"
+msgstr "Application name"
+
+#: ../Console/ManifestInstaller.php:42
+#: ../Core/templates/jivoo/console/system-info.html.php:32
+#: ../Extensions/ExtensionModel.php:30
+msgid "Version"
+msgstr "Version"
+
+#: ../Console/ManifestInstaller.php:43
+msgid "Modules"
+msgstr "Modules"
+
+#: ../Console/ManifestInstaller.php:47
+msgid "Configure application"
+msgstr "Configure application"
+
+#: ../Console/SystemInfo.php:18
+msgid "System Info"
+msgstr "System Info"
+
+#: ../Controllers/ActionDispatcher.php:95
+#: ../Controllers/ActionDispatcher.php:126
+#: ../Controllers/ActionDispatcher.php:206
+msgid "Invalid controller: %1"
+msgstr "Invalid controller: %1"
+
+#: ../Controllers/ActionDispatcher.php:142
+msgid "Invalid route string for action dispatcher"
+msgstr "Invalid route string for action dispatcher"
+
+#: ../Controllers/ActionDispatcher.php:149
+#: ../Snippets/SnippetDispatcher.php:84
+msgid "Invalid JSON parameters in route string"
+msgstr "Invalid JSON parameters in route string"
+
+#: ../Controllers/ActionDispatcher.php:211
+msgid "Invalid action: %1"
+msgstr "Invalid action: %1"
+
+#: ../Core/App.php:379
+msgid "An event handler for \"%1\" threw an exception: %2"
+msgstr "An event handler for \"%1\" threw an exception: %2"
+
+#: ../Core/App.php:393
+msgid "The second parameter of p() is no longer needed"
+msgstr "The second parameter of p() is no longer needed"
+
+#: ../Core/App.php:421
+msgid "Fatal error (%1)"
+msgstr "Fatal error (%1)"
+
+#: ../Core/App.php:423
+#: ../Core/Cli/Shell.php:182
+msgid "Uncaught exception"
+msgstr "Uncaught exception"
+
+#: ../Core/App.php:436
+msgid "Exception template (%1) failed: %2"
+msgstr "Exception template (%1) failed: %2"
+
+#: ../Core/App.php:451
+msgid "Uncaught exception: %1"
+msgstr "Uncaught exception: %1"
+
+#: ../Core/App.php:466
+msgid "Could not create crash report: Log directory is missing"
+msgstr "Could not create crash report: Log directory is missing"
+
+#: ../Core/App.php:475
+msgid "A crash report has been generated: \"%1\""
+msgstr "A crash report has been generated: \"%1\""
+
+#: ../Core/App.php:479
+msgid "Failed to create crash report \"%1\""
+msgstr "Failed to create crash report \"%1\""
+
+#: ../Core/App.php:509
+msgid "Error template (%1) failed: %2"
+msgstr "Error template (%1) failed: %2"
+
+#: ../Core/App.php:551
+msgid "The command-line interface is disabled."
+msgstr "The command-line interface is disabled."
+
+#: ../Core/App.php:609
+msgid "%1 does not support PHP %2. PHP %3 or above is required"
+msgstr "%1 does not support PHP %2. PHP %3 or above is required"
+
+#: ../Core/App.php:625
+msgid "Application not stopped"
+msgstr "Application not stopped"
+
+#: ../Core/App.php:638
+msgid "The following state documents were not properly closed: %1{, }{ and }"
+msgstr "The following state documents were not properly closed: %1{, }{ and }"
+
+#: ../Core/Boot.php:43
+msgid "Undefined environment: %1"
+msgstr "Undefined environment: %1"
+
+#: ../Core/Cli/Command.php:72
+#: ../Core/Cli/Shell.php:108
+msgid "Unknown command: %1"
+msgstr "Unknown command: %1"
+
+#: ../Core/Cli/Command.php:91
+msgid "Options:"
+msgstr "Options:"
+
+#: ../Core/Cli/Command.php:99
+msgid "Commands:"
+msgstr "Commands:"
+
+#: ../Core/Cli/Shell.php:24
+msgid "Show the application and framework version"
+msgstr "Show the application and framework version"
+
+#: ../Core/Cli/Shell.php:25
+msgid "Show this help"
+msgstr "Show this help"
+
+#: ../Core/Cli/Shell.php:26
+msgid "Show stack trace for most recent exception"
+msgstr "Show stack trace for most recent exception"
+
+#: ../Core/Cli/Shell.php:27
+msgid "Ends the shell session"
+msgstr "Ends the shell session"
+
+#: ../Core/Cli/Shell.php:47
+#: ../Core/Cli/Shell.php:60
+msgid "Unknown option: %1"
+msgstr "Unknown option: %1"
+
+#: ../Core/Cli/Shell.php:119
+msgid "Did you mean \"%1\"?"
+msgstr "Did you mean \"%1\"?"
+
+#: ../Core/Cli/Shell.php:138
+msgid "%1: %2 in %3:%4"
+msgstr "%1: %2 in %3:%4"
+
+#: ../Core/Cli/Shell.php:142
+msgid "Stack trace:"
+msgstr "Stack trace:"
+
+#: ../Core/Cli/Shell.php:164
+msgid "Caused by:"
+msgstr "Caused by:"
+
+#: ../Core/Cli/Shell.php:186
+msgid "Uncaught %1: %2"
+msgstr "Uncaught %1: %2"
+
+#: ../Core/Cli/Shell.php:188
+msgid "Call \"trace\" to show stack trace"
+msgstr "Call \"trace\" to show stack trace"
+
+#: ../Core/EventManager.php:57
+#: ../Core/EventManager.php:136
+msgid "Event subject \"%1\" does not have event \"%2\""
+msgstr "Event subject \"%1\" does not have event \"%2\""
+
+#: ../Core/I18n/I18n.php:36
+msgid "Invalid language tag: %1"
+msgstr "Invalid language tag: %1"
+
+#: ../Core/I18n/I18n.php:92
+msgid "Language not found: %1"
+msgstr "Language not found: %1"
+
+#: ../Core/I18n/I18n.php:173
+msgid "Today %1"
+msgstr "Today %1"
+
+#: ../Core/I18n/I18n.php:176
+msgid "Yesterday %1"
+msgstr "Yesterday %1"
+
+#: ../Core/I18n/I18n.php:179
+msgid "Tomorrow %1"
+msgstr "Tomorrow %1"
+
+#: ../Core/I18n/I18n.php:221
+msgid "January"
+msgstr "January"
+
+#: ../Core/I18n/I18n.php:223
+msgid "February"
+msgstr "February"
+
+#: ../Core/I18n/I18n.php:225
+msgid "March"
+msgstr "March"
+
+#: ../Core/I18n/I18n.php:227
+msgid "April"
+msgstr "April"
+
+#: ../Core/I18n/I18n.php:229
+msgid "May"
+msgstr "May"
+
+#: ../Core/I18n/I18n.php:231
+msgid "June"
+msgstr "June"
+
+#: ../Core/I18n/I18n.php:233
+msgid "July"
+msgstr "July"
+
+#: ../Core/I18n/I18n.php:235
+msgid "August"
+msgstr "August"
+
+#: ../Core/I18n/I18n.php:237
+msgid "September"
+msgstr "September"
+
+#: ../Core/I18n/I18n.php:239
+msgid "October"
+msgstr "October"
+
+#: ../Core/I18n/I18n.php:241
+msgid "November"
+msgstr "November"
+
+#: ../Core/I18n/I18n.php:243
+msgid "December"
+msgstr "December"
+
+#: ../Core/I18n/I18n.php:248
+msgid "Sunday"
+msgstr "Sunday"
+
+#: ../Core/I18n/I18n.php:250
+msgid "Monday"
+msgstr "Monday"
+
+#: ../Core/I18n/I18n.php:252
+msgid "Tuesday"
+msgstr "Tuesday"
+
+#: ../Core/I18n/I18n.php:254
+msgid "Wednesday"
+msgstr "Wednesday"
+
+#: ../Core/I18n/I18n.php:256
+msgid "Thursday"
+msgstr "Thursday"
+
+#: ../Core/I18n/I18n.php:258
+msgid "Friday"
+msgstr "Friday"
+
+#: ../Core/I18n/I18n.php:260
+msgid "Saturday"
+msgstr "Saturday"
+
+#: ../Core/I18n/Localization.php:326
+msgid "plural not yet fully supported"
+msgstr "plural not yet fully supported"
+
+#: ../Core/Log/FileHandler.php:42
+msgid "Could not create log directory: %1"
+msgstr "Could not create log directory: %1"
+
+#: ../Core/Log/FileHandler.php:47
+msgid "Could not create log file: %1"
+msgstr "Could not create log file: %1"
+
+#: ../Core/Log/FileHandler.php:66
+#: ../Core/Store/FileStore.php:95
+msgid "Could not open file: %1"
+msgstr "Could not open file: %1"
+
+#: ../Core/Log/Logger.php:168
+msgid "Undefined log level: %1"
+msgstr "Undefined log level: %1"
+
+#: ../Core/ModuleLoader.php:250
+msgid "%1 must load before %2"
+msgstr "%1 must load before %2"
+
+#: ../Core/ObjectMacro.php:57
+#: ../Core/ObjectMacro.php:66
+msgid "Macro is write-only."
+msgstr "Macro is write-only."
+
+#: ../Core/Store/FileStore.php:99
+msgid "Could not lock file: %1"
+msgstr "Could not lock file: %1"
+
+#: ../Core/Store/FileStore.php:146
+msgid "Invalid file format: %1"
+msgstr "Invalid file format: %1"
+
+#: ../Core/Store/FileStore.php:158
+#: ../Core/Store/PhpSessionStore.php:103
+msgid "Not mutable"
+msgstr "Not mutable"
+
+#: ../Core/Store/FileStore.php:159
+msgid "Write file: %1"
+msgstr "Write file: %1"
+
+#: ../Core/Store/PhpSessionStore.php:60
+msgid "Could not start PHP session"
+msgstr "Could not start PHP session"
+
+#: ../Core/Store/PhpStore.php:30
+msgid "Invalid file format"
+msgstr "Invalid file format"
+
+#: ../Core/Store/Session.php:18
+#: ../Core/Store/State.php:64
+msgid "State already closed."
+msgstr "State already closed."
+
+#: ../Core/Store/State.php:38
+msgid "Could not read state: %1"
+msgstr "Could not read state: %1"
+
+#: ../Core/Store/StateMap.php:63
+msgid "State file missing or inaccessible: %1"
+msgstr "State file missing or inaccessible: %1"
+
+#: ../Core/Store/StateMap.php:65
+msgid "Open state (read): %1"
+msgstr "Open state (read): %1"
+
+#: ../Core/Store/StateMap.php:84
+msgid "Open state (write): %1"
+msgstr "Open state (write): %1"
+
+#: ../Core/Store/StateMap.php:149
+msgid "State not open: %1"
+msgstr "State not open: %1"
+
+#: ../Core/Store/StateMap.php:158
+msgid "Method not applicable."
+msgstr "Method not applicable."
+
+#: ../Core/Utilities.php:151
+msgid "Class \"%1\" should extend \"%2\""
+msgstr "Class \"%1\" should extend \"%2\""
+
+#: ../Core/Vendor/VendorLoader.php:56
+msgid "Could not import library: %1"
+msgstr "Could not import library: %1"
+
+#: ../Core/templates/error/error.php:5
+#: ../Core/templates/error/error.php:62
+msgid "Error"
+msgstr "Error"
+
+#: ../Core/templates/error/error.php:68
+msgid "An error occurred while loading this page&hellip;"
+msgstr "An error occurred while loading this page&hellip;"
+
+#: ../Core/templates/error/exception.php:34
+msgid "An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request."
+msgstr "An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request."
+
+#: ../Core/templates/error/exception.php:38
+msgid "The exception was thrown from the following file:"
+msgstr "The exception was thrown from the following file:"
+
+#: ../Core/templates/error/exception.php:40
+msgid "Stack trace"
+msgstr "Stack trace"
+
+#: ../Core/templates/error/exception.php:47
+msgid "Caused by"
+msgstr "Caused by"
+
+#: ../Core/templates/error/exception.php:50
+msgid "%1 in file %2 on line %3:"
+msgstr "%1 in file %2 on line %3:"
+
+#: ../Core/templates/error/exception.php:67
+#: ../Core/templates/error/exception.php:70
+#: ../Core/templates/jivoo/console/system-info.html.php:51
+msgid "%1 version"
+msgstr "%1 version"
+
+#: ../Core/templates/error/exception.php:73
+#: ../Core/templates/jivoo/console/system-info.html.php:66
+msgid "PHP version"
+msgstr "PHP version"
+
+#: ../Core/templates/error/exception.php:76
+#: ../Core/templates/jivoo/console/system-info.html.php:70
+msgid "Server API"
+msgstr "Server API"
+
+#: ../Core/templates/error/exception.php:79
+msgid "Web server"
+msgstr "Web server"
+
+#: ../Core/templates/error/exception.php:82
+#: ../Core/templates/jivoo/console/system-info.html.php:62
+msgid "Operating system"
+msgstr "Operating system"
+
+#: ../Core/templates/error/exception.php:86
+msgid "Log messages"
+msgstr "Log messages"
+
+#: ../Core/templates/error/exception.php:91
+msgid "Message"
+msgstr "Message"
+
+#: ../Core/templates/error/exception.php:92
+#: ../Core/templates/error/stack.php:4
+msgid "File"
+msgstr "File"
+
+#: ../Core/templates/error/exception.php:93
+msgid "Time"
+msgstr "Time"
+
+#: ../Core/templates/error/stack.php:5
+msgid "Class"
+msgstr "Class"
+
+#: ../Core/templates/error/stack.php:6
+msgid "Function"
+msgstr "Function"
+
+#: ../Core/templates/error/stack.php:7
+msgid "Arguments"
+msgstr "Arguments"
+
+#: ../Core/templates/jivoo/active-models/active-model-installer/install.html.php:5
+msgid "The default data is being installed."
+msgstr "The default data is being installed."
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:3
+#: ../Core/templates/jivoo/console/generators.html.php:1
+msgid "Data and models"
+msgstr "Data and models"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:9
+#: ../Core/templates/jivoo/console/generators.html.php:7
+msgid "Schemas"
+msgstr "Schemas"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:16
+msgid "Schema"
+msgstr "Schema"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:19
+#: ../Core/templates/jivoo/console/control-panel.html.php:61
+#: ../Core/templates/jivoo/console/control-panel.html.php:107
+#: ../Core/templates/jivoo/console/control-panel.html.php:148
+msgid "Actions"
+msgstr "Actions"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:51
+msgid "Models"
+msgstr "Models"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:58
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:26
+msgid "Model"
+msgstr "Model"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:91
+#: ../Core/templates/jivoo/console/generators.html.php:14
+msgid "Application logic"
+msgstr "Application logic"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:97
+msgid "Controllers"
+msgstr "Controllers"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:104
+msgid "Controller"
+msgstr "Controller"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:138
+msgid "Snippets"
+msgstr "Snippets"
+
+#: ../Core/templates/jivoo/console/control-panel.html.php:145
+msgid "Snippet"
+msgstr "Snippet"
+
+#: ../Core/templates/jivoo/console/devbar.html.php:10
+msgid "Development"
+msgstr "Development"
+
+#: ../Core/templates/jivoo/console/devbar.html.php:15
+msgid "Fade"
+msgstr "Fade"
+
+#: ../Core/templates/jivoo/console/devbar.html.php:18
+msgid "Hide"
+msgstr "Hide"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:6
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:35
+#: ../Core/templates/jivoo/console/system-info.html.php:28
+#: ../Extensions/ExtensionModel.php:29
+#: ../Models/File/FileModel.php:26
+msgid "Name"
+msgstr "Name"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:9
+msgid "Name of schema in singular CamelCase, e.g. \"Post\" or \"Comment\"."
+msgstr "Name of schema in singular CamelCase, e.g. \"Post\" or \"Comment\"."
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:14
+msgid "Features"
+msgstr "Features"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:17
+msgid "Auto incrementing primary key \"id\""
+msgstr "Auto incrementing primary key \"id\""
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:20
+msgid "Timestamps \"updated\" and \"created\""
+msgstr "Timestamps \"updated\" and \"created\""
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:27
+msgid "Create active model with same name"
+msgstr "Create active model with same name"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:31
+msgid "Fields"
+msgstr "Fields"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:36
+#: ../Models/File/FileModel.php:27
+msgid "Type"
+msgstr "Type"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:37
+msgid "Null"
+msgstr "Null"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:38
+msgid "Default"
+msgstr "Default"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:49
+msgid "Remove"
+msgstr "Remove"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:55
+msgid "Add field"
+msgstr "Add field"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:60
+msgid "Create schema"
+msgstr "Create schema"
+
+#: ../Core/templates/jivoo/console/generators/schema-generator.html.php:61
+msgid "Cancel"
+msgstr "Cancel"
+
+#: ../Core/templates/jivoo/console/generators.html.php:4
+msgid "Create schema/model"
+msgstr "Create schema/model"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:4
+msgid "Scope"
+msgstr "Scope"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:6
+#: ../Core/templates/jivoo/console/system-info.html.php:21
+msgid "Application"
+msgstr "Application"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:7
+#: ../Core/templates/jivoo/console/system-info.html.php:43
+msgid "Library"
+msgstr "Library"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:9
+msgid "Extensions"
+msgstr "Extensions"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:16
+msgid "Themes"
+msgstr "Themes"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:25
+msgid "Set scope"
+msgstr "Set scope"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:33
+msgid "The current directory is: %1"
+msgstr "The current directory is: %1"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:38
+msgid "The directory does not exist."
+msgstr "The directory does not exist."
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:65
+msgid "New translation"
+msgstr "New translation"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:69
+msgid "Language code (IETF)"
+msgstr "Language code (IETF)"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:70
+msgid "Language"
+msgstr "Language"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:71
+msgid "Region"
+msgstr "Region"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:74
+msgid "Inherit from"
+msgstr "Inherit from"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:81
+msgid "Leave blank to copy all strings from root language."
+msgstr "Leave blank to copy all strings from root language."
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:84
+msgid "Create"
+msgstr "Create"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:88
+msgid "Generate root language"
+msgstr "Generate root language"
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:91
+msgid "Generates the root language file (\"%1\") from all uses of %2 and %3 in the selected scope."
+msgstr "Generates the root language file (\"%1\") from all uses of %2 and %3 in the selected scope."
+
+#: ../Core/templates/jivoo/console/i18n-info.html.php:96
+msgid "Generate"
+msgstr "Generate"
+
+#: ../Core/templates/jivoo/console/manifest-installer/configure.html.php:2
+msgid "Choose a name for your application and select the modules that you want to use."
+msgstr "Choose a name for your application and select the modules that you want to use."
+
+#: ../Core/templates/jivoo/console/manifest-installer/welcome.html.php:1
+msgid "Welcome to the Jivoo web application framework version %1."
+msgstr "Welcome to the Jivoo web application framework version %1."
+
+#: ../Core/templates/jivoo/console/manifest-installer/welcome.html.php:4
+msgid "No valid application configuration was found in the specified application directory:"
+msgstr "No valid application configuration was found in the specified application directory:"
+
+#: ../Core/templates/jivoo/console/manifest-installer/welcome.html.php:9
+msgid "Do you want Jivoo to generate the files for a new application?"
+msgstr "Do you want Jivoo to generate the files for a new application?"
+
+#: ../Core/templates/jivoo/console/system-info.html.php:3
+msgid "Instance"
+msgstr "Instance"
+
+#: ../Core/templates/jivoo/console/system-info.html.php:6
+msgid "Instance files"
+msgstr "Instance files"
+
+#: ../Core/templates/jivoo/console/system-info.html.php:10
+msgid "Entry script"
+msgstr "Entry script"
+
+#: ../Core/templates/jivoo/console/system-info.html.php:14
+msgid "Environment"
+msgstr "Environment"
+
+#: ../Core/templates/jivoo/console/system-info.html.php:24
+#: ../Core/templates/jivoo/console/system-info.html.php:47
+#: ../Models/File/FileModel.php:25
+msgid "Path"
+msgstr "Path"
+
+#: ../Core/templates/jivoo/console/system-info.html.php:36
+msgid "Shared application files"
+msgstr "Shared application files"
+
+#: ../Core/templates/jivoo/databases/database-installer/configure.html.php:6
+msgid "You have selected the %1 database driver."
+msgstr "You have selected the %1 database driver."
+
+#: ../Core/templates/jivoo/databases/database-installer/configure.html.php:9
+msgid "The following information is required."
+msgstr "The following information is required."
+
+#: ../Core/templates/jivoo/databases/database-installer/configure.html.php:16
+msgid "The location of the database."
+msgstr "The location of the database."
+
+#: ../Core/templates/jivoo/databases/database-installer/configure.html.php:20
+msgid "Can be used to prevent conflict with other tables in the database."
+msgstr "Can be used to prevent conflict with other tables in the database."
+
+#: ../Core/templates/jivoo/databases/database-installer/select.html.php:5
+msgid "Please select your desired database driver from the list below."
+msgstr "Please select your desired database driver from the list below."
+
+#: ../Core/templates/jivoo/databases/database-installer/select.html.php:16
+msgid "Available"
+msgstr "Available"
+
+#: ../Core/templates/jivoo/databases/database-installer/select.html.php:20
+msgid "Select %1"
+msgstr "Select %1"
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:9
+msgid "An existing installation has been found."
+msgstr "An existing installation has been found."
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:10
+msgid "Would you like to use the existing data and upgrade tables if necessary?"
+msgstr "Would you like to use the existing data and upgrade tables if necessary?"
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:14
+msgid "Migrate existing tables"
+msgstr "Migrate existing tables"
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:18
+msgid "Or, would you like to delete all existing tables?"
+msgstr "Or, would you like to delete all existing tables?"
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:24
+msgid "The following tables already exist in the database: %1{, }{, and }."
+msgstr "The following tables already exist in the database: %1{, }{, and }."
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:25
+msgid "Would you like to delete them and do a clean install?"
+msgstr "Would you like to delete them and do a clean install?"
+
+#: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:30
+msgid "Clean install"
+msgstr "Clean install"
+
+#: ../Core/templates/jivoo/migrations/migration-installer/create.html.php:5
+msgid "The neccessary tables are being created."
+msgstr "The neccessary tables are being created."
+
+#: ../Core/templates/jivoo/migrations/migration-updater/migrate.html.php:5
+msgid "The database is being migrated."
+msgstr "The database is being migrated."
+
+#: ../Core/templates/jivoo/setup/default-installer/welcome.html.php:3
+msgid "This guide will help you installing %1 version %2."
+msgstr "This guide will help you installing %1 version %2."
+
+#: ../Core/templates/jivoo/setup/default-installer/welcome.html.php:8
+#: ../Core/templates/jivoo/setup/default-updater/welcome.html.php:8
+msgid "Click on the button below to continue."
+msgstr "Click on the button below to continue."
+
+#: ../Core/templates/jivoo/setup/default-updater/welcome.html.php:3
+msgid "This guide will help you updating %1 to version %2."
+msgstr "This guide will help you updating %1 to version %2."
+
+#: ../Core/templates/jivoo/setup/layout.html.php:63
+#: ../Core/templates/jivoo/setup/layout.html.php:65
+msgid "Next"
+msgstr "Next"
+
+#: ../Core/templates/jivoo/setup/layout.html.php:71
+#: ../Core/templates/jivoo/setup/layout.html.php:73
+msgid "Back"
+msgstr "Back"
+
+#: ../Core/templates/jivoo/setup/lock-installer/configure.html.php:4
+msgid "The username and password will be used to access this installer."
+msgstr "The username and password will be used to access this installer."
+
+#: ../Core/templates/jivoo/setup/login.html.php:4
+msgid "Log in using your maintainance username and password in order to continue the installation process."
+msgstr "Log in using your maintainance username and password in order to continue the installation process."
+
+#: ../Core/templates/jivoo/setup/login.html.php:7
+#: ../Setup/LockInstaller.php:51
+msgid "Username"
+msgstr "Username"
+
+#: ../Core/templates/jivoo/setup/login.html.php:8
+#: ../Setup/LockInstaller.php:52
+msgid "Password"
+msgstr "Password"
+
+#: ../Core/templates/jivoo/setup/maintenance.html.php:6
+#: ../Core/templates/jivoo/setup/maintenance.html.php:58
+msgid "Down for maintenance"
+msgstr "Down for maintenance"
+
+#: ../Core/templates/jivoo/setup/maintenance.html.php:64
+msgid "This website is currently being updated and will be back shortly."
+msgstr "This website is currently being updated and will be back shortly."
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:1
+msgid "%1 could not save the configuration to the following file:"
+msgstr "%1 could not save the configuration to the following file:"
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:4
+msgid "The file exists, but %1 does not have permission to write to it."
+msgstr "The file exists, but %1 does not have permission to write to it."
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:5
+msgid "You should change the access permission or ownership of the file to allow %1 to write to it. "
+msgstr "You should change the access permission or ownership of the file to allow %1 to write to it. "
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:6
+msgid "Click here to get more help."
+msgstr "Click here to get more help."
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:7
+msgid "Alternatively, you can manually edit the file."
+msgstr "Alternatively, you can manually edit the file."
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:9
+msgid "The file does not exists, and %1 does not have permission to create it."
+msgstr "The file does not exists, and %1 does not have permission to create it."
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:10
+msgid "Please create the file with the permissions necessary for %1 to write to it, then refresh this page."
+msgstr "Please create the file with the permissions necessary for %1 to write to it, then refresh this page."
+
+#: ../Core/templates/jivoo/setup/save-config.html.php:12
+msgid "Unsaved data"
+msgstr "Unsaved data"
+
+#: ../Databases/Common/MysqlTypeAdapter.php:194
+msgid "Unsupported MySQL type for column: %1"
+msgstr "Unsupported MySQL type for column: %1"
+
+#: ../Databases/Common/PostgresqlTypeAdapter.php:197
+msgid "Unsupported PostgreSQL type \"%1\" for column: %2"
+msgstr "Unsupported PostgreSQL type \"%1\" for column: %2"
+
+#: ../Databases/Common/SqlTable.php:122
+msgid "Schema %1 does not contain field %2"
+msgstr "Schema %1 does not contain field %2"
+
+#: ../Databases/Common/SqlTable.php:257
+msgid "Unable to join SqlTable with data source of type \"%1\""
+msgstr "Unable to join SqlTable with data source of type \"%1\""
+
+#: ../Databases/Common/SqlTable.php:264
+msgid "Unable to join SqlTable with table of different database"
+msgstr "Unable to join SqlTable with table of different database"
+
+#: ../Databases/Common/SqliteTypeAdapter.php:148
+msgid "Cannot read type \"%1\" for column: %2"
+msgstr "Cannot read type \"%1\" for column: %2"
+
+#: ../Databases/Common/SqliteTypeAdapter.php:166
+msgid "Unsupported SQLite type for column: %1"
+msgstr "Unsupported SQLite type for column: %1"
+
+#: ../Databases/DatabaseDriversHelper.php:36
+msgid "Driver class not found: %1"
+msgstr "Driver class not found: %1"
+
+#: ../Databases/DatabaseDriversHelper.php:39
+msgid "Driver manifest not found: %1"
+msgstr "Driver manifest not found: %1"
+
+#: ../Databases/DatabaseDriversHelper.php:45
+msgid "Invalid driver manifest: %1 (%2)"
+msgstr "Invalid driver manifest: %1 (%2)"
+
+#: ../Databases/DatabaseInstaller.php:48
+msgid "Select database driver"
+msgstr "Select database driver"
+
+#: ../Databases/DatabaseInstaller.php:79
+msgid "Table prefix"
+msgstr "Table prefix"
+
+#: ../Databases/DatabaseInstaller.php:101
+msgid "Configure %1"
+msgstr "Configure %1"
+
+#: ../Databases/DatabaseInstaller.php:131
+msgid "An error occured: %1"
+msgstr "An error occured: %1"
+
+#: ../Databases/Databases.php:121
+msgid "Database \"%1\" not configured"
+msgstr "Database \"%1\" not configured"
+
+#: ../Databases/Databases.php:129
+msgid "Database driver not set"
+msgstr "Database driver not set"
+
+#: ../Databases/Databases.php:135
+msgid "Invalid database driver: %1"
+msgstr "Invalid database driver: %1"
+
+#: ../Databases/Databases.php:140
+msgid "Database option missing: \"%1\""
+msgstr "Database option missing: \"%1\""
+
+#: ../Databases/Databases.php:154
+msgid "Missing schema: \"%1\""
+msgstr "Missing schema: \"%1\""
+
+#: ../Databases/Databases.php:168
+msgid "Database connection failed (%1): %2"
+msgstr "Database connection failed (%1): %2"
+
+#: ../Databases/Drivers/PdoSqlite/PdoSqliteDatabase.php:28
+#: ../Databases/Drivers/Sqlite3/Sqlite3Database.php:34
+msgid "SQLite database does not exist and could not be created: %1"
+msgstr "SQLite database does not exist and could not be created: %1"
+
+#: ../Databases/LoadableDatabase.php:61
+msgid "Table not found: \"%1\""
+msgstr "Table not found: \"%1\""
+
+#: ../Extensions/ExtensionModel.php:28
+msgid "Canonical name"
+msgstr "Canonical name"
+
+#: ../Extensions/ExtensionModel.php:31
+msgid "Description"
+msgstr "Description"
+
+#: ../Extensions/ExtensionModel.php:32
+msgid "Enabled"
+msgstr "Enabled"
+
+#: ../Extensions/Extensions.php:226
+msgid "Error decoding JSON: %1"
+msgstr "Error decoding JSON: %1"
+
+#: ../Extensions/Extensions.php:252
+#: ../Extensions/Extensions.php:273
+msgid "Extension \"%1\" disabled, caused by: %2"
+msgstr "Extension \"%1\" disabled, caused by: %2"
+
+#: ../Extensions/Extensions.php:295
+msgid "Extension not found or invalid: \"%1\""
+msgstr "Extension not found or invalid: \"%1\""
+
+#: ../Extensions/Extensions.php:327
+msgid "Extension not in load list: \"%1\""
+msgstr "Extension not in load list: \"%1\""
+
+#: ../Extensions/Extensions.php:533
+msgid "Invalid extension: %1"
+msgstr "Invalid extension: %1"
+
+#: ../Helpers/FilteringHelper.php:95
+msgid "not"
+msgstr "not"
+
+#: ../Helpers/FilteringHelper.php:96
+msgid "and"
+msgstr "and"
+
+#: ../Helpers/FilteringHelper.php:97
+msgid "or"
+msgstr "or"
+
+#: ../Helpers/FilteringHelper.php:98
+msgid "contains"
+msgstr "contains"
+
+#: ../Helpers/FilteringHelper.php:99
+msgid "before"
+msgstr "before"
+
+#: ../Helpers/FilteringHelper.php:100
+msgid "after"
+msgstr "after"
+
+#: ../Helpers/FilteringHelper.php:101
+msgid "in"
+msgstr "in"
+
+#: ../Helpers/FilteringHelper.php:102
+msgid "on"
+msgstr "on"
+
+#: ../Helpers/FilteringHelper.php:103
+msgid "at"
+msgstr "at"
+
+#: ../Helpers/FormHelper.php:134
+#: ../Helpers/FormHelper.php:138
+msgid "No form or form element is open."
+msgstr "No form or form element is open."
+
+#: ../Helpers/FormHelper.php:165
+msgid "Top element \"%1\" is not a form element."
+msgstr "Top element \"%1\" is not a form element."
+
+#: ../Helpers/HtmlHelper.php:147
+#: ../Jtk/IconHelper.php:113
+#: ../Jtk/IconHelper.php:152
+msgid "Invalid route: %1"
+msgstr "Invalid route: %1"
+
+#: ../Jtk/ContentAdminHelper.php:135
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+#: ../Jtk/ContentAdminHelper.php:136
+msgid "Confirm"
+msgstr "Confirm"
+
+#: ../Jtk/JtkSnippet.php:54
+msgid "JTK object is null"
+msgstr "JTK object is null"
+
+#: ../Jtk/Table/Column.php:85
+msgid "Yes"
+msgstr "Yes"
+
+#: ../Jtk/Table/Column.php:85
+msgid "No"
+msgstr "No"
+
+#: ../Jtk/Table/DataTable.php:54
+#: ../Jtk/Table/DataTable.php:70
+msgid "No model set"
+msgstr "No model set"
+
+#: ../Migrations/MigrationInstaller.php:36
+msgid "Existing data detected"
+msgstr "Existing data detected"
+
+#: ../Migrations/MigrationInstaller.php:100
+msgid "Creating tables"
+msgstr "Creating tables"
+
+#: ../Migrations/MigrationInstaller.php:181
+msgid "Creating table \"%1\"..."
+msgstr "Creating table \"%1\"..."
+
+#: ../Migrations/MigrationUpdater.php:51
+msgid "Migrating database"
+msgstr "Migrating database"
+
+#: ../Migrations/MigrationUpdater.php:132
+msgid "Running migration \"%1\"..."
+msgstr "Running migration \"%1\"..."
+
+#: ../Migrations/Migrations.php:84
+msgid "\"%1 is not a migratable database"
+msgstr "\"%1 is not a migratable database"
+
+#: ../Migrations/Migrations.php:238
+msgid "Migration failed: "
+msgstr "Migration failed: "
+
+#: ../Models/DataType.php:83
+msgid "%1 is not a valid type"
+msgstr "%1 is not a valid type"
+
+#: ../Models/DataType.php:589
+msgid "Invalid data type placeholder: %1"
+msgstr "Invalid data type placeholder: %1"
+
+#: ../Models/Enum.php:80
+msgid "Enum class not found: %1"
+msgstr "Enum class not found: %1"
+
+#: ../Models/Enum.php:86
+msgid "Enum type \"%1\" must contain at least one constant"
+msgstr "Enum type \"%1\" must contain at least one constant"
+
+#: ../Models/EnumDataType.php:46
+msgid "Default value must be part of enum"
+msgstr "Default value must be part of enum"
+
+#: ../Models/EnumDataType.php:59
+msgid "Invalid use of anonymous enum type"
+msgstr "Invalid use of anonymous enum type"
+
+#: ../Models/File/FileModel.php:28
+msgid "Size"
+msgstr "Size"
+
+#: ../Models/File/FileModel.php:29
+msgid "Modified"
+msgstr "Modified"
+
+#: ../Models/File/FileModel.php:30
+msgid "Created"
+msgstr "Created"
+
+#: ../Models/Form.php:127
+#: ../Models/Validation/Validator.php:147
+msgid "Must not be empty."
+msgstr "Must not be empty."
+
+#: ../Models/Model.php:249
+msgid "Can't find row number in selection without ordering"
+msgstr "Can't find row number in selection without ordering"
+
+#: ../Models/Models.php:95
+#: ../Models/Models.php:107
+msgid "Model \"%1\" not found"
+msgstr "Model \"%1\" not found"
+
+#: ../Models/Validation/Validator.php:138
+msgid "Must be a scalar."
+msgstr "Must be a scalar."
+
+#: ../Models/Validation/Validator.php:147
+msgid "Must be empty."
+msgstr "Must be empty."
+
+#: ../Models/Validation/Validator.php:152
+msgid "Must not be set."
+msgstr "Must not be set."
+
+#: ../Models/Validation/Validator.php:152
+msgid "Must be set."
+msgstr "Must be set."
+
+#: ../Models/Validation/Validator.php:160
+msgid "Not a valid email address."
+msgstr "Not a valid email address."
+
+#: ../Models/Validation/Validator.php:160
+msgid "Must not be an email address."
+msgstr "Must not be an email address."
+
+#: ../Models/Validation/Validator.php:168
+msgid "Not a valid URL."
+msgstr "Not a valid URL."
+
+#: ../Models/Validation/Validator.php:168
+msgid "Must not be a URL."
+msgstr "Must not be a URL."
+
+#: ../Models/Validation/Validator.php:178
+msgid "Not a valid date."
+msgstr "Not a valid date."
+
+#: ../Models/Validation/Validator.php:178
+msgid "Must not be a date."
+msgstr "Must not be a date."
+
+#: ../Models/Validation/Validator.php:201
+msgid "Must be numeric."
+msgstr "Must be numeric."
+
+#: ../Models/Validation/Validator.php:201
+msgid "Must not be numeric."
+msgstr "Must not be numeric."
+
+#: ../Models/Validation/Validator.php:206
+msgid "Must be an integer."
+msgstr "Must be an integer."
+
+#: ../Models/Validation/Validator.php:206
+msgid "Must not be an integer."
+msgstr "Must not be an integer."
+
+#: ../Models/Validation/Validator.php:212
+msgid "Must be a decimal number."
+msgstr "Must be a decimal number."
+
+#: ../Models/Validation/Validator.php:212
+msgid "Must not be a decimal number."
+msgstr "Must not be a decimal number."
+
+#: ../Models/Validation/Validator.php:217
+msgid "Must be boolean (true or false)."
+msgstr "Must be boolean (true or false)."
+
+#: ../Models/Validation/Validator.php:217
+msgid "Must not be boolean."
+msgstr "Must not be boolean."
+
+#: ../Models/Validation/Validator.php:223
+msgid "Must be greater than or equal to %1."
+msgstr "Must be greater than or equal to %1."
+
+#: ../Models/Validation/Validator.php:229
+msgid "Must be less than or equal to %1."
+msgstr "Must be less than or equal to %1."
+
+#: ../Models/Validation/Validator.php:243
+msgid "Invalid value."
+msgstr "Invalid value."
+
+#: ../Models/Validation/Validator.php:252
+msgid "Must be unique."
+msgstr "Must be unique."
+
+#: ../Models/Validation/Validator.php:252
+msgid "Must not be unique."
+msgstr "Must not be unique."
+
+#: ../Routing/DispatcherCollection.php:83
+msgid "Not a valid route, must be array or string"
+msgstr "Not a valid route, must be array or string"
+
+#: ../Routing/DispatcherCollection.php:111
+msgid "No dispatcher found for route"
+msgstr "No dispatcher found for route"
+
+#: ../Routing/DispatcherCollection.php:145
+msgid "Unknown route prefix: %1."
+msgstr "Unknown route prefix: %1."
+
+#: ../Routing/DispatcherCollection.php:146
+msgid "Missing route prefix."
+msgstr "Missing route prefix."
+
+#: ../Routing/FlashMap.php:14
+msgid "An error occured."
+msgstr "An error occured."
+
+#: ../Routing/FlashMap.php:15
+msgid "Saved file."
+msgstr "Saved file."
+
+#: ../Routing/Http.php:48
+msgid "An invalid status code was provided: %1."
+msgstr "An invalid status code was provided: %1."
+
+#: ../Routing/Http.php:222
+msgid "Headers already sent in file %1 on line %2"
+msgstr "Headers already sent in file %1 on line %2"
+
+#: ../Routing/Routing.php:409
+msgid "Could not find path for "
+msgstr "Could not find path for "
+
+#: ../Routing/Routing.php:681
+msgid "No route selected"
+msgstr "No route selected"
+
+#: ../Routing/Routing.php:707
+msgid "Dispatch: %1"
+msgstr "Dispatch: %1"
+
+#: ../Routing/Routing.php:725
+msgid "An invalid response was returned for: %1"
+msgstr "An invalid response was returned for: %1"
+
+#: ../Routing/Routing.php:749
+msgid "Not acceptable"
+msgstr "Not acceptable"
+
+#: ../Routing/Routing.php:780
+msgid "An invalid response was returned from a dispatch function"
+msgstr "An invalid response was returned from a dispatch function"
+
+#: ../Routing/Routing.php:793
+msgid "Headers already sent in %1 on line %2"
+msgstr "Headers already sent in %1 on line %2"
+
+#: ../Routing/Routing.php:796
+msgid "Rendering response %1 (%2 %3)"
+msgstr "Rendering response %1 (%2 %3)"
+
+#: ../Routing/RoutingTable.php:56
+#: ../Routing/RoutingTable.php:107
+msgid "Auto routing not possible for route."
+msgstr "Auto routing not possible for route."
+
+#: ../Routing/VoidDispatcher.php:65
+msgid "Trying to dispatch void route."
+msgstr "Trying to dispatch void route."
+
+#: ../Setup/DefaultInstaller.php:35
+msgid "Welcome to %1"
+msgstr "Welcome to %1"
+
+#: ../Setup/DefaultUpdater.php:31
+msgid "Update required. Could not enter maintenance mode."
+msgstr "Update required. Could not enter maintenance mode."
+
+#: ../Setup/DefaultUpdater.php:35
+msgid "Updating %1"
+msgstr "Updating %1"
+
+#: ../Setup/DefaultUpdater.php:39
+msgid "From version %1 to version %2"
+msgstr "From version %1 to version %2"
+
+#: ../Setup/DefaultUpdater.php:46
+msgid "To version %2"
+msgstr "To version %2"
+
+#: ../Setup/InstallerSnippet.php:268
+msgid "Installer step: %1::%2"
+msgstr "Installer step: %1::%2"
+
+#: ../Setup/InstallerSnippet.php:338
+#: ../Setup/InstallerSnippet.php:361
+msgid "Done!"
+msgstr "Done!"
+
+#: ../Setup/InstallerSnippet.php:348
+msgid "Asynchronous task failed: %1"
+msgstr "Asynchronous task failed: %1"
+
+#: ../Setup/InstallerSnippet.php:401
+msgid "Unable to save configuration file"
+msgstr "Unable to save configuration file"
+
+#: ../Setup/LockInstaller.php:38
+msgid "Installation required. Could not enter maintenance mode."
+msgstr "Installation required. Could not enter maintenance mode."
+
+#: ../Setup/LockInstaller.php:49
+msgid "Configure maintenance user"
+msgstr "Configure maintenance user"
+
+#: ../Setup/LockInstaller.php:53
+msgid "Confirm password"
+msgstr "Confirm password"
+
+#: ../Setup/LockInstaller.php:59
+msgid "The two passwords are not identical."
+msgstr "The two passwords are not identical."
+
+#: ../Setup/Login.php:31
+msgid "Incorrect username and/or password."
+msgstr "Incorrect username and/or password."
+
+#: ../Setup/Setup.php:171
+msgid "An invalid response was returned from installer step: %1"
+msgstr "An invalid response was returned from installer step: %1"
+
+#: ../Setup/Setup.php:185
+msgid "Trigger installer: %1"
+msgstr "Trigger installer: %1"
+
+#: ../Setup/Setup.php:211
+msgid "Enable lock"
+msgstr "Enable lock"
+
+#: ../Setup/Setup.php:228
+msgid "Disable lock"
+msgstr "Disable lock"
+
+#: ../Snippets/Snippet.php:276
+msgid "Invalid request."
+msgstr "Invalid request."
+
+#: ../Snippets/SnippetDispatcher.php:77
+msgid "Invalid route string for snippet dispatcher"
+msgstr "Invalid route string for snippet dispatcher"
+
+#: ../Snippets/SnippetDispatcher.php:122
+msgid "Invalid snippet: %1"
+msgstr "Invalid snippet: %1"
+
+#: ../Snippets/SnippetHelper.php:44
+msgid "Not found"
+msgstr "Not found"
+
+#: ../Themes/ThemeModel.php:28
+msgid "Screenshot"
+msgstr "Screenshot"
+
+#: ../Themes/Themes.php:54
+msgid "No theme found for \"%1\""
+msgstr "No theme found for \"%1\""
+
+#: ../Themes/Themes.php:80
+msgid "The theme \"%1\" has an invalid json file."
+msgstr "The theme \"%1\" has an invalid json file."
+
+#: ../Themes/Themes.php:109
+msgid "Theme not found or invalid: \"%1\""
+msgstr "Theme not found or invalid: \"%1\""
+
+#: ../View/Compile/DefaultMacros.php:187
+msgid "Empty if-node must follow another if-node."
+msgstr "Empty if-node must follow another if-node."
+
+#: ../View/Compile/DefaultMacros.php:216
+msgid "Else-node must follow an if-node or another else-node."
+msgstr "Else-node must follow an if-node or another else-node."
+
+#: ../View/Compile/DefaultMacros.php:232
+msgid "Empty foreach-node must folow another foreach-node"
+msgstr "Empty foreach-node must folow another foreach-node"
+
+#: ../View/Compile/DefaultMacros.php:317
+msgid " . var_export($translate, true) . $params . "
+msgstr " . var_export($translate, true) . $params . "
+
+#: ../View/Compile/TemplateCompiler.php:66
+msgid "Could not read template: %1"
+msgstr "Could not read template: %1"
+
+#: ../View/Compile/TemplateCompiler.php:68
+msgid "Could not parse template: %1"
+msgstr "Could not parse template: %1"
+
+#: ../View/Compile/TemplateCompiler.php:136
+msgid "Undefined macro: %1"
+msgstr "Undefined macro: %1"
+
+#: ../View/Template.php:158
+msgid "Template not found: %1"
+msgstr "Template not found: %1"
+
+#: ../View/View.php:237
+msgid "Could not create directory: %1"
+msgstr "Could not create directory: %1"
+
+#: ../View/View.php:241
+msgid "Could not write compiled template: %1"
+msgstr "Could not write compiled template: %1"
+
+#: ../View/View.php:242
+msgid "Compiling template %1"
+msgstr "Compiling template %1"
+
+#: ../View/ViewResources.php:82
+#: ../View/ViewResources.php:106
+msgid "Unknown type of resource: \"%1\""
+msgstr "Unknown type of resource: \"%1\""
+
+#: ../View/ViewResponse.php:89
+msgid "Ouput buffer not closed in template: %1."
+msgstr "Ouput buffer not closed in template: %1."
+
+#: ../functions.php:102
+msgid "Assumption failed: %1"
+msgstr "Assumption failed: %1"
+
+#: ../Core/templates/jivoo/databases/database-installer/select.html.php:27
+msgid "Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extension"
+msgid_plural "Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extensions"
+msgstr[0] "Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extension"
+msgstr[1] "Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extensions"
+
+#: ../Models/Model.php:171
+msgid "find() must be called with %1 parameter"
+msgid_plural "find() must be called with %1 parameters"
+msgstr[0] "find() must be called with %1 parameter"
+msgstr[1] "find() must be called with %1 parameters"
+
+#: ../Models/Validation/Validator.php:183
+msgid "Must be at least %1 character long."
+msgid_plural "Must be at least %1 characters long."
+msgstr[0] "Must be at least %1 character long."
+msgstr[1] "Must be at least %1 characters long."
+
+#: ../Models/Validation/Validator.php:192
+msgid "Must be at most %1 character long."
+msgid_plural "Must be at most %1 characters long."
+msgstr[0] "Must be at most %1 character long."
+msgstr[1] "Must be at most %1 characters long."
+
+#: ../Models/Validation/Validator.php:234
+msgid "Must be \"%1{\", \"}{\" or \"}\"."
+msgid_plural "Must be either \"%1{\", \"}{\" or \"}\"."
+msgstr[0] "Must be \"%1{\", \"}{\" or \"}\"."
+msgstr[1] "Must be either \"%1{\", \"}{\" or \"}\"."
+
+#: ../View/Compile/DefaultMacros.php:351
+msgid " . var_export($value, true) . $params . "
+msgid_plural " . var_export($translate, true) . "
+msgstr[0] " . var_export($value, true) . $params . "
+msgstr[1] " . var_export($translate, true) . "
+
