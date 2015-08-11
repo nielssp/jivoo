@@ -179,6 +179,14 @@ class LanguageGenerator {
   }
   
   /**
+   * @param string $string
+   * @return string
+   */
+  private function quote($string) {
+    return '"' . addcslashes($string, "\\\"\0..\37") . '"';
+  }
+  
+  /**
    * Create a gettext POT-file.
    * @return string POT file content.
    */
@@ -186,16 +194,16 @@ class LanguageGenerator {
     $pot = '';
     foreach ($this->stringLiterals as $message => $literal) {
       $pot .= '#: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
-      $pot .= 'msgid ' . Json::encode($message) . PHP_EOL;
-      $pot .= 'msgstr ' . Json::encode($message) . PHP_EOL . PHP_EOL;
+      $pot .= 'msgid ' . $this->quote($message) . PHP_EOL;
+      $pot .= 'msgstr ' . $this->quote($message) . PHP_EOL . PHP_EOL;
     }
     foreach ($this->pluralLiterals as $message => $array) {
       list($plural, $singular, $smessage) = $array;
       $pot .= '#: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
-      $pot .= 'msgid ' . Json::encode($smessage) . PHP_EOL;
-      $pot .= 'msgid_plural ' . Json::encode($message) . PHP_EOL;
-      $pot .= 'msgstr[0] ' . Json::encode($smessage) . PHP_EOL;
-      $pot .= 'msgstr[1] ' . Json::encode($message) . PHP_EOL . PHP_EOL;
+      $pot .= 'msgid ' . $this->quote($smessage) . PHP_EOL;
+      $pot .= 'msgid_plural ' . $this->quote($message) . PHP_EOL;
+      $pot .= 'msgstr[0] ' . $this->quote($smessage) . PHP_EOL;
+      $pot .= 'msgstr[1] ' . $this->quote($message) . PHP_EOL . PHP_EOL;
     }
     return $pot;
   }
