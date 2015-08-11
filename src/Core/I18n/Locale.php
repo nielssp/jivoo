@@ -6,6 +6,7 @@
 namespace Jivoo\Core\I18n;
 
 use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidArgumentException;
 
 /**
  * A localization, e.g. translation strings and date formats.
@@ -21,7 +22,7 @@ use Jivoo\InvalidPropertyException;
  * @property string $monthDay Month and day format.
  * @property string $weekDay Week day and time format. 
  */
-class Localization {
+class Locale {
   /**
    * @var string
    */
@@ -71,6 +72,21 @@ class Localization {
    * @var string Week day+time format
    */
   private $weekDay = 'l %TIME';
+  
+  /**
+   * @var string
+   */
+  private $pluralForms = 'nplurals=2; plural=(n != 1);';
+  
+  /**
+   * @var int
+   */
+  private $plurals = 2;
+  
+  /**
+   * @var string
+   */
+  private $pluralExpr = 'return ($n != 1);';
 
   /**
    * Construct new localization.
@@ -90,6 +106,8 @@ class Localization {
       case 'region':
       case 'dateFormat':
       case 'timeFormat':
+      case 'plurals':
+      case 'pluralExpr':
         return $this->$property;
       case 'longFormat':
       case 'monthYear':
@@ -122,6 +140,19 @@ class Localization {
       case 'monthDay':
       case 'weekDay':
         $this->$property = $value;
+        return;
+      case 'pluralForms':
+        if (preg_match('/^nplurals *= *([0-9]+) *; *plural *=(.+);$/', trim($value), $matches) !== 1)
+          throw new InvalidArgumentException('Invalid pluralForms format');
+        $this->plurals = intval($matches[1]);
+        $expr = str_replace('n', '$n', $matches[2]);
+        // approximates precedence of C's ternary operator by adding parentheses
+        // DOES NOT WORK IN ALL CASES THOUGH
+        // TODO: Fix somehow.. A simple C expression parser?
+        do {
+          $expr = preg_replace('/:([^\(].*)$/', ':($1)', $expr, -1, $count);
+        } while ($count > 0);
+        $this->pluralExpr = 'return ' . $expr . ';';
         return;
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
@@ -159,23 +190,25 @@ class Localization {
    * Extend this localization with additional messages from another one.
    * @param Localization $l Other localization object.
    */
-  public function extend(Localization $l) {
+  public function extend(Locale $l) {
     $this->messages = array_merge($this->messages, $l->messages);
   }
 
   /**
    * Set translation string.
    * @param string $message Message in english.
-   * @param string $translation Translation string.
-   * @param string $patterns,... Regular expression patterns to match message variables
-   * against.
+   * @param string|string[] $translation Translation string (or multiple
+   * translation strings for plural forms.
    */
-  public function set($message, $translation) {
-    $args = func_get_args();
-    array_shift($args);
-    if (!isset($this->messages[$message]))
-      $this->messages[$message] = array();
-    $this->messages[$message][] = $args;
+  public function set($messageId, $translation) {
+    if (is_array($translation)) {
+      $this->messages[$messageId] = $translation;
+    }
+    else {
+      if (!isset($this->messages[$messageId]))
+        $this->messages[$messageId] = array();
+      $this->messages[$messageId][] = $translation;
+    }
   }
   
   /**
@@ -196,52 +229,38 @@ class Localization {
    * @return string Translated string.
    */
   public function get($message) {
-    $args = func_get_args();
-    $args = array_slice($args, 1);
     if (isset($this->messages[$message])) {
-      $patterns = $this->messages[$message];
-      foreach ($patterns as $pattern) {
-        $translation = array_shift($pattern);
-        $patternLength = count($pattern);
-        $match = true;
-        for ($i = 0; $i < $patternLength; $i++) {
-          if (!isset($pattern[$i]))
-            continue;
-          $arg = $args[$i];
-          if (is_array($arg))
-            $arg = count($arg);
-          if (preg_match($pattern[$i], $arg) !== 1) {
-            $match = false;
-            break;
-          }
-        }
-        if ($match)
-          return $this->replacePlaceholders($translation, $args);
-      }
+      $message = $this->messages[$message][0];
     }
-    return $this->replacePlaceholders($message, $args);
+    return $this->replacePlaceholders($message, array_slice(func_get_args(), 1));
   }
 
   /**
    * Translate a string containing a numeric value, e.g.
    * <code>$l->getNumeric('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
-   * @param string $message Message in english (plural).
+   * @param string $plural Message in english (plural).
    * @param string $singular Singular version of message in english.
-   * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
-   * numeral to test.
+   * @param int|array $n The integer to test, replaces the %1-placeholder in the
+   * message. 
+   * @param mixed $vars,... Values for additional placholders starting from %2.
    * @return Translated string.
    */
-  public function getNumeric($message, $singular) {
-    $args = func_get_args();
-    $args = array_slice($args, 2);
-    if (isset($this->messages[$message]))
-      return call_user_func_array(array($this, 'get'), array_merge(array($message), $args));
-    $num = $args[0];
-    if (is_array($num))
-      $num = count($num);
-    if (abs($num) == 1)
-      return $this->replacePlaceholders($singular, $args);
-    return $this->replacePlaceholders($message, $args);
+  public function nget($plural, $singular, $n) {
+    if (is_array($n))
+      $n = count($n);
+    if (isset($this->messages[$plural])) {
+      $i = intval(eval($this->pluralExpr));
+      $message = $this->messages[$plural][0];
+      if (isset($this->messages[$plural][$i]))
+        $message = $this->messages[$plural][$i];
+    }
+    else if (abs($n) == 1) {
+      $message = $singular;
+    }
+    else {
+      $message = $plural;
+    }
+    return $this->replacePlaceholders($message, array_slice(func_get_args(), 2));
   }
 
   /**
