@@ -145,17 +145,52 @@ class Locale {
         if (preg_match('/^nplurals *= *([0-9]+) *; *plural *=(.+);$/', trim($value), $matches) !== 1)
           throw new InvalidArgumentException('Invalid pluralForms format');
         $this->plurals = intval($matches[1]);
-        $expr = str_replace('n', '$n', $matches[2]);
-        // approximates precedence of C's ternary operator by adding parentheses
-        // DOES NOT WORK IN ALL CASES THOUGH
-        // TODO: Fix somehow.. A simple C expression parser?
-        do {
-          $expr = preg_replace('/:([^\(].*)$/', ':($1)', $expr, -1, $count);
-        } while ($count > 0);
+        $expr = self::convertExpr($matches[2]);
         $this->pluralExpr = 'return ' . $expr . ';';
         return;
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  /**
+   * Converts simple gettext C expressions to PHP.
+   * @param string $expr C expression.
+   * @return string PHP expression.
+   */
+  public static function convertExpr($expr) {
+    preg_match_all('/(==|!=|<=|>=|&&|\|\||<<|>>|[-!?:+*\/&|^~%<>()n]|[0-9]+)/', $expr, $matches);
+    $tokens = $matches[0];
+    $expr = '';
+    $stack = array();
+    foreach ($tokens as $token) {
+      if ($token == 'n') {
+        $expr .= '$n';
+      }
+      else if ($token == ':') {
+        array_push($stack, ':');
+        $expr .= ':(';
+      }
+      else if ($token == '(') {
+        array_push($stack, '(');
+        $expr .= '(';
+      }
+      else if ($token == ')') {
+        while (count($stack) > 0) {
+          $c = array_pop($stack);
+          $expr .= ')';
+          if ($c == '(')
+            break;
+        }
+      }
+      else {
+        $expr .= $token;
+      }
+    }
+    while (count($stack) > 0) {
+      array_pop($stack);
+      $expr .= ')';
+    }
+    return $expr;
   }
 
   /**
