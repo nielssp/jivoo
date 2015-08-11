@@ -196,6 +196,7 @@ class LanguageGenerator {
     $pot = 'msgid ""' . PHP_EOL
          . 'msgstr ""' . PHP_EOL
          . '"Project-Id-Version: ' . $project . '\n"' . PHP_EOL
+         . '"POT-Creation-Date: ' . date('Y-m-d H:iO') . '\n"' . PHP_EOL
          . '"Language: en\n"' . PHP_EOL
          . '"MIME-Version: 1.0\n"' . PHP_EOL
          . '"Content-Type: text/plain; charset=UTF-8\n"' . PHP_EOL

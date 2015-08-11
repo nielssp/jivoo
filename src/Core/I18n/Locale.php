@@ -274,14 +274,19 @@ class Locale {
    * <code>$l->nget('This post has %1 comments', 'This post has %1 comment', $numcomments);</code>
    * @param string $plural Message in english (plural).
    * @param string $singular Singular version of message in english.
-   * @param int|array $n The integer to test, replaces the %1-placeholder in the
-   * message. 
+   * @param int|array|\Countable $n The integer to test, replaces the
+   * %1-placeholder in the message. May also be an array or a {@see \Countable},
+   * in which case {@see count} will be called on the value.
    * @param mixed $vars,... Values for additional placholders starting from %2.
    * @return Translated string.
+   * @throws \Jivoo\InvalidArgumentException If $n is not an integer, an 
+   * array, or a {@see \Countable}. 
    */
   public function nget($plural, $singular, $n) {
-    if (is_array($n))
+    if (is_array($n) or $n instanceof \Countable)
       $n = count($n);
+    assume(is_scalar($n));
+    $n = intval($n);
     if (isset($this->messages[$plural])) {
       $i = intval(eval($this->pluralExpr));
       $message = $this->messages[$plural][0];
