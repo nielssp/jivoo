@@ -6,6 +6,7 @@
 namespace Jivoo\Console;
 
 use Jivoo\Core\Localization;
+use Jivoo\Core\Json;
 
 /**
  * Finds, and generates a localization from, occurrences of {@see tr()) and
@@ -27,6 +28,8 @@ class LanguageGenerator {
    * @var string[]
    */
   private $warnings = array();
+  
+  private $sourceRefs = array();
   
   /**
    * Scan a single file.
@@ -53,6 +56,8 @@ class LanguageGenerator {
       $stringLiteral = $match[0];
       $message = eval('return ' . $stringLiteral . ';');
       $this->stringLiterals[$message] = $stringLiteral;
+      $line = substr_count($content, "\n", 0, $match[1]) + 1;
+      $this->sourceRefs[$message] = array($file, $line);
     }
     preg_match_all('/\btn\(/', $content, $matchesTest, PREG_OFFSET_CAPTURE);
     preg_match_all('/\btn\(\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")\s*,\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")/s', $content, $matches, PREG_OFFSET_CAPTURE);
@@ -74,7 +79,10 @@ class LanguageGenerator {
       $pluralLiteral = $matches[1][$i][0];
       $singularLiteral = $matches[4][$i][0];
       $message = eval('return ' . $pluralLiteral . ';');
-      $this->pluralLiterals[$message] = array($pluralLiteral, $singularLiteral);
+      $smessage = eval('return ' . $singularLiteral . ';');
+      $this->pluralLiterals[$message] = array($pluralLiteral, $singularLiteral, $smessage);
+      $line = substr_count($content, "\n", 0, $matches[0][$i][1]) + 1;
+      $this->sourceRefs[$message] = array($file, $line);
     }
   }
   
@@ -143,15 +151,17 @@ class LanguageGenerator {
     $php .= '$l->localName = "English";' . PHP_EOL;
     $php .= PHP_EOL;
 
-    foreach ($this->stringLiterals as $literal) {
+    foreach ($this->stringLiterals as $message => $literal) {
+      $php .= '//: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL; 
       $php .= '$l->set(' . PHP_EOL
         . '  ' . $literal . ',' . PHP_EOL
         . '  ' . $literal . PHP_EOL
         . ');' . PHP_EOL;
     }
 
-    foreach ($this->pluralLiterals as $array) {
-      list($plural, $singular) = $array;
+    foreach ($this->pluralLiterals as $message => $array) {
+      list($plural, $singular, $smessage) = $array;
+      $php .= '//: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
       $php .= '$l->set(' . PHP_EOL
       . '  ' . $plural . ',' . PHP_EOL
       . '  ' . $singular . ',' . PHP_EOL
@@ -166,5 +176,27 @@ class LanguageGenerator {
     $php .= PHP_EOL;
     $php .= 'return $l;' . PHP_EOL;
     return $php;
+  }
+  
+  /**
+   * Create a gettext POT-file.
+   * @return string POT file content.
+   */
+  public function createPotFile() {
+    $pot = '';
+    foreach ($this->stringLiterals as $message => $literal) {
+      $pot .= '#: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
+      $pot .= 'msgid ' . Json::encode($message) . PHP_EOL;
+      $pot .= 'msgstr ' . Json::encode($message) . PHP_EOL . PHP_EOL;
+    }
+    foreach ($this->pluralLiterals as $message => $array) {
+      list($plural, $singular, $smessage) = $array;
+      $pot .= '#: ' . implode(':', $this->sourceRefs[$message]) . PHP_EOL;
+      $pot .= 'msgid ' . Json::encode($smessage) . PHP_EOL;
+      $pot .= 'msgid_plural ' . Json::encode($message) . PHP_EOL;
+      $pot .= 'msgstr[0] ' . Json::encode($smessage) . PHP_EOL;
+      $pot .= 'msgstr[1] ' . Json::encode($message) . PHP_EOL . PHP_EOL;
+    }
+    return $pot;
   }
 }

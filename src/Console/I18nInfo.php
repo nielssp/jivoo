@@ -56,13 +56,13 @@ class I18nInfo extends ConsoleSnippet {
       $this->viewData['themes'] = null;
     }
     
-    $this->viewData['dir'] = $this->p('app', 'languages');
-    $this->rootDir = $this->p('app', '');
+    $this->viewData['dir'] = $this->p('app/languages');
+    $this->rootDir = $this->p('app');
     if (isset($this->request->query['scope'])) {
       $scope = $this->request->query['scope'];
       if ($scope === 'lib') {
         $this->scope = 'lib';
-        $this->viewData['dir'] = $this->p('Core', 'languages');
+        $this->viewData['dir'] = $this->p('Core/languages');
         $this->rootDir = \Jivoo\PATH;
       }
       else if (strpos($scope, '-') !== false) {
@@ -100,10 +100,10 @@ class I18nInfo extends ConsoleSnippet {
       $gen = new LanguageGenerator();
       $gen->scanDir($this->rootDir);
       
-      $fileName = $this->viewData['dir'] . '/en.lng.php';
+      $fileName = $this->viewData['dir'] . '/en.pot';
       $file = fopen($fileName, 'w');
       if ($file) {
-        fwrite($file, $gen->createCorePhpFile());
+        fwrite($file, $gen->createPotFile());
         fclose($file);
         $this->session->flash->success = tr('Language created: %1', $fileName);
         return $this->refresh();
