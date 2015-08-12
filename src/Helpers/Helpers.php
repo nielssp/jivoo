@@ -59,7 +59,7 @@ class Helpers extends LoadableModule {
   public function getHelper($name) {
     if (!isset($this->helpers[$name])) {
       $class = $this->app->n('Helpers\\' . $name . 'Helper');
-      if (!Utilities::classExists($class)) {
+      if (!class_exists($class)) {
         if (isset($this->helperClasses[$name])) {
           $class = $this->helperClasses[$name];
         }

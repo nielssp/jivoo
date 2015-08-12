@@ -40,9 +40,9 @@ class Snippets extends LoadableModule {
   public function getSnippet($name, $singleton = true) {
     if (!$singleton or !isset($this->instances[$name])) {
       $class = $name;
-      if (!Utilities::classExists($class))
+      if (!class_exists($class))
         $class = $this->app->n('Snippets\\' . $class);
-      if (!Utilities::classExists($class))
+      if (!class_exists($class))
         return null;
       Utilities::assumeSubclassOf($class, 'Jivoo\Snippets\Snippet');
       $object = new $class($this->app);

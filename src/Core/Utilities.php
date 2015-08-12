@@ -119,20 +119,6 @@ class Utilities {
     $className = array_slice(explode('\\', $className), -1);
     return $className[0];
   }
-
-  /**
-   * Check if a class exists.
-   * @param string $className Name of class.
-   * @param bool $autoload Whether or not to autoload it if it does.
-   * @return bool True if it exists, false otherwise.
-   */
-  public static function classExists($className, $autoload = true) {
-    if (class_exists($className, false))
-      return true;
-    if (!$autoload)
-      return false;
-    return Autoloader::getInstance()->load($className);
-  }
   
   /**
    * Check whether or not $class extends $parent, and throw an exception if

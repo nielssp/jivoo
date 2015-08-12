@@ -43,7 +43,7 @@ class Controllers extends LoadableModule {
     if (isset($this->instances[$name]))
       return get_class($this->instances[$name]);
     $class = $name . 'Controller';
-    if (!Utilities::classExists($class))
+    if (!class_exists($class))
       $class = $this->app->n('Controllers\\' . $class);
     return $class;
   }
@@ -77,9 +77,9 @@ class Controllers extends LoadableModule {
   public function getController($name, $singleton = true) {
     if (!$singleton or !isset($this->instances[$name])) {
       $class = $name . 'Controller';
-      if (!Utilities::classExists($class))
+      if (!class_exists($class))
         $class = $this->app->n('Controllers\\' . $class);
-      if (!Utilities::classExists($class))
+      if (!class_exists($class))
         return null;
       Utilities::assumeSubclassOf($class, 'Jivoo\Controllers\Controller');
       $object = new $class($this->app);

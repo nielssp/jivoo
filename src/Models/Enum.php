@@ -52,12 +52,12 @@ abstract class Enum {
       return true;
     if (isset(self::$classes[$class]))
       return true;
-    if (Utilities::classExists($class)) {
+    if (class_exists($class)) {
       self::$classes[$class] = $class;
       return true;
     }
     foreach (self::$searchPrefixes as $prefix) {
-      if (Utilities::classExists($prefix . $class)) {
+      if (class_exists($prefix . $class)) {
         self::$classes[$class] = $prefix . $class;
         return true;
       }

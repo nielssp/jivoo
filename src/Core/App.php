@@ -613,7 +613,7 @@ class App implements IEventSubject, LoggerAwareInterface {
     
     // Find initialization class
     $class = $this->n('Boot');
-    if (!Utilities::classExists($class))
+    if (!class_exists($class))
       $class = 'Jivoo\Core\Boot';
     $boot = new $class($this);
     $this->triggerEvent('beforeBoot');

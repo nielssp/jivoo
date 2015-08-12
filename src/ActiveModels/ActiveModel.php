@@ -239,7 +239,7 @@ abstract class ActiveModel extends Model implements IEventListener {
         $options = array();
       }
       $mixin = 'Jivoo\ActiveModels\\' . $mixin . 'Mixin';
-      if (!Utilities::classExists($mixin))
+      if (!class_exists($mixin))
         throw new InvalidMixinException(tr('Mixin class not found: %1', $mixin));
       if (!is_subclass_of($mixin, 'Jivoo\ActiveModels\ActiveModelMixin'))
         throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));

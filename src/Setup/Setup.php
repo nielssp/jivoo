@@ -82,7 +82,7 @@ class Setup extends LoadableModule {
     $state = $this->state->read('setup');
     if (isset($this->app->manifest['install'])) {
       $installer = $this->app->manifest['install'];
-      if (!Utilities::classExists($installer))
+      if (!class_exists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       if (!$state[$installer]->get('done', false)) {
         $state = $this->state->write('setup');
@@ -97,7 +97,7 @@ class Setup extends LoadableModule {
       else if ($state['version'] !== $this->app->version) {
         $state = $this->state->write('setup');
         $installer = $this->app->manifest['update'];
-        if (!Utilities::classExists($installer))
+        if (!class_exists($installer))
           $installer = $this->app->n('Snippets\\' . $installer);
         $installerState = $state['updates'][$this->app->version][$installer];
         if ($installerState->get('done', false)) {
@@ -111,7 +111,7 @@ class Setup extends LoadableModule {
     if (isset($state['current']['install'])) {
       $state = $this->state->write('setup');
       $installer = $state['current']->get('install', null);
-      if (!Utilities::classExists($installer))
+      if (!class_exists($installer))
         $installer = $this->app->n('Snippets\\' . $installer);
       $installerState = $state['current'][$installer];
       if ($installerState->get('done', false)) {
@@ -180,7 +180,7 @@ class Setup extends LoadableModule {
    * @throws \Exception If the installer could not be started.
    */
   public function trigger($installerClass) {
-    if (!Utilities::classExists($installerClass))
+    if (!class_exists($installerClass))
       $installerClass = $this->app->n('Snippets\\' . $installerClass);
     $this->logger->info(tr('Trigger installer: %1', $installerClass));
     $this->getInstaller($installerClass);

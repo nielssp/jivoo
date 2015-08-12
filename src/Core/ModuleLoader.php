@@ -211,7 +211,7 @@ class ModuleLoader implements IEventSubject {
     }
     $this->classes[$module] = $class;
     
-    assume(Utilities::classExists($class));
+    assume(class_exists($class));
     $loadOrder = LoadableModule::getLoadOrder($class);
 
     foreach ($loadOrder['before'] as $dependency)
