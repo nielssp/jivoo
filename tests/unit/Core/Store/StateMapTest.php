@@ -2,13 +2,7 @@
 
 namespace Jivoo\Core\Store;
 
-class StateMapTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class StateMapTest extends \Jivoo\Test {
 
   private $dir = 'tests/_data/state';
   private $state;

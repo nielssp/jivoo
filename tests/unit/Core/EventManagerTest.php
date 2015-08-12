@@ -2,13 +2,7 @@
 
 namespace Jivoo\Core;
 
-class EventManagerTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class EventManagerTest extends \Jivoo\Test {
 
   protected function _before() {}
 

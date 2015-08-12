@@ -2,13 +2,7 @@
 
 namespace Jivoo\Core;
 
-class UtilitiesTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class UtilitiesTest extends \Jivoo\Test {
 
   protected function _before() {}
 

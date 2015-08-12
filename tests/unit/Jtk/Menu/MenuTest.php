@@ -2,13 +2,7 @@
 
 namespace Jivoo\Jtk\Menu;
 
-class MenuTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class MenuTest extends \Jivoo\Test {
 
   protected function _before() {}
 

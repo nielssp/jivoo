@@ -5,13 +5,7 @@ namespace Jivoo\Core\I18n;
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidArgumentException;
 
-class LocaleTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class LocaleTest extends \Jivoo\Test {
 
   protected function _before() {}
 

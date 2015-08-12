@@ -2,13 +2,7 @@
 
 namespace Jivoo\Core;
 
-class PathsTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class PathsTest extends \Jivoo\Test {
 
   protected function _before() {}
 

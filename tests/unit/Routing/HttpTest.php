@@ -2,13 +2,7 @@
 
 namespace Jivoo\Routing;
 
-class HttpTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class HttpTest extends \Jivoo\Test {
 
   protected function _before() {}
 

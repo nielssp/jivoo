@@ -5,13 +5,7 @@ namespace Jivoo\Core;
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidMethodException;
 
-class ModuleTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class ModuleTest extends \Jivoo\Test {
   
   protected function _before() {}
 

@@ -2,13 +2,7 @@
 
 namespace Jivoo\Core\Store;
 
-class PhpStoreTest extends \Codeception\TestCase\Test {
-
-  /**
-   *
-   * @var \UnitTester
-   */
-  protected $tester;
+class PhpStoreTest extends \Jivoo\Test {
 
   private $file;
   private $store;
