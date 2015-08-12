@@ -39,8 +39,8 @@ class LanguageGenerator {
   public function scanFile($scope, $file) {
     $content = file_get_contents($scope . '/' . $file);
     $file = '../' . $file;
-    preg_match_all('/\btr\(/', $content, $matchesTest, PREG_OFFSET_CAPTURE);
-    preg_match_all('/\btr\(\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")/s', $content, $matches, PREG_OFFSET_CAPTURE);
+    preg_match_all('/\btr\(|\/\*\s*tr\s*\*\//', $content, $matchesTest, PREG_OFFSET_CAPTURE);
+    preg_match_all('/(?:\btr\(|\/\*\s*tr\s*\*\/)\s*(\'([^\'\\\\]|\\\\.)*\'|"([^"\\\\]|\\\\.)*")/s', $content, $matches, PREG_OFFSET_CAPTURE);
     if (count($matchesTest[0]) != count($matches[0])) {
       $offsets = array();
       foreach ($matches[0] as $match) {
