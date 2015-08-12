@@ -6,6 +6,7 @@
 namespace Jivoo\Core\I18n;
 
 use Jivoo\Core\Unicode;
+use Jivoo\Core\Cache\ICache;
 
 /**
  * Internationalization and localization.
@@ -22,6 +23,11 @@ class I18n {
    * @var Locale
    */
   private static $locale = null;
+  
+  /**
+   * @var ICache
+   */
+  private static $cache = null;
   
   /**
    * Set current language.
@@ -68,6 +74,14 @@ class I18n {
   }
   
   /**
+   * Set cache used for loading messages.
+   * @param ICache $cache Cache.
+   */
+  public static function setCache(ICache $cache) {
+    self::$cache = $cache;
+  }
+  
+  /**
    * Load a localization.
    * @param bool $extend Whether to extend the existing localization object
    * (true) or replace it (false).
@@ -88,6 +102,14 @@ class I18n {
    */
   public static function loadFrom($dir, $extend = true) {
     $file = $dir . '/' . self::$language . '.';
+    if (isset(self::$cache)) {
+      $cached = self::$cache->get($file);
+      if (isset($cached)) {
+        $localization = new Locale($cached);
+        self::load($localization, $extend);
+        return true;
+      }
+    }
     if (file_exists($file . 'mo')) {
       $localization = Locale::readMo($file . 'mo');
     }
@@ -97,6 +119,9 @@ class I18n {
     else {
       trigger_error(tr('Language not found: %1', $file . 'mo'), E_USER_NOTICE);
       return false;
+    }
+    if (isset(self::$cache)) {
+      self::$cache->set($file, $localization->getMessages(), 3600);
     }
     self::load($localization, $extend);
     return true;

@@ -23,9 +23,9 @@ interface ICache {
    * @param string $key Item key, may contain dots, see {@see get}.
    * @param mixed $value Value.
    * @param int $expiration Expiration timestamp in seconds. Default is 0
-   * (never expires). If less than 2,592,000 (30 days), the time is relative to
-   * the current timestamp, otherwise it is interpreted as an absolute UNIX
-   * timestamp. 
+   * (never expires). If less than or equal to 2,592,000 (30 days), the time
+   * is relative to the current timestamp, otherwise it is interpreted as an
+   * absolute UNIX timestamp. 
    * @return bool True if stored, false on failure.
    */
   public function set($key, $value, $expiration = 0);

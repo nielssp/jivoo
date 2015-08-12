@@ -1,6 +1,5 @@
 <?php
 use Jivoo\Core\I18n\Locale;
-use Jivoo\Core\I18n\LazyLocale;
 use Jivoo\Core\Json;
 require '../src/bootstrap.php';
 
@@ -448,7 +447,8 @@ $rounds = 20;
 
 $file1 = '../../jivoocms/app/languages/da.mo';
 $file2 = '../../jivoocms/app/languages/da.po';
-$file3 = '../../jivoocms/app/languages/da.s';
+// $file3 = '../../jivoocms/app/languages/da.s';
+$file3 = '../../jivoocms/user/cache/test.s';
 $file4 = '../../jivoocms/app/languages/da.php';
 $file5 = '../../jivoocms/app/languages/da.json';
 
@@ -474,7 +474,7 @@ $needles = array_slice($messages, 0, $gets);
 $g5 = $test->testFunction($rounds, 'readAndGetMo5', $file1, $needles);
 $g6 = $test->testFunction($rounds, 'readAndGetMo6', $file1, $needles);
 $g7 = $test->testFunction($rounds, 'readAndGetMo7', $file1, $needles);
-$g8 = $test->testFunction($rounds, 'readAndGetMo8', $file1, $needles);
+// $g8 = $test->testFunction($rounds, 'readAndGetMo8', $file1, $needles);
 $l7 = $test->testFunction($rounds, '\Jivoo\Core\I18n\Locale::readPo', $file2);
 
 // $rounds = 500;

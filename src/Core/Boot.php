@@ -7,7 +7,9 @@ namespace Jivoo\Core;
 
 use Jivoo\Console\Shell;
 use Jivoo\Core\I18n\I18n;
+use Jivoo\Core\Cache\StoreCache;
 use Psr\Log\LogLevel;
+use Jivoo\Core\Store\SerializedStore;
 
 /**
  * The default application initialization class. Extend this class and override
@@ -73,7 +75,12 @@ class Boot extends Module {
         'showReference' => true
       )
     );
-
+    
+    $store = new SerializedStore($this->p('cache/i18n.s'));
+    if ($store->touch()) {
+      I18n::setCache(new StoreCache($store));
+    }
+    
     if (isset($this->config['i18n']['language']))
       I18n::setLanguage($this->config['i18n']['language']);
     

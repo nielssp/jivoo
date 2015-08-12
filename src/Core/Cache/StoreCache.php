@@ -37,11 +37,11 @@ class StoreCache implements ICache {
    */
   private function read() {
     if ($this->store->isOpen()) {
-      $this->data = $this->store->read()
+      $this->data = $this->store->read();
     }
     else {
       $this->store->open(false);
-      $this->data = $this->store->read()
+      $this->data = $this->store->read();
       $this->store->close();
     }
   }
@@ -60,7 +60,7 @@ class StoreCache implements ICache {
    * {@inheritdoc}
    */
   public function get($key) {
-    if (!isset($this->data()))
+    if (!isset($this->data))
       $this->read();
     if (isset($this->data[$key])) {
       if (!is_array($this->data[$key])) {
@@ -81,8 +81,8 @@ class StoreCache implements ICache {
   /**
    * {@inheritdoc}
    */
-  public function set($key, $value, $expiration = 0) 
-    if (!isset($this->data()))
+  public function set($key, $value, $expiration = 0) {
+    if (!isset($this->data))
       $this->read();
     if ($expiration != 0 and $expiration <= 2592000)
       $expiration = time() + $expiration;
@@ -123,7 +123,7 @@ class StoreCache implements ICache {
    */
   public function increment($key, $offset = 1, $init = 0) {
     $value = $this->get($key);
-    if (!is_numeric($value)) {
+    if (!is_numeric($value))
       $value = $init;
     $value += $offset;
     $this->set($key, $value);
@@ -135,7 +135,7 @@ class StoreCache implements ICache {
    */
   public function decrement($key, $offset = 1, $init = 0) {
     $value = $this->get($key);
-    if (!is_numeric($value)) {
+    if (!is_numeric($value))
       $value = $init;
     $value -= $offset;
     $this->set($key, $value);
@@ -151,7 +151,7 @@ class StoreCache implements ICache {
       return true;
     }
     if (substr($key, -1) === '.') {
-      if (!isset($this->data()))
+      if (!isset($this->data))
         $this->read();
       $len = strlen($key);
       $success = false;

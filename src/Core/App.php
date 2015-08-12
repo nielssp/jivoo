@@ -24,6 +24,8 @@ use Jivoo\Core\Log\Logger;
 use Jivoo\Core\Log\FileHandler;
 use Jivoo\Core\Log\ErrorException;
 use Jivoo\Core\Cli\Shell;
+use Jivoo\Core\Cache\NullCache;
+use Jivoo\Core\Cache\ICache;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -42,6 +44,7 @@ use Jivoo\Core\Cli\Shell;
  * @property-read EventManager $eventManager Application event manager.
  * @property-read StateMap $state Application persistent state storage.
  * @property-read LoggerInterface $logger Application logger.
+ * @property-read ICache $cache Application cache.
  * @property-read ModuleLoader $m Module loader.
  * @property-read VendorLoader $vendor Third-party library loader.
  * @property-read Shell|null $shell The command-line shell if application is
@@ -167,6 +170,11 @@ class App implements IEventSubject, LoggerAwareInterface {
   private $logger;
   
   /**
+   * @var ICache Application cache.
+   */
+  private $cache;
+  
+  /**
    * @var string[]
    */
   private $errorPaths = array();
@@ -242,6 +250,8 @@ class App implements IEventSubject, LoggerAwareInterface {
     // Persistent state storage
     $this->state = new StateMap($this->p('state'));
     
+    $this->cache = new NullCache();
+    
     if ($this->isCli())
       $this->shell = new Shell($this);
   }
@@ -271,6 +281,7 @@ class App implements IEventSubject, LoggerAwareInterface {
       case 'm':
       case 'vendor':
       case 'shell':
+      case 'cache':
         return $this->$property;
       case 'eventManager':
         return $this->e;
@@ -298,6 +309,13 @@ class App implements IEventSubject, LoggerAwareInterface {
    */
   public function setLogger(LoggerInterface $logger) {
     $this->logger = $logger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCache(ICache $cache) {
+    $this->cache = $cache;
   }
   
   /**

@@ -77,13 +77,16 @@ abstract class FileStore implements IStore {
    * @return boolean True if file exists and is writable, false otherwise.
    */
   public function touch() {
-    if (file_exists($this->file))
+    if (file_exists($this->file)) {
+      $this->file = realpath($this->file);
       return true;
+    }
     $handle = fopen($this->file, 'c');
     if (!$handle)
       return false;
     fwrite($handle, $this->defaultContent);
     fclose($handle);
+    $this->file = realpath($this->file);
     return true;
   }
   

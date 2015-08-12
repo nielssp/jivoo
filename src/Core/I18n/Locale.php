@@ -101,9 +101,12 @@ class Locale {
   public $thousandsSep = ','; // tr('[Locale::thousandsSep]')
 
   /**
-   * Construct new localization.
+   * Construct new locale.
+   * @param array $messages Optional messages to create locale from.
    */
-  public function __construct() { }
+  public function __construct($messages = array()) {
+    $this->messages = $messages;
+  }
 
   /**
    * Get value of a property.
@@ -224,11 +227,22 @@ class Locale {
    * @return string[][] List of arrays. The keys are messages. The first element
    * of each array array is the translation string, and the remaining elements
    * (if any) are the message variable patterns.
+   * @deprecated
    */
   public function getTranslationStrings() {
     return $this->messages;
   }
 
+  /**
+   * Return a list of known messages along with translation strings.
+   * @return string[][] List of arrays. The keys are message ids. The values are
+   * lists of translations (e.g. one or n, where n is the number ofplural
+   * forms).
+   */
+  public function getMessages() {
+    return $this->messages;
+  }
+  
   /**
    * Translate a string.
    * @param string $message Message in english.

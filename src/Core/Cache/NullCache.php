@@ -21,7 +21,7 @@ class NullCache implements ICache {
   /**
    * {@inheritdoc}
    */
-  public function set($key, $value, $expiration = 0) 
+  public function set($key, $value, $expiration = 0) {
     return false;
   }
 
