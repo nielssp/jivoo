@@ -28,6 +28,8 @@ class PhpStore extends FileStore {
   protected function decode($content) {
     if (substr($content, 0, 5) !== '<?php')
       throw new AccessException(tr('Invalid file format'));
+    // Using eval() instead of include prevents opcode cachers from returning
+    // old data.
     return eval(substr($content, 5));
   }
   

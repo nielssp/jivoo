@@ -1,6 +1,7 @@
 <?php
 use Jivoo\Core\I18n\Locale;
 use Jivoo\Core\I18n\LazyLocale;
+use Jivoo\Core\Json;
 require '../src/bootstrap.php';
 
 function readMo2($file) {
@@ -425,6 +426,18 @@ function readAndGetMo8($file, $messages) {
     $l->get($message);
 }
 
+function readMoSeri($file) {
+  return unserialize(file_get_contents($file));
+}
+
+function readMoPhp($file) {
+  return include $file;
+}
+
+function readMoJson($file) {
+  return Json::decodeFile($file);
+}
+
 ini_set('display_errors', true);
 
 include '../../LAB/LabTest.php';
@@ -435,11 +448,23 @@ $rounds = 20;
 
 $file1 = '../../jivoocms/app/languages/da.mo';
 $file2 = '../../jivoocms/app/languages/da.po';
+$file3 = '../../jivoocms/app/languages/da.s';
+$file4 = '../../jivoocms/app/languages/da.php';
+$file5 = '../../jivoocms/app/languages/da.json';
 
 $l1 = $test->testFunction($rounds, '\Jivoo\Core\I18n\Locale::readMo', $file1);
+
+$messages = $l1->getTranslationStrings();
+file_put_contents($file3, serialize($messages));
+file_put_contents($file4, '<?php ' . var_export($messages, true) . ';');
+file_put_contents($file5, Json::encode($messages));
+
 $l2 = $test->testFunction($rounds, 'readMo2', $file1);
 $l3 = $test->testFunction($rounds, 'readMo3', $file1);
 $l4 = $test->testFunction($rounds, 'readMo4', $file1);
+$l5 = $test->testFunction($rounds, 'readMoSeri', $file3);
+$l6 = $test->testFunction($rounds, 'readMoPhp', $file4);
+$l7 = $test->testFunction($rounds, 'readMoJson', $file5);
 // $l5 = $test->testFunction($rounds, 'readMo5', $file1);
 // $l6 = $test->testFunction($rounds, 'readMo6', $file1);
 $messages = array_keys($l1->getTranslationStrings());

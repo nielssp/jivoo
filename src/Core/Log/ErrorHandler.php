@@ -19,6 +19,16 @@ class ErrorHandler implements LoggerAwareInterface {
   private static $instance = null;
   
   /**
+   * @var int
+   */
+  private static $catch = 0;
+  
+  /**
+   * @var string
+   */
+  private static $error = null;
+  
+  /**
    * @var LoggerInterface
    */
   private $logger;
@@ -146,6 +156,10 @@ class ErrorHandler implements LoggerAwareInterface {
    * E_RECOVERABLE_ERROR) to exceptions.
    */
   public function handle($type, $message, $file, $line) {
+    if (self::$catch & $type > 0) {
+      self::$error = $message;
+      return;
+    }
     switch ($type) {
       case E_USER_NOTICE:
       case E_USER_DEPRECATED:
@@ -196,17 +210,18 @@ class ErrorHandler implements LoggerAwareInterface {
   }
   
   /**
-   * Catch a PHP error or warning message.
+   * Detect one or more PHP error messages and return the last one.
    * @param callable $callable Function to catch error in.
-   * @return string|null Error message or null if no error was triggered.
+   * @param int $mask Error type mask, e.g. `E_ERROR | E_WARNING` to detect
+   * errors or warnings. Default is -1 which catches everything.
+   * @return string|null Last error message or null if no error was triggered.
    */
-  public static function catchError($callable) {
-    $error = null;
-    set_error_handler(function($type, $message) use($error) {
-      $error = $message;
-    });
+  public static function detect($callable, $mask = -1) {
+    self::$catch = $mask;
     $callable();
-    restore_error_handler();
+    $error = self::$error;
+    self::$catch = 0;
+    self::$error = null;
     return $error;
   }
 }

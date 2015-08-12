@@ -35,7 +35,8 @@ abstract class FileStore implements IStore {
   private $data = null;
   
   /**
-   * @var string Default file content (used by {@see touch()}).
+   * @var string Default file content (used by {@see touch()}). Should
+   * result in en empty document array, e.g. <code>array()</code>. 
    */
   protected $defaultContent = '';
   
