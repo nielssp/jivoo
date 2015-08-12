@@ -114,7 +114,6 @@ class LanguageGenerator {
             $this->scanFile($scope, $file);
         }
       }
-      closedir($dir);
     }
   }
   
@@ -207,7 +206,7 @@ class LanguageGenerator {
       foreach ($this->sourceRefs[$message] as $source)
         $pot .= '#: ' . implode(':', $source) . PHP_EOL;
       $pot .= 'msgid ' . $this->quote($message) . PHP_EOL;
-      $pot .= 'msgstr ' . $this->quote($message) . PHP_EOL . PHP_EOL;
+      $pot .= 'msgstr ""' . PHP_EOL . PHP_EOL;
     }
     foreach ($this->pluralLiterals as $message => $array) {
       list($plural, $singular, $smessage) = $array;
@@ -215,8 +214,8 @@ class LanguageGenerator {
         $pot .= '#: ' . implode(':', $source) . PHP_EOL;
       $pot .= 'msgid ' . $this->quote($smessage) . PHP_EOL;
       $pot .= 'msgid_plural ' . $this->quote($message) . PHP_EOL;
-      $pot .= 'msgstr[0] ' . $this->quote($smessage) . PHP_EOL;
-      $pot .= 'msgstr[1] ' . $this->quote($message) . PHP_EOL . PHP_EOL;
+      $pot .= 'msgstr[0] ""' . PHP_EOL;
+      $pot .= 'msgstr[1] ""' . PHP_EOL . PHP_EOL;
     }
     return $pot;
   }
