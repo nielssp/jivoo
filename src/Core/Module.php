@@ -7,13 +7,13 @@ namespace Jivoo\Core;
 
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidMethodException;
-use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareInterface as LoggerAware;
 use Psr\Log\LoggerInterface;
 
 /**
  * A module is part of an application.
  */
-abstract class Module implements IEventSubject, LoggerAwareInterface {
+abstract class Module implements IEventSubject, LoggerAware {
   /**
    * @var string[] Names of modules required by this module.
    */

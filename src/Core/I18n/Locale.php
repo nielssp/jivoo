@@ -141,7 +141,7 @@ class Locale {
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
-  
+
   /**
    * Converts simple gettext C expressions to PHP.
    * @param string $expr C expression.
@@ -182,16 +182,7 @@ class Locale {
     }
     return $expr;
   }
-
-  /**
-   * Unset value of a property.
-   * @param string $property Property name.
-   * @throws InvalidPropertyException If property is not defined.
-   */
-  public function __unset($property) {
-    $this->__set($property, null);
-  }
-
+  
   /**
    * Extend this localization with additional messages from another one.
    * @param Locale $l Other localization object.

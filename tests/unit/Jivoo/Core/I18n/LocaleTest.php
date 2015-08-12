@@ -3,6 +3,7 @@
 namespace Jivoo\Core\I18n;
 
 use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidArgumentException;
 
 class LocaleTest extends \Codeception\TestCase\Test {
 
@@ -18,6 +19,8 @@ class LocaleTest extends \Codeception\TestCase\Test {
 
   public function testSetAndGet() {
     $l = new Locale();
+    $this->assertEquals(array(), $l->getMessages());
+    
     $this->assertEquals('Hello, World!', $l->get('Hello, World!'));
     $l->set('Hello, World!', 'Hej, Verden!');
     $this->assertEquals('Hej, Verden!', $l->get('Hello, World!'));
@@ -26,6 +29,11 @@ class LocaleTest extends \Codeception\TestCase\Test {
     $this->assertEquals('Hello, World!', $l->get('Hello, %1!', 'World'));
     $l->set('Hello, %1!', 'Hej, %1!');
     $this->assertEquals('Hej, World!', $l->get('Hello, %1!', 'World'));
+    
+    $this->assertFalse($l->hasProperty('foo'));
+    $l->set('[Locale::foo]', 'bar');
+    $this->assertTrue($l->hasProperty('foo'));
+    $this->assertEquals('bar', $l->getProperty('foo'));
   }
   
   public function testNget() {
@@ -119,16 +127,35 @@ class LocaleTest extends \Codeception\TestCase\Test {
     $this->assertEquals('Der er 2 brugere', $l2->nget('There are %1 users', 'There is %1 user', 2));
   }
   
+  public function testPluralForms() {
+    $l = new Locale();
+    
+    $l->pluralForms = 'nplurals=3; plural=n % 3;';
+    $this->assertEquals(3, $l->plurals);
+    $this->assertEquals('return $n%3;', $l->pluralExpr);
+
+    try {
+      $l->pluralForms = 'nplurals=3 plural=n % 3;';
+      $this->fail('InvalidArgumentException not thrown');
+    }
+    catch (InvalidArgumentException $e) {}
+  }
+  
+  public function testConvertExpr() {
+    $cases = array(
+      'n' => '$n',
+      'n % 5 == 1 ? 0 : 1' => '$n%5==1?0:(1)',
+      'n % 5 == 1 ? 0 : n % 2 != 0 ? 15 : 23' => '$n%5==1?0:($n%2!=0?15:(23))',
+      'n < 5 && n > 3 || (!n == n^5)' => '$n<5&&$n>3||(!$n==$n^5)',
+      '(n == 2) ? (n == 3) : (n == 4)' => '($n==2)?($n==3):(($n==4))',
+      'n?(n?(n?1:2):3):4' => '$n?($n?($n?1:(2)):(3)):(4)'
+    );
+    foreach ($cases as $expr => $expected)
+      $this->assertEquals($expected, Locale::convertExpr($expr));
+  }
+  
   public function testMagicGettersAndSetters() {
     $l = new Locale();
-    $l->dateFormat = 'Ymd';
-    $this->assertEquals('Ymd', $l->dateFormat);
-    
-    $l->longFormat = '%DATE';
-    $this->assertEquals('Ymd', $l->longFormat);
-    
-    unset($l->longFormat);
-    $this->assertFalse(isset($l->longFormat));
     
     try {
       $l->notAProperty = true;
@@ -140,10 +167,25 @@ class LocaleTest extends \Codeception\TestCase\Test {
       $this->fail('InvalidPropertyException not thrown');
     }
     catch (InvalidPropertyException $e) {}
-    try {
-      isset($l->notAProperty);
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
+  }
+  
+  public function testReadPo() {
+    $l = Locale::readPo('tests/_data/Core/I18n/da.po');
+    $this->assertEquals('juni', $l->get('June'));
+    $this->assertEquals('d/m/Y', $l->dateFormat);
+    $this->assertTrue($l->hasProperty('timeFormat'));
+    $this->assertEquals('Der er 0 brugere', $l->nget('There are %1 users', 'There is %1 user', 0));
+    $this->assertEquals('Der er 1 bruger', $l->nget('There are %1 users', 'There is %1 user', 1));
+    $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
+  }
+  
+  public function testReadMo() {
+    $l = Locale::readMo('tests/_data/Core/I18n/da.mo');
+    $this->assertEquals('juni', $l->get('June'));
+    $this->assertEquals('d/m/Y', $l->dateFormat);
+    $this->assertTrue($l->hasProperty('timeFormat'));
+    $this->assertEquals('Der er 0 brugere', $l->nget('There are %1 users', 'There is %1 user', 0));
+    $this->assertEquals('Der er 1 bruger', $l->nget('There are %1 users', 'There is %1 user', 1));
+    $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
   }
 }

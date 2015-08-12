@@ -1,16 +1,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Jivoo 0.22.0-dev\n"
-"POT-Creation-Date: 2015-08-12 18:51+0000\n"
-"Language: en\n"
+"POT-Creation-Date: 2015-08-12 20:52+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Jivoo 0.22.0-dev\n"
+"X-Generator: Poedit 1.8.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../AccessControl/Acl/RoleAcl.php:43
-#: ../AccessControl/Acl/RoleAcl.php:89
+#: ../AccessControl/Acl/RoleAcl.php:43 ../AccessControl/Acl/RoleAcl.php:89
 msgid "Undefined role: %1"
 msgstr ""
 
@@ -23,38 +25,21 @@ msgid "Unauthorized"
 msgstr ""
 
 #: ../AccessControl/AuthorizationRequest.php:49
-#: ../ActiveModels/ActiveRecord.php:195
-#: ../ActiveModels/ActiveRecord.php:222
-#: ../ActiveModels/ActiveRecord.php:239
-#: ../ActiveModels/ActiveRecord.php:259
-#: ../Core/App.php:289
-#: ../Core/App.php:304
-#: ../Core/I18n/Locale.php:123
-#: ../Core/I18n/Locale.php:142
-#: ../Core/Module.php:115
-#: ../Core/Module.php:126
-#: ../Core/Store/Document.php:75
-#: ../Core/Store/Document.php:99
-#: ../Databases/Schema.php:67
-#: ../Models/Condition/Condition.php:48
-#: ../Models/DataType.php:137
-#: ../Models/Expression/Condition.php:45
-#: ../Models/File/FileRecord.php:89
-#: ../Models/Record.php:135
-#: ../Models/Record.php:144
-#: ../Models/Record.php:157
-#: ../Models/Record.php:166
+#: ../ActiveModels/ActiveRecord.php:195 ../ActiveModels/ActiveRecord.php:222
+#: ../ActiveModels/ActiveRecord.php:239 ../ActiveModels/ActiveRecord.php:259
+#: ../Core/App.php:289 ../Core/App.php:304 ../Core/I18n/Locale.php:123
+#: ../Core/I18n/Locale.php:142 ../Core/Module.php:115 ../Core/Module.php:126
+#: ../Core/Store/Document.php:75 ../Core/Store/Document.php:99
+#: ../Databases/Schema.php:67 ../Models/Condition/Condition.php:48
+#: ../Models/DataType.php:137 ../Models/Expression/Condition.php:45
+#: ../Models/File/FileRecord.php:89 ../Models/Record.php:135
+#: ../Models/Record.php:144 ../Models/Record.php:157 ../Models/Record.php:166
 #: ../Models/Selection/BasicSelection.php:69
-#: ../Routing/DispatcherCollection.php:41
-#: ../Routing/EventSource.php:49
-#: ../Routing/EventSource.php:66
-#: ../Routing/FlashMessage.php:48
-#: ../Routing/Request.php:225
-#: ../Routing/Request.php:243
-#: ../Routing/Response.php:74
-#: ../Routing/Response.php:94
-#: ../Routing/Session.php:83
-#: ../View/Compile/TemplateNode.php:62
+#: ../Routing/DispatcherCollection.php:41 ../Routing/EventSource.php:49
+#: ../Routing/EventSource.php:66 ../Routing/FlashMessage.php:48
+#: ../Routing/Request.php:225 ../Routing/Request.php:243
+#: ../Routing/Response.php:74 ../Routing/Response.php:94
+#: ../Routing/Session.php:83 ../View/Compile/TemplateNode.php:62
 msgid "Invalid property: %1"
 msgstr ""
 
@@ -83,10 +68,8 @@ msgstr ""
 msgid "Mixin class %1 must extend ActiveModelMixin"
 msgstr ""
 
-#: ../ActiveModels/ActiveModel.php:400
-#: ../ActiveModels/ActiveModel.php:706
-#: ../ActiveModels/ActiveModel.php:748
-#: ../ActiveModels/ActiveModel.php:791
+#: ../ActiveModels/ActiveModel.php:400 ../ActiveModels/ActiveModel.php:706
+#: ../ActiveModels/ActiveModel.php:748 ../ActiveModels/ActiveModel.php:791
 msgid "Unknown association: %1"
 msgstr ""
 
@@ -106,15 +89,12 @@ msgstr ""
 msgid "Association data source \"%1\" not found"
 msgstr ""
 
-#: ../ActiveModels/ActiveModel.php:729
-#: ../ActiveModels/ActiveModel.php:772
+#: ../ActiveModels/ActiveModel.php:729 ../ActiveModels/ActiveModel.php:772
 msgid "Association must be of type \"belongsTo\" or \"hasOne\""
 msgstr ""
 
-#: ../ActiveModels/ActiveModel.php:866
-#: ../ActiveModels/ActiveModel.php:891
-#: ../ActiveModels/ActiveModel.php:918
-#: ../ActiveModels/ActiveModel.php:972
+#: ../ActiveModels/ActiveModel.php:866 ../ActiveModels/ActiveModel.php:891
+#: ../ActiveModels/ActiveModel.php:918 ../ActiveModels/ActiveModel.php:972
 msgid "Unknown association type: %1"
 msgstr ""
 
@@ -126,12 +106,9 @@ msgstr ""
 msgid "Installing data into \"%1\"..."
 msgstr ""
 
-#: ../ActiveModels/ActiveRecord.php:275
-#: ../Core/Module.php:157
-#: ../Jtk/JtkHelper.php:72
-#: ../Jtk/JtkObject.php:73
-#: ../Models/Condition/Condition.php:61
-#: ../Models/Expression/Condition.php:58
+#: ../ActiveModels/ActiveRecord.php:275 ../Core/Module.php:157
+#: ../Jtk/JtkHelper.php:72 ../Jtk/JtkObject.php:73
+#: ../Models/Condition/Condition.php:61 ../Models/Expression/Condition.php:58
 #: ../Models/Selection/BasicSelection.php:97
 msgid "Invalid method: %1"
 msgstr ""
@@ -152,19 +129,16 @@ msgstr ""
 msgid "Could not create user directory: %1"
 msgstr ""
 
-#: ../Console/Console.php:96
-#: ../Core/templates/error/exception.php:64
+#: ../Console/Console.php:96 ../Core/templates/error/exception.php:64
 #: ../Core/templates/jivoo/console/system-info.html.php:58
 msgid "System"
 msgstr ""
 
-#: ../Console/Console.php:98
-#: ../Console/ControlPanel.php:18
+#: ../Console/Console.php:98 ../Console/ControlPanel.php:18
 msgid "Control panel"
 msgstr ""
 
-#: ../Console/Console.php:99
-#: ../Console/I18nInfo.php:44
+#: ../Console/Console.php:99 ../Console/I18nInfo.php:44
 msgid "I18n"
 msgstr ""
 
@@ -228,8 +202,7 @@ msgstr ""
 msgid "Unable to create file: %1"
 msgstr ""
 
-#: ../Console/LanguageGenerator.php:53
-#: ../Console/LanguageGenerator.php:77
+#: ../Console/LanguageGenerator.php:53 ../Console/LanguageGenerator.php:77
 msgid "Invalid use of %1 on line %2 in %3"
 msgstr ""
 
@@ -265,8 +238,7 @@ msgstr ""
 msgid "Invalid route string for action dispatcher"
 msgstr ""
 
-#: ../Controllers/ActionDispatcher.php:149
-#: ../Snippets/SnippetDispatcher.php:84
+#: ../Controllers/ActionDispatcher.php:149 ../Snippets/SnippetDispatcher.php:84
 msgid "Invalid JSON parameters in route string"
 msgstr ""
 
@@ -286,8 +258,7 @@ msgstr ""
 msgid "Fatal error (%1)"
 msgstr ""
 
-#: ../Core/App.php:441
-#: ../Core/Cli/Shell.php:182
+#: ../Core/App.php:441 ../Core/Cli/Shell.php:182
 msgid "Uncaught exception"
 msgstr ""
 
@@ -335,8 +306,7 @@ msgstr ""
 msgid "Undefined environment: %1"
 msgstr ""
 
-#: ../Core/Cli/Command.php:72
-#: ../Core/Cli/Shell.php:108
+#: ../Core/Cli/Command.php:72 ../Core/Cli/Shell.php:108
 msgid "Unknown command: %1"
 msgstr ""
 
@@ -364,8 +334,7 @@ msgstr ""
 msgid "Ends the shell session"
 msgstr ""
 
-#: ../Core/Cli/Shell.php:47
-#: ../Core/Cli/Shell.php:60
+#: ../Core/Cli/Shell.php:47 ../Core/Cli/Shell.php:60
 msgid "Unknown option: %1"
 msgstr ""
 
@@ -393,8 +362,7 @@ msgstr ""
 msgid "Call \"trace\" to show stack trace"
 msgstr ""
 
-#: ../Core/EventManager.php:57
-#: ../Core/EventManager.php:136
+#: ../Core/EventManager.php:57 ../Core/EventManager.php:136
 msgid "Event subject \"%1\" does not have event \"%2\""
 msgstr ""
 
@@ -408,99 +376,99 @@ msgstr ""
 
 #: ../Core/I18n/I18n.php:180
 msgid "Today %1"
-msgstr ""
+msgstr "I dag, %1"
 
 #: ../Core/I18n/I18n.php:183
 msgid "Yesterday %1"
-msgstr ""
+msgstr "I går, %1"
 
 #: ../Core/I18n/I18n.php:186
 msgid "Tomorrow %1"
-msgstr ""
+msgstr "I morgen, %1"
 
 #: ../Core/I18n/I18n.php:235
 msgid "January"
-msgstr ""
+msgstr "januar"
 
 #: ../Core/I18n/I18n.php:237
 msgid "February"
-msgstr ""
+msgstr "februar"
 
 #: ../Core/I18n/I18n.php:239
 msgid "March"
-msgstr ""
+msgstr "marts"
 
 #: ../Core/I18n/I18n.php:241
 msgid "April"
-msgstr ""
+msgstr "april"
 
 #: ../Core/I18n/I18n.php:243
 msgid "May"
-msgstr ""
+msgstr "maj"
 
 #: ../Core/I18n/I18n.php:245
 msgid "June"
-msgstr ""
+msgstr "juni"
 
 #: ../Core/I18n/I18n.php:247
 msgid "July"
-msgstr ""
+msgstr "juli"
 
 #: ../Core/I18n/I18n.php:249
 msgid "August"
-msgstr ""
+msgstr "august"
 
 #: ../Core/I18n/I18n.php:251
 msgid "September"
-msgstr ""
+msgstr "september"
 
 #: ../Core/I18n/I18n.php:253
 msgid "October"
-msgstr ""
+msgstr "oktober"
 
 #: ../Core/I18n/I18n.php:255
 msgid "November"
-msgstr ""
+msgstr "november"
 
 #: ../Core/I18n/I18n.php:257
 msgid "December"
-msgstr ""
+msgstr "december"
 
 #: ../Core/I18n/I18n.php:262
 msgid "Sunday"
-msgstr ""
+msgstr "søndag"
 
 #: ../Core/I18n/I18n.php:264
 msgid "Monday"
-msgstr ""
+msgstr "mandag"
 
 #: ../Core/I18n/I18n.php:266
 msgid "Tuesday"
-msgstr ""
+msgstr "tirsdag"
 
 #: ../Core/I18n/I18n.php:268
 msgid "Wednesday"
-msgstr ""
+msgstr "onsdag"
 
 #: ../Core/I18n/I18n.php:270
 msgid "Thursday"
-msgstr ""
+msgstr "torsdag"
 
 #: ../Core/I18n/I18n.php:272
 msgid "Friday"
-msgstr ""
+msgstr "fredag"
 
 #: ../Core/I18n/I18n.php:274
 msgid "Saturday"
-msgstr ""
+msgstr "lørdag"
 
 #: ../Core/I18n/Locale.php:46
 msgid "[Locale::name]"
-msgstr ""
+msgstr "Danish"
 
 #: ../Core/I18n/Locale.php:51
 msgid "[Locale::localName]"
-msgstr ""
+msgstr "Dansk"
 
 #: ../Core/I18n/Locale.php:56
 msgid "[Locale::region]"
@@ -508,39 +476,39 @@ msgstr ""
 
 #: ../Core/I18n/Locale.php:61
 msgid "[Locale::dateFormat]"
-msgstr ""
+msgstr "d/m/Y"
 
 #: ../Core/I18n/Locale.php:66
 msgid "[Locale::timeFormat]"
-msgstr ""
+msgstr "H:i"
 
 #: ../Core/I18n/Locale.php:71
 msgid "[Locale::dateTimeFormat]"
-msgstr ""
+msgstr "d/m/Y H:i"
 
 #: ../Core/I18n/Locale.php:76
 msgid "[Locale::longFormat]"
-msgstr ""
+msgstr "d/m/Y H:i"
 
 #: ../Core/I18n/Locale.php:81
 msgid "[Locale::monthYear]"
-msgstr ""
+msgstr "F Y"
 
 #: ../Core/I18n/Locale.php:86
 msgid "[Locale::monthDay]"
-msgstr ""
+msgstr "j. F"
 
 #: ../Core/I18n/Locale.php:91
 msgid "[Locale::weekDay]"
-msgstr ""
+msgstr "l, H:i"
 
 #: ../Core/I18n/Locale.php:96
 msgid "[Locale::decimalPoint]"
-msgstr ""
+msgstr ","
 
 #: ../Core/I18n/Locale.php:101
 msgid "[Locale::thousandsSep]"
-msgstr ""
+msgstr "."
 
 #: ../Core/Log/FileHandler.php:42
 msgid "Could not create log directory: %1"
@@ -550,8 +518,7 @@ msgstr ""
 msgid "Could not create log file: %1"
 msgstr ""
 
-#: ../Core/Log/FileHandler.php:66
-#: ../Core/Store/FileStore.php:99
+#: ../Core/Log/FileHandler.php:66 ../Core/Store/FileStore.php:99
 msgid "Could not open file: %1"
 msgstr ""
 
@@ -563,8 +530,7 @@ msgstr ""
 msgid "%1 must load before %2"
 msgstr ""
 
-#: ../Core/ObjectMacro.php:57
-#: ../Core/ObjectMacro.php:66
+#: ../Core/ObjectMacro.php:57 ../Core/ObjectMacro.php:66
 msgid "Macro is write-only."
 msgstr ""
 
@@ -576,8 +542,7 @@ msgstr ""
 msgid "Invalid file format: %1"
 msgstr ""
 
-#: ../Core/Store/FileStore.php:162
-#: ../Core/Store/PhpSessionStore.php:103
+#: ../Core/Store/FileStore.php:162 ../Core/Store/PhpSessionStore.php:103
 msgid "Not mutable"
 msgstr ""
 
@@ -593,8 +558,7 @@ msgstr ""
 msgid "Invalid file format"
 msgstr ""
 
-#: ../Core/Store/Session.php:18
-#: ../Core/Store/State.php:64
+#: ../Core/Store/Session.php:18 ../Core/Store/State.php:64
 msgid "State already closed."
 msgstr ""
 
@@ -630,8 +594,7 @@ msgstr ""
 msgid "Could not import library: %1"
 msgstr ""
 
-#: ../Core/templates/error/error.php:5
-#: ../Core/templates/error/error.php:62
+#: ../Core/templates/error/error.php:5 ../Core/templates/error/error.php:62
 msgid "Error"
 msgstr ""
 
@@ -640,7 +603,9 @@ msgid "An error occurred while loading this page&hellip;"
 msgstr ""
 
 #: ../Core/templates/error/exception.php:34
-msgid "An uncaught %1 was thrown in file %2 on line %3 that prevented further execution of this request."
+msgid ""
+"An uncaught %1 was thrown in file %2 on line %3 that prevented further "
+"execution of this request."
 msgstr ""
 
 #: ../Core/templates/error/exception.php:38
@@ -692,8 +657,7 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: ../Core/templates/error/exception.php:92
-#: ../Core/templates/error/stack.php:4
+#: ../Core/templates/error/exception.php:92 ../Core/templates/error/stack.php:4
 msgid "File"
 msgstr ""
 
@@ -783,8 +747,7 @@ msgstr ""
 #: ../Core/templates/jivoo/console/generators/schema-generator.html.php:6
 #: ../Core/templates/jivoo/console/generators/schema-generator.html.php:35
 #: ../Core/templates/jivoo/console/system-info.html.php:28
-#: ../Extensions/ExtensionModel.php:29
-#: ../Models/File/FileModel.php:26
+#: ../Extensions/ExtensionModel.php:29 ../Models/File/FileModel.php:26
 msgid "Name"
 msgstr ""
 
@@ -912,7 +875,9 @@ msgid "Generate root language"
 msgstr ""
 
 #: ../Core/templates/jivoo/console/i18n-info.html.php:91
-msgid "Generates the root language file (\"%1\") from all uses of %2 and %3 in the selected scope."
+msgid ""
+"Generates the root language file (\"%1\") from all uses of %2 and %3 in the "
+"selected scope."
 msgstr ""
 
 #: ../Core/templates/jivoo/console/i18n-info.html.php:96
@@ -920,7 +885,9 @@ msgid "Generate"
 msgstr ""
 
 #: ../Core/templates/jivoo/console/manifest-installer/configure.html.php:2
-msgid "Choose a name for your application and select the modules that you want to use."
+msgid ""
+"Choose a name for your application and select the modules that you want to "
+"use."
 msgstr ""
 
 #: ../Core/templates/jivoo/console/manifest-installer/welcome.html.php:1
@@ -928,7 +895,9 @@ msgid "Welcome to the Jivoo web application framework version %1."
 msgstr ""
 
 #: ../Core/templates/jivoo/console/manifest-installer/welcome.html.php:4
-msgid "No valid application configuration was found in the specified application directory:"
+msgid ""
+"No valid application configuration was found in the specified application "
+"directory:"
 msgstr ""
 
 #: ../Core/templates/jivoo/console/manifest-installer/welcome.html.php:9
@@ -994,7 +963,8 @@ msgid "An existing installation has been found."
 msgstr ""
 
 #: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:10
-msgid "Would you like to use the existing data and upgrade tables if necessary?"
+msgid ""
+"Would you like to use the existing data and upgrade tables if necessary?"
 msgstr ""
 
 #: ../Core/templates/jivoo/migrations/migration-installer/check.html.php:14
@@ -1053,16 +1023,16 @@ msgid "The username and password will be used to access this installer."
 msgstr ""
 
 #: ../Core/templates/jivoo/setup/login.html.php:4
-msgid "Log in using your maintainance username and password in order to continue the installation process."
+msgid ""
+"Log in using your maintainance username and password in order to continue "
+"the installation process."
 msgstr ""
 
-#: ../Core/templates/jivoo/setup/login.html.php:7
-#: ../Setup/LockInstaller.php:51
+#: ../Core/templates/jivoo/setup/login.html.php:7 ../Setup/LockInstaller.php:51
 msgid "Username"
 msgstr ""
 
-#: ../Core/templates/jivoo/setup/login.html.php:8
-#: ../Setup/LockInstaller.php:52
+#: ../Core/templates/jivoo/setup/login.html.php:8 ../Setup/LockInstaller.php:52
 msgid "Password"
 msgstr ""
 
@@ -1084,7 +1054,9 @@ msgid "The file exists, but %1 does not have permission to write to it."
 msgstr ""
 
 #: ../Core/templates/jivoo/setup/save-config.html.php:5
-msgid "You should change the access permission or ownership of the file to allow %1 to write to it. "
+msgid ""
+"You should change the access permission or ownership of the file to allow %1 "
+"to write to it. "
 msgstr ""
 
 #: ../Core/templates/jivoo/setup/save-config.html.php:6
@@ -1100,7 +1072,9 @@ msgid "The file does not exists, and %1 does not have permission to create it."
 msgstr ""
 
 #: ../Core/templates/jivoo/setup/save-config.html.php:10
-msgid "Please create the file with the permissions necessary for %1 to write to it, then refresh this page."
+msgid ""
+"Please create the file with the permissions necessary for %1 to write to it, "
+"then refresh this page."
 msgstr ""
 
 #: ../Core/templates/jivoo/setup/save-config.html.php:12
@@ -1212,8 +1186,7 @@ msgstr ""
 msgid "Error decoding JSON: %1"
 msgstr ""
 
-#: ../Extensions/Extensions.php:253
-#: ../Extensions/Extensions.php:274
+#: ../Extensions/Extensions.php:253 ../Extensions/Extensions.php:274
 msgid "Extension \"%1\" disabled, caused by: %2"
 msgstr ""
 
@@ -1265,8 +1238,7 @@ msgstr ""
 msgid "at"
 msgstr ""
 
-#: ../Helpers/FormHelper.php:134
-#: ../Helpers/FormHelper.php:138
+#: ../Helpers/FormHelper.php:134 ../Helpers/FormHelper.php:138
 msgid "No form or form element is open."
 msgstr ""
 
@@ -1274,8 +1246,7 @@ msgstr ""
 msgid "Top element \"%1\" is not a form element."
 msgstr ""
 
-#: ../Helpers/HtmlHelper.php:147
-#: ../Jtk/IconHelper.php:113
+#: ../Helpers/HtmlHelper.php:147 ../Jtk/IconHelper.php:113
 #: ../Jtk/IconHelper.php:152
 msgid "Invalid route: %1"
 msgstr ""
@@ -1300,8 +1271,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: ../Jtk/Table/DataTable.php:54
-#: ../Jtk/Table/DataTable.php:70
+#: ../Jtk/Table/DataTable.php:54 ../Jtk/Table/DataTable.php:70
 msgid "No model set"
 msgstr ""
 
@@ -1369,8 +1339,7 @@ msgstr ""
 msgid "Created"
 msgstr ""
 
-#: ../Models/Form.php:127
-#: ../Models/Validation/Validator.php:147
+#: ../Models/Form.php:127 ../Models/Validation/Validator.php:147
 msgid "Must not be empty."
 msgstr ""
 
@@ -1378,8 +1347,7 @@ msgstr ""
 msgid "Can't find row number in selection without ordering"
 msgstr ""
 
-#: ../Models/Models.php:95
-#: ../Models/Models.php:107
+#: ../Models/Models.php:95 ../Models/Models.php:107
 msgid "Model \"%1\" not found"
 msgstr ""
 
@@ -1539,8 +1507,7 @@ msgstr ""
 msgid "Rendering response %1 (%2 %3)"
 msgstr ""
 
-#: ../Routing/RoutingTable.php:56
-#: ../Routing/RoutingTable.php:107
+#: ../Routing/RoutingTable.php:56 ../Routing/RoutingTable.php:107
 msgid "Auto routing not possible for route."
 msgstr ""
 
@@ -1572,8 +1539,7 @@ msgstr ""
 msgid "Installer step: %1::%2"
 msgstr ""
 
-#: ../Setup/InstallerSnippet.php:338
-#: ../Setup/InstallerSnippet.php:361
+#: ../Setup/InstallerSnippet.php:338 ../Setup/InstallerSnippet.php:361
 msgid "Done!"
 msgstr ""
 
@@ -1697,8 +1663,7 @@ msgstr ""
 msgid "Compiling template %1"
 msgstr ""
 
-#: ../View/ViewResources.php:82
-#: ../View/ViewResources.php:106
+#: ../View/ViewResources.php:82 ../View/ViewResources.php:106
 msgid "Unknown type of resource: \"%1\""
 msgstr ""
 
@@ -1712,7 +1677,8 @@ msgstr ""
 
 #: ../Core/templates/jivoo/databases/database-installer/select.html.php:27
 msgid "Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extension"
-msgid_plural "Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extensions"
+msgid_plural ""
+"Unavailable. Missing the \"%1{\", \"}{\" and \"}\" PHP extensions"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1740,9 +1706,7 @@ msgid_plural "Must be either \"%1{\", \"}{\" or \"}\"."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../View/Compile/DefaultMacros.php:351
-msgid " . var_export($value, true) . $params . "
-msgid_plural " . var_export($translate, true) . "
-msgstr[0] ""
-msgstr[1] ""
-
+msgid "There are %1 user"
+msgid_plural "There are %1 users"
+msgstr[0] "Der er %1 bruger"
+msgstr[1] "Der er %1 brugere"
