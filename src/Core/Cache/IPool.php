@@ -10,7 +10,7 @@ use Psr\Cache\CacheItemPoolInterface;
 /**
  * An object cache for storing serializable values under keys. 
  */
-interface IPool extends CacheItemPoolInterface {
+interface Pool extends CacheItemPoolInterface {
   /**
    * Return value stored under a key.
    * @param string $key Item key.

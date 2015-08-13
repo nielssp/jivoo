@@ -6,12 +6,12 @@
 namespace Jivoo\Models;
 
 /**
- * A more advanced extension of {@see IBasicRecord}.
+ * A more advanced extension of {@see BasicRecord}.
  */
-interface IModel extends Selection\ISelection, IBasicModel {
+interface Model extends Selection\Selection, BasicModel {
   /**
    * Get shcmea of model.
-   * @return ISchema Schema for model.
+   * @return Schema Schema for model.
    */
   public function getSchema();
 
@@ -25,7 +25,7 @@ interface IModel extends Selection\ISelection, IBasicModel {
 
   /**
    * Get validator for model.
-   * @return IValidator Validator for model.
+   * @return Validator Validator for model.
    */
   public function getValidator();
 
@@ -39,17 +39,17 @@ interface IModel extends Selection\ISelection, IBasicModel {
 
   /**
    * Make a selection that selects a single record.
-   * @param IRecord $record A record.
-   * @return ISelection A selection.
+   * @param Record $record A record.
+   * @return Selection A selection.
   */
-  public function selectRecord(IRecord $record);
+  public function selectRecord(Record $record);
 
   /**
    * Make a selection that selects everything except for a single record.
-   * @param IRecord $record A record.
-   * @return ISelection A selection.
+   * @param Record $record A record.
+   * @return Selection A selection.
    */
-  public function selectNotRecord(IRecord $record);
+  public function selectNotRecord(Record $record);
 
   /**
    * Find a record by its primary key. If the primary key
@@ -57,7 +57,7 @@ interface IModel extends Selection\ISelection, IBasicModel {
    * parameter for each field (in alphabetical order).
    * @param mixed $primary Value of primary key.
    * @param mixed ...$primary For multifield primary key.
-   * @return IRecord|null A single matching record or null if it doesn't exist.
+   * @return Record|null A single matching record or null if it doesn't exist.
    * @throws InvalidSelectionException If number of parameters does not
    * match size of primary key.
    */
@@ -66,7 +66,7 @@ interface IModel extends Selection\ISelection, IBasicModel {
   /**
    * Convert model to another type (for the purpose of joining).
    * @param string $class Name of model class to convert to.
-   * @return IModel|null New instance or null if not possible.
+   * @return Model|null New instance or null if not possible.
    */
   public function asInstanceOf($class);
   
@@ -76,7 +76,7 @@ interface IModel extends Selection\ISelection, IBasicModel {
    * @param string[]|null $allowedFields List of allowed fields (null for all
    * fields allowed), fields that are not allowed (or not in the model) will be
    * ignored.
-   * @return IRecord A record.
+   * @return Record A record.
    */
   public function create($data = array(), $allowedFields = null);
 

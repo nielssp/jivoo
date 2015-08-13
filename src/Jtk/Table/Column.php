@@ -5,8 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Jtk\Table;
 
-use Jivoo\Models\IBasicRecord;
-use Jivoo\Models\IBasicModel;
+use Jivoo\Models\BasicRecord;
+use Jivoo\Models\BasicModel;
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Models\DataType;
 
@@ -20,7 +20,7 @@ use Jivoo\Models\DataType;
  * @property bool $descending If the default sorting is descending.
  * @property int|string $size Optional width of column.
  * @property callable $cellRenderer Cell renderer with parameters
- * ({@see DataTable} $table, {@see IBasicRecord} $record) and return type
+ * ({@see DataTable} $table, {@see BasicRecord} $record) and return type
  * string.
  */
 class Column extends JtkObject {
@@ -29,7 +29,7 @@ class Column extends JtkObject {
    * @param string $label Column label
    * @param string $field Model field name.
    * @param callable $cellRenderer Cell renderer with parameters
-   * ({@see DataTable} $table, {@see IBasicRecord} $record) and return type
+   * ({@see DataTable} $table, {@see BasicRecord} $record) and return type
    * string. 
    */
   public function __construct($label, $field = null, $cellRenderer = null) {
@@ -57,20 +57,20 @@ class Column extends JtkObject {
   /**
    * Invoke cell renderer.
    * @param DataTable $table Table.
-   * @param IBasicRecord $record Record.
+   * @param BasicRecord $record Record.
    * @return string Value.
    */
-  public function render(DataTable $table, IBasicRecord $record) {
+  public function render(DataTable $table, BasicRecord $record) {
     return call_user_func($this->cellRenderer, $table, $record);
   }
 
   /**
    * Default cell renderer.
    * @param DataTable $table Table.
-   * @param IBasicRecord $record Record.
+   * @param BasicRecord $record Record.
    * @return string Value.
    */
-  public function defaultCellRenderer(DataTable $table, IBasicRecord $record) {
+  public function defaultCellRenderer(DataTable $table, BasicRecord $record) {
     $field = $this->field;
     $type = $table->model->getType($field)->type;
     $cell = null;
@@ -89,7 +89,7 @@ class Column extends JtkObject {
         break;
     }
     if ($this->primary) {
-      if ($record instanceof ILinkable)
+      if ($record instanceof Linkable)
         $cell = $this->Html->link($cell, $record);
     }
     return $cell;

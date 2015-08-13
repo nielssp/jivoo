@@ -7,7 +7,7 @@ namespace Jivoo\Migrations;
 
 use Jivoo\Setup\InstallerSnippet;
 use Jivoo\Setup\AsyncTaskBase;
-use Jivoo\Databases\IMigratableDatabase;
+use Jivoo\Databases\MigratableDatabase;
 
 /**
  * Migration updater. Migrates tables. 
@@ -20,7 +20,7 @@ class MigrationUpdater extends InstallerSnippet {
   protected $dbName = 'default'; // TODO: set this somewhere
   
   /**
-   * @var \Jivoo\Databases\IDatabase Database being migrated.
+   * @var \Jivoo\Databases\Database Database being migrated.
    */
   protected $db = null; 
 

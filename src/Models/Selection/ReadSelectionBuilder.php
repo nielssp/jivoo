@@ -5,11 +5,11 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Selection;
 
-use Jivoo\Models\IModel;
-use Jivoo\Models\IRecord;
+use Jivoo\Models\Model;
+use Jivoo\Models\Record;
 use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\DataType;
-use Jivoo\Models\IBasicModel;
+use Jivoo\Models\BasicModel;
 use Jivoo\Models\ModelBase;
 
 /**
@@ -21,7 +21,7 @@ use Jivoo\Models\ModelBase;
  * @property-read array[] $fields List of arrays describing fields.
  * @property-read array[] $additionalFields List of arrays describing fields.
  */
-class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection {
+class ReadSelectionBuilder extends BasicSelectionBase implements ReadSelection {
   /**
    * @var bool Distinct.
    */
@@ -57,7 +57,7 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
    * Each array is of the following format:
    * <code>
    * array(
-   *   'source' => ..., // Data source to join with ({@see IDataSource})
+   *   'source' => ..., // Data source to join with ({@see DataSource})
    *   'type' => ..., // Type of join: 'INNER', 'RIGHT' or 'LEFT'
    *   'alias' => ..., // Alias for other data source (string|null)
    *   'condition' => ... // Join condition ({@see Condition})
@@ -90,7 +90,7 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
    *   'alias' => ... // Alias (string)
    *   'expression' => ..., // Expression (string)
    *   'type' => ... // Type (DataType|null)
-   *   'model' => ... // Model (IBasicModel|null)
+   *   'model' => ... // Model (BasicModel|null)
    *   'record' => ... // Record field (string|null)
    * )
    * </code>
@@ -161,7 +161,7 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
   /**
    * {@inheritdoc}
    */
-  public function withRecord($field, IBasicModel $model) {
+  public function withRecord($field, BasicModel $model) {
     foreach ($model->getFields() as $modelField) {
       if ($model->isVirtual($modelField))
         continue;
@@ -200,7 +200,7 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
   /**
    * {@inheritdoc}
    */
-  public function innerJoin(IModel $dataSource, $condition = null, $alias = null) {
+  public function innerJoin(Model $dataSource, $condition = null, $alias = null) {
     if (!($condition instanceof ConditionBuilder)) {
       $condition = new ConditionBuilder($condition);
     }
@@ -216,7 +216,7 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
   /**
    * {@inheritdoc}
    */
-  public function leftJoin(IModel $dataSource, $condition, $alias = null) {
+  public function leftJoin(Model $dataSource, $condition, $alias = null) {
     if (!($condition instanceof ConditionBuilder)) {
       $condition = new ConditionBuilder($condition);
     }
@@ -229,7 +229,7 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
   /**
    * {@inheritdoc}
    */
-  public function rightJoin(IModel $dataSource, $condition, $alias = null) {
+  public function rightJoin(Model $dataSource, $condition, $alias = null) {
     if (!($condition instanceof ConditionBuilder)) {
       $condition = new ConditionBuilder($condition);
     }
@@ -270,10 +270,10 @@ class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection 
   
   /**
    * Find row number of a record in selection.
-   * @param IRecord $record A record.
+   * @param Record $record A record.
    * @return int Row number.
    */
-  public function rowNumber(IRecord $record) {
+  public function rowNumber(Record $record) {
     return $this->model->rowNumberSelection($this, $record);
   }
 

@@ -8,7 +8,7 @@ namespace Jivoo\Models;
 /**
  * A basic model implementation.
  */
-class BasicModelBase implements IBasicModel {
+class BasicModelBase implements BasicModel {
   
   /**
    * @var string[] Associative array of fields and labels.
@@ -101,13 +101,13 @@ class BasicModelBase implements IBasicModel {
   /**
    * Sort an array of records by a field.
    * @param string $field Field to sort by.
-   * @param IBasicRecord[] $selection Array of records.
+   * @param BasicRecord[] $selection Array of records.
    * @param bool Whether to sort in descending order.
-   * @return IBasicRecord[] Sorted array.
+   * @return BasicRecord[] Sorted array.
    */
   public function sortBy($field, $selection, $descending = false) {
     assume(is_array($selection));
-    usort($selection, function(IBasicRecord $a, IBasicRecord $b) use($field, $descending) {
+    usort($selection, function(BasicRecord $a, BasicRecord $b) use($field, $descending) {
       if ($a->$field == $b->$field)
         return 0;
       if ($descending) {
@@ -127,8 +127,8 @@ class BasicModelBase implements IBasicModel {
   /**
    * Sort an array of records by a field in descending order.
    * @param string $field Field to sort by.
-   * @param IBasicRecord[] $selection Array of records.
-   * @return IBasicRecord[] Sorted array.
+   * @param BasicRecord[] $selection Array of records.
+   * @return BasicRecord[] Sorted array.
    */
   public function sortByDescending($field, $selection) {
     return $this->sortBy($field, $selection, true);

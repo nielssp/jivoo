@@ -9,10 +9,10 @@ class EventManagerTest extends \Jivoo\Test {
   protected function _after() {}
   
   public function testAttachAndDetach() {
-    $subject1 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject1 = $this->getMockBuilder('Jivoo\Core\EventSubject')->getMock();
     $subject1->method('getEvents')
       ->willReturn(array('someEvent'));
-    $subject2 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject2 = $this->getMockBuilder('Jivoo\Core\EventSubject')->getMock();
     $subject2->method('getEvents')
       ->willReturn(array('someEvent'));
     $em1 = new EventManager($subject1);
@@ -39,15 +39,15 @@ class EventManagerTest extends \Jivoo\Test {
   }
   
   public function testListener() {
-    $subject1 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject1 = $this->getMockBuilder('Jivoo\Core\EventSubject')->getMock();
     $subject1->method('getEvents')
       ->willReturn(array('someEvent'));
-    $subject2 = $this->getMockBuilder('Jivoo\Core\IEventSubject')->getMock();
+    $subject2 = $this->getMockBuilder('Jivoo\Core\EventSubject')->getMock();
     $subject2->method('getEvents')
       ->willReturn(array('someEvent'));
     $em1 = new EventManager($subject1);
     $em2 = new EventManager($subject2, $em1);
-    $l = $this->getMockBuilder('Jivoo\Core\IEventListener')
+    $l = $this->getMockBuilder('Jivoo\Core\EventListener')
       ->setMethods(array('getEventHandlers', 'someEvent'))
       ->getMock();
     $l->method('getEventHandlers')

@@ -8,7 +8,7 @@ namespace Jivoo\Databases;
 /**
  * A database implementing migration methods.
  */
-interface IMigratableDatabase extends IDatabase, IMigratable {
+interface MigratableDatabase extends Database, Migratable {
   /**
    * Refresh schemas, i.e. update database schema to match actual database
    * schema.
@@ -17,7 +17,7 @@ interface IMigratableDatabase extends IDatabase, IMigratable {
   
   /**
    * Change schema of database.
-   * @param IDatabaseSchema $schema New database schema.
+   * @param DatabaseSchema $schema New database schema.
    */
-  public function setSchema(IDatabaseSchema $schema);
+  public function setSchema(DatabaseSchema $schema);
 }

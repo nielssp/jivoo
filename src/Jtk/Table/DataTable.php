@@ -7,14 +7,14 @@ namespace Jivoo\Jtk\Table;
 
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Jtk\JtkCollection;
-use Jivoo\Models\IBasicRecord;
+use Jivoo\Models\BasicRecord;
 use Jivoo\Core\ObjectMacro;
 
 /**
  * A data table.
- * @property Jivoo\Models\IBasicModel $model Model.
- * @property ObjectMacro|IBasicSelection|IBasicRecord[] $selection Content of table.
- * If $model is a {@see Jivoo\Models\IModel} then a {@see IBasicSelection} is
+ * @property Jivoo\Models\BasicModel $model Model.
+ * @property ObjectMacro|BasicSelection|BasicRecord[] $selection Content of table.
+ * If $model is a {@see Jivoo\Models\Model} then a {@see BasicSelection} is
  * expected. The default is an {@see ObjectMacro} that records method calls that
  * will later be applied to the model when creating a selection.
  * @property string $primaryKey Name of primary key field.
@@ -88,10 +88,10 @@ class DataTable extends JtkObject {
   
   /**
    * Create a row based on a record.
-   * @param IBasicRecord $record Record.
+   * @param BasicRecord $record Record.
    * @return Row Resulting row.
    */
-  public function createRow(IBasicRecord $record) {
+  public function createRow(BasicRecord $record) {
     $row = new Row($this);
     $row->record = $record;
     if (isset($this->primaryKey)) {

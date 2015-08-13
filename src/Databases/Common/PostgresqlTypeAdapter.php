@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
-use Jivoo\Databases\IMigrationTypeAdapter;
+use Jivoo\Databases\MigrationTypeAdapter;
 use Jivoo\Models\DataType;
 use Jivoo\Databases\Schema;
 use Jivoo\Core\Utilities;
@@ -15,7 +15,7 @@ use Jivoo\Databases\TypeException;
 /**
  * Type adapter for PostgreSQL database drivers.
  */
-class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
+class PostgresqlTypeAdapter implements MigrationTypeAdapter {
   /**
    * @var SqlDatabase Database
    */

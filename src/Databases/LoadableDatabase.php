@@ -12,9 +12,9 @@ use Jivoo\Models\DataType;
 /**
  * A database driver that can be loaded by the {@see Databases} module.
  */
-abstract class LoadableDatabase extends Module implements IMigratableDatabase {
+abstract class LoadableDatabase extends Module implements MigratableDatabase {
   /**
-   * @var IDatabaseSchema Schema.
+   * @var DatabaseSchema Schema.
    */
   private $schema;
   
@@ -24,7 +24,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   private $tableNames;
   
   /**
-   * @var IMigrationTypeAdapter Migration adapter.
+   * @var MigrationTypeAdapter Migration adapter.
    */
   private $migrationAdapter;
   
@@ -36,10 +36,10 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   /**
    * Construct database.
    * @param App $app Associated application.
-   * @param IDatabaseSchema $schema Database schema.
+   * @param DatabaseSchema $schema Database schema.
    * @param array $options Associative array of options for driver.
    */
-  public final function __construct(App $app, IDatabaseSchema $schema, $options = array()) {
+  public final function __construct(App $app, DatabaseSchema $schema, $options = array()) {
     parent::__construct($app);
     $this->schema = $schema;
     $this->init($options);
@@ -82,7 +82,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   
   /**
    * Get migration and type adapter.
-   * @return IMigrationTypeAdapter Migration and type adapter.
+   * @return MigrationTypeAdapter Migration and type adapter.
    */
   protected abstract function getMigrationAdapter();
   
@@ -96,7 +96,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   /**
    * {@inheritdoc}
    */
-  public function setSchema(IDatabaseSchema $schema) {
+  public function setSchema(DatabaseSchema $schema) {
     $this->schema = $schema;
     foreach ($schema->getTables() as $table) {
       $tableSchema = $schema->getSchema($table);
@@ -132,7 +132,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
   /**
    * Get table schema.
    * @param string $table Table name.
-   * @return ISchema Schema.
+   * @return Schema Schema.
    */
   public function getTableSchema($table) {
     return $this->migrationAdapter->getTableSchema($table);

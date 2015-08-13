@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 /**
  * A module is part of an application.
  */
-abstract class Module implements IEventSubject, LoggerAware {
+abstract class Module implements EventSubject, LoggerAware {
   /**
    * @var string[] Names of modules required by this module.
    */
@@ -208,7 +208,7 @@ abstract class Module implements IEventSubject, LoggerAware {
   /**
    * {@inheritdoc}
    */
-  public function attachEventListener(IEventListener $listener) {
+  public function attachEventListener(EventListener $listener) {
     $this->e->attachListener($listener);
   }
 
@@ -222,7 +222,7 @@ abstract class Module implements IEventSubject, LoggerAware {
   /**
    * {@inheritdoc}
    */
-  public function detachEventListener(IEventListener $listener) {
+  public function detachEventListener(EventListener $listener) {
     $this->e->detachListener($listener);
   }
 

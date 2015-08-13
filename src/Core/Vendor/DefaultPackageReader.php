@@ -6,7 +6,7 @@
 namespace Jivoo\Core\Vendor;
 
 
-class DefaultPackageReader implements IPackageReader {
+class DefaultPackageReader implements PackageReader {
   /**
    * @var DefaultPackageReader
    */

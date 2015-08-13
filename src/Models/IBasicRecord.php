@@ -8,7 +8,7 @@ namespace Jivoo\Models;
 /**
  * Contains data for a single record belonging to a model.
  */
-interface IBasicRecord extends \ArrayAccess {
+interface BasicRecord extends \ArrayAccess {
   /**
    * Get value of a field.
    * @param string $field Field name.
@@ -33,7 +33,7 @@ interface IBasicRecord extends \ArrayAccess {
 
   /** 
    * Get associated model.
-   * @return IBasicModel Associated model.
+   * @return BasicModel Associated model.
    */
   public function getModel();
   

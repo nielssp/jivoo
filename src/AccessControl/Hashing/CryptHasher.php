@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\AccessControl\Hashing;
 
-use Jivoo\AccessControl\IPasswordHasher;
+use Jivoo\AccessControl\PasswordHasher;
 use Jivoo\Core\Utilities;
 use Jivoo\AccessControl\UnsupportedHashTypeException;
 use Jivoo\AccessControl\Random;
@@ -14,7 +14,7 @@ use Jivoo\Core\Binary;
 /**
  * A password hasher using the PHP {@see crypt} function.
  */
-abstract class CryptHasher implements IPasswordHasher {
+abstract class CryptHasher implements PasswordHasher {
   /**
    * @var string Name of PHP constant associated with the hash type.
    */

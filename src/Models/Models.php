@@ -51,7 +51,7 @@ class Models extends LoadableModule {
   }
   
   /**
-   * Add an IModel class
+   * Add an Model class
    * @param string $class Class name
    */
   public function addClass($class) {
@@ -61,9 +61,9 @@ class Models extends LoadableModule {
   /**
    * Add/set model
    * @param string $name Model name
-   * @param IModel $model Model object
+   * @param Model $model Model object
    */
-  public function setModel($name, IModel $model) {
+  public function setModel($name, Model $model) {
     if (isset($this->modelClasses[$name])) {
       unset($this->modelClasses[$name]);
     }
@@ -73,7 +73,7 @@ class Models extends LoadableModule {
   /**
    * Get a model
    * @param string $name Model name
-   * @return IModel|null Model object or null if not found
+   * @return Model|null Model object or null if not found
    */
   public function getModel($name) {
     if (isset($this->modelObjects[$name])) {
@@ -85,7 +85,7 @@ class Models extends LoadableModule {
   /**
    * Get several models.
    * @param string[] $names List of model names.
-   * @return IModel[] List of model objects.
+   * @return Model[] List of model objects.
    */
   public function getModels($names) {
     $models = array();

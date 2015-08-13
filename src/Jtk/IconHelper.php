@@ -8,7 +8,7 @@ namespace Jivoo\Jtk;
 use Jivoo\Helpers\Helper;
 
 /**
- * Helper for inserting icons using icon provideres, see {@see IIconProvider}.
+ * Helper for inserting icons using icon provideres, see {@see IconProvider}.
  */
 class IconHelper extends Helper {
   /**
@@ -17,7 +17,7 @@ class IconHelper extends Helper {
   protected $helpers = array('Html');
   
   /**
-   * @var IIconProvider[]
+   * @var IconProvider[]
    */
   private $providers = array();
   
@@ -30,9 +30,9 @@ class IconHelper extends Helper {
    
   /**
    * Add an icon provider.
-   * @param IIconProvider $provider Icon provider.
+   * @param IconProvider $provider Icon provider.
    */
-  public function addProvider(IIconProvider $provider) {
+  public function addProvider(IconProvider $provider) {
     array_unshift($this->providers, $provider);
   }
   
@@ -86,7 +86,7 @@ class IconHelper extends Helper {
   /**
    * Create a link with only an icon.
    * @param string $label Link label.
-   * @property string|array|Jivoo\Routing\ILinkable|null $route A route, see
+   * @property string|array|Jivoo\Routing\Linkable|null $route A route, see
    * {@see Jivoo\Routing\Routing}.
    * @param string $icon Icon identifier.
    * @param string[] $attributes Additional attributes for link.
@@ -121,7 +121,7 @@ class IconHelper extends Helper {
   /**
    * Create a link with a label and an icon.
    * @param string $label Link label.
-   * @property string|array|Jivoo\Routing\ILinkable|null $route A route, see
+   * @property string|array|Jivoo\Routing\Linkable|null $route A route, see
    * {@see Jivoo\Routing\Routing}.
    * @param string $icon Icon identifier.
    * @param string $count Optional number.

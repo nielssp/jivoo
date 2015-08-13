@@ -5,17 +5,17 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Validation;
 
-use Jivoo\Models\IRecord;
+use Jivoo\Models\Record;
 
 /**
  * A record validator.
  */
-interface IValidator {
+interface Validator {
   /**
    * Validate a record.
-   * @param IRecord $record Record to validate.
+   * @param Record $record Record to validate.
    * @return string[] An associative array of field names and error messages (array should
    * be empty if record is valid).
    */
-  public function validate(IRecord $record);
+  public function validate(Record $record);
 }

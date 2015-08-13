@@ -10,7 +10,7 @@ use Jivoo\Models\DataType;
 /**
  * Interface containing methods for migrating databases.
  */
-interface IMigratable {
+interface Migratable {
   /**
    * Create a table based on a schema.
    * @param Schema $schema Schema.

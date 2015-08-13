@@ -16,7 +16,7 @@ class EventManager {
   private $events = array();
   
   /**
-   * @var IEventSubject The object that triggers events in this collection.
+   * @var EventSubject The object that triggers events in this collection.
   */
   private $subject = null;
   
@@ -32,12 +32,12 @@ class EventManager {
 
   /**
    * Create a new event collection.
-   * @param IEventSubject $subject The object that triggers events in this collection.
+   * @param EventSubject $subject The object that triggers events in this collection.
    * @param EventManager|null $parent Optional parent event manager, will receive
    * the same events as child, but with class name of the subject prepended
    * to the event name (separated by a dot).
    */
-  public function __construct(IEventSubject $subject, EventManager $parent = null) {
+  public function __construct(EventSubject $subject, EventManager $parent = null) {
     $this->subject = $subject;
     $this->subjectClass = get_class($subject);
     foreach ($this->subject->getEvents() as $name)
@@ -63,9 +63,9 @@ class EventManager {
   /**
    * Attach an event listener to object (i.e. multiple handlers to multiple
    * events).
-   * @param IEventListener $listener An event listener.
+   * @param EventListener $listener An event listener.
    */
-  public function attachListener(IEventListener $listener) {
+  public function attachListener(EventListener $listener) {
     foreach ($listener->getEventHandlers() as $name => $method) {
       if (!is_string($name)) {
         $name = $method;
@@ -96,9 +96,9 @@ class EventManager {
   
   /**
    * Detach all handlers implemented by an event listener.
-   * @param IEventListener $listener An event listener.
+   * @param EventListener $listener An event listener.
    */
-  public function detachListener(IEventListener $listener) {
+  public function detachListener(EventListener $listener) {
     foreach ($listener->getEventHandlers() as $name => $method) {
       if (!is_string($name)) {
         $name = $method;

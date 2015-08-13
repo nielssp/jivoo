@@ -7,12 +7,12 @@ namespace Jivoo\Core\Store;
 
 /**
  * A state is a document that (unlike {@see Config}) ensures durability of
- * changes. Thus, if the state is mutable, the assiciated {@see IStore} will
+ * changes. Thus, if the state is mutable, the assiciated {@see Store} will
  * be exclusively locked until {@see close()} is called.  
  */
 class State extends Document {
   /**
-   * @var IStore
+   * @var Store
    */
   private $store = null;
 
@@ -23,11 +23,11 @@ class State extends Document {
 
   /**
    * Construct state.
-   * @param IStore $store Store to load/save data from/to.
+   * @param Store $store Store to load/save data from/to.
    * @param bool $mutable Whether state is mutable (true) or read-only (false).
    * @throws AccessException If state could not be read.
    */
-  public function __construct(IStore $store, $mutable = true) {
+  public function __construct(Store $store, $mutable = true) {
     parent::__construct();
     $this->store = $store;
     try {

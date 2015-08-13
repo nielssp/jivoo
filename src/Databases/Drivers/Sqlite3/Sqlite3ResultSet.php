@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Drivers\Sqlite3;
 
-use Jivoo\Databases\IResultSet;
+use Jivoo\Databases\ResultSet;
 
 /**
  * Result set for SQLite3 database driver.
  */
-class Sqlite3ResultSet implements IResultSet {
+class Sqlite3ResultSet implements ResultSet {
   /**
    * @var SQLite3Result SQLite3 result object.
    */

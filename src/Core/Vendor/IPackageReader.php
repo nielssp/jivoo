@@ -8,12 +8,12 @@ namespace Jivoo\Core\Vendor;
 /**
  * 
  */
-interface IPackageReader {
+interface PackageReader {
   /**
    * Read a package.
    * @param string $name Package name.
    * @param string $path Path to package directory.
-   * @return IPackage|null Return package manifest or null if invalid package. 
+   * @return Package|null Return package manifest or null if invalid package. 
    */
   public function read($name, $path);
 }

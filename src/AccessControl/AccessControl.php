@@ -31,7 +31,7 @@ class AccessControl extends LoadableModule {
   );
   
   /**
-   * @var IPasswordHasher[] Associative array of named password hasshers.
+   * @var PasswordHasher[] Associative array of named password hasshers.
    */
   private $hashers = array();
 
@@ -58,9 +58,9 @@ class AccessControl extends LoadableModule {
   
   /**
    * Add a password hasher.
-   * @param IPasswordHasher $hasher Password hasher.
+   * @param PasswordHasher $hasher Password hasher.
    */
-  public function addPasswordHasher(IPasswordHasher $hasher) {
+  public function addPasswordHasher(PasswordHasher $hasher) {
     $this->hashers[Utilities::getClassName($hasher)] = $hasher;
   }
   
@@ -68,7 +68,7 @@ class AccessControl extends LoadableModule {
    * Get a named password hasher.
    * @param string $hasher Name of password hasher, or 'Default' for default
    * password hasher.
-   * @return IPasswordHasher Password hasher.
+   * @return PasswordHasher Password hasher.
    */
   public function getPasswordHasher($hasher = 'Default') {
     return $this->hashers[$hasher];

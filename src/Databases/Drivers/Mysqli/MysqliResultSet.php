@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Drivers\Mysqli;
 
-use Jivoo\Databases\IResultSet;
+use Jivoo\Databases\ResultSet;
 
 /**
  * Result set for MySQLi driver.
  */
-class MysqliResultSet implements IResultSet {
+class MysqliResultSet implements ResultSet {
   /**
    * @var mysqli_result MySQLi result object.
    */

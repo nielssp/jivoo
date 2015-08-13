@@ -8,7 +8,7 @@ namespace Jivoo\Models;
 /**
  * Contains mutable data for a single record belonging to a model.
  */
-interface IRecord extends IBasicRecord {
+interface Record extends BasicRecord {
   /**
    * Set value of a field.
    * @param string $field Field name.
@@ -33,7 +33,7 @@ interface IRecord extends IBasicRecord {
    */
   public function set($field, $value);
 
-  /** @return IModel Associated model */
+  /** @return Model Associated model */
 //   public function getModel();
 
   /**

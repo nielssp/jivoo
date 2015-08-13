@@ -8,7 +8,7 @@ namespace Jivoo\Databases;
 /**
  * A database.
  */
-interface IDatabase {
+interface Database {
   /**
    * Get table.
    * @param string $table Table name
@@ -31,7 +31,7 @@ interface IDatabase {
   
   /**
    * Get schema of database.
-   * @return IDatabaseSchema Database schema.
+   * @return DatabaseSchema Database schema.
    */
   public function getSchema();
   

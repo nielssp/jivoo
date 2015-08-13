@@ -6,23 +6,23 @@
 namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\LoadableDatabase;
-use Jivoo\Databases\IMigrationTypeAdapter;
+use Jivoo\Databases\MigrationTypeAdapter;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\DataType;
-use Jivoo\Models\IBasicModel;
-use Jivoo\Models\Condition\IQuoter;
+use Jivoo\Models\BasicModel;
+use Jivoo\Models\Condition\Quoter;
 
 /**
  * A generic SQL database.
  */
-abstract class SqlDatabaseBase extends LoadableDatabase implements ISqlDatabase, IQuoter {
+abstract class SqlDatabaseBase extends LoadableDatabase implements SqlDatabase, Quoter {
   /**
    * @var string Table prefix.
    */
   protected $tablePrefix = '';
 
   /**
-   * @var IMigrationTypeAdapter Type/migration adapter.
+   * @var MigrationTypeAdapter Type/migration adapter.
    */
   private $typeAdapter = null;
   
@@ -56,9 +56,9 @@ abstract class SqlDatabaseBase extends LoadableDatabase implements ISqlDatabase,
   
   /**
    * Set migration/type adapter.
-   * @param IMigrationTypeAdapter $typeAdapter Adapter.
+   * @param MigrationTypeAdapter $typeAdapter Adapter.
    */
-  protected function setTypeAdapter(IMigrationTypeAdapter $typeAdapter) {
+  protected function setTypeAdapter(MigrationTypeAdapter $typeAdapter) {
     $this->typeAdapter = $typeAdapter;
   }
 

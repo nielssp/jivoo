@@ -8,7 +8,7 @@ namespace Jivoo\Routing;
 /**
  * A dummy dispatcher that handles 'void:' routes.
  */
-class VoidDispatcher implements IDispatcher {
+class VoidDispatcher implements Dispatcher {
   /**
    * {@inheritdoc}
    */

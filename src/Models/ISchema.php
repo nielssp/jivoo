@@ -8,7 +8,7 @@ namespace Jivoo\Models;
 /**
  * Model schema.
  */
-interface ISchema {
+interface Schema {
   /**
    * Get type of field.
    * @param string $field Field name.

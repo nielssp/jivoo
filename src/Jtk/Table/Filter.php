@@ -6,14 +6,14 @@
 namespace Jivoo\Jtk\Table;
 
 use Jivoo\Jtk\JtkObject;
-use Jivoo\Routing\ILinkable;
+use Jivoo\Routing\Linkable;
 
 /**
  * Table row filter.
  * @property string $label Filter label.
  * @property string $filter Filter query string.
  */
-class Filter extends JtkObject implements ILinkable {
+class Filter extends JtkObject implements Linkable {
   /**
    * Construct filter. 
    * @param string $label Filter label.

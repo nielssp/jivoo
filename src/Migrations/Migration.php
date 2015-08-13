@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Migrations;
 
-use Jivoo\Databases\IMigratableDatabase;
+use Jivoo\Databases\MigratableDatabase;
 use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 
@@ -14,7 +14,7 @@ use Jivoo\Models\DataType;
  */
 abstract class Migration {
   /**
-   * @var IMigratableDatabase Database.
+   * @var MigratableDatabase Database.
    */
   private $db = null;
   
@@ -30,10 +30,10 @@ abstract class Migration {
   
   /**
    * Construct migration.
-   * @param IMigratableDatabase $db Database to run migration on.
+   * @param MigratableDatabase $db Database to run migration on.
    * @param MigrationSchema $schema A migration schema.
    */
-  public final function __construct(IMigratableDatabase $db, MigrationSchema $schema) {
+  public final function __construct(MigratableDatabase $db, MigrationSchema $schema) {
     $this->db = $db;
     $this->schema = $schema;
   }
@@ -41,7 +41,7 @@ abstract class Migration {
   /**
    * Get a table.
    * @param string $table Table name.
-   * @return ITable Table.
+   * @return Table Table.
    */
   public function __get($table) {
     return $this->db->$table;

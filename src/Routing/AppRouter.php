@@ -96,7 +96,7 @@ abstract class AppRouter extends AppListener {
 
   /**
    * Set up this {@see AppRouter} as the creator of paths for a specific route. 
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array|Linkable|string|null $route A route, see {@see Routing}.
    * @param int|string $arity Arity of route, i.e. number of parameters (integer or '*').
    * @param int $priority Priority of route.
    */
@@ -108,7 +108,7 @@ abstract class AppRouter extends AppListener {
 
   /**
    * Set the current route.
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array|Linkable|string|null $route A route, see {@see Routing}.
    * @param int $priority Priority of route.
    */
   protected function setRoute($route, $priority = null) {

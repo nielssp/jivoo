@@ -7,7 +7,7 @@ namespace Jivoo\Helpers\Filtering;
 
 use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\Condition\NotCondition;
-use Jivoo\Models\IBasicModel;
+use Jivoo\Models\BasicModel;
 use Jivoo\Helpers\FilteringHelper;
 use Jivoo\Helpers\Filtering\Ast\FilterNode;
 use Jivoo\Helpers\Filtering\Ast\NotTermNode;
@@ -31,16 +31,16 @@ class SelectionFilterVisitor extends FilterVisitor {
   private $primary;
   
   /**
-   * @var IBasicModel Model.
+   * @var BasicModel Model.
    */
   private $model;
 
   /**
    * Construct visitor.
    * @param FilteringHelper $Filtering Filtering helper.
-   * @param IBasicModel $model Model.
+   * @param BasicModel $model Model.
    */
-  public function __construct(FilteringHelper $Filtering, IBasicModel $model) {
+  public function __construct(FilteringHelper $Filtering, BasicModel $model) {
     $this->Filtering = $Filtering;
     $this->primary = $this->Filtering->primary;
     $this->model = $model;

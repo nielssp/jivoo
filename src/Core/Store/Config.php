@@ -9,7 +9,7 @@ namespace Jivoo\Core\Store;
  * A configuration is a document used primarily for reading (but with support
  * for the occasional write as well).
  * 
- * Unlike {@see State}, the associated {@see IStore} is
+ * Unlike {@see State}, the associated {@see Store} is
  * only exclusively locked while writing, so the same configuration can be
  * opened multiple times in by different instances. However it does not ensure
  * durability, since changes made in one instance can be overwritten by changes
@@ -17,7 +17,7 @@ namespace Jivoo\Core\Store;
  */
 class Config extends Document {
   /**
-   * @var IStore
+   * @var Store
    */
   private $store = null;
   
@@ -28,9 +28,9 @@ class Config extends Document {
   
   /**
    * Construct conifguration.
-   * @param IStore $store Optional store to load/save data from/to.
+   * @param Store $store Optional store to load/save data from/to.
    */
-  public function __construct(IStore $store = null) {
+  public function __construct(Store $store = null) {
     parent::__construct();
     if (isset($store)) {
       $this->store = $store;

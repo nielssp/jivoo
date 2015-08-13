@@ -8,23 +8,23 @@ namespace Jivoo\AccessControl;
 /**
  * A method of authentication.
  */
-interface IAuthentication {
+interface Authentication {
   /**
    * Attempt to authenticate a user.
    * @param array $data Associative array of authentication data.
-   * @param IUserModel $userModel User model to use for authentication.
-   * @param IPasswordHasher $hasher Password hasher used for passwords.
-   * @return mixed|null User data (e.g. an {@see Jivoo\Models\IBasicRecord})
+   * @param UserModel $userModel User model to use for authentication.
+   * @param PasswordHasher $hasher Password hasher used for passwords.
+   * @return mixed|null User data (e.g. an {@see Jivoo\Models\BasicRecord})
    * or null on failure.
    */
-  public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher);
+  public function authenticate($data, UserModel $userModel, PasswordHasher $hasher);
   
   /**
    * Deauthenticate a user.
    * @param mixed $userData User data.
-   * @param IUserModel $userModel User model.
+   * @param UserModel $userModel User model.
    */
-  public function deauthenticate($userData, IUserModel $userModel);
+  public function deauthenticate($userData, UserModel $userModel);
   
   /**
    * Whether or not a cookie (for long-lived sessions) should be created based

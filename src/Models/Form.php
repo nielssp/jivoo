@@ -11,7 +11,7 @@ use Jivoo\Models\Validation\ValidatorBuilder;
  * A generic form.
  * @TODO rename: FormBuilder ??
  */
-class Form implements IBasicRecord, IBasicModel {
+class Form implements BasicRecord, BasicModel {
   
   /**
    * @var array Associative array of data.
@@ -183,7 +183,7 @@ class Form implements IBasicRecord, IBasicModel {
     $this->errors[$field] = $errorMsg;
   }
 
-  /* IModel implementation */
+  /* Model implementation */
 
   /**
    * Create a new form using same fields as this one.
