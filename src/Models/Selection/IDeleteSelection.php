@@ -8,7 +8,7 @@ namespace Jivoo\Models\Selection;
 /**
  * A delete selection.
  */
-interface DeleteSelection extends BasicSelection {
+interface IDeleteSelection extends IBasicSelection {
   /**
    * Delete record in selection.
    * @return int Number of deleted records.

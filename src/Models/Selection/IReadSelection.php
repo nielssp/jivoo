@@ -5,18 +5,18 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Selection;
 
-use Jivoo\Models\Model;
+use Jivoo\Models\IModel;
 use Jivoo\Models\DataType;
-use Jivoo\Models\BasicModel;
+use Jivoo\Models\IBasicModel;
 
 /**
  * A read selection.
  */
-interface ReadSelection extends BasicSelection, \IteratorAggregate, \Countable {
+interface IReadSelection extends IBasicSelection, \IteratorAggregate, \Countable {
   /**
    * Set alias for selection source.
    * @param string $alias Alias.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
   public function alias($alias);
   
@@ -34,7 +34,7 @@ interface ReadSelection extends BasicSelection, \IteratorAggregate, \Countable {
    * @param string $alias Name of new field.
    * @param string $expression Expression for field, e.g. 'COUNT(*)'.
    * @param DataType|null $type Optional type of field.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
   public function with($field, $expression, DataType $type = null);
 
@@ -43,61 +43,61 @@ interface ReadSelection extends BasicSelection, \IteratorAggregate, \Countable {
    * records.
    * @param string $alias Name of new field, expects the associated model to be
    * aliased with the same name.
-   * @param BasicModel $model Model of associated record.
-   * @return ReadSelection A read selection.
+   * @param IBasicModel $model Model of associated record.
+   * @return IReadSelection A read selection.
    */
-  public function withRecord($field, BasicModel $model);
+  public function withRecord($field, IBasicModel $model);
   
   /**
    * Group by one or more columns.
    * @param string|string[] $columns A single column name or a list of column
    * names.
    * @param Condition|string $condition Grouping condition.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
   public function groupBy($columns, $condition = null);
 
   /**
    * Perform an inner join with another model.
-   * @param Model $other Other model.
-   * @param string|Condition $condition Join condition.
+   * @param IModel $other Other model.
+   * @param string|ICondition $condition Join condition.
    * @param string $alias Alias for joined model/table.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
-  public function innerJoin(Model $other, $condition, $alias = null);
+  public function innerJoin(IModel $other, $condition, $alias = null);
   /**
    * Perform a left join with another model.
-   * @param Model $other Other model.
-   * @param string|Condition $condition Join condition.
+   * @param IModel $other Other model.
+   * @param string|ICondition $condition Join condition.
    * @param string $alias Alias for joined model/table.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
-  public function leftJoin(Model $other, $condition, $alias = null);
+  public function leftJoin(IModel $other, $condition, $alias = null);
 
   /**
    * Perform a right join with another model.
-   * @param Model $other Other model.
-   * @param string|Condition $condition Join condition.
+   * @param IModel $other Other model.
+   * @param string|ICondition $condition Join condition.
    * @param string $alias Alias for joined model/table.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
-  public function rightJoin(Model $other, $condition, $alias = null);
+  public function rightJoin(IModel $other, $condition, $alias = null);
 
   /**
    * Fetch only distinct records (i.e. prevent duplicate records in result).
    * @param bool $distinct Whether to fetch only distinct records.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
    */
   public function distinct($distinct = true);
   
   /**
    * Return first record in selection.
-   * @return Record|null A record if available..
+   * @return IRecord|null A record if available..
   */
   public function first();
   /**
    * Return last record in selection.
-   * @return Record|null A record if available.
+   * @return IRecord|null A record if available.
   */
   public function last();
 
@@ -109,14 +109,14 @@ interface ReadSelection extends BasicSelection, \IteratorAggregate, \Countable {
   
   /**
    * Convert selection to an array.
-   * @return \Jivoo\Models\Record[] Array of records.
+   * @return \Jivoo\Models\IRecord[] Array of records.
    */
   public function toArray();
 
   /**
    * Set offset.
    * @param int $offset Offset.
-   * @return ReadSelection A read selection.
+   * @return IReadSelection A read selection.
   */
   public function offset($offset);
 }

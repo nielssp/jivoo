@@ -6,13 +6,13 @@
 namespace Jivoo\ActiveModels;
 
 use Jivoo\Core\Module;
-use Jivoo\Core\EventListener;
+use Jivoo\Core\IEventListener;
 use Jivoo\Core\App;
 
 /**
  * A mixin for active models.
  */
-abstract class ActiveModelMixin extends Module implements EventListener {
+abstract class ActiveModelMixin extends Module implements IEventListener {
   /**
    * @var ActiveModel Associated model.
    */

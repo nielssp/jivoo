@@ -34,7 +34,7 @@ abstract class ExtensionController extends ExtensionModule {
   private $helperObjects = array();
   
   /**
-   * @var Model[] An associative array of model names and objects.
+   * @var IModel[] An associative array of model names and objects.
   */
   private $modelObjects = array();
 
@@ -99,7 +99,7 @@ abstract class ExtensionController extends ExtensionModule {
 
   /**
    * Redirect to a route.
-   * @param array|Linkable|string|null $route Route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route Route, see {@see Routing}.
    */
   protected function redirect($route = null) {
     $this->m->Routing->redirect($route);

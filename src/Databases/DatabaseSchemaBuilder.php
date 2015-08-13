@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Models\Schema;
+use Jivoo\Models\ISchema;
 
 /**
  * A database schema.
  */
-class DatabaseSchemaBuilder implements DatabaseSchema {
+class DatabaseSchemaBuilder implements IDatabaseSchema {
   /**
    * @var Schema[] Associative array of names and schema.
    */
@@ -48,9 +48,9 @@ class DatabaseSchemaBuilder implements DatabaseSchema {
   
   /**
    * Add a schema (and table).
-   * @param Schema $schema Schema.
+   * @param ISchema $schema Schema.
    */
-  public function addSchema(Schema $schema) {
+  public function addSchema(ISchema $schema) {
     $name = $schema->getName();
     if (!in_array($name, $this->tables))
       $this->tables[] = $name;

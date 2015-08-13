@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\File;
 
-use Jivoo\Models\BasicRecord;
+use Jivoo\Models\IBasicRecord;
 use Jivoo\InvalidPropertyException;
 
 /**
@@ -17,7 +17,7 @@ use Jivoo\InvalidPropertyException;
  * @property-read int $modified Modification time.
  * @property-read int $created Creation time.
  */
-class FileRecord implements BasicRecord {
+class FileRecord implements IBasicRecord {
   /**
    * @var FileModel Model.
    */

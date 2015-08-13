@@ -8,7 +8,7 @@ namespace Jivoo\Models\Selection;
 /**
  * An update selection.
  */
-interface UpdateSelection extends BasicSelection {
+interface IUpdateSelection extends IBasicSelection {
   /**
    * Assign value to field. If $field is an associative array, then multiple
    * fields are assigned. If $field contains an equals sign ('=') then $field
@@ -16,7 +16,7 @@ interface UpdateSelection extends BasicSelection {
    * @param string|array $field Field name or associative array of field names
    * and values
    * @param string $value Value
-   * @return UpdateSelection An update selection.
+   * @return IUpdateSelection An update selection.
    */
   public function set($field, $value = null);
 

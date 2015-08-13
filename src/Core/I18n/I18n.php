@@ -6,7 +6,7 @@
 namespace Jivoo\Core\I18n;
 
 use Jivoo\Core\Unicode;
-use Jivoo\Core\Cache\Cache;
+use Jivoo\Core\Cache\ICache;
 
 /**
  * Internationalization and localization.
@@ -25,7 +25,7 @@ class I18n {
   private static $locale = null;
   
   /**
-   * @var Cache
+   * @var ICache
    */
   private static $cache = null;
   
@@ -75,9 +75,9 @@ class I18n {
   
   /**
    * Set cache used for loading messages.
-   * @param Cache $cache Cache.
+   * @param ICache $cache Cache.
    */
-  public static function setCache(Cache $cache) {
+  public static function setCache(ICache $cache) {
     self::$cache = $cache;
   }
   

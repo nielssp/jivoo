@@ -17,7 +17,7 @@ use Jivoo\InvalidMethodException;
  * @property-read Condition $where Select condition.
  * @property-read Model $model Target of selection.
  */
-abstract class BasicSelectionBase implements BasicSelection {
+abstract class BasicSelectionBase implements IBasicSelection {
   /**
    * List of arrays describing ordering.
    *

@@ -12,7 +12,7 @@ use Jivoo\Core\Utilities;
 /**
  * Module for handling routes and HTTP requests.
  * 
- * A "route" as a value is either an array, an {@see Linkable} object,
+ * A "route" as a value is either an array, an {@see ILinkable} object,
  * a string or `null`.
  * 
  * The format of the array is:
@@ -50,8 +50,8 @@ use Jivoo\Core\Utilities;
  *   A link to the index-action of the PagesController.
  *   
  * Other legal values are:
- * * An object implementing {@see Linkable}, in which case the
- *   {@see Linkable::getRoute()} method is called
+ * * An object implementing {@see ILinkable}, in which case the
+ *   {@see ILinkable::getRoute()} method is called
  * * `null`, in which case a link to the frontpage is returned
  * * A string, in which case the following grammar applies:
  * <code>
@@ -67,10 +67,10 @@ use Jivoo\Core\Utilities;
  * the action. The resulting controller would be 'DatabaseSetupController'.
  * 
  * @property-read Request $request Current request.
- * @property-read array|Linkable|string|null $route The currently selected
+ * @property-read array|ILinkable|string|null $route The currently selected
  * route, contains the current controller, action and parameters, see {@see Routing}.
- * @property-read array|Linkable|string|null $root The root route, see {@see Routing}.
- * @property-read array|Linkable|string|null $error The error route, see {@see Routing}.
+ * @property-read array|ILinkable|string|null $root The root route, see {@see Routing}.
+ * @property-read array|ILinkable|string|null $error The error route, see {@see Routing}.
  * @property-read DispatcherCollection $dispatchers Collection of dispatchers.
  * @property-read RoutingTable $routes Routing table.
  */
@@ -236,7 +236,7 @@ class Routing extends LoadableModule {
   
   /**
    * Set current route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param number $priority Priority of route.
    */
   public function setRoot($route, $priority = 9) {
@@ -264,7 +264,7 @@ class Routing extends LoadableModule {
   
   /**
    * Set error route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function setError($route) {
     $this->error = $route;
@@ -307,7 +307,7 @@ class Routing extends LoadableModule {
 
   /**
    * Check whether or not a route matches the current request.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If route is not valid.
    * @return boolean True if current route, false otherwise.
    */
@@ -345,7 +345,7 @@ class Routing extends LoadableModule {
   
   /**
    * Merge two routes.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param array $mergeWith Route array to merge with.
    * @param array Resulting route (as an array).
    * @return array Merged route.
@@ -357,7 +357,7 @@ class Routing extends LoadableModule {
 
   /**
    * Validate route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If invalid route.
    * @return array A valid route array.
    */
@@ -367,7 +367,7 @@ class Routing extends LoadableModule {
   
   /**
    * Get a URL for a route (including http://domain.name).
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If incomplete route.
    * @return string A URL.
    */
@@ -412,7 +412,7 @@ class Routing extends LoadableModule {
   
   /**
    * Get a link for a route (absolute path).
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If no path found.
    * @return string[] A path array.
    */
@@ -423,7 +423,7 @@ class Routing extends LoadableModule {
   
   /**
    * Get a link for a route (absolute path).
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If no path found.
    * @return string A link.
    */
@@ -454,7 +454,7 @@ class Routing extends LoadableModule {
 
   /**
    * Perform a redirect.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function redirect($route = null) {
     $this->triggerEvent('beforeRedirect', new RedirectEvent($this, $route, false));
@@ -463,7 +463,7 @@ class Routing extends LoadableModule {
 
   /**
    * Perform a permanent redirect.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function moved($route = null) {
     $this->triggerEvent('beforeRedirect', new RedirectEvent($this, $route, true));
@@ -484,7 +484,7 @@ class Routing extends LoadableModule {
   
   /**
    * Automatically create routes.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param bool $resource Whether to use resource routing.
    */
   public function autoRoute($route, $resource = false) {
@@ -512,7 +512,7 @@ class Routing extends LoadableModule {
    *   set the action. 
    *
    * @param string $pattern A path pattern.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param number $priority Priority of route.
    * @throws InvalidRouteException If unknown placeholder.
    */
@@ -603,7 +603,7 @@ class Routing extends LoadableModule {
 
   /**
    * Add association of route and path-pattern.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param string[] $pattern A pattern array.
    * @param int|string $arity Arity of pattern (integer or '*').
    * @param int $priority Priority of path.
@@ -625,8 +625,8 @@ class Routing extends LoadableModule {
   
   /**
    * Add association of route and path-function, i.e. override the dispatcher
-   * path function (see {@see Dispatcher::getPath()}) with a custom one.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * path function (see {@see IDispatcher::getPath()}) with a custom one.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param callback $function Path function.
    * @param int|string $arity Arity of route, i.e. number of parameters (integer or '*').
    * @param int $priority Priority of path function.
@@ -652,7 +652,7 @@ class Routing extends LoadableModule {
 
   /**
    * Set current route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param int $priority Priority of route.
    * @return boolean True if successful, false if a route with higher priority
    * was previously set.
@@ -686,7 +686,7 @@ class Routing extends LoadableModule {
 
   /**
    * Follow a route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param int $status HTTP status code override.
    * @throws InvalidRouteException If route is invalid.
    */
@@ -850,7 +850,7 @@ class Routing extends LoadableModule {
   /**
    * Make sure that the current path matches the controller and action. If not,
    * redirect to the right path.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function reroute($route = null) {
     $currentPath = $this->request->path;
@@ -866,7 +866,7 @@ class Routing extends LoadableModule {
  */
 class RenderEvent extends Event {
   /**
-   * @var array|Linkable|string|null $route The route being followed, see {@see Routing}.
+   * @var array|ILinkable|string|null $route The route being followed, see {@see Routing}.
    */
   public $route;
   
@@ -888,7 +888,7 @@ class RenderEvent extends Event {
   /**
    * Construct render event.
    * @param object $sender Sender object.
-   * @param array|Linkable|string|null $route The route being followed, see {@see Routing}.
+   * @param array|ILinkable|string|null $route The route being followed, see {@see Routing}.
    * @param Response|null The rendered response if any.
    * @param string|null The response body if any.
    */
@@ -905,7 +905,7 @@ class RenderEvent extends Event {
  */
 class RedirectEvent extends Event {
   /**
-   * @var array|Linkable|string|null $route A route, see {@see Routing}.
+   * @var array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public $route;
   
@@ -917,7 +917,7 @@ class RedirectEvent extends Event {
   /**
    * Construct redirect event.
    * @param object $sender Sender object.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param bool $movied Whether it is a permanent (true) or temporary (false) redirect.
    */
   public function __construct($sender, $route, $moved) {

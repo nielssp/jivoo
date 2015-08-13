@@ -5,14 +5,14 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers;
 
-use Jivoo\Models\BasicRecord;
-use Jivoo\View\ViewExtension;
+use Jivoo\Models\IBasicRecord;
+use Jivoo\View\IViewExtension;
 
 /**
  * Use this interface to extend the functionality of some forms (see
  * {@see \Jivoo\View\ViewExtensions}.
  */
-interface FormExtension extends ViewExtension {
+interface IFormExtension extends IViewExtension {
   /**
    * Get name of field.
    * @return string Name.
@@ -21,10 +21,10 @@ interface FormExtension extends ViewExtension {
   
   /**
    * Get value of field.
-   * @param BasicRecord $record A record.
+   * @param IBasicRecord $record A record.
    * @return string Value. 
    */
-  public function getValue(BasicRecord $record = null);
+  public function getValue(IBasicRecord $record = null);
   
   /**
    * Get label for field.

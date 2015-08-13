@@ -15,7 +15,7 @@ use Jivoo\View\ViewResponse;
 /**
  * A loadable snippet.
  */
-abstract class SnippetBase extends Module implements Snippet {
+abstract class SnippetBase extends Module implements ISnippet {
   /**
    * @var string[] A list of other helpers needed by this helper.
   */
@@ -47,7 +47,7 @@ abstract class SnippetBase extends Module implements Snippet {
   private $helperObjects = array();
   
   /**
-   * @var BasicModel[] An associative array of model names and objects.
+   * @var IBasicModel[] An associative array of model names and objects.
   */
   private $modelObjects = array();
   
@@ -221,7 +221,7 @@ abstract class SnippetBase extends Module implements Snippet {
 
   /**
    * Redirect to a route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   protected function redirect($route = null) {
     $this->m->Routing->redirect($route);

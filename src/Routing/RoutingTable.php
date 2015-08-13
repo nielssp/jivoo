@@ -45,7 +45,7 @@ class RoutingTable {
   /**
    * Automatically create routes for all actions in a controller or just a
    * single action.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @param array $options An associative array of options for auto routing.
    * @return self Self.
    */
@@ -60,7 +60,7 @@ class RoutingTable {
   
   /**
    * Create route for root, i.e. the frontpage.
-   * @param array|Linkable|string|null $route A route, {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
    * @return self Self.
    */
   public function root($route) {
@@ -70,7 +70,7 @@ class RoutingTable {
   
   /**
    * Create route for error page.
-   * @param array|Linkable|string|null $route A route, {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
    * @return self Self.
    */
   public function error($route) {
@@ -82,7 +82,7 @@ class RoutingTable {
   /**
    * Create route for requests matching a pattern.
    * @param string $pattern A path to match, see {@see Routing::addRoute}.
-   * @param array|Linkable|string|null $route A route, {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
    * @param int $priority Priority of route.
    * @return self Self.
    */
@@ -97,7 +97,7 @@ class RoutingTable {
   /**
    * Automatically create routes for a resource. Expects controller to be set in
    * the route.
-   * @param array|Linkable|string|null $route A route, {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, {@see Routing}.
    * @return self Self.
    */
   public function resource($route) {

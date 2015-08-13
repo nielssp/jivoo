@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Drivers\Mysql;
 
-use Jivoo\Databases\ResultSet;
+use Jivoo\Databases\IResultSet;
 
 /**
  * Result set for MySQL driver.
  */
-class MysqlResultSet implements ResultSet {
+class MysqlResultSet implements IResultSet {
   /**
    * @var resource MySQL result resource.
    */

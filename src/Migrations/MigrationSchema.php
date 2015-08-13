@@ -5,24 +5,24 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Migrations;
 
-use Jivoo\Databases\DatabaseSchema;
-use Jivoo\Databases\Migratable;
-use Jivoo\Databases\MigratableDatabase;
+use Jivoo\Databases\IDatabaseSchema;
+use Jivoo\Databases\IMigratable;
+use Jivoo\Databases\IMigratableDatabase;
 use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
-use Jivoo\Models\Schema;
+use Jivoo\Models\ISchema;
 
 /**
  * A modifiable database schema for use with migrations.
  */
-class MigrationSchema implements DatabaseSchema, Migratable {
+class MigrationSchema implements IDatabaseSchema, IMigratable {
   /**
-   * @var DatabaseSchema Target schema.
+   * @var IDatabaseSchema Target schema.
    */
   private $targetSchema;
   
   /**
-   * @var MigratableDatabase Database.
+   * @var IMigratableDatabase Database.
    */
   private $db;
   
@@ -37,9 +37,9 @@ class MigrationSchema implements DatabaseSchema, Migratable {
   private $tables = array();
   /**
    * Construct migration schema.
-   * @param MigratableDatabase The database to migrate.
+   * @param IMigratableDatabase The database to migrate.
    */
-  public function __construct(MigratableDatabase $db) {
+  public function __construct(IMigratableDatabase $db) {
     $this->db = $db;
     $this->targetSchema = $db->getSchema();
     $db->refreshSchema();
@@ -85,7 +85,7 @@ class MigrationSchema implements DatabaseSchema, Migratable {
   /**
    * {@inheritdoc}
    */
-  public function addSchema(Schema $schema) {
+  public function addSchema(ISchema $schema) {
     $this->schemas[$schema->getName()] = $schema;
   }
 

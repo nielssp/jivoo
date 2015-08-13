@@ -8,7 +8,7 @@ namespace Jivoo\Core;
 /**
  * A producer of events. Handlers and listeners can be attached.
  */
-interface EventSubject {
+interface IEventSubject {
   /**
    * Attach an event handler to an event.
    * @param string $name Name of event to handle.
@@ -20,9 +20,9 @@ interface EventSubject {
   /**
    * Attach an event listener to object (i.e. multiple handlers to multiple
    * events).
-   * @param EventListener $listener An event listener.
+   * @param IEventListener $listener An event listener.
    */
-  public function attachEventListener(EventListener $listener);
+  public function attachEventListener(IEventListener $listener);
   
   /**
    * Detach an already attached event handler.
@@ -33,9 +33,9 @@ interface EventSubject {
   
   /**
    * Detach all handlers implemented by an event listener.
-   * @param EventListener $listener An event listener.
+   * @param IEventListener $listener An event listener.
    */
-  public function detachEventListener(EventListener $listener);
+  public function detachEventListener(IEventListener $listener);
   
   /**
    * Whether or not the object produces the given event.

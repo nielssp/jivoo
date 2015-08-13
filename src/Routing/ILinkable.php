@@ -8,10 +8,10 @@ namespace Jivoo\Routing;
 /**
  * An object that can be used in place of a route, see {@see Routing}.
  */
-interface Linkable {
+interface ILinkable {
   /**
    * Get a route.
-   * @return string|array|Linkable|null A route, see {@see Routing}.
+   * @return string|array|ILinkable|null A route, see {@see Routing}.
    */
   public function getRoute();
 }

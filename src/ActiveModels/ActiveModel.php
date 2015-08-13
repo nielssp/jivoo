@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\ActiveModels;
 
-use Jivoo\Core\EventListener;
+use Jivoo\Core\IEventListener;
 use Jivoo\Core\Event;
 use Jivoo\Models\ModelBase;
 use Jivoo\Core\App;
@@ -20,14 +20,14 @@ use Jivoo\Models\DataType;
 use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\Selection\BasicSelectionBase;
 use Jivoo\Models\Selection\SelectionBuilder;
-use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\Record;
 use Jivoo\Databases\InvalidTableException;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
  */
-abstract class ActiveModel extends ModelBase implements EventListener {
+abstract class ActiveModel extends ModelBase implements IEventListener {
   /**
    * @var string Name of database used by model.
    */
@@ -359,7 +359,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
   /**
    * Get route for record.
    * @param ActiveRecord $record A record.
-   * @return array|Linkable|string|null $route A route, see {@see Routing}.
+   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function getRoute(ActiveRecord $record) {
     return null;
@@ -369,7 +369,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * Get route for an action defined in model.
    * @param ActiveRecord $record A record.
    * @param string $action Name of an action.
-   * @return array|Linkable|string|null $route A route, see {@see Routing}.
+   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
    */
   public function getAction(ActiveRecord $record, $action) {
     if (isset($this->actions[$action])) {
@@ -390,7 +390,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * @param string $name
    * @param string $association Name of "hasMany" or "hasAndBelongsToMany"
    * association to base collection on.
-   * @param string|Condition $condition Select condition for collection.
+   * @param string|ICondition $condition Select condition for collection.
    * @throws InvalidAssociationException If association is undefined.
    */
   public function addVirtualCollection($name, $association, $condition) {
@@ -692,12 +692,12 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * Join with and return an associated record (associated using "belongsTo" or
    * "hasOne").
    * @param string $association Name of association.
-   * @param ReadSelection $selection Optional selection.
-   * @return ReadSelection Resulting selection.
+   * @param IReadSelection $selection Optional selection.
+   * @return IReadSelection Resulting selection.
    * @throws InvalidAssociationException If association is undefined or not of
    * the correct type ("belongsTo" or "hasOne").
    */
-  public function withAssociated($association, ReadSelection $selection = null) {
+  public function withAssociated($association, IReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new SelectionBuilder($this);
     if (!isset($this->associations))
@@ -734,12 +734,12 @@ abstract class ActiveModel extends ModelBase implements EventListener {
   /**
    * Prefect associated records.tion Name of association.
    * @param string $association Name of association.
-   * @param ReadSelection $selection Optional selection.
-   * @return ReadSelection Original selection.
+   * @param IReadSelection $selection Optional selection.
+   * @return IReadSelection Original selection.
    * @throws InvalidAssociationException If association is undefined or not of
    * the correct type ("belongsTo" or "hasOne").
    */
-  public function prefetchAssociated($association, ReadSelection $selection = null) {
+  public function prefetchAssociated($association, IReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new SelectionBuilder($this);
     if (!isset($this->associations))
@@ -779,10 +779,10 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * Join with and count the content of an associated collection (associated
    * using either "hasMany" or "hasAndBelongsToMany").
    * @param string $association Name of association.
-   * @param ReadSelection $selection Optional selection.
-   * @return ReadSelection Resulting selection.
+   * @param IReadSelection $selection Optional selection.
+   * @return IReadSelection Resulting selection.
    */
-  public function withCount($association, ReadSelection $selection = null) {
+  public function withCount($association, IReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new SelectionBuilder($this);
     if (!isset($this->associations))
@@ -922,7 +922,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * Set association.
    * @param ActiveRecord $record A record.
    * @param array $association Association options.
-   * @param ActiveRecord|Selection|ActiveRecord[] $value New value.
+   * @param ActiveRecord|ISelection|ActiveRecord[] $value New value.
    * @throws InvalidAssociationException If association type unknown.
    */
   public function setAssociation(ActiveRecord $record, $association, $value) {
@@ -951,7 +951,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
         $key = $association['thisKey'];
         $id = $this->primaryKey;
         $idValue = $record->$id;
-        if ($value instanceof Selection) {
+        if ($value instanceof ISelection) {
           $value->set($key, $idValue)->update();
           return;
         }

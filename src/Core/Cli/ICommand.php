@@ -8,7 +8,7 @@ namespace Jivoo\Core\Cli;
 /**
  * A command, or subcommand, for use in the command-line interface.
  */
-interface Command {
+interface ICommand {
   /**
    * Get array of options accepted by this command.
    * 

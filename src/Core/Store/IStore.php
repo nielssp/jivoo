@@ -9,7 +9,7 @@ namespace Jivoo\Core\Store;
  * Reads and writes semi-structured data ("documents") with support for mutual
  * exclusion.
  */
-interface Store {
+interface IStore {
   /**
    * Open store for reading and optionally writing.
    * @param bool $mutable Whether writing should be enabled (with exclusive

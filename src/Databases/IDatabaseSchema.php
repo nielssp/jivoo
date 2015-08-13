@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Models\Schema;
+use Jivoo\Models\ISchema;
 
 /**
  * A database schema.
  */
-interface DatabaseSchema {
+interface IDatabaseSchema {
   /**
    * Get table names.
    * @return string[] List of table names.
@@ -20,13 +20,13 @@ interface DatabaseSchema {
   /**
    * Get schema for table.
    * @param string $table Table name.
-   * @return Schema Table schema.
+   * @return ISchema Table schema.
    */
   public function getSchema($table);
   
   /**
    * Add table schema.
-   * @param Schema $schema Table schema;
+   * @param ISchema $schema Table schema;
    */
-  public function addSchema(Schema $schema);
+  public function addSchema(ISchema $schema);
 }

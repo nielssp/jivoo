@@ -5,18 +5,18 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
-use Jivoo\Databases\Database;
+use Jivoo\Databases\IDatabase;
 
 /**
  * An SQL database.
  */
-interface SqlDatabase extends Database {
+interface ISqlDatabase extends IDatabase {
   /**
    * Execute a raw sql query on database.
    * @param string $sql Raw sql.
    * @param string|null $pk Name of auto incrementing primary key if any (only
    * supplied for inserts and only needed for some database systems).
-   * @return ResultSet|int A result set if query is a select-, show-,
+   * @return IResultSet|int A result set if query is a select-, show-,
    * explain-, or describe-query, the last insert id if query is an insert- or
    * replace-query, or number of affected rows in any other case..
    * @throws \Jivoo\Databases\QueryException if query failed.
@@ -25,7 +25,7 @@ interface SqlDatabase extends Database {
 
   /**
    * Get type adapter.
-   * @return TypeAdapter Type adapter for database.
+   * @return ITypeAdapter Type adapter for database.
    */
   public function getTypeAdapter();
 }

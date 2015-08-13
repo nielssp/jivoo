@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Cache;
 
-use Jivoo\Core\Store\Store;
+use Jivoo\Core\Store\IStore;
 
 /**
  * A cache that doesn't store anything. Can be used to disable caching.
  */
-class NullCache implements Cache {
+class NullCache implements ICache {
   /**
    * {@inheritdoc}
    */

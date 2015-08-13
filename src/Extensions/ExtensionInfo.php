@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Extensions;
 
-use Jivoo\Models\BasicRecord;
+use Jivoo\Models\IBasicRecord;
 use Jivoo\Assets\Assets;
 use Jivoo\Core\App;
 
@@ -23,7 +23,7 @@ use Jivoo\Core\App;
  * @property-read string $pKey Path key for location of extension.
  * @property-read string[] Names of imported extensions that depend on this one.
  */
-class ExtensionInfo implements BasicRecord {
+class ExtensionInfo implements IBasicRecord {
   /**
    * @var string Kind of extension, used for looking up location, e.g. "themes".
    */

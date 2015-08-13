@@ -8,7 +8,7 @@ namespace Jivoo\Routing;
 /**
  * Implements a type of route.
  */
-interface Dispatcher {
+interface IDispatcher {
   /**
    * Get route string prefixes understood by this dispatcher.
    * @return string[] List of prefixes.

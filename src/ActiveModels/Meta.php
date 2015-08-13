@@ -5,15 +5,15 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\ActiveModels;
 
-use Jivoo\Models\Model;
-use Jivoo\Models\Record;
+use Jivoo\Models\IModel;
+use Jivoo\Models\IRecord;
 
 /**
  * Record meta data object.
  */
-class Meta implements Record {
+class Meta implements IRecord {
   /**
-   * @var Model Meta model.
+   * @var IModel Meta model.
    */
   private $model;
 
@@ -49,11 +49,11 @@ class Meta implements Record {
 
   /**
    * Construct meta data object.
-   * @param Model $model Meta data model.
+   * @param IModel $model Meta data model.
    * @param string $recordKey Name of key column in meta model (e.g. 'userId').
    * @param ActiveRecord $record Record data meta data describes.
    */
-  public function __construct(Model $model, $recordKey, ActiveRecord $record)  {
+  public function __construct(IModel $model, $recordKey, ActiveRecord $record)  {
     $this->model = $model;
     $this->recordKey = $recordKey;
     $id = $record->getModel()->getAiPrimaryKey();

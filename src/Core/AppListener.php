@@ -10,7 +10,7 @@ namespace Jivoo\Core;
  * Subclasses can be attached to the application by adding their names to
  * the "listeners"-array in 'app.json'.
  */
-abstract class AppListener extends Module implements EventListener {
+abstract class AppListener extends Module implements IEventListener {
   /**
    * @var string[] Associative array of event names and handler methods.
    */

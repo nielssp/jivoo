@@ -10,7 +10,7 @@ use Jivoo\Assets\Assets;
 /**
  * An icon provider that provides icons from the assets directory.
  */
-class AssetIconProvider implements IconProvider {
+class AssetIconProvider implements IIconProvider {
   /**
    * @var Assets
    */

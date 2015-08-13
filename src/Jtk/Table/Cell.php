@@ -7,7 +7,7 @@ namespace Jivoo\Jtk\Table;
 
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Jtk\JtkCollection;
-use Jivoo\Models\BasicRecord;
+use Jivoo\Models\IBasicRecord;
 
 /**
  * A single tablle cell.

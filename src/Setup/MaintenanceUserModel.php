@@ -6,13 +6,13 @@
 namespace Jivoo\Setup;
 
 use Jivoo\Core\Store\Config;
-use Jivoo\AccessControl\UserModel;
+use Jivoo\AccessControl\IUserModel;
 use Jivoo\AccessControl\Random;
 
 /**
  * User model for the maintenance user
  */
-class MaintenanceUserModel implements UserModel {
+class MaintenanceUserModel implements IUserModel {
   /**
    * @var Config Lock.
    */

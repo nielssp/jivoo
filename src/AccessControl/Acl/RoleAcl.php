@@ -6,8 +6,8 @@
 namespace Jivoo\AccessControl\Acl;
 
 use Jivoo\AccessControl\LoadableAcl;
-use Jivoo\Models\BasicRecord;
-use Jivoo\AccessControl\PermissionList;
+use Jivoo\Models\IBasicRecord;
+use Jivoo\AccessControl\IPermissionList;
 use Jivoo\AccessControl\PermissionList;
 use Jivoo\AccessControl\Jivoo\AccessControl;
 use Jivoo\AccessControl\InvalidRoleException;
@@ -15,7 +15,7 @@ use Jivoo\AccessControl\InvalidRoleException;
 /**
  * An access control list implementation that assumes the user data has a
  * 'role' field (can be changed with the 'field' option) that can be accessed
- * using array access (e.g. as implemented by {@see BasicRecord})
+ * using array access (e.g. as implemented by {@see IBasicRecord})
  */
 class RoleAcl extends LoadableAcl {
   /**
@@ -27,7 +27,7 @@ class RoleAcl extends LoadableAcl {
   );
   
   /**
-   * @var PermissionList[]
+   * @var IPermissionList[]
    */
   private $roles = array();
 
@@ -49,7 +49,7 @@ class RoleAcl extends LoadableAcl {
   /**
    * Get permissions of a role, or create the role if it doesn't exist.
    * @param string $role Role name or id.
-   * @return PermissionList $permissions Permission list.
+   * @return IPermissionList $permissions Permission list.
    */
   public function __get($role) {
     if (!isset($this->roles[$role]))
@@ -60,7 +60,7 @@ class RoleAcl extends LoadableAcl {
   /**
    * Get permissions of a role.
    * @param string $role Role name or id.
-   * @param PermissionList $permissions Permission list.
+   * @param IPermissionList $permissions Permission list.
    */
   public function __set($role, $permissions) {
     $this->roles[$role] = $permissions;
@@ -69,9 +69,9 @@ class RoleAcl extends LoadableAcl {
   /**
    * Add a role.
    * @param string $role Role name or id.
-   * @param PermissionList $permissions Permission list.
+   * @param IPermissionList $permissions Permission list.
    */
-  public function addRole($role, PermissionList $permissions) {
+  public function addRole($role, IPermissionList $permissions) {
     $this->roles[$role] = $permissions;
   }
   

@@ -8,11 +8,11 @@ namespace Jivoo\Models;
 /**
  * Contains several links to actions.
  */
-interface ActionRecord {
+interface IActionRecord {
   /**
    * Get route to a named action.
    * @param string $action Action name.
-   * @return array|Linkable|string|null A route, see {@see Routing}.
+   * @return array|ILinkable|string|null A route, see {@see Routing}.
    */
   public function action($action);
 }

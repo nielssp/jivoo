@@ -5,13 +5,13 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Jtk\Table;
 
-use Jivoo\Models\BasicRecord;
+use Jivoo\Models\IBasicRecord;
 use Jivoo\Jtk\JtkObject;
 
 /**
  * Table row action.
  * @property string $label Action label.
- * @property string|array|Jivoo\Routing\Linkable|null $route A route, see
+ * @property string|array|Jivoo\Routing\ILinkable|null $route A route, see
  * {@see Jivoo\Routing\Routing}.
  * @property string $icon Icon path or name.
  * @property array $data Optional data.
@@ -22,7 +22,7 @@ class Action extends JtkObject {
   /**
    * Construct action.
    * @param string $label Action label.
-   * @param string|array|Jivoo\Routing\Linkable|null $route A route, see
+   * @param string|array|Jivoo\Routing\ILinkable|null $route A route, see
    * {@see Jivoo\Routing\Routing}.
    * @param string $icon Icon path or name.
    */
@@ -36,12 +36,12 @@ class Action extends JtkObject {
   
   /**
    * Get route for a record.
-   * @param BasicRecord $record Record.
+   * @param IBasicRecord $record Record.
    * @todo implement
-   * @return string|array|Jivoo\Routing\Linkable|null A route, see
+   * @return string|array|Jivoo\Routing\ILinkable|null A route, see
    * {@see Jivoo\Routing\Routing}.
    */
-  public function getRoute(BasicRecord $record) {
+  public function getRoute(IBasicRecord $record) {
     
   }
 }
