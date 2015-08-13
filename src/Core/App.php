@@ -13,7 +13,7 @@ use Jivoo\Core\Store\Jivoo\Core\Store;
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidClassException;
 use Jivoo\Autoloader;
-use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareInterface as LoggerAware;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Jivoo\Core\Log\FileLogger;
@@ -24,8 +24,8 @@ use Jivoo\Core\Log\Logger;
 use Jivoo\Core\Log\FileHandler;
 use Jivoo\Core\Log\ErrorException;
 use Jivoo\Core\Cli\Shell;
-use Jivoo\Core\Cache\NullCache;
-use Jivoo\Core\Cache\Cache;
+use Psr\Cache\CacheItemPoolInterface;
+use Jivoo\Core\Cache\NullPool;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -50,7 +50,7 @@ use Jivoo\Core\Cache\Cache;
  * @property-read Shell|null $shell The command-line shell if application is
  * running in the CLI.  
  */
-class App implements EventSubject, LoggerAwareInterface {
+class App implements EventSubject, LoggerAware {
   /**
    * @var array Application configuration.
    */
@@ -170,7 +170,7 @@ class App implements EventSubject, LoggerAwareInterface {
   private $logger;
   
   /**
-   * @var Cache Application cache.
+   * @var CacheItemPoolInterface Application cache.
    */
   private $cache;
   
@@ -250,7 +250,7 @@ class App implements EventSubject, LoggerAwareInterface {
     // Persistent state storage
     $this->state = new StateMap($this->p('state'));
     
-    $this->cache = new NullCache();
+    $this->cache = new NullPool();
     
     if ($this->isCli())
       $this->shell = new Shell($this);
@@ -314,7 +314,7 @@ class App implements EventSubject, LoggerAwareInterface {
   /**
    * {@inheritdoc}
    */
-  public function setCache(Cache $cache) {
+  public function setCache(CacheItemPoolInterface $cache) {
     $this->cache = $cache;
   }
   
