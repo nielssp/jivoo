@@ -10,6 +10,7 @@ use Jivoo\Core\Module;
 
 /**
  * A loadable ACL module. Subclasses should use the prefix "Acl".
+ * @todo Rename to AclModule or something?
  */
 abstract class LoadableAcl extends Module implements IAcl {
   /**

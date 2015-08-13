@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers\Filtering;
 
-use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\Condition\NotCondition;
 use Jivoo\Models\IBasicModel;
 use Jivoo\Helpers\FilteringHelper;
@@ -51,8 +51,8 @@ class SelectionFilterVisitor extends FilterVisitor {
    */
   protected function visitFilter(FilterNode $node) {
     if (count($node->children) == 0)
-      return new Condition('false');
-    $condition = new Condition();
+      return new ConditionBuilder('false');
+    $condition = new ConditionBuilder();
     foreach ($node->children as $child) {
       $cond = $this->visit($child);
       if ($child->operator == 'or') {
@@ -77,7 +77,7 @@ class SelectionFilterVisitor extends FilterVisitor {
    */
   protected function visitComparison(ComparisonNode $node) {
     if (!$this->model->hasField($node->left))
-      return new Condition('false');
+      return new ConditionBuilder('false');
     $type = $this->model->getType($node->left);
     $right = $type->convert($node->right);
     switch ($node->comparison) {
@@ -93,11 +93,11 @@ class SelectionFilterVisitor extends FilterVisitor {
             list($start, $end) = $interval;
             switch ($node->comparison) {
               case '=':
-                $cond = new Condition('%m.%c >= %_', $this->model, $node->left, $type, $start);
+                $cond = new ConditionBuilder('%m.%c >= %_', $this->model, $node->left, $type, $start);
                 $cond->and('%m.%c <= %_', $this->model, $node->left, $type, $end);
                 return $cond;
               case '!=':
-                $cond = new Condition('%m.%c < %_', $this->model, $node->left, $type, $start);
+                $cond = new ConditionBuilder('%m.%c < %_', $this->model, $node->left, $type, $start);
                 $cond->or('%m.%c > %_', $this->model, $node->left, $type, $end);
                 return $cond;
               case '<':
@@ -110,11 +110,11 @@ class SelectionFilterVisitor extends FilterVisitor {
             }
           }
         }
-        return new Condition('%m.%c ' . $node->comparison . ' %_', $this->model, $node->left, $type, $right);
+        return new ConditionBuilder('%m.%c ' . $node->comparison . ' %_', $this->model, $node->left, $type, $right);
       case 'contains':
-        return new Condition('%m.%c LIKE %s', $this->model, $node->left, '%' . Condition::escapeLike($right) . '%');
+        return new ConditionBuilder('%m.%c LIKE %s', $this->model, $node->left, '%' . ConditionBuilder::escapeLike($right) . '%');
     }
-    return new Condition('false');
+    return new ConditionBuilder('false');
   }
 
   /**
@@ -122,10 +122,10 @@ class SelectionFilterVisitor extends FilterVisitor {
    */
   protected function visitString(StringNode $node) {
     if (count($this->primary) == 0)
-      return new Condition('false');
-    $condition = new Condition();
+      return new ConditionBuilder('false');
+    $condition = new ConditionBuilder();
     foreach ($this->primary as $column) {
-      $condition->or('%m.%c LIKE %s', $this->model, $column, '%' . Condition::escapeLike($node->value) . '%');
+      $condition->or('%m.%c LIKE %s', $this->model, $column, '%' . ConditionBuilder::escapeLike($node->value) . '%');
     }
     return $condition;
   }

@@ -5,14 +5,14 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Models\Model;
-use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\ModelBase;
+use Jivoo\Models\Selection\ReadSelectionBuilder;
 use Jivoo\Models\ISchema;
 
 /**
  * A database table.
  */
-abstract class Table extends Model {
+abstract class Table extends ModelBase {
   /**
    * Set schema of table.
    * @param ISchema $schema Schema.
@@ -22,7 +22,7 @@ abstract class Table extends Model {
   /**
    * {@inheritdoc}
    */
-  public function firstSelection(ReadSelection $selection) {
+  public function firstSelection(ReadSelectionBuilder $selection) {
     $resultSet = $this->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
@@ -32,7 +32,7 @@ abstract class Table extends Model {
   /**
    * {@inheritdoc}
    */
-  public function lastSelection(ReadSelection $selection) {
+  public function lastSelection(ReadSelectionBuilder $selection) {
     $resultSet = $this->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
@@ -42,7 +42,7 @@ abstract class Table extends Model {
   /**
    * {@inheritdoc}
    */
-  public function read(ReadSelection $selection) {
+  public function read(ReadSelectionBuilder $selection) {
     $resultSet = $this->readSelection($selection);
     return new ResultSetIterator($this, $resultSet, $selection);
   }
@@ -50,7 +50,7 @@ abstract class Table extends Model {
   /**
    * {@inheritdoc}
    */
-  public function readCustom(ReadSelection $selection, Model $model = null) {
+  public function readCustom(ReadSelectionBuilder $selection, ModelBase $model = null) {
     $resultSet = $this->readSelection($selection);
     if (isset($model))
       return new ResultSetIterator($model, $resultSet, $selection);
@@ -63,8 +63,8 @@ abstract class Table extends Model {
 
   /**
    * Read a selection.
-   * @param ReadSelection $selection A read selection.
+   * @param ReadSelectionBuilder $selection A read selection.
    * @return IResultSet A result set.
    */
-  public abstract function readSelection(ReadSelection $selection);
+  public abstract function readSelection(ReadSelectionBuilder $selection);
 }

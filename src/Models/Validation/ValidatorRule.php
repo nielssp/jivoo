@@ -140,7 +140,7 @@ class ValidatorRule {
    */
   public function validate(IRecord $record, $field) {
     foreach ($this->rules as $name => $rule) {
-      $result = Validator::validateRule($record, $field, $name, $rule);
+      $result = ValidatorBuilder::validateRule($record, $field, $name, $rule);
       if ($result !== true) {
         if (isset($this->message))
           return $this->message;

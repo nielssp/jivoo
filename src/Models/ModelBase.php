@@ -6,17 +6,17 @@
 namespace Jivoo\Models;
 
 use Jivoo\Core\Module;
-use Jivoo\Models\Selection\UpdateSelection;
-use Jivoo\Models\Selection\DeleteSelection;
-use Jivoo\Models\Selection\ReadSelection;
-use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Selection\UpdateSelectionBuilder;
+use Jivoo\Models\Selection\DeleteSelectionBuilder;
+use Jivoo\Models\Selection\ReadSelectionBuilder;
+use Jivoo\Models\Selection\SelectionBuilder;
 use Jivoo\Models\Selection\IReadSelection;
-use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\Condition\ConditionBuilder;
 
 /**
  * A base class for models.
  */
-abstract class Model extends Module implements IModel {
+abstract class ModelBase extends Module implements IModel {
   /**
    * @var string|null The auto increment primary key.
    */
@@ -37,11 +37,11 @@ abstract class Model extends Module implements IModel {
   /**
    * Create a record for existing data.
    * @param array $data Associative array of record data.
-   * @param ReadSelection $selection The selection that led to the creation of
+   * @param ReadSelectionBuilder $selection The selection that led to the creation of
    * this record.
    * @return Record A record.
    */
-  public function createExisting($data = array(), ReadSelection $selection) {
+  public function createExisting($data = array(), ReadSelectionBuilder $selection) {
     $additonal = $selection->additionalFields;
     if (empty($additonal))
       return Record::createExisting($this, $data, array());
@@ -143,7 +143,7 @@ abstract class Model extends Module implements IModel {
    */
   public function selectNotRecord(IRecord $record) {
     $primaryKey = $this->getSchema()->getPrimaryKey();
-    $condition = new Condition();
+    $condition = new ConditionBuilder();
     foreach ($primaryKey as $field) {
       $condition = $condition->or($field . ' != ?', $record->$field);
     }
@@ -185,14 +185,14 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function update() {
-    return $this->updateSelection(new UpdateSelection($this));
+    return $this->updateSelection(new UpdateSelectionBuilder($this));
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete() {
-    return $this->deleteSelection(new DeleteSelection($this));
+    return $this->deleteSelection(new DeleteSelectionBuilder($this));
   }
 
   /**
@@ -200,7 +200,7 @@ abstract class Model extends Module implements IModel {
    * @return int Number of records.
    */
   public function count() {
-    return $this->countSelection(new ReadSelection($this));
+    return $this->countSelection(new ReadSelectionBuilder($this));
   }
 
   /**
@@ -209,21 +209,21 @@ abstract class Model extends Module implements IModel {
    * @return int The row number.
    */
   public function rowNumber(IRecord $record) {
-    return $this->rowNumberSelection(new ReadSelection($this), $record);
+    return $this->rowNumberSelection(new ReadSelectionBuilder($this), $record);
   } 
 
   /**
    * {@inheritdoc}
    */
   public function first() {
-    return $this->firstSelection(new ReadSelection($this));
+    return $this->firstSelection(new ReadSelectionBuilder($this));
   }
 
   /**
    * {@inheritdoc}
    */
   public function last() {
-    return $this->lastSelection(new ReadSelection($this));
+    return $this->lastSelection(new ReadSelectionBuilder($this));
   }
 
   /**
@@ -239,16 +239,16 @@ abstract class Model extends Module implements IModel {
   /**
    * Find row number of a record in the result set of a selection. The selection
    * must be ordered.
-   * @param ReadSelection $selection A read selection.
+   * @param ReadSelectionBuilder $selection A read selection.
    * @param IRecord $record A record.
    * @throws InvalidSelectionException If the selection is not ordered.
    * @return int Row number.
    */
-  public function rowNumberSelection(ReadSelection $selection, IRecord $record) {
+  public function rowNumberSelection(ReadSelectionBuilder $selection, IRecord $record) {
     if (empty($selection->orderBy)) {
       throw new InvalidSelectionException(tr('Can\'t find row number in selection without ordering'));
     }
-    $condition = new Condition();
+    $condition = new ConditionBuilder();
     foreach ($selection->orderBy as $orderBy) {
       $column = $orderBy['column'];
       $type = $this->getType($column)->placeholder;
@@ -264,51 +264,51 @@ abstract class Model extends Module implements IModel {
 
   /**
    * Execute an update selection.
-   * @param UpdateSelection $selection Update selection.
+   * @param UpdateSelectionBuilder $selection Update selection.
    * @return int Number of affected records.
    */
-  public abstract function updateSelection(UpdateSelection $selection);
+  public abstract function updateSelection(UpdateSelectionBuilder $selection);
   /**
    * Execute a delete selection.
-   * @param DeleteSelection $selection Delete selection.
+   * @param DeleteSelectionBuilder $selection Delete selection.
    * @return int Number of affected records.
   */
-  public abstract function deleteSelection(DeleteSelection $selection);
+  public abstract function deleteSelection(DeleteSelectionBuilder $selection);
   
   /**
    * Count size of the result of a selection.
-   * @param ReadSelection $selection Read selection.
+   * @param ReadSelectionBuilder $selection Read selection.
    * @return int Size of selection.
    */
-  public abstract function countSelection(ReadSelection $selection);
+  public abstract function countSelection(ReadSelectionBuilder $selection);
   
   /**
    * Return first record in a selection.
-   * @param ReadSelection $selection Read selection.
+   * @param ReadSelectionBuilder $selection Read selection.
    * @return IRecord A record.
    */
-  public abstract function firstSelection(ReadSelection $selection);
+  public abstract function firstSelection(ReadSelectionBuilder $selection);
   
   /**
    * Return last record in a selection.
-   * @param ReadSelection $selection Read selection.
+   * @param ReadSelectionBuilder $selection Read selection.
    * @return IRecord A record.
    */
-  public abstract function lastSelection(ReadSelection $selection);
+  public abstract function lastSelection(ReadSelectionBuilder $selection);
   
   /**
    * Execute a read selection without creating records.
-   * @param ReadSelection $selection Read selection.
+   * @param ReadSelectionBuilder $selection Read selection.
    * @return array[] A list of associative arrays.
    */
-  public abstract function readCustom(ReadSelection $selection); 
+  public abstract function readCustom(ReadSelectionBuilder $selection); 
 
   /**
    * Execute a read selection and create an iterator.
-   * @param ReadSelection $selection Read selection.
+   * @param ReadSelectionBuilder $selection Read selection.
    * @return IRecordIterator Iterator.
   */
-  public abstract function read(ReadSelection $selection);
+  public abstract function read(ReadSelectionBuilder $selection);
 
   /**
    * {@inheritdoc}
@@ -365,9 +365,9 @@ abstract class Model extends Module implements IModel {
   public function __call($method, $args) {
     switch ($method) {
       case 'and':
-        return call_user_func_array(array(new Selection($this), 'andWhere'), $args);
+        return call_user_func_array(array(new SelectionBuilder($this), 'andWhere'), $args);
       case 'or':
-        return call_user_func_array(array(new Selection($this), 'orWhere'), $args);
+        return call_user_func_array(array(new SelectionBuilder($this), 'orWhere'), $args);
     }
     parent::__call($method, $args);
   }
@@ -384,7 +384,7 @@ abstract class Model extends Module implements IModel {
    */
   public function where($clause) {
     $args = func_get_args();
-    return call_user_func_array(array(new Selection($this), 'where'), $args);
+    return call_user_func_array(array(new SelectionBuilder($this), 'where'), $args);
   }
 
   /**
@@ -392,7 +392,7 @@ abstract class Model extends Module implements IModel {
    */
   public function andWhere($clause) {
     $args = func_get_args();
-    return call_user_func_array(array(new Selection($this), 'andWhere'), $args);
+    return call_user_func_array(array(new SelectionBuilder($this), 'andWhere'), $args);
   }
 
   /**
@@ -400,14 +400,14 @@ abstract class Model extends Module implements IModel {
    */
   public function orWhere($clause) {
     $args = func_get_args();
-    return call_user_func_array(array(new Selection($this), 'orWhere'), $args);
+    return call_user_func_array(array(new SelectionBuilder($this), 'orWhere'), $args);
   }
 
   /**
    * {@inheritdoc}
    */
   public function limit($limit) {
-    $selection = new Selection($this);
+    $selection = new SelectionBuilder($this);
     return $selection->limit($limit);
   }
 
@@ -415,7 +415,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function orderBy($column) {
-    $selection = new Selection($this);
+    $selection = new SelectionBuilder($this);
     return $selection->orderBy($column);
   }
 
@@ -423,7 +423,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function orderByDescending($column) {
-    $selection = new Selection($this);
+    $selection = new SelectionBuilder($this);
     return $selection->orderByDescending($column);
   }
 
@@ -438,7 +438,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function set($column, $value = null) {
-    $selection = new UpdateSelection($this);
+    $selection = new UpdateSelectionBuilder($this);
     return $selection->set($column, $value);
   }
 
@@ -446,7 +446,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function alias($alias) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->alias($alias);
   }
 
@@ -454,7 +454,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function select($expression, $alias = null) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->select($expression, $alias);
   }
 
@@ -462,7 +462,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function with($field, $expression, DataType $type = null) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->with($field, $expression, $type);
   }
 
@@ -470,7 +470,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function withRecord($field, IBasicModel $Model) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->withRecord($field, $model);
   }
 
@@ -478,7 +478,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function groupBy($columns, $condition = null) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->groupBy($columns, $condition);
   }
 
@@ -486,7 +486,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function innerJoin(IModel $other, $condition, $alias = null) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->innerJoin($other, $condition, $alias);
   }
 
@@ -494,7 +494,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function leftJoin(IModel $other, $condition, $alias = null) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->leftJoin($other, $condition, $alias);
   }
 
@@ -502,7 +502,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function rightJoin(IModel $other, $condition, $alias = null) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->rightJoin($other, $condition, $alias);
   }
 
@@ -510,7 +510,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function distinct($distinct = true) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->distinct($distinct);
   }
 
@@ -518,7 +518,7 @@ abstract class Model extends Module implements IModel {
    * {@inheritdoc}
    */
   public function offset($offset) {
-    $select = new ReadSelection($this);
+    $select = new ReadSelectionBuilder($this);
     return $select->offset($offset);
   }
   
@@ -530,7 +530,7 @@ abstract class Model extends Module implements IModel {
    */
   public function getIterator(IReadSelection $selection = null) {
     if (!isset($selection))
-      $selection = new ReadSelection($this);
+      $selection = new ReadSelectionBuilder($this);
     return $this->read($selection);    
   }
 }

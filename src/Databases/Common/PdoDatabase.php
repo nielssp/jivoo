@@ -10,7 +10,7 @@ use Jivoo\Databases\QueryException;
 /**
  * A generic PDO SQL database.
  */
-abstract class PdoDatabase extends SqlDatabase {
+abstract class PdoDatabase extends SqlDatabaseBase {
   /**
    * @var PDO PDO Connection.
    */

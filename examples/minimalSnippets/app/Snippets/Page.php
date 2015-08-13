@@ -1,9 +1,9 @@
 <?php
 namespace Minimal\Snippets;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class Page extends Snippet {
+class Page extends SnippetBase {
   public function get() {
     $template = 'pages/' . implode('/', $this->request->path) . '.html';
     if (!file_exists($this->p('app', 'templates/' . $template . '.php')))

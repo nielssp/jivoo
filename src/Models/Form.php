@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models;
 
-use Jivoo\Models\Validation\Validator;
+use Jivoo\Models\Validation\ValidatorBuilder;
 
 /**
  * A generic form.
@@ -51,12 +51,12 @@ class Form implements IBasicRecord, IBasicModel {
       $this->addField($field, DataType::detectType($value));
       $this->data[$field] = $value;
     } 
-    $this->validator = new Validator($this);
+    $this->validator = new ValidatorBuilder($this);
   }
 
   /**
    * Get form validator.
-   * @return Validator Validator.
+   * @return ValidatorBuilder Validator.
    */
   public function getValidator() {
     return $this->validator;

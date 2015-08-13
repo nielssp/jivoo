@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Drivers\Sqlite3;
 
-use Jivoo\Databases\Common\SqlDatabase;
+use Jivoo\Databases\Common\SqlDatabaseBase;
 use Jivoo\Databases\Common\SqliteTypeAdapter;
 use Jivoo\Databases\QueryException;
 use Jivoo\Databases\ConnectionException;
@@ -13,7 +13,7 @@ use Jivoo\Databases\ConnectionException;
 /**
  * SQLite3 database driver.
  */
-class Sqlite3Database extends SqlDatabase {
+class Sqlite3Database extends SqlDatabaseBase {
   /**
    * @var SQLite3 SQLite3 object.
    */

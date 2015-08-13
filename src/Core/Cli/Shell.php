@@ -10,7 +10,7 @@ use Jivoo\Core\App;
 /**
  * Command-line interface for Jivoo applications.
  */
-class Shell extends Command {
+class Shell extends CommandBase {
   
   private $name;
   

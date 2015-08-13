@@ -16,7 +16,7 @@ use Jivoo\InvalidMethodException;
  * array('glue' => ..., 'clause' => ..., 'vars' => array(...)) where the glue
  * is either 'AND' or 'OR'. 
  */
-class Condition implements ICondition {
+class ConditionBuilder implements ICondition {
   /**
    * @var array[] A list of clauses
    */
@@ -75,7 +75,7 @@ class Condition implements ICondition {
    * @param ICondition|string $clause
    * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
-   * @return Condition A new condition
+   * @return ConditionBuilder A new condition
    */
   public static function create() {
     $args = func_get_args();
@@ -246,7 +246,7 @@ class Condition implements ICondition {
       if ($sqlString != '') {
         $sqlString .= ' ' . $clause['glue'] . ' ';
       }
-      if ($clause['clause'] instanceof Condition) {
+      if ($clause['clause'] instanceof ConditionBuilder) {
         if ($clause['clause']->hasClauses()) {
           if ($clause['clause'] instanceof NotCondition) {
             $sqlString .= 'NOT ';

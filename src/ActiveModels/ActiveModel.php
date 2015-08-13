@@ -7,19 +7,19 @@ namespace Jivoo\ActiveModels;
 
 use Jivoo\Core\IEventListener;
 use Jivoo\Core\Event;
-use Jivoo\Models\Model;
+use Jivoo\Models\ModelBase;
 use Jivoo\Core\App;
 use Jivoo\Databases\Databases;
 use Jivoo\Core\Utilities;
-use Jivoo\Models\Selection\UpdateSelection;
-use Jivoo\Models\Selection\DeleteSelection;
-use Jivoo\Models\Selection\ReadSelection;
-use Jivoo\Models\Validation\Validator;
+use Jivoo\Models\Selection\UpdateSelectionBuilder;
+use Jivoo\Models\Selection\DeleteSelectionBuilder;
+use Jivoo\Models\Selection\ReadSelectionBuilder;
+use Jivoo\Models\Validation\ValidatorBuilder;
 use Jivoo\Databases\ResultSetIterator;
 use Jivoo\Models\DataType;
-use Jivoo\Models\Condition\Condition;
-use Jivoo\Models\Selection\BasicSelection;
-use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Condition\ConditionBuilder;
+use Jivoo\Models\Selection\BasicSelectionBase;
+use Jivoo\Models\Selection\SelectionBuilder;
 use Jivoo\Models\Selection\IReadSelection;
 use Jivoo\Models\Record;
 use Jivoo\Databases\InvalidTableException;
@@ -27,7 +27,7 @@ use Jivoo\Databases\InvalidTableException;
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
  */
-abstract class ActiveModel extends Model implements IEventListener {
+abstract class ActiveModel extends ModelBase implements IEventListener {
   /**
    * @var string Name of database used by model.
    */
@@ -220,7 +220,7 @@ abstract class ActiveModel extends Model implements IEventListener {
       $this->virtualFields[] = $field;
     }
 
-    $this->validator = new Validator($this, $this->validate);
+    $this->validator = new ValidatorBuilder($this, $this->validate);
     $this->schema->createValidationRules($this->validator);
 
     foreach ($this->nonVirtualFields as $field) {
@@ -293,7 +293,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($data = array(), ReadSelection $selection = null) {
+  public function createExisting($data = array(), ReadSelectionBuilder $selection = null) {
     if (isset($data[$this->primaryKey])) {
       $id = $data[$this->primaryKey];
       if (array_key_exists($id, $this->cache))
@@ -401,7 +401,7 @@ abstract class ActiveModel extends Model implements IEventListener {
     $association = $this->associations[$association];
     $association['name'] = $name;
     if (is_string($condition))
-      $condition = new Condition($condition);
+      $condition = new ConditionBuilder($condition);
     $association['condition'] = $condition;
     $this->associations[$name] = $association;
   }
@@ -621,28 +621,28 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function updateSelection(UpdateSelection $selection) {
+  public function updateSelection(UpdateSelectionBuilder $selection) {
     return $this->source->updateSelection($selection);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteSelection(DeleteSelection $selection) {
+  public function deleteSelection(DeleteSelectionBuilder $selection) {
     return $this->source->deleteSelection($selection);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function countSelection(ReadSelection $selection) {
+  public function countSelection(ReadSelectionBuilder $selection) {
     return $this->source->countSelection($selection);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function firstSelection(ReadSelection $selection) {
+  public function firstSelection(ReadSelectionBuilder $selection) {
     $resultSet = $this->source->readSelection($selection->limit(1));
     if (!$resultSet->hasRows())
       return null;
@@ -652,7 +652,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function lastSelection(ReadSelection $selection) {
+  public function lastSelection(ReadSelectionBuilder $selection) {
     $resultSet = $this->source->readSelection($selection->reverseOrder()->limit(1));
     if (!$resultSet->hasRows())
       return null;
@@ -662,7 +662,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function read(ReadSelection $selection) {
+  public function read(ReadSelectionBuilder $selection) {
     $resultSet = $this->source->readSelection($selection);
     return new ResultSetIterator($this, $resultSet, $selection);
   }
@@ -670,7 +670,7 @@ abstract class ActiveModel extends Model implements IEventListener {
   /**
    * {@inheritdoc}
    */
-  public function readCustom(ReadSelection $selection, $model = null) {
+  public function readCustom(ReadSelectionBuilder $selection, $model = null) {
     return $this->source->readCustom($selection, $model);
   }
 
@@ -699,7 +699,7 @@ abstract class ActiveModel extends Model implements IEventListener {
    */
   public function withAssociated($association, IReadSelection $selection = null) {
     if (!isset($selection))
-      $selection = new Selection($this);
+      $selection = new SelectionBuilder($this);
     if (!isset($this->associations))
       $this->createAssociations();
     if (!isset($this->associations[$association]))
@@ -741,7 +741,7 @@ abstract class ActiveModel extends Model implements IEventListener {
    */
   public function prefetchAssociated($association, IReadSelection $selection = null) {
     if (!isset($selection))
-      $selection = new Selection($this);
+      $selection = new SelectionBuilder($this);
     if (!isset($this->associations))
       $this->createAssociations();
     if (!isset($this->associations[$association]))
@@ -784,7 +784,7 @@ abstract class ActiveModel extends Model implements IEventListener {
    */
   public function withCount($association, IReadSelection $selection = null) {
     if (!isset($selection))
-      $selection = new Selection($this);
+      $selection = new SelectionBuilder($this);
     if (!isset($this->associations))
       $this->createAssociations();
     if (!isset($this->associations[$association]))

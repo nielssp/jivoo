@@ -12,7 +12,7 @@ use Jivoo\Models\IRecord;
  * A record validator.
  * @TODO Some information about $validator-array and use of validators here
  */
-class Validator implements IValidator {
+class ValidatorBuilder implements IValidator {
   /**
    * @var ValidatorField[] Associative array of field names and ValidatorField objects
    */

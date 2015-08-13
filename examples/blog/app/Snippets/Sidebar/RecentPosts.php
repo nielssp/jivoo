@@ -1,9 +1,9 @@
 <?php
 namespace Blog\Snippets\Sidebar;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class RecentPosts extends Snippet {
+class RecentPosts extends SnippetBase {
   protected $models = array('Post');
   
   public function get() {

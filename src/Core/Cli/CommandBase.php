@@ -10,7 +10,7 @@ use Jivoo\Core\Module;
 /**
  * A command with subcommands.
  */
-abstract class Command extends Module implements ICommand {
+abstract class CommandBase extends Module implements ICommand {
   
   protected $commands = array();
   

@@ -1,9 +1,9 @@
 <?php
 namespace Chat\Snippets;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class NotFound extends Snippet {
+class NotFound extends SnippetBase {
   public function get() {
     $this->setStatus(404);
     return $this->render();

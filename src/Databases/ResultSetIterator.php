@@ -5,9 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Models\Model;
+use Jivoo\Models\ModelBase;
 use Jivoo\Models\IRecordIterator;
-use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\Selection\ReadSelectionBuilder;
 
 /**
  * Iterator for {@see IResultSet} instances.
@@ -40,11 +40,11 @@ class ResultSetIterator implements IRecordIterator {
 
   /**
    * Construct iterator.
-   * @param Model $model Model.
+   * @param ModelBase $model Model.
    * @param IResultSet $resultSet Result set.
-   * @param ReadSelection $selection The selection that created this result set.
+   * @param ReadSelectionBuilder $selection The selection that created this result set.
    */
-  public function __construct(Model $model, IResultSet $resultSet, ReadSelection $selection) {
+  public function __construct(ModelBase $model, IResultSet $resultSet, ReadSelectionBuilder $selection) {
     $this->model = $model;
     $this->selection = $selection;
     $this->resultSet = $resultSet;

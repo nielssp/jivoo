@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Setup;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\Form;
 use Jivoo\Routing\ResponseOverrideException;
@@ -17,7 +17,7 @@ use Jivoo\Core\Store\Document;
  * An installer. Consists of a number of steps (implemented as methods) and 
  * subinstallers.
  */
-abstract class InstallerSnippet extends Snippet {
+abstract class InstallerSnippet extends SnippetBase {
   /**
    * {@inheritdoc}
    */

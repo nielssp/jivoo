@@ -5,13 +5,13 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Console;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
 /**
  * Console snippet that automatically disabled layout for requests made with
  * Ajax.
  */
-class ConsoleSnippet extends Snippet {
+class ConsoleSnippet extends SnippetBase {
   /**
    * {@inheritdoc}
    */

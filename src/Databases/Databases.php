@@ -144,7 +144,7 @@ class Databases extends LoadableModule {
     try {
       $class = 'Jivoo\Databases\Drivers\\' . $driver  . '\\' . $driver . 'Database';
       Utilities::assumeSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
-      $dbSchema = new DatabaseSchema();
+      $dbSchema = new DatabaseSchemaBuilder();
       foreach ($schemas as $schema) {
         if (is_string($schema)) {
           $name = $schema;

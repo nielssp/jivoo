@@ -8,4 +8,4 @@ namespace Jivoo\Models\Condition;
 /**
  * Same as {@see Condition} but with a logical NOT operation.
  */
-class NotCondition extends Condition { }
+class NotCondition extends ConditionBuilder { }

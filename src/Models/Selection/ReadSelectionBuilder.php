@@ -7,10 +7,10 @@ namespace Jivoo\Models\Selection;
 
 use Jivoo\Models\IModel;
 use Jivoo\Models\IRecord;
-use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\DataType;
 use Jivoo\Models\IBasicModel;
-use Jivoo\Models\Model;
+use Jivoo\Models\ModelBase;
 
 /**
  * A read selection.
@@ -21,7 +21,7 @@ use Jivoo\Models\Model;
  * @property-read array[] $fields List of arrays describing fields.
  * @property-read array[] $additionalFields List of arrays describing fields.
  */
-class ReadSelection extends BasicSelection implements IReadSelection {
+class ReadSelectionBuilder extends BasicSelectionBase implements IReadSelection {
   /**
    * @var bool Distinct.
    */
@@ -110,7 +110,7 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * {@inheritdoc}
    */
   public function select($expression, $alias = null) {
-    if ($alias instanceof Model) {
+    if ($alias instanceof ModelBase) {
       $this->fields = array(array(
         'expression' => $expression,
         'alias' => null
@@ -185,8 +185,8 @@ class ReadSelection extends BasicSelection implements IReadSelection {
     if (!is_array($columns)) {
       $columns = array($columns);
     }
-    if (!($condition instanceof Condition)) {
-      $condition = new Condition($condition);
+    if (!($condition instanceof ConditionBuilder)) {
+      $condition = new ConditionBuilder($condition);
     }
 //     if (isset($this->groupBy)) {
 //       $columns = array_merge($this->groupBy['columns'], $columns);
@@ -201,8 +201,8 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * {@inheritdoc}
    */
   public function innerJoin(IModel $dataSource, $condition = null, $alias = null) {
-    if (!($condition instanceof Condition)) {
-      $condition = new Condition($condition);
+    if (!($condition instanceof ConditionBuilder)) {
+      $condition = new ConditionBuilder($condition);
     }
     $this->joins[] = array(
       'source' => $dataSource,
@@ -217,8 +217,8 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * {@inheritdoc}
    */
   public function leftJoin(IModel $dataSource, $condition, $alias = null) {
-    if (!($condition instanceof Condition)) {
-      $condition = new Condition($condition);
+    if (!($condition instanceof ConditionBuilder)) {
+      $condition = new ConditionBuilder($condition);
     }
     $this->joins[] = array('source' => $dataSource, 'type' => 'LEFT',
       'alias' => $alias, 'condition' => $condition
@@ -230,8 +230,8 @@ class ReadSelection extends BasicSelection implements IReadSelection {
    * {@inheritdoc}
    */
   public function rightJoin(IModel $dataSource, $condition, $alias = null) {
-    if (!($condition instanceof Condition)) {
-      $condition = new Condition($condition);
+    if (!($condition instanceof ConditionBuilder)) {
+      $condition = new ConditionBuilder($condition);
     }
     $this->joins[] = array('source' => $dataSource, 'type' => 'RIGHT',
       'alias' => $alias, 'condition' => $condition

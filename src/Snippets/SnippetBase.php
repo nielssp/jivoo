@@ -15,7 +15,7 @@ use Jivoo\View\ViewResponse;
 /**
  * A loadable snippet.
  */
-class Snippet extends Module implements ISnippet {
+abstract class SnippetBase extends Module implements ISnippet {
   /**
    * @var string[] A list of other helpers needed by this helper.
   */

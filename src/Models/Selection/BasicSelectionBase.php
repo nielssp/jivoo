@@ -5,8 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Selection;
 
-use Jivoo\Models\Model;
-use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\ModelBase;
+use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidMethodException;
 
@@ -17,7 +17,7 @@ use Jivoo\InvalidMethodException;
  * @property-read Condition $where Select condition.
  * @property-read Model $model Target of selection.
  */
-abstract class BasicSelection implements IBasicSelection {
+abstract class BasicSelectionBase implements IBasicSelection {
   /**
    * List of arrays describing ordering.
    *
@@ -49,10 +49,10 @@ abstract class BasicSelection implements IBasicSelection {
 
   /**
    * Construct basic selection.
-   * @param Model $model Target of selection.
+   * @param ModelBase $model Target of selection.
    */
-  public function __construct(Model $model) {
-    $this->where = new Condition();
+  public function __construct(ModelBase $model) {
+    $this->where = new ConditionBuilder();
     $this->model = $model;
   }
 
@@ -173,10 +173,10 @@ abstract class BasicSelection implements IBasicSelection {
   /**
    * Convert a basic selection to a full selection. Removes
    * all information specific to read/update/delete.
-   * @return Selection Selection.
+   * @return SelectionBuilder Selection.
    */
   public function toSelection() {
-    $selection = new Selection($this->model);
+    $selection = new SelectionBuilder($this->model);
     $selection->where = $this->where;
     $selection->limit = $this->limit;
     $selection->orderBy = $this->orderBy;

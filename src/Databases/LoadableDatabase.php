@@ -113,7 +113,7 @@ abstract class LoadableDatabase extends Module implements IMigratableDatabase {
    */
   public function refreshSchema() {
     $tables = array_intersect($this->schema->getTables(), $this->tableNames);
-    $this->schema = new DatabaseSchema();
+    $this->schema = new DatabaseSchemaBuilder();
     foreach ($tables as $table) {
       $schema = $this->getTableSchema($table);
       $this->schema->addSchema($schema);

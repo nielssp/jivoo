@@ -12,7 +12,7 @@ use Psr\Log\LogLevel;
 /**
  * A handler that proxies log messages to another PSR-3 logger.
  */
-class LoggerHandler extends Handler implements LoggerAwareInterface {
+class LoggerHandler extends HandlerBase implements LoggerAwareInterface {
   /**
    * @var LoggerInterface
    */

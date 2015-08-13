@@ -5,13 +5,13 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\File;
 
-use Jivoo\Models\BasicModel;
+use Jivoo\Models\BasicModelBase;
 use Jivoo\Models\DataType;
 
 /**
  * The file model.
  */
-class FileModel extends BasicModel {
+class FileModel extends BasicModelBase {
   /**
    * @var FileModel Singleton instance.
    */

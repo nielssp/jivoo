@@ -8,7 +8,7 @@ namespace Jivoo\Databases;
 use Jivoo\Models\ISchema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
-use Jivoo\Models\Validation\Validator;
+use Jivoo\Models\Validation\ValidatorBuilder;
 use Jivoo\InvalidPropertyException;
 
 /**
@@ -129,9 +129,9 @@ class Schema implements ISchema {
 
   /**
    * Create validation rules based on types.
-   * @param Validator $validator Validator to create rules on.
+   * @param ValidatorBuilder $validator Validator to create rules on.
    */
-  public function createValidationRules(Validator $validator) {
+  public function createValidationRules(ValidatorBuilder $validator) {
     foreach ($this->_fields as $field => $type) {
       $type->createValidationRules($validator->$field);
     }

@@ -11,7 +11,7 @@ use Jivoo\Routing\Http;
 /**
  * Used for pushing data to the client side using long polling.
  */
-abstract class CometSnippet extends Snippet {
+abstract class CometSnippet extends SnippetBase {
   /**
    * @var float Number of calls to {@see update()} per second.
    */

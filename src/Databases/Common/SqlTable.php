@@ -8,10 +8,10 @@ namespace Jivoo\Databases\Common;
 use Jivoo\Databases\Table;
 use Jivoo\Core\App;
 use Jivoo\Models\ISchema;
-use Jivoo\Models\Condition\Condition;
-use Jivoo\Models\Selection\ReadSelection;
-use Jivoo\Models\Selection\UpdateSelection;
-use Jivoo\Models\Selection\DeleteSelection;
+use Jivoo\Models\Condition\ConditionBuilder;
+use Jivoo\Models\Selection\ReadSelectionBuilder;
+use Jivoo\Models\Selection\UpdateSelectionBuilder;
+use Jivoo\Models\Selection\DeleteSelectionBuilder;
 use Jivoo\Models\Record;
 use Jivoo\Models\Condition\NotCondition;
 use Jivoo\Databases\InvalidTableException;
@@ -44,10 +44,10 @@ class SqlTable extends Table {
   /**
    * Construct table.
    * @param App $app Associated application.
-   * @param SqlDatabase $database Owner database.
+   * @param SqlDatabaseBase $database Owner database.
    * @param string $table Table name (without prefix etc.).
    */
-  public function __construct(App $app, SqlDatabase $database, $table) {
+  public function __construct(App $app, SqlDatabaseBase $database, $table) {
     $this->owner = $database;
     $this->name = $table;
     $this->schema = $this->owner->getSchema()->getSchema($table);
@@ -79,7 +79,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($raw = array(), ReadSelection $selection) {
+  public function createExisting($raw = array(), ReadSelectionBuilder $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
     $additional = $selection->additionalFields;
     $data = array();
@@ -137,10 +137,10 @@ class SqlTable extends Table {
 
   /**
    * Convert a condition to SQL.
-   * @param Condition $where The condition.
+   * @param ConditionBuilder $where The condition.
    * @return string SQL subquery.
    */
-  protected function conditionToSql(Condition $where) {
+  protected function conditionToSql(ConditionBuilder $where) {
     return $where->toString($this->owner);
   }
   
@@ -155,7 +155,7 @@ class SqlTable extends Table {
       $vars = func_get_args();
       array_shift($vars); 
     }
-    return Condition::interpolate($query, $vars, $this->owner);
+    return ConditionBuilder::interpolate($query, $vars, $this->owner);
   }
   
   /**
@@ -179,7 +179,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function countSelection(ReadSelection $selection) {
+  public function countSelection(ReadSelectionBuilder $selection) {
     if (isset($selection->groupBy)) {
       $result = $this->owner->rawQuery(
         'SELECT COUNT(*) as _count FROM (' . $this->convertReadSelection($selection, '1') . ') AS _selection_count'
@@ -196,17 +196,17 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function readSelection(ReadSelection $selection) {
+  public function readSelection(ReadSelectionBuilder $selection) {
     return $this->owner->rawQuery($this->convertReadSelection($selection));
   }
 
   /**
    * Convert a read selection to an SQL query.
-   * @param ReadSelection $selection Read selection.
+   * @param ReadSelectionBuilder $selection Read selection.
    * @param string|null $projection Projection override.
    * @return string SQL query.
    */
-  private function convertReadSelection(ReadSelection $selection, $projection = null) {
+  private function convertReadSelection(ReadSelectionBuilder $selection, $projection = null) {
     $sqlString = 'SELECT ';
     if ($selection->distinct)
       $sqlString .= 'DISTINCT ';
@@ -306,7 +306,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function updateSelection(UpdateSelection $selection) {
+  public function updateSelection(UpdateSelectionBuilder $selection) {
     $typeAdapter = $this->owner->getTypeAdapter();
     $sqlString = 'UPDATE ' . $this->owner->quoteModel($this->name);
     $sets = $selection->sets;
@@ -349,7 +349,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function deleteSelection(DeleteSelection $selection) {
+  public function deleteSelection(DeleteSelectionBuilder $selection) {
     $sqlString = 'DELETE FROM ' . $this->owner->quoteModel($this->name);
     if ($selection->where->hasClauses()) {
       $sqlString .= ' WHERE ' . $this->conditionToSql($selection->where);

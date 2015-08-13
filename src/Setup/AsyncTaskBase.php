@@ -8,7 +8,7 @@ namespace Jivoo\Setup;
 /**
  * Implements progress and status updates for asynchronous tasks.
  */
-abstract class AsyncTask implements IAsyncTask {
+abstract class AsyncTaskBase implements IAsyncTask {
   /**
    * @var string Status message;
    */

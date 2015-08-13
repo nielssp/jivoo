@@ -44,7 +44,7 @@ class Snippets extends LoadableModule {
         $class = $this->app->n('Snippets\\' . $class);
       if (!class_exists($class))
         return null;
-      Utilities::assumeSubclassOf($class, 'Jivoo\Snippets\Snippet');
+      Utilities::assumeSubclassOf($class, 'Jivoo\Snippets\SnippetBase');
       $object = new $class($this->app);
       if (!$singleton)
         return $object;

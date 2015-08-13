@@ -9,7 +9,7 @@ use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Databases\Schema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
-use Jivoo\Models\Condition\Condition;
+use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Databases\TypeException;
 
 /**
@@ -23,9 +23,9 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
 
   /**
    * Construct type adapter.
-   * @param SqlDatabase $db Database.
+   * @param SqlDatabaseBase $db Database.
    */
-  public function __construct(SqlDatabase $db) {
+  public function __construct(SqlDatabaseBase $db) {
     $this->db = $db;
   }
 
@@ -133,7 +133,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
       $column .= ' NOT';
     $column .= ' NULL';
     if (isset($type->default))
-      $column .= Condition::interpolate(' DEFAULT %_', array($type, $type->default), $this->db);
+      $column .= ConditionBuilder::interpolate(' DEFAULT %_', array($type, $type->default), $this->db);
     return $column;
   }
   

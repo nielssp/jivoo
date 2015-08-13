@@ -1,8 +1,8 @@
 <?php
 namespace Chat\Snippets;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class FrontPage extends Snippet {
+class FrontPage extends SnippetBase {
   protected $helpers = array('Snippet');
 }

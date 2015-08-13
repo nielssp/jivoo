@@ -1,9 +1,9 @@
 <?php
 namespace Blog\Snippets\Sidebar;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class RecentComments extends Snippet {
+class RecentComments extends SnippetBase {
   protected $models = array('Comment');
   
   public function get() {

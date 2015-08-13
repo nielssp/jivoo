@@ -23,9 +23,9 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
 
   /**
    * Construct type adapter.
-   * @param SqlDatabase $db Database.
+   * @param SqlDatabaseBase $db Database.
    */
-  public function __construct(SqlDatabase $db) {
+  public function __construct(SqlDatabaseBase $db) {
     $this->db = $db;
   }
 

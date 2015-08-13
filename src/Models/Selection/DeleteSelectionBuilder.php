@@ -8,7 +8,7 @@ namespace Jivoo\Models\Selection;
 /**
  * A delete selection.
  */
-class DeleteSelection extends BasicSelection implements IDeleteSelection {
+class DeleteSelectionBuilder extends BasicSelectionBase implements IDeleteSelection {
   /**
    * {@inheritdoc}
    */

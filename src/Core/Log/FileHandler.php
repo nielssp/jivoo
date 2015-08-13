@@ -11,7 +11,7 @@ use Psr\Log\LogLevel;
 /**
  * File log handler.
  */
-class FileHandler extends Handler {
+class FileHandler extends HandlerBase {
   /**
    * @var string
    */

@@ -51,7 +51,7 @@ function h($string) {
  */
 function where($condition) {
   $args = func_get_args();
-  $condition = new Jivoo\Models\Condition\Condition();
+  $condition = new Jivoo\Models\Condition\ConditionBuilder();
   call_user_func_array(array($condition, 'andWhere'), $args);
   return $condition;
 }

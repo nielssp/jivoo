@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Setup;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
 /**
  * Log in using the maintenance user.
  */
-class Login extends Snippet {
+class Login extends SnippetBase {
   /**
    * {@inheritdoc}
    */

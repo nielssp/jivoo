@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Drivers\Mysqli;
 
-use Jivoo\Databases\Common\SqlDatabase;
+use Jivoo\Databases\Common\SqlDatabaseBase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Databases\ConnectionException;
 use Jivoo\Databases\QueryException;
@@ -13,7 +13,7 @@ use Jivoo\Databases\QueryException;
 /**
  * MySQLi database driver.
  */
-class MysqliDatabase extends SqlDatabase {
+class MysqliDatabase extends SqlDatabaseBase {
   /**
    * @var mysqli MySQLi object.
    */

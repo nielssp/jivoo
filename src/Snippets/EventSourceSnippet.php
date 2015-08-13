@@ -12,7 +12,7 @@ use Jivoo\Routing\EventSource;
  * Not supported in all browsers, and works a bit strange sometimes, might be
  * better to use {@see CometSnippet}.
  */
-abstract class EventSourceSnippet extends Snippet {
+abstract class EventSourceSnippet extends SnippetBase {
   /**
    * @var float Number of calls to {@see update()} per second.
    */

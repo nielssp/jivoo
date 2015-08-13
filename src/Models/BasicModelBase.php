@@ -8,7 +8,7 @@ namespace Jivoo\Models;
 /**
  * A basic model implementation.
  */
-class BasicModel implements IBasicModel {
+class BasicModelBase implements IBasicModel {
   
   /**
    * @var string[] Associative array of fields and labels.

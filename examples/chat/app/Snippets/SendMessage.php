@@ -1,10 +1,10 @@
 <?php
 namespace Chat\Snippets;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 use Jivoo\Core\Json;
 
-class SendMessage extends Snippet {
+class SendMessage extends SnippetBase {
   protected $helpers = array('Form');
   
   protected $models = array('Message');

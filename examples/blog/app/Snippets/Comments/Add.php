@@ -1,9 +1,9 @@
 <?php
 namespace Blog\Snippets\Comments;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class Add extends Snippet {
+class Add extends SnippetBase {
   protected $helpers = array('Form');
   
   protected $models = array('Comment', 'Post');

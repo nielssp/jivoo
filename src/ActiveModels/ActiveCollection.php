@@ -5,21 +5,21 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\ActiveModels;
 
-use Jivoo\Models\Model;
+use Jivoo\Models\ModelBase;
 use Jivoo\Models\Selection\ISelection;
-use Jivoo\Models\Selection\UpdateSelection;
-use Jivoo\Models\Selection\DeleteSelection;
-use Jivoo\Models\Selection\ReadSelection;
+use Jivoo\Models\Selection\UpdateSelectionBuilder;
+use Jivoo\Models\Selection\DeleteSelectionBuilder;
+use Jivoo\Models\Selection\ReadSelectionBuilder;
 use Jivoo\Models\Selection\IBasicSelection;
 use Jivoo\Models\Selection\IReadSelection;
-use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Selection\SelectionBuilder;
 use Jivoo\Models\Condition\ICondition;
 
 /**
  * A special model representing an association collection as result from for
  * instance a many-to-many relationship between models.
  */
-class ActiveCollection extends Model {
+class ActiveCollection extends ModelBase {
   /**
    * @var ActiveModel "This" model.
    */
@@ -116,7 +116,7 @@ class ActiveCollection extends Model {
     }
     else {
       $selection = $selection->where($this->thisKey . ' = ?', $this->recordId);
-      if ($selection instanceof Selection)
+      if ($selection instanceof SelectionBuilder)
         $selection = $selection->toReadSelection();
     }
     if (isset($this->condition))
@@ -263,14 +263,14 @@ class ActiveCollection extends Model {
   /**
    * {@inheritdoc}
    */
-  public function createExisting($data = array(), ReadSelection $selection) {
+  public function createExisting($data = array(), ReadSelectionBuilder $selection) {
     return $this->other->createExisting($data, $selection);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateSelection(UpdateSelection $selection) {
+  public function updateSelection(UpdateSelectionBuilder $selection) {
     if (!isset($this->join))
       return $this->other->updateSelection(
         $selection->where($this->thisKey . ' = ?', $this->recordId)
@@ -290,7 +290,7 @@ class ActiveCollection extends Model {
   /**
    * {@inheritdoc}
    */
-  public function deleteSelection(DeleteSelection $selection) {
+  public function deleteSelection(DeleteSelectionBuilder $selection) {
     if (!isset($this->join))
       return $this->other->deleteSelection($this->prepareSelection($selection));
     $pk = $this->otherPrimary;
@@ -312,35 +312,35 @@ class ActiveCollection extends Model {
   /**
    * {@inheritdoc}
    */
-  public function countSelection(ReadSelection $selection) {
+  public function countSelection(ReadSelectionBuilder $selection) {
     return $this->other->countSelection($selection);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function firstSelection(ReadSelection $selection) {
+  public function firstSelection(ReadSelectionBuilder $selection) {
     return $this->other->firstSelection($this->prepareSelection($selection));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function lastSelection(ReadSelection $selection) {
+  public function lastSelection(ReadSelectionBuilder $selection) {
     return $this->other->lastSelection($this->prepareSelection($selection));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function read(ReadSelection $selection) {
+  public function read(ReadSelectionBuilder $selection) {
     return $this->other->read($this->prepareSelection($selection));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function readCustom(ReadSelection $selection) {
+  public function readCustom(ReadSelectionBuilder $selection) {
     return $this->other->readCustom($this->prepareSelection($selection));
   }
 

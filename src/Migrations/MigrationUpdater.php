@@ -6,7 +6,7 @@
 namespace Jivoo\Migrations;
 
 use Jivoo\Setup\InstallerSnippet;
-use Jivoo\Setup\AsyncTask;
+use Jivoo\Setup\AsyncTaskBase;
 use Jivoo\Databases\IMigratableDatabase;
 
 /**
@@ -61,7 +61,7 @@ class MigrationUpdater extends InstallerSnippet {
 /**
  * Asynchronous task for migrating tables.
  */
-class MigrateTask extends AsyncTask {
+class MigrateTask extends AsyncTaskBase {
   /**
    * @var Migrations
    */

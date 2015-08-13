@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Extensions;
 
-use Jivoo\Models\BasicModel;
+use Jivoo\Models\BasicModelBase;
 use Jivoo\Models\DataType;
 
 /**
@@ -13,7 +13,7 @@ use Jivoo\Models\DataType;
  * {@see getInstance()} to get instance.
  * @see ExtensionInfo
  */
-class ExtensionModel extends BasicModel {
+class ExtensionModel extends BasicModelBase {
   /**
    * @var ExtensionModel Singleton instance.
    */

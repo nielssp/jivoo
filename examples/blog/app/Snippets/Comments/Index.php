@@ -1,9 +1,9 @@
 <?php
 namespace Blog\Snippets\Comments;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class Index extends Snippet {
+class Index extends SnippetBase {
   protected $helpers = array('Pagination');
   
   protected $models = array('Comment', 'Post');

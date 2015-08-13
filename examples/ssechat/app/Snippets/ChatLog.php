@@ -1,7 +1,7 @@
 <?php
 namespace Chat\Snippets;
 
-use Jivoo\Snippets\Snippet;
+use Jivoo\Snippets\SnippetBase;
 
-class ChatLog extends Snippet {
+class ChatLog extends SnippetBase {
 }

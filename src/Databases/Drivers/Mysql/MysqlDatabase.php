@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Drivers\Mysql;
 
-use Jivoo\Databases\Common\SqlDatabase;
+use Jivoo\Databases\Common\SqlDatabaseBase;
 use Jivoo\Databases\Common\MysqlTypeAdapter;
 use Jivoo\Databases\ConnectionException;
 use Jivoo\Databases\QueryException;
@@ -15,7 +15,7 @@ use Jivoo\Databases\QueryException;
  * @deprecated Use {@see MysqliDatabase} or {@see PdoMysqlDatabase} instead,
  * if available.
  */
-class MysqlDatabase extends SqlDatabase {
+class MysqlDatabase extends SqlDatabaseBase {
   /**
    * @var resource MySQL connection handle.
    */

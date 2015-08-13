@@ -6,7 +6,7 @@
 namespace Jivoo\ActiveModels;
 
 use Jivoo\Setup\InstallerSnippet;
-use Jivoo\Setup\AsyncTask;
+use Jivoo\Setup\AsyncTaskBase;
 
 /**
  * ActiveModel installer. Calls the 'install'-method of each ActiveModel unless
@@ -44,7 +44,7 @@ class ActiveModelInstaller extends InstallerSnippet {
 /**
  * Asynchronous task for installing active models.
  */
-class InstallTask extends AsyncTask {
+class InstallTask extends AsyncTaskBase {
   /**
    * @var ActiveModels
    */

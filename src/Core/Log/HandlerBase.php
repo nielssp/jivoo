@@ -7,7 +7,7 @@ namespace Jivoo\Core\Log;
 
 use Psr\Log\LogLevel;
 
-abstract class Handler implements IHandler {
+abstract class HandlerBase implements IHandler {
   /**
    * @var string
    */

@@ -15,7 +15,7 @@ use Jivoo\Models\Condition\IQuoter;
 /**
  * A generic SQL database.
  */
-abstract class SqlDatabase extends LoadableDatabase implements ISqlDatabase, IQuoter {
+abstract class SqlDatabaseBase extends LoadableDatabase implements ISqlDatabase, IQuoter {
   /**
    * @var string Table prefix.
    */
