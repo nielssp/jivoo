@@ -48,7 +48,7 @@ class MaintenanceUserModel implements UserModel {
    * {@inheritdoc}
    */
   public function createSession($userData, $validUntil) {
-    $sessionId = base64_encode(Random::bytes(32));
+    $sessionId = Binary::base64Encode(Random::bytes(32), true);
     $this->lock['session'] = $sessionId;
     $this->lock->save();
     return $sessionId;

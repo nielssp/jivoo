@@ -7,6 +7,7 @@ namespace Jivoo\AccessControl;
 
 use Jivoo\Routing\Session;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Binary;
 
 /**
  * Single-user model. Can be used for simple authentication of a single
@@ -62,7 +63,7 @@ class SingleUserModel implements UserModel {
    * {@inheritdoc}
    */
   public function createSession($userData, $validUntil) {
-    $sessionId = base64_encode(Random::bytes(32));
+    $sessionId = Binary::base64Encode(Random::bytes(32), true);
     $this->session['user_session'] = $sessionId;
     return $sessionId;
   }

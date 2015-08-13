@@ -35,4 +35,31 @@ class Binary {
       return mb_substr($string, $start, $length, '8bit');
     return substr($string, $start, $length);
   }
+  
+  /**
+   * Encode binary data using base64.
+   * @param string $data String.
+   * @param bool $url 'base64url' standard. Removes padding and replaces '+'
+   * and '/' with '-' and '_'.
+   * @return string Base64 encoded string.  
+   */
+  public static function base64Encode($data, $url = false) {
+    if ($url)
+      return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+    else
+      return base64_encode($data);
+  }
+  
+  /**
+   * Decode base64 encoded string.
+   * @param string $data Base64 encoded string..
+   * @param bool $url Whether to replace '-' and '_' with '+' and '/'.
+   * @return string Original string.
+   */
+  public static function base64Decode($data, $url = true) {
+    if ($url)
+      return base64_decode(strtr($data, '-_', '+/'));
+    else
+      return base64_decode($data);
+  }
 }

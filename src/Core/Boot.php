@@ -76,9 +76,11 @@ class Boot extends Module {
       )
     );
     
-    $store = new SerializedStore($this->p('cache/i18n.s'));
-    if ($store->touch()) {
-      I18n::setCache(new StoreCache($store));
+    if (Utilities::dirExists($this->p('cache'))) {
+      $store = new SerializedStore($this->p('cache/i18n.s'));
+      if ($store->touch()) {
+        I18n::setCache(new StoreCache($store));
+      }
     }
     
     if (isset($this->config['i18n']['language']))
