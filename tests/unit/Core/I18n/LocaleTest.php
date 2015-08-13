@@ -24,10 +24,22 @@ class LocaleTest extends \Jivoo\Test {
     $l->set('Hello, %1!', 'Hej, %1!');
     $this->assertEquals('Hej, World!', $l->get('Hello, %1!', 'World'));
     
-    $this->assertFalse($l->hasProperty('foo'));
+    $this->assertFalse(isset($l->foo));
     $l->set('[Locale::foo]', 'bar');
-    $this->assertTrue($l->hasProperty('foo'));
-    $this->assertEquals('bar', $l->getProperty('foo'));
+    $this->assertTrue(isset($l->foo));
+    $this->assertEquals('bar', $l->foo);
+    $l->foo = 'baz';
+    $this->assertTrue(isset($l->foo));
+    $this->assertEquals('baz', $l->foo);
+    unset($l->foo);
+    $this->assertFalse(isset($l->foo));
+    $this->assertEquals('[Locale::foo]', $l->get('[Locale::foo]'));
+    
+    $this->assertEquals('Y-m-d', $l->shortDate);
+    $l->shortDate = 'd-m-Y';
+    $this->assertEquals('d-m-Y', $l->shortDate);
+    unset($l->shortDate);
+    $this->assertEquals('Y-m-d', $l->shortDate);
   }
   
   public function testNget() {
@@ -152,11 +164,6 @@ class LocaleTest extends \Jivoo\Test {
     $l = new Locale();
     
     try {
-      $l->notAProperty = true;
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
-    try {
       $l->notAProperty;
       $this->fail('InvalidPropertyException not thrown');
     }
@@ -166,8 +173,8 @@ class LocaleTest extends \Jivoo\Test {
   public function testReadPo() {
     $l = Locale::readPo('tests/_data/Core/I18n/da.po');
     $this->assertEquals('juni', $l->get('June'));
-    $this->assertEquals('d/m/Y', $l->dateFormat);
-    $this->assertTrue($l->hasProperty('timeFormat'));
+    $this->assertEquals('d/m/Y', $l->shortDate);
+    $this->assertTrue(isset($l->shortTime));
     $this->assertEquals('Der er 0 brugere', $l->nget('There are %1 users', 'There is %1 user', 0));
     $this->assertEquals('Der er 1 bruger', $l->nget('There are %1 users', 'There is %1 user', 1));
     $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
@@ -176,10 +183,33 @@ class LocaleTest extends \Jivoo\Test {
   public function testReadMo() {
     $l = Locale::readMo('tests/_data/Core/I18n/da.mo');
     $this->assertEquals('juni', $l->get('June'));
-    $this->assertEquals('d/m/Y', $l->dateFormat);
-    $this->assertTrue($l->hasProperty('timeFormat'));
+    $this->assertEquals('d/m/Y', $l->shortDate);
+    $this->assertTrue(isset($l->shortTime));
     $this->assertEquals('Der er 0 brugere', $l->nget('There are %1 users', 'There is %1 user', 0));
     $this->assertEquals('Der er 1 bruger', $l->nget('There are %1 users', 'There is %1 user', 1));
     $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
+    
+    // big endian file:
+    $l = Locale::readMo('tests/_data/Core/I18n/da.be.mo');
+    $this->assertEquals('juni', $l->get('June'));
+    $this->assertEquals('d/m/Y', $l->shortDate);
+    $this->assertTrue(isset($l->shortTime));
+    $this->assertEquals('Der er 0 brugere', $l->nget('There are %1 users', 'There is %1 user', 0));
+    $this->assertEquals('Der er 1 bruger', $l->nget('There are %1 users', 'There is %1 user', 1));
+    $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
+    
+    // not a MO file:
+    try {
+      $l = Locale::readMo('tests/_data/Core/I18n/da.po');
+      $this->fail('error not generated');
+    }
+    catch (\PHPUnit_Framework_Exception $e) {}
+
+    // not a MO file:
+    try {
+      $l = Locale::readMo('tests/_data/Core/I18n/notafile');
+      $this->fail('error not generated');
+    }
+    catch (\PHPUnit_Framework_Exception $e) {}
   }
 }

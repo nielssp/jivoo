@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Jivoo 0.22.0-dev\n"
-"POT-Creation-Date: 2015-08-12 20:52+0200\n"
+"POT-Creation-Date: 2015-08-13 12:01+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -27,14 +27,13 @@ msgstr ""
 #: ../AccessControl/AuthorizationRequest.php:49
 #: ../ActiveModels/ActiveRecord.php:195 ../ActiveModels/ActiveRecord.php:222
 #: ../ActiveModels/ActiveRecord.php:239 ../ActiveModels/ActiveRecord.php:259
-#: ../Core/App.php:289 ../Core/App.php:304 ../Core/I18n/Locale.php:123
-#: ../Core/I18n/Locale.php:142 ../Core/Module.php:115 ../Core/Module.php:126
-#: ../Core/Store/Document.php:75 ../Core/Store/Document.php:99
-#: ../Databases/Schema.php:67 ../Models/Condition/Condition.php:48
-#: ../Models/DataType.php:137 ../Models/Expression/Condition.php:45
-#: ../Models/File/FileRecord.php:89 ../Models/Record.php:135
-#: ../Models/Record.php:144 ../Models/Record.php:157 ../Models/Record.php:166
-#: ../Models/Selection/BasicSelection.php:69
+#: ../Core/App.php:289 ../Core/App.php:304 ../Core/I18n/Locale.php:105
+#: ../Core/Module.php:115 ../Core/Module.php:126 ../Core/Store/Document.php:75
+#: ../Core/Store/Document.php:99 ../Databases/Schema.php:67
+#: ../Models/Condition/Condition.php:48 ../Models/DataType.php:137
+#: ../Models/Expression/Condition.php:45 ../Models/File/FileRecord.php:89
+#: ../Models/Record.php:135 ../Models/Record.php:144 ../Models/Record.php:157
+#: ../Models/Record.php:166 ../Models/Selection/BasicSelection.php:69
 #: ../Routing/DispatcherCollection.php:41 ../Routing/EventSource.php:49
 #: ../Routing/EventSource.php:66 ../Routing/FlashMessage.php:48
 #: ../Routing/Request.php:225 ../Routing/Request.php:243
@@ -370,143 +369,155 @@ msgstr ""
 msgid "Invalid language tag: %1"
 msgstr ""
 
-#: ../Core/I18n/I18n.php:120
-msgid "Language not found: %1"
-msgstr ""
-
-#: ../Core/I18n/I18n.php:180
+#: ../Core/I18n/I18n.php:233
 msgid "Today %1"
 msgstr "I dag, %1"
 
-#: ../Core/I18n/I18n.php:183
+#: ../Core/I18n/I18n.php:236
 msgid "Yesterday %1"
 msgstr "I går, %1"
 
-#: ../Core/I18n/I18n.php:186
+#: ../Core/I18n/I18n.php:239
 msgid "Tomorrow %1"
 msgstr "I morgen, %1"
 
-#: ../Core/I18n/I18n.php:235
+#: ../Core/I18n/I18n.php:242
+msgid "F j"
+msgstr "j. F"
+
+#: ../Core/I18n/I18n.php:245
+msgid "F Y"
+msgstr "F Y"
+
+#: ../Core/I18n/I18n.php:266
 msgid "January"
 msgstr "januar"
 
-#: ../Core/I18n/I18n.php:237
+#: ../Core/I18n/I18n.php:268
 msgid "February"
 msgstr "februar"
 
-#: ../Core/I18n/I18n.php:239
+#: ../Core/I18n/I18n.php:270
 msgid "March"
 msgstr "marts"
 
-#: ../Core/I18n/I18n.php:241
+#: ../Core/I18n/I18n.php:272
 msgid "April"
 msgstr "april"
 
-#: ../Core/I18n/I18n.php:243
+#: ../Core/I18n/I18n.php:274
 msgid "May"
 msgstr "maj"
 
-#: ../Core/I18n/I18n.php:245
+#: ../Core/I18n/I18n.php:276
 msgid "June"
 msgstr "juni"
 
-#: ../Core/I18n/I18n.php:247
+#: ../Core/I18n/I18n.php:278
 msgid "July"
 msgstr "juli"
 
-#: ../Core/I18n/I18n.php:249
+#: ../Core/I18n/I18n.php:280
 msgid "August"
 msgstr "august"
 
-#: ../Core/I18n/I18n.php:251
+#: ../Core/I18n/I18n.php:282
 msgid "September"
 msgstr "september"
 
-#: ../Core/I18n/I18n.php:253
+#: ../Core/I18n/I18n.php:284
 msgid "October"
 msgstr "oktober"
 
-#: ../Core/I18n/I18n.php:255
+#: ../Core/I18n/I18n.php:286
 msgid "November"
 msgstr "november"
 
-#: ../Core/I18n/I18n.php:257
+#: ../Core/I18n/I18n.php:288
 msgid "December"
 msgstr "december"
 
-#: ../Core/I18n/I18n.php:262
+#: ../Core/I18n/I18n.php:293
 msgid "Sunday"
 msgstr "søndag"
 
-#: ../Core/I18n/I18n.php:264
+#: ../Core/I18n/I18n.php:295
 msgid "Monday"
 msgstr "mandag"
 
-#: ../Core/I18n/I18n.php:266
+#: ../Core/I18n/I18n.php:297
 msgid "Tuesday"
 msgstr "tirsdag"
 
-#: ../Core/I18n/I18n.php:268
+#: ../Core/I18n/I18n.php:299
 msgid "Wednesday"
 msgstr "onsdag"
 
-#: ../Core/I18n/I18n.php:270
+#: ../Core/I18n/I18n.php:301
 msgid "Thursday"
 msgstr "torsdag"
 
-#: ../Core/I18n/I18n.php:272
+#: ../Core/I18n/I18n.php:303
 msgid "Friday"
 msgstr "fredag"
 
-#: ../Core/I18n/I18n.php:274
+#: ../Core/I18n/I18n.php:305
 msgid "Saturday"
 msgstr "lørdag"
 
-#: ../Core/I18n/Locale.php:46
+#: ../Core/I18n/Locale.php:61
 msgid "[Locale::name]"
 msgstr "Danish"
 
-#: ../Core/I18n/Locale.php:51
+#: ../Core/I18n/Locale.php:62
 msgid "[Locale::localName]"
 msgstr "Dansk"
 
-#: ../Core/I18n/Locale.php:56
+#: ../Core/I18n/Locale.php:63
 msgid "[Locale::region]"
 msgstr ""
 
-#: ../Core/I18n/Locale.php:61
-msgid "[Locale::dateFormat]"
+#: ../Core/I18n/Locale.php:65
+msgid "[Locale::shortDate]"
 msgstr "d/m/Y"
 
 #: ../Core/I18n/Locale.php:66
-msgid "[Locale::timeFormat]"
+msgid "[Locale::mediumDate]"
+msgstr "j. F Y"
+
+#: ../Core/I18n/Locale.php:67
+msgid "[Locale::longDate]"
+msgstr "l \\d\\e\\n j. F Y"
+
+#: ../Core/I18n/Locale.php:68
+msgid "[Locale::shortTime]"
 msgstr "H:i"
 
+#: ../Core/I18n/Locale.php:69
+msgid "[Locale::mediumTime]"
+msgstr "H:i:s"
+
+#: ../Core/I18n/Locale.php:70
+msgid "[Locale::longTime]"
+msgstr "H:i:s T"
+
 #: ../Core/I18n/Locale.php:71
-msgid "[Locale::dateTimeFormat]"
+msgid "[Locale::shortDateTime]"
 msgstr "d/m/Y H:i"
 
-#: ../Core/I18n/Locale.php:76
-msgid "[Locale::longFormat]"
-msgstr "d/m/Y H:i"
+#: ../Core/I18n/Locale.php:72
+msgid "[Locale::mediumDateTime]"
+msgstr "j. F Y H:i H:i:s"
 
-#: ../Core/I18n/Locale.php:81
-msgid "[Locale::monthYear]"
-msgstr "F Y"
+#: ../Core/I18n/Locale.php:73
+msgid "[Locale::longDateTime]"
+msgstr "l \\d\\e\\n j. F Y H:i:s T"
 
-#: ../Core/I18n/Locale.php:86
-msgid "[Locale::monthDay]"
-msgstr "j. F"
-
-#: ../Core/I18n/Locale.php:91
-msgid "[Locale::weekDay]"
-msgstr "l, H:i"
-
-#: ../Core/I18n/Locale.php:96
+#: ../Core/I18n/Locale.php:75
 msgid "[Locale::decimalPoint]"
 msgstr ","
 
-#: ../Core/I18n/Locale.php:101
+#: ../Core/I18n/Locale.php:76
 msgid "[Locale::thousandsSep]"
 msgstr "."
 
@@ -1706,7 +1717,34 @@ msgid_plural "Must be either \"%1{\", \"}{\" or \"}\"."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "There are %1 user"
+#: ../View/Compile/DefaultMacros.php:351
+msgid " . var_export($value, true) . $params . "
+msgid_plural " . var_export($translate, true) . "
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "There is %1 user"
 msgid_plural "There are %1 users"
 msgstr[0] "Der er %1 bruger"
 msgstr[1] "Der er %1 brugere"
+
+#~ msgid "[Locale::dateFormat]"
+#~ msgstr "d/m/Y"
+
+#~ msgid "[Locale::timeFormat]"
+#~ msgstr "H:i"
+
+#~ msgid "[Locale::dateTimeFormat]"
+#~ msgstr "d/m/Y H:i"
+
+#~ msgid "[Locale::longFormat]"
+#~ msgstr "d/m/Y H:i"
+
+#~ msgid "[Locale::monthYear]"
+#~ msgstr "F Y"
+
+#~ msgid "[Locale::monthDay]"
+#~ msgstr "j. F"
+
+#~ msgid "[Locale::weekDay]"
+#~ msgstr "l, H:i"

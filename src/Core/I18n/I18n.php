@@ -110,18 +110,25 @@ class I18n {
         return true;
       }
     }
-    if (file_exists($file . 'mo')) {
+    if (file_exists($file . 'pot')) {
+      return true;
+    }
+    else if (file_exists($file . 'mo')) {
       $localization = Locale::readMo($file . 'mo');
     }
     else if (file_exists($file . 'po')) {
       $localization = Locale::readPo($file . 'po');
     }
     else {
-      trigger_error(tr('Language not found: %1', $file . 'mo'), E_USER_NOTICE);
       return false;
     }
     if (isset(self::$cache)) {
       self::$cache->set($file, $localization->getMessages(), 3600);
+      // PSR-6 style: ??
+//       $item = self::$cache->get($file);
+//       $item->set($localization->getMessages());
+//       $item->expiresAfter(3600);
+//       self::$cache->save($item);
     }
     self::load($localization, $extend);
     return true;
@@ -146,31 +153,77 @@ class I18n {
    * $l->nget('This post has %1 comments', 'This post has %1 comment', $numcomments);
    * </code>
    * 
-   * @param string $message Message in english (plural).
+   * @param string $plural Message in english (plural).
    * @param string $singular Singular version of message in english.
    * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
    * numeral to test.
    * @return Translated string.
    */
-  public static function nget($message, $singular, $number) {
+  public static function nget($plural, $singular, $number) {
     $args = func_get_args();
     return call_user_func_array(array(self::getLocale(), 'nget'), $args);
+  }
+  
+  /**
+   * Format a number using the preferred decimal point and thousands separator.
+   * @param int|float $number Number.
+   * @param int $decimals Number of decimals.
+   * @return string The formatted number.
+   */
+  public static function number($number, $decimals = 0) {
+    $l = self::getLocale();
+    return number_format($number, $decimals, $l->decimalPoint, $l->thousandsSep);
+  }
+  
+  /**
+   * Format time using preferred locale format. 
+   * @param int|null $timestamp UNIX timestamp or null for current timestamp.
+   * @param string $style Which style to use ('short', 'medium', or 'long').
+   * @return string Formatted time.
+   */
+  public static function formatTime($timestamp = null, $style = 'short') {
+    $property = $style . 'Time';
+    return self::date(self::getLocale()->$property, $timestamp);
+  }
+
+  /**
+   * Format date using preferred locale format.
+   * @param int|null $timestamp UNIX timestamp or null for current timestamp.
+   * @param string $style Which style to use ('short', 'medium', or 'long').
+   * @return string Formatted date.
+   */
+  public static function formatDate($timestamp = null, $style = 'short') {
+    $property = $style . 'Time';
+    return self::date(self::getLocale()->$property, $timestamp);
+  }
+
+  /**
+   * Format date and time using preferred locale format.
+   * @param int|null $timestamp UNIX timestamp or null for current timestamp.
+   * @param string $style Which style to use ('short', 'medium', or 'long').
+   * @return string Formatted date and time.
+   */
+  public static function formatDateTime($timestamp = null, $style = 'short') {
+    $property = $style . 'DateTime';
+    return self::date(self::getLocale()->$property, $timestamp);
   }
 
   /**
    * Format a timestamp using preferred long format.
    * @param string $timestamp Timestamp, default is now.
    * @return string Formatted date and time.
+   * @deprecated
    */
   public static function longDate($timestamp = null) {
     $l = self::getLocale();
-    return self::date($l->longFormat, $timestamp);
+    return self::date($l->shortDateTime, $timestamp);
   }
 
   /**
    * Format a timestamp using a short style.
    * @param string $timestamp Timestamp, default is now.
    * @return string Formatted date and time.
+   * @deprecated TODO: move to as more sensible place
    */
   public static function shortDate($timestamp = null) {
     $l = self::getLocale();
@@ -186,46 +239,24 @@ class I18n {
       return tr('Tomorrow %1', self::formatTime($timestamp));
     }
     else if ($cYear == date('Y', $timestamp)) {
-      return self::date($l->monthDay, $timestamp);
+      return self::date(tr('F j'), $timestamp);
     }
     else {
-      return self::date($l->monthYear, $timestamp);
+      return self::date(tr('F Y'), $timestamp);
     }
   }
 
   /**
-   * Format date using the preferred date format of the current locale. 
-   * @param int|null $timestamp UNIX timestamp or null for now 
-   * @return string Formatted date string
-   */
-  public static function formatDate($timestamp = null) {
-    $l = self::getLocale();
-    return self::date($l->dateFormat, $timestamp);
-  }
-
-  /**
-   * Format time using the preferred timeformat of the current locale. 
-   * @param int|null $timestamp UNIX timestamp or null for now 
-   * @return string Formatted time string
-   */
-  public static function formatTime($timestamp = null) {
-    $l = self::getLocale();
-    return self::date($l->timeFormat, $timestamp);
-  }
-  
-  public static function number($number, $decimals = 0) {
-    $l = self::getLocale();
-    return number_format($number, $decimals, $l->decimalPoint, $l->thousandsSep);
-  }
-
-  /**
-   * Localized date function
+   * Localized date function.
    *
-   * Works like date() but translates month names and weekday names.
+   * Works like {@see date()} but translates month names and weekday names using
+   * the current {@see getLocale()}.
    *
-   * @param string $format The format of the outputted date string. See {@link http://dk.php.net/manual/en/function.date.php date()}
-   * @param int $timestamp Optional Unix timestamp to use. Default is value of time()
-   * @return string Formatted date string
+   * @param string $format The format of the outputted date string. See
+   * {@link http://php.net/manual/en/function.date.php date()}
+   * @param int $timestamp Optional Unix timestamp to use. Default is value of 
+   * {@see time()}
+   * @return string Formatted date string.
    */
   public static function date($format, $timestamp = null) {
     if (is_null($timestamp))

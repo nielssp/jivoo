@@ -5,8 +5,10 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 
 /**
- * Translate function alias.
- * @see I18n::get()
+ * Translate a string. Alias for {@see \Jivoo\Core\I18n\I18n:get}.
+ * @param string $message Message in english.
+ * @param mixed $vars,... Values for placeholders starting from %1.
+ * @return string Translated string.
  */
 function tr($message) {
   $args = func_get_args();
@@ -14,10 +16,21 @@ function tr($message) {
 }
 
 /**
- * Translate function alias.
- * @see I18n::nget()
+ * Translate a string containing a numeric value.
+ * Alias for {@see \Jivoo\Core\I18n\I18n:nget}.
+ *
+ * For instance:
+ * <code>
+ * $l->nget('This post has %1 comments', 'This post has %1 comment', $numcomments);
+ * </code>
+ *
+ * @param string $plural Message in english (plural).
+ * @param string $singular Singular version of message in english.
+ * @param mixed $vars,... Values for placholders starting from %1, the first one (%1) is the
+ * numeral to test.
+ * @return Translated string.
  */
-function tn($message, $singular, $number) {
+function tn($plural, $singular, $number) {
   $args = func_get_args();
   return call_user_func_array(array('Jivoo\Core\I18n\I18n', 'nget'), $args);
 }
@@ -32,9 +45,9 @@ function h($string) {
 }
 
 /**
- * Alias for Condition constructor.
- * @param ICondition|string Condition.
- * @return Condition Condition object.
+ * Alias for {@see \Jivoo\Models\Condition\Condition} constructor.
+ * @param \Jivoo\Models\ConditionICondition|string Condition.
+ * @return \Jivoo\Models\Condition\Condition Condition object.
  */
 function where($condition) {
   $args = func_get_args();
@@ -44,35 +57,63 @@ function where($condition) {
 }
 
 /**
- * @see I18n::formatDate()
+ * Format time using preferred locale format. 
+ * @param int|null $timestamp UNIX timestamp or null for current timestamp.
+ * @param string $style Which style to use ('short', 'medium', or 'long').
+ * @return string Formatted time.
+ * @see \Jivoo\Core\I18n\I18n::formatDate()
  */
-function fdate($timestamp = null) {
+function fdate($timestamp = null, $style = 'short') {
   return Jivoo\Core\I18n\I18n::formatDate($timestamp);
 }
 
 /**
- * @see I18n::formatTime()
+ * Format date using preferred locale format.
+ * @param int|null $timestamp UNIX timestamp or null for current timestamp.
+ * @param string $style Which style to use ('short', 'medium', or 'long').
+ * @return string Formatted date.
+ * @see \Jivoo\Core\I18n\I18n::formatTime()
  */
-function ftime($timestamp = null) {
+function ftime($timestamp = null, $style = 'short') {
   return Jivoo\Core\I18n\I18n::formatTime($timestamp);
 }
 
 /**
+ * Format date and time using preferred locale format.
+ * @param int|null $timestamp UNIX timestamp or null for current timestamp.
+ * @param string $style Which style to use ('short', 'medium', or 'long').
+ * @return string Formatted date and time.
+ * @see \Jivoo\Core\I18n\I18n::formatDateTime()
+ */
+function fdatetime($timestamp = null, $style = 'short') {
+  return Jivoo\Core\I18n\I18n::formatDateTime($timestamp);
+}
+
+/**
  * @see I18n::longDate()
+ * @deprecated
  */
 function ldate($timestamp = null) {
   return Jivoo\Core\I18n\I18n::longDate($timestamp);
 }
 
 /**
- * @see I18n::shortDate()
+ * Localized date function.
+ * @see \Jivoo\Core\I18n\I18n::shortDate()
+ * @deprecated
  */
 function sdate($timestamp = null) {
   return Jivoo\Core\I18n\I18n::shortDate($timestamp);
 }
 
 /**
- * @see I18n::date()
+ * Localized date formatting function.
+ * @see \Jivoo\Core\I18n\I18n::date()
+ * @param string $format The format of the outputted date string. See
+ * {@link http://php.net/manual/en/function.date.php date()}
+ * @param int $timestamp Optional Unix timestamp to use. Default is value of 
+ * {@see time()}
+ * @return string Formatted date string.
  */
 function tdate($format, $timestamp = null) {
   return Jivoo\Core\I18n\I18n::date($format, $timestamp);

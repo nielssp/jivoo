@@ -14,10 +14,31 @@ use Jivoo\InvalidArgumentException;
  * @property-read string $pluralExpr Plural expression (PHP).
  * @property-write string $pluralForms gettext-style C-expression for plurals,
  * e.g.: <code>nplurals=1; plural=(n!=1);</code>
+ * 
+ * @property string $name English name of language.
+ * @property string $localName Local name of language.
+ * @property string $region Name of region.
+ * 
+ * @property string $shortDate Preferred short date format, should be numeric,
+ * e.g. 'Y-m-d'.
+ * @property string $mediumDate Preferred medium date format.
+ * @property string $longDate Preferred long date format.
+ * @property string $shortTime Preferred short time format, e.g. hours and
+ * minutes.
+ * @property string $mediumTime Preferred medium time format, e.g. hours,
+ * minutes and seconds.
+ * @property string $longTime Preferred long time format, e.g. hours,
+ * minutes, seconds and time zone.
+ * @property string $shortDateTime Preferred short date and time format.
+ * @property string $mediumDateTime Preferred medium date and time format.
+ * @property string $longDateTime Preferred long date and time format.
+ * 
+ * @property string $decimalPoint Preferred decimal point.
+ * @property string $thousandsSep Preferred thousands separator.
  */
 class Locale {
   /**
-   * @var array Messages in english and their local translation.
+   * @var array Messages in english and their local translation(s).
    */
   protected $messages = array();
     
@@ -32,73 +53,28 @@ class Locale {
   private $pluralExpr = 'return ($n != 1);';
   
   /**
-   * @var string[]
+   * @var string[] Default values for locale properties. The defaults are
+   * supposed to represent a sort of international English using 24-hour clock
+   * and ISO 8601 dates.
    */
-  protected static $properties = array(
-    'name', 'localName', 'region', 'dateFormat', 'timeFormat',
-    'dateTimeFormat', 'longFormat', 'decimalPoint', 'thousandsSep',
-    'monthYear', 'monthDay', 'weekDay'
+  protected static $defaultProperties = array(
+    'name' => 'English', // tr('[Locale::name]')
+    'localName' => 'English', // tr('[Locale::localName]')
+    'region' => '', // tr('[Locale::region]')
+    
+    'shortDate' => 'Y-m-d', // tr('[Locale::shortDate]')
+    'mediumDate' => 'Y-m-d', // tr('[Locale::mediumDate]')
+    'longDate' => 'Y-m-d', // tr('[Locale::longDate]')
+    'shortTime' => 'H:i', // tr('[Locale::shortTime]')
+    'mediumTime' => 'H:i:s', // tr('[Locale::mediumTime]')
+    'longTime' => 'H:i:s T', // tr('[Locale::longTime]')
+    'shortDateTime' => 'Y-m-d H:i', // tr('[Locale::shortDateTime]')
+    'mediumDateTime' => 'Y-m-d H:i:s', // tr('[Locale::mediumDateTime]')
+    'longDateTime' => 'Y-m-d H:i:s T', // tr('[Locale::longDateTime]')
+    
+    'decimalPoint' => '.', // tr('[Locale::decimalPoint]')
+    'thousandsSep' => ',', // tr('[Locale::thousandsSep]')
   );
-  
-  /**
-   * @var string Language name (in English).
-   */
-  public $name = ''; // tr('[Locale::name]')
-
-  /**
-   * @var string Language name.
-   */
-  public $localName = ''; // tr('[Locale::localName]')
-  
-  /**
-   * @var string Region name.
-   */
-  public $region = ''; // tr('[Locale::region]')
-
-  /**
-   * @var string Preferred date format.
-   */
-  public $dateFormat = 'Y-m-d'; // tr('[Locale::dateFormat]')
-  
-  /**
-   * @var string Preferred time format.
-   */
-  public $timeFormat = 'H:i'; // tr('[Locale::timeFormat]')
-
-  /**
-   * @var string Preferred long date format.
-   */
-  public $dateTimeFormat = 'Y-m-d H:i'; // tr('[Locale::dateTimeFormat]')
-
-  /**
-   * @var string Preferred long date format.
-   */
-  public $longFormat = 'Y-m-d H:i'; // tr('[Locale::longFormat]')
-  
-  /**
-   * @var string Month+year format
-   */
-  public $monthYear = 'F Y'; // tr('[Locale::monthYear]')
-  
-  /**
-   * @var string Month+day format.
-   */
-  public $monthDay = 'F j'; // tr('[Locale::monthDay]')
-  
-  /**
-   * @var string Week day+time format
-   */
-  public $weekDay = 'l H:i'; // tr('[Locale::weekDay]')
-  
-  /**
-   * @var string Preferred decimal point.
-   */
-  public $decimalPoint = '.'; // tr('[Locale::decimalPoint]')
-
-  /**
-   * @var string Preferred thousands separator.
-   */
-  public $thousandsSep = ','; // tr('[Locale::thousandsSep]')
 
   /**
    * Construct new locale.
@@ -109,7 +85,8 @@ class Locale {
   }
 
   /**
-   * Get value of a property.
+   * Get value of a property. Non-default properties can be added using
+   * {@see __set}.
    * @param string $property Property name.
    * @return mixed Value.
    * @throws InvalidPropertyException If property is not defined.
@@ -119,15 +96,20 @@ class Locale {
       case 'plurals':
       case 'pluralExpr':
         return $this->$property;
+      default:
+        if (isset($this->messages['[Locale::' . $property . ']']))
+          return $this->messages['[Locale::' . $property . ']'][0];
+        if (isset(self::$defaultProperties[$property]))
+          return self::$defaultProperties[$property];
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
 
   /**
-   * Set value of a property.
+   * Set value of a property. Non-default properties are added as messages
+   * with a message id of the form '[Locale::propertyName]'.
    * @param string $property Property name.
    * @param mixed $value Value.
-   * @throws InvalidPropertyException If property is not defined.
    */
   public function __set($property, $value) {
     switch ($property) {
@@ -138,8 +120,36 @@ class Locale {
         $expr = self::convertExpr($matches[2]);
         $this->pluralExpr = 'return ' . $expr . ';';
         return;
+      default:
+        $this->messages['[Locale::' . $property . ']'] = array($value);
     }
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  /**
+   * Whether a property exists and has a value.
+   * @param string $property Property name.
+   * @return bool True if it exists.
+   */
+  public function __isset($property) {
+    switch ($property) {
+      case 'plurals':
+      case 'pluralExpr':
+        return $this->$property;
+      default:
+        if (isset($this->messages['[Locale::' . $property . ']']))
+          return true;
+        return isset(self::$defaultProperties[$property]);
+    }
+  }
+
+  /**
+   * Unset a property. For default properties, the value is reverted to the 
+   * default value defined in {@see $defaultProperties}.
+   * @param string $property Property name.
+   */
+  public function __unset($property) {
+    if (isset($this->messages['[Locale::' . $property . ']']))
+      unset($this->messages['[Locale::' . $property . ']']);
   }
 
   /**
@@ -189,10 +199,6 @@ class Locale {
    */
   public function extend(Locale $l) {
     $this->messages = array_merge($this->messages, $l->messages);
-    foreach (self::$properties as $property) {
-      if ($l->hasProperty($property))
-        $this->$property = $l->getProperty($property);
-    }
   }
 
   /**
@@ -245,16 +251,6 @@ class Locale {
       $message = $this->messages[$message][0];
     }
     return $this->replacePlaceholders($message, array_slice(func_get_args(), 1));
-  }
-  
-  public function hasProperty($property) {
-    return isset($this->messages['[Locale::' . $property . ']'])
-      and $this->messages['[Locale::' . $property . ']'][0] != ''
-      and $this->messages['[Locale::' . $property . ']'][0] != '[Locale::' . $property . ']';
-  }
-  
-  public function getProperty($property) {
-    return $this->messages['[Locale::' . $property . ']'][0];
   }
 
   /**
@@ -394,10 +390,6 @@ class Locale {
           $l->set($id, $message);
       }
     }
-    foreach (self::$properties as $property) {
-      if ($l->hasProperty($property))
-        $l->$property = $l->getProperty($property);
-    }
     return $l;
   }
   
@@ -409,7 +401,7 @@ class Locale {
   public static function readMo($file) {
     $f = file_get_contents($file);
   
-    if (!$f) {
+    if ($f === false) {
       trigger_error('Could not open file: ' . $file, E_USER_ERROR);
       return null;
     }
@@ -487,10 +479,6 @@ class Locale {
       else {
         $o += 1;
       }
-    }
-    foreach (self::$properties as $property) {
-      if ($l->hasProperty($property))
-        $l->$property = $l->getProperty($property);
     }
     return $l;
   }
