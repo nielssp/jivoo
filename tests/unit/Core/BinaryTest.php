@@ -36,4 +36,22 @@ class BinaryTest extends \Jivoo\Test {
     $this->assertEquals("\xc3\xa5", Binary::slice('♥å', -2));
     $this->assertEquals("\xc3", Binary::slice('♥å', -2, -1));
   }
+  
+  public function testBase64() {
+    $this->assertEquals('YQ==', Binary::base64Encode('a'));
+    $this->assertEquals('YQ', Binary::base64Encode('a', true));
+    
+    $original = '☢☣☯♥☺';
+    $b64 = Binary::base64Encode($original);
+    $this->assertEquals($original, Binary::base64Decode($b64));
+    $b64 = Binary::base64Encode($original, true);
+    $this->assertEquals($original, Binary::base64Decode($b64));
+    
+    $this->assertEquals('/+4=', Binary::base64Encode("\xFF\xEE"));
+    $this->assertEquals('_-4', Binary::base64Encode("\xFF\xEE", true));
+    $this->assertEquals("\xFF\xEE", Binary::base64Decode('/+4='));
+    $this->assertEquals("\xFF\xEE", Binary::base64Decode('_-4='));
+    $this->assertEquals("\xFF\xEE", Binary::base64Decode('/+4=', false));
+    $this->assertEquals('', Binary::base64Decode('_-4=', false));
+  }
 }
