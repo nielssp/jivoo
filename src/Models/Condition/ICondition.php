@@ -7,12 +7,12 @@ namespace Jivoo\Models\Condition;
 
 /**
  * A condition for selecting rows in a database table
- * @method Condition and(Condition|string $clause, mixed $vars,... ) AND operator
- * @method Condition or(Condition|string $clause, mixed $vars,... ) OR operator
+ * @method ICondition and(Condition|string $clause, mixed $vars,... ) AND operator
+ * @method ICondition or(Condition|string $clause, mixed $vars,... ) OR operator
  */
-interface Condition {
+interface ICondition {
   /**
-   * Implements methods {@see Condition::and()} and {@see Condition::or()}
+   * Implements methods {@see ICondition::and()} and {@see ICondition::or()}
    * @param string $method Method name ('and' or 'or')
    * @param mixed[] $args List of parameters
    * @return self Self.

@@ -8,7 +8,7 @@ namespace Jivoo\Core;
 /**
  * A task that runs periodically.
  */
-interface Task {
+interface ITask {
   /**
    * Delay between runs in seconds.
    * @return int Number of seconds that must pass before the next run.

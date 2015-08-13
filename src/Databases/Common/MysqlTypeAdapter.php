@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
-use Jivoo\Databases\MigrationTypeAdapter;
+use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Models\DataType;
 use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Core\Utilities;
@@ -15,7 +15,7 @@ use Jivoo\Databases\TypeException;
 /**
  * Type adapter for MySQL database drivers.
  */
-class MysqlTypeAdapter implements MigrationTypeAdapter {
+class MysqlTypeAdapter implements IMigrationTypeAdapter {
   /**
    * @var SqlDatabase Database
    */

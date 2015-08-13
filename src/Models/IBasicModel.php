@@ -8,7 +8,7 @@ namespace Jivoo\Models;
 /**
  * Describes the format of data in a record
  */
-interface BasicModel {
+interface IBasicModel {
   /**
    * Get name of model. 
    * @return string Name.

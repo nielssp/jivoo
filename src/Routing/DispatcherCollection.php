@@ -17,7 +17,7 @@ class DispatcherCollection {
   private $routing;
   
   /**
-   * @var Dispatcher[] Dispatchers.
+   * @var IDispatcher[] Dispatchers.
    */
   private $dispatchers = array();
   
@@ -33,7 +33,7 @@ class DispatcherCollection {
    * Get dispatcher for prefix.
    * @param string $prefix Prefix.
    * @throws InvalidPropertyException If no dispatcher found.
-   * @return Dispatcher Dispatcher.
+   * @return IDispatcher Dispatcher.
    */
   public function __get($prefix) {
     if (isset($this->dispatchers[$prefix]))
@@ -52,9 +52,9 @@ class DispatcherCollection {
   
   /**
    * Add a dispatcher object.
-   * @param Dispatcher $dispatcher Dispatcher object.
+   * @param IDispatcher $dispatcher Dispatcher object.
    */
-  public function add(Dispatcher $dispatcher) {
+  public function add(IDispatcher $dispatcher) {
     $prefixes = $dispatcher->getPrefixes();
     foreach ($prefixes as $prefix) {
       $this->dispatchers[$prefix] = $dispatcher;
@@ -63,7 +63,7 @@ class DispatcherCollection {
   
   /**
    * Validate a route.
-   * @param array|Linkable|string|null $route A route, see {@see Routing}.
+   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
    * @throws InvalidRouteException If route is not valid.
    * @return array A valid route array.
    */
@@ -76,7 +76,7 @@ class DispatcherCollection {
     else if (is_string($route)) {
       $route = $this->toRoute($route);
     }
-    else if (is_object($route) and $route instanceof Linkable) {
+    else if (is_object($route) and $route instanceof ILinkable) {
       return $this->validate($route->getRoute());
     }
     if (!is_array($route))

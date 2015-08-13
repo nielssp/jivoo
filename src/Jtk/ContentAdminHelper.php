@@ -6,15 +6,15 @@
 namespace Jivoo\Jtk;
 
 use Jivoo\Helpers\Helper;
-use Jivoo\Models\Model;
+use Jivoo\Models\IModel;
 use Jivoo\Routing\TextResponse;
 use Jivoo\View\ViewResponse;
 use Jivoo\Routing\NotFoundException;
 
 /**
  * A helper for typical administration tasks such as bulk edit and deletion.
- * @property-read Jivoo\Models\BasicRecord $record Selected record if any.
- * @property-read Jivoo\Models\Selection\BasicSelection|BasicRecord[] $selection
+ * @property-read Jivoo\Models\IBasicRecord $record Selected record if any.
+ * @property-read Jivoo\Models\Selection\IBasicSelection|IBasicRecord[] $selection
  * Selection or array of records if any.
  */
 class ContentAdminHelper extends Helper {
@@ -29,12 +29,12 @@ class ContentAdminHelper extends Helper {
   private $modelName = null;
   
   /**
-   * @var Model
+   * @var IModel
    */
   private $record = null;
   
   /**
-   * @var Jivoo\Models\Selection\BasicSelection
+   * @var Jivoo\Models\Selection\IBasicSelection
    */
   private $selection = null;
   
@@ -119,7 +119,7 @@ class ContentAdminHelper extends Helper {
   
   /**
    * Respond with a confirmation dialog.
-   * @property string|array|\Jivoo\Routing\Linkable|null $returnRoute A route,
+   * @property string|array|\Jivoo\Routing\ILinkable|null $returnRoute A route,
    * see {@see Jivoo\Routing\Routing}.
    * @return \Jivoo\Routing\Response Response object.
    */
@@ -142,12 +142,12 @@ class ContentAdminHelper extends Helper {
   
   /**
    * Make a selection based on request.
-   * @param Model $model The model.
+   * @param IModel $model The model.
    * @param string|null $ids Optional comma-separated list of ids to select.
    * @param string $idField Name of id field.
    * @return self Self.
    */
-  public function makeSelection(Model $model, $ids = null, $idField = 'id') {
+  public function makeSelection(IModel $model, $ids = null, $idField = 'id') {
     $this->modelName = $model->getName();
     $this->record = null;
     $this->selection = null;

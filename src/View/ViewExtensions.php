@@ -30,10 +30,10 @@ class ViewExtensions {
   /**
    * Add a view extension.
    * @param string $template Template to extend.
-   * @param ViewExtension $extension The view extension.
+   * @param IViewExtension $extension The view extension.
    * @param string $hook Names of hooks to attach view extension to.
    */
-  public function add($template, ViewExtension $extension, $hook = null) {
+  public function add($template, IViewExtension $extension, $hook = null) {
     if (!isset($this->extensions[$template]))
       $this->extensions[$template] = array();
     $this->extensions[$template][] = array(
@@ -46,7 +46,7 @@ class ViewExtensions {
    * Access view extensions attached to a hook, and make sure they
    * implement the desired interface.
    * @param string $hook Hook name.
-   * @return ViewExtension[] List of view extensions for hook.
+   * @return IViewExtension[] List of view extensions for hook.
    */
   public function extensions($hook = null) {
     $template = $this->view->template->getCurrent();

@@ -10,10 +10,10 @@ use Jivoo\Helpers\FormHelper;
 /**
  * An editor.
  */
-interface Editor {
+interface IEditor {
   /**
    * Get content format used by editor.
-   * @return ContentFormat Format object.
+   * @return IContentFormat Format object.
    */
   public function getFormat();
 

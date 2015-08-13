@@ -9,7 +9,7 @@ namespace Jivoo\Setup;
  * An asynchronous installation task. Can be suspended and resumed later. The
  * actual computation happens in {@see run()}.
  */
-interface AsyncTask {
+interface IAsyncTask {
   /**
    * Resume task.
    * @param array $state Saved state.

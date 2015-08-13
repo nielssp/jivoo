@@ -8,7 +8,7 @@ namespace Jivoo\AccessControl;
 /**
  * An access control list.
  */
-interface Acl {
+interface IAcl {
   /**
    * Check if a user has a permission.
    * @param mixed $user User data.

@@ -8,7 +8,7 @@ namespace Jivoo\Databases;
 /**
  * A type and migration adapter.
  */
-interface MigrationTypeAdapter extends Migratable, TypeAdapter {
+interface IMigrationTypeAdapter extends IMigratable, ITypeAdapter {
   /**
    * Whether or not a table exists.
    * @param string $table Table name.
@@ -25,7 +25,7 @@ interface MigrationTypeAdapter extends Migratable, TypeAdapter {
   /**
    * Get table schema.
    * @param string $table Table name.
-   * @return Schema Schema.
+   * @return ISchema Schema.
    */
   public function getTableSchema($table);
 }

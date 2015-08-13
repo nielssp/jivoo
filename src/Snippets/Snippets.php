@@ -18,7 +18,7 @@ class Snippets extends LoadableModule {
   protected $modules = array('Routing', 'View', 'Helpers');
 
   /**
-   * @var Snippet[] Snippet instances.
+   * @var ISnippet[] Snippet instances.
    */
   private $instances = array();
   
@@ -35,7 +35,7 @@ class Snippets extends LoadableModule {
    * @param string $name Snippet class name.
    * @param bool $singleton Whether to use an existing instance instead of
    * creating a new one.
-   * @return Snippet Snippet instance or null if not found.
+   * @return ISnippet Snippet instance or null if not found.
    */
   public function getSnippet($name, $singleton = true) {
     if (!$singleton or !isset($this->instances[$name])) {

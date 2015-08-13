@@ -9,7 +9,7 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
-use Jivoo\Databases\MigratableDatabase;
+use Jivoo\Databases\IMigratableDatabase;
 use Jivoo\Autoloader;
 
 /**
@@ -27,7 +27,7 @@ class Migrations extends LoadableModule {
   protected $modules = array('Databases');
   
   /**
-   * @var MigratableDatabase[] Database connections.
+   * @var IMigratableDatabase[] Database connections.
    */
   private $connections = array();
   
@@ -76,7 +76,7 @@ class Migrations extends LoadableModule {
    * Get an attached database.
    * @param string $name Database name.
    * @throws MigrationException If the database is not attached.
-   * @return MigratableDatabase Database/
+   * @return IMigratableDatabase Database/
    */
   public function getDatabase($name) {
     if (isset($this->connections[$name]))
@@ -91,7 +91,7 @@ class Migrations extends LoadableModule {
    */
   public function attachDatabase($name, $migrationDir) {
     $db = $this->m->Databases->$name->getConnection();
-    assume($db instanceof MigratableDatabase);
+    assume($db instanceof IMigratableDatabase);
     $this->migrationDirs[$name] = $migrationDir;
     $this->connections[$name] = $db;
     if ($this->config['automigrate'] and isset($this->m->Setup)) {

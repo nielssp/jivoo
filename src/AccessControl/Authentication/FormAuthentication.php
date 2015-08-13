@@ -6,8 +6,8 @@
 namespace Jivoo\AccessControl\Authentication;
 
 use Jivoo\AccessControl\LoadableAuthentication;
-use Jivoo\AccessControl\UserModel;
-use Jivoo\AccessControl\PasswordHasher;
+use Jivoo\AccessControl\IUserModel;
+use Jivoo\AccessControl\IPasswordHasher;
 
 /**
  * Authentication using a POST-method form. Expects fields named "username" and
@@ -31,7 +31,7 @@ class FormAuthentication extends LoadableAuthentication {
   /**
    * {@inheritdoc}
    */
-  public function authenticate($data, UserModel $userModel, PasswordHasher $hasher) {
+  public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher) {
     $this->cookie = isset($data['remember']);
     $idData = array();
     $idData[$this->options['username']] = $data[$this->options['username']];

@@ -8,9 +8,9 @@ namespace Jivoo\Models;
 use Jivoo\InvalidPropertyException;
 
 /**
- * A record associated with a {@see Model}.
+ * A record associated with a {@see IModel}.
  */
-class Record implements Record {
+class Record implements IRecord {
   /**
    * @var array Associative array of record data.
    */
@@ -27,7 +27,7 @@ class Record implements Record {
   private $updatedData = array();
   
   /**
-   * @var Model Model.
+   * @var IModel Model.
    */
   private $model;
   
@@ -48,11 +48,11 @@ class Record implements Record {
   
   /**
    * Construct record.
-   * @param Model $model Associated model.
+   * @param IModel $model Associated model.
    * @param array $data Associative array of record data. 
    * @param string $allowedFields List of allowed fields.
    */
-  private function __construct(Model $model, $data = array(), $allowedFields = null) {
+  private function __construct(IModel $model, $data = array(), $allowedFields = null) {
     $this->model = $model;
     $this->data = array_fill_keys($model->getFields(), null);
     $this->addData($data, $allowedFields);
@@ -60,12 +60,12 @@ class Record implements Record {
   
   /**
    * Create a new record.
-   * @param Model $model Associated model.
+   * @param IModel $model Associated model.
    * @param array $data Associative array of record data.
    * @param string $allowedFields List of allowed fields.
    * @return Record A new record.
    */
-  public static function createNew(Model $model, $data = array(), $allowedFields = null) {
+  public static function createNew(IModel $model, $data = array(), $allowedFields = null) {
     $record = new Record($model, $data, $allowedFields);
     $record->new = true;
     $record->saved = false;
@@ -74,12 +74,12 @@ class Record implements Record {
   
   /**
    * Recreate an existing record.
-   * @param Model $model Associated model.
+   * @param IModel $model Associated model.
    * @param array $data Associative array of record data.
    * @param array $virtual Associative array of virtual record data.
    * @return Record An existing record.
    */
-  public static function createExisting(Model $model, $data = array(), $virtual = array()) {
+  public static function createExisting(IModel $model, $data = array(), $virtual = array()) {
     $record = new Record($model, $data);
     $record->updatedData = array();
     $record->virtual = $virtual;

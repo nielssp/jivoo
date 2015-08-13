@@ -12,7 +12,7 @@ use Jivoo\Core\Utilities;
  * Single-user model. Can be used for simple authentication of a single
  * administration user.
  */
-class SingleUserModel implements UserModel {
+class SingleUserModel implements IUserModel {
   /**
    * @var Session Used for storing session data.
    */

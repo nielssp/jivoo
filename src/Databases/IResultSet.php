@@ -8,7 +8,7 @@ namespace Jivoo\Databases;
 /**
  * Represents the result of a database query.
  */
-interface ResultSet {
+interface IResultSet {
   /**
    * Check if resultset is empty.
    * @return bool True if there are rows in resultset.

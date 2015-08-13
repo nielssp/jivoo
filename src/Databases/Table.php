@@ -7,7 +7,7 @@ namespace Jivoo\Databases;
 
 use Jivoo\Models\ModelBase;
 use Jivoo\Models\Selection\ReadSelectionBuilder;
-use Jivoo\Models\Schema;
+use Jivoo\Models\ISchema;
 
 /**
  * A database table.
@@ -15,9 +15,9 @@ use Jivoo\Models\Schema;
 abstract class Table extends ModelBase {
   /**
    * Set schema of table.
-   * @param Schema $schema Schema.
+   * @param ISchema $schema Schema.
    */
-  public abstract function setSchema(Schema $schema);
+  public abstract function setSchema(ISchema $schema);
 
   /**
    * {@inheritdoc}
@@ -64,7 +64,7 @@ abstract class Table extends ModelBase {
   /**
    * Read a selection.
    * @param ReadSelectionBuilder $selection A read selection.
-   * @return ResultSet A result set.
+   * @return IResultSet A result set.
    */
   public abstract function readSelection(ReadSelectionBuilder $selection);
 }

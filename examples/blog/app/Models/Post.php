@@ -2,7 +2,7 @@
 namespace Blog\Models;
 
 use Jivoo\ActiveModels\ActiveModel;
-use Jivoo\Routing\Linkable;
+use Jivoo\Routing\ILinkable;
 use Jivoo\ActiveModels\ActiveRecord;
 
 class Post extends ActiveModel {

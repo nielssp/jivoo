@@ -5,30 +5,30 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Validation;
 
-use Jivoo\Models\BasicModel;
-use Jivoo\Models\Record;
+use Jivoo\Models\IBasicModel;
+use Jivoo\Models\IRecord;
 
 /**
  * A record validator.
  * @TODO Some information about $validator-array and use of validators here
  */
-class ValidatorBuilder implements Validator {
+class ValidatorBuilder implements IValidator {
   /**
    * @var ValidatorField[] Associative array of field names and ValidatorField objects
    */
   private $fields = array();
 
   /**
-   * @var BasicModel Model.
+   * @var IBasicModel Model.
    */
   private $model;
 
   /**
    * Construct validator.
-   * @param BasicModel $model Associated model.
+   * @param IBasicModel $model Associated model.
    * @param array $fields Associative array of field-names and rules.
    */
-  public function __construct(BasicModel $model, $fields = array()) {
+  public function __construct(IBasicModel $model, $fields = array()) {
     $this->model = $model;
     foreach ($fields as $field => $rules) {
       $this->fields[$field] = new ValidatorField($rules);
@@ -106,7 +106,7 @@ class ValidatorBuilder implements Validator {
   /**
    * {@inheritdoc}
    */
-  public function validate(Record $record) {
+  public function validate(IRecord $record) {
     $result = array();
     foreach ($this->fields as $field => $validator) {
       $fieldResult = $validator->validate($record, $field);
@@ -118,13 +118,13 @@ class ValidatorBuilder implements Validator {
 
   /**
    * Validate a rule on a record.
-   * @param Record $record A record.
+   * @param IRecord $record A record.
    * @param string $field Field name.
    * @param string $ruleName Name of rule.
    * @param mixed $rule Value of rule.
    * @return true|string True if valid, otherwise returns an error message.
    */
-  public static function validateRule(Record $record, $field, $ruleName, $rule) {
+  public static function validateRule(IRecord $record, $field, $ruleName, $rule) {
     if ($rule instanceof ValidatorRule) {
       return $rule->validate($record, $field);
     }

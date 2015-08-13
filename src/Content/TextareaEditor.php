@@ -10,7 +10,7 @@ use Jivoo\Helpers\FormHelper;
 /**
  * A simple textarea-based editor for any format.
  */
-class TextareaEditor implements Editor {
+class TextareaEditor implements IEditor {
   /**
    * @var string Name of content format.
    */

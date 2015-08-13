@@ -312,7 +312,7 @@ class Assets extends LoadableModule {
   
   /**
    * Get link to a dynamic asset.
-   * @param array|Linkable|string|null $route A route, see {@see \Jivoo\Routing\Routing}. 
+   * @param array|ILinkable|string|null $route A route, see {@see \Jivoo\Routing\Routing}. 
    * @return string|null Link to asset, or null if not found.
    */
   public function getDynamicAsset($route) {

@@ -6,12 +6,12 @@
 namespace Jivoo\Models;
 
 /**
- * A more advanced extension of {@see BasicRecord}.
+ * A more advanced extension of {@see IBasicRecord}.
  */
-interface Model extends Selection\Selection, BasicModel {
+interface IModel extends Selection\ISelection, IBasicModel {
   /**
    * Get shcmea of model.
-   * @return Schema Schema for model.
+   * @return ISchema Schema for model.
    */
   public function getSchema();
 
@@ -25,7 +25,7 @@ interface Model extends Selection\Selection, BasicModel {
 
   /**
    * Get validator for model.
-   * @return Validator Validator for model.
+   * @return IValidator Validator for model.
    */
   public function getValidator();
 
@@ -39,17 +39,17 @@ interface Model extends Selection\Selection, BasicModel {
 
   /**
    * Make a selection that selects a single record.
-   * @param Record $record A record.
-   * @return Selection A selection.
+   * @param IRecord $record A record.
+   * @return ISelection A selection.
   */
-  public function selectRecord(Record $record);
+  public function selectRecord(IRecord $record);
 
   /**
    * Make a selection that selects everything except for a single record.
-   * @param Record $record A record.
-   * @return Selection A selection.
+   * @param IRecord $record A record.
+   * @return ISelection A selection.
    */
-  public function selectNotRecord(Record $record);
+  public function selectNotRecord(IRecord $record);
 
   /**
    * Find a record by its primary key. If the primary key
@@ -57,7 +57,7 @@ interface Model extends Selection\Selection, BasicModel {
    * parameter for each field (in alphabetical order).
    * @param mixed $primary Value of primary key.
    * @param mixed ...$primary For multifield primary key.
-   * @return Record|null A single matching record or null if it doesn't exist.
+   * @return IRecord|null A single matching record or null if it doesn't exist.
    * @throws InvalidSelectionException If number of parameters does not
    * match size of primary key.
    */
@@ -66,7 +66,7 @@ interface Model extends Selection\Selection, BasicModel {
   /**
    * Convert model to another type (for the purpose of joining).
    * @param string $class Name of model class to convert to.
-   * @return Model|null New instance or null if not possible.
+   * @return IModel|null New instance or null if not possible.
    */
   public function asInstanceOf($class);
   
@@ -76,7 +76,7 @@ interface Model extends Selection\Selection, BasicModel {
    * @param string[]|null $allowedFields List of allowed fields (null for all
    * fields allowed), fields that are not allowed (or not in the model) will be
    * ignored.
-   * @return Record A record.
+   * @return IRecord A record.
    */
   public function create($data = array(), $allowedFields = null);
 

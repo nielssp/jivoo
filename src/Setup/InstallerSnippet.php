@@ -320,10 +320,10 @@ abstract class InstallerSnippet extends SnippetBase {
   
   /**
    * Run asynchronous task.
-   * @param AsyncTask $task Task object.
+   * @param IAsyncTask $task Task object.
    * @return bool True if task is done. 
    */
-  public function runAsync(AsyncTask $task) {
+  public function runAsync(IAsyncTask $task) {
     if ($this->request->hasValidData()) {
       $taskState = $this->installState->getSubset('async')->getSubset($this->current->name);
       $state = $taskState->get('state', array());

@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Vendor;
 
-interface Package {
+interface IPackage {
   public function getName();
   
   public function load();

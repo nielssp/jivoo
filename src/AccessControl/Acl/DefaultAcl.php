@@ -6,7 +6,7 @@
 namespace Jivoo\AccessControl\Acl;
 
 use Jivoo\AccessControl\LoadableAcl;
-use Jivoo\AccessControl\PermissionList;
+use Jivoo\AccessControl\IPermissionList;
 
 /**
  * Default modifiable access control list. Permissions are independent of user.

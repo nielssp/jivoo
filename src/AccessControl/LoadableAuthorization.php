@@ -12,7 +12,7 @@ use Jivoo\Core\Module;
  * A loadable authorization module. Subclasses should use the prefix
  * "Authorization".
  */
-abstract class LoadableAuthorization extends Module implements Authorization {
+abstract class LoadableAuthorization extends Module implements IAuthorization {
   /**
    * @var AuthHelper Authentication and authorization helper.
    */

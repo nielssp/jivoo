@@ -6,8 +6,8 @@
 namespace Jivoo\AccessControl\Authentication;
 
 use Jivoo\AccessControl\LoadableAuthentication;
-use Jivoo\AccessControl\UserModel;
-use Jivoo\AccessControl\PasswordHasher;
+use Jivoo\AccessControl\IUserModel;
+use Jivoo\AccessControl\IPasswordHasher;
 
 /**
  * Authentication using Basic HTTP authentication.
@@ -24,7 +24,7 @@ class BasicAuthentication extends LoadableAuthentication {
   /**
    * {@inheritdoc}
    */
-  public function authenticate($data, UserModel $userModel, PasswordHasher $hasher) {
+  public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher) {
     if (!isset($this->options['realm']))
       $this->options['realm'] = $_SERVER['SERVER_NAME'];
     if (isset($_SERVER['PHP_AUTH_USER']) and isset($_SERVER['PHP_AUTH_PW'])) {

@@ -8,7 +8,7 @@ namespace Jivoo\Core\Store;
 /**
  * Stores data in PHP sessions.
  */
-class PhpSessionStore implements Store {
+class PhpSessionStore implements IStore {
   /**
    * @var bool Whether or not session is open.
    */

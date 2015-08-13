@@ -5,32 +5,32 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Models\Model;
+use Jivoo\Models\IModel;
 
 /**
  * A wrapper for another database driver.
  */
-class DatabaseConnection implements Database {
+class DatabaseConnection implements IDatabase {
   /**
    * @var Table[] Tabbles.
    */
   private $tables = array();
   
   /**
-   * @var Database Database.
+   * @var IDatabase Database.
    */
   private $connection;
   
   /**
-   * @var DatabaseSchema Database schema.
+   * @var IDatabaseSchema Database schema.
    */
   private $schema;
 
   /**
    * Construct database connection.
-   * @param Database $database Database.
+   * @param IDatabase $database Database.
    */
-  public function __construct(Database $database) {
+  public function __construct(IDatabase $database) {
     $this->connection = $database;
     $this->schema = $database->getSchema();
   }
@@ -68,7 +68,7 @@ class DatabaseConnection implements Database {
   /**
    * {@inheritdoc}
    */
-  public function __set($table, Model $model) {
+  public function __set($table, IModel $model) {
     $this->tables[$table] = $model;
   }
 
@@ -81,7 +81,7 @@ class DatabaseConnection implements Database {
 
   /**
    * Get wrapped database.
-   * @return Database Database.
+   * @return IDatabase Database.
    */
   public function getConnection() {
     return $this->connection;

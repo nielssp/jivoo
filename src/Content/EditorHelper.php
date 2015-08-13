@@ -26,9 +26,9 @@ class EditorHelper extends Helper {
    * Set editor for model field.
    * @param ActiveModel $model A model.
    * @param string $field Field name.
-   * @param Editor $editor Editor object.
+   * @param IEditor $editor Editor object.
    */
-  public function set(ActiveModel $model, $field, Editor $editor) {
+  public function set(ActiveModel $model, $field, IEditor $editor) {
     $this->m->Content->setEditor($model, $field, $editor);
   }
 

@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers;
 
-use Jivoo\Models\Selection\BasicSelection;
+use Jivoo\Models\Selection\IBasicSelection;
 use Jivoo\Helpers\Filtering\SelectionFilterVisitor;
 use Jivoo\Helpers\Filtering\FilterParser;
 use Jivoo\Helpers\Filtering\FilterScanner;
 use Jivoo\Helpers\Filtering\RecordFilterVisitor;
-use Jivoo\Models\BasicModel;
+use Jivoo\Models\IBasicModel;
 
 /**
  * Helper for filtering selections or arrays of records based on a query string.
@@ -105,12 +105,12 @@ class FilteringHelper extends Helper {
 
   /**
    * Apply filtering to a selection or an array of records.
-   * @param BasicSelection|BasicRecord[] $selection Selection or array of records.
-   * @param BasicModel $model Model (must be set if using {@see BasicSelection}
+   * @param IBasicSelection|IBasicRecord[] $selection Selection or array of records.
+   * @param IBasicModel $model Model (must be set if using {@see IBasicSelection}
    * for the first parameter).
-   * @return BasicSelection|BasicRecord[] Filtered selection or array of records.
+   * @return IBasicSelection|IBasicRecord[] Filtered selection or array of records.
    */
-  public function apply($selection, BasicModel $model = null) {
+  public function apply($selection, IBasicModel $model = null) {
     if (!isset($this->query) or empty($this->query))
       return $selection;
     if (!isset($this->scanner)) {
@@ -124,9 +124,9 @@ class FilteringHelper extends Helper {
     if (count($tokens) == 0)
       return $selection;
     $root = $this->parser->parse($tokens);
-    if ($selection instanceof BasicSelection) {
+    if ($selection instanceof IBasicSelection) {
       if (!isset($model)) {
-        assume($selection instanceof Model);
+        assume($selection instanceof IModel);
         $model = $selection;
       }
       $visitor = new SelectionFilterVisitor($this, $model);

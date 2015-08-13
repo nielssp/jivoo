@@ -8,7 +8,7 @@ namespace Jivoo\Core\Log;
 /**
  * A log handler.
  */
-interface Handler {
+interface IHandler {
   /**
    * Whether this handler accepts log records at this level.
    * @param string $level Log level, see {@see \Psr\Log\LogLevel}.

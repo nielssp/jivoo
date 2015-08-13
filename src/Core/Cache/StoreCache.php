@@ -5,14 +5,14 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Cache;
 
-use Jivoo\Core\Store\Store;
+use Jivoo\Core\Store\IStore;
 
 /**
- * A cache that stores values in an {@see Store}. 
+ * A cache that stores values in an {@see IStore}. 
  */
-class StoreCache implements Cache {
+class StoreCache implements ICache {
   /**
-   * @var Store
+   * @var IStore
    */
   private $store;
   
@@ -23,9 +23,9 @@ class StoreCache implements Cache {
   
   /**
    * Construct store cache.
-   * @param Store $store Store.
+   * @param IStore $store Store.
    */
-  public function __construct(Store $store) {
+  public function __construct(IStore $store) {
     $this->store = $store;
   }
   

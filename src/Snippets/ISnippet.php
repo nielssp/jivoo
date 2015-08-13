@@ -10,7 +10,7 @@ use Jivoo\Routing\Response;
 /**
  * Snippet interface.
  */
-interface Snippet {
+interface ISnippet {
   /**
    * Execute snippet logic and produce response.
    * @param string[] $parameters Parameters.

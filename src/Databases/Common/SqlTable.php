@@ -7,7 +7,7 @@ namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\Table;
 use Jivoo\Core\App;
-use Jivoo\Models\Schema;
+use Jivoo\Models\ISchema;
 use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\Selection\ReadSelectionBuilder;
 use Jivoo\Models\Selection\UpdateSelectionBuilder;
@@ -72,7 +72,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function setSchema(Schema $schema) {
+  public function setSchema(ISchema $schema) {
     $this->schema = $schema;
   }
   

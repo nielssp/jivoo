@@ -28,7 +28,7 @@ class MetaMixin extends ActiveModelMixin {
   );
 
   /**
-   * @var Model Meta data model.
+   * @var IModel Meta data model.
    */
   private $other;
 

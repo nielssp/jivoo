@@ -10,7 +10,7 @@ use Jivoo\Models\DataType;
 /**
  * Convert types from database to schema and vice versa.
  */
-interface TypeAdapter {
+interface ITypeAdapter {
   /**
    * Encode value for database.
    * @param DataType $type Data type to convert from.

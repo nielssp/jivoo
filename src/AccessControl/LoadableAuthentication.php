@@ -12,7 +12,7 @@ use Jivoo\Core\Module;
  * A loadable authentication module. Subclasses should use the prefix
  * "Authentication".
  */
-abstract class LoadableAuthentication extends Module implements Authentication {
+abstract class LoadableAuthentication extends Module implements IAuthentication {
   /**
    * @var array Associative array of default options for module.
    */
@@ -31,14 +31,14 @@ abstract class LoadableAuthentication extends Module implements Authentication {
   /**
    * {@inheritdoc}
    */
-  public function authenticate($data, UserModel $userModel, PasswordHasher $hasher) {
+  public function authenticate($data, IUserModel $userModel, IPasswordHasher $hasher) {
     return null;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deauthenticate($user, UserModel $userModel) { }
+  public function deauthenticate($user, IUserModel $userModel) { }
 
   /**
    * {@inheritdoc}

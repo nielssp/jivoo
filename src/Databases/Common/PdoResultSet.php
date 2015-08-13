@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
-use Jivoo\Databases\ResultSet;
+use Jivoo\Databases\IResultSet;
 
 /**
  * A PDO database result set.
  */
-class PdoResultSet implements ResultSet {
+class PdoResultSet implements IResultSet {
 
   /**
    * @var PDOStatement Statement.

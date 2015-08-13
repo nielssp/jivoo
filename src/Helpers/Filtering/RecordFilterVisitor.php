@@ -5,8 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers\Filtering;
 
-use Jivoo\Models\BasicRecord;
-use Jivoo\Models\BasicModel;
+use Jivoo\Models\IBasicRecord;
+use Jivoo\Models\IBasicModel;
 use Jivoo\Helpers\FilteringHelper;
 use Jivoo\Helpers\Filtering\Ast\FilterNode;
 use Jivoo\Helpers\Filtering\Ast\NotTermNode;
@@ -20,12 +20,12 @@ use Jivoo\Core\I18n\I18n;
  */
 class RecordFilterVisitor extends FilterVisitor {
   /**
-   * @var BasicRecord Record.
+   * @var IBasicRecord Record.
    */
   private $record;
   
   /**
-   * @var BasicModel Model.
+   * @var IBasicModel Model.
    */
   private $model;
   
@@ -37,9 +37,9 @@ class RecordFilterVisitor extends FilterVisitor {
   /**
    * Construct record filter visitor.
    * @param FilteringHelper $Filtering Filtering helper.
-   * @param BasicRecord $record Record.
+   * @param IBasicRecord $record Record.
    */
-  public function __construct(FilteringHelper $Filtering, BasicRecord $record = null) {
+  public function __construct(FilteringHelper $Filtering, IBasicRecord $record = null) {
     $this->primary = $Filtering->primary;
     $this->record = $record;
     if (isset($record))
@@ -48,9 +48,9 @@ class RecordFilterVisitor extends FilterVisitor {
   
   /**
    * Set record to test.
-   * @param BasicRecord $record Record.
+   * @param IBasicRecord $record Record.
    */
-  public function setRecord(BasicRecord $record) {
+  public function setRecord(IBasicRecord $record) {
     $this->record = $record;
     $this->model = $record->getModel();
   }

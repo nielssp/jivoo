@@ -6,10 +6,10 @@
 namespace Jivoo\Jtk\Table;
 
 use Jivoo\Jtk\JtkSnippet;
-use Jivoo\Models\BasicModel;
-use Jivoo\Models\Selection\BasicSelection;
-use Jivoo\Models\Model;
-use Jivoo\Models\BasicRecord;
+use Jivoo\Models\IBasicModel;
+use Jivoo\Models\Selection\IBasicSelection;
+use Jivoo\Models\IModel;
+use Jivoo\Models\IBasicRecord;
 use Jivoo\Models\Form;
 use Jivoo\Models\DataType;
 use Jivoo\Core\ObjectMacro;
@@ -30,13 +30,13 @@ class DataTableSnippet extends JtkSnippet {
   
   /**
    * Compare two records based on the chosen sorting.
-   * @param BasicRecord $a First record.
-   * @param BasicRecord $b Second record.
+   * @param IBasicRecord $a First record.
+   * @param IBasicRecord $b Second record.
    * @return int The order of the two rows. I.e. 0 if they are equal, a
    * positive integer if the first record should come after the second record,
    * or a negative integer otherwise.
    */
-  public function compareRecords(BasicRecord $a, BasicRecord $b) {
+  public function compareRecords(IBasicRecord $a, IBasicRecord $b) {
     $field = $this->object->sortBy->field;
     if ($a->$field == $b->$field)
       return 0;
@@ -92,11 +92,11 @@ class DataTableSnippet extends JtkSnippet {
    */
   public function get() {
     $o = $this->object;
-    assume($o->model instanceof BasicModel);
-    if ($o->model instanceof Model) {
+    assume($o->model instanceof IBasicModel);
+    if ($o->model instanceof IModel) {
       if ($o->selection instanceof ObjectMacro)
         $o->selection = $o->selection->playMacro($o->model);
-      else if (!($o->selection instanceof BasicSelection))
+      else if (!($o->selection instanceof IBasicSelection))
         $o->selection = $o->model;
       if (!isset($o->primaryKey))
         $o->primaryKey = $o->model->getAiPrimaryKey(); // TODO: more general?
@@ -131,7 +131,7 @@ class DataTableSnippet extends JtkSnippet {
       $sortBy->descending = ($this->request->query['order'] == 'desc');
     $o->sortBy = $sortBy;
     
-    if ($o->selection instanceof BasicSelection) {
+    if ($o->selection instanceof IBasicSelection) {
       if ($sortBy->descending)
         $o->selection = $o->selection->orderByDescending($sortBy->field);
       else

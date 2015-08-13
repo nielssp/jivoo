@@ -8,5 +8,5 @@ namespace Jivoo\Models\Selection;
 /**
  * An undecided selection.
  */
-interface Selection extends ReadSelection, UpdateSelection, DeleteSelection {
+interface ISelection extends IReadSelection, IUpdateSelection, IDeleteSelection {
 }

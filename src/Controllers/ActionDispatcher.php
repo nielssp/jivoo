@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Controllers;
 
-use Jivoo\Routing\Dispatcher;
+use Jivoo\Routing\IDispatcher;
 use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
@@ -18,7 +18,7 @@ use Jivoo\Routing\Http;
 /**
  * Action based routing.
  */
-class ActionDispatcher implements Dispatcher {
+class ActionDispatcher implements IDispatcher {
   /**
    * @var Routing Routing module.
    */

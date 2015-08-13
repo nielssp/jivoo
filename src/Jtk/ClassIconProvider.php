@@ -9,7 +9,7 @@ namespace Jivoo\Jtk;
  * An icon provider that uses the class-attribute to provide icons, e.g. when
  * icons are provided by a style sheet.
  */
-class ClassIconProvider implements IconProvider {
+class ClassIconProvider implements IIconProvider {
   /**
    * @var string Icons class prefix
    */

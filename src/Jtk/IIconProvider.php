@@ -8,7 +8,7 @@ namespace Jivoo\Jtk;
 /**
  * A provider of icons for HTML templates.
  */
-interface IconProvider {
+interface IIconProvider {
   /**
    * Retreive 
    * @param string $icon Icon identifier

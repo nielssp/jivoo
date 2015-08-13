@@ -5,16 +5,16 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Selection;
 
-use Jivoo\Models\Model;
-use Jivoo\Models\Record;
+use Jivoo\Models\IModel;
+use Jivoo\Models\IRecord;
 use Jivoo\Models\DataType;
-use Jivoo\Models\BasicModel;
+use Jivoo\Models\IBasicModel;
 
 /**
  * An undecided selection. Will transform into a more specific selection based
  * on use.
  */
-class SelectionBuilder extends BasicSelectionBase implements Selection {
+class SelectionBuilder extends BasicSelectionBase implements ISelection {
   /**
    * Copy attributes into a basic selection.
    * @param BasicSelectionBase $copy A basic selection.
@@ -80,7 +80,7 @@ class SelectionBuilder extends BasicSelectionBase implements Selection {
   /**
    * {@inheritdoc}
    */
-  public function withRecord($field, BasicModel $model) {
+  public function withRecord($field, IBasicModel $model) {
     return $this->copyBasicAttr(new ReadSelectionBuilder($this->model))->withRecord($field, $model);
   }
 
@@ -94,21 +94,21 @@ class SelectionBuilder extends BasicSelectionBase implements Selection {
   /**
    * {@inheritdoc}
    */
-  public function innerJoin(Model $other, $condition, $alias = null) {
+  public function innerJoin(IModel $other, $condition, $alias = null) {
     return $this->copyBasicAttr(new ReadSelectionBuilder($this->model))->innerJoin($other, $condition, $alias);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function leftJoin(Model $other, $condition, $alias = null) {
+  public function leftJoin(IModel $other, $condition, $alias = null) {
     return $this->copyBasicAttr(new ReadSelectionBuilder($this->model))->leftJoin($other, $condition, $alias);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rightJoin(Model $other, $condition, $alias = null) {
+  public function rightJoin(IModel $other, $condition, $alias = null) {
     return $this->copyBasicAttr(new ReadSelectionBuilder($this->model))->rightJoin($other, $condition, $alias);
   }
 
@@ -142,10 +142,10 @@ class SelectionBuilder extends BasicSelectionBase implements Selection {
 
   /**
    * Find row number of a record in selection.
-   * @param Record $record A record
+   * @param IRecord $record A record
    * @return int Row number.
    */
-  public function rowNumber(Record $record) {
+  public function rowNumber(IRecord $record) {
     return $this->copyBasicAttr(new ReadSelectionBuilder($this->model))->rowNumber($record);
   }
 

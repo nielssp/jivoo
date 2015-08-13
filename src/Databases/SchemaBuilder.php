@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Models\Schema;
+use Jivoo\Models\ISchema;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\Validation\ValidatorBuilder;
@@ -14,7 +14,7 @@ use Jivoo\InvalidPropertyException;
 /**
  * Represents a database table schema.
  */
-class SchemaBuilder implements Schema {
+class SchemaBuilder implements ISchema {
   /**
    * @var string[] List of column names.
    */

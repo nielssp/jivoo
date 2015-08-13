@@ -10,7 +10,7 @@ use Jivoo\Models\DataType;
 /**
  * Quotes strings, model names, and field names in expressions.
  */
-interface Quoter {
+interface IQuoter {
   /**
    * Quote a literal.
    * @param DataType $type Type.

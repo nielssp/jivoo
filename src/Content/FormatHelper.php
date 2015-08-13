@@ -6,8 +6,8 @@
 namespace Jivoo\Content;
 
 use Jivoo\Helpers\Helper;
-use Jivoo\Models\Model;
-use Jivoo\Models\BasicRecord;
+use Jivoo\Models\IModel;
+use Jivoo\Models\IBasicRecord;
 use Jivoo\Routing\InvalidRouteException;
 
 /**
@@ -31,21 +31,21 @@ class FormatHelper extends Helper {
   
   /**
    * Set encoder of field.
-   * @param Model $model A model.
+   * @param IModel $model A model.
    * @param String $field Field name.
    * @param HtmlEncoder $encoder Encoder.
    */
-  public function set(Model $model, $field, HtmlEncoder $encoder) {
+  public function set(IModel $model, $field, HtmlEncoder $encoder) {
     $this->m->Content->setEncoder($model, $field, $encoder);
   }
   
   /**
    * Get encoder of field.
-   * @param Model $model A model.
+   * @param IModel $model A model.
    * @param string $field Field name.
    * @return HtmLEncoder An encoder.
    */
-  public function encoder(Model $model, $field) {
+  public function encoder(IModel $model, $field) {
     return $this->m->Content->getEncoder($model, $field);
   }
 
@@ -62,44 +62,44 @@ class FormatHelper extends Helper {
 
   /**
    * Get format for field.
-   * @param BasicRecord $record A record.
+   * @param IBasicRecord $record A record.
    * @param string $field Field name.
-   * @return ContentFormat|null Format object if available, otherwise null.
+   * @return IContentFormat|null Format object if available, otherwise null.
    */
-  public function formatOf(BasicRecord $record, $field) {
+  public function formatOf(IBasicRecord $record, $field) {
     $formatField = $field . 'Format';
     return $this->m->Content->getFormat($record->$formatField);
   }
   
   /**
    * Enable content extensions on field.
-   * @param Model $model A model.
+   * @param IModel $model A model.
    * @param string $field Field name.
    */
-  public function enableExtensions(Model $model, $field) {
+  public function enableExtensions(IModel $model, $field) {
    $this->m->Content->enableExtensions($model, $field);
   }
 
   /**
    * Get cleartext content of field.
-   * @param BasicRecord $record A record.
+   * @param IBasicRecord $record A record.
    * @param string $field Field name.
    * @return string Text content.
    */
-  public function text(BasicRecord $record, $field) {
+  public function text(IBasicRecord $record, $field) {
     $textField = $field . 'Text';
     return h($record->$textField);
   }
 
   /**
    * Get HTML content of field.
-   * @param BasicRecord $record A record.
+   * @param IBasicRecord $record A record.
    * @param string $field Field name.
    * @param array $options Associative array of options for encoder, see
    * {@see HtmlEncoder::encode}.
    * @return string HTML encoded content.
    */
-  public function html(BasicRecord $record, $field, $options = array()) {
+  public function html(IBasicRecord $record, $field, $options = array()) {
     $encoder = $this->m->Content->getEncoder($record->getModel(), $field);
     $htmlField = $field . 'Html';
     $content = $record->$htmlField;
