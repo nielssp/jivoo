@@ -22,8 +22,9 @@ interface Pool extends CacheItemPool {
    * Store a value under a key.
    * @param string $key Item key.
    * @param mixed $value Value.
-   * @param int $expiration Expiration timestamp in seconds. Default is 0
-   * (never expires). If less than or equal to 2,592,000 (30 days), the time
+   * @param int|\DateInterval|\DateTime|null $expiration Timestamp or interval.
+   * Null and the integer 0 is interpreted as 'no expiration date'. 
+   * If the integer is less than or equal to 2,592,000 (30 days), the time
    * is relative to the current timestamp, otherwise it is interpreted as an
    * absolute UNIX timestamp. 
    * @return bool True if stored, false on failure.
@@ -34,7 +35,8 @@ interface Pool extends CacheItemPool {
    * Store a value under a key. Fails if the key already has a value.
    * @param string $key Item key.
    * @param mixed $value Value.
-   * @param int $expiration Expiration timestamp in seconds. {@see set}.
+   * @param int|\DateInterval|\DateTime|null $expiration Expiration timestamp
+   * {@see set}.
    * @return bool True if stored, false on failure.
    */
   public function add($key, $value, $expiration = 0);
@@ -43,7 +45,8 @@ interface Pool extends CacheItemPool {
    * Store a value under a key. Fails if the key doesn't exist.
    * @param string $key Item key.
    * @param mixed $value Value.
-   * @param int $expiration Expiration timestamp in seconds. {@see set}.
+   * @param int|\DateInterval|\DateTime|null $expiration Expiration timestamp
+   * {@see set}.
    * @return bool True if stored, false on failure.
    */
   public function replace($key, $value, $expiration = 0);
@@ -51,7 +54,8 @@ interface Pool extends CacheItemPool {
   /**
    * Updates the expiration time of a key. Fails if the key doesn't exist.
    * @param string $key Item key.
-   * @param int $expiration Expiration timestamp in seconds. {@see set}.
+   * @param int|\DateInterval|\DateTime|null $expiration Expiration timestamp
+   * {@see set}.
    * @return bool True if updated, false on failure.
    */
   public function touch($key, $expiration = 0);

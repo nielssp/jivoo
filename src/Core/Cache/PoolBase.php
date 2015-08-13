@@ -46,7 +46,7 @@ abstract class PoolBase implements Pool {
   public function set($key, $value, $expiration = 0) {
     $item = $this->getItem($key);
     $item->set($value);
-    $item->expiresAt($expiration);
+    $item->expiresAt(self::convertExpiration($expiration));
     $this->save($item);
     return true;
   }
@@ -59,7 +59,7 @@ abstract class PoolBase implements Pool {
     if ($this->isHit())
       return false;
     $item->set($value);
-    $item->expiresAt($expiration);
+    $item->expiresAt(self::convertExpiration($expiration));
     $this->save($item);
     return true;
   }
@@ -72,7 +72,7 @@ abstract class PoolBase implements Pool {
     if (!$this->isHit())
       return false;
     $item->set($value);
-    $item->expiresAt($expiration);
+    $item->expiresAt(self::convertExpiration($expiration));
     $this->save($item);
     return true;
   }
@@ -84,7 +84,7 @@ abstract class PoolBase implements Pool {
     $item = $this->getItem($key);
     if (!$this->isHit())
       return false;
-    $item->expiresAt($expiration);
+    $item->expiresAt(self::convertExpiration($expiration));
     $this->save($item);
     return true;
   }
@@ -124,5 +124,30 @@ abstract class PoolBase implements Pool {
    */
   public function delete($key) {
     $this->deleteItems(array($key));
+  }
+  
+  /**
+   * Converts expiration timestamp, interval, {\DateInterval} or {\DateTime}
+   * to a {\DateTime} or null (for no expiration date).
+   * @param int|\DateInterval|\DateTime|null $expiration Timestamp or interval.
+   * Null and the integer 0 is interpreted as 'no expiration date'. 
+   * If the integer is less than or equal to 2,592,000 (30 days), the time
+   * is relative to the current timestamp, otherwise it is interpreted as an
+   * absolute UNIX timestamp. 
+   * @return \DateTime|null
+   */
+  public static function convertExpiration($expiration) {
+    if ($expiration === null or $expiration === 0)
+      return null;
+    if (is_int($expiration)) {
+      if ($expiration <= 2592000)
+        $expiration += time();
+      return \DateTime::createFromFormat('U', $expiration);
+    }
+    if ($expiration instanceof \DateTime)
+      return $expiration;
+    assume($expiration instanceof \DateInterval);
+    $d = new \DateTime();
+    return $d->add($expiration);
   }
 }
