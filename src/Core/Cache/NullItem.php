@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Cache;
 
-use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemInterface as CacheItem;
 
 /**
  * A cache item that forgets all values.
  */
-class NullItem implements CacheItemInterface {
+class NullItem implements CacheItem {
   /**
    * @var string
    */

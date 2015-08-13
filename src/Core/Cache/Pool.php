@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Cache;
 
-use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\CacheItemPoolInterface as CacheItemPool;
 
 /**
  * An object cache for storing serializable values under keys. 
  */
-interface Pool extends CacheItemPoolInterface {
+interface Pool extends CacheItemPool {
   /**
    * Return value stored under a key.
    * @param string $key Item key.

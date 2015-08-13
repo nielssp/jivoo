@@ -8,6 +8,7 @@ namespace Jivoo\Setup;
 use Jivoo\Core\Store\Config;
 use Jivoo\AccessControl\UserModel;
 use Jivoo\AccessControl\Random;
+use Jivoo\Core\Binary;
 
 /**
  * User model for the maintenance user

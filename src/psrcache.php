@@ -1,5 +1,5 @@
 <?php
-// PSR-6 (Proposed) cacheing interfaces. May change in the future.
+// PSR-6 (Proposed) caching interfaces. May change in the future.
 // See https://github.com/php-fig/fig-standards/blob/master/proposed/cache.md
 // and https://github.com/php-fig/fig-standards/blob/master/proposed/cache-meta.md
 namespace Psr\Cache;
