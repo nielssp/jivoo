@@ -8,7 +8,7 @@ namespace Jivoo\Content;
 /**
  * A content format.
  */
-interface IContentFormat {
+interface ContentFormat {
   /**
    * Get identifying name of format. 
    * @return string Name.

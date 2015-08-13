@@ -6,15 +6,15 @@
 namespace Jivoo\Databases;
 
 use Jivoo\Models\ModelBase;
-use Jivoo\Models\IRecordIterator;
+use Jivoo\Models\RecordIterator;
 use Jivoo\Models\Selection\ReadSelectionBuilder;
 
 /**
- * Iterator for {@see IResultSet} instances.
+ * Iterator for {@see ResultSet} instances.
  */
-class ResultSetIterator implements IRecordIterator {
+class ResultSetIterator implements RecordIterator {
   /**
-   * @var IResultSet Result set.
+   * @var ResultSet Result set.
    */
   private $resultSet;
   
@@ -34,17 +34,17 @@ class ResultSetIterator implements IRecordIterator {
   private $position = 0;
   
   /**
-   * @var IRecord[] Records.
+   * @var Record[] Records.
    */
   private $array = array();
 
   /**
    * Construct iterator.
    * @param ModelBase $model Model.
-   * @param IResultSet $resultSet Result set.
+   * @param ResultSet $resultSet Result set.
    * @param ReadSelectionBuilder $selection The selection that created this result set.
    */
-  public function __construct(ModelBase $model, IResultSet $resultSet, ReadSelectionBuilder $selection) {
+  public function __construct(ModelBase $model, ResultSet $resultSet, ReadSelectionBuilder $selection) {
     $this->model = $model;
     $this->selection = $selection;
     $this->resultSet = $resultSet;
@@ -61,7 +61,7 @@ class ResultSetIterator implements IRecordIterator {
 
   /**
    * Get current record.
-   * @return IRecord A record.
+   * @return Record A record.
    */
   public function current() {
     return $this->array[$this->position];
@@ -92,7 +92,7 @@ class ResultSetIterator implements IRecordIterator {
   
   /**
    * Convert result set to array.
-   * @return \Jivoo\Databases\IRecord[] Array of records.
+   * @return \Jivoo\Databases\Record[] Array of records.
    */
   public function toArray() {
     while ($this->resultSet->hasRows())

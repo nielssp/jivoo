@@ -6,9 +6,9 @@
 namespace Jivoo\Content;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Models\IModel;
-use Jivoo\Models\IBasicModel;
-use Jivoo\Models\IBasicRecord;
+use Jivoo\Models\Model;
+use Jivoo\Models\BasicModel;
+use Jivoo\Models\BasicRecord;
 use Jivoo\ActiveModels\ActiveModel;
 use Jivoo\Routing\InvalidRouteException;
 
@@ -23,7 +23,7 @@ class Content extends LoadableModule {
   protected $modules = array('Helpers');
 
   /**
-   * @var IContentFormat[] Formats.
+   * @var ContentFormat[] Formats.
    */
   private $formats = array();
   
@@ -33,12 +33,12 @@ class Content extends LoadableModule {
   private $encoders = array();
   
   /**
-   * @var IEditor[][] Associative array of format names and list of editors.
+   * @var Editor[][] Associative array of format names and list of editors.
    */
   private $editors = array();
 
   /**
-   * @var IEditor[][] Associative array of model names and field editors.
+   * @var Editor[][] Associative array of model names and field editors.
    */
   private $defaultEditors = array();
   
@@ -130,10 +130,10 @@ class Content extends LoadableModule {
   
   /**
    * Enable content extensions on a field in a model.
-   * @param IModel $model A model.
+   * @param Model $model A model.
    * @param string $field Field name.
    */
-  public function enableExtensions(IModel $model, $field) {
+  public function enableExtensions(Model $model, $field) {
     $name = $model->getName();
     if (!isset($this->extensionsEnabled[$name]))
       $this->extensionsEnabled[$name] = array();
@@ -142,10 +142,10 @@ class Content extends LoadableModule {
   
   /**
    * Disable content extensions on a field in a model.
-   * @param IModel $model A model.
+   * @param Model $model A model.
    * @param string $field Field name.
    */
-  public function disableExtensions(IModel $model, $field) {
+  public function disableExtensions(Model $model, $field) {
     $name = $model->getName();
     if (!isset($this->extensionsEnabled[$name]))
       return;
@@ -156,11 +156,11 @@ class Content extends LoadableModule {
   
   /**
    * Get encoder for a field.
-   * @param IBasicModel $model A model.
+   * @param BasicModel $model A model.
    * @param string $field Field name.
    * @return HtmlEncoder Encoder.
    */
-  public function getEncoder(IBasicModel $model, $field) {
+  public function getEncoder(BasicModel $model, $field) {
     $name = $model->getName();
     if (!isset($this->encoders[$name]))
       $this->encoders[$name] = array();
@@ -171,7 +171,7 @@ class Content extends LoadableModule {
 
   /**
    * Get all formats.
-   * @return IContentFormat[] Associative array of format names and format objects.
+   * @return ContentFormat[] Associative array of format names and format objects.
    */
   public function getFormats() {
     return $this->formats;
@@ -180,7 +180,7 @@ class Content extends LoadableModule {
   /**
    * Get a content format.
    * @param string $name Format name.
-   * @return IContentFormat|null Format object or null if undefined.
+   * @return ContentFormat|null Format object or null if undefined.
    */
   public function getFormat($name) {
     if (isset($this->formats[$name]))
@@ -190,9 +190,9 @@ class Content extends LoadableModule {
 
   /**
    * Add a content format.
-   * @param IContentFormat $format Format object.
+   * @param ContentFormat $format Format object.
    */
-  public function addFormat(IContentFormat $format) {
+  public function addFormat(ContentFormat $format) {
     $name = $format->getName();
     $this->formats[$name] = $format;
     $this->editors[$name] = array();
@@ -201,11 +201,11 @@ class Content extends LoadableModule {
   /**
    * Compile content of a field, i.e. convert to HTML, encode, and apply content
    * extensions if enabled. 
-   * @param IBasicRecord $record A record.
+   * @param BasicRecord $record A record.
    * @param string $field Field name.
    * @return string Compiled and encoded content.
    */
-  public function compile(IBasicRecord $record, $field) {
+  public function compile(BasicRecord $record, $field) {
     $model = $record->getModel();
     $name = $model->getName();
     $formatField = $field . 'Format';
@@ -222,10 +222,10 @@ class Content extends LoadableModule {
 
   /**
    * Add an editor.
-   * @param IEditor $editor Editor object.
+   * @param Editor $editor Editor object.
    * @throws \Exception If format used by editor is unknown.
    */
-  public function addEditor(IEditor $editor) {
+  public function addEditor(Editor $editor) {
     $format = $editor->getFormat();
     if (!isset($this->editors[$format]))
       throw new \Exception('Unknown format: ' . $format);
@@ -234,11 +234,11 @@ class Content extends LoadableModule {
   
   /**
    * Get default editor for field.
-   * @param IBasicRecord $record A record.
+   * @param BasicRecord $record A record.
    * @param string $field Field name.
-   * @return IEdtor|null An editor or null if no default.
+   * @return Edtor|null An editor or null if no default.
    */
-  public function getDefaultEditor(IBasicRecord $record, $field) {
+  public function getDefaultEditor(BasicRecord $record, $field) {
     $model = $record->getModel();
     $name = $model->getName();
     if (isset($this->defaultEditors[$name])) {
@@ -251,11 +251,11 @@ class Content extends LoadableModule {
 
   /**
    * Get editor for field.
-   * @param IBasicRecord $record A record.
+   * @param BasicRecord $record A record.
    * @param string $field Field name.
-   * @return IEdtitor|null An editor or null if none available.
+   * @return Edtitor|null An editor or null if none available.
    */
-  public function getEditor(IBasicRecord $record, $field) {
+  public function getEditor(BasicRecord $record, $field) {
     $model = $record->getModel();
     $name = $model->getName();
     $formatField = $field . 'Format';
@@ -276,11 +276,11 @@ class Content extends LoadableModule {
   
   /**
    * Set editor for field.
-   * @param IBasicModel $model A model.
+   * @param BasicModel $model A model.
    * @param string $field Field name.
-   * @param IEditor $editor An editor.
+   * @param Editor $editor An editor.
    */
-  public function setEditor(ActiveModel $model, $field, IEditor $editor) {
+  public function setEditor(ActiveModel $model, $field, Editor $editor) {
     $name = $model->getName();
     if (!isset($this->defaultEditors[$name]))
       $this->defaultEditors[$name] = array();

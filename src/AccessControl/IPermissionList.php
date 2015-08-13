@@ -8,7 +8,7 @@ namespace Jivoo\AccessControl;
 /**
  * A permission list.
  */
-interface IPermissionList {
+interface PermissionList {
   /**
    * Check if a permission exists in the list.
    * @param string $permission Permission string.

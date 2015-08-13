@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases\Common;
 
-use Jivoo\Databases\IMigrationTypeAdapter;
+use Jivoo\Databases\MigrationTypeAdapter;
 use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
@@ -15,7 +15,7 @@ use Jivoo\Databases\TypeException;
 /**
  * Type and migration adapter for SQLite database drivers.
  */
-class SqliteTypeAdapter implements IMigrationTypeAdapter {
+class SqliteTypeAdapter implements MigrationTypeAdapter {
   /**
    * @var SqlDatabase Database.
    */

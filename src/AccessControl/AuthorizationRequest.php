@@ -10,12 +10,12 @@ use Jivoo\InvalidPropertyException;
 
 /**
  * Represents a request for authorization
- * @property-read array|ILinkable|string|null $route A route, see {@see Routing}.
+ * @property-read array|Linkable|string|null $route A route, see {@see Routing}.
  * @property-read mixed $user User data of requesting user.
  */
 class AuthorizationRequest {
   /**
-   * @var array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @var array|Linkable|string|null $route A route, see {@see Routing}.
    */
   private $route;
   

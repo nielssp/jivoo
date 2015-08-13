@@ -36,7 +36,7 @@ class Controller extends Module {
   private $helperObjects = array();
   
   /**
-   * @var IBasicModel[] An associative array of model names and objects.
+   * @var BasicModel[] An associative array of model names and objects.
   */
   private $modelObjects = array();
   
@@ -238,7 +238,7 @@ class Controller extends Module {
 
   /**
    * Redirect to a route.
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array|Linkable|string|null $route A route, see {@see Routing}.
    */
   protected function redirect($route = null) {
     $this->m->Routing->redirect($route);

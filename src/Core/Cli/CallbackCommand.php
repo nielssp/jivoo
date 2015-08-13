@@ -8,7 +8,7 @@ namespace Jivoo\Core\Cli;
 /**
  * A command based on a callback.
  */
-class CallbackCommand implements ICommand {
+class CallbackCommand implements Command {
   /**
    * @var callable
    */

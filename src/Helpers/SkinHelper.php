@@ -112,7 +112,7 @@ class SkinHelper extends Helper {
   /**
    * Apply a skin template. The route should point at a dynamic asset (action or
    * snippet returning a css-file).
-   * @param array|\Jivoo\Routing\ILinkable|string|null $route A route, see
+   * @param array|\Jivoo\Routing\Linkable|string|null $route A route, see
    * {@see \Jivoo\Routing\Routing}.
    * @param string $options
    */

@@ -8,7 +8,7 @@ namespace Jivoo\Routing;
 /**
  * URL based routing.
  */
-class UrlDispatcher implements IDispatcher {
+class UrlDispatcher implements Dispatcher {
   /**
    * @var Routing Routing module.
    */

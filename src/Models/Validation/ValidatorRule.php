@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Validation;
 
-use Jivoo\Models\IRecord;
+use Jivoo\Models\Record;
 
 /**
  * A custom validator rule.
@@ -134,11 +134,11 @@ class ValidatorRule {
 
   /**
    * Validate a record field using this rule.
-   * @param IRecord $record A record.
+   * @param Record $record A record.
    * @param string $field Field name.
    * @return true|string True if valid, otherwise return an error message.
    */
-  public function validate(IRecord $record, $field) {
+  public function validate(Record $record, $field) {
     foreach ($this->rules as $name => $rule) {
       $result = ValidatorBuilder::validateRule($record, $field, $name, $rule);
       if ($result !== true) {

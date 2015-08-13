@@ -25,7 +25,7 @@ namespace Jivoo\Core;
  * @property-read \Jivoo\Themes\Themes $Themes
  * @property-read \Jivoo\View\View $View
  */
-class ModuleLoader implements IEventSubject {
+class ModuleLoader implements EventSubject {
   /**
    * @var App
    */
@@ -92,7 +92,7 @@ class ModuleLoader implements IEventSubject {
   /**
    * {@inheritdoc}
    */
-  public function attachEventListener(IEventListener $listener) {
+  public function attachEventListener(EventListener $listener) {
     $this->e->attachListener($listener);
   }
   
@@ -106,7 +106,7 @@ class ModuleLoader implements IEventSubject {
   /**
    * {@inheritdoc}
    */
-  public function detachEventListener(IEventListener $listener) {
+  public function detachEventListener(EventListener $listener) {
     $this->e->detachListener($listener);
   }
   

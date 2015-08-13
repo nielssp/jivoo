@@ -7,7 +7,7 @@ namespace Jivoo\Migrations;
 
 use Jivoo\Setup\InstallerSnippet;
 use Jivoo\Setup\AsyncTaskBase;
-use Jivoo\Databases\IMigratableDatabase;
+use Jivoo\Databases\MigratableDatabase;
 
 /**
  * Migration installer. Checks database, cleans/migrates data, creates tables.
@@ -112,7 +112,7 @@ class MigrationInstaller extends MigrationUpdater {
  */
 class CreateTask extends AsyncTaskBase {
   /**
-   * @var IMigratableDatabase
+   * @var MigratableDatabase
    */
   private $db;
   
@@ -133,9 +133,9 @@ class CreateTask extends AsyncTaskBase {
   
   /**
    * Construct task.
-   * @param IMigratableDatabase $db Database to create tables in.
+   * @param MigratableDatabase $db Database to create tables in.
    */
-  public function __construct(IMigratableDatabase $db) {
+  public function __construct(MigratableDatabase $db) {
     $this->db = $db;
     $this->schema = $db->getSchema();
   }

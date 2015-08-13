@@ -8,7 +8,7 @@ namespace Jivoo\Core\Cache;
 /**
  * An object cache for storing serializable values under keys. 
  */
-interface ICache {
+interface Cache {
   /**
    * Return item stored under a key.
    * @param string $key Item key, may contain dots to denote subkeys, e.g.

@@ -7,12 +7,12 @@ namespace Jivoo\Jtk\Table;
 
 use Jivoo\Jtk\JtkObject;
 use Jivoo\Jtk\JtkCollection;
-use Jivoo\Models\IBasicRecord;
+use Jivoo\Models\BasicRecord;
 
 /**
  * A data table row.
  * @property DataTable $table Associated table.
- * @property IBasicRecord $record Associated record if any.
+ * @property BasicRecord $record Associated record if any.
  * @property JtkCollection $cells Cells of row.
  * @property JtkCollection $actions Available row actions.
  */

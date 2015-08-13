@@ -5,12 +5,12 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Content\Formats;
 
-use Jivoo\Content\IContentFormat;
+use Jivoo\Content\ContentFormat;
 
 /**
  * Plaintext format.
  */
-class TextFormat implements IContentFormat {
+class TextFormat implements ContentFormat {
   /**
    * {@inheritdoc}
    */

@@ -177,7 +177,7 @@ class Console extends LoadableModule {
    * Add an Ajax-based tool to the developer toolbar.
    * @param string $id A unique tool id.
    * @param string $name Name of tool.
-   * @param array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @param array|Linkable|string|null $route A route, see {@see Routing}.
    * @param bool $ajax Whether to use Ajax. If false, then a simple
    * link is created instead.
    * @param bool $ajaxOnly Whether to only allow Ajax (e.g. don't allow middle

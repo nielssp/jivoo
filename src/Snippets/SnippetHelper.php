@@ -21,7 +21,7 @@ class SnippetHelper extends Helper {
   /**
    * Get snippet instance.
    * @param string $snippet Snippet name.
-   * @return ISnippet Snippet instance.
+   * @return Snippet Snippet instance.
    */
   public function __get($snippet) {
     return $this->m->Snippets->getSnippet($snippet);

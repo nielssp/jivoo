@@ -9,7 +9,7 @@ namespace Jivoo\Models\Selection;
  * An update selection.
  * @property-read array $sets An associative array of field names and values.
  */
-class UpdateSelectionBuilder extends BasicSelectionBase implements IUpdateSelection {
+class UpdateSelectionBuilder extends BasicSelectionBase implements UpdateSelection {
   /**
    * @var array Associative array of field names and values
    */

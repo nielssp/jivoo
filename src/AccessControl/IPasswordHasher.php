@@ -8,7 +8,7 @@ namespace Jivoo\AccessControl;
 /**
  * A password hasher.
  */
-interface IPasswordHasher {
+interface PasswordHasher {
   /**
    * Hash a password.
    * @param string $password Cleartext password.

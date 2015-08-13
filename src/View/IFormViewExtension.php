@@ -5,10 +5,10 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\View;
 
-use Jivoo\Helpers\IFormExtension;
+use Jivoo\Helpers\FormExtension;
 
 /**
  * A view extension that produces form elements.
  */
-interface IFormViewExtension extends IViewExtension, IFormExtension {
+interface FormViewExtension extends ViewExtension, FormExtension {
 }

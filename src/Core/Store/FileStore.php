@@ -8,7 +8,7 @@ namespace Jivoo\Core\Store;
 /**
  * Stores data in files. See subclasses for implementations of file formats.
  */
-abstract class FileStore implements IStore {
+abstract class FileStore implements Store {
   /**
    * @var string
    */

@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Models\Validation;
 
-use Jivoo\Models\IRecord;
+use Jivoo\Models\Record;
 
 /**
  * Validator for a single field.
@@ -130,11 +130,11 @@ class ValidatorField {
 
   /**
    * Validate a value. Return value must be compared using ===.
-   * @param IRecord $record Record.
+   * @param Record $record Record.
    * @param string $field Record field.
    * @return true|string True if valid or an error message if invalid.
    */
-  public function validate(IRecord $record, $field) {
+  public function validate(Record $record, $field) {
     foreach ($this->rules as $name => $rule) {
       $result = ValidatorBuilder::validateRule($record, $field, $name, $rule);
       if ($result !== true)

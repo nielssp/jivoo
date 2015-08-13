@@ -12,12 +12,12 @@ use Jivoo\Routing\RenderEvent;
 
 /**
  * Helper class for authentication and autorization.
- * @property IUserModel $userModel User model.
- * @property array|ILinkable|string|null $loginRoute Route for login page, ee
+ * @property UserModel $userModel User model.
+ * @property array|Linkable|string|null $loginRoute Route for login page, ee
  * {@see Routing}.
- * @property array|ILinkable|string|null $unauthorizedRoute Route to redirect to
+ * @property array|Linkable|string|null $unauthorizedRoute Route to redirect to
  * when user unauthorized, see {@see Routing}.
- * @property array|ILinkable|string|null $ajaxRoute Route to redirect to for
+ * @property array|Linkable|string|null $ajaxRoute Route to redirect to for
  * AJAX requests,  see {@see Routing}.
  * @property-read string $sessionId Current session id.
  * @property bool $createSessions Whether or not to create sessions.
@@ -30,22 +30,22 @@ use Jivoo\Routing\RenderEvent;
  * @property int $cookieLifeTime Life time of cookies in seconds.
  * @property int $cookieRenewAfter Number of seconds after which the cookie
  * is renewed.
- * @property IPasswordHasher $passwordHasher Password hasher used to hash
+ * @property PasswordHasher $passwordHasher Password hasher used to hash
  * passwords.
  * @property string $permissionPrefix Prefix for permissions when checking
  * access control lists.
  * @property-read mixed $user User data of current user if logged in, otherwise
  * null.
- * @property-write string|IAuthentication|string[]|IAuthentication[]|array[] $authentication
+ * @property-write string|Authentication|string[]|Authentication[]|array[] $authentication
  * Add one or more access control lists. Can be the name of a class (without
  * 'Authentication'-suffix) or a list of names, see
  * {@see LoadableAuthentication}. Can also be an associative array mapping names
  * to options.
- * @property-write string|IAuthorization|string[]|IAuthorization[]|array[] $authorization
+ * @property-write string|Authorization|string[]|Authorization[]|array[] $authorization
  * Add one or more access control lists. Can be the name of a class (without
  * 'Authorization'-suffix) or a list of names, see {@see LoadableAuthorization}.
  * Can also be an associative array mapping names to options.
- * @property-write string|IAcl|string[]|IAcl[]|array[] $acl
+ * @property-write string|Acl|string[]|Acl[]|array[] $acl
  * Add one or more access control lists. Can be the name of a class (without
  * 'Acl'-suffix) or a list of names, see {@see LoadableAcl}. Can also be an
  * associative array mapping names to options.
@@ -67,7 +67,7 @@ class AuthHelper extends Helper {
   private $sessionId = null;
 
   /**
-   * @var IUserModel User model.
+   * @var UserModel User model.
    */
   private $userModel = null;
   
@@ -117,47 +117,47 @@ class AuthHelper extends Helper {
   private $permissionPrefix = '';
   
   /**
-   * @param array|ILinkable|string|null $route Route for login page.
+   * @param array|Linkable|string|null $route Route for login page.
    */
   private $loginRoute = null;
   
   /**
-   * @param array|ILinkable|string|null $route Route unauthorized page.
+   * @param array|Linkable|string|null $route Route unauthorized page.
    */
   private $unauthorizedRoute = null;
   
   /**
-   * @var array|ILinkable|string|null $route Route for AJAX requests.
+   * @var array|Linkable|string|null $route Route for AJAX requests.
    */
   private $ajaxRoute = null;
   
   /**
-   * @var IAuthentication[] Associative array of authentication methods.
+   * @var Authentication[] Associative array of authentication methods.
    */
   private $authenticationMethods = array();
   
   /**
-   * @var IAuthentication[] Associative array of stateless authentication methods.
+   * @var Authentication[] Associative array of stateless authentication methods.
    */
   private $statelessAuthenticationMethods = array();
 
   /**
-   * @var IAuthorization[] Associative array of authorization methods.
+   * @var Authorization[] Associative array of authorization methods.
    */
   private $authorizationMethods= array();
   
   /**
-   * @var IAcl[] Associative array of ACL handlers.
+   * @var Acl[] Associative array of ACL handlers.
    */
   private $aclMethods = array();
   
   /**
-   * @var (IAuthentication|IAuthorization|IAcl)[]
+   * @var (Authentication|Authorization|Acl)[]
    */
   private $acModules = array();
   
   /**
-   * @var IPasswordHasher Password hasher.
+   * @var PasswordHasher Password hasher.
    */
   private $passwordHasher = null;
   
@@ -226,7 +226,7 @@ class AuthHelper extends Helper {
         $this->$property = $value;
         return;
       case 'passwordHasher':
-        if ($value instanceof IPasswordHasher)
+        if ($value instanceof PasswordHasher)
           $this->passwordHasher = $value;
         else
           $this->passwordHasher = $this->m->AccessControl->getPasswordHasher($value);
@@ -279,11 +279,11 @@ class AuthHelper extends Helper {
   
   /**
    * Load authentication module.
-   * @param string|IAuthentication $name Name or object.
+   * @param string|Authentication $name Name or object.
    * @param array $options Options for new object.
    */
   private function loadAuthentication($name, $options = array()) {
-    if ($name instanceof IAuthentication)
+    if ($name instanceof Authentication)
       return $this->addAuthentication($name);
     $class = 'Jivoo\AccessControl\Authentication\\' . $name . 'Authentication';
     Utilities::assumeSubclassOf($class, 'Jivoo\AccessControl\LoadableAuthentication');
@@ -292,11 +292,11 @@ class AuthHelper extends Helper {
   
   /**
    * Load authorization module.
-   * @param string|IAuthorization $name Name or object.
+   * @param string|Authorization $name Name or object.
    * @param array $options Options for new object.
    */
   private function loadAuthorization($name, $options = array()) {
-    if ($name instanceof IAuthorization)
+    if ($name instanceof Authorization)
       return $this->addAuthorization($name);
     $class = 'Jivoo\AccessControl\Authorization\\' . $name . 'Authorization';
     Utilities::assumeSubclassOf($class, 'Jivoo\AccessControl\LoadableAuthorization');
@@ -305,11 +305,11 @@ class AuthHelper extends Helper {
 
   /**
    * Load ACL module.
-   * @param string|IAcl $name Name or object.
+   * @param string|Acl $name Name or object.
    * @param array $options Options for new object.
    */
   private function loadAcl($name, $options = array()) {
-    if ($name instanceof IAcl)
+    if ($name instanceof Acl)
       return $this->addAcl($name);
     $class = 'Jivoo\AccessControl\Acl\\' . $name . 'Acl';
     Utilities::assumeSubclassOf($class, 'Jivoo\AccessControl\LoadableAcl');
@@ -318,11 +318,11 @@ class AuthHelper extends Helper {
   
   /**
    * Add an authentication module.
-   * @param IAuthentication $authentication Module.
+   * @param Authentication $authentication Module.
    * @param string $name Name that can be used to later access the module using
    * {@see __get}, default is the class name (without namespace).
    */
-  public function addAuthentication(IAuthentication $authentication, $name = null) {
+  public function addAuthentication(Authentication $authentication, $name = null) {
     $this->authenticationMethods[] = $authentication;
     if ($authentication->isStateless())
       $this->statelessAuthenticationMethods[] = $authentication;
@@ -333,11 +333,11 @@ class AuthHelper extends Helper {
   
   /**
    * Add an authorization module.
-   * @param IAuthorization $authorization Module.
+   * @param Authorization $authorization Module.
    * @param string $name Name that can be used to later access the module using
    * {@see __get}, default is the class name (without namespace).
    */
-  public function addAuthorization(IAuthorization $authorization, $name = null) {
+  public function addAuthorization(Authorization $authorization, $name = null) {
     $this->authorizationMethods[] = $authorization;
     if (!isset($name))
       $name = Utilities::getClassName($authorization);
@@ -346,11 +346,11 @@ class AuthHelper extends Helper {
   
   /**
    * Add an ACL module.
-   * @param IAcl $acl Module.
+   * @param Acl $acl Module.
    * @param string $name Name that can be used to later access the module using
    * {@see __get}, default is the class name (without namespace).
    */
-  public function addAcl(IAcl $acl, $name = null) {
+  public function addAcl(Acl $acl, $name = null) {
     $this->aclMethods[] = $acl;
     if (!isset($name))
       $name = Utilities::getClassName($acl);
@@ -473,7 +473,7 @@ class AuthHelper extends Helper {
   
   /**
    * Check user authorization for a route.
-   * @param array|\Jivoo\Routing\ILinkable|string|null $route A route,
+   * @param array|\Jivoo\Routing\Linkable|string|null $route A route,
    * see {@see \Jivoo\Routing\Routing}.
    * @param mixed $user Optional user data, if null the current user is used.
    * @return bool True if user is authorized.

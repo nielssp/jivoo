@@ -8,7 +8,7 @@ namespace Jivoo\AccessControl;
 /**
  * Modificable permission list. Default is to deny everything.
  */
-class PermissionList implements IPermissionList {
+class PermissionList implements PermissionList {
   /**
    * @var true|array Allowed permissions.
    */
@@ -20,7 +20,7 @@ class PermissionList implements IPermissionList {
   private $deny = true;
   
   /**
-   * @var IPermissionList
+   * @var PermissionList
    */
   private $parent = null;
   
@@ -48,9 +48,9 @@ class PermissionList implements IPermissionList {
   
   /**
    * Set inheritted permissions.
-   * @param IPermissionList $parent Parent.
+   * @param PermissionList $parent Parent.
    */
-  public function inheritFrom(IPermissionList $parent) {
+  public function inheritFrom(PermissionList $parent) {
     $this->parent = $parent;
   }
   

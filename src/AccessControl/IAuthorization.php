@@ -8,7 +8,7 @@ namespace Jivoo\AccessControl;
 /**
  * A method of authorization.
  */
-interface IAuthorization {
+interface Authorization {
   /**
    * Process a request for authorization.
    * @param AuthorizationRequest $authRequest Request of authorization.

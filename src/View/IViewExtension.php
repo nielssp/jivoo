@@ -8,7 +8,7 @@ namespace Jivoo\View;
 /**
  * A view extension.
  */
-interface IViewExtension {
+interface ViewExtension {
   /**
    * Prepare extension.
    * @return bool Whether or not the extension should be displayed.
