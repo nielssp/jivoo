@@ -402,6 +402,7 @@ class Locale {
     $f = file_get_contents($file);
   
     if ($f === false) {
+      //TODO: throw exception instead
       trigger_error('Could not open file: ' . $file, E_USER_ERROR);
       return null;
     }
