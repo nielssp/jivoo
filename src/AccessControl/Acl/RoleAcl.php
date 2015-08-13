@@ -6,16 +6,16 @@
 namespace Jivoo\AccessControl\Acl;
 
 use Jivoo\AccessControl\LoadableAcl;
-use Jivoo\Models\IBasicRecord;
-use Jivoo\AccessControl\IPermissionList;
+use Jivoo\Models\BasicRecord;
 use Jivoo\AccessControl\PermissionList;
+use Jivoo\AccessControl\PermissionListBuilder;
 use Jivoo\AccessControl\Jivoo\AccessControl;
 use Jivoo\AccessControl\InvalidRoleException;
 
 /**
  * An access control list implementation that assumes the user data has a
  * 'role' field (can be changed with the 'field' option) that can be accessed
- * using array access (e.g. as implemented by {@see IBasicRecord})
+ * using array access (e.g. as implemented by {@see BasicRecord})
  */
 class RoleAcl extends LoadableAcl {
   /**
@@ -27,7 +27,7 @@ class RoleAcl extends LoadableAcl {
   );
   
   /**
-   * @var IPermissionList[]
+   * @var PermissionList[]
    */
   private $roles = array();
 
@@ -49,7 +49,7 @@ class RoleAcl extends LoadableAcl {
   /**
    * Get permissions of a role, or create the role if it doesn't exist.
    * @param string $role Role name or id.
-   * @return IPermissionList $permissions Permission list.
+   * @return PermissionList $permissions Permission list.
    */
   public function __get($role) {
     if (!isset($this->roles[$role]))
@@ -60,7 +60,7 @@ class RoleAcl extends LoadableAcl {
   /**
    * Get permissions of a role.
    * @param string $role Role name or id.
-   * @param IPermissionList $permissions Permission list.
+   * @param PermissionList $permissions Permission list.
    */
   public function __set($role, $permissions) {
     $this->roles[$role] = $permissions;
@@ -69,9 +69,9 @@ class RoleAcl extends LoadableAcl {
   /**
    * Add a role.
    * @param string $role Role name or id.
-   * @param IPermissionList $permissions Permission list.
+   * @param PermissionList $permissions Permission list.
    */
-  public function addRole($role, IPermissionList $permissions) {
+  public function addRole($role, PermissionList $permissions) {
     $this->roles[$role] = $permissions;
   }
   
@@ -83,7 +83,7 @@ class RoleAcl extends LoadableAcl {
    * @throws InvalidRoleException If the parent role is undefined.
    */
   public function createRole($role, $parent = null) {
-    $permissions = new PermissionList($this->app);
+    $permissions = new PermissionListBuilder($this->app);
     if (isset($parent)) {
       if (!isset($this->roles[$parent]))
         throw new InvalidRoleException(tr('Undefined role: %1', $parent));

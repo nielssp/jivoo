@@ -19,7 +19,7 @@ class Logger implements LoggerInterface {
   private $log = array();
 
   /**
-   * @var IHandler[][]
+   * @var Handler[][]
    */
   private $handlers = array(
     LogLevel::EMERGENCY => array(),
@@ -56,12 +56,12 @@ class Logger implements LoggerInterface {
   
   /**
    * Add a log handler.
-   * @param IHandler $handler Log handler.
+   * @param Handler $handler Log handler.
    * @param bool $getsPrevious Whether this log handler should get a batch of
    * all previously logged messages.
    * @param bool $prepend If true, the handler is prepended instead of appended.
    */
-  public function addHandler(IHandler $handler, $getsPrevious = true, $prepend = false) {
+  public function addHandler(Handler $handler, $getsPrevious = true, $prepend = false) {
     foreach ($this->handlers as $level => $handlers) {
       if ($handler->accepts($level)) {
         if ($prepend)

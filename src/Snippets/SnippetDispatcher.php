@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Snippets;
 
-use Jivoo\Routing\IDispatcher;
+use Jivoo\Routing\Dispatcher;
 use Jivoo\Routing\Routing;
 use Jivoo\Routing\InvalidResponseException;
 use Jivoo\Routing\Response;
@@ -17,7 +17,7 @@ use Jivoo\Routing\Http;
 /**
  * Snippet based routing.
  */
-class SnippetDispatcher implements IDispatcher {
+class SnippetDispatcher implements Dispatcher {
   /**
    * @var Routing Routing module.
    */

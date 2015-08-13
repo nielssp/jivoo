@@ -13,7 +13,7 @@ use Jivoo\Core\VendorException;
  */
 class VendorLoader {
   /**
-   * @var IPackageReader[]
+   * @var PackageReader[]
    */
   private $paths = array();
   
@@ -21,7 +21,7 @@ class VendorLoader {
    * Add a vendor-directory path.
    * @param string $path Path.
    */
-  public function addPath($path, IPackageReader $reader = null) {
+  public function addPath($path, PackageReader $reader = null) {
     if (!isset($reader))
       $reader = true;
     $path = Utilities::convertRealPath($path);
@@ -57,7 +57,7 @@ class VendorLoader {
     $manifest->registerAutoloader();
   }
   
-  public function getLibraries(IPackageReader $reader = null) {
+  public function getLibraries(PackageReader $reader = null) {
     
   }
 }

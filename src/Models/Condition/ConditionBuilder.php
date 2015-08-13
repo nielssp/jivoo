@@ -6,7 +6,7 @@
 namespace Jivoo\Models\Condition;
 
 use Jivoo\Models\DataType;
-use Jivoo\Models\IBasicModel;
+use Jivoo\Models\BasicModel;
 use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidMethodException;
 
@@ -16,7 +16,7 @@ use Jivoo\InvalidMethodException;
  * array('glue' => ..., 'clause' => ..., 'vars' => array(...)) where the glue
  * is either 'AND' or 'OR'. 
  */
-class ConditionBuilder implements ICondition {
+class ConditionBuilder implements Condition {
   /**
    * @var array[] A list of clauses
    */
@@ -24,7 +24,7 @@ class ConditionBuilder implements ICondition {
 
   /**
    * Construct condition. The function {@see where} is an alias.
-   * @param ICondition|string $clause Clause.
+   * @param Condition|string $clause Clause.
    * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with.
    */
@@ -72,7 +72,7 @@ class ConditionBuilder implements ICondition {
 
   /**
    * Create condition, can be used instead of constructor for chaining purposes
-   * @param ICondition|string $clause
+   * @param Condition|string $clause
    * @param mixed $vars,... Additional values to replace placeholders in
    * $clause with
    * @return ConditionBuilder A new condition
@@ -180,10 +180,10 @@ class ConditionBuilder implements ICondition {
    * 
    * @param string|Condition $format Expression format, use placeholders instead of values.
    * @param mixed[] $vars List of values to replace placeholders with.
-   * @param IQuoter $quoter Quoter object for quoting identifieres and literals.
+   * @param Quoter $quoter Quoter object for quoting identifieres and literals.
    * @return string The interpolated expression.
    */
-  public static function interpolate($format, $vars, IQuoter $quoter) {
+  public static function interpolate($format, $vars, Quoter $quoter) {
     if ($format instanceof self)
       return $format->toString($quoter);
     assume(is_string($format));
@@ -217,7 +217,7 @@ class ConditionBuilder implements ICondition {
       }
       if (isset($matches[3]) and ($matches[3] == 'm' or $matches[3] == 'model')) {
         if (!is_string($value)) {
-          assume($value instanceof IBasicModel);
+          assume($value instanceof BasicModel);
           $value = $value->getName();
         }
         return $quoter->quoteModel($value);
@@ -240,7 +240,7 @@ class ConditionBuilder implements ICondition {
     }, $format);
   }
   
-  public function toString(IQuoter $quoter) {
+  public function toString(Quoter $quoter) {
     $sqlString = '';
     foreach ($this->clauses as $clause) {
       if ($sqlString != '') {

@@ -2,18 +2,18 @@
 
 namespace Jivoo\Core\Cache;
 
-abstract class ICacheTest extends \Jivoo\Test {
+abstract class CacheTest extends \Jivoo\Test {
   protected function _before() {}
 
   protected function _after() {}
   
   /**
-   * @return ICache 
+   * @return Cache 
    */
   abstract protected function getCache();
   
   public function testImplements() {
-    $this->assertInstanceOf('Jivoo\Core\Cache\ICache', $this->getCache());
+    $this->assertInstanceOf('Jivoo\Core\Cache\Cache', $this->getCache());
   }
   
   public function testGet() {

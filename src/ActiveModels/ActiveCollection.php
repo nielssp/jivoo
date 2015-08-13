@@ -6,14 +6,14 @@
 namespace Jivoo\ActiveModels;
 
 use Jivoo\Models\ModelBase;
-use Jivoo\Models\Selection\ISelection;
+use Jivoo\Models\Selection\Selection;
 use Jivoo\Models\Selection\UpdateSelectionBuilder;
 use Jivoo\Models\Selection\DeleteSelectionBuilder;
 use Jivoo\Models\Selection\ReadSelectionBuilder;
-use Jivoo\Models\Selection\IBasicSelection;
-use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\Selection\BasicSelection;
+use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Selection\SelectionBuilder;
-use Jivoo\Models\Condition\ICondition;
+use Jivoo\Models\Condition\Condition;
 
 /**
  * A special model representing an association collection as result from for
@@ -46,12 +46,12 @@ class ActiveCollection extends ModelBase {
   private $otherKey;
   
   /**
-   * @var IBasicSelection Source selection.
+   * @var BasicSelection Source selection.
    */
   private $source;
   
   /**
-   * @var IModel Model used for joining in a many-to-many relationship.
+   * @var Model Model used for joining in a many-to-many relationship.
    */
   private $join = null;
   
@@ -66,7 +66,7 @@ class ActiveCollection extends ModelBase {
   private $count = null;
   
   /**
-   * @var ICondition
+   * @var Condition
    */
   private $condition = null;
   
@@ -101,15 +101,15 @@ class ActiveCollection extends ModelBase {
 
   /**
    * Prepare selection, e.g. by joining with join table.
-   * @param IBasicSelection $selection Input selection or null for source.
-   * @return IReadSelection Resulting selection.
+   * @param BasicSelection $selection Input selection or null for source.
+   * @return ReadSelection Resulting selection.
    */
-  private function prepareSelection(IBasicSelection $selection = null) {
+  private function prepareSelection(BasicSelection $selection = null) {
     if (!isset($selection))
       return $this->source;
     $selection->alias($this->alias);
     if (isset($this->join)) {
-      assume($selection instanceof IReadSelection);
+      assume($selection instanceof ReadSelection);
       $selection = $selection
         ->leftJoin($this->join, $this->otherPrimary . '= J.' . $this->otherKey, 'J')
         ->where('J.' . $this->thisKey . ' = ?', $this->recordId);
@@ -145,9 +145,9 @@ class ActiveCollection extends ModelBase {
 
   /**
    * Add all records from selection to collection.
-   * @param ISelection $selection Selection of records.
+   * @param Selection $selection Selection of records.
    */
-  public function addAll(ISelection $selection) {
+  public function addAll(Selection $selection) {
     if (isset($this->join)) {
       $pk = $this->otherPrimary;
       foreach ($selection as $record) {
@@ -217,9 +217,9 @@ class ActiveCollection extends ModelBase {
 
   /**
    * Remove all records in selection from collection.
-   * @param ISelection $selection A selection of records.
+   * @param Selection $selection A selection of records.
    */
-  public function removeAll(ISelection $selection = null) {
+  public function removeAll(Selection $selection = null) {
     $selection = $this->prepareSelection($selection);
     if (isset($this->join)) {
       $pk = $this->otherPrimary;

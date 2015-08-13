@@ -35,7 +35,7 @@ class AutoloaderTest extends Test {
     $this->assertFalse($autoloader->load('Foo\Bar'));
     $this->assertTrue($autoloader->load('Foo\Helper'));
     $this->assertTrue($autoloader->load('Foo\Model'));
-    $this->assertTrue($autoloader->load('Foo\Selection\Selection'));
+    $this->assertTrue($autoloader->load('Foo\Selection\SelectionBuilder'));
     
     // TODO: mock loadFrom and test paths etc.
   }

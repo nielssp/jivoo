@@ -5,16 +5,16 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\ActiveModels;
 
-use Jivoo\Models\IRecord;
-use Jivoo\Models\IActionRecord;
-use Jivoo\Routing\ILinkable;
+use Jivoo\Models\Record;
+use Jivoo\Models\ActionRecord;
+use Jivoo\Routing\Linkable;
 use Jivoo\InvalidMethodException;
 use Jivoo\InvalidPropertyException;
 
 /**
  * An active record, see also {@see ActiveModel}.
  */
-class ActiveRecord implements IRecord, IActionRecord, ILinkable {
+class ActiveRecord implements Record, ActionRecord, Linkable {
   /**
    * @var array Record data.
    */
@@ -213,7 +213,7 @@ class ActiveRecord implements IRecord, IActionRecord, ILinkable {
       }
     }
     else if (array_key_exists($field, $this->virtualData)) {
-      if ($this->virtualData[$field] instanceof IRecord)
+      if ($this->virtualData[$field] instanceof Record)
         $this->virtualData[$field]->addData($value);
       else
         $this->virtualData[$field] = $value;

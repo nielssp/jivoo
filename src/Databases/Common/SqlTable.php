@@ -7,12 +7,12 @@ namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\Table;
 use Jivoo\Core\App;
-use Jivoo\Models\ISchema;
+use Jivoo\Models\Schema;
 use Jivoo\Models\Condition\ConditionBuilder;
 use Jivoo\Models\Selection\ReadSelectionBuilder;
 use Jivoo\Models\Selection\UpdateSelectionBuilder;
 use Jivoo\Models\Selection\DeleteSelectionBuilder;
-use Jivoo\Models\Record;
+use Jivoo\Models\RecordBuilder;
 use Jivoo\Models\Condition\NotCondition;
 use Jivoo\Databases\InvalidTableException;
 use Jivoo\Databases\QueryException;
@@ -72,7 +72,7 @@ class SqlTable extends Table {
   /**
    * {@inheritdoc}
    */
-  public function setSchema(ISchema $schema) {
+  public function setSchema(Schema $schema) {
     $this->schema = $schema;
   }
   
@@ -129,10 +129,10 @@ class SqlTable extends Table {
         $virtual[$field] = null;
       }
       else {
-        $virtual[$field] = Record::createExisting($record['model'], $record['data']);
+        $virtual[$field] = RecordBuilder::createExisting($record['model'], $record['data']);
       }
     }
-    return Record::createExisting($this, $data, $virtual);
+    return RecordBuilder::createExisting($this, $data, $virtual);
   }
 
   /**

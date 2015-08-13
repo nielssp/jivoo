@@ -8,9 +8,9 @@ namespace Jivoo\Models;
 use Jivoo\InvalidPropertyException;
 
 /**
- * A record associated with a {@see IModel}.
+ * A record associated with a {@see Model}.
  */
-class Record implements IRecord {
+class RecordBuilder implements Record {
   /**
    * @var array Associative array of record data.
    */
@@ -27,7 +27,7 @@ class Record implements IRecord {
   private $updatedData = array();
   
   /**
-   * @var IModel Model.
+   * @var Model Model.
    */
   private $model;
   
@@ -48,11 +48,11 @@ class Record implements IRecord {
   
   /**
    * Construct record.
-   * @param IModel $model Associated model.
+   * @param Model $model Associated model.
    * @param array $data Associative array of record data. 
    * @param string $allowedFields List of allowed fields.
    */
-  private function __construct(IModel $model, $data = array(), $allowedFields = null) {
+  private function __construct(Model $model, $data = array(), $allowedFields = null) {
     $this->model = $model;
     $this->data = array_fill_keys($model->getFields(), null);
     $this->addData($data, $allowedFields);
@@ -60,13 +60,13 @@ class Record implements IRecord {
   
   /**
    * Create a new record.
-   * @param IModel $model Associated model.
+   * @param Model $model Associated model.
    * @param array $data Associative array of record data.
    * @param string $allowedFields List of allowed fields.
-   * @return Record A new record.
+   * @return RecordBuilder A new record.
    */
-  public static function createNew(IModel $model, $data = array(), $allowedFields = null) {
-    $record = new Record($model, $data, $allowedFields);
+  public static function createNew(Model $model, $data = array(), $allowedFields = null) {
+    $record = new RecordBuilder($model, $data, $allowedFields);
     $record->new = true;
     $record->saved = false;
     return $record;
@@ -74,13 +74,13 @@ class Record implements IRecord {
   
   /**
    * Recreate an existing record.
-   * @param IModel $model Associated model.
+   * @param Model $model Associated model.
    * @param array $data Associative array of record data.
    * @param array $virtual Associative array of virtual record data.
-   * @return Record An existing record.
+   * @return RecordBuilder An existing record.
    */
-  public static function createExisting(IModel $model, $data = array(), $virtual = array()) {
-    $record = new Record($model, $data);
+  public static function createExisting(Model $model, $data = array(), $virtual = array()) {
+    $record = new RecordBuilder($model, $data);
     $record->updatedData = array();
     $record->virtual = $virtual;
     return $record;

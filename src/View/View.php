@@ -18,13 +18,13 @@ use Jivoo\View\Compile\TemplateCompiler;
  * initialized.
  * @property-read ViewBlocks $blocks View blocks.
  * @property-read TemplateCompiler|null $compiler The template compiler if enabled. 
- * @method string link(array|ILinkable|string|null $route = null) Alias for
+ * @method string link(array|Linkable|string|null $route = null) Alias for
  * {@see Routing::getLink}. 
- * @method string url(array|ILinkable|string|null $route = null) Alias for
+ * @method string url(array|Linkable|string|null $route = null) Alias for
  * {@see Routing::getUrl}. 
- * @method bool isCurrent(array|ILinkable|string|null $route = null)
+ * @method bool isCurrent(array|Linkable|string|null $route = null)
  *  Alias for {@see Routing::isCurrent}.
- * @method array mergeRoutes(array|ILinkable|string|null $route = null,
+ * @method array mergeRoutes(array|Linkable|string|null $route = null,
  *       array $mergeWith = array()) Alias for {@see Routing::mergeRoutes}.
  * @method string file(string $file) Alias for {@see Assets::getAsset}.
  * @method icon(string $icon) Alias for {@see ViewBlocks::icon}.
@@ -40,7 +40,7 @@ use Jivoo\View\Compile\TemplateCompiler;
  * @method importConditional(string $resource, string $condition)
  *  Alias for {@see ViewResources::importConditional}.
  * @method string resourceBlock() Alias for {@see ViewResources::resourceBlock}.
- * @method IViewExtension[] extensions(string $hook = null, string $type = 'IViewExtension')
+ * @method ViewExtension[] extensions(string $hook = null, string $type = 'ViewExtension')
  *  Alias for {@see ViewExtensions::extensions}.
  */
 class View extends LoadableModule {

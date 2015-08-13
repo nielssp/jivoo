@@ -10,7 +10,7 @@ use Jivoo\Core\Module;
 /**
  * A command with subcommands.
  */
-abstract class CommandBase extends Module implements ICommand {
+abstract class CommandBase extends Module implements Command {
   
   protected $commands = array();
   
@@ -42,11 +42,11 @@ abstract class CommandBase extends Module implements ICommand {
   /**
    * 
    * @param string $name
-   * @param ICommand|callable $command Command or callable.
+   * @param Command|callable $command Command or callable.
    * @param string $description Optional description of $command is a callable.
    */
   public function addCommand($name, $command, $description = null) {
-    if (!($command instanceof ICommand)) {
+    if (!($command instanceof Command)) {
       $command = new CallbackCommand($command, $description);
     }
     foreach ($command->getOptions() as $option => $hasParameter)

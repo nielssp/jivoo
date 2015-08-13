@@ -5,10 +5,10 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Helpers;
 
-use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\Selection\ReadSelection;
 
 /**
- * Create pagination on an array or a {@see IReadSelection}.
+ * Create pagination on an array or a {@see ReadSelection}.
  */
 class PaginationHelper extends Helper {
   /**
@@ -52,17 +52,17 @@ class PaginationHelper extends Helper {
   private $to = null;
 
   /**
-   * Paginate a selection (using {@see IReadSelection::limit()} and
-   * {@see IReadSelection::offset()}) or an array (using {@see array_slice()}).
-   * @param IReadSelection|array $select Selection or array.
+   * Paginate a selection (using {@see ReadSelection::limit()} and
+   * {@see ReadSelection::offset()}) or an array (using {@see array_slice()}).
+   * @param ReadSelection|array $select Selection or array.
    * @param int $itemsPerPage Number of items per page.
-   * @return IReadSelection|array Modified selection or sliced array.
+   * @return ReadSelection|array Modified selection or sliced array.
    */
   public function paginate($select, $itemsPerPage = 5) {
     assume($itemsPerPage > 0);
     $this->limit = $itemsPerPage;
     if (!isset($this->count)) {
-      if ($select instanceof IReadSelection)
+      if ($select instanceof ReadSelection)
         $this->count = $select->count();
       else
         $this->count = count($select);
@@ -86,7 +86,7 @@ class PaginationHelper extends Helper {
       $this->view->blocks->relation('next', null, $this->getLink($this->nextLink()));
     if (!$this->isFirst())
       $this->view->blocks->relation('prev', null, $this->getLink($this->prevLink()));
-    if ($select instanceof IReadSelection) {
+    if ($select instanceof ReadSelection) {
       $select = $select->limit($this->limit);
       $select = $select->offset($this->offset);
       return $select;
@@ -195,7 +195,7 @@ class PaginationHelper extends Helper {
    * Link to a page.
    * @param int $page Page.
    * @param string $fragment Fragment.
-   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @return array|Linkable|string|null $route A route, see {@see Routing}.
    */
   public function link($page, $fragment = null) {
     return array(
@@ -208,7 +208,7 @@ class PaginationHelper extends Helper {
   /**
    * Link to the previous page.
    * @param string $fragment Fragment.
-   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @return array|Linkable|string|null $route A route, see {@see Routing}.
    */
   public function prevLink($fragment = null) {
     return array(
@@ -221,7 +221,7 @@ class PaginationHelper extends Helper {
   /**
    * Link to the next page.
    * @param string $fragment Fragment.
-   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @return array|Linkable|string|null $route A route, see {@see Routing}.
    */
   public function nextLink($fragment = null) {
     return array(
@@ -234,7 +234,7 @@ class PaginationHelper extends Helper {
   /**
    * Link to the first page.
    * @param string $fragment Fragment.
-   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @return array|Linkable|string|null $route A route, see {@see Routing}.
    */
   public function firstLink($fragment = null) {
     return array(
@@ -247,7 +247,7 @@ class PaginationHelper extends Helper {
   /**
    * Link to the last page.
    * @param string $fragment Fragment.
-   * @return array|ILinkable|string|null $route A route, see {@see Routing}.
+   * @return array|Linkable|string|null $route A route, see {@see Routing}.
    */
   public function lastLink($fragment = null) {
     return array(

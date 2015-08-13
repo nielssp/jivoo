@@ -126,7 +126,7 @@ class HtmlHelper extends Helper {
   /**
    * Create a link
    * @param string $label Label for link
-   * @param array|\Jivoo\Routing\ILinkable|string|null $route Route for link,
+   * @param array|\Jivoo\Routing\Linkable|string|null $route Route for link,
    * default is frontpage, see {@see \Jivoo\Routing\Routing}.
    * @param string[] $attributes Attributes, see {@see Html::readAttributes}.
    * @return string HTML link.

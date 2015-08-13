@@ -33,7 +33,7 @@ abstract class Helper extends Module {
   private $helperObjects = array();
 
   /**
-   * @var IModel[] An associative array of model names and objects.
+   * @var Model[] An associative array of model names and objects.
    */
   private $modelObjects = array();
 
@@ -73,7 +73,7 @@ abstract class Helper extends Module {
   
   /**
    * Convert a route to a link.
-   * @param array|ILinkable|string|null $route Route, see {@see Routing}.
+   * @param array|Linkable|string|null $route Route, see {@see Routing}.
    * @return string A link.
    */
   protected function getLink($route) {

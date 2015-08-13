@@ -10,13 +10,13 @@ use Jivoo\Models\Selection\UpdateSelectionBuilder;
 use Jivoo\Models\Selection\DeleteSelectionBuilder;
 use Jivoo\Models\Selection\ReadSelectionBuilder;
 use Jivoo\Models\Selection\SelectionBuilder;
-use Jivoo\Models\Selection\IReadSelection;
+use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\Condition\ConditionBuilder;
 
 /**
  * A base class for models.
  */
-abstract class ModelBase extends Module implements IModel {
+abstract class ModelBase extends Module implements Model {
   /**
    * @var string|null The auto increment primary key.
    */
@@ -31,7 +31,7 @@ abstract class ModelBase extends Module implements IModel {
    * {@inheritdoc}
    */
   public function create($data = array(), $allowedFields = null) {
-    return Record::createNew($this, $data, $allowedFields);
+    return RecordBuilder::createNew($this, $data, $allowedFields);
   }
   
   /**
@@ -39,12 +39,12 @@ abstract class ModelBase extends Module implements IModel {
    * @param array $data Associative array of record data.
    * @param ReadSelectionBuilder $selection The selection that led to the creation of
    * this record.
-   * @return Record A record.
+   * @return RecordBuilder A record.
    */
   public function createExisting($data = array(), ReadSelectionBuilder $selection) {
     $additonal = $selection->additionalFields;
     if (empty($additonal))
-      return Record::createExisting($this, $data, array());
+      return RecordBuilder::createExisting($this, $data, array());
     $virtual = array();
     $subrecords = array();
     foreach ($raw as $field => $value) {
@@ -73,10 +73,10 @@ abstract class ModelBase extends Module implements IModel {
         $virtual[$field] = null;
       }
       else {
-        $virtual[$field] = Record::createExisting($record['model'], $record['data']);
+        $virtual[$field] = RecordBuilder::createExisting($record['model'], $record['data']);
       }
     }
-    return Record::createExisting($this, $data, $virtual);
+    return RecordBuilder::createExisting($this, $data, $virtual);
   }
 
   /**
@@ -129,7 +129,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
-  public function selectRecord(IRecord $record) {
+  public function selectRecord(Record $record) {
     $primaryKey = $this->getSchema()->getPrimaryKey();
     $selection = $this;
     foreach ($primaryKey as $field) {
@@ -141,7 +141,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
-  public function selectNotRecord(IRecord $record) {
+  public function selectNotRecord(Record $record) {
     $primaryKey = $this->getSchema()->getPrimaryKey();
     $condition = new ConditionBuilder();
     foreach ($primaryKey as $field) {
@@ -205,10 +205,10 @@ abstract class ModelBase extends Module implements IModel {
 
   /**
    * Get row number of record.
-   * @param IRecord $record A record.
+   * @param Record $record A record.
    * @return int The row number.
    */
-  public function rowNumber(IRecord $record) {
+  public function rowNumber(Record $record) {
     return $this->rowNumberSelection(new ReadSelectionBuilder($this), $record);
   } 
 
@@ -240,11 +240,11 @@ abstract class ModelBase extends Module implements IModel {
    * Find row number of a record in the result set of a selection. The selection
    * must be ordered.
    * @param ReadSelectionBuilder $selection A read selection.
-   * @param IRecord $record A record.
+   * @param Record $record A record.
    * @throws InvalidSelectionException If the selection is not ordered.
    * @return int Row number.
    */
-  public function rowNumberSelection(ReadSelectionBuilder $selection, IRecord $record) {
+  public function rowNumberSelection(ReadSelectionBuilder $selection, Record $record) {
     if (empty($selection->orderBy)) {
       throw new InvalidSelectionException(tr('Can\'t find row number in selection without ordering'));
     }
@@ -285,14 +285,14 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * Return first record in a selection.
    * @param ReadSelectionBuilder $selection Read selection.
-   * @return IRecord A record.
+   * @return Record A record.
    */
   public abstract function firstSelection(ReadSelectionBuilder $selection);
   
   /**
    * Return last record in a selection.
    * @param ReadSelectionBuilder $selection Read selection.
-   * @return IRecord A record.
+   * @return Record A record.
    */
   public abstract function lastSelection(ReadSelectionBuilder $selection);
   
@@ -306,7 +306,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * Execute a read selection and create an iterator.
    * @param ReadSelectionBuilder $selection Read selection.
-   * @return IRecordIterator Iterator.
+   * @return RecordIterator Iterator.
   */
   public abstract function read(ReadSelectionBuilder $selection);
 
@@ -469,7 +469,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
-  public function withRecord($field, IBasicModel $Model) {
+  public function withRecord($field, BasicModel $Model) {
     $select = new ReadSelectionBuilder($this);
     return $select->withRecord($field, $model);
   }
@@ -485,7 +485,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
-  public function innerJoin(IModel $other, $condition, $alias = null) {
+  public function innerJoin(Model $other, $condition, $alias = null) {
     $select = new ReadSelectionBuilder($this);
     return $select->innerJoin($other, $condition, $alias);
   }
@@ -493,7 +493,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
-  public function leftJoin(IModel $other, $condition, $alias = null) {
+  public function leftJoin(Model $other, $condition, $alias = null) {
     $select = new ReadSelectionBuilder($this);
     return $select->leftJoin($other, $condition, $alias);
   }
@@ -501,7 +501,7 @@ abstract class ModelBase extends Module implements IModel {
   /**
    * {@inheritdoc}
    */
-  public function rightJoin(IModel $other, $condition, $alias = null) {
+  public function rightJoin(Model $other, $condition, $alias = null) {
     $select = new ReadSelectionBuilder($this);
     return $select->rightJoin($other, $condition, $alias);
   }
@@ -525,10 +525,10 @@ abstract class ModelBase extends Module implements IModel {
 
   /**
    * Get iterator.
-   * @param IReadSelection $selection Optional selection to get iterator for.
-   * @return IRecordIterator A record iterator.
+   * @param ReadSelection $selection Optional selection to get iterator for.
+   * @return RecordIterator A record iterator.
    */
-  public function getIterator(IReadSelection $selection = null) {
+  public function getIterator(ReadSelection $selection = null) {
     if (!isset($selection))
       $selection = new ReadSelectionBuilder($this);
     return $this->read($selection);    

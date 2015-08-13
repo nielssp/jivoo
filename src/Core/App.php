@@ -25,7 +25,7 @@ use Jivoo\Core\Log\FileHandler;
 use Jivoo\Core\Log\ErrorException;
 use Jivoo\Core\Cli\Shell;
 use Jivoo\Core\Cache\NullCache;
-use Jivoo\Core\Cache\ICache;
+use Jivoo\Core\Cache\Cache;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -44,13 +44,13 @@ use Jivoo\Core\Cache\ICache;
  * @property-read EventManager $eventManager Application event manager.
  * @property-read StateMap $state Application persistent state storage.
  * @property-read LoggerInterface $logger Application logger.
- * @property-read ICache $cache Application cache.
+ * @property-read Cache $cache Application cache.
  * @property-read ModuleLoader $m Module loader.
  * @property-read VendorLoader $vendor Third-party library loader.
  * @property-read Shell|null $shell The command-line shell if application is
  * running in the CLI.  
  */
-class App implements IEventSubject, LoggerAwareInterface {
+class App implements EventSubject, LoggerAwareInterface {
   /**
    * @var array Application configuration.
    */
@@ -170,7 +170,7 @@ class App implements IEventSubject, LoggerAwareInterface {
   private $logger;
   
   /**
-   * @var ICache Application cache.
+   * @var Cache Application cache.
    */
   private $cache;
   
@@ -314,7 +314,7 @@ class App implements IEventSubject, LoggerAwareInterface {
   /**
    * {@inheritdoc}
    */
-  public function setCache(ICache $cache) {
+  public function setCache(Cache $cache) {
     $this->cache = $cache;
   }
   
@@ -343,7 +343,7 @@ class App implements IEventSubject, LoggerAwareInterface {
   /**
    * {@inheritdoc}
    */
-  public function attachEventListener(IEventListener $listener) {
+  public function attachEventListener(EventListener $listener) {
     $this->e->attachListener($listener);
   }
 
@@ -357,7 +357,7 @@ class App implements IEventSubject, LoggerAwareInterface {
   /**
    * {@inheritdoc}
    */
-  public function detachEventListener(IEventListener $listener) {
+  public function detachEventListener(EventListener $listener) {
     $this->e->detachListener($listener);
   }
 

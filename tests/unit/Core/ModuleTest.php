@@ -48,7 +48,7 @@ class ModuleTest extends \Jivoo\Test {
     $this->assertEquals('ptest', $m->p('a/b'));
     $this->assertEquals($m->getEvents(), array('someEvent'));
     $this->assertTrue($m->hasEvent('someEvent'));
-    $l = $this->getMockBuilder('Jivoo\Core\IEventListener')
+    $l = $this->getMockBuilder('Jivoo\Core\EventListener')
       ->setMethods(array('getEventHandlers', 'someEvent'))
       ->getMock();
     $l->method('getEventHandlers')

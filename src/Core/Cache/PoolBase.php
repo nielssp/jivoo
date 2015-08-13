@@ -7,7 +7,7 @@ namespace Jivoo\Core\Cache;
 
 use Psr\Cache\CacheItemInterface;
 
-abstract class PoolBase implements IPool {
+abstract class PoolBase implements Pool {
   /**
    * {@inheritdoc}
    */
