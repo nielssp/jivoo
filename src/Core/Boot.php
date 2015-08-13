@@ -10,6 +10,7 @@ use Jivoo\Core\I18n\I18n;
 use Jivoo\Core\Cache\StoreCache;
 use Psr\Log\LogLevel;
 use Jivoo\Core\Store\SerializedStore;
+use Jivoo\Core\Cache\StorePool;
 
 /**
  * The default application initialization class. Extend this class and override
@@ -79,7 +80,7 @@ class Boot extends Module {
     if (Utilities::dirExists($this->p('cache'))) {
       $store = new SerializedStore($this->p('cache/i18n.s'));
       if ($store->touch()) {
-        I18n::setCache(new StoreCache($store));
+        I18n::setCache(new StorePool($store));
       }
     }
     

@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Cache;
 
-use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemInterface as CacheItem;
 
 abstract class PoolBase implements Pool {
   /**
@@ -21,7 +21,7 @@ abstract class PoolBase implements Pool {
   /**
    * {@inheritdoc}
    */
-  public function saveDeferred(CacheItemInterface $item) {
+  public function saveDeferred(CacheItem $item) {
     $this->save();
     return $this;
   }
@@ -117,5 +117,12 @@ abstract class PoolBase implements Pool {
     $item->set($value);
     $this->save($item);
     return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete($key) {
+    $this->deleteItems(array($key));
   }
 }

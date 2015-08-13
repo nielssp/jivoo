@@ -35,6 +35,7 @@ if (!interface_exists('Psr\Log\LoggerInterface')) {
 
 require PATH . '/functions.php';
 require PATH . '/exceptions.php';
+require PATH . '/psrcache.php';
 
 error_reporting(-1);
 Core\Log\ErrorHandler::getInstance()->register();

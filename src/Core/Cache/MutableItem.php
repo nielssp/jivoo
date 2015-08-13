@@ -8,20 +8,41 @@ namespace Jivoo\Core\Cache;
 use Psr\Cache\CacheItemInterface as CacheItem;
 
 /**
- * A cache item without a value.
+ * A mutable cache item that with a value and an expiration date.
  */
-class NullItem implements CacheItem {
+class MutableItem implements CacheItem {
   /**
    * @var string
    */
   private $key;
 
   /**
+   * @var string
+   */
+  private $value;
+  
+  /**
+   * @var bool
+   */
+  private $hit;
+
+  /**
+   * @var \DateTimeInterface|null
+   */
+  private $expiration;
+
+  /**
    * Construct item.
    * @param string $key Item key.
+   * @param mixed $value Item value.
+   * @param bool $hit Whether the value is valid.
+   * @param \DateTimeInterface|null $expiration Expiration time if any.
    */
-  public function __construct($key) {
+  public function __construct($key, $value, $hit, \DateTimeInterface $expiration = null) {
     $this->key = $key;
+    $this->value = $value;
+    $this->hit = $hit;
+    $this->expiration = $expiration;
   }
 
   /**
@@ -35,6 +56,8 @@ class NullItem implements CacheItem {
    * {@inheritdoc}
    */
   public function get() {
+    if ($this->hit)
+      return $this->value;
     return null;
   }
 
@@ -42,6 +65,8 @@ class NullItem implements CacheItem {
    * {@inheritdoc}
    */
   public function set($value) {
+    $this->value = $value;
+    $this->hit = true;
     return $this;
   }
 
@@ -49,20 +74,22 @@ class NullItem implements CacheItem {
    * {@inheritdoc}
    */
   public function isHit() {
-    return false;
+    return $this->hit;
   }
 
   /**
    * {@inheritdoc}
    */
   public function exists() {
-    return false;
+    // ????
+    return $this->hit;
   }
 
   /**
    * {@inheritdoc}
    */
   public function expiresAt($expiration) {
+    $this->expiration = $expiration;
     return $this;
   }
 
@@ -70,6 +97,10 @@ class NullItem implements CacheItem {
    * {@inheritdoc}
    */
   public function expiresAfter($time) {
+    $this->expiration = new \DateTime();
+    if (is_int($time))
+      $time = new \DateInterval('PT' . $time . 'S');
+    $this->expiration->add($time);
     return $this;
   }
 
@@ -77,6 +108,6 @@ class NullItem implements CacheItem {
    * {@inheritdoc}
    */
   public function getExpiration() {
-    return null;
+    return $this->expiration;
   }
 }

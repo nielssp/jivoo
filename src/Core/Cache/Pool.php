@@ -78,7 +78,7 @@ interface Pool extends CacheItemPool {
    * Delete/invalidate the value stored under a key. Fails if the key doesn't
    * exist.
    * @param string $key Item key.
-   * @return bool True if one ore more items were deleted, false on failure.
+   * @return bool True if the items was deleted, false on failure.
    */
   public function delete($key);
 }

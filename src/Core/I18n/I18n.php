@@ -7,6 +7,7 @@ namespace Jivoo\Core\I18n;
 
 use Jivoo\Core\Unicode;
 use Jivoo\Core\Cache\Cache;
+use Psr\Cache\CacheItemPoolInterface as CacheItemPool;
 
 /**
  * Internationalization and localization.
@@ -25,7 +26,7 @@ class I18n {
   private static $locale = null;
   
   /**
-   * @var Cache
+   * @var CacheItemPool
    */
   private static $cache = null;
   
@@ -75,9 +76,9 @@ class I18n {
   
   /**
    * Set cache used for loading messages.
-   * @param Cache $cache Cache.
+   * @param CacheItemPool $cache Cache.
    */
-  public static function setCache(Cache $cache) {
+  public static function setCache(CacheItemPool $cache) {
     self::$cache = $cache;
   }
   
@@ -103,11 +104,17 @@ class I18n {
   public static function loadFrom($dir, $extend = true) {
     $file = $dir . '/' . self::$language . '.';
     if (isset(self::$cache)) {
-      $cached = self::$cache->get($file);
-      if (isset($cached)) {
-        $localization = new Locale($cached);
-        self::load($localization, $extend);
-        return true;
+      $cached = self::$cache->getItem($file);
+      if ($cached->isHit()) {
+        $value = $cached->get();
+        if (is_array($value)) {
+          $localization = new Locale($value);
+          self::load($localization, $extend);
+          return true;
+        }
+        else {
+          self::$cache->deleteItems(array($file));
+        }
       }
     }
     if (file_exists($file . 'pot')) {
@@ -123,12 +130,11 @@ class I18n {
       return false;
     }
     if (isset(self::$cache)) {
-      self::$cache->set($file, $localization->getMessages(), 3600);
-      // PSR-6 style: ??
-//       $item = self::$cache->get($file);
-//       $item->set($localization->getMessages());
-//       $item->expiresAfter(3600);
-//       self::$cache->save($item);
+//       self::$cache->set($file, $localization->getMessages(), 3600);
+      $item = self::$cache->getItem($file);
+      $item->set($localization->getMessages());
+      $item->expiresAfter(3600);
+      self::$cache->save($item);
     }
     self::load($localization, $extend);
     return true;

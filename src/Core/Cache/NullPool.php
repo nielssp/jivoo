@@ -5,7 +5,7 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Cache;
 
-use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemInterface as CacheItem;
 
 /**
  * A cache pool that doesn't save any item.
@@ -35,7 +35,7 @@ class NullPool extends PoolBase {
   /**
    * {@inheritdoc}
    */
-  public function save(CacheItemInterface $item) {
+  public function save(CacheItem $item) {
     return $this;
   }
 }
