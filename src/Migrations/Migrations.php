@@ -6,7 +6,7 @@
 namespace Jivoo\Migrations;
 
 use Jivoo\Core\LoadableModule;
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
 use Jivoo\Databases\IMigratableDatabase;
@@ -57,7 +57,7 @@ class Migrations extends LoadableModule {
     );
     
     // Initialize SchemaRevision schema
-    $this->schema = new Schema('SchemaRevision');
+    $this->schema = new SchemaBuilder('SchemaRevision');
     $this->schema->revision = DataType::string(255);
     $this->schema->setPrimaryKey('revision');
     

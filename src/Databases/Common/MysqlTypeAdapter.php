@@ -7,7 +7,7 @@ namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Models\DataType;
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Json;
 use Jivoo\Databases\TypeException;
@@ -200,7 +200,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
    */
   public function getTableSchema($table) {
     $result = $this->db->rawQuery('SHOW COLUMNS FROM `' . $this->db->tableName($table) . '`');
-    $schema = new Schema($table);
+    $schema = new SchemaBuilder($table);
     while ($row = $result->fetchAssoc()) {
       $column = $row['Field'];
       $schema->addField($column, $this->toDataType($row));
@@ -258,7 +258,7 @@ class MysqlTypeAdapter implements IMigrationTypeAdapter {
   /**
    * {@inheritdoc}
    */
-  public function createTable(Schema $schema) {
+  public function createTable(SchemaBuilder $schema) {
     $sql = 'CREATE TABLE `' . $this->db->tableName($schema->getName()) . '` (';
     $columns = $schema->getFields();
     $first = true;

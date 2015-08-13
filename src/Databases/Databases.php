@@ -62,7 +62,7 @@ class Databases extends LoadableModule {
           $split = explode('.', $file);
           if (isset($split[1]) AND $split[1] == 'php') {
             $class = $this->app->n('Schemas\\' . $split[0]);
-            Utilities::assumeSubclassOf($class, 'Jivoo\Databases\Schema');
+            Utilities::assumeSubclassOf($class, 'Jivoo\Databases\SchemaBuilder');
             $schemas[] = new $class();
           }
         }

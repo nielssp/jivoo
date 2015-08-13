@@ -7,7 +7,7 @@ namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\IMigrationTypeAdapter;
 use Jivoo\Models\DataType;
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Json;
 use Jivoo\Databases\TypeException;
@@ -203,7 +203,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
    */
   public function getTableSchema($table) {
     $result = $this->db->rawQuery("SELECT * FROM information_schema.columns WHERE table_name = '" . $this->db->tableName($table) . "'");
-    $schema = new Schema($table);
+    $schema = new SchemaBuilder($table);
     while ($row = $result->fetchAssoc()) {
       $column = $row['column_name'];
       $schema->addField($column, $this->toDataType($row));
@@ -276,7 +276,7 @@ class PostgresqlTypeAdapter implements IMigrationTypeAdapter {
   /**
    * {@inheritdoc}
    */
-  public function createTable(Schema $schema) {
+  public function createTable(SchemaBuilder $schema) {
     $table = $schema->getName();
     $sql = 'CREATE TABLE ' . $this->db->quoteModel($table) . ' (';
     $columns = $schema->getFields();

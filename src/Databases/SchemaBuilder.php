@@ -14,7 +14,7 @@ use Jivoo\InvalidPropertyException;
 /**
  * Represents a database table schema.
  */
-class Schema implements ISchema {
+class SchemaBuilder implements ISchema {
   /**
    * @var string[] List of column names.
    */

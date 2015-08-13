@@ -13,9 +13,9 @@ use Jivoo\Models\DataType;
 interface IMigratable {
   /**
    * Create a table based on a schema.
-   * @param Schema $schema Schema.
+   * @param SchemaBuilder $schema Schema.
    */
-  public function createTable(Schema $schema);
+  public function createTable(SchemaBuilder $schema);
   
   /**
    * Rename a table.

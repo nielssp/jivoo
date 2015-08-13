@@ -1,10 +1,10 @@
 <?php
 namespace Blog\Schemas;
 
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 
-class PostSchema extends Schema {
+class PostSchema extends SchemaBuilder {
   protected function createSchema() {
     $this->addAutoIncrementId();
     $this->title = DataType::string(255);

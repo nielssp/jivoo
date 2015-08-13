@@ -1,10 +1,10 @@
 <?php
 namespace Blog\Schemas;
 
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 
-class CommentSchema extends Schema {
+class CommentSchema extends SchemaBuilder {
   protected function createSchema() {
     $this->addAutoIncrementId();
     $this->postId = DataType::integer(DataType::UNSIGNED);

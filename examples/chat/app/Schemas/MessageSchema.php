@@ -1,10 +1,10 @@
 <?php
 namespace Chat\Schemas;
 
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 
-class MessageSchema extends Schema {
+class MessageSchema extends SchemaBuilder {
   protected function createSchema() {
     $this->addAutoIncrementId();
     $this->author = DataType::string(20, true);

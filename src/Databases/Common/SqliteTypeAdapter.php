@@ -6,7 +6,7 @@
 namespace Jivoo\Databases\Common;
 
 use Jivoo\Databases\IMigrationTypeAdapter;
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\Condition\ConditionBuilder;
@@ -172,7 +172,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
    */
   public function getTableSchema($table) {
     $result = $this->db->rawQuery('PRAGMA table_info("' . $this->db->tableName($table) . '")');
-    $schema = new Schema($table);
+    $schema = new SchemaBuilder($table);
     $primaryKey = array();
     while ($row = $result->fetchAssoc()) {
       $column = $row['name'];
@@ -234,7 +234,7 @@ class SqliteTypeAdapter implements IMigrationTypeAdapter {
   /**
    * {@inheritdoc}
    */
-  public function createTable(Schema $schema) {
+  public function createTable(SchemaBuilder $schema) {
     $sql = 'CREATE TABLE "' . $this->db->tableName($schema->getName()) . '" (';
     $columns = $schema->getFields();
     $first = true;

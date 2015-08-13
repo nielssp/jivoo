@@ -8,7 +8,7 @@ namespace Jivoo\Migrations;
 use Jivoo\Databases\IDatabaseSchema;
 use Jivoo\Databases\IMigratable;
 use Jivoo\Databases\IMigratableDatabase;
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 use Jivoo\Models\ISchema;
 
@@ -92,7 +92,7 @@ class MigrationSchema implements IDatabaseSchema, IMigratable {
   /**
    * {@inheritdoc}
    */
-  public function createTable(Schema $schema) {
+  public function createTable(SchemaBuilder $schema) {
     $table = $schema->getName();
     $this->tables[] = $table;
     $this->schemas[$table] = $schema;

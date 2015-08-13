@@ -6,7 +6,7 @@
 namespace Jivoo\ActiveModels;
 
 use Jivoo\Core\Utilities;
-use Jivoo\Databases\Schema;
+use Jivoo\Databases\SchemaBuilder;
 use Jivoo\Models\DataType;
 
 /**
@@ -14,7 +14,7 @@ use Jivoo\Models\DataType;
  * of the form '____MetaSchema' and creates a schema consisting of fields '___Id',
  * 'variable', and 'value'.
  */
-abstract class MetaSchema extends Schema {
+abstract class MetaSchema extends SchemaBuilder {
   /**
    * Get the name of the id field.
    * @return string Name of id field.
