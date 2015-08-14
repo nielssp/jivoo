@@ -199,7 +199,7 @@ class I18n {
    * @return string Formatted date.
    */
   public static function formatDate($timestamp = null, $style = 'short') {
-    $property = $style . 'Time';
+    $property = $style . 'Date';
     return self::date(self::getLocale()->$property, $timestamp);
   }
 
