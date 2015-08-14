@@ -30,10 +30,6 @@ class StorePool extends PoolBase {
     $this->store = $store;
   }
   
-  public function __destruct() {
-    $this->write();
-  }
-  
   private function read() {
     if ($this->store->isOpen()) {
       $this->data = $this->store->read();
@@ -101,6 +97,15 @@ class StorePool extends PoolBase {
    * {@inheritdoc}
    */
   public function save(CacheItem $item) {
+    $this->saveDeferred($item);
+    $this->commit();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveDeferred(CacheItem $item) {
     if (!isset($this->data))
       $this->read();
     $expiration = $item->getExpiration();
@@ -109,6 +114,14 @@ class StorePool extends PoolBase {
     else
       $expiration = 0;
     $this->data[$item->getKey()] = array($item->get(), $expiration);
-    return $this;
+    return $htis;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function commit() {
+    $this->write();
+    return true;
   }
 }
