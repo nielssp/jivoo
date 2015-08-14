@@ -33,6 +33,31 @@ class PhpNode extends TemplateNode {
     $this->code = $code;
     $this->statement = $statement;
   }
+  
+  /**
+   * Create a PHP literal from a value.
+   * @param mixed $value Value.
+   * @return PhpNode PHP expression.
+   */
+  public static function export($value) {
+    return new PhpNode(var_export($value, true));
+  }
+  
+  /**
+   * Create a PHP expression from a node.
+   * @param TemplateNode $node Node.
+   * @return PhpNode PHP expression.
+   */
+  public static function expr(TemplateNode $node) {
+    if ($node instanceof PhpNode) {
+      if (!$node->statement)
+        return $node;
+      return self::export(null);
+    }
+    if ($node instanceof TextNode)
+      return self::export($node->text);
+    return self::export($node->__toString());
+  }
 
   /**
    * {@inheritdoc}

@@ -158,8 +158,14 @@ class ViewResources {
     else {
       $args = func_get_args();
     }
-    foreach ($args as $resource)
-      $this->importFrames[$this->framePointer][] = $resource;
+    foreach ($args as $resource) {
+      if (strpos($resource, ';') !== false) {
+        $this->import(explode(';', $resource));
+      }
+      else {
+        $this->importFrames[$this->framePointer][] = $resource;
+      }
+    }
   }
   
   /**

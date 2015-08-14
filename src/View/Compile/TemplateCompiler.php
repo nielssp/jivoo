@@ -18,6 +18,11 @@ class TemplateCompiler {
   private $macros = array();
   
   /**
+   * @var string
+   */
+  private $currentTemplate = null;
+  
+  /**
    * Construct compiler.
    * @param bool $defaultMacros Whether to add default macros provided by
    * {@see DefaultMacros}.
@@ -61,6 +66,7 @@ class TemplateCompiler {
    */
   public function compile($template) {
     $dom = new \simple_html_dom();
+    $this->currentTemplate = $template;
     $file = file_get_contents($template);
     if ($file === false)
       throw new InvalidTemplateException(tr('Could not read template: %1', $template));
@@ -80,7 +86,6 @@ class TemplateCompiler {
         $root->append($this->convert($html));
       }
     }
-    
     $this->transform($root);
     
     return $root->__toString();
@@ -92,8 +97,9 @@ class TemplateCompiler {
    * @return TemplateNode Template node.
    */
   public function convert(\simple_html_dom_node $node) {
-    if ($node->tag === 'text' or $node->tag === 'unknown')
+    if ($node->tag === 'text' or $node->tag === 'unknown') {
       return new TextNode($node->innertext);
+    }
     else if ($node->tag === 'comment') {
       if (preg_match('/^<!-- *\{(.*)\} *-->$/ms', $node->innertext, $matches) === 1) {
         return new PhpNode($matches[1], true);
@@ -103,8 +109,14 @@ class TemplateCompiler {
     else {
       $output = new HtmlNode($node->tag);
       foreach ($node->attr as $name => $value) {
+        if (preg_match('/^{(.*)}$/', $value, $matches) === 1)
+          $value = new PhpNode($matches[1]);
+        else if ($value !== true)
+          $value = new TextNode($value);
+        else
+          $value = null;
         if (strpos($name, ':') === false) {
-          $output->setAttribute($name, new TextNode($value));
+          $output->setAttribute($name, $value);
         }
         else {
 //           list($ns, $name) = explode(':', $name, 2);
@@ -133,7 +145,7 @@ class TemplateCompiler {
       if (!$node->hasMacro($macro))
         continue;
       if (!isset($this->macros[$macro]))
-        throw new InvalidMacroException(tr('Undefined macro: %1', $macro));
+        throw new InvalidMacroException(tr('Undefined macro "%1" in template: %2', $macro, $this->currentTemplate));
       call_user_func($this->macros[$macro], $node, $value);
       if (!isset($node->parent))
         return;

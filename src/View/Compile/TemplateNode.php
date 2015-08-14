@@ -11,12 +11,13 @@ use Jivoo\InvalidPropertyException;
  * A template node.
  * @property-read string[] $macros Macros and values.
  * @property-read InternalNode|null $parent Parent node if any.
+ * @property-read InternalNode|null $root Root node if any.
  * @property-read TemplateNode|null $next Next sibling if any.
  * @property-read TemplateNode|null $prev Previous sibling if any.
  */
 abstract class TemplateNode {
   /**
-   * @var string[] Macros and values.
+   * @var (TextNode|PhpNode|null)[] Macros and values.
    */
   private $macros = array();
   
@@ -24,6 +25,11 @@ abstract class TemplateNode {
    * @var string[]
    */
   private $properties = array();
+  
+  /**
+   * @var InternalNode|null Root node if any.
+   */
+  protected $root = null;
 
   /**
    * @var InternalNode|null Parent node if any.
@@ -55,6 +61,7 @@ abstract class TemplateNode {
     switch ($property) {
       case 'macros':
       case 'parent':
+      case 'root':
       case 'next':
       case 'prev':
         return $this->$property;
@@ -179,9 +186,9 @@ abstract class TemplateNode {
   /**
    * Add a macro.
    * @param string $macro Macro name.
-   * @param string|null $value Macro parameter if any.
+   * @param TextNode|PhpNode|null $value Macro parameter if any.
    */
-  public function addMacro($macro, $value = null) {
+  public function addMacro($macro, TemplateNode $value = null) {
     $this->macros[$macro] = $value;
   }
   
@@ -198,7 +205,7 @@ abstract class TemplateNode {
    * Get parameter of a macro, returns null if macro doesn't hava a parameter,
    * use {@see hasMacro} to check for existence of macro.
    * @param string $macro Macro name.
-   * @return string|null Macro parameter.
+   * @return TextNode|PhpNode|null Macro parameter.
    */
   public function getMacro($macro) {
     if (isset($this->macros[$macro]))

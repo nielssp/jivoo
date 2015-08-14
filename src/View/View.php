@@ -236,11 +236,12 @@ class View extends LoadableModule {
       if (!Utilities::dirExists($dir)) {
         throw new InvalidTemplateException(tr('Could not create directory: %1', $dir));
       }
+      $output = $this->compiler->compile($source);
       $file = fopen($compiled, 'w');
       if (!$file)
         throw new InvalidTemplateException(tr('Could not write compiled template: %1', $compiled));
       $this->logger->info(tr('Compiling template %1', $source));
-      fwrite($file, $this->compiler->compile($source));
+      fwrite($file, $output);
       fclose($file);
       $this->compiled[$template] = $compiled;
     }

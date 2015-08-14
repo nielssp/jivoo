@@ -20,152 +20,168 @@ class DefaultMacros extends Macros {
     $functions = array(
       'outerhtml', 'innerhtml', 'outertext', 'innertext', 'html', 'text',
       'main', 'embed', 'block', 'layout', 'nolayout', 'extend', 'ignore',
+      'import', 'imports',
       'if', 'else', 'foreach',
       'tr', 'tn',
       'href', 'datetime', 'class', 'file',
-      // attributes
-      'src', 'alt', 'title', 'id', 'style'
     );
     $macros = array();
     foreach ($functions as $function)
       $macros[$function] = array($this, '_' . $function);
     return $macros;
   }
-  
-  /**
-   * Automatic attribute macros.
-   * @param string $attribute Attribute name prefixed with an underscore.
-   * @param array $params Array of parameters, the first an {@see HtmlNode}, and
-   * the second the string value of the macro (a string).
-   */
-  public function __call($attribute, $params) {
-    $attribute = ltrim($attribute, '_');
-    if (isset($params[1]))
-      $params[0]->setAttribute($attribute, new PhpNode($params[1]));
-  }
 
   /**
    * Replaces the node with PHP code.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _outerhtml(HtmlNode $node, $value) {
-    $node->replaceWith(new PhpNode($value));
+  public function _outerhtml(HtmlNode $node, TemplateNode $value) {
+    $node->replaceWith($value);
   }
 
   /**
    * Replaces the content of the node with PHP code.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _innerhtml(HtmlNode $node, $value) {
-    $node->clear()->append(new PhpNode($value));
+  public function _innerhtml(HtmlNode $node, TemplateNode $value) {
+    $node->clear()->append($value);
   }
 
   /**
    * Replaces the node with PHP code (with html entities replaced).
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _outertext(HtmlNode $node, $value) {
-    $node->replaceWith(new PhpNode('h(' . $value . ')'));
+  public function _outertext(HtmlNode $node, TemplateNode $value) {
+    if ($value instanceof PhpNode)
+      $value = new PhpNode('h(' . $value->code . ')');
+    $node->replaceWith($value);
   }
 
   /**
    * Replaces the content of the node with PHP code (with html entities replaced).
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _innertext(HtmlNode $node, $value) {
-    $node->clear()->append(new PhpNode('h(' . $value . ')'));
+  public function _innertext(HtmlNode $node, TemplateNode $value) {
+    if ($value instanceof PhpNode)
+      $value = new PhpNode('h(' . $value->code . ')');
+    $node->clear()->append($value);
   }
 
   /**
    * Replaces the content of the node with PHP code.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _html(HtmlNode $node, $value) {
+  public function _html(HtmlNode $node, TemplateNode $value) {
     $this->_innerhtml($node, $value);
   }
   
   /**
    * Replaces the content of the node with PHP code (with html entities replaced).
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _text(HtmlNode $node, $value) {
+  public function _text(HtmlNode $node, TemplateNode $value) {
     $this->_innertext($node, $value);
   }
 
   /**
    * Sets the primary (root) node.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (omit).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _main(HtmlNode $node, $value) {
+  public function _main(HtmlNode $node, TemplateNode $value = null) {
+  }
+
+  /**
+   * Import a styleheet or script. If the current node is a '<link />' it is
+   * removed.
+   * @param HtmlNode $node Node.
+   * @param TemplateNode|null $value Macro parameter.
+   */
+  public function _import(HtmlNode $node, TemplateNode $value) {
+    $node->root->prepend(new PhpNode('$this->import(' . PhpNode::expr($value)->code . ')', true));
+    if ($node->tag == 'link')
+      $node->detach();
+  }
+
+  /**
+   * Replaces node with list of script and/or stylesheet imports.
+   * @param HtmlNode $node Node.
+   * @param TemplateNode|null $value Macro parameter.
+   */
+  public function _imports(HtmlNode $node, TemplateNode $value = null) {
+    if (isset($value)) {
+    $node->root->prepend(new PhpNode('$this->import(' . PhpNode::expr($value)->code . ')', true));
+    }
+    if ($node->tag == 'link')
+      $node->replaceWith(new PhpNode('$this->resourceBlock()'));
   }
 
   /**
    * Replaces the content of the node with another template.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _embed(HtmlNode $node, $value) {
-    $node->replaceWith(new PhpNode('$this->embed(' . var_export($value, true) . ')'));
+  public function _embed(HtmlNode $node, TemplateNode $value) {
+    $node->replaceWith(new PhpNode('$this->embed(' . PhpNode::expr($value)->code . ')'));
   }
 
   /**
    * Replaces the content of the node with the content of a block.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _block(HtmlNode $node, $value) {
-    $node->replaceWith(new PhpNode('$this->block(' . var_export($value, true) . ')'));
+  public function _block(HtmlNode $node, TemplateNode $value) {
+    $node->replaceWith(new PhpNode('$this->block(' . PhpNode::expr($value)->code . ')'));
   }
 
   /**
    * Sets the layout.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _layout(HtmlNode $node, $value) {
-    $node->before(new PhpNode('$this->layout(' . var_export($value, true) . ')', true));
+  public function _layout(HtmlNode $node, TemplateNode $value) {
+    $node->before(new PhpNode('$this->layout(' . PhpNode::expr($value)->code . ')', true));
   }
 
   /**
    * Disables the layout.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (omit).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _nolayout(HtmlNode $node, $value) {
+  public function _nolayout(HtmlNode $node, TemplateNode $value = null) {
     $node->before(new PhpNode('$this->disableLayout()', true));
   }
 
   /**
    * Sets the parent template.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * @param TemplateNode $value Macro parameter.
    */
-  public function _extend(HtmlNode $node, $value) {
-    $node->before(new PhpNode('$this->extend(' . var_export($value, true) . ')', true));
+  public function _extend(HtmlNode $node, TemplateNode $value) {
+    $node->before(new PhpNode('$this->extend(' . PhpNode::expr($value)->code . ')', true));
   }
 
   /**
    * Removes the node from the DOM.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (omit).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _ignore(HtmlNode $node, $value) {
+  public function _ignore(HtmlNode $node, TemplateNode $value = null) {
     $node->detach();
   }
 
   /**
    * Begins or continues (if parameter omitted) an if block around the node.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode $value Macro parameter.
    */
-  public function _if(HtmlNode $node, $value) {
+  public function _if(HtmlNode $node, TemplateNode $value) {
     if (!isset($value)) {
       $prev = $node->prev;
       $between = array();
@@ -186,7 +202,7 @@ class DefaultMacros extends Macros {
       } while (isset($prev));
       throw new InvalidTemplateException(tr('Empty if-node must follow another if-node.'));
     }
-    $ifNode = new IfNode($value);
+    $ifNode = new IfNode(PhpNode::expr($value)->code);
     $node->replaceWith($ifNode);
     $ifNode->then->append($node);
   }
@@ -194,9 +210,9 @@ class DefaultMacros extends Macros {
   /**
    * Begins or continues (if parameter omitted) an else block around the node.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _else(HtmlNode $node, $value) {
+  public function _else(HtmlNode $node, TemplateNode $value = null) {
     $prev = $node->prev;
     $between = array();
     do {
@@ -219,9 +235,9 @@ class DefaultMacros extends Macros {
   /**
    * Begins or continues (if parameter omitted) a foreach block around the node.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _foreach(HtmlNode $node, $value) {
+  public function _foreach(HtmlNode $node, TemplateNode $value) {
     if (!isset($value)) {
       if ($node->prev instanceof ForeachNode) {
         $foreachNode = $node->prev;
@@ -231,7 +247,7 @@ class DefaultMacros extends Macros {
       }
       throw new InvalidTemplateException(tr('Empty foreach-node must folow another foreach-node'));
     }
-    $foreachNode = new ForeachNode($value);
+    $foreachNode = new ForeachNode(PhpNode::expr($value)->code);
     $node->replaceWith($foreachNode);
     $foreachNode->append($node);
   }
@@ -239,58 +255,59 @@ class DefaultMacros extends Macros {
   /**
    * Sets the datetime-attribute to the specified UNIX timestamp.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _datetime(HtmlNode $node, $value) {
-    $node->setAttribute('datetime', new PhpNode('date(\'c\', ' . $value . ')'));
+  public function _datetime(HtmlNode $node, TemplateNode $value) {
+    $node->setAttribute('datetime', new PhpNode('date(\'c\', ' . PhpNode::expr($value)->code . ')'));
   }
   
   /**
    * Sets the href-attribute to the specified route-value (see {@see \Jivoo\Routing\Routing}).
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _href(HtmlNode $node, $value) {
+  public function _href(HtmlNode $node, TemplateNode $value) {
     if ($node->hasAttribute('class')) {
       
     }
     else {
-      $node->setAttribute('class', new PhpNode('if ($this->isCurrent(' . $value . ')) echo \'current\';', true));
+      $node->setAttribute('class', new PhpNode('if ($this->isCurrent(' . PhpNode::expr($value)->code . ')) echo \'current\';', true));
     }
-    $node->setAttribute('href', new PhpNode('$this->link(' . $value . ')'));
+    $node->setAttribute('href', new PhpNode('$this->link(' . PhpNode::expr($value)->code . ')'));
   }
   
   /**
    * Adds a class.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (PHP expression).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _class(HtmlNode $node, $value) {
+  public function _class(HtmlNode $node, TemplateNode $value) {
     if ($node->hasAttribute('class')) {
       $node->setAttribute(
         'class',
-        new PhpNode("'" . h($node->getAttribute('class')) . " ' . " . $value)
+        new PhpNode("'" . h($node->getAttribute('class')) . " ' . " . PhpNode::expr($value)->code)
       );
     }
     else {
-      $node->setAttribute('class', new PhpNode($value));
+      $node->setAttribute('class', PhpNode::expr($value)->code);
     }
   }
 
   /**
    * Points the src- or href-attribute at an asset.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  static function _file(HtmlNode $node, $value) {
+  static function _file(HtmlNode $node, TemplateNode $value = null) {
+    // TODO: implement
   }
 
   /**
    * Translates content of node, automatically replaces expressions with placeholders.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (omit).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _tr(HtmlNode $node, $value) {
+  public function _tr(HtmlNode $node, TemplateNode $value = null) {
     $translate = '';
     $num = 1;
     $params = array();
@@ -322,9 +339,9 @@ class DefaultMacros extends Macros {
    * Translates content of node, automatically replaces expressions with placeholders.
    * Expects content of node to be plural and macro parameter to be singular.
    * @param HtmlNode $node Node.
-   * @param string|null $value Macro parameter (string).
+   * @param TemplateNode|null $value Macro parameter.
    */
-  public function _tn(HtmlNode $node, $value) {
+  public function _tn(HtmlNode $node, TemplateNode $value) {
     $translate = '';
     $num = 1;
     $params = array();
@@ -348,7 +365,7 @@ class DefaultMacros extends Macros {
       $params = ', ' . implode(', ', $params);
     $translate = trim($translate);
     $node->clear();
-    $phpNode = new PhpNode('tn(' . var_export($translate, true) . ', ' . var_export($value, true) . $params . ')');
+    $phpNode = new PhpNode('tn(' . var_export($translate, true) . ', ' . PhpNode::expr($value)->code . $params . ')');
     $node->append($phpNode);
   }
 }

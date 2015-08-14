@@ -13,6 +13,14 @@ class InternalNode extends TemplateNode implements \Countable {
    * @var TemplateNode[] Children.
    */
   protected $content = array();
+  
+  /**
+   * Construct internal node.
+   */
+  public function __construct() {
+    parent::__construct();
+    $this->root = $this;
+  }
 
   /**
    * {@inheritdoc}
@@ -29,6 +37,7 @@ class InternalNode extends TemplateNode implements \Countable {
   public function append(TemplateNode $node) {
     assume(!isset($node->parent));
     $node->parent = $this;
+    $node->root = $this->root;
     if ($this->content !== array()) {
       $slice = array_slice($this->content, -1);
       $node->prev = $slice[0];
@@ -46,6 +55,7 @@ class InternalNode extends TemplateNode implements \Countable {
   public function prepend(TemplateNode $node) {
     assume(!isset($node->parent));
     $node->parent = $this;
+    $node->root = $this->root;
     if ($this->content !== array()) {
       $node->next = $this->content[0];
       $node->next->prev = $node;
@@ -63,6 +73,7 @@ class InternalNode extends TemplateNode implements \Countable {
     assume($node->parent === $this);
     $this->content = array_diff($this->content, array($node));
     $node->parent = null;
+    $node->root = null;
     if (isset($node->next))
       $node->next->prev = $node->prev;
     if (isset($node->prev))
@@ -84,6 +95,7 @@ class InternalNode extends TemplateNode implements \Countable {
     $offset = array_search($next, $this->content, true);
     array_splice($this->content, $offset, 0, array($node));
     $node->parent = $this;
+    $node->root = $this->root;
     $node->next = $next;
     $node->prev = $next->prev;
     $next->prev = $node;
@@ -104,7 +116,9 @@ class InternalNode extends TemplateNode implements \Countable {
     $offset = array_search($node, $this->content, true);
     $this->content[$offset] = $replacement;
     $replacement->parent = $this;
+    $replacement->root = $this->root;
     $node->parent = null;
+    $node->root = null;
     if (isset($node->next)) {
       $node->next->prev = $replacement;
       $replacement->next = $node->next;
@@ -125,6 +139,7 @@ class InternalNode extends TemplateNode implements \Countable {
   public function clear() {
     foreach ($this->content as $node) {
       $node->parent = null;
+      $node->root = null;
       $node->next = null;
       $node->prev = null;
     }
