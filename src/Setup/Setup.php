@@ -238,6 +238,13 @@ class Setup extends LoadableModule {
       $this->authHelper = new AuthHelper($this->app);
       $this->authHelper->sessionPrefix = 'setup_auth_';
       $this->authHelper->cookiePrefix = 'setup_auth_';
+      if (isset($this->lock['cpassword'])) {
+        $this->lock['password'] = $this->authHelper->passwordHasher->hash($this->lock['cpassword']);
+        unset($this->lock['cpassword']);
+        if (!$this->lock->save()) {
+          trigger_error(tr('Could not save lock file: %1', $this->p('user/lock.php')), E_USER_ERROR);
+        }
+      }
       $this->authHelper->userModel = new MaintenanceUserModel($this->lock);
       $this->authHelper->authentication = 'Form';
     }
