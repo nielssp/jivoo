@@ -40,7 +40,7 @@ body.narrow {
     #main {
       padding-left: 0;
       padding-right: 0;
-      width: $sm - 48px;
+      max-width: $sm - 48px;
       margin: 0 auto;
     }
   }

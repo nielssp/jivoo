@@ -442,7 +442,7 @@ a.badge:hover {
     border-color: #134175; }
   .button.button-primary[disabled], .button.button-primary[disabled]:hover, .button.button-primary[disabled]:active, button.button-primary[disabled], button.button-primary[disabled]:hover, button.button-primary[disabled]:active, input[type=button].button-primary[disabled], input[type=button].button-primary[disabled]:hover, input[type=button].button-primary[disabled]:active, input[type=reset].button-primary[disabled], input[type=reset].button-primary[disabled]:hover, input[type=reset].button-primary[disabled]:active, input[type=submit].button-primary[disabled], input[type=submit].button-primary[disabled]:hover, input[type=submit].button-primary[disabled]:active {
     background-color: #98a9bc;
-    border-color: #5e7691;
+    border-color: #5d7691;
     color: #eee; }
 .button.button-light, button.button-light, input[type=button].button-light, input[type=reset].button-light, input[type=submit].button-light {
   background-color: #b8cfe8;
@@ -478,7 +478,7 @@ a.badge:hover {
     border-color: #136175; }
   .button.button-info[disabled], .button.button-info[disabled]:hover, .button.button-info[disabled]:active, button.button-info[disabled], button.button-info[disabled]:hover, button.button-info[disabled]:active, input[type=button].button-info[disabled], input[type=button].button-info[disabled]:hover, input[type=button].button-info[disabled]:active, input[type=reset].button-info[disabled], input[type=reset].button-info[disabled]:hover, input[type=reset].button-info[disabled]:active, input[type=submit].button-info[disabled], input[type=submit].button-info[disabled]:hover, input[type=submit].button-info[disabled]:active {
     background-color: #98b5bc;
-    border-color: #5e8691;
+    border-color: #5d8691;
     color: #eee; }
 .button.button-success, button.button-success, input[type=button].button-success, input[type=reset].button-success, input[type=submit].button-success {
   background-color: #58c958;
@@ -490,7 +490,7 @@ a.badge:hover {
     border-color: #137513; }
   .button.button-success[disabled], .button.button-success[disabled]:hover, .button.button-success[disabled]:active, button.button-success[disabled], button.button-success[disabled]:hover, button.button-success[disabled]:active, input[type=button].button-success[disabled], input[type=button].button-success[disabled]:hover, input[type=button].button-success[disabled]:active, input[type=reset].button-success[disabled], input[type=reset].button-success[disabled]:hover, input[type=reset].button-success[disabled]:active, input[type=submit].button-success[disabled], input[type=submit].button-success[disabled]:hover, input[type=submit].button-success[disabled]:active {
     background-color: #98bc98;
-    border-color: #5e915e;
+    border-color: #5d915d;
     color: #eee; }
 .button.button-warning, button.button-warning, input[type=button].button-warning, input[type=reset].button-warning, input[type=submit].button-warning {
   background-color: #c98d58;
@@ -502,7 +502,7 @@ a.badge:hover {
     border-color: #754113; }
   .button.button-warning[disabled], .button.button-warning[disabled]:hover, .button.button-warning[disabled]:active, button.button-warning[disabled], button.button-warning[disabled]:hover, button.button-warning[disabled]:active, input[type=button].button-warning[disabled], input[type=button].button-warning[disabled]:hover, input[type=button].button-warning[disabled]:active, input[type=reset].button-warning[disabled], input[type=reset].button-warning[disabled]:hover, input[type=reset].button-warning[disabled]:active, input[type=submit].button-warning[disabled], input[type=submit].button-warning[disabled]:hover, input[type=submit].button-warning[disabled]:active {
     background-color: #bca998;
-    border-color: #91765e;
+    border-color: #91765d;
     color: #eee; }
 .button.button-error, button.button-error, input[type=button].button-error, input[type=reset].button-error, input[type=submit].button-error {
   background-color: #c95858;
@@ -514,7 +514,7 @@ a.badge:hover {
     border-color: #751313; }
   .button.button-error[disabled], .button.button-error[disabled]:hover, .button.button-error[disabled]:active, button.button-error[disabled], button.button-error[disabled]:hover, button.button-error[disabled]:active, input[type=button].button-error[disabled], input[type=button].button-error[disabled]:hover, input[type=button].button-error[disabled]:active, input[type=reset].button-error[disabled], input[type=reset].button-error[disabled]:hover, input[type=reset].button-error[disabled]:active, input[type=submit].button-error[disabled], input[type=submit].button-error[disabled]:hover, input[type=submit].button-error[disabled]:active {
     background-color: #bc9898;
-    border-color: #915e5e;
+    border-color: #915d5d;
     color: #eee; }
 
 .button-group {
@@ -1162,7 +1162,7 @@ label[for] {
       border-color: #134175; }
     .field.field-primary .input-group-button .button[disabled], .field.field-primary .input-group-button .button[disabled]:hover, .field.field-primary .input-group-button .button[disabled]:active, .field.field-primary .input-group-button button[disabled], .field.field-primary .input-group-button button[disabled]:hover, .field.field-primary .input-group-button button[disabled]:active, .field.field-primary .input-group-button input[type=button][disabled], .field.field-primary .input-group-button input[type=button][disabled]:hover, .field.field-primary .input-group-button input[type=button][disabled]:active, .field.field-primary .input-group-button input[type=reset][disabled], .field.field-primary .input-group-button input[type=reset][disabled]:hover, .field.field-primary .input-group-button input[type=reset][disabled]:active, .field.field-primary .input-group-button input[type=submit][disabled], .field.field-primary .input-group-button input[type=submit][disabled]:hover, .field.field-primary .input-group-button input[type=submit][disabled]:active {
       background-color: #98a9bc;
-      border-color: #5e7691;
+      border-color: #5d7691;
       color: #eee; }
   .field.field-light > label:first-child,
   .field.field-light .help {
@@ -1228,7 +1228,7 @@ label[for] {
       border-color: #136175; }
     .field.field-info .input-group-button .button[disabled], .field.field-info .input-group-button .button[disabled]:hover, .field.field-info .input-group-button .button[disabled]:active, .field.field-info .input-group-button button[disabled], .field.field-info .input-group-button button[disabled]:hover, .field.field-info .input-group-button button[disabled]:active, .field.field-info .input-group-button input[type=button][disabled], .field.field-info .input-group-button input[type=button][disabled]:hover, .field.field-info .input-group-button input[type=button][disabled]:active, .field.field-info .input-group-button input[type=reset][disabled], .field.field-info .input-group-button input[type=reset][disabled]:hover, .field.field-info .input-group-button input[type=reset][disabled]:active, .field.field-info .input-group-button input[type=submit][disabled], .field.field-info .input-group-button input[type=submit][disabled]:hover, .field.field-info .input-group-button input[type=submit][disabled]:active {
       background-color: #98b5bc;
-      border-color: #5e8691;
+      border-color: #5d8691;
       color: #eee; }
   .field.field-success > label:first-child,
   .field.field-success .help {
@@ -1250,7 +1250,7 @@ label[for] {
       border-color: #137513; }
     .field.field-success .input-group-button .button[disabled], .field.field-success .input-group-button .button[disabled]:hover, .field.field-success .input-group-button .button[disabled]:active, .field.field-success .input-group-button button[disabled], .field.field-success .input-group-button button[disabled]:hover, .field.field-success .input-group-button button[disabled]:active, .field.field-success .input-group-button input[type=button][disabled], .field.field-success .input-group-button input[type=button][disabled]:hover, .field.field-success .input-group-button input[type=button][disabled]:active, .field.field-success .input-group-button input[type=reset][disabled], .field.field-success .input-group-button input[type=reset][disabled]:hover, .field.field-success .input-group-button input[type=reset][disabled]:active, .field.field-success .input-group-button input[type=submit][disabled], .field.field-success .input-group-button input[type=submit][disabled]:hover, .field.field-success .input-group-button input[type=submit][disabled]:active {
       background-color: #98bc98;
-      border-color: #5e915e;
+      border-color: #5d915d;
       color: #eee; }
   .field.field-warning > label:first-child,
   .field.field-warning .help {
@@ -1272,7 +1272,7 @@ label[for] {
       border-color: #754113; }
     .field.field-warning .input-group-button .button[disabled], .field.field-warning .input-group-button .button[disabled]:hover, .field.field-warning .input-group-button .button[disabled]:active, .field.field-warning .input-group-button button[disabled], .field.field-warning .input-group-button button[disabled]:hover, .field.field-warning .input-group-button button[disabled]:active, .field.field-warning .input-group-button input[type=button][disabled], .field.field-warning .input-group-button input[type=button][disabled]:hover, .field.field-warning .input-group-button input[type=button][disabled]:active, .field.field-warning .input-group-button input[type=reset][disabled], .field.field-warning .input-group-button input[type=reset][disabled]:hover, .field.field-warning .input-group-button input[type=reset][disabled]:active, .field.field-warning .input-group-button input[type=submit][disabled], .field.field-warning .input-group-button input[type=submit][disabled]:hover, .field.field-warning .input-group-button input[type=submit][disabled]:active {
       background-color: #bca998;
-      border-color: #91765e;
+      border-color: #91765d;
       color: #eee; }
   .field.field-error > label:first-child,
   .field.field-error .help {
@@ -1294,7 +1294,7 @@ label[for] {
       border-color: #751313; }
     .field.field-error .input-group-button .button[disabled], .field.field-error .input-group-button .button[disabled]:hover, .field.field-error .input-group-button .button[disabled]:active, .field.field-error .input-group-button button[disabled], .field.field-error .input-group-button button[disabled]:hover, .field.field-error .input-group-button button[disabled]:active, .field.field-error .input-group-button input[type=button][disabled], .field.field-error .input-group-button input[type=button][disabled]:hover, .field.field-error .input-group-button input[type=button][disabled]:active, .field.field-error .input-group-button input[type=reset][disabled], .field.field-error .input-group-button input[type=reset][disabled]:hover, .field.field-error .input-group-button input[type=reset][disabled]:active, .field.field-error .input-group-button input[type=submit][disabled], .field.field-error .input-group-button input[type=submit][disabled]:hover, .field.field-error .input-group-button input[type=submit][disabled]:active {
       background-color: #bc9898;
-      border-color: #915e5e;
+      border-color: #915d5d;
       color: #eee; }
   .field > *:last-child {
     margin-bottom: 0; }
@@ -1876,7 +1876,7 @@ body.exception {
     body.narrow #main {
       padding-left: 0;
       padding-right: 0;
-      width: 720px;
+      max-width: 720px;
       margin: 0 auto; } }
 
 table.trace td, table.trace th {
