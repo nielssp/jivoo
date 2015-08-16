@@ -11,6 +11,8 @@ use Jivoo\Core\Cache\StoreCache;
 use Psr\Log\LogLevel;
 use Jivoo\Core\Store\SerializedStore;
 use Jivoo\Core\Cache\StorePool;
+use Jivoo\Core\Store\PhpSessionStore;
+use Jivoo\Core\Store\Session;
 
 /**
  * The default application initialization class. Extend this class and override
@@ -33,14 +35,12 @@ class Boot extends Module {
     parent::__construct($app);
   }
   
-  protected function load($module) {
-    return $this->m->load($module);
-  }
-  
-  protected function import($module) {
-    return $this->m->import($module);
-  }
-  
+  /**
+   * Runs application initialization code.
+   * @param string $environment Environment, must be defined as a method and
+   * exist in {@see $environments}.
+   * @throws InvalidEnvironmentException If the environment is undefined.
+   */
   public function boot($environment) {    
     if (!in_array($environment, $this->environments))
       throw new InvalidEnvironmentException(tr('Undefined environment: %1', $environment));
@@ -90,6 +90,9 @@ class Boot extends Module {
 
     I18n::loadFrom($this->p('Core', 'languages'));
     I18n::loadFrom($this->p('app', 'languages'));
+    
+//     $sessionStore = new PhpSessionStore();
+//     $this->session = new Session($sessionStore);
 
     $modules = $this->modules;
     if (isset($this->app->manifest['modules']))
