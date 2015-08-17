@@ -20,9 +20,4 @@ class MarkdownFormat extends ExtensionModule implements ContentFormat {
     $Parsedown = new Parsedown();
     return $Parsedown->text($text);
   }
-  
-  public function toText($text) {
-    $encoder = new HtmlEncoder();
-    return $encoder->encode($this->toHtml($text));
-  }
 }

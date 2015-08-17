@@ -55,8 +55,7 @@ class ContentFilter {
     $htmlField = $field . 'Html';
     $textField = $field . 'Text';
     $html = $this->Content->compile($event->record, $field);
-    $textEncoder = new HtmlEncoder();
     $event->record->$htmlField = $html;
-    $event->record->$textField = $textEncoder->encode($html); 
+    $event->record->$textField = strip_tags($html); 
   }
 }
