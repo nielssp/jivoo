@@ -86,7 +86,7 @@ class HtmlNode extends InternalNode {
    */
   public function removeData($attribute) {
     if (isset($this->attributes['data-' . $attribute]))
-      unset($htis->attributes['data-' . $attribute]);
+      unset($this->attributes['data-' . $attribute]);
   } 
 
   /**
@@ -124,7 +124,7 @@ class HtmlNode extends InternalNode {
    */
   public function removeAttribute($attribute) {
     if (isset($this->attributes[$attribute]))
-      unset($htis->attributes[$attribute]);
+      unset($this->attributes[$attribute]);
   }
   
   /**

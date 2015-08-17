@@ -114,7 +114,7 @@ class StorePool extends PoolBase {
     else
       $expiration = 0;
     $this->data[$item->getKey()] = array($item->get(), $expiration);
-    return $htis;
+    return $this;
   }
 
   /**
