@@ -26,6 +26,7 @@
     "psr/log": "1.0"
   },
   "suggest": {
+    "ezyang/htmlpurifier": "Required by the Content module."
   },
   "require-dev": {
     "codeception/codeception": "*",
