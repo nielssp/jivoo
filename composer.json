@@ -26,7 +26,8 @@
     "psr/log": "1.0"
   },
   "suggest": {
-    "ezyang/htmlpurifier": "Required by the Content module."
+    "ezyang/htmlpurifier": "Required by the Content module.",
+    "jivoo/simplehtmldom": "Allows the use of compiled HTML templates."
   },
   "require-dev": {
     "codeception/codeception": "*",

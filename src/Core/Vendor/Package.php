@@ -5,8 +5,10 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Vendor;
 
+use Jivoo\Autoloader;
+
 interface Package {
   public function getName();
   
-  public function load();
+  public function load(Autoloader $autoloader);
 }

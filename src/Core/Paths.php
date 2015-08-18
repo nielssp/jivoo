@@ -111,6 +111,38 @@ class Paths implements \ArrayAccess {
   }
 
   /**
+   * Whether the path exists.
+   * @param string $ipath Internal path.
+   * @return bool True if path exists.
+   */
+  public function fileExists($ipath) {
+    return file_exists($this->p($ipath));
+  }
+  
+  /**
+   * Whether the path exists and is a directory.
+   * @param string $ipath Internal path.
+   * @return bool True if path exists and is a directory.
+   */
+  public function isDir($ipath) {
+    return is_dir($this->p($ipath));
+  }
+  
+  /**
+   * Check whether a directory exists or create it if it doesn't.
+   * @param string $ipath Internal path.
+   * @param bool $create Attempt to create directory if it doesn't exist.
+   * @param bool $recursive Whether to recursively create parent directories
+   * as well.
+   * @param int $mode Directory permission, default is 0777.
+   * @return bool True if directory exists.
+   */
+  public function dirExists($ipath, $create = true, $recursive = true, $mode = 0777) {
+    $path = $this->p($ipath);
+    return is_dir($path) or ($create and mkdir($path, $mode, $recursive));
+  }
+
+  /**
    * Combine two paths with a path separator ('/').
    * @param string $pathA First path.
    * @param string $pathB Second path.

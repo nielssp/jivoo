@@ -6,6 +6,9 @@
 namespace Jivoo\Core\Vendor;
 
 use Jivoo\Core\VendorException;
+use Jivoo\Core\Paths;
+use Jivoo\Core\App;
+use Jivoo\Autoloader;
 
 /**
  * Imports third-party libraries (e.g. packages installed using Composer) from
@@ -13,9 +16,23 @@ use Jivoo\Core\VendorException;
  */
 class VendorLoader {
   /**
+   * @var App
+   */
+  private $app;
+
+  /**
    * @var PackageReader[]
    */
   private $paths = array();
+  
+  /**
+   * @var bool[]
+   */
+  private $imported = array();
+  
+  public function __construct(App $app) {
+    $this->app = $app;
+  }
   
   /**
    * Add a vendor-directory path.
@@ -24,7 +41,7 @@ class VendorLoader {
   public function addPath($path, PackageReader $reader = null) {
     if (!isset($reader))
       $reader = true;
-    $path = Utilities::convertRealPath($path);
+    $path = Paths::convertRealPath($path);
     $this->paths[$path] = $reader; 
   }
   
@@ -33,7 +50,7 @@ class VendorLoader {
    * @param string $path Path.
    */
   public function removePath($path) {
-    $path = Utilities::convertRealPath($path);
+    $path = Paths::convertRealPath($path);
     if (isset($this->paths[$path]))
       unset($this->paths[$path]);
   }
@@ -43,6 +60,8 @@ class VendorLoader {
    * @param string $name Library name.
    */
   public function import($name) {
+    if (isset($this->imported[$name]))
+      return;
     $manifest = null;
     foreach ($this->paths as $path => $reader) {
       $path = $path . '/' . $name;
@@ -54,7 +73,8 @@ class VendorLoader {
     }
     if (!isset($manifest))
       throw new VendorException(tr('Could not import library: %1', $name));
-    $manifest->registerAutoloader();
+    $manifest->load(Autoloader::getInstance());
+    $this->imported[$name] = true;
   }
   
   public function getLibraries(PackageReader $reader = null) {

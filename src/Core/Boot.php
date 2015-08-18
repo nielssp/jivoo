@@ -13,6 +13,7 @@ use Jivoo\Core\Store\SerializedStore;
 use Jivoo\Core\Cache\StorePool;
 use Jivoo\Core\Store\PhpSessionStore;
 use Jivoo\Core\Store\Session;
+use Jivoo\Core\Vendor\ComposerPackageReader;
 
 /**
  * The default application initialization class. Extend this class and override
@@ -90,6 +91,13 @@ class Boot extends Module {
 
     I18n::loadFrom($this->p('Core', 'languages'));
     I18n::loadFrom($this->p('app', 'languages'));
+    
+    $vendor = $this->p('app/../vendor');
+    if (is_dir($vendor))
+      $this->vendor->addPath($vendor, new ComposerPackageReader());
+    $vendor = $this->p('share/vendor');
+    if (is_dir($vendor))
+      $this->vendor->addPath($vendor, new ComposerPackageReader());
     
 //     $sessionStore = new PhpSessionStore();
 //     $this->session = new Session($sessionStore);

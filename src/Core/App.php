@@ -252,6 +252,8 @@ class App implements EventSubject, LoggerAware {
     
     $this->cache = new NullPool();
     
+    $this->vendor = new VendorLoader($this);
+    
     if ($this->isCli())
       $this->shell = new Shell($this);
   }

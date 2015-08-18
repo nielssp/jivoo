@@ -109,6 +109,7 @@ class View extends LoadableModule {
     $this->blocks = new ViewBlocks($this);
     
     if ($this->config->get('compileTemplates', false)) {
+      $this->vendor->import('jivoo/simplehtmldom');
       $this->compiler = new TemplateCompiler();
       $this->autoCompile = true;
     }
@@ -228,8 +229,6 @@ class View extends LoadableModule {
    */
   public function compileTemplate($dir, $template) {
     if (!isset($this->compiled[$template])) {
-      // TODO: $this->vendor->import('[someone]/simplehtmldom');
-      $this->m->load('Extensions')->import('simplehtmldom');
       $source = $dir . $template;
       $compiled = $dir . 'compiled/' . $template . '.php';
       $dir = dirname($compiled);
