@@ -56,7 +56,7 @@ abstract class PoolBase implements Pool {
    */
   public function add($key, $value, $expiration = 0) {
     $item = $this->getItem($key);
-    if ($this->isHit())
+    if ($item->isHit())
       return false;
     $item->set($value);
     $item->expiresAt(self::convertExpiration($expiration));
@@ -69,7 +69,7 @@ abstract class PoolBase implements Pool {
    */
   public function replace($key, $value, $expiration = 0) {
     $item = $this->getItem($key);
-    if (!$this->isHit())
+    if (!$item->isHit())
       return false;
     $item->set($value);
     $item->expiresAt(self::convertExpiration($expiration));
@@ -82,7 +82,7 @@ abstract class PoolBase implements Pool {
    */
   public function touch($key, $expiration = 0) {
     $item = $this->getItem($key);
-    if (!$this->isHit())
+    if (!$item->isHit())
       return false;
     $item->expiresAt(self::convertExpiration($expiration));
     $this->save($item);
@@ -94,11 +94,10 @@ abstract class PoolBase implements Pool {
    */
   public function increment($key, $offset = 1, $init = 0) {
     $item = $this->getItem($key);
-    if ($this->isHit())
-      $value = $item->get();
+    if ($item->isHit())
+      $value = $item->get() + $offset;
     else
       $value = $init;
-    $value += $offset;
     $item->set($value);
     $this->save($item);
     return $value;
@@ -109,11 +108,10 @@ abstract class PoolBase implements Pool {
    */
   public function decrement($key, $offset = 1, $init = 0) {
     $item = $this->getItem($key);
-    if ($this->isHit())
-      $value = $item->get();
+    if ($item->isHit())
+      $value = $item->get() - $offset;
     else
       $value = $init;
-    $value -= $offset;
     $item->set($value);
     $this->save($item);
     return $value;

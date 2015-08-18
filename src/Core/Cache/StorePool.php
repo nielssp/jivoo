@@ -58,13 +58,11 @@ class StorePool extends PoolBase {
     if (array_key_exists($key, $this->data)) {
       $value = $this->data[$key][0];
       $expiration = $this->data[$key][1];
-      if ($expiration <= time()) {
+      if (isset($expiration) and $expiration <= time()) {
         unset($this->data[$key]);
       }
       else {
-        if ($expiration == 0)
-          $expiration = null;
-        else
+        if (isset($expiration))
           $expiration = \DateTime::createFromFormat('U', $expiration);
         return new MutableItem($key, $value, true, $expiration);
       }
@@ -111,8 +109,6 @@ class StorePool extends PoolBase {
     $expiration = $item->getExpiration();
     if (isset($expiration))
       $expiration = $expiration->getTimestamp();
-    else
-      $expiration = 0;
     $this->data[$item->getKey()] = array($item->get(), $expiration);
     return $this;
   }

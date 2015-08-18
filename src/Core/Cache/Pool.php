@@ -79,10 +79,8 @@ interface Pool extends CacheItemPool {
   public function decrement($key, $offset = 1, $init = 0);
   
   /**
-   * Delete/invalidate the value stored under a key. Fails if the key doesn't
-   * exist.
+   * Delete/invalidate the value stored under a key.
    * @param string $key Item key.
-   * @return bool True if the items was deleted, false on failure.
    */
   public function delete($key);
 }

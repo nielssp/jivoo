@@ -13,7 +13,7 @@ class PhpStoreTest extends \Jivoo\Test {
   }
 
   protected function _after() {
-    $this->tester->deleteFile($this->file);
+    unlink($this->file);
   }
   
   public function testTouch() {

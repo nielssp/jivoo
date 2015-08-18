@@ -98,8 +98,15 @@ class MutableItem implements CacheItem {
    */
   public function expiresAfter($time) {
     $this->expiration = new \DateTime();
-    if (is_int($time))
-      $time = new \DateInterval('PT' . $time . 'S');
+    if (is_int($time)) {
+      if ($time < 0) {
+        $time = new \DateInterval('PT' . abs($time) . 'S');
+        $time->invert = 1;
+      }
+      else {
+        $time = new \DateInterval('PT' . $time . 'S');
+      }
+    }
     $this->expiration->add($time);
     return $this;
   }
