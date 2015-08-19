@@ -87,9 +87,8 @@ class AppController extends Controller {
   }
   
   public function logout() {
-    if (!$this->Auth->isLoggedIn()) {
+    if (!$this->Auth->isLoggedIn())
       $this->redirect(null);
-    }
     $this->Auth->logOut();
     $this->redirect();
   }

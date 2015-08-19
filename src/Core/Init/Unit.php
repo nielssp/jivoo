@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Init;
 
+use Jivoo\Core\Store\Document;
+use Jivoo\Core\App;
+
 /**
  * An initialization unit.
  */
@@ -12,7 +15,7 @@ interface Unit {
   /**
    * Run unit.
    */
-  public function run();
+  public function run(App $app, Document $config);
   
   /**
    * Get dependencies of unit, i.e. the names of the units that must run before
