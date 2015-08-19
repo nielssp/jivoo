@@ -371,6 +371,11 @@ class Locale {
             $l->pluralForms = $value;
             break;
           }
+          else if (trim(strtolower($property)) == 'language') {
+            $value = LanguageTag::parseTag($value);
+            $l->name = $value[0];
+            $l->region = $value[1];
+          }
         }
       }
       $id = $message['msgid'];
@@ -470,6 +475,11 @@ class Locale {
             if (trim(strtolower($property)) == 'plural-forms') {
               $l->pluralForms = $value;
               break;
+            }
+            else if (trim(strtolower($property)) == 'language') {
+              $value = LanguageTag::parseTag($value);
+              $l->name = $value[0];
+              $l->region = $value[1];
             }
           }
         }

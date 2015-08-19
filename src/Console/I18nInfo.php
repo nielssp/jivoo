@@ -8,6 +8,7 @@ namespace Jivoo\Console;
 use Jivoo\Snippets\SnippetBase;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\I18n\Locale;
+use Jivoo\Core\I18n\I18n;
 
 /**
  * I18n language generator and editor.
