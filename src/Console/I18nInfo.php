@@ -7,6 +7,7 @@ namespace Jivoo\Console;
 
 use Jivoo\Snippets\SnippetBase;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\I18n\Locale;
 
 /**
  * I18n language generator and editor.
@@ -141,10 +142,26 @@ class I18nInfo extends ConsoleSnippet {
     if ($files !== false) {
       foreach ($files as $file) {
         $ex = explode('.', $file);
-        if (count($ex) == 3 and $ex[2] == 'php' and $ex[1] == 'lng') {
+        if (count($ex) == 2) {
           $tag = $ex[0];
-          $localization = include $dir . '/' . $file;
-          $languages[$tag] = $localization;
+          if ($ex[1] == 'po' or $ex[1] == 'pot') {
+            $locale = Locale::readPo($dir . '/' . $file);
+          }
+          else if ($ex[1] == 'mo') {
+            $locale = Locale::readMo($dir . '/' . $file);
+          }
+          else {
+            continue;
+          }
+          if (!isset($languages[$tag])) {
+            $languages[$tag] = array(
+              'locale' => $locale,
+              'po' => false,
+              'mo' => false,
+              'pot' => false
+            );
+          }
+          $languages[$tag][$ex[1]] = true;
         }
       }
     }

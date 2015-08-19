@@ -45,18 +45,20 @@
 <th>Language</th>
 <th>Region</th>
 <th>Code</th>
-<th>CSV</th>
-<th>PHP</th>
+<th>POT</th>
+<th>PO</th>
+<th>MO</th>
 </tr>
 </thead>
 <tbody>
-<?php foreach ($languages as $code => $localization): ?>
+<?php foreach ($languages as $code => $language): ?>
 <tr>
-<td><?php echo h($localization->name); ?></td>
-<td><?php echo h($localization->region); ?></td>
+<td><?php echo h($language['locale']->name); ?></td>
+<td><?php echo h($language['locale']->region); ?></td>
 <td><?php echo $code; ?></td>
-<td>No</td>
-<td>Yes</td>
+<td><?php echo $language['pot'] ? tr('Yes') : tr('No'); ?></td>
+<td><?php echo $language['po'] ? tr('Yes') : tr('No'); ?></td>
+<td><?php echo $language['mo'] ? tr('Yes') : tr('No'); ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
@@ -75,7 +77,7 @@
 <?php echo $Form->select('extend'); ?>
 <?php echo $Form->option('', ''); ?>
 <?php foreach ($languages as $code => $localization): ?>
-<?php echo $Form->option($code, h($localization->name . ' (' . $code . ')')); ?>
+<?php echo $Form->option($code, h($language['locale']->name . ' (' . $code . ')')); ?>
 <?php endforeach; ?>
 <?php echo $Form->end(); ?>
 <?php echo tr('Leave blank to copy all strings from root language.'); ?>
@@ -88,7 +90,7 @@
 <h2><?php echo tr('Generate root language'); ?></h2>
 
 <p>
-<?php echo tr('Generates the root language file ("%1") from all uses of %2 and %3 in the selected scope.', 'en', '<code>tr()</code>', '<code>tn()</code>'); ?>
+<?php echo tr('Generates the root language file ("%1") from all uses of %2 and %3 in the selected scope.', 'en.pot', '<code>tr()</code>', '<code>tn()</code>'); ?>
 </p>
 
 <?php echo $Form->form(array('mergeQuery' => true)); ?>
