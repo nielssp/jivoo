@@ -58,6 +58,18 @@ class PhpNode extends TemplateNode {
       return self::export($node->text);
     return self::export($node->__toString());
   }
+  
+  /**
+   * Create a PHP array-expression from an HTML node's attributes.
+   * @param HtmlNode $node HTML node.
+   * @return PhpNode PHP array-expression.
+   */
+  public static function attributes(HtmlNode $node) {
+    $attributes = array();
+    foreach ($node->attributes as $key => $value)
+      $attributes[] = var_export($key, true) . ' => ' . self::expr($value)->code;
+    return new PhpNode('array(' . implode(',', $attributes) . ')');
+  }
 
   /**
    * {@inheritdoc}

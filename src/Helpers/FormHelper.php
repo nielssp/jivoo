@@ -10,6 +10,7 @@ use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\DataType;
 use Jivoo\Models\EnumDataType;
 use Jivoo\Helpers\Form\Field;
+use Jivoo\Helpers\Form\FormMacros;
 
 /**
  * A helper for creating HTML forms
@@ -49,6 +50,11 @@ class FormHelper extends Helper {
    * @var string[] Associative array of field names and error messages.
    */
   private $errors = array();
+  
+  protected function init() {
+    if (isset($this->view->compiler))
+      $this->view->compiler->addMacros(new FormMacros());
+  }
 
   /**
    * Begin a form. End it with {@see end()}.

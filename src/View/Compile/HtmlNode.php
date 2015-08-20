@@ -10,6 +10,7 @@ use Jivoo\Helpers\Html;
 /**
  * An HTML node.
  * @property-read string $tag HTML tag.
+ * @property-read TemplateNode[] $attributes HTML attributes.
  */
 class HtmlNode extends InternalNode {
   /**
@@ -46,8 +47,11 @@ class HtmlNode extends InternalNode {
    * {@inheritdoc}
    */
   public function __get($property) {
-    if ($property == 'tag')
-      return $this->tag;
+    switch ($property) {
+      case 'tag':
+      case 'attributes':
+        return $this->$property;
+    }
     return parent::__get($property);
   }
   
@@ -117,7 +121,7 @@ class HtmlNode extends InternalNode {
       return $this->attributes[$attribute];
     return null;
   }
-
+  
   /**
    * Remove an attribute.
    * @param string $attribute Attribute name.

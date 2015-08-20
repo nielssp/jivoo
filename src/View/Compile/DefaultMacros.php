@@ -11,25 +11,6 @@ use Jivoo\View\InvalidTemplateException;
  * Implements the default template macros.
  */
 class DefaultMacros extends Macros {
-  
-  /**
-   * Get an associative array of macro names and functions.
-   * @return callable[] Associative array mapping macro names to callables.
-   */
-  public function getMacros() {
-    $functions = array(
-      'outerhtml', 'innerhtml', 'outertext', 'innertext', 'html', 'text',
-      'main', 'embed', 'block', 'layout', 'nolayout', 'extend', 'ignore',
-      'import', 'imports',
-      'if', 'else', 'foreach',
-      'tr', 'tn',
-      'href', 'datetime', 'class', 'file',
-    );
-    $macros = array();
-    foreach ($functions as $function)
-      $macros[$function] = array($this, '_' . $function);
-    return $macros;
-  }
 
   /**
    * Replaces the node with PHP code.
