@@ -58,4 +58,27 @@ class Unicode {
       preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY), $start, $length
     ));
   }
+  
+  /**
+   * Whether a string starts with another string.
+   * @param string $string String to test.
+   * @param string $start String to compare start of $string with.
+   * @return bool True if $string starts with $start.
+   */
+  public static function startsWith($string, $start) {
+    return strncmp($string, $start, strlen($start)) === 0;
+  }
+
+  /**
+   * Whether a string end with another string.
+   * @param string $string String to test.
+   * @param string $end String to compare end of $string with.
+   * @return bool True if $string ends with $end.
+   */
+  public static function endsWith($string, $end) {
+    $l = strlen($end);
+    if ($l == 0)
+      return true;
+    return substr($string, -$l) === $end;
+  }
 }

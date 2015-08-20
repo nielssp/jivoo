@@ -41,7 +41,7 @@ function tn($plural, $singular, $number) {
  * @return string Output.
  */
 function h($string) {
-  return htmlentities(strval($string), ENT_COMPAT, 'UTF-8');
+  return htmlentities(strval($string), ENT_COMPAT, 'UTF-8', false);
 }
 
 /**

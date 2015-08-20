@@ -78,6 +78,10 @@ class Boot extends Module {
       )
     );
     
+//     $units = new UnitLoader($this->app);
+//     $units->enable('Routing', true);
+//     $units->runAll();
+    
     if (Utilities::dirExists($this->p('cache'))) {
       $store = new SerializedStore($this->p('cache/i18n.s'));
       if ($store->touch()) {

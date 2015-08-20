@@ -295,7 +295,7 @@ class DefaultMacros extends Macros {
     $before = array();
     foreach ($node->getChildren() as $child) {
       if ($child instanceof TextNode) {
-        $translate .= $child ->text;
+        $translate .= $child->text;
       }
       else if ($child instanceof PhpNode and !$child->statement) {
         $translate .= '%' . $num;
@@ -303,7 +303,9 @@ class DefaultMacros extends Macros {
         $num++;
       }
       else {
-        throw new InvalidTemplateException('not implemented');
+        $translate .= '%' . $num;
+        $params[] = PhpNode::expr($child);
+        $num++;
       }
     }
     if (count($params) == 0)
@@ -337,7 +339,9 @@ class DefaultMacros extends Macros {
         $num++;
       }
       else {
-        throw new InvalidTemplateException('not implemented');
+        $translate .= '%' . $num;
+        $params[] = PhpNode::expr($child);
+        $num++;
       }
     }
     if (count($params) == 0)

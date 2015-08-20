@@ -61,4 +61,38 @@ class UnicodeTest extends \Jivoo\Test {
     $this->assertEquals('♥☺', Unicode::slice('☢☣☯♥☺', -2));
     $this->assertEquals('♥', Unicode::slice('☢☣☯♥☺', -2, -1));
   }
+  
+  public function testStartsWith() {
+    $this->assertTrue(Unicode::startsWith('', ''));
+    $this->assertTrue(Unicode::startsWith('foo', ''));
+    $this->assertTrue(Unicode::startsWith('foo', 'f'));
+    $this->assertTrue(Unicode::startsWith('foo', 'fo'));
+    $this->assertTrue(Unicode::startsWith('foo', 'foo'));
+    $this->assertFalse(Unicode::startsWith('foo', 'o'));
+    $this->assertFalse(Unicode::startsWith('foo', 'fooo'));
+    $this->assertFalse(Unicode::startsWith('foo', 'bar'));
+    $this->assertFalse(Unicode::startsWith('foo', 'foa'));
+    
+    $this->assertTrue(Unicode::startsWith('☢☣☯♥☺', ''));
+    $this->assertTrue(Unicode::startsWith('☢☣☯♥☺', '☢'));
+    $this->assertTrue(Unicode::startsWith('☢☣☯♥☺', '☢☣☯♥☺'));
+    $this->assertFalse(Unicode::startsWith('☢☣☯♥☺', '☢☣☯♥☺foo'));
+  }
+  
+  public function testEndsWith() {
+    $this->assertTrue(Unicode::endsWith('', ''));
+    $this->assertTrue(Unicode::endsWith('foo', ''));
+    $this->assertTrue(Unicode::endsWith('foo', 'o'));
+    $this->assertTrue(Unicode::endsWith('foo', 'oo'));
+    $this->assertTrue(Unicode::endsWith('foo', 'foo'));
+    $this->assertFalse(Unicode::endsWith('foo', 'f'));
+    $this->assertFalse(Unicode::endsWith('foo', 'ffoo'));
+    $this->assertFalse(Unicode::endsWith('foo', 'bar'));
+    $this->assertFalse(Unicode::endsWith('foo', 'phoo'));
+
+    $this->assertTrue(Unicode::endsWith('☢☣☯♥☺', ''));
+    $this->assertTrue(Unicode::endsWith('☢☣☯♥☺', '☺'));
+    $this->assertTrue(Unicode::endsWith('☢☣☯♥☺', '☢☣☯♥☺'));
+    $this->assertFalse(Unicode::endsWith('☢☣☯♥☺', 'foo☢☣☯♥☺'));
+  }
 }

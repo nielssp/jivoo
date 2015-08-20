@@ -12,8 +12,7 @@ use Jivoo\Autoloader;
  * Collection of useful utility functions.
  */
 class Utilities {
-  private function __construct() {
-  }
+  private function __construct() {}
 
   /**
    * Convert path from Windows-style to UNIX-style.
@@ -126,6 +125,7 @@ class Utilities {
    * @param string|object $class Class name or object.
    * @param string $parent Expected parent class of $class.
    * @throws InvalidClassException if $class does not extend $parent.
+   * @deprecated Use {@see Assume}.
    */
   public static function assumeSubclassOf($class, $parent) {
     if (!is_subclass_of($class, $parent)) {

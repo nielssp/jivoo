@@ -15,6 +15,11 @@ namespace Jivoo {
    */
   class InvalidArgumentException extends \InvalidArgumentException
     implements Exception {}
+  
+  /**
+   * Thrown when method or function argument is not of the expected type.
+   */
+  class InvalidTypeException extends InvalidArgumentException {}
 
   /**
    * Thrown when method is undefined.
