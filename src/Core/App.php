@@ -210,7 +210,7 @@ class App implements EventSubject, LoggerAware {
     $this->e = new EventManager($this);
     $this->m = new ModuleLoader($this);
     $this->paths = new Paths(
-      dirname($_SERVER['SCRIPT_FILENAME']),
+      Paths::convertPath(getcwd()),
       $userPath
     );
     $this->paths->app = $appPath;
@@ -221,7 +221,7 @@ class App implements EventSubject, LoggerAware {
     // Temporary work-around for weird SCRIPT_NAME.
     // When url contains a trailing dot such as
     // /app/index.php/admin./something
-    // SCRIPT_NAME returns /PeanutCMS/index.php/admin./something instead of expected
+    // SCRIPT_NAME returns /app/index.php/admin./something instead of expected
     // /app/index.php
     $script = explode('/', $_SERVER['SCRIPT_NAME']);
     while (count($script) > 0) {

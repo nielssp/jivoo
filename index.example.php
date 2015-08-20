@@ -5,6 +5,10 @@
 // it using a web browser to create a new application. 
 //
 
+// Change current working directory to the one containing this file (ensures
+// that relative paths work correctly, especially when used from the CLI).
+chdir(dirname(__FILE__));
+
 // Path to $directory containing Jivoo framework distribution.
 $root = '.';
 
