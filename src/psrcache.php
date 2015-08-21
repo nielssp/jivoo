@@ -46,11 +46,6 @@ interface CacheItemInterface {
    * @return static
    */
   public function expiresAfter($time);
-
-  /**
-   * @return \DateTime
-   */
-  public function getExpiration();
 }
 
 interface CacheItemPoolInterface {

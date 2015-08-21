@@ -112,7 +112,8 @@ class MutableItem implements CacheItem {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the expiration of the item if any.
+   * @return \DateTime|null Expiration date or null of item does not expire.
    */
   public function getExpiration() {
     return $this->expiration;

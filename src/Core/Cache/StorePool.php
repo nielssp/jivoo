@@ -7,6 +7,7 @@ namespace Jivoo\Core\Cache;
 
 use Jivoo\Core\Store\Store;
 use Psr\Cache\CacheItemInterface as CacheItem;
+use Jivoo\Core\Assume;
 
 /**
  * A cache that stores values in an {@see Store}. 
@@ -106,6 +107,7 @@ class StorePool extends PoolBase {
   public function saveDeferred(CacheItem $item) {
     if (!isset($this->data))
       $this->read();
+    Assume::isInstanceOf($item, 'Jivoo\Core\Cache\MutableItem');
     $expiration = $item->getExpiration();
     if (isset($expiration))
       $expiration = $expiration->getTimestamp();

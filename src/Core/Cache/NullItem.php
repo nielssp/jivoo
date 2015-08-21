@@ -72,11 +72,4 @@ class NullItem implements CacheItem {
   public function expiresAfter($time) {
     return $this;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getExpiration() {
-    return null;
-  }
 }
