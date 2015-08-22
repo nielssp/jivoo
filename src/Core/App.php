@@ -150,7 +150,8 @@ class App implements EventSubject, LoggerAware {
   private $events = array(
     'beforeBoot', 'afterBoot',
     'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
-    'afterLoadModules', 'afterInit',
+    'afterLoadModules',
+    'beforeInit', 'afterInit',
     'beforeShowException', 'beforeStop'
   );
   
@@ -564,8 +565,9 @@ class App implements EventSubject, LoggerAware {
    * @param bool $enableCli Whether to enable the command-line interface. If
    * enabled, the environment will be set to 'cli' when the application is run
    * from the command-line.
+   * @param bool $enableInit Whether to enable the new initialization system.
    */
-  public function run($environment = 'production', $enableCli = true) {
+  public function run($environment = 'production', $enableCli = true, $enableInit = false) {
     if ($this->isCli()) {
       if (!$enableCli) {
         echo tr('The command-line interface is disabled.');
@@ -631,16 +633,29 @@ class App implements EventSubject, LoggerAware {
       ));
     }
     
-    // Find initialization class
-    $class = $this->n('Boot');
-    if (!class_exists($class))
-      $class = 'Jivoo\Core\Boot';
-    $boot = new $class($this);
-    $this->triggerEvent('beforeBoot');
-    $boot->boot($environment);
-    $this->triggerEvent('afterBoot');
-    $this->triggerEvent('afterLoadModules'); // TODO: legacy event
-    $this->triggerEvent('afterInit'); // TODO: legacy event
+    if ($enableInit) {
+      $class = $this->n('Init');
+      if (!class_exists($class))
+        $class = 'Jivoo\Core\Init';
+      $init = new $class($this);
+
+      $this->triggerEvent('beforeInit');
+      $init->init($environment);
+      $this->triggerEvent('afterLoadModules'); // TODO: legacy event
+      $this->triggerEvent('afterInit');
+    }
+    else {
+      // Find initialization class
+      $class = $this->n('Boot');
+      if (!class_exists($class))
+        $class = 'Jivoo\Core\Boot';
+      $boot = new $class($this);
+      $this->triggerEvent('beforeBoot');
+      $boot->boot($environment);
+      $this->triggerEvent('afterBoot');
+      $this->triggerEvent('afterLoadModules'); // TODO: legacy event
+      $this->triggerEvent('afterInit'); // TODO: legacy event
+    }
     
     $this->logger->warning(tr('Application not stopped'));
   }

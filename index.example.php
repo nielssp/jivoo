@@ -9,7 +9,7 @@
 // that relative paths work correctly, especially when used from the CLI).
 chdir(dirname(__FILE__));
 
-// Path to $directory containing Jivoo framework distribution.
+// Path to directory containing Jivoo framework distribution.
 $root = '.';
 
 // Path to Jivoo framework bootstrap script.
