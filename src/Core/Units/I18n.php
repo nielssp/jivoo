@@ -10,18 +10,16 @@ use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 
 /**
- * Initializes the routing module.
+ * Initializes the internationalization and localization system.
  */
-class Routing extends UnitBase {
-  /**
-   * {@inheritdoc}
-   */
-  protected $requires = array('Request');
-  
+class I18n extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->routing = new \Jivoo\Routing\Routing($app);
+    if (isset($confog['language']))
+      \Jivoo\Core\I18n\I18n::setLanguage($config['language']);
+    \Jivoo\Core\I18n\I18n::loadFrom($this->p('Core/languages'));
+    \Jivoo\Core\I18n\I18n::loadFrom($this->p('app/languages'));
   }
 }

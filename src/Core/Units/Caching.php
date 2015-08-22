@@ -10,18 +10,13 @@ use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 
 /**
- * Initializes the routing module.
+ * Initializes the cache system.
  */
-class Routing extends UnitBase {
-  /**
-   * {@inheritdoc}
-   */
-  protected $requires = array('Request');
-  
+class Caching extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->routing = new \Jivoo\Routing\Routing($app);
+    // not implemented
   }
 }

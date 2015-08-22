@@ -30,6 +30,11 @@ class Assume {
       self::isString($class);
       if ($class === $parent)
         return;
+      if (!class_exists($class)) {
+        throw new InvalidClassException(
+          'Class not found: ' . $class
+        );
+      }
       throw new InvalidClassException(
         'Class ' . $class . ' should extend ' . $parent
       );

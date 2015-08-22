@@ -8,20 +8,21 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
+use Jivoo\Core\Vendor\ComposerPackageReader;
 
 /**
- * Initializes the routing module.
+ * Initializes the third-party library loading system.
  */
-class Routing extends UnitBase {
-  /**
-   * {@inheritdoc}
-   */
-  protected $requires = array('Request');
-  
+class Vendor extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->routing = new \Jivoo\Routing\Routing($app);
+    $vendor = $this->p('app/../vendor');
+    if (is_dir($vendor))
+      $this->vendor->addPath($vendor, new ComposerPackageReader());
+    $vendor = $this->p('share/vendor');
+    if (is_dir($vendor))
+      $this->vendor->addPath($vendor, new ComposerPackageReader());
   }
 }
