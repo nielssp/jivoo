@@ -70,7 +70,7 @@ class Init extends Module {
   
   protected function cli() {
     $this->development();
-    $this->m->units->disable(array('Request', 'Routing'));
+    $this->m->units->disable('Request', false);
     $this->m->units->enable('Shell');
   }
 }

@@ -23,9 +23,14 @@ class UnitLoader implements EventSubject {
   private $units = array();
   
   /**
-   * @var bool[] Enabled units.
+   * @var string[] Waiting units.
    */
-  private $enabled = array();
+  private $waiting = array();
+  
+  /**
+   * @var string[]
+   */
+  private $states = array();
   
   /**
    * @var bool[] Finished units.
@@ -127,14 +132,28 @@ class UnitLoader implements EventSubject {
     if ($withDependencies) {
       $this->enable($this->units[$name]->requires(), true);
     }
-    $this->enabled[$name] = true;
+    $this->states[$name] = UnitState::ENABLED;
+    $this->waiting[$name] = $name;
   }
   
-  public function disable($name) {
+  public function disable($name, $unload = true) {
+    if (is_array($name)) {
+      foreach ($name as $n)
+        $this->disable($n, $unload);
+      return;
+    }
     if ($name instanceof Unit)
       $name = $this->getName($name);
-    if (isset($this->enabled[$name]))
-      unset($this->enabled[$name]);
+    if (isset($this->states[$name])) {
+      if (isset($htis->waiting[$name]))
+        unset($this->waiting[$name]);
+      if ($unload) {
+        unset($this->states[$name]);
+      }
+      else {
+        $this->states[$name] = UnitState::DISABLED;
+      }
+    }
   }
 
   public function getName(Unit $unit) {
@@ -176,17 +195,22 @@ class UnitLoader implements EventSubject {
     
     return $unit;
   }
-
-  public function isEnabled($name) {
+  
+  public function getState($name) {
     if ($name instanceof Unit)
       $name = $this->getName($name);
-    return isset($this->enabled[$name]);
+    if (!isset($this->states[$name]))
+      return UnitState::UNLOADED;
+    return $this->states[$name];
   }
 
-  public function isFinished($name) {
-    if ($name instanceof Unit)
-      $name = $this->getName($name);
-    return isset($this->finished[$name]);
+  public function isActive($name) {
+    $state = $this->getState($name);
+    return in_array(array(UnitState::ENABLED, UnitState::DONE), $state);
+  }
+
+  public function isDone($name) {
+    return $this->getState($name) == UnitState::DONE;
   }
   
   /**
@@ -204,41 +228,59 @@ class UnitLoader implements EventSubject {
   }
 
   public function run($name) {
-    if (!isset($this->enabled[$name])) {
-      return false;
-    }
     if (!isset($this->units[$name]))
+      return false;
+    if ($this->states[$name] == UnitState::DONE)
+      return true;
+    if ($this->states[$name] != UnitState::ENABLED)
       return false;
 
     foreach ($this->units[$name]->requires() as $dependency) {
-      if (!isset($this->finished[$dependency]) and !$this->run($dependency))
-        throw new LoadOrderException(tr('Unit %1 depends on %2', $name, $dependency));
+      if ($this->run($dependency))
+        continue;
+      $state = $this->getState($dependency);
+      if ($state == UnitState::DISABLED) {
+        $this->states[$name] = UnitState::DISABLED;
+        return false;
+      }
+      $this->states[$name] = UnitState::FAILED;
+      throw new LoadOrderException(
+        'Unit ' . $name . ' depends on ' . $dependency . ' (' . $state . ')'
+      );
     }
 
     if (isset($this->after[$name])) {
       foreach ($this->after[$name] as $dependency) {
-        if (isset($this->enabled[$dependency]))
+        if (isset($this->waiting[$dependency]))
           $this->run($dependency);
       }
     }
     if (isset($this->before[$name])) {
       foreach ($this->before[$name] as $dependency) {
-        if (isset($this->finished[$dependency])) {
-          throw new LoadOrderException(tr('Unit %1 must run before %2', $name, $dependency));
+        if ($this->getState($dependency) == UnitState::DONE) {
+          throw new LoadOrderException(
+            'Unit ' . $name . ' must run before ' . $dependency
+          );
         }
       }
     }
-    $this->units[$name]->run($this->app, new Document());
-    $this->finished[$name] = true;
-    unset($this->enabled[$name]);
+    try {
+      $this->units[$name]->run($this->app, new Document());
+    }
+    catch (\Exception $e) {
+      $this->states[$name] = UnitState::FAILED;
+      throw $e;
+    }
+    $this->states[$name] = UnitState::DONE;
+    return true;
   }
   
   /**
    * Run all enabled units.
    */
   public function runAll() {
-    while (count($this->enabled)) {
-      $this->run(key($this->enabled));
+    while (count($this->waiting)) {
+      $this->run(array_shift($this->waiting));
     }
   }
 }
