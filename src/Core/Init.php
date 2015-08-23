@@ -63,7 +63,7 @@ class Init extends Module {
   
   protected function production() {
     $this->m->units->enable(array(
-      'Caching', 'I18n', 'Vendor',
+      'Cache', 'I18n', 'Vendor',
       'Request', 'Routing',
     ));
   }

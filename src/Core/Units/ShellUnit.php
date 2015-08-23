@@ -10,13 +10,14 @@ use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 
 /**
- * Initializes the cache system.
+ * Initializes the shell.
  */
-class Caching extends UnitBase {
+class ShellUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    // not implemented
+    $this->shell->parseArguments();
+    $this->shell->run();
   }
 }

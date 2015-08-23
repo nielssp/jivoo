@@ -8,16 +8,19 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
+use Jivoo\Core\I18n\I18n;
 
 /**
- * Initializes the shell.
+ * Initializes the internationalization and localization system.
  */
-class Shell extends UnitBase {
+class I18nUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $this->shell->parseArguments();
-    $this->shell->run();
+    if (isset($confog['language']))
+      I18n::setLanguage($config['language']);
+    I18n::loadFrom($this->p('Core/languages'));
+    I18n::loadFrom($this->p('app/languages'));
   }
 }

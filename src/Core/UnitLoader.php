@@ -158,11 +158,14 @@ class UnitLoader implements EventSubject {
 
   public function getName(Unit $unit) {
     $class = get_class($unit);
-    if (Unicode::startsWith($class , 'Jivoo\Core\Units\\'))
-      return substr($class, strlen('Jivoo\Core\Units\\'));
-    $ns = $this->app->n() . '\\';
-    if (Unicode::startsWith($class , $ns))
-      return substr($class, strlen($ns));
+    if (Unicode::endsWith($class, 'Unit')) {
+      $class = substr($class, 0, -4);
+      if (Unicode::startsWith($class , 'Jivoo\Core\Units\\'))
+        return substr($class, strlen('Jivoo\Core\Units\\'));
+      $ns = $this->app->n() . '\\';
+      if (Unicode::startsWith($class , $ns))
+        return substr($class, strlen($ns));
+    }
     return $class;
   }
   
@@ -177,10 +180,12 @@ class UnitLoader implements EventSubject {
       if (isset($this->units[$name]))
         return $this->units[$name];
       
-      if (class_exists('Jivoo\Core\Units\\' . $name))
-        $class = 'Jivoo\Core\Units\\' . $name;
-      else if (class_exists($this->app->n('Units\\' . $name)))
-        $class = $this->app->n('Units\\' . $name);
+      if (class_exists('Jivoo\Core\Units\\' . $name . 'Unit'))
+        $class = 'Jivoo\Core\Units\\' . $name . 'Unit';
+      else if (class_exists($this->app->n('Units\\' . $name . 'Unit')))
+        $class = $this->app->n('Units\\' . $name . 'Unit');
+      else if (class_exists($name . 'Unit'))
+        $class = $name . 'Unit';
       else
         $class = $name;
       Assume::isSubclassOf($class, 'Jivoo\Core\UnitBase');

@@ -8,20 +8,16 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
+use Jivoo\Routing\Request;
 
 /**
- * Initializes the routing module.
+ * Initializes the request object.
  */
-class Routing extends UnitBase {
-  /**
-   * {@inheritdoc}
-   */
-  protected $requires = array('Request');
-  
+class RequestUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->routing = new \Jivoo\Routing\Routing($app);
+    $app->m->request = new Request($config->get('cookiePrefix', ''));
   }
 }
