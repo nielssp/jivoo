@@ -27,13 +27,16 @@ abstract class LoadableModule extends Module {
    * Construct module.
    * @param App $app Associated application.
    */
-  public final function __construct(App $app) {
+  public function __construct(App $app) {
     parent::__construct($app);
     $name = Utilities::getClassName($this);
     $this->config = $this->config[$name];
-    $this->init();
   }
 
+  public function runInit() {
+    $this->init();
+  }
+  
   /**
    * Module initialization method.
    */

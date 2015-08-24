@@ -28,7 +28,7 @@ class RoutingUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->routing = new Routing($app);
+    $app->m->routing = new Routing($app, false);
     
     $app->m->routing->dispatchers->add(
       new ActionDispatcher($app)

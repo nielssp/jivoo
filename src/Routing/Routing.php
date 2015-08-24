@@ -8,6 +8,7 @@ namespace Jivoo\Routing;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Event;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\App;
 
 /**
  * Module for handling routes and HTTP requests.
@@ -128,6 +129,17 @@ class Routing extends LoadableModule {
     'beforeDispatch', 'afterDispatch', 'beforeFollowRoute',
     'beforeCreateDispatch', 'afterCreateDispatch');
 
+  public function __construct(App $app) {
+    parent::__construct($app);
+
+    $this->dispatchers = new DispatcherCollection($this);
+    $this->dispatchers->add(new VoidDispatcher());
+    $this->dispatchers->add(new PathDispatcher($this));
+    $this->dispatchers->add(new UrlDispatcher($this));
+
+    $this->routes = new RoutingTable($this);
+  }
+  
   /**
    * {@inheritdoc}
    */
@@ -149,13 +161,6 @@ class Routing extends LoadableModule {
         'ip' => $this->request->ip
       )
     );
-    
-    $this->dispatchers = new DispatcherCollection($this);
-    $this->dispatchers->add(new VoidDispatcher());
-    $this->dispatchers->add(new PathDispatcher($this));
-    $this->dispatchers->add(new UrlDispatcher($this));
-    
-    $this->routes = new RoutingTable($this);
 
     // Determine if the current URL is correct
     if ($this->config['reroute']) {

@@ -62,7 +62,7 @@ class ModuleLoader extends Module {
   }
   
   /**
-   * Load a module.
+   * Get a loaded module.
    * @param string $module Module name.
    * @return LoadableModule Module.
    */
@@ -85,13 +85,18 @@ class ModuleLoader extends Module {
    * @param object $object Module.
    */
   public function __set($module, $object) {
+    $this->triggerEvent('beforeLoadModule', new LoadModuleEvent($this, $module));
     $this->objects[$module] = $object;
+    $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $object));
+    if (isset($this->lazyModules[$module]))
+      $this->lazyModules[$module]->playMacro($object, false);
   }
   
   /**
    * Whether a module has been imported (but not necessarily loaded).
    * @param string $module Module name.
    * @return bool True if module is imported.
+   * @deprecated
    */
   public function hasImport($module) {
     return isset($this->classes[$module]);
@@ -116,6 +121,7 @@ class ModuleLoader extends Module {
    * Ensures that moduleA is loaded before moduleB.
    * @param string $moduleA Module A.
    * @param string $moduleB Module B.
+   * @deprecated
    */
   public function before($moduleA, $moduleB) {
     if (!isset($this->before[$moduleA]))
@@ -130,6 +136,7 @@ class ModuleLoader extends Module {
    * Import a module. Importing all modules before they are loaded ensures
    * correct load order.
    * @param string|string[] $module Module name or list of module names.
+   * @deprecated
    */
   public function import($module) {
     if (is_array($module)) {
@@ -169,6 +176,7 @@ class ModuleLoader extends Module {
    * Load a module.
    * @param string|string[] $module Module name or list of module names.
    * @return LoadableModule Module.
+   * @deprecated
    */
   public function load($module) {
     if (is_array($module)) {
@@ -197,6 +205,7 @@ class ModuleLoader extends Module {
       }
       Utilities::assumeSubclassOf($class, 'Jivoo\Core\LoadableModule');
       $this->objects[$module] = new $class($this->app);
+      $this->objects[$module]->runInit();
       $this->triggerEvent('afterLoadModule', new LoadModuleEvent($this, $module, $this->objects[$module]));
       $this->objects[$module]->afterLoad();
       if (isset($this->lazyModules[$module]))
