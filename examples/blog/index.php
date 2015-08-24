@@ -9,7 +9,4 @@ $app = new Jivoo\Core\App(
 
 $app->paths->share = '../../share';
 
-// $app->incomplete ...
-// default environments
-
 $app->run('development');

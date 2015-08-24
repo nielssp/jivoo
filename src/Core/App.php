@@ -306,6 +306,16 @@ class App implements EventSubject, LoggerAware {
     }
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
+
+  /**
+   * Whether a property is set.
+   * @param string $property Property name.
+   * @return bool True if property set.
+   * @throws InvalidPropertyException If property is not defined.
+   */
+  public function __isset($property) {
+    return !is_null($this->__get($property));
+  }
   
   /**
    * {@inheritdoc}

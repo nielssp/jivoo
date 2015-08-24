@@ -11,12 +11,7 @@ use Jivoo\Core\Store\Document;
 /**
  * Loads and keeps track of Jivoo initialization units.
  */
-class UnitLoader implements EventSubject {
-  /**
-   * @var App
-   */
-  private $app;
-  
+class UnitLoader extends Module {
   /**
    * @var Unit[] Loaded units.
    */
@@ -48,74 +43,9 @@ class UnitLoader implements EventSubject {
   private $after = array();
   
   /**
-   * @var EventManager Application event manager.
-   */
-  private $e = null;
-  
-  /**
-   * @var string[]
-   */
-  private $events = array('beforeRunUnit', 'afterRunUnit');
-  
-  /**
-   * Construct module loader.
-   * @param App $app Application.
-   */
-  public function __construct(App $app) {
-    $this->app = $app;
-    $this->e = new EventManager($this);
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function getEvents() {
-    return $this->events;
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function attachEventHandler($name, $callback) {
-    $this->e->attachHandler($name, $callback);
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function attachEventListener(EventListener $listener) {
-    $this->e->attachListener($listener);
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function detachEventHandler($name, $callback) {
-    $this->e->detachHandler($name, $callback);
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function detachEventListener(EventListener $listener) {
-    $this->e->detachListener($listener);
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function hasEvent($name) {
-    return in_array($name, $this->events);
-  }
-  
-  /**
-   * @param string $name
-   * @param Event $event
-   * @return bool
-   */
-  private function triggerEvent($name, Event $event = null) {
-    return $this->e->trigger($name, $event);
-  }
+  protected $events = array('beforeRunUnit', 'afterRunUnit');
   
   public function enable($name, $withDependencies = false) {
     if (is_array($name)) {
@@ -239,7 +169,7 @@ class UnitLoader implements EventSubject {
       return true;
     if ($this->states[$name] != UnitState::ENABLED)
       return false;
-
+    
     foreach ($this->units[$name]->requires() as $dependency) {
       if ($this->run($dependency))
         continue;
@@ -269,6 +199,12 @@ class UnitLoader implements EventSubject {
         }
       }
     }
+
+    $this->triggerEvent('beforeRunUnit', new Event($this, array(
+      'unitName' => $name,
+      'unit' => $this->units[$name]
+    )));
+    
     try {
       $this->units[$name]->run($this->app, new Document());
     }
@@ -276,6 +212,10 @@ class UnitLoader implements EventSubject {
       $this->states[$name] = UnitState::FAILED;
       throw $e;
     }
+    $this->triggerEvent('afterRunUnit', new Event($this, array(
+      'unitName' => $name,
+      'unit' => $this->units[$name]
+    )));
     $this->states[$name] = UnitState::DONE;
     return true;
   }

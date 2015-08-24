@@ -14,29 +14,82 @@ use Jivoo\Routing\RoutingTable;
 use Jivoo\Core\Utilities;
 use Jivoo\InvalidClassException;
 use Jivoo\Routing\Http;
+use Jivoo\Core\Assume;
+use Jivoo\Core\Module;
 
 /**
  * Action based routing.
  */
-class ActionDispatcher implements Dispatcher {
+class ActionDispatcher extends Module implements Dispatcher {
   /**
-   * @var Routing Routing module.
+   * {@inheritdoc}
    */
-  private $routing;
+  protected $modules = array('routing');
+
+  /**
+   * @var Controller[] Associative array of controller instances.
+   */
+  private $instances = array();
   
   /**
-   * @var Controllers Controllers module;
+   * @var array An associative array of controller names and actions.
    */
-  private $controllers;
+  private $actions = array();
+
+  /**
+   * Get class name of controller.
+   * @param string $name Controller name.
+   * @return string|false Class name or false if not found.
+   */
+  public function getClass($name) {
+    if (isset($this->instances[$name]))
+      return get_class($this->instances[$name]);
+    $class = $name . 'Controller';
+    if (!class_exists($class))
+      $class = $this->app->n('Controllers\\' . $class);
+    return $class;
+  }
   
   /**
-   * Construct url dispatcher.
-   * @param Routing $routing Routing module.
-   * @param Controllers $controllers Controllers module.
+   * Get list of actions.
+   * @param string $name Controller name.
+   * @return string[]|boolean List of actions or false if controller not found.
    */
-  public function __construct(Routing $routing, Controllers $controllers) {
-    $this->routing = $routing;
-    $this->controllers = $controllers;
+  public function getActions($name) {
+    $class = $this->getClass($name);
+    if (!isset($this->actions[$name])) {
+      $reflection = new \ReflectionClass($class);
+      $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+      $this->actions[$name] = array();
+      foreach ($methods as $method) {
+        if ($method->class == $class and $method->name != 'before' and $method->name != 'after')
+          $this->actions[$name][] = $method->name;
+      }
+    }
+    return $this->actions[$name];
+  }
+  
+  /**
+   * Get a controller instance.
+   * @param string $name Controller name.
+   * @param bool $singleton Whether to use an existing instance instead of
+   * creating a new one.
+   * @return Controller|null Controller object or null if not found.
+   */
+  public function getController($name, $singleton = true) {
+    if (!$singleton or !isset($this->instances[$name])) {
+      $class = $name . 'Controller';
+      if (!class_exists($class))
+        $class = $this->app->n('Controllers\\' . $class);
+      if (!class_exists($class))
+        return null;
+      Assume::isSubclassOf($class, 'Jivoo\Controllers\Controller');
+      $object = new $class($this->app);
+      if (!$singleton)
+        return $object;
+      $this->instances[$name] = $object;
+    }
+    return $this->instances[$name];
   }
   
   /**
@@ -52,7 +105,7 @@ class ActionDispatcher implements Dispatcher {
   public function validate(&$route) {
     if (isset($route['controller']) or isset($route['action'])) {
       if (!isset($route['controller'])) {
-        $current = $this->routing->route;
+        $current = $this->m->routing->route;
         if (isset($current['controller']))
           $route['controller'] = $current['controller'];
       }
@@ -90,7 +143,7 @@ class ActionDispatcher implements Dispatcher {
     else {
       if (isset($route['action'])) {
         $action = $route['action'];
-        $class = $this->controllers->getClass($controller);
+        $class = $this->getClass($controller);
         if (!$class) {
           throw new InvalidClassException(tr('Invalid controller: %1', $controller));
         }
@@ -121,7 +174,7 @@ class ActionDispatcher implements Dispatcher {
         return $patternBase;
       }
       else {
-        $actions = $this->controllers->getActions($controller);
+        $actions = $this->getActions($controller);
         if ($actions === false) {
           throw new InvalidClassException(tr('Invalid controller: %1', $controller));
         }
@@ -156,8 +209,8 @@ class ActionDispatcher implements Dispatcher {
       $route['controller'] = $matches[2];
     }
     else {
-      if (isset($this->routing->route['controller']))
-        $route['controller'] = $this->routing->route['controller'];
+      if (isset($this->m->routing->route['controller']))
+        $route['controller'] = $this->m->routing->route['controller'];
       $route['action'] = $matches[2];
     }
     return $route;
@@ -178,7 +231,7 @@ class ActionDispatcher implements Dispatcher {
   public function isCurrent($route) {
     if (!isset($route['action']))
       $route['action'] = 'index';
-    $selection = $this->routing->route;
+    $selection = $this->m->routing->route;
     if (!isset($selection['controller']))
       return false;
     return $selection['controller'] == $route['controller']
@@ -201,7 +254,7 @@ class ActionDispatcher implements Dispatcher {
    * {@inheritdoc}
    */
   public function createDispatch($route) {
-    $controller = $this->controllers->getController($route['controller']);
+    $controller = $this->getController($route['controller']);
     if (!isset($controller))
       throw new InvalidRouteException(tr('Invalid controller: %1', $route['controller']));
     if (!isset($route['action']))

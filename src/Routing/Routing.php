@@ -132,6 +132,8 @@ class Routing extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    $this->m->routing = $this;
+    
     // Set default settings
     $this->config->defaults = array(
       'reroute' => true,

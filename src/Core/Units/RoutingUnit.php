@@ -31,11 +31,11 @@ class RoutingUnit extends UnitBase {
     $app->m->routing = new Routing($app);
     
     $app->m->routing->dispatchers->add(
-      new ActionDispatcher($app->m->routing, new Controllers($app))
+      new ActionDispatcher($app)
     );
 
     $app->m->routing->dispatchers->add(
-      new SnippetDispatcher($app->m->routing, new Snippets($app))
+      new SnippetDispatcher($app)
     );
   }
 }

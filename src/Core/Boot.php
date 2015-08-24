@@ -20,6 +20,7 @@ use Jivoo\Core\Vendor\ComposerPackageReader;
  * the {@see boot} method to customize the initialization process. The defeault
  * implementation supports the environments 'production', 'development', and
  * 'cli'.
+ * @deprecated
  */
 class Boot extends Module {
   /**

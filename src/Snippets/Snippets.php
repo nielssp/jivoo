@@ -10,6 +10,7 @@ use Jivoo\Core\Utilities;
 
 /**
  * Snippets module.
+ * @deprecated
  */
 class Snippets extends LoadableModule {
   /**
@@ -26,7 +27,7 @@ class Snippets extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Routing->dispatchers->add(new SnippetDispatcher($this->m->Routing, $this));
+    $this->m->Routing->dispatchers->add(new SnippetDispatcher($this->app));
     $this->m->Helpers->addHelper('Jivoo\Snippets\SnippetHelper');
   }
   

@@ -13,29 +13,44 @@ use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Routing\RoutingTable;
 use Jivoo\Routing\TextResponse;
 use Jivoo\Routing\Http;
+use Jivoo\Core\Module;
+use Jivoo\Core\Assume;
 
 /**
  * Snippet based routing.
  */
-class SnippetDispatcher implements Dispatcher {
+class SnippetDispatcher extends Module implements Dispatcher {
   /**
-   * @var Routing Routing module.
+   * {@inheritdoc}
    */
-  private $routing;
-  
+  protected $modules = array('routing');
+
   /**
-   * @var Snippets Snippets module;
+   * @var Snippet[] Snippet instances.
    */
-  private $snippets;
-  
+  private $instances = array();
+
   /**
-   * Construct url dispatcher.
-   * @param Routing $routing Routing module.
-   * @param Snippets $snippets Snippets module.
+   * Get a snippet instance.
+   * @param string $name Snippet class name.
+   * @param bool $singleton Whether to use an existing instance instead of
+   * creating a new one.
+   * @return Snippet Snippet instance or null if not found.
    */
-  public function __construct(Routing $routing, Snippets $snippets) {
-    $this->routing = $routing;
-    $this->snippets = $snippets;;
+  public function getSnippet($name, $singleton = true) {
+    if (!$singleton or !isset($this->instances[$name])) {
+      $class = $name;
+      if (!class_exists($class))
+        $class = $this->app->n('Snippets\\' . $class);
+      if (!class_exists($class))
+        return null;
+      Assume::isSubclassOf($class, 'Jivoo\Snippets\SnippetBase');
+      $object = new $class($this->app);
+      if (!$singleton)
+        return $object;
+      $this->instances[$name] = $object;
+    }
+    return $this->instances[$name];
   }
   
   /**
@@ -98,7 +113,7 @@ class SnippetDispatcher implements Dispatcher {
    * {@inheritdoc}
    */
   public function isCurrent($route) {
-    $selection = $this->routing->route;
+    $selection = $this->m->routing->route;
     return $selection['snippet'] == $route['snippet'] 
       and ($route['parameters'] == '*'
         or $selection['parameters'] == $route['parameters']);
@@ -117,7 +132,7 @@ class SnippetDispatcher implements Dispatcher {
    * {@inheritdoc}
    */
   public function createDispatch($route) {
-    $snippet = $this->snippets->getSnippet($route['snippet']);
+    $snippet = $this->getSnippet($route['snippet']);
     if (!isset($snippet))
       throw new InvalidRouteException(tr('Invalid snippet: %1', $route['snippet']));
     return function() use($snippet, $route) {

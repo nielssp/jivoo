@@ -90,8 +90,10 @@ abstract class Module implements EventSubject, LoggerAware {
     $this->app = $app;
     $this->config = $app->config;
     $this->state = $app->state;
-    $this->m = $app->m;
-    $this->m->load($this->modules);
+    if (isset($app->m)) {
+      $this->m = $app->m;
+      $this->m->load($this->modules);
+    }
     $this->vendor = $app->vendor;
     $this->shell = $app->shell;
     $this->logger = $app->logger;

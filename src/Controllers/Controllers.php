@@ -10,6 +10,7 @@ use Jivoo\Core\Utilities;
 
 /**
  * Controllers module.
+ * @deprecated
  */
 class Controllers extends LoadableModule {
   /**
@@ -31,7 +32,7 @@ class Controllers extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Routing->dispatchers->add(new ActionDispatcher($this->m->Routing, $this));
+    $this->m->Routing->dispatchers->add(new ActionDispatcher($this->app));
   }
   
   /**
