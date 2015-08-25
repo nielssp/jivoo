@@ -19,6 +19,11 @@ class SetupUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
+  protected $requires = array('Routing', 'AppLogic');
+
+  /**
+   * {@inheritdoc}
+   */
   public function run(App $app, Document $config) {
     $app->m->Setup = new Setup($app);
     $app->m->Setup->runInit();

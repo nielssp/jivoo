@@ -106,7 +106,7 @@ class SkinHelper extends Helper {
    * @return \Jivoo\Routing\Response CSS response.
    */
   public function import($skin) {
-    return $this->view->render($skin);
+    return $this->m->View->render($skin);
   }
   
   /**

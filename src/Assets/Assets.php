@@ -190,7 +190,6 @@ class Assets extends LoadableModule {
       return false;
     $path = $this->request->path;
     array_shift($path);
-    if (isset($this->m->Snippets)) {
       $name = str_replace('.', '_', implode('\\', array_map(array('Jivoo\Core\Utilities', 'dashesToCamelCase'), $path)));
       try {
         $route = array('snippet' => $name);
@@ -198,8 +197,6 @@ class Assets extends LoadableModule {
         $this->m->Routing->followRoute($route);
       }
       catch (InvalidRouteException $e) { }
-    }
-    if (isset($this->m->Controllers)) {
       $action = str_replace('.', '_', array_pop($path));
       $controller = implode('\\', array_map(array('Jivoo\Core\Utilities', 'dashesToCamelCase'), $path));
       try {
@@ -208,7 +205,6 @@ class Assets extends LoadableModule {
         $this->m->Routing->followRoute($route);
       }
       catch (InvalidRouteException $e) { }
-    }
     return false;
   }
   

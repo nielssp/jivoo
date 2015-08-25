@@ -22,7 +22,7 @@ class LegacyModulesUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Request');
+  protected $requires = array('Request', 'AppLogic');
   
   /**
    * {@inheritdoc}

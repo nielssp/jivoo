@@ -23,6 +23,11 @@ class AppLogicUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
+  protected $requires = array('State', 'Vendor', 'Cache');
+  
+  /**
+   * {@inheritdoc}
+   */
   public function run(App $app, Document $config) {
     Enum::addSearchPrefix($app->n('Enums') . '\\');
     $app->m->Helpers = new Helpers($app);

@@ -8,28 +8,29 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
+use Jivoo\Controllers\ActionDispatcher;
+use Jivoo\Controllers\Controllers;
 use Jivoo\Core\LoadableModule;
-use Jivoo\ActiveModels\ActiveModels;
+use Jivoo\Snippets\SnippetDispatcher;
+use Jivoo\Snippets\Snippets;
+use Jivoo\Routing\Routing;
+use Jivoo\Assets\Assets;
+use Jivoo\View\View;
+use Jivoo\Core\Module;
 
 /**
- * Initializes the database system.
+ * Initializes the application routes.
  */
-class ActiveModelsUnit extends UnitBase {
+class AppRoutesUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Databases', 'AppLogic', 'LegacyModules');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $after = array('Migrations');
+  protected $requires = array('Routing');
   
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->ActiveModels = new ActiveModels($app);
-    $app->m->ActiveModels->runInit();
+    $this->m->Routing->loadRoutes();
   }
 }

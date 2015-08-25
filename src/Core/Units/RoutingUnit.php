@@ -25,7 +25,7 @@ class RoutingUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Request');
+  protected $requires = array('Request', 'AppLogic');
   
   /**
    * {@inheritdoc}
@@ -50,7 +50,6 @@ class RoutingUnit extends UnitBase {
     $app->m->Routing->dispatchers->add(
       new SnippetDispatcher($app)
     );
-    $this->m->Routing->loadRoutes();
 
     $app->on('ready', array($app->m->Routing, 'findRoute'));
     
