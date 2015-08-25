@@ -154,6 +154,7 @@ class Routing extends LoadableModule {
     );
 
     $this->request = new Request($this->config['sessionPrefix'], $this->app->basePath);
+    $this->m->request = $this->request;
     $this->logger->debug(
       'Request for {path} from {ip}',
       array(

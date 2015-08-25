@@ -34,7 +34,7 @@ class Models extends LoadableModule {
       if ($files !== false) {
         foreach ($files as $file) {
           $split = explode('.', $file);
-          if (isset($split[1]) AND $split[1] == 'php') {
+          if (isset($split[1]) and $split[1] == 'php') {
             $this->addClass($this->app->n('Models\\' . $split[0]));
           }
         }
