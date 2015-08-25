@@ -13,7 +13,7 @@ use Jivoo\Core\Cache\Cache;
 /**
  * Initializes the cache system.
  */
-class CacheUnit extends UnitBase {
+class SetupUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */

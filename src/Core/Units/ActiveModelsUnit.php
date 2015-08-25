@@ -8,16 +8,27 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
-use Jivoo\Core\Cache\Cache;
+use Jivoo\Core\LoadableModule;
+use Jivoo\ActiveModels\ActiveModels;
 
 /**
- * Initializes the cache system.
+ * Initializes the database system.
  */
-class CacheUnit extends UnitBase {
+class ActiveModelsUnit extends UnitBase {
+  /**
+   * {@inheritdoc}
+   */
+  protected $requires = array('Databases');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $after = array('Migrations');
+  
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->cache = new Cache();
+    $app->m->activeModels = new ActiveModels($app);
   }
 }

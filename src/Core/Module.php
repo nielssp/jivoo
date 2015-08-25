@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 /**
  * A module is part of an application.
  */
-abstract class Module implements EventSubject, LoggerAware {
+abstract class Module extends EventSubjectBase implements LoggerAware {
   /**
    * @var string[] Names of modules required by this module.
    */
@@ -30,21 +30,6 @@ abstract class Module implements EventSubject, LoggerAware {
   protected $m;
   
   /**
-   * @var \Jivoo\Core\Vendor\VendorLoader Third-party library loader.
-   */
-  protected $vendor;
-  
-  /**
-   * @var \Jivoo\Core\Cli\Shell Command-line shell (if running in CLI mode).
-   */
-  protected $shell;
-  
-  /**
-   * @var \Jivoo\Core\Store\StateMap Application persistent state storage.
-   */
-  protected $state;
-  
-  /**
    * @var LoggerInterface Application logger.
    */
   protected $logger;
@@ -55,54 +40,18 @@ abstract class Module implements EventSubject, LoggerAware {
   protected $config = null;
 
   /**
-   * @var \Jivoo\Routing\Request|null The Request object if available (provided by
-   * {@see \Jivoo\Routing\Routing} if loaded at time of initialization).
-   */
-  protected $request = null;
-
-  /**
-   * @var \Jivoo\Routing\Session|null Session storage object if available (provided by
-   * {@see \Jivoo\Routing\Routing} if loaded at time of initialization)
-   */
-  protected $session = null;
-
-  /**
-   * @var \Jivoo\View\View|null Current view if available (provided by
-   * {@see \Jivoo\View\View} if loaded at time of initialization)
-   */
-  protected $view = null;
-  
-  /**
-   * @var string[] List of event names fired by this module.
-   */
-  protected $events = array();
-
-  /**
-   * @var EventManager Event manager for this module.
-   */
-  private $e;
-
-  /**
    * Construct module. Should always be called when extending this class.
    * @param App $app Associated application.
    */
   public function __construct(App $app) {
+    $this->inheritElements('modules');
     $this->app = $app;
     $this->config = $app->config;
-    $this->state = $app->state;
     if (isset($app->m)) {
       $this->m = $app->m;
-      $this->m->load($this->modules);
+      foreach ($this->modules as $module)
+        $this->m->__get($module);
     }
-    $this->vendor = $app->vendor;
-    $this->shell = $app->shell;
-    $this->logger = $app->logger;
-    if (isset($this->m->Routing)) {
-      $this->request = $this->m->Routing->request;
-      $this->session = $this->request->session;
-    }
-    if (isset($this->m->View))
-      $this->view = $this->m->View;
 
     $this->e = new EventManager($this, $this->app->eventManager);
   }
@@ -114,6 +63,8 @@ abstract class Module implements EventSubject, LoggerAware {
    * @throws InvalidPropertyException If property is not defined.
    */
   public function __get($property) {
+    if ($property == 'config')
+      return $this->config;
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
     return null;
   }
@@ -198,57 +149,5 @@ abstract class Module implements EventSubject, LoggerAware {
    */
   public function p($key, $path = null) {
     return $this->app->p($key, $path);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function attachEventHandler($name, $callback) {
-    $this->e->attachHandler($name, $callback);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function attachEventListener(EventListener $listener) {
-    $this->e->attachListener($listener);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function detachEventHandler($name, $callback) {
-    $this->e->detachHandler($name, $callback);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function detachEventListener(EventListener $listener) {
-    $this->e->detachListener($listener);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEvents() {
-    return $this->events;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasEvent($name) {
-    return in_array($name, $this->events);
-  }
-
-  /**
-   * Trigger an event on this object.
-   * @param string $name Name of event.
-   * @param Event $event Event object.
-   * @return bool False if event was stopped, true otherwise.
-   */
-  public function triggerEvent($name, Event $event = null) {
-    return $this->e->trigger($name, $event);
   }
 }

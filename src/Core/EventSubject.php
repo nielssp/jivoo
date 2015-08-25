@@ -16,6 +16,15 @@ interface EventSubject {
    * {@see Event) as its first parameter.
    */
   public function attachEventHandler($name, $callback);
+
+  /**
+   * Attach an event handler to an event (shorter alternative to
+   * {@see attachEventHandler}.
+   * @param string $name Name of event to handle.
+   * @param callback $callback Function to call. Function must accept an
+   * {@see Event) as its first parameter.
+   */
+  public function on($name, $callback);
   
   /**
    * Attach an event listener to object (i.e. multiple handlers to multiple
@@ -36,13 +45,6 @@ interface EventSubject {
    * @param EventListener $listener An event listener.
    */
   public function detachEventListener(EventListener $listener);
-  
-  /**
-   * Whether or not the object produces the given event.
-   * @param string $name Name of event.
-   * @return bool True if object produces event, false otherwise.
-   */
-  public function hasEvent($name);
 
   /**
    * Get names of all events produced by object.

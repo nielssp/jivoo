@@ -21,7 +21,7 @@ class LoadEvent extends Event {
   public $loaded = false;
   
   /**
-   * @var Module|null Object if loaded.
+   * @var object|null Object if loaded.
    */
   public $object;
   
@@ -29,9 +29,9 @@ class LoadEvent extends Event {
    * Construct load event.
    * @param object $sender Sender of event.
    * @param string $class Name of class.
-   * @param Module $object Object if loaded.
+   * @param object $object Object if loaded.
    */
-  public function __construct($sender, $class, Module $object = null) {
+  public function __construct($sender, $class, $object = null) {
     parent::__construct($sender);
     $this->class = $class;
     if (isset($object)) {

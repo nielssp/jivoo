@@ -103,6 +103,12 @@ namespace Jivoo\Core {
     implements CoreException {}
   
   /**
+   * Thrown when a module is missing.
+   */
+  class InvalidModuleException extends \LogicException
+    implements CoreException {}
+  
+  /**
    * Thrown when an application fails to load.
    */
   class AppException extends \UnexpectedValueException

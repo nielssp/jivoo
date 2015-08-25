@@ -5,13 +5,14 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Databases;
 
-use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Module;
+use Jivoo\Core\App;
 
 /**
- * Database module.
+ * Connects to databases.
  */
-class Databases extends LoadableModule {
+class DatabaseLoader extends Module {
   /**
    * @var DatabaseDriversHelper Driver helper.
    */
@@ -23,19 +24,11 @@ class Databases extends LoadableModule {
   private $connections = array();
 
   /**
-   * {@inheritdoc}
+   * Construct database loader.
    */
-  protected function init() {
+  public function __construct(App $app) {
+    parent::__construct($app);
     $this->drivers = new DatabaseDriversHelper($this->app);
-    
-    if (isset($this->app->manifest['databases'])) {
-      foreach ($this->app->manifest['databases'] as $name) {
-        $this->attachDatabase($name, $this->p('app/Schemas/' . $name));
-      }
-    }
-    else {
-      $this->attachDatabase('default', $this->p('app/Schemas'));
-    }
   }
 
   /**

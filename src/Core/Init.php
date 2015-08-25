@@ -56,16 +56,18 @@ class Init extends Module {
     $this->m->units->runAll();
   }
   
-  protected function development() {
-    $this->production();
-//     $this->m->units->enable('Console');
-  }
-  
   protected function production() {
     $this->m->units->enable(array(
       'Cache', 'I18n', 'Vendor',
       'Request', 'Routing',
     ));
+    if (isset($this->app->manifest['init']))
+      $this->m->units->enable($this->app->manifest['init']);
+  }
+  
+  protected function development() {
+    $this->production();
+//     $this->m->units->enable('Console');
   }
   
   protected function cli() {

@@ -37,8 +37,9 @@ class RoutingUnit extends UnitBase {
     $app->m->routing->dispatchers->add(
       new SnippetDispatcher($app)
     );
+    
+    $this->m->routing->loadRoutes();
 
-    $app->attachEventHandler('afterLoadModules', array($app->m->routing, 'loadRoutes'));
-    $app->attachEventHandler('afterInit', array($app->m->routing, 'findRoute'));
+    $app->on('ready', array($app->m->routing, 'findRoute'));
   }
 }

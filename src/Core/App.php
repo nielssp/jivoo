@@ -33,24 +33,16 @@ use Jivoo\Core\Cache\NullPool;
  * @property-read Paths $paths Application and framework paths.
  * @property-read string $name Application name.
  * @property-read string $version Application version.
- * @property-read string $namespace Application namespace.
- * @property-read string $minPhpVersion Minimum PHP version.
  * @property-read string $environment Environment name.
  * @property-read Config $config User configuration.
  * @property-read bool $noManifest True if application manifest file missing.
  * @property-read array $manifest Application manifest.
- * @property-read string $sessionPrefix Application session prefix.
  * @property-read string $entryScript Name of entry script, e.g. 'index.php'.
  * @property-read EventManager $eventManager Application event manager.
- * @property-read StateMap $state Application persistent state storage.
  * @property-read LoggerInterface $logger Application logger.
- * @property-read Cache $cache Application cache.
  * @property-read ModuleLoader $m Module loader.
- * @property-read VendorLoader $vendor Third-party library loader.
- * @property-read Shell|null $shell The command-line shell if application is
- * running in the CLI.  
  */
-class App implements EventSubject, LoggerAware {
+class App extends EventSubjectBase implements LoggerAware {
   /**
    * @var array Application configuration.
    */
@@ -118,11 +110,6 @@ class App implements EventSubject, LoggerAware {
    * @var string Application namespace.
    */
   private $namespace;
-
-  /**
-   * @var string Minimum PHP version.
-   */
-  private $minPhpVersion;
   
   /**
    * @var ModuleLoader Module loader.
@@ -135,35 +122,9 @@ class App implements EventSubject, LoggerAware {
   private $environment = 'production';
   
   /**
-   * @var StateMap
-   */
-  private $state = null;
-
-  /**
-   * @var string Application session prefix.
-   */
-  private $sessionPrefix = 'jivoo_';
-  
-  /**
    * @var string[] Names of events produced by this object.
    */
-  private $events = array(
-    'beforeBoot', 'afterBoot',
-    'beforeImportModules', 'afterImportModules', 'beforeLoadModules',
-    'afterLoadModules',
-    'beforeInit', 'afterInit',
-    'beforeShowException', 'beforeStop'
-  );
-  
-  /**
-   * @var EventManager Application event manager.
-   */
-  private $e = null;
-  
-  /**
-   * @var VendorLoader Third-party library loader.
-   */
-  private $vendor;
+  protected $events = array('init', 'ready', 'showException', 'stop');
   
   /**
    * @var LoggerInterface Application logger.
@@ -171,20 +132,10 @@ class App implements EventSubject, LoggerAware {
   private $logger;
   
   /**
-   * @var CacheItemPoolInterface Application cache.
-   */
-  private $cache;
-  
-  /**
    * @var string[]
    */
   private $errorPaths = array();
   
-  /**
-   * @var Shell
-   */
-  private $shell = null;
-
   /**
    * Create application.
    * @param string $appPath Path to app-directory containing at least an
@@ -193,6 +144,7 @@ class App implements EventSubject, LoggerAware {
    * @param string $entryScript Name of entry script, e.g. 'index.php'.
    */
   public function __construct($appPath, $userPath, $entryScript = 'index.php') {
+    parent::__construct();
     $this->logger = ErrorHandler::getInstance()->getLogger();
 
     $appPath = Utilities::convertPath($appPath);
@@ -208,8 +160,7 @@ class App implements EventSubject, LoggerAware {
       $manifest = $this->defaultManifest;
     }
     $this->manifest = $manifest;
-    $this->e = new EventManager($this);
-    $this->m = new ModuleLoader($this);
+    $this->m = new ModuleLoader();
     $this->paths = new Paths(
       Paths::convertPath(getcwd()),
       $userPath
@@ -237,8 +188,6 @@ class App implements EventSubject, LoggerAware {
     $this->name = $manifest['name'];
     $this->version = $manifest['version'];
     $this->namespace = $manifest['namespace'];
-    $this->minPhpVersion = $manifest['minPhpVersion'];
-    $this->sessionPrefix = $manifest['sessionPrefix'];
 
     Autoloader::getInstance()->addPath($this->namespace, $this->p('app'));
 
@@ -247,16 +196,6 @@ class App implements EventSubject, LoggerAware {
 
     $file = new PhpStore($this->p('user/config.php'));
     $this->config = new Config($file);
-    
-    // Persistent state storage
-    $this->state = new StateMap($this->p('state'));
-    
-    $this->cache = new NullPool();
-    
-    $this->vendor = new VendorLoader($this);
-    
-    if ($this->isCli())
-      $this->shell = new Shell($this);
   }
 
   /**
@@ -267,24 +206,17 @@ class App implements EventSubject, LoggerAware {
    */
   public function __get($property) {
     switch ($property) {
-      case 'paths':
       case 'name':
       case 'version':
-      case 'namespace':
-      case 'minPhpVersion':
+      case 'paths':
       case 'environment':
       case 'config':
       case 'manifest':
       case 'noManifest':
-      case 'sessionPrefix':
       case 'basePath':
       case 'entryScript':
-      case 'state':
       case 'logger':
       case 'm':
-      case 'vendor':
-      case 'shell':
-      case 'cache':
         return $this->$property;
       case 'eventManager':
         return $this->e;
@@ -323,13 +255,6 @@ class App implements EventSubject, LoggerAware {
   public function setLogger(LoggerInterface $logger) {
     $this->logger = $logger;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setCache(CacheItemPoolInterface $cache) {
-    $this->cache = $cache;
-  }
   
   /**
    * Whether application is running from the command line.
@@ -337,58 +262,6 @@ class App implements EventSubject, LoggerAware {
    */
   public function isCli() {
     return php_sapi_name() == 'cli';
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function getEvents() {
-    return $this->events;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function attachEventHandler($name, $callback) {
-    $this->e->attachHandler($name, $callback);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function attachEventListener(EventListener $listener) {
-    $this->e->attachListener($listener);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function detachEventHandler($name, $callback) {
-    $this->e->detachHandler($name, $callback);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function detachEventListener(EventListener $listener) {
-    $this->e->detachListener($listener);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasEvent($name) {
-    return in_array($name, $this->events);
-  }
-
-  /**
-   * Trigger an event on this object.
-   * @param string $name Name of event.
-   * @param Event $event Event object.
-   * @return bool False if event was stopped, true otherwise.
-   */
-  private function triggerEvent($name, Event $event = null) {
-    return $this->e->trigger($name, $event);
   }
 
   /**
@@ -523,7 +396,7 @@ class App implements EventSubject, LoggerAware {
       $this->crashReport($exception);
       $body = ob_get_clean();
       $event = new ShowExceptionEvent($this, $exception, $body);
-      $this->safeTriggerEvent('beforeShowException', $event);
+      $this->safeTriggerEvent('showException', $event);
       echo $event->body;
       $this->stop(1);
     }
@@ -575,9 +448,8 @@ class App implements EventSubject, LoggerAware {
    * @param bool $enableCli Whether to enable the command-line interface. If
    * enabled, the environment will be set to 'cli' when the application is run
    * from the command-line.
-   * @param bool $enableInit Whether to enable the new initialization system.
    */
-  public function run($environment = 'production', $enableCli = true, $enableInit = false) {
+  public function run($environment = 'production', $enableCli = true) {
     if ($this->isCli()) {
       if (!$enableCli) {
         echo tr('The command-line interface is disabled.');
@@ -636,36 +508,21 @@ class App implements EventSubject, LoggerAware {
     }
 
     // Check PHP version
-    if (version_compare(phpversion(), $this->minPhpVersion) < 0) {
+    if (version_compare(phpversion(), $this->manifest['minPhpVersion']) < 0) {
       throw new AppException(tr(
         '%1 does not support PHP %2. PHP %3 or above is required',
         $this->name, phpversion(), $this->minPhpVersion
       ));
     }
     
-    if ($enableInit) {
-      $class = $this->n('Init');
-      if (!class_exists($class))
-        $class = 'Jivoo\Core\Init';
-      $init = new $class($this);
+    $class = $this->n('Init');
+    if (!class_exists($class))
+      $class = 'Jivoo\Core\Init';
+    $this->m->init = new $class($this);
 
-      $this->triggerEvent('beforeInit');
-      $init->init($environment);
-      $this->triggerEvent('afterLoadModules'); // TODO: legacy event
-      $this->triggerEvent('afterInit');
-    }
-    else {
-      // Find initialization class
-      $class = $this->n('Boot');
-      if (!class_exists($class))
-        $class = 'Jivoo\Core\Boot';
-      $boot = new $class($this);
-      $this->triggerEvent('beforeBoot');
-      $boot->boot($environment);
-      $this->triggerEvent('afterBoot');
-      $this->triggerEvent('afterLoadModules'); // TODO: legacy event
-      $this->triggerEvent('afterInit'); // TODO: legacy event
-    }
+    $this->triggerEvent('init');
+    $this->m->init->init($environment);
+    $this->triggerEvent('ready');
     
     $this->logger->warning(tr('Application not stopped'));
   }
@@ -675,14 +532,7 @@ class App implements EventSubject, LoggerAware {
    * @param int $status Return code
    */
   public function stop($status = 0) {
-    $this->safeTriggerEvent('beforeStop');
-    
-    $open = $this->state->closeAll();
-    if (!empty($open))
-      $this->logger->warning(tr(
-        'The following state documents were not properly closed: %1{, }{ and }',
-        $open
-      ));
+    $this->safeTriggerEvent('stop');
     
     exit($status);
   }

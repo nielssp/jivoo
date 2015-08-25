@@ -42,11 +42,10 @@ abstract class Helper extends Module {
    * @param App $app Associated application.
    */
   public final function __construct(App $app) {
-    $this->inheritElements('modules');
     $this->inheritElements('helpers');
     $this->inheritElements('models');
     parent::__construct($app);
-    $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);
+    $this->helperObjects = $this->m->helpers->getHelpers($this->helpers);
     $this->modelObjects = $this->m->Models->getModels($this->models);
     $this->init();
   }
