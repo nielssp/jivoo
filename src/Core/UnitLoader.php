@@ -45,7 +45,7 @@ class UnitLoader extends Module {
   /**
    * {@inheritdoc}
    */
-  protected $events = array('beforeRunUnit', 'afterRunUnit');
+  protected $events = array('unitRun', 'unitDone', 'allRun', 'allDone');
   
   public function enable($name, $withDependencies = false) {
     if (is_array($name)) {
@@ -200,7 +200,7 @@ class UnitLoader extends Module {
       }
     }
 
-    $this->triggerEvent('beforeRunUnit', new Event($this, array(
+    $this->triggerEvent('unitRun', new Event($this, array(
       'unitName' => $name,
       'unit' => $this->units[$name]
     )));
@@ -212,7 +212,7 @@ class UnitLoader extends Module {
       $this->states[$name] = UnitState::FAILED;
       throw $e;
     }
-    $this->triggerEvent('afterRunUnit', new Event($this, array(
+    $this->triggerEvent('unitDone', new Event($this, array(
       'unitName' => $name,
       'unit' => $this->units[$name]
     )));
@@ -224,8 +224,10 @@ class UnitLoader extends Module {
    * Run all enabled units.
    */
   public function runAll() {
+    $this->triggerEvent('allRun');
     while (count($this->waiting)) {
       $this->run(array_shift($this->waiting));
     }
+    $this->triggerEvent('allDone');
   }
 }

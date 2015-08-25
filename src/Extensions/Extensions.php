@@ -70,6 +70,11 @@ class Extensions extends LoadableModule {
   private $loadList = array();
   
   /**
+   * @var ExtensionModule
+   */
+  private $extensionModules = array();
+  
+  /**
    * @var array Array of view extensions.
    */
   private $viewExtensions = array();
@@ -109,14 +114,14 @@ class Extensions extends LoadableModule {
       }
     }
     
-    // Load installed extensions when all modules are loaded and initialized
-    $this->run();
-    
     $this->attachFeature('load', array($this, 'handleLoad'));
     $this->attachFeature('include', array($this, 'handleInclude'));
     $this->attachFeature('viewExtensions', array($this, 'handleViewExtensions'));
     
     $this->attachEventHandler('afterLoadExtensions', array($this, 'addViewExtensions'));
+    
+    // Load installed extensions when all modules are loaded and initialized
+    $this->m->units->on('allDone', array($this, 'run'));
   }
   
   /**
@@ -125,7 +130,7 @@ class Extensions extends LoadableModule {
   public function addViewExtensions() {
     foreach ($this->viewExtensions as $module => $veInfo) {
       $this->view->extensions->add(
-        $veInfo['template'], $this->e[$module], $veInfo['hook']
+        $veInfo['template'], $this->extensionModules[$module], $veInfo['hook']
       );
     }
   }
@@ -320,16 +325,16 @@ class Extensions extends LoadableModule {
    * imported.
    */
   public function getModule($name) {
-    if (!isset($this->e[$name])) {
+    if (!isset($this->extensionModules[$name])) {
       if (!isset($this->loadList[$name]))
         throw new InvalidExtensionException(tr('Extension not in load list: "%1"', $name));
       $this->triggerEvent('beforeLoadExtension', new LoadExtensionEvent($this, $name));
       Utilities::assumeSubclassOf($name, 'Jivoo\Extensions\ExtensionModule');
       $info = $this->loadList[$name];
-      $this->e[$name] = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
-      $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->e[$name]));
+      $this->extensionModules[$name] = new $name($this->app, $info, $this->config['config'][$info->canonicalName]);
+      $this->triggerEvent('afterLoadExtension', new LoadExtensionEvent($this, $name, $this->extensionModules[$name]));
     }
-    return $this->e[$name];
+    return $this->extensionModules[$name];
   }
   
   /**
@@ -349,7 +354,7 @@ class Extensions extends LoadableModule {
    * @return bool True if loaded, false otherwise.
    */
   public function hasModule($name) {
-    return isset($this->e[$name]);
+    return isset($this->extensionModules[$name]);
   }
 
   /**

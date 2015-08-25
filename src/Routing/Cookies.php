@@ -16,7 +16,7 @@ class Cookies implements \ArrayAccess {
   /**
    * @var string Cookie prefix.
    */
-  private $prefix = '';
+  public $prefix = '';
 
   /**
    * @var string[] Cookie values.
