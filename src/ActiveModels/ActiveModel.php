@@ -23,6 +23,7 @@ use Jivoo\Models\Selection\SelectionBuilder;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\RecordBuilder;
 use Jivoo\Databases\InvalidTableException;
+use Jivoo\Databases\DatabaseLoader;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -173,13 +174,13 @@ abstract class ActiveModel extends ModelBase implements EventListener {
   /**
    * Construct active model.
    * @param App $app Associated application.
-   * @param Databases $databases Databases module.
+   * @param DatabaseLoader $databases Databases module.
    * @throws InvalidActiveModelException If model is incorrectly defined.
    * @throws InvalidTableException If table not found.
    * @throws InvalidAssociationException If association models are invalid.
    * @throws InvalidMixinException If a mixin is invalid.
    */
-  public final function __construct(App $app, Databases $databases) {
+  public final function __construct(App $app, DatabaseLoader $databases) {
     parent::__construct($app);
     $databaseName = $this->database;
     $database = $databases->$databaseName;

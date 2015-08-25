@@ -20,6 +20,7 @@ class DatabasesUnit extends UnitBase {
    */
   public function run(App $app, Document $config) {
     $app->m->db = new DatabaseLoader($app);
+    $app->m->Databases = $app->m->db;
 
     if (isset($app->manifest['databases'])) {
       foreach ($app->manifest['databases'] as $name) {

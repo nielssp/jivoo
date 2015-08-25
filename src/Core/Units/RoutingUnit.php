@@ -14,6 +14,8 @@ use Jivoo\Core\LoadableModule;
 use Jivoo\Snippets\SnippetDispatcher;
 use Jivoo\Snippets\Snippets;
 use Jivoo\Routing\Routing;
+use Jivoo\Assets\Assets;
+use Jivoo\View\View;
 
 /**
  * Initializes the routing module.
@@ -28,18 +30,25 @@ class RoutingUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->routing = new Routing($app, false);
+    $app->m->Routing = new Routing($app, false);
     
-    $app->m->routing->dispatchers->add(
+    $app->m->Routing->dispatchers->add(
       new ActionDispatcher($app)
     );
 
-    $app->m->routing->dispatchers->add(
+    $app->m->Routing->dispatchers->add(
       new SnippetDispatcher($app)
     );
     
-    $this->m->routing->loadRoutes();
+    $this->m->Routing->loadRoutes();
 
-    $app->on('ready', array($app->m->routing, 'findRoute'));
+    $app->on('ready', array($app->m->Routing, 'findRoute'));
+    
+    $app->m->Assets = new Assets($app);
+    $app->m->Assets->runInit();
+    
+    $app->m->View = new View($app);
+    $app->m->View->runInit();
+    $app->m->addProperty('view', $app->m->View);
   }
 }

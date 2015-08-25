@@ -32,14 +32,14 @@ class DatabaseDriversHelper extends Helper {
    * @throws InvalidDriverException If driver is missing or invalid.
    */
   public function checkDriver($driver) {
-    if (!file_exists($this->p('Databases/Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
+    if (!file_exists($this->p('Jivoo/Databases/Drivers/' . $driver . '/' . $driver . 'Database.php'))) {
       throw new InvalidDriverException(tr('Driver class not found: %1', $driver));
     }
-    if (!file_exists($this->p('Databases/Drivers/' . $driver . '/driver.json'))) {
+    if (!file_exists($this->p('Jivoo/Databases/Drivers/' . $driver . '/driver.json'))) {
       throw new InvalidDriverException(tr('Driver manifest not found: %1', $driver));
     }
     try {
-      $info = Json::decodeFile($this->p('Databases/Drivers/' . $driver . '/driver.json'));
+      $info = Json::decodeFile($this->p('Jivoo/Databases/Drivers/' . $driver . '/driver.json'));
     }
     catch (JsonException $e) {
       throw new InvalidDriverException(tr('Invalid driver manifest: %1 (%2)', $driver, $e->getMessage()), 0, $e);

@@ -19,5 +19,7 @@ class RequestUnit extends UnitBase {
    */
   public function run(App $app, Document $config) {
     $app->m->request = new Request($config->get('cookiePrefix', ''));
+    $app->m->addProperty('request', $this->m->request);
+    $app->m->addProperty('session', $this->m->request->session);
   }
 }

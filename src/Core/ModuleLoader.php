@@ -5,6 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\InvalidPropertyException;
+use Jivoo\InvalidMethodException;
+
 /**
  * Loads and keeps track of Jivoo modules (subclasses of {@see LoadableModule}).
  * @property-read \Jivoo\AccessControl\AccessControl $AccessControl
@@ -52,6 +55,16 @@ class ModuleLoader extends EventSubjectBase {
   private $after = array();
   
   /**
+   * @var mixed[]
+   */
+  private $properties = array();
+  
+  /**
+   * @var callable[]
+   */
+  private $methods = array();
+  
+  /**
    * {@inheritdoc}
    */
   protected $events = array('moduleLoad', 'moduleLoaded');
@@ -87,6 +100,41 @@ class ModuleLoader extends EventSubjectBase {
     $this->triggerEvent('moduleLoaded', new LoadModuleEvent($this, $module, $object));
     if (isset($this->lazyModules[$module]))
       $this->lazyModules[$module]->playMacro($object, false);
+  }
+  
+  /**
+   * Add a read-only property to all modules.
+   * @param string $property Property.
+   * @param mixed $value Value.
+   */
+  public function addProperty($property, $value) {
+    $this->properties[$property] = $value;
+  }
+  
+  public function removeProperty($property) {
+    if (isset($this->properties[$property]))
+      unset($this->properties[$property]);
+  }
+  
+  public function getProperty($property) {
+    if (array_key_exists($property, $this->properties))
+      return $this->properties[$property];
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
+  }
+  
+  public function addMethod($method, $callable) {
+    $this->methods[$method] = $callable;
+  }
+  
+  public function removeMethod($method) {
+    if (isset($this->methods[$method]))
+      unset($this->methods[$method]);
+  }
+  
+  public function callMethod($method, $parameters) {
+    if (array_key_exists($method, $this->methods))
+      return call_user_func($this->methods[$method], $parameters);
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
   
   /**

@@ -45,7 +45,7 @@ abstract class Helper extends Module {
     $this->inheritElements('helpers');
     $this->inheritElements('models');
     parent::__construct($app);
-    $this->helperObjects = $this->m->helpers->getHelpers($this->helpers);
+    $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);
     $this->modelObjects = $this->m->Models->getModels($this->models);
     $this->init();
   }

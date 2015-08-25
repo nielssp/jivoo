@@ -24,7 +24,7 @@ class ActionDispatcher extends Module implements Dispatcher {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('routing');
+  protected $modules = array('Routing');
 
   /**
    * @var Controller[] Associative array of controller instances.
@@ -105,7 +105,7 @@ class ActionDispatcher extends Module implements Dispatcher {
   public function validate(&$route) {
     if (isset($route['controller']) or isset($route['action'])) {
       if (!isset($route['controller'])) {
-        $current = $this->m->routing->route;
+        $current = $this->m->Routing->route;
         if (isset($current['controller']))
           $route['controller'] = $current['controller'];
       }
@@ -209,8 +209,8 @@ class ActionDispatcher extends Module implements Dispatcher {
       $route['controller'] = $matches[2];
     }
     else {
-      if (isset($this->m->routing->route['controller']))
-        $route['controller'] = $this->m->routing->route['controller'];
+      if (isset($this->m->Routing->route['controller']))
+        $route['controller'] = $this->m->Routing->route['controller'];
       $route['action'] = $matches[2];
     }
     return $route;
@@ -231,7 +231,7 @@ class ActionDispatcher extends Module implements Dispatcher {
   public function isCurrent($route) {
     if (!isset($route['action']))
       $route['action'] = 'index';
-    $selection = $this->m->routing->route;
+    $selection = $this->m->Routing->route;
     if (!isset($selection['controller']))
       return false;
     return $selection['controller'] == $route['controller']

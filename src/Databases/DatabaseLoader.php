@@ -8,6 +8,7 @@ namespace Jivoo\Databases;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Module;
 use Jivoo\Core\App;
+use Jivoo\Core\Assume;
 
 /**
  * Connects to databases.
@@ -29,6 +30,7 @@ class DatabaseLoader extends Module {
   public function __construct(App $app) {
     parent::__construct($app);
     $this->drivers = new DatabaseDriversHelper($this->app);
+    $this->config = $this->app->config->getSubset('Databases');
   }
 
   /**
@@ -43,9 +45,9 @@ class DatabaseLoader extends Module {
       if ($files !== false) {
         foreach ($files as $file) {
           $split = explode('.', $file);
-          if (isset($split[1]) AND $split[1] == 'php') {
+          if (isset($split[1]) and $split[1] == 'php') {
             $class = $this->app->n('Schemas\\' . $split[0]);
-            Utilities::assumeSubclassOf($class, 'Jivoo\Databases\SchemaBuilder');
+            Assume::isSubclassOf($class, 'Jivoo\Databases\SchemaBuilder');
             $schemas[] = new $class();
           }
         }

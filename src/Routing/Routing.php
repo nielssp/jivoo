@@ -144,7 +144,7 @@ class Routing extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->routing = $this;
+    $this->m->Routing = $this;
     
     // Set default settings
     $this->config->defaults = array(
@@ -200,7 +200,6 @@ class Routing extends LoadableModule {
    */
   public function __get($property) {
     switch ($property) {
-      case 'request':
       case 'dispatchers':
       case 'routes':
       case 'root':

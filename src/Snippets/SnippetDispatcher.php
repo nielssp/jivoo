@@ -23,7 +23,7 @@ class SnippetDispatcher extends Module implements Dispatcher {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('routing');
+  protected $modules = array('Routing');
 
   /**
    * @var Snippet[] Snippet instances.
@@ -113,7 +113,7 @@ class SnippetDispatcher extends Module implements Dispatcher {
    * {@inheritdoc}
    */
   public function isCurrent($route) {
-    $selection = $this->m->routing->route;
+    $selection = $this->m->Routing->route;
     return $selection['snippet'] == $route['snippet'] 
       and ($route['parameters'] == '*'
         or $selection['parameters'] == $route['parameters']);

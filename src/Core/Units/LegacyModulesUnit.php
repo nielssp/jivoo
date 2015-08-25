@@ -16,17 +16,26 @@ use Jivoo\Helpers\Helpers;
 use Jivoo\Models\Models;
 
 /**
- * Initializes application logic such as controllers, helpers, models, etc.
+ * Initializes old modules.
  */
-class AppLogicUnit extends UnitBase {
+class LegacyModulesUnit extends UnitBase {
+  /**
+   * {@inheritdoc}
+   */
+  protected $requires = array('Request');
+  
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    Enum::addSearchPrefix($app->n('Enums') . '\\');
-    $app->m->Helpers = new Helpers($app);
-    $app->m->Helpers->runInit();
-    $app->m->Models = new Models($app);
-    $app->m->Models->runInit();
+    $modules = $this->app->manifest['modules'];
+    $modules = array_intersect($modules, array(
+      'AccessControl', 'Console', 'Content', 'Extensions', 'Jtk', 'Themes'
+    ));
+    foreach ($modules as $module) {
+      $class = 'Jivoo\\' . $module . '\\' . $module;
+      $this->m->$module = new $class($app);
+      $this->m->$module->runInit();
+    }
   }
 }

@@ -19,7 +19,7 @@ class Console extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Snippets', 'Routing', 'View', 'Assets', 'Extensions');
+  protected $modules = array('Routing', 'View', 'Assets', 'Extensions');
 
   /**
    * {@inheritdoc}

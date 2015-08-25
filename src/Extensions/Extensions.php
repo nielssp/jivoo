@@ -75,11 +75,6 @@ class Extensions extends LoadableModule {
   private $viewExtensions = array();
   
   /**
-   * @var ExtensionModule[] Map of extension modules.
-   */
-  private $e = array();
-  
-  /**
    * @var array[] Array of 2-tuples of feature name and handler callback.
    */
   private $featureHandlers = array();
@@ -115,7 +110,7 @@ class Extensions extends LoadableModule {
     }
     
     // Load installed extensions when all modules are loaded and initialized
-    $this->app->attachEventHandler('afterLoadModules', array($this, 'run'));
+    $this->run();
     
     $this->attachFeature('load', array($this, 'handleLoad'));
     $this->attachFeature('include', array($this, 'handleInclude'));

@@ -21,7 +21,7 @@ class ActionAuthorization extends LoadableAuthorization {
   public function authorize(AuthorizationRequest $authRequest) {
     $route = $authRequest->route; 
     if ($route['dispatcher'] instanceof ActionDispatcher) {
-      $controller = $this->m->Controllers->getController($route['controller']);
+      $controller = $this->m->Routing->dispatchers->action->getController($route['controller']);
       $permission = str_replace('\\', '.', $route['controller']) . '.' . $route['action'];
       return $this->Auth->hasPermission($permission);
     }

@@ -47,10 +47,14 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
     $this->inheritElements('modules');
     $this->app = $app;
     $this->config = $app->config;
+    $this->logger = $app->logger;
     if (isset($app->m)) {
       $this->m = $app->m;
-      foreach ($this->modules as $module)
+      foreach ($this->modules as $module) {
+        if (!isset($this->m->$module))
+          throw new InvalidModuleException('Module "' . $module . '" not loaded. Required by ' . get_class($this));
         $this->m->__get($module);
+      }
     }
 
     $this->e = new EventManager($this, $this->app->eventManager);
@@ -65,8 +69,7 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
   public function __get($property) {
     if ($property == 'config')
       return $this->config;
-    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
-    return null;
+    return $this->m->getProperty($property);
   }
   
   /**
@@ -107,7 +110,7 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
    * @throws InvalidMethodException If method is not defined.
    */
   public function __call($method, $parameters) {
-    throw new InvalidMethodException(tr('Invalid method: %1', $method));
+    $this->m->callMethod($method, $parameters);
   }
   
   /**

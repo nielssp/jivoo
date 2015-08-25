@@ -171,7 +171,7 @@ class AuthHelper extends Helper {
    */
   protected function init() {
     $this->passwordHasher = $this->m->AccessControl->getPasswordHasher();
-    $this->m->Routing->on('dispatch', array($this, 'checkAuthorization'));
+    $this->m->Routing->on('beforeDispatch', array($this, 'checkAuthorization'));
     $this->defaultAcl = new DefaultAcl($this->app);
     $this->addAcl($this->defaultAcl);
   }

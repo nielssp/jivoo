@@ -29,6 +29,7 @@ class ActiveModelsUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->activeModels = new ActiveModels($app);
+    $app->m->ActiveModels = new ActiveModels($app);
+    $app->m->ActiveModels->runInit();
   }
 }
