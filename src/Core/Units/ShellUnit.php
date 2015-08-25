@@ -8,6 +8,7 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
+use Jivoo\Core\Cli\Shell;
 
 /**
  * Initializes the shell.
@@ -17,7 +18,10 @@ class ShellUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $this->shell->parseArguments();
-    $this->shell->run();
+    $app->m->Shell = new Shell($app);
+    $app->on('ready', function() use($app) {
+      $app->m->Shell->parseArgument();
+      $app->m->Shell->run();
+    });
   }
 }

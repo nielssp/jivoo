@@ -8,19 +8,17 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
-use Jivoo\Core\Cache\Cache;
-use Jivoo\Core\LoadableModule;
-use Jivoo\Setup\Setup;
+use Jivoo\Core\Store\StateMap;
 
 /**
- * Initializes the cache system.
+ * Initializes application state storage.
  */
-class SetupUnit extends UnitBase {
+class StateUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->Setup = new Setup($app);
-    $app->m->Setup->runInit();
+    $app->m->state = new StateMap($this->p('state'));
+    $app->m->addProperty('state', $app->m->state);
   }
 }

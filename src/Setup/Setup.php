@@ -27,7 +27,7 @@ class Setup extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Helpers', 'Routing', 'Snippets', 'View');
+  protected $modules = array('Helpers', 'Routing', 'View');
   
   /**
    * @var InstallerSnippet[] Installers.
@@ -48,20 +48,24 @@ class Setup extends LoadableModule {
    * @var bool Whether or not an install is in progress. 
    */
   private $active = false;
+  
+  private $snippets;
 
   /**
    * {@inheritdoc}
    */
   protected function init() {
+    $this->snippets = $this->m->Routing->dispatchers->snippet;
+
     $lockFile = new PhpStore($this->p('user', 'lock.php'));
     $this->lock = new Config($lockFile);
     if ($this->lock->get('enable', false)) {
       $auth = $this->getAuth();
       if (!$auth->isLoggedIn()) {
         if ($this->request->path === array('setup')) {
-          $login = $this->m->Snippets->getSnippet('Jivoo\Setup\Login');
+          $login = $this->snippets->getSnippet('Jivoo\Setup\Login');
           $login->enableLayout();
-          $response = $this->m->Routing->dispatch($login, array($auth));
+          $response = $this->snippets->dispatch($login, array($auth));
         }
         else {
           $response = $this->m->Routing->dispatch(
@@ -73,6 +77,7 @@ class Setup extends LoadableModule {
         $this->m->Routing->respond($response);
       }
     }
+    $this->afterLoad();
   }
 
   /**
@@ -157,7 +162,7 @@ class Setup extends LoadableModule {
    */
   public function dispatchInstaller($installer, Document $installerState = null) {
     $snippet = $this->getInstaller($installer, $installerState);
-    $this->app->attachEventHandler('beforeStop', function(Event $event) {
+    $this->app->on('stop', function(Event $event) {
       $event->sender->state->close('setup');
     });
     try {
@@ -263,7 +268,7 @@ class Setup extends LoadableModule {
         $state = $this->state->write('setup');
         $state = $state[$class];
       }
-      $snippet = $this->m->Snippets->getSnippet($class);
+      $snippet = $this->snippets->getSnippet($class);
       assume($snippet instanceof InstallerSnippet);
       if (isset($state))
         $snippet->setState($state);

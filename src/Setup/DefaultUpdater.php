@@ -15,7 +15,7 @@ class DefaultUpdater extends InstallerSnippet {
    */  
   public function setup() {
     $this->appendStep('welcome');
-    if ($this->m->hasImport('Migrations'))
+    if ($this->m->units->isActive('Migrations'))
       $this->appendInstaller('Jivoo\Migrations\MigrationUpdater');
     $this->appendStep('unlock');
   }
@@ -33,8 +33,8 @@ class DefaultUpdater extends InstallerSnippet {
     }
     $this->viewData['to'] = $this->app->version;
     $this->viewData['title'] = tr('Updating %1', $this->app->name);
-    if (isset($this->app->state['setup']['version'])) {
-      $this->viewData['from'] = $this->app->state['setup']['version'];
+    if (isset($this->state['setup']['version'])) {
+      $this->viewData['from'] = $this->state['setup']['version'];
       $this->viewData['subtitle'] = tr(
         'From version %1 to version %2',
         '<strong>' . $this->viewData['from'] . '</strong>',

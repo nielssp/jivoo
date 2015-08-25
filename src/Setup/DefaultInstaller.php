@@ -17,11 +17,11 @@ class DefaultInstaller extends InstallerSnippet {
   public function setup() {
     $this->appendStep('welcome', true);
     $this->appendInstaller('Jivoo\Setup\LockInstaller');
-    if ($this->m->hasImport('Databases'))
+    if ($this->m->units->isActive('Databases'))
       $this->appendInstaller('Jivoo\Databases\DatabaseInstaller');
-    if ($this->m->hasImport('Migrations'))
+    if ($this->m->units->isActive('Migrations'))
       $this->appendInstaller('Jivoo\Migrations\MigrationInstaller');
-    if ($this->m->hasImport('ActiveModels'))
+    if ($this->m->units->isActive('ActiveModels'))
       $this->appendInstaller('Jivoo\ActiveModels\ActiveModelInstaller');
     $this->appendStep('unlock');
   }

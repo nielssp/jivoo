@@ -58,7 +58,7 @@ class Init extends Module {
   
   protected function production() {
     $this->m->units->enable(array(
-      'Cache', 'I18n', 'Vendor', 'AppLogic',
+      'Cache', 'I18n', 'State', 'Vendor', 'AppLogic',
       'Request', 'Routing', 'LegacyModules'
     ));
     if (isset($this->app->manifest['init']))
