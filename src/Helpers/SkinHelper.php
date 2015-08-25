@@ -122,10 +122,10 @@ class SkinHelper extends Helper {
       $route['query'] = $options;
     }
     $url =  $this->m->Assets->getDynamicAsset($route);
-    $this->view->resources->provide($url, $url);
-    $this->view->resources->closeFrame();
-    $this->view->resources->import($url);
-    $this->view->resources->openFrame();
+    $this->m->View->resources->provide($url, $url);
+    $this->m->View->resources->closeFrame();
+    $this->m->View->resources->import($url);
+    $this->m->View->resources->openFrame();
   }
   
   /**
@@ -134,7 +134,7 @@ class SkinHelper extends Helper {
    * @return TextResponse CSS response.
    */
   public function render($skin) {
-    $content = $this->view->render($skin);
+    $content = $this->m->View->render($skin);
     $response = new TextResponse(Http::OK, 'css', $content);
     return $response;
   }

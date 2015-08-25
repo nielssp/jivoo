@@ -55,6 +55,7 @@ class Console extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
+    $this->afterLoad();
   }
   
   /**
@@ -84,7 +85,7 @@ class Console extends LoadableModule {
       $this->view->resources->closeFrame();
       
       $this->m->Routing->attachEventHandler('afterRender', array($this, 'injectCode'));
-      $this->app->attachEventHandler('beforeShowException', array($this, 'injectCode'));
+      $this->app->on('showException', array($this, 'injectCode'));
       
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\SystemInfo');
       $this->m->Routing->routes->auto('snippet:Jivoo\Console\Generators');

@@ -16,6 +16,7 @@ use Jivoo\Snippets\Snippets;
 use Jivoo\Routing\Routing;
 use Jivoo\Assets\Assets;
 use Jivoo\View\View;
+use Jivoo\Core\Module;
 
 /**
  * Initializes the routing module.
@@ -32,6 +33,16 @@ class RoutingUnit extends UnitBase {
   public function run(App $app, Document $config) {
     $app->m->Routing = new Routing($app, false);
     
+    $this->m->Routing->fixPath();
+
+    $this->logger->debug(
+      'Request for {path} from {ip}',
+      array(
+        'path' => '/' . implode('/', $app->m->request->path),
+        'ip' => $app->m->request->ip
+      )
+    );
+    
     $app->m->Routing->dispatchers->add(
       new ActionDispatcher($app)
     );
@@ -39,7 +50,6 @@ class RoutingUnit extends UnitBase {
     $app->m->Routing->dispatchers->add(
       new SnippetDispatcher($app)
     );
-    
     $this->m->Routing->loadRoutes();
 
     $app->on('ready', array($app->m->Routing, 'findRoute'));

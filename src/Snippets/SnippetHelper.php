@@ -14,17 +14,23 @@ use Jivoo\Routing\NotFoundException;
  */
 class SnippetHelper extends Helper {
   /**
-   * {@inheritdoc}
+   * Get a snippet instance.
+   * @param string $name Snippet class name.
+   * @param bool $singleton Whether to use an existing instance instead of
+   * creating a new one.
+   * @return Snippet Snippet instance or null if not found.
    */
-  protected $modules = array('Snippets');
-  
+  public function getSnippet($name, $singleton = true) {
+    return $this->m->Routing->dispatchers->snippet->getSnippet($name, $singleton);
+  }
+
   /**
    * Get snippet instance.
    * @param string $snippet Snippet name.
    * @return Snippet Snippet instance.
    */
   public function __get($snippet) {
-    return $this->m->Snippets->getSnippet($snippet);
+    return $this->getSnippet($snippet);
   }
   
   /**
@@ -35,7 +41,7 @@ class SnippetHelper extends Helper {
    */
   public function __call($snippet, $parameters) {
     try {
-      $response = $this->m->Snippets->getSnippet($snippet)->__invoke($parameters);
+      $response = $this->__get($snippet)->__invoke($parameters);
       if ($response instanceof Response)
         return $response->body;
       return $response;

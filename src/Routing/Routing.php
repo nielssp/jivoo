@@ -131,6 +131,8 @@ class Routing extends LoadableModule {
 
   public function __construct(App $app) {
     parent::__construct($app);
+    
+    $this->config = $this->config->getSubset('Routing');
 
     $this->dispatchers = new DispatcherCollection($this);
     $this->dispatchers->add(new VoidDispatcher());
@@ -145,13 +147,6 @@ class Routing extends LoadableModule {
    */
   protected function init() {
     $this->m->Routing = $this;
-    
-    // Set default settings
-    $this->config->defaults = array(
-      'reroute' => true,
-      'rewrite' => false,
-      'sessionPrefix' => $this->app->sessionPrefix,
-    );
 
     $this->request = new Request($this->config['sessionPrefix'], $this->app->basePath);
     $this->m->request = $this->request;
@@ -164,6 +159,19 @@ class Routing extends LoadableModule {
     );
 
     // Determine if the current URL is correct
+
+
+    $this->app->attachEventHandler('afterLoadModules', array($this, 'loadRoutes'));
+    $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
+  }
+  
+  public function fixPath() {
+    // Set default settings
+    $this->config->defaults = array(
+      'reroute' => true,
+      'rewrite' => false
+    );
+    
     if ($this->config['reroute']) {
       if ($this->config['rewrite']) {
         if (isset($this->request->path[0]) and $this->request->path[0] == $this->app->entryScript) {;
@@ -190,9 +198,6 @@ class Routing extends LoadableModule {
         $this->redirectPath($this->request->path, $this->request->query);
       }
     }
-
-    $this->app->attachEventHandler('afterLoadModules', array($this, 'loadRoutes'));
-    $this->app->attachEventHandler('afterInit', array($this, 'findRoute'));
   }
   
   /**

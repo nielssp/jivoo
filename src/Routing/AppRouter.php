@@ -14,11 +14,6 @@ abstract class AppRouter extends AppListener {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Routing');
-
-  /**
-   * {@inheritdoc}
-   */
   protected $handlers = array(
     'Jivoo\Routing\Routing.beforeLoadRoutes',
     'Jivoo\Routing\Routing.afterLoadRoutes'

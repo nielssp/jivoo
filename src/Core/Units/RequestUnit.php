@@ -18,7 +18,7 @@ class RequestUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->request = new Request($config->get('cookiePrefix', ''));
+    $app->m->request = new Request($config->get('cookiePrefix', ''), $this->app->basePath);
     $app->m->addProperty('request', $this->m->request);
     $app->m->addProperty('session', $this->m->request->session);
   }
