@@ -344,7 +344,6 @@ class View extends LoadableModule {
     if (isset($this->template))
       return $this->template->render($template, $data, $withLayout);
     uasort($this->templateDirs, array('Jivoo\Core\Utilities', 'prioritySorter'));
-    $this->data->flash = $this->request->session->flash;
     $this->template = new Template($this);
     $result = $this->template->render($template, $data, $withLayout);
     $this->template = null;

@@ -4,7 +4,7 @@ namespace Blog\Snippets\Comments;
 use Jivoo\Snippets\SnippetBase;
 
 class Add extends SnippetBase {
-  protected $helpers = array('Form');
+  protected $helpers = array('Form', 'Notify');
   
   protected $models = array('Comment', 'Post');
   
@@ -31,7 +31,7 @@ class Add extends SnippetBase {
       array('author', 'content')
     );
     if ($comment->save()) {
-      $this->session->flash->success = tr('Comment saved.');
+      $this->Notify->success = tr('Comment saved.');
       return $this->redirect($comment);
     }
     $this->view->data->comment = $comment;

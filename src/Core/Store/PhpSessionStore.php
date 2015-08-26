@@ -37,7 +37,7 @@ class PhpSessionStore implements Store {
   /**
    * @var bool Whether to enable HttpOnly flag on session cookie.
    */
-  public $httpOnly = false;
+  public $httpOnly = true;
   
   /**
    * @var array
@@ -55,7 +55,8 @@ class PhpSessionStore implements Store {
       $params['domain'],
       $this->secure, $this->httpOnly
     );
-    session_name($this->name);
+    if (isset($this->name))
+      session_name($this->name);
     if (!session_start())
       throw new AccessException(tr('Could not start PHP session'));
     $this->open = true;
@@ -65,6 +66,9 @@ class PhpSessionStore implements Store {
       if (isset($_SESSION[$this->key]))
         $this->data = $_SESSION[$this->key];  
     }
+    else {
+      $this->data = $_SESSION;
+    }
   }
 
   /**
@@ -73,12 +77,6 @@ class PhpSessionStore implements Store {
   public function close() {
     if (!$this->open)
       return;
-    if ($this->mutable) {
-      if (isset($this->key))
-        $_SESSION[$this->key] = $this->data;
-      else
-        $_SESSION = $this->data;
-    }
     session_write_close();
     $this->open = false;
     $this->mutable = false;
@@ -102,6 +100,10 @@ class PhpSessionStore implements Store {
     if (!$this->mutable)
       throw new AccessException(tr('Not mutable'));
     $this->data = $data;
+    if (isset($this->key))
+      $_SESSION[$this->key] = $this->data;
+    else
+      $_SESSION = $this->data;
   }
 
   /**

@@ -131,7 +131,7 @@ class Console extends LoadableModule {
     else
       $this->setVariable('jivooLog', array());
     $this->setVariable('jivooRequest', $this->request->toArray());
-    $this->setVariable('jivooSession', $this->request->session->toArray());
+    $this->setVariable('jivooSession', $this->session->toArray());
     $this->setVariable('jivooCookies', $this->request->cookies->toArray());
     $extraVars = '<script type="text/javascript">'
       . $this->outputVariables()

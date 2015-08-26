@@ -32,7 +32,7 @@ $this->import('jivoo/core.css');
 </h1>
 <?php endif; ?>
 
-<?php foreach ($flash as $message): ?>
+<?php foreach ($this->helper('Notify') as $message): ?>
 <div class="flash flash-<?php echo $message->type; ?>">
 <?php echo $message; ?>
 </div>

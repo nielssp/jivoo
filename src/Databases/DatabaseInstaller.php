@@ -15,7 +15,7 @@ class DatabaseInstaller extends InstallerSnippet {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Html', 'Form', 'Jivoo\Databases\DatabaseDrivers');
+  protected $helpers = array('Html', 'Form', 'Notify', 'Jivoo\Databases\DatabaseDrivers');
 
   /**
    * {@inheritdoc}
@@ -127,7 +127,7 @@ class DatabaseInstaller extends InstallerSnippet {
           return $this->saveConfigAndContinue();
         }
         catch (ConnectionException $exception) {
-          $this->session->flash->error = tr(
+          $this->Notify->error = tr(
             'An error occured: %1', $exception->getMessage()
           );
         }

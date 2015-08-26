@@ -14,7 +14,7 @@ namespace Jivoo\Routing;
  * $this->session->flash->error[] = tr('An error occured.');
  * $this->session->flash->success = tr('Saved file.');
  * </code>
- * 
+ * @deprecated Use {@see \Jivoo\Helpers\NotifyHelper}
  */
 class FlashMap implements \IteratorAggregate, \ArrayAccess, \Countable {
   /**

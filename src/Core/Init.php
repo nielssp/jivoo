@@ -61,7 +61,7 @@ class Init extends Module {
       $this->m->units->enable($this->app->manifest['init']);
     $this->m->units->enable(array(
       'Cache', 'I18n', 'State', 'Vendor', 'AppLogic',
-      'Request', 'Routing', 'LegacyModules', 'AppRoutes'
+      'Request', 'Routing', 'Session', 'LegacyModules', 'AppRoutes'
     ));
   }
   

@@ -9,6 +9,7 @@ use Jivoo\Core\Utilities;
 use Jivoo\InvalidPropertyException;
 use Jivoo\AccessControl\Random;
 use Jivoo\Core\Binary;
+use Jivoo\Core\Log\Logger;
 
 /**
  * A class representing an HTTP request.
@@ -16,11 +17,12 @@ use Jivoo\Core\Binary;
  * @property array $query The GET query as an associative array.
  * @property string $fragment The fragment.
  * @property array|null $route Currently selected route, {@see Routing}.
+ * @property RequestToken|null $requestToken Provider of request tokens, must be
+ * set for {@see hasValidData} to work.
  * @property-read string[] $realPath The original $path.
  * @property-read array $data POST data as an associative array.
  * @property-read array $files File upload data.
  * @property-read Cookies $cookies Cookie access object.
- * @property-read Sessione $session Session storage access object.
  * @property-read string|null $ip The remote address or null if not set.
  * @property-read string|null $url The request uri or null if not set.
  * @property-read string|null $referrer HTTP referer or null if not set.
@@ -53,11 +55,6 @@ class Request {
    */
   private $cookies;
 
-  /**
-   * @var Session Session object.
-   */
-  private $session;
-  
   /**
    * @var array|null Route.
    */
@@ -113,13 +110,18 @@ class Request {
    * @var bool Whether or not HTTPS was used.
    */
   private $secure = false;
+  
+  /**
+   * @var RequestToken
+   */
+  private $requestToken = null;
 
   /**
    * Construct request.
-   * @param string $sessionPrefix Session prefix to use for session variables.
+   * @param string $cookiePrefix Cookie prefix to use for cookies.
    * @param string $basePath Base path of application.
    */
-  public function __construct($sessionPrefix = '', $basePath = '/') {
+  public function __construct($cookiePrefix = '', $basePath = '/') {
     $url = $_SERVER['REQUEST_URI'];
        
     $request = parse_url($url);
@@ -188,8 +190,7 @@ class Request {
       }
     }
 
-    $this->cookies = new Cookies($_COOKIE, $sessionPrefix, $basePath);
-    $this->session = new Session($sessionPrefix, $sessionPrefix . 'session_id', $this->secure);
+    $this->cookies = new Cookies($_COOKIE, $cookiePrefix, $basePath);
   }
 
   /**
@@ -207,11 +208,11 @@ class Request {
       case 'files':
       case 'query':
       case 'cookies':
-      case 'session':
       case 'fragment':
       case 'domainName':
       case 'method':
       case 'secure':
+      case 'requestToken':
         return $this->$name;
       case 'ip':
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
@@ -238,6 +239,7 @@ class Request {
       case 'path':
       case 'query':
       case 'fragment':
+      case 'requestToken':
         $this->$name = $value;
         return;
     }
@@ -317,10 +319,11 @@ class Request {
    * @return string Access token.
    */
   public function getToken() {
-    if (!isset($this->session['access_token'])) {
-      $this->session['access_token'] = Binary::base64Encode(Random::bytes(32), true);
+    if (!isset($this->requestToken)) {
+      trigger_error(tr('Request token missing. Is the session module missing?'), E_USER_WARNING);
+      return '';
     }
-    return $this->session['access_token'];
+    return $this->requestToken->getToken();
   }
 
   /**
@@ -328,11 +331,14 @@ class Request {
    * @return bool True if they match, false otherwise.
    */
   public function checkToken() {
-    if (!isset($this->data['access_token']) or
-         !isset($this->session['access_token'])) {
+    if (!isset($this->requestToken)) {
+      trigger_error(tr('Request token missing. Is the session module missing?'), E_USER_WARNING);
       return false;
     }
-    return $this->session['access_token'] === $this->data['access_token'];
+    if (!isset($this->data['access_token'])) {
+      return false;
+    }
+    return $this->requestToken->getToken() === $this->data['access_token'];
   }
 
   /**

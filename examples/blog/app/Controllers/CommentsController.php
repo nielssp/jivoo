@@ -62,7 +62,7 @@ class CommentsController extends AppController {
     if ($this->request->hasValidData('Comment')) {
       $this->comment->addData($this->request->data['Comment']);
       if ($this->comment->save()) {
-        $this->session->flash->success = tr('Comment saved.');
+        $this->Notify->success = tr('Comment saved.');
         return $this->redirect($this->comment);
       }
     }
@@ -81,7 +81,7 @@ class CommentsController extends AppController {
     
     if ($this->request->hasValidData()) {
       $this->comment->delete();
-      $this->session->flash->success = tr('Comment deleted.');
+      $this->Notify->success = tr('Comment deleted.');
       return $this->redirect($this->post);
     }
     return $this->redirect($this->comment);

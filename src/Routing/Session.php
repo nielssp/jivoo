@@ -15,6 +15,7 @@ use Jivoo\InvalidPropertyException;
  * 
  * @property-read string $id Session id.
  * @property-read FlashMap $flash Flash messages.
+ * @deprecated
  */
 class Session implements \ArrayAccess {
   

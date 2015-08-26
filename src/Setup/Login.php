@@ -19,7 +19,7 @@ class Login extends SnippetBase {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Form');
+  protected $helpers = array('Form', 'Notify');
 
   /**
    * {@inheritdoc}
@@ -28,7 +28,7 @@ class Login extends SnippetBase {
     if ($this->Auth->logIn())
       return $this->redirect(null);
     else
-      $this->session->flash->error = tr('Incorrect username and/or password.');
+      $this->Notify->error = tr('Incorrect username and/or password.');
     return $this->get();
   }
 

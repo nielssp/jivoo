@@ -17,7 +17,7 @@ class I18nInfo extends ConsoleSnippet {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Form');
+  protected $helpers = array('Form', 'Notify');
   
   /**
    * @var string
@@ -111,11 +111,11 @@ class I18nInfo extends ConsoleSnippet {
       if ($file) {
         fwrite($file, $gen->createPotFile($this->viewData['project']));
         fclose($file);
-        $this->session->flash->success = tr('Language created: %1', $fileName);
+        $this->Notify->success = tr('Language created: %1', $fileName);
         return $this->refresh();
       }
       else {
-        $this->session->flash->error = tr('Unable to create file: %1', $fileName);
+        $this->Notify->error = tr('Unable to create file: %1', $fileName);
       }
     }
     else if (isset($data['new'])) {

@@ -15,6 +15,11 @@ interface Unit {
    * Run unit.
    */
   public function run(App $app, Document $config);
+
+  /**
+   * Stop unit.
+   */
+  public function stop(App $app, Document $config);
   
   /**
    * Get dependencies of unit, i.e. the names of the units that must run before

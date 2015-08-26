@@ -7,7 +7,7 @@ use Jivoo\Models\Form;
 
 class AppController extends Controller {
   
-  protected $helpers = array('Auth', 'Form', 'Snippet');
+  protected $helpers = array('Auth', 'Form', 'Snippet', 'Notify');
   
   public function before() {
     $this->config->defaults = array(
@@ -44,11 +44,11 @@ class AppController extends Controller {
         if ($form->password === $form->confirmPassword) {
           $this->config['password'] = $this->Auth->passwordHasher->hash($form->password);
           if ($this->config->save()) {
-            $this->session->flash->success = tr('Password changed.');
+            $this->Notify->success = tr('Password changed.');
             return $this->refresh();
           }
           else {
-            $this->session->flash->error = tr('Could not save configuration file.');
+            $this->Notify->error = tr('Could not save configuration file.');
           }
         }
         else {
@@ -57,11 +57,11 @@ class AppController extends Controller {
       }
       else {
         if ($this->config->save()) {
-          $this->session->flash->success = tr('Settings saved.');
+          $this->Notify->success = tr('Settings saved.');
           return $this->refresh();
         }
         else {
-          $this->session->flash->error = tr('Could not save configuration file.');
+          $this->Notify->error = tr('Could not save configuration file.');
         }
       }
     }
@@ -80,7 +80,7 @@ class AppController extends Controller {
         return $this->refresh();
       }
       else {
-        $this->session->flash->error = tr('Incorrect username and/or password.');
+        $this->Notify->error = tr('Incorrect username and/or password.');
       }
     }
     return $this->render();

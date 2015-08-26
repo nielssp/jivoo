@@ -47,6 +47,11 @@ class UnitLoader extends Module {
    */
   protected $events = array('unitRun', 'unitDone', 'allRun', 'allDone');
   
+  public function __construct(App $app) {
+    parent::__construct($app);
+    $app->on('stop', array($this, 'stopAll'));
+  }
+  
   public function enable($name, $withDependencies = false) {
     if (is_array($name)) {
       foreach ($name as $n)
@@ -229,5 +234,15 @@ class UnitLoader extends Module {
       $this->run(array_shift($this->waiting));
     }
     $this->triggerEvent('allDone');
+  }
+  
+  /**
+   * Stop all enabled units.
+   */
+  public function stopAll() {
+    foreach ($this->states as $name => $state) {
+      if ($state == UnitState::DONE)
+        $this->units[$name]->stop($this->app, new Document());
+    }
   }
 }

@@ -88,8 +88,15 @@ class Assume {
   }
   
   public static function isNonEmpty($value) {
-    if (!is_bool($value))
-      self::typeError($value, 'a boolean');
+    self::isArray($value);
+    if (!count($value))
+      throw new InvalidArgumentException('Array must not be empty');
+  }
+  
+  public static function hasKey($value, $key) {
+    self::isArray($value);
+    if (!array_key_exists($key, $value))
+      throw new InvalidArgumentException('Array must have key "' . $key . '"');
   }
   
   private static function typeError($value, $expected) {

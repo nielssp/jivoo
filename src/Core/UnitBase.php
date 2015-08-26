@@ -5,6 +5,8 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core;
 
+use Jivoo\Core\Store\Document;
+
 /**
  * An initialization unit.
  */
@@ -25,6 +27,11 @@ abstract class UnitBase extends Module implements Unit {
    * enabled.
    */
   protected $before = array();
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stop(App $app, Document $config) {}
   
   /**
    * {@inheritdoc}
