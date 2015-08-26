@@ -8,6 +8,7 @@ namespace Jivoo\Helpers;
 use Jivoo\Core\Utilities;
 use Jivoo\InvalidPropertyException;
 use Jivoo\Core\Assume;
+use Jivoo\Core\Store\Document;
 
 /**
  * Display notifications.
@@ -29,26 +30,13 @@ class NotifyHelper extends Helper implements \Countable, \IteratorAggregate {
    * {@inheritdoc}
    */
   protected function init() {
-    if (!is_array($this->m->session['notify']))
+    if (!is_array($this->m->session->get('notify')))
       $this->m->session['notify'] = array();
     foreach ($this->m->session['notify'] as $type => $list) {
-      $this->lists[$type] = new NotificationList($type, $list);
+      $this->lists[$type] = new NotificationList($this->m->session['notify'], $type);
     }
   }
 
-  /**
-   * Save messages to session storage.
-   */
-  public function save() {
-    $map = array();
-    foreach ($this->lists as $type => $list) {
-      if (count($list) > 0) {
-        $map[$type] = $list->toArray();
-      }
-    }
-    $this->m->session['notify'] = $map;
-  }
-  
   /**
    * Get message list associated with type.
    * @param string $type Message type, e.g. 'error', 'success'.
@@ -56,7 +44,7 @@ class NotifyHelper extends Helper implements \Countable, \IteratorAggregate {
    */
   public function __get($type) {
     if (!isset($this->lists[$type]))
-      $this->lists[$type] = new NotificationList($type);
+      $this->lists[$type] = new NotificationList($this->m->session['notify'], $type);
     return $this->lists[$type];
   }
   
@@ -66,7 +54,7 @@ class NotifyHelper extends Helper implements \Countable, \IteratorAggregate {
    * @param string $message Message.
    */
   public function __set($type, $message) {
-    $this->__get($type)->offsetSet(null, $message);
+    $this->__get($type)[] = $message;
   }
   
   /**
@@ -209,13 +197,19 @@ class NotificationList implements \ArrayAccess, \Countable, \Iterator {
   private $iterable;
   
   /**
-   * Conmstruct message list.
-   * @param string $type Message type.
-   * @param string[] $list Messages.
+   * @var Document
    */
-  public function __construct($type, $list = array()) {
+  private $session;
+  
+  /**
+   * Conmstruct message list.
+   * @param Document $session Notifications.
+   * @param string $type Message type.
+   */
+  public function __construct(Document $session, $type) {
     $this->type = $type;
-    $this->list = $list;
+    $this->list = $session->get($type, array());
+    $this->session = $session;
   }
   
   /**
@@ -250,6 +244,7 @@ class NotificationList implements \ArrayAccess, \Countable, \Iterator {
     else {
       $this->list[$key] = $value;
     }
+    $this->session[$this->type] = $this->list;
   }
   
   /**
@@ -257,6 +252,7 @@ class NotificationList implements \ArrayAccess, \Countable, \Iterator {
    */
   public function offsetUnset($key) {
     unset($this->list[$key]);
+    $this->session[$this->type] = $this->list;
   }
   
   /**
@@ -271,6 +267,7 @@ class NotificationList implements \ArrayAccess, \Countable, \Iterator {
    */
   public function clear() {
     $this->list = array();
+    $this->session[$this->type] = $this->list;
   }
   
   /**
@@ -279,6 +276,7 @@ class NotificationList implements \ArrayAccess, \Countable, \Iterator {
    */
   public function current() {
     unset($this->list[key($this->iterable)]);
+    $this->session[$this->type] = $this->list;
     return new Notification(current($this->iterable), $this->type);
   }
   
