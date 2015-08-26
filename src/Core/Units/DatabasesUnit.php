@@ -18,6 +18,11 @@ class DatabasesUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
+  protected $requires = array('AppLogic');
+  
+  /**
+   * {@inheritdoc}
+   */
   public function run(App $app, Document $config) {
     $app->m->db = new DatabaseLoader($app);
     $app->m->Databases = $app->m->db;

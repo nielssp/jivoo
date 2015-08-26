@@ -13,11 +13,6 @@ use Jivoo\Core\App;
  */
 abstract class Helper extends Module {
   /**
-   * {@inheritdoc}
-   */
-  protected $modules = array('Helpers', 'Models');
-
-  /**
    * @var string[] A list of other helpers needed by this helper.
    */
   protected $helpers = array();
@@ -45,8 +40,10 @@ abstract class Helper extends Module {
     $this->inheritElements('helpers');
     $this->inheritElements('models');
     parent::__construct($app);
-    $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);
-    $this->modelObjects = $this->m->Models->getModels($this->models);
+    if (isset($this->m->Helpers))
+      $this->helperObjects = $this->m->Helpers->getHelpers($this->helpers);
+    if (isset($this->m->Models))
+      $this->modelObjects = $this->m->Models->getModels($this->models);
     $this->init();
   }
 

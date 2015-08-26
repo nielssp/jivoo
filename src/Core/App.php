@@ -357,7 +357,12 @@ class App extends EventSubjectBase implements LoggerAware {
     );
     $this->fatalError = $fatal;
     if ($this->isCli()) {
-      echo 'Exception: ' . $exception->getMessage();
+      if (isset($this->m->shell)) {
+        $this->m->shell->handleException($exception);
+      }
+      else {
+        Shell::dumpException($exception);
+      }
       $this->stop(1);
     }
     if ($this->config['core']['createCrashReports']) {

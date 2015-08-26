@@ -69,7 +69,7 @@ abstract class CommandBase extends Module implements Command {
     if ($command == 'exit')
       $this->stop();
     if (!isset($this->commands[$command])) {
-      $this->shell->put(tr('Unknown command: %1', $command));
+      $this->m->shell->put(tr('Unknown command: %1', $command));
       return;
     }
     call_user_func($this->commands[$command], $parameters, $this->options);
@@ -86,21 +86,21 @@ abstract class CommandBase extends Module implements Command {
   public function help() {
     $description = $this->getDescription();
     if (isset($description))
-      $this->shell->put($description);
+      $this->m->shell->put($description);
     if (count($this->availableOptions)) {
-      $this->shell->put(tr('Options:'));
+      $this->m->shell->put(tr('Options:'));
       $options = $this->availableOptions;
       ksort($options);
       foreach ($options as $option => $hasParam) {
-        $this->shell->put('  --' . sprintf('% -15s', $option) . ' ' . $this->getDescription($option));
+        $this->m->shell->put('  --' . sprintf('% -15s', $option) . ' ' . $this->getDescription($option));
       }
     }
     if (count($this->commands)) {
-      $this->shell->put(tr('Commands:'));
+      $this->m->shell->put(tr('Commands:'));
       $commands = $this->commands;
       ksort($commands);
       foreach ($commands as $name => $command) {
-        $this->shell->put('  ' . sprintf('% -15s', $name) . ' ' . $command->getDescription());
+        $this->m->shell->put('  ' . sprintf('% -15s', $name) . ' ' . $command->getDescription());
       }
     }
   }

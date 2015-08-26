@@ -17,11 +17,16 @@ class ShellUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
+  protected $requires = array('AppLogic');
+  
+  /**
+   * {@inheritdoc}
+   */
   public function run(App $app, Document $config) {
-    $app->m->Shell = new Shell($app);
+    $app->m->shell = new Shell($app);
+    $app->m->shell->parseArguments();
     $app->on('ready', function() use($app) {
-      $app->m->Shell->parseArgument();
-      $app->m->Shell->run();
+      $app->m->shell->run();
     });
   }
 }

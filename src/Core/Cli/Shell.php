@@ -6,6 +6,7 @@
 namespace Jivoo\Core\Cli;
 
 use Jivoo\Core\App;
+use Jivoo\Core\Log\ErrorHandler;
 
 /**
  * Command-line interface for Jivoo applications.
@@ -20,7 +21,6 @@ class Shell extends CommandBase {
   
   public function __construct(App $app) {
     parent::__construct($app);
-    $this->shell = $this;
     $this->addCommand('version', array($this, 'showVersion'), tr('Show the application and framework version'));
     $this->addCommand('help', array($this, 'showHelp'), tr('Show this help'));
     $this->addCommand('trace', array($this, 'showTrace'), tr('Show stack trace for most recent exception'));
@@ -130,16 +130,23 @@ class Shell extends CommandBase {
   public function showTrace() {
     if (!isset($this->lastError))
       return;
-    $this->dumpException($this->lastError);
+    self::dumpException($this->lastError);
   }
-  
-  public function dumpException(\Exception $exception) {
-    $this->error(tr(
-      '%1: %2 in %3:%4', get_class($exception),
-      $exception->getMessage(), $exception->getFile(), $exception->getLine()
-    ));
-    $this->error();
-    $this->error(tr('Stack trace:'));
+
+  public static function dumpException(\Exception $exception, $stream = STDERR) {
+    if ($exception instanceof \ErrorException)
+      $title = 'Fatal error (' .  ErrorHandler::toString($exception->getSeverity()) . ')';
+    else
+      $title = get_class($exception);
+    fwrite(
+      $stream,
+      $title . ': ' . $exception->getMessage() . ' in ' .
+        $exception->getFile() . ':' . $exception->getLine() . PHP_EOL . PHP_EOL
+    );
+    fwrite(
+      $stream,
+      'Stack trace:' . PHP_EOL
+    );
     $trace = $exception->getTrace();
     foreach ($trace as $i => $call) {
       $message = '  ' . sprintf('% 2d', $i) . '. ';
@@ -156,14 +163,15 @@ class Shell extends CommandBase {
         $arglist[] = (is_scalar($arg) ? var_export($arg, true) : gettype($arg));
       }
       $message .=  implode(', ', $arglist);
-      $message .=  ')';
-      $this->error($message);
+      $message .=  ')' . PHP_EOL;
+      fwrite($stream, $message);
     }
     $previous = $exception->getPrevious();
     if (isset($previous)) {
-      $this->error(tr('Caused by:')); 
-      $this->dumpException($previous);
+      fwrite($stream, 'Caused by:' . PHP_EOL);
+      self::dumpException($previous);
     }
+    fflush($stream);
   }
   
   public function showVersion() {
@@ -180,12 +188,12 @@ class Shell extends CommandBase {
     $this->lastError = $exception;
     if (isset($this->options['trace'])) {
       $this->error(tr('Uncaught exception'));
-      $this->dumpException($exception);
+      self::dumpException($exception);
     }
     else {
       $this->error(tr('Uncaught %1: %2', get_class($exception), $exception->getMessage()));
       $this->put();
-      $this->put(tr('Call "trace" to show stack trace'));
+      $this->put(tr('Call "trace" or run script with the "--trace" option to show stack trace'));
     }
   }
   
