@@ -21,8 +21,15 @@ abstract class PoolBase implements Pool {
   /**
    * {@inheritdoc}
    */
+  public function itemExists($key) {
+    return $this->getItem($key)->isHit();
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   public function saveDeferred(CacheItem $item) {
-    $this->save();
+    $this->save($item);
     return $this;
   }
 

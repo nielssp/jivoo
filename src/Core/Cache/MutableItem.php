@@ -80,14 +80,6 @@ class MutableItem implements CacheItem {
   /**
    * {@inheritdoc}
    */
-  public function exists() {
-    // ????
-    return $this->hit;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function expiresAt($expiration) {
     $this->expiration = $expiration;
     return $this;

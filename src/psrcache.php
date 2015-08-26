@@ -31,11 +31,6 @@ interface CacheItemInterface {
   public function isHit();
 
   /**
-   * @return bool
-   */
-  public function exists();
-
-  /**
    * @param \DateTimeInterface $expiration
    * @return static
    */
@@ -59,35 +54,41 @@ interface CacheItemPoolInterface {
   /**
    * @param array $keys
    * @return array|\Traversable
-  */
+   */
   public function getItems(array $keys = array());
+  
+  /**
+   * @param string $key
+   * @return bool
+   */
+  public function itemExists($key);
 
   /**
-   * @return boolean
-  */
+   * @return bool
+   */
   public function clear();
 
   /**
    * @param array $keys
    * @return static
-  */
+   */
   public function deleteItems(array $keys);
 
   /**
    * @param CacheItemInterface $item
    * @return static
-  */
+   */
   public function save(CacheItemInterface $item);
 
   /**
    * @param CacheItemInterface $item
    * @return static
-  */
+   */
   public function saveDeferred(CacheItemInterface $item);
 
   /**
    * @return bool
-  */
+   */
   public function commit();
 
 }

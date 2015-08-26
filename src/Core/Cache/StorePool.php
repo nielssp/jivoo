@@ -74,6 +74,15 @@ class StorePool extends PoolBase {
   /**
    * {@inheritdoc}
    */
+  public function itemExists($key) {
+    if (!isset($this->data))
+      $this->read();
+    return array_key_exists($key, $this->data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function clear() {
     $this->data = array();
     return true;

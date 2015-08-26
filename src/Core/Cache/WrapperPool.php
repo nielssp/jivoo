@@ -42,6 +42,13 @@ class WrapperPool extends PoolBase {
   /**
    * {@inheritdoc}
    */
+  public function itemExists($key) {
+    return $this->pool->itemExists($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function clear() {
     return $this->pool->clear();
   }

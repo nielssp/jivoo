@@ -55,13 +55,6 @@ class NullItem implements CacheItem {
   /**
    * {@inheritdoc}
    */
-  public function exists() {
-    return false;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function expiresAt($expiration) {
     return $this;
   }
