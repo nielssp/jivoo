@@ -17,9 +17,16 @@ class I18nUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
+  protected $requires = array('Cache');
+  
+  /**
+   * {@inheritdoc}
+   */
   public function run(App $app, Document $config) {
-    if (isset($confog['language']))
-      I18n::setLanguage($config['language']);
+    I18n::setCache($app->m->cache->i18n);
+    
+    if (isset($app->config['i18n']['language']))
+      I18n::setLanguage($app->config['i18n']['language']);
     I18n::loadFrom($this->p('Core/languages'));
     I18n::loadFrom($this->p('app/languages'));
   }
