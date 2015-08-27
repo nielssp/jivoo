@@ -25,11 +25,7 @@ class ModuleTest extends \Jivoo\Test {
         if ($property == 'View')
           return 'view';
         if ($property == 'Routing')
-          return (object)array(
-            'request' => (object)array(
-              'session' => 'session'
-            )
-          );
+          return 'routing';
       }));
     $app->method('__get')
       ->will($this->returnCallback(function($property) use($mloader) {
@@ -39,15 +35,11 @@ class ModuleTest extends \Jivoo\Test {
 
     $m = new A($app);
     
-    $this->assertAttributeEquals('session', 'session', $m);
-    $this->assertAttributeEquals('view', 'view', $m);
-    
     $app->expects($this->once())
       ->method('p')
       ->willReturn('ptest');
     $this->assertEquals('ptest', $m->p('a/b'));
     $this->assertEquals($m->getEvents(), array('someEvent'));
-    $this->assertTrue($m->hasEvent('someEvent'));
     $l = $this->getMockBuilder('Jivoo\Core\EventListener')
       ->setMethods(array('getEventHandlers', 'someEvent'))
       ->getMock();

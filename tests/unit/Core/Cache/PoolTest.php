@@ -20,14 +20,14 @@ abstract class PoolTest extends \Jivoo\Test {
     $this->assertNull($pool->get($key));
     $this->assertNull($pool->getItem($key)->get());
     $this->assertFalse($pool->getItem($key)->isHit());
-    $this->assertFalse($pool->getItem($key)->exists());
+    $this->assertFalse($pool->itemExists($key));
   }
   
   protected function assertHit($expected, Pool $pool, $key) {
     $this->assertEquals($expected, $pool->get($key));
     $this->assertEquals($expected, $pool->getItem($key)->get());
     $this->assertTrue($pool->getItem($key)->isHit());
-    $this->assertTrue($pool->getItem($key)->exists());
+    $this->assertTrue($pool->itemExists($key));
   }
   
   public function testEmptyPool() {

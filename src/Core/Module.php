@@ -69,7 +69,9 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
   public function __get($property) {
     if ($property == 'config')
       return $this->config;
-    return $this->m->getProperty($property);
+    if (isset($this->m))
+      return $this->m->getProperty($property);
+    throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
   /**
@@ -110,7 +112,9 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
    * @throws InvalidMethodException If method is not defined.
    */
   public function __call($method, $parameters) {
-    $this->m->callMethod($method, $parameters);
+    if (isset($this->m))
+      return $this->m->callMethod($method, $parameters);
+    throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
   
   /**
