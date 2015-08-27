@@ -221,7 +221,6 @@ class Routing extends LoadableModule {
    */
   public function __isset($property) {
     switch ($property) {
-      case 'request':
       case 'dispatchers':
       case 'routes':
       case 'root':

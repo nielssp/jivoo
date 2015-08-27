@@ -54,7 +54,7 @@ class NotifyHelper extends Helper implements \Countable, \IteratorAggregate {
    * @param string $message Message.
    */
   public function __set($type, $message) {
-    $this->__get($type)[] = $message;
+    $this->__get($type)->offsetSet(null, $message);
   }
   
   /**
@@ -144,7 +144,7 @@ class NotificationIterator implements \Iterator {
     $tuple = current($this->list);
     $index = $tuple[0];
     $type = $tuple[1]->type;
-    unset($this->Notify->__get($type)[$index]);
+    $this->Notify->__get($type)->offsetUnset($index);
     return $tuple[1];
   }
 
