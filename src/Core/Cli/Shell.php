@@ -163,10 +163,12 @@ class Shell extends CommandBase {
       }
       $message .=  $call['function'] . '(';
       $arglist = array();
-      foreach ($call['args'] as $arg) {
-        $arglist[] = (is_scalar($arg) ? var_export($arg, true) : gettype($arg));
+      if (isset($call['args'])) {
+        foreach ($call['args'] as $arg) {
+          $arglist[] = (is_scalar($arg) ? var_export($arg, true) : gettype($arg));
+        }
+        $message .=  implode(', ', $arglist);
       }
-      $message .=  implode(', ', $arglist);
       $message .=  ')' . PHP_EOL;
       fwrite($stream, $message);
     }
