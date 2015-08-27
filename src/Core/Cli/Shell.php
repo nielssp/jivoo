@@ -212,6 +212,9 @@ class Shell extends CommandBase {
     if (is_object($value)) {
       return get_class($value);
     }
+    if (is_resource($value)) {
+      return get_resource_type($value);
+    }
     return var_export($value, true);
   }
 
