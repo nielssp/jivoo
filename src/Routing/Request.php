@@ -21,7 +21,7 @@ use Jivoo\Core\Log\Logger;
  * set for {@see hasValidData} to work.
  * @property-read string[] $realPath The original $path.
  * @property-read array $data POST data as an associative array.
- * @property-read array $files File upload data.
+ * @property-read UploadedFile[] $files File upload data.
  * @property-read Cookies $cookies Cookie access object.
  * @property-read string|null $ip The remote address or null if not set.
  * @property-read string|null $url The request uri or null if not set.
@@ -159,7 +159,7 @@ class Request {
 
     $this->query = $_GET;
     $this->data = $_POST;
-    $this->files = $_FILES;
+    $this->files = UploadedFile::convert($_FILES);
     
     $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
     if ($this->method != 'GET')

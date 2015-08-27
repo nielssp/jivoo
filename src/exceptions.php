@@ -323,6 +323,12 @@ namespace Jivoo\Routing  {
     implements RoutingException {}
   
   /**
+   * Thrown when a file upload fails.
+   */
+  class UploadException extends \RuntimeException
+    implements RoutingException {}
+  
+  /**
    * When thrown, the current response is replaced.
    */
   class ResponseOverrideException extends \RuntimeException
