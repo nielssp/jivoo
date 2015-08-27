@@ -7,6 +7,9 @@ namespace Jivoo\Core\Cli;
 
 use Jivoo\Core\App;
 use Jivoo\Core\Log\ErrorHandler;
+use Jivoo\Core\Log\FileHandler;
+use Psr\Log\LogLevel;
+use Jivoo\Core\Log\StreamHandler;
 
 /**
  * Command-line interface for Jivoo applications.
@@ -28,6 +31,7 @@ class Shell extends CommandBase {
     $this->addOption('help', 'h');
     $this->addOption('version', 'v');
     $this->addOption('trace', 't');
+    $this->addOption('debug', 'd');
   }
   
   public function parseArguments() {
@@ -249,6 +253,10 @@ class Shell extends CommandBase {
   }
   
   public function run() {
+    $level = LogLevel::WARNING;
+    if (isset($this->options['debug']))
+      $level = LogLevel::DEBUG;
+    $this->logger->addHandler(new StreamHandler(STDERR, $level));
     while (ob_get_level() > 0)
       ob_end_clean();
     while (true) {

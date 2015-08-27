@@ -11,21 +11,11 @@ use Psr\Log\LogLevel;
 /**
  * File log handler.
  */
-class FileHandler extends HandlerBase {
+class FileHandler extends StreamHandler {
   /**
    * @var string
    */
   private $file;
-  
-  /**
-   * @var resource
-   */
-  private $stream = null;
-  
-  /**
-   * @var bool
-   */
-  private $useLocking = false;
   
   /**
    * Construct file log handler.
@@ -35,7 +25,6 @@ class FileHandler extends HandlerBase {
    * atomicity of each write.
    */
   public function __construct($filePath, $level = LogLevel::DEBUG, $useLocking = false) {
-    parent::__construct($level);
     if (!file_exists($filePath)) {
       $dir = dirname($filePath);
       if (!Utilities::dirExists($dir)) {
@@ -50,7 +39,7 @@ class FileHandler extends HandlerBase {
       }
     }
     $this->file = realpath($filePath);
-    $this->useLocking = $useLocking;
+    parent::__construct(null, $level, $useLocking);
   }
   
   /**
@@ -67,41 +56,6 @@ class FileHandler extends HandlerBase {
         return;
       }
     }
-    if ($this->useLocking)
-      flock($this->stream, LOCK_EX);
-    
-    fwrite($this->stream, self::format($record));
-
-    if ($this->useLocking)
-      flock($this->stream, LOCK_UN);
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function close() {
-    if (is_resource($this->stream))
-      fclose($this->stream);
-  }
-  
-  /**
-   * Format a log message for a log file.
-   * @param array $record Log message array.
-   * @return string Formatted log message followed by a line break.
-   */
-  public static function format(array $record) {
-    $seconds = (int) $record['time'];
-    $millis = floor(($record['time'] - $seconds) * 1000);
-    $timestamp = date('Y-m-d H:i:s', $seconds);
-    $timestamp .= sprintf('.%03d ', $millis);
-    $timestamp .= date('P');
-    $level = '[' . $record['level'] . ']';
-    $message = '';
-    $message .= Logger::interpolate($record['message'], $record['context']);
-    if (isset($record['context']['file']))
-      $message .= ' in ' . $record['context']['file'];
-    if (isset($record['context']['line']))
-      $message .= ' on line ' . $record['context']['line'];
-    return $timestamp . ' ' . $level .  ' ' . $message . PHP_EOL;
+    parent::handle($record);
   }
 }
