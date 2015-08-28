@@ -11,6 +11,7 @@ use Jivoo\Helpers\Filtering\FilterParser;
 use Jivoo\Helpers\Filtering\FilterScanner;
 use Jivoo\Helpers\Filtering\RecordFilterVisitor;
 use Jivoo\Models\BasicModel;
+use Jivoo\Models\Model;
 
 /**
  * Helper for filtering selections or arrays of records based on a query string.
