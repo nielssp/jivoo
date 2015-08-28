@@ -47,11 +47,22 @@ class UnitLoader extends Module {
    */
   protected $events = array('unitRun', 'unitDone', 'allRun', 'allDone');
   
+  /**
+   * Construct unit loader.
+   * @param App $app Application.
+   */
   public function __construct(App $app) {
     parent::__construct($app);
     $app->on('stop', array($this, 'stopAll'));
   }
   
+  /**
+   * Enable a unit.
+   * @param string|Unit|string[]|Unit[] $name Unit(s) to enable, may be a unit
+   * name, a {@see Unit} object, or an array of names and objects.
+   * @param bool $withDependencies Whether to recursively enable the unit's
+   * dependencies.
+   */
   public function enable($name, $withDependencies = false) {
     if (is_array($name)) {
       foreach ($name as $n)
@@ -71,7 +82,14 @@ class UnitLoader extends Module {
     $this->waiting[$name] = $name;
   }
   
-  public function disable($name, $unload = true) {
+  /**
+   * Disable a unit.
+   * @param string|Unit|string[]|Unit[] $name  Unit(s) to enable, may be a unit
+   * name, a {@see Unit} object, or an array of names and objects.
+   * @param bool $cascade Whether to recursively disable units that depend on
+   * this one.
+   */
+  public function disable($name, $cascade = false) {
     if (is_array($name)) {
       foreach ($name as $n)
         $this->disable($n, $unload);
@@ -82,15 +100,22 @@ class UnitLoader extends Module {
     if (isset($this->states[$name])) {
       if (isset($htis->waiting[$name]))
         unset($this->waiting[$name]);
-      if ($unload) {
-        unset($this->states[$name]);
+      if ($cascade) {
+        $this->states[$name] = UnitState::DISABLED;
       }
       else {
-        $this->states[$name] = UnitState::DISABLED;
+        unset($this->states[$name]);
       }
     }
   }
 
+  /**
+   * Get the name of a unit. The name of a unit is its class name without a
+   * "Unit"-suffix. If the class is in the namespace "Jivoo\Core\Units" or
+   * "(app namespace)\Units", the namespace is removed from the name.
+   * @param Unit $unit Unit.
+   * @return string Unit name.
+   */
   public function getName(Unit $unit) {
     $class = get_class($unit);
     if (Unicode::endsWith($class, 'Unit')) {
@@ -104,6 +129,17 @@ class UnitLoader extends Module {
     return $class;
   }
   
+  /**
+   * Load a unit (does not enable it).
+   * 
+   * When loading a unit, the method will first look in the namespaces
+   * "Jivoo\Core\Units" and "(app namespace)\Units". E.g. when attempting to
+   * load "Foo\Bar", the following class lookups are made:
+   * "Jivoo\Core\Units\Foo\BarUnit", "(app namespace)\Units\Foo\BarUnit",
+   * "Foor\BarUnit", and "Foo\Bar".
+   * @param string|Unit $name Unit name or object.
+   * @return Unit The loaded unit.
+   */
   public function load($name) {
     if ($name instanceof Unit) {
       $unit = $name;
@@ -136,6 +172,11 @@ class UnitLoader extends Module {
     return $unit;
   }
   
+  /**
+   * Get the state of a unit.
+   * @param string|Unit $name Unit name or object.
+   * @return string Unit state, see {@see UnitState} for possible values.
+   */
   public function getState($name) {
     if ($name instanceof Unit)
       $name = $this->getName($name);
@@ -144,11 +185,21 @@ class UnitLoader extends Module {
     return $this->states[$name];
   }
 
+  /**
+   * Whether a unit is either enabled or has already run.
+   * @param string|Unit $name Unit name or object.
+   * @return bool True if enabled or done.
+   */
   public function isActive($name) {
     $state = $this->getState($name);
     return in_array(array(UnitState::ENABLED, UnitState::DONE), $state);
   }
 
+  /**
+   * Whether a unit has finished successfully.
+   * @param string|Unit $name Unit name or object.
+   * @return bool True if done.
+   */
   public function isDone($name) {
     return $this->getState($name) == UnitState::DONE;
   }
@@ -167,6 +218,14 @@ class UnitLoader extends Module {
     $this->after[$unitB][] = $unitA;
   }
 
+  /**
+   * Run a unit.
+   * @param string|Unit $name Unit name or object.
+   * @throws LoadOrderException If dependencies cannot be satisfied.
+   * @throws Exception Any exception may be thrown from a unit.
+   * @return bool True if unit runs (or has already run) successfully. False
+   * if disabled or not loaded.
+   */
   public function run($name) {
     if (!isset($this->units[$name]))
       return false;

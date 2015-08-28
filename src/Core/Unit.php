@@ -13,11 +13,15 @@ use Jivoo\Core\Store\Document;
 interface Unit {
   /**
    * Run unit.
+   * @param App $app Application.
+   * @param Document $config Unit configuration.
    */
   public function run(App $app, Document $config);
 
   /**
    * Stop unit.
+   * @param App $app Application.
+   * @param Document $config Unit configuration.
    */
   public function stop(App $app, Document $config);
   

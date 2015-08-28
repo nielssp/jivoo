@@ -56,6 +56,9 @@ class Init extends Module {
     $this->m->units->runAll();
   }
   
+  /**
+   * Run applciation in production mode.
+   */
   protected function production() {
     if (isset($this->app->manifest['init']))
       $this->m->units->enable($this->app->manifest['init']);
@@ -64,12 +67,18 @@ class Init extends Module {
       'Request', 'Routing', 'Session', 'LegacyModules', 'AppRoutes'
     ));
   }
-  
+
+  /**
+   * Run applciation in development mode.
+   */
   protected function development() {
     $this->production();
 //     $this->m->units->enable('Console');
   }
-  
+
+  /**
+   * Run applciation in CLI mode.
+   */
   protected function cli() {
     $this->development();
     $this->m->units->disable('Request', false);
