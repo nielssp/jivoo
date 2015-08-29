@@ -270,7 +270,8 @@ class UnitLoader extends Module {
     )));
     
     try {
-      $this->units[$name]->run($this->app, new Document());
+      $config = $this->config->getSubset($name);
+      $this->units[$name]->run($this->app, $config);
     }
     catch (\Exception $e) {
       $this->states[$name] = UnitState::FAILED;
@@ -300,8 +301,10 @@ class UnitLoader extends Module {
    */
   public function stopAll() {
     foreach ($this->states as $name => $state) {
-      if ($state == UnitState::DONE)
-        $this->units[$name]->stop($this->app, new Document());
+      if ($state == UnitState::DONE) {
+        $config = $this->config->getSubset($name);
+        $this->units[$name]->stop($this->app, $config);
+      }
     }
   }
 }
