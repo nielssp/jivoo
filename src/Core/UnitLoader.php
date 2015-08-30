@@ -192,7 +192,7 @@ class UnitLoader extends Module {
    */
   public function isActive($name) {
     $state = $this->getState($name);
-    return in_array(array(UnitState::ENABLED, UnitState::DONE), $state);
+    return in_array($state, array(UnitState::ENABLED, UnitState::DONE));
   }
 
   /**

@@ -73,10 +73,10 @@ class DatabaseDriversHelper extends Helper {
    */
   public function listDrivers() {
     $drivers = array();
-    $files = scandir($this->p('Databases', 'Drivers'));
+    $files = scandir($this->p('Jivoo/Databases/Drivers'));
     if ($files !== false) {
       foreach ($files as $driver) {
-        if (is_dir($this->p('Databases', 'Drivers/' . $driver))) {
+        if (is_dir($this->p('Jivoo/Databases/Drivers/' . $driver))) {
           try {
             $drivers[$driver] = $this->checkDriver($driver);
           }

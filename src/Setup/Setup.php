@@ -65,7 +65,7 @@ class Setup extends LoadableModule {
         if ($this->request->path === array('setup')) {
           $login = $this->snippets->getSnippet('Jivoo\Setup\Login');
           $login->enableLayout();
-          $response = $this->snippets->dispatch($login, array($auth));
+          $response = $this->m->Routing->dispatch($login, array($auth));
         }
         else {
           $response = $this->m->Routing->dispatch(

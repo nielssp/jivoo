@@ -2,6 +2,7 @@
   "name": "Jivoo chat application",
   "namespace": "Chat",
   "version": "1.0",
+  "init": ["Setup", "Databases", "Migrations", "ActiveModels"],
   "modules": [
     "Routing",
     "AccessControl",

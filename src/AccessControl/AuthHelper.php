@@ -9,6 +9,7 @@ use Jivoo\Helpers\Helper;
 use Jivoo\AccessControl\Acl\DefaultAcl;
 use Jivoo\Core\Utilities;
 use Jivoo\Routing\RenderEvent;
+use Jivoo\Core\Assume;
 
 /**
  * Helper class for authentication and autorization.
@@ -51,11 +52,6 @@ use Jivoo\Routing\RenderEvent;
  * associative array mapping names to options.
  */
 class AuthHelper extends Helper {
-  /**
-   * {@inheritdoc}
-   */
-  protected $modules = array('AccessControl');
-
   /**
    * @var mixed Current user, if logged in. 
    */
@@ -162,6 +158,19 @@ class AuthHelper extends Helper {
   private $passwordHasher = null;
   
   /**
+   * @var string[] List of built-in hashing algorithms.
+   */
+  private $builtInHashers = array(
+    'Jivoo\AccessControl\Hashing\BcryptHasher',
+    'Jivoo\AccessControl\Hashing\Sha512Hasher',
+    'Jivoo\AccessControl\Hashing\Sha256Hasher',
+    'Jivoo\AccessControl\Hashing\BlowfishHasher',
+    'Jivoo\AccessControl\Hashing\Md5Hasher',
+    'Jivoo\AccessControl\Hashing\ExtDesHasher',
+    'Jivoo\AccessControl\Hashing\StdDesHasher'
+  );
+  
+  /**
    * @var DefaultAcl Default access control list.
    */
   private $defaultAcl = null;
@@ -170,7 +179,14 @@ class AuthHelper extends Helper {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->passwordHasher = $this->m->AccessControl->getPasswordHasher();
+    foreach ($this->builtInHashers as $builtIn) {
+      try {
+        $this->passwordHasher = new $builtIn();
+        break;
+      }
+      catch (UnsupportedHashTypeException $e) { }
+    }
+    
     $this->m->Routing->on('beforeDispatch', array($this, 'checkAuthorization'));
     $this->defaultAcl = new DefaultAcl($this->app);
     $this->addAcl($this->defaultAcl);
@@ -226,10 +242,13 @@ class AuthHelper extends Helper {
         $this->$property = $value;
         return;
       case 'passwordHasher':
-        if ($value instanceof PasswordHasher)
+        if ($value instanceof PasswordHasher) {
           $this->passwordHasher = $value;
-        else
-          $this->passwordHasher = $this->m->AccessControl->getPasswordHasher($value);
+        }
+        else {
+          Assume::isSubclassOf($value, 'Jivoo\AccessControl\Passwordhasher');
+          $this->passwordHasher = new $value();
+        }
         return;
       case 'authentication':
         if (is_array($value)) {

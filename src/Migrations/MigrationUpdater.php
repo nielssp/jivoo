@@ -35,7 +35,7 @@ class MigrationUpdater extends InstallerSnippet {
    * {@inheritdoc}
    */
   public function before() {
-    $this->m->load('Migrations');
+    $this->m->units->run('Migrations');
     
     $name = $this->dbName;
     $this->db = $this->m->Databases->$name->getConnection();

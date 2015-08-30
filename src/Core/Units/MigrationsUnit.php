@@ -10,14 +10,22 @@ use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Databases\DatabaseLoader;
+use Jivoo\Migrations\Migrations;
 
 /**
  * Initializes the migration system.
  */
-class MigrationsUnit extends UnitBase {
+class MigrationsUnit extends UnitBase {  
+  /**
+   * {@inheritdoc}
+   */
+  protected $requires = array('Databases');
+  
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
+    $this->m->Migrations = new Migrations($app);
+    $this->m->Migrations->runInit();
   }
 }

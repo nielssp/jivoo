@@ -81,7 +81,7 @@ class Migrations extends LoadableModule {
   public function getDatabase($name) {
     if (isset($this->connections[$name]))
       return $this->connections[$name];
-    throw new MigrationException(tr('"%1 is not a migratable database', $name));
+    throw new MigrationException(tr('"%1" is not a migratable database', $name));
   }
 
   /**

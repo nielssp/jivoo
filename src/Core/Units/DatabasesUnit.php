@@ -19,6 +19,11 @@ class DatabasesUnit extends UnitBase {
    * {@inheritdoc}
    */
   protected $requires = array('AppLogic');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $after = array('Setup');
   
   /**
    * {@inheritdoc}
