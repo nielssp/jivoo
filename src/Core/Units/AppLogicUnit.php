@@ -23,7 +23,7 @@ class AppLogicUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('State', 'Vendor', 'Cache', 'Session');
+  protected $requires = array('State', 'Vendor', 'Cache');
   
   /**
    * {@inheritdoc}

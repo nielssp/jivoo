@@ -530,6 +530,7 @@ class App extends EventSubjectBase implements LoggerAware {
     $this->triggerEvent('ready');
     
     $this->logger->warning(tr('Application not stopped'));
+    $this->stop(1);
   }
   
   /**
@@ -538,7 +539,6 @@ class App extends EventSubjectBase implements LoggerAware {
    */
   public function stop($status = 0) {
     $this->safeTriggerEvent('stop');
-    
     exit($status);
   }
 }

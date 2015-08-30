@@ -19,7 +19,7 @@ class SetupUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Routing', 'AppLogic');
+  protected $requires = array('Routing', 'AppLogic', 'Session');
 
   /**
    * {@inheritdoc}
