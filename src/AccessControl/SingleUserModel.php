@@ -5,9 +5,9 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\AccessControl;
 
-use Jivoo\Routing\Session;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Binary;
+use Jivoo\Core\Store\Session;
 
 /**
  * Single-user model. Can be used for simple authentication of a single

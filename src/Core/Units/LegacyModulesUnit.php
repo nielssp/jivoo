@@ -22,16 +22,16 @@ class LegacyModulesUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Request', 'AppLogic');
+  protected $requires = array('Routing', 'AppLogic');
   
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
     $modules = $this->app->manifest['modules'];
-    $modules = array_intersect($modules, array(
-      'AccessControl', 'Console', 'Content', 'Extensions', 'Jtk', 'Themes'
-    ));
+    $modules = array_intersect(array(
+      'Extensions', 'AccessControl', 'Console', 'Content', 'Jtk', 'Themes'
+    ), $modules);
     foreach ($modules as $module) {
       $class = 'Jivoo\\' . $module . '\\' . $module;
       $this->m->$module = new $class($app);

@@ -2,6 +2,7 @@
   "name": "Jivoo Blog Example",
   "namespace": "Blog",
   "version": "1.0",
+  "init": ["Databases", "Migrations", "ActiveModels"],
   "modules": [
     "Assets",
     "Helpers",
