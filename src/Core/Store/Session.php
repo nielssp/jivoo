@@ -23,14 +23,13 @@ class Session extends Document {
   /**
    * Construct state.
    * @param Store $store Store to load/save data from/to.
-   * @param bool $mutable Whether state is mutable (true) or read-only (false).
    * @throws AccessException If state could not be read.
    */
-  public function __construct(Store $store, $mutable = true) {
+  public function __construct(Store $store) {
     parent::__construct();
     $this->store = $store;
     try {
-      $this->store->open($mutable);
+      $this->store->open(true);
       $this->data = $this->store->read();
     }
     catch (AccessException $e) {
@@ -45,7 +44,7 @@ class Session extends Document {
   public function isOpen() {
     return $this->store->isMutable();
   }
-  
+
   /**
    * Reopen a closed session.
    * @return boolean True on success, false on failure.
@@ -53,7 +52,7 @@ class Session extends Document {
   public function open() {
     $this->store->open(true);
   }
-  
+
   /**
    * Close, save (if mutable), and unlock state data.
    * @throws NotOpenException If the state has already been closed.
@@ -64,6 +63,7 @@ class Session extends Document {
     $this->store->close();
     $this->updated = false;
   }
+
   /**
    * {@inheritdoc}
    */
