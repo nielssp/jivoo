@@ -8,6 +8,7 @@ namespace Jivoo\Helpers;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Core\LoadEvent;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Assume;
 
 /**
  * Helpers module. All helpers added to the module, can be accessed as
@@ -72,7 +73,7 @@ class Helpers extends LoadableModule {
         }
       }
       $this->triggerEvent('beforeLoadHelper', new LoadHelperEvent($this, $name));
-      Utilities::assumeSubclassOf($class, 'Jivoo\Helpers\Helper');
+      Assume::isSubclassOf($class, 'Jivoo\Helpers\Helper');
       $this->helpers[$name] = new $class($this->app);
       $this->triggerEvent('afterLoadHelper', new LoadHelperEvent($this, $name, $this->helpers[$name]));
     }

@@ -33,6 +33,8 @@ class AppLogicUnit extends UnitBase {
     $app->m->Helpers = new Helpers($app);
     $app->m->Helpers->addHelper('Jivoo\Snippets\SnippetHelper');
     $app->m->Helpers->runInit();
+    $app->m->Helpers->addHelper('Jivoo\AccessControl\AuthHelper');
+    $app->m->addMethod('helper', array($app->m->Helpers, 'getHelper'));
     $app->m->Models = new Models($app);
     $app->m->Models->runInit();
 

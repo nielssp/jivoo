@@ -369,7 +369,7 @@ abstract class ModelBase extends Module implements Model {
       case 'or':
         return call_user_func_array(array(new SelectionBuilder($this), 'orWhere'), $args);
     }
-    parent::__call($method, $args);
+    return parent::__call($method, $args);
   }
 
   /**

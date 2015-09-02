@@ -133,7 +133,7 @@ class ModuleLoader extends EventSubjectBase {
   
   public function callMethod($method, $parameters) {
     if (array_key_exists($method, $this->methods))
-      return call_user_func($this->methods[$method], $parameters);
+      return call_user_func_array($this->methods[$method], $parameters);
     throw new InvalidMethodException(tr('Invalid method: %1', $method));
   }
   
