@@ -42,7 +42,7 @@ echo h($blogTitle);
 <h1><?php echo h($title); ?></h1>
 <?php endif; ?>
 
-<?php foreach ($flash as $message): ?>
+<?php foreach ($Notify as $message): ?>
 <p class="flash flash-<?php echo $message->type; ?>"><?php echo $message; ?></p>
 <?php endforeach; ?>
 
