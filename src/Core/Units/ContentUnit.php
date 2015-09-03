@@ -9,27 +9,17 @@ use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\LoadableModule;
-use Jivoo\ActiveModels\ActiveModels;
+use Jivoo\Content\Content;
 
 /**
- * Initializes the database system.
+ * Initializes the Content system.
  */
-class ActiveModelsUnit extends UnitBase {
-  /**
-   * {@inheritdoc}
-   */
-  protected $requires = array('Databases', 'AppLogic');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $after = array('Migrations');
-  
+class ContentUnit extends UnitBase {  
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->ActiveModels = new ActiveModels($app);
-    $app->m->ActiveModels->runInit();
+    $this->m->Content = new Content($app);
+    $this->m->Content->runInit();
   }
 }

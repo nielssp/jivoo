@@ -9,27 +9,22 @@ use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\LoadableModule;
-use Jivoo\ActiveModels\ActiveModels;
+use Jivoo\Console\Console;
 
 /**
- * Initializes the database system.
+ * Initializes the developper's console system.
  */
-class ActiveModelsUnit extends UnitBase {
+class ConsoleUnit extends UnitBase {  
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Databases', 'AppLogic');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $after = array('Migrations');
+  protected $requires = array('AppLogic', 'Routing', 'Extensions');
   
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->ActiveModels = new ActiveModels($app);
-    $app->m->ActiveModels->runInit();
+    $this->m->Console = new Console($app);
+    $this->m->Console->runInit();
   }
 }

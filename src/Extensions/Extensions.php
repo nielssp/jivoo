@@ -20,11 +20,6 @@ class Extensions extends LoadableModule {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Assets', 'View');
-  
-  /**
-   * {@inheritdoc}
-   */
   protected $events = array(
     'beforeImportExtensions', 'afterImportExtensions',
     'beforeLoadExtensions', 'beforeLoadExtension',
@@ -129,7 +124,7 @@ class Extensions extends LoadableModule {
    */
   public function addViewExtensions() {
     foreach ($this->viewExtensions as $module => $veInfo) {
-      $this->view->extensions->add(
+      $this->m->lazy('View')->extensions->add(
         $veInfo['template'], $this->extensionModules[$module], $veInfo['hook']
       );
     }

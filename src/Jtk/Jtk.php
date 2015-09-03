@@ -14,11 +14,6 @@ use Jivoo\Core\Utilities;
  */
 class Jtk extends LoadableModule {
   /**
-   * {@inheritdoc}
-   */
-  protected $modules = array('Helpers');
-  
-  /**
    * @var string[]
    */
   private $tools = array();
@@ -32,9 +27,9 @@ class Jtk extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Helpers->addHelper('Jivoo\Jtk\JtkHelper');
-    $this->m->Helpers->addHelper('Jivoo\Jtk\IconHelper');
-    $this->m->Helpers->addHelper('Jivoo\Jtk\ContentAdminHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Jtk\JtkHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Jtk\IconHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Jtk\ContentAdminHelper');
     
     $this->addTool('Jivoo\Jtk\Table\DataTable');
     $this->addTool('Jivoo\Jtk\Menu\Menu');

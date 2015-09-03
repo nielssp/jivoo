@@ -18,11 +18,6 @@ use Jivoo\Routing\InvalidRouteException;
  */
 class Content extends LoadableModule {
   /**
-   * {@inheritdoc}
-   */
-  protected $modules = array('Helpers');
-
-  /**
    * @var ContentFormat[] Formats.
    */
   private $formats = array();
@@ -56,8 +51,8 @@ class Content extends LoadableModule {
    * {@inheritdoc}
    */
   protected function init() {
-    $this->m->Helpers->addHelper('Jivoo\Content\EditorHelper');
-    $this->m->Helpers->addHelper('Jivoo\Content\FormatHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Content\EditorHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Content\FormatHelper');
     
     $this->extensions = new ContentExtensions();
     

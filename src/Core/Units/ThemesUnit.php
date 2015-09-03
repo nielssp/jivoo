@@ -9,27 +9,22 @@ use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\LoadableModule;
-use Jivoo\ActiveModels\ActiveModels;
+use Jivoo\Themes\Themes;
 
 /**
- * Initializes the database system.
+ * Initializes the themes system.
  */
-class ActiveModelsUnit extends UnitBase {
+class ThemesUnit extends UnitBase {  
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Databases', 'AppLogic');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $after = array('Migrations');
+  protected $requires = array('Extensions', 'Routing');
   
   /**
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->ActiveModels = new ActiveModels($app);
-    $app->m->ActiveModels->runInit();
+    $this->m->Themes = new Themes($app);
+    $this->m->Themes->runInit();
   }
 }

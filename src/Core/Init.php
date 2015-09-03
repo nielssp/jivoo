@@ -63,8 +63,8 @@ class Init extends Module {
     if (isset($this->app->manifest['init']))
       $this->m->units->enable($this->app->manifest['init']);
     $this->m->units->enable(array(
-      'Cache', 'I18n', 'State', 'Vendor', 'AppLogic',
-      'Request', 'Routing', 'Session', 'LegacyModules', 'AppRoutes'
+      'Cache', 'I18n', 'State', 'Vendor', 'Extensions', 'AppLogic',
+      'Request', 'Routing', 'Session', 'AppRoutes'
     ));
   }
 
@@ -73,7 +73,7 @@ class Init extends Module {
    */
   protected function development() {
     $this->production();
-//     $this->m->units->enable('Console');
+    $this->m->units->enable('Console');
   }
 
   /**
