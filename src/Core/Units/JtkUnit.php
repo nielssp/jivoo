@@ -19,7 +19,8 @@ class JtkUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $this->m->Jtk = new Jtk($app);
-    $this->m->Jtk->runInit();
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Jtk\JtkHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Jtk\IconHelper');
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Jtk\ContentAdminHelper');
   }
 }

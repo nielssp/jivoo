@@ -7,6 +7,7 @@ namespace Jivoo\Jtk;
 
 use Jivoo\Helpers\Helper;
 use Jivoo\Routing\Response;
+use Jivoo\Core\Utilities;
 
 /**
  * Jivoo toolkit helper.
@@ -15,13 +16,23 @@ class JtkHelper extends Helper {
   /**
    * {@inheritdoc}
    */
-  protected $modules = array('Jtk', 'Themes');
+  protected $modules = array('Themes');
 
   /**
    * {@inheritdoc}
    */
   protected $helpers = array('Snippet', 'Icon', 'Html');
+
+  /**
+   * @var string[]
+   */
+  private $tools = array();
   
+  /**
+   * @var JtkSnippet[]
+   */
+  private $toolInstances = array();
+
   /**
    * @var int[] Preferred icon sizes.
    */
@@ -38,6 +49,38 @@ class JtkHelper extends Helper {
   protected function init() {
     if (isset($this->view->compiler))
       $this->view->compiler->addMacros(new JtkMacros());
+    
+    $this->addTool('Jivoo\Jtk\Table\DataTable');
+    $this->addTool('Jivoo\Jtk\Menu\Menu');
+  }
+  
+  /**
+   * Add a tool snippet.
+   * @param string $class JtkObject class name.
+   * @param string $snippetClass Optional name of snippet class. Default is
+   * $class . 'Snippet'.
+   */
+  public function addTool($class, $snippetClass = null) {
+    $name = Utilities::getClassName($class);
+    if (!isset($snippetClass))
+      $snippetClass = $class . 'Snippet';
+    $this->tools[$name] = $snippetClass;
+  }
+  
+  /**
+   * Get a JTK tool/snippet.
+   * @param string $name Tool name.
+   * @return JtkSnippet Snippet object for tool.
+   */
+  public function getTool($name) {
+//     if (isset($this->toolInstances[$name]))
+//       return $this->toolInstances[$name];
+    if (isset ($this->tools[$name])) {
+      $class = $this->tools[$name];
+      Utilities::assumeSubclassOf($class, 'Jivoo\Jtk\JtkSnippet');
+      return new $class($this->app);
+    }
+    return null;
   }
   
   /**
@@ -48,7 +91,7 @@ class JtkHelper extends Helper {
    * @throws \Exception If tool not found.
    */
   public function __get($toolName) {
-    $tool = $this->m->Jtk->getTool($toolName);
+    $tool = $this->getTool($toolName);
     if (!isset($tool))
       return parent::__get($toolName);
     return new PartialJtkSnippet($tool, $tool->getObject());
@@ -62,7 +105,7 @@ class JtkHelper extends Helper {
    * @throws \Exception If tool not found.
    */
   public function __call($tool, $parameters) {
-    $tool = $this->m->Jtk->getTool($tool);
+    $tool = $this->getTool($tool);
     if (isset($tool)) {
       $response = $tool->__invoke($parameters);
       if ($response instanceof Response)
