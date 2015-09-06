@@ -32,12 +32,22 @@ class ComposerPackage implements Package {
             $autoloader->addPath($namespace, $this->path . '/' . trim($p, '/'));
         }
         else {
-            $autoloader->addPath($namespace, $this->path . '/' . trim($path, '/'));
+          $autoloader->addPath($namespace, $this->path . '/' . trim($path, '/'));
         }
       }
     }
     if (isset($this->manifest['autoload']['psr-0'])) {
-      assume(false, 'PSR-0 support not implemented');
+      // TODO: add real PSR-0 support
+      assume(is_array($this->manifest['autoload']['psr-0']));
+      foreach ($this->manifest['autoload']['psr-0'] as $namespace => $path) {
+        if (is_array($path)) {
+          foreach ($path as $p)
+            $autoloader->addPath($namespace, $this->path . '/' . trim($p, '/'));
+        }
+        else {
+          $autoloader->addPath($namespace, $this->path . '/' . trim($path, '/'));
+        }
+      }
     }
     if (isset($this->manifest['autoload']['classmap'])) {
       assume(false, 'classmap support not implemented');
