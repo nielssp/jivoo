@@ -12,12 +12,26 @@ class ContentMixin extends ActiveModelMixin {
   /**
    * {@inheritdoc}
    */
+  protected $modules= array('Helpers');
+  
+  /**
+   * {@inheritdoc}
+   */
   protected $options = array(
     'fields' => array('content'),
     'text' => true,
     'html' => true,
     'format' => true,
   );
+
+  /**
+   * {@inheritdoc}
+   */
+  public function init() {
+    $helper = $this->helper('Content');
+    foreach ($this->options['fields'] as $field) {
+      $helper->register($this->model, $field);
+  }
 
   /**
    * {@inheritdoc}
