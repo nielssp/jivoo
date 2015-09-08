@@ -9,6 +9,8 @@ use Jivoo\InvalidPropertyException;
 use Jivoo\InvalidMethodException;
 use Psr\Log\LoggerAwareInterface as LoggerAware;
 use Psr\Log\LoggerInterface;
+use Jivoo\Core\Log\NullLogger;
+use Jivoo\Core\Store\Document;
 
 /**
  * A module is part of an application.
@@ -27,10 +29,11 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
   /**
    * @var ModuleLoader Collection of loaded modules.
    */
-  protected $m;
+  protected $m = null;
   
   /**
-   * @var LoggerInterface Application logger.
+   * @var LoggerInterface Application logger, defaults to {@see NullLogger} if
+   * the application hasn't been set.
    */
   protected $logger;
 
@@ -41,23 +44,29 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
 
   /**
    * Construct module. Should always be called when extending this class.
-   * @param App $app Associated application.
+   * @param App|null $app Associated application if any.
    */
-  public function __construct(App $app) {
-    $this->inheritElements('modules');
-    $this->app = $app;
-    $this->config = $app->config;
-    $this->logger = $app->logger;
-    if (isset($app->m)) {
-      $this->m = $app->m;
-      foreach ($this->modules as $module) {
-        if (!isset($this->m->$module))
-          throw new InvalidModuleException('Module "' . $module . '" not loaded. Required by ' . get_class($this));
-        $this->m->__get($module);
+  public function __construct(App $app = null) {
+    if (isset($app)) {
+      $this->inheritElements('modules');
+      $this->app = $app;
+      $this->config = $app->config;
+      $this->logger = $app->logger;
+      if (isset($app->m)) {
+        $this->m = $app->m;
+        foreach ($this->modules as $module) {
+          if (!isset($this->m->$module))
+            throw new InvalidModuleException('Module "' . $module . '" not loaded. Required by ' . get_class($this));
+          $this->m->__get($module);
+        }
       }
+  
+      $this->e = new EventManager($this, $this->app->eventManager);
     }
-
-    $this->e = new EventManager($this, $this->app->eventManager);
+    else {
+      $this->logger = new NullLogger();
+      $this->config = new Document();
+    }
   }
   
   /**
@@ -155,6 +164,7 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
    * @return string Absolute path.
    */
   public function p($key, $path = null) {
+    assume(isset($this->app));
     return $this->app->p($key, $path);
   }
 }
