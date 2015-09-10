@@ -43,16 +43,15 @@ class SqlTable extends Table {
 
   /**
    * Construct table.
-   * @param App $app Associated application.
    * @param SqlDatabaseBase $database Owner database.
    * @param string $table Table name (without prefix etc.).
    */
-  public function __construct(App $app, SqlDatabaseBase $database, $table) {
+  public function __construct(SqlDatabaseBase $database, $table) {
     $this->owner = $database;
     $this->name = $table;
     $this->schema = $this->owner->getSchema()->getSchema($table);
     $this->caseInsensitive = $this->owner->caseInsensitiveFields();
-    parent::__construct($app);
+    parent::__construct();
   }
 
   /**

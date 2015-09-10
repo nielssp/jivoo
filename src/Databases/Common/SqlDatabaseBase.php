@@ -44,7 +44,7 @@ abstract class SqlDatabaseBase extends LoadableDatabase implements SqlDatabase, 
    * @return SqlTable Table object.
    */
   protected function getTable($table) {
-    return new SqlTable($this->app, $this, $table);
+    return new SqlTable($this, $table);
   }
 
   /**

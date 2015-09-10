@@ -39,8 +39,8 @@ abstract class LoadableDatabase extends Module implements MigratableDatabase {
    * @param DatabaseSchema $schema Database schema.
    * @param array $options Associative array of options for driver.
    */
-  public final function __construct(App $app, DatabaseSchema $schema, $options = array()) {
-    parent::__construct($app);
+  public final function __construct(DatabaseSchema $schema, $options = array()) {
+    parent::__construct();
     $this->schema = $schema;
     $this->init($options);
     $this->migrationAdapter = $this->getMigrationAdapter();

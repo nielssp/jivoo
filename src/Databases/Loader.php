@@ -104,7 +104,7 @@ class Loader {
     }
     try {
       $class = 'Jivoo\Databases\Drivers\\' . $driver  . '\\' . $driver . 'Database';
-      Utilities::assumeSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
+      Assume::isSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
       $dbSchema = new DatabaseSchemaBuilder();
       foreach ($schemas as $schema) {
         if (is_string($schema)) {
@@ -118,7 +118,7 @@ class Loader {
         }
         $dbSchema->addSchema($schema);
       }
-      $object = new $class(null, $dbSchema, $options);
+      $object = new $class($dbSchema, $options);
       if (isset($name)) {
         $this->connections[$name] = new DatabaseConnection($object);
       }
