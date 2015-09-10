@@ -10,6 +10,8 @@ use Jivoo\Core\Module;
 use Jivoo\Core\App;
 use Jivoo\Core\Assume;
 use Jivoo\Core\Store\Document;
+use Jivoo\InvalidPropertyException;
+use Jivoo\Core\Json;
 
 /**
  * Connects to databases.
@@ -20,6 +22,8 @@ class Loader {
    */
   private $config;
   
+  private $drivers;
+  
   /**
    * @var LodableDatabase[] Named database connections.
    */
@@ -28,8 +32,9 @@ class Loader {
   /**
    * Construct database loader.
    */
-  public function __construct(Document $config) {
+  public function __construct(Document $config, $drivers) {
     $this->config = $config;
+    $this->drivers = $drivers;
   }
 
   /**
@@ -40,7 +45,7 @@ class Loader {
   public function __get($name) {
     if (isset($this->connections[$name]))
       return $this->connections[$name];
-    return parent::__get($name);
+    throw new InvalidPropertyException('Undefined property: ' . $name);
   }
 
   /**
@@ -57,6 +62,82 @@ class Loader {
    */
   public function getConnections() {
     return $this->connections;
+  }
+
+  /**
+   * Get information about a database driver.
+   *
+   * The returned information array is of the format:
+   * <code>
+   * array(
+   *   'driver' => ..., // Driver name (string)
+   *   'name' => ..., // Formal name, e.g. 'MySQL' instead of 'MySql' (string)
+   *   'requiredOptions' => array(...), // List of required options (string[])
+   *   'optionalOptions' => array(...), // List of optional options (string[])
+   *   'isAvailable' => ..., // Whether or not driver is available (bool)
+   *   'missingExtensions => array(...) // List of missing extensions (string[])
+   * )
+   * </code>
+   * @param string $driver Driver name
+   * @return array Driver information as an associative array.
+   * @throws InvalidDriverException If driver is missing or invalid.
+   */
+  public function checkDriver($driver) {
+    if (!file_exists($this->drivers . '/' . $driver . '/' . $driver . 'Database.php')) {
+      throw new InvalidDriverException(tr('Driver class not found: %1', $driver));
+    }
+    if (!file_exists($this->drivers . '/' . $driver . '/driver.json')) {
+      throw new InvalidDriverException(tr('Driver manifest not found: %1', $driver));
+    }
+    try {
+      $info = Json::decodeFile($this->drivers . '/' . $driver . '/driver.json');
+    }
+    catch (JsonException $e) {
+      throw new InvalidDriverException(tr('Invalid driver manifest: %1 (%2)', $driver, $e->getMessage()), 0, $e);
+    }
+    if (!isset($info['required']))
+      $info['required'] = array();
+    if (!isset($info['optional']))
+      $info['optional'] = array();
+    if (!isset($info['phpExtensions']))
+      $info['phpExtensions'] = array();
+    $missing = array();
+    foreach ($info['phpExtensions'] as $dependency) {
+      if (!extension_loaded($dependency)) {
+        $missing[] = $dependency;
+      }
+    }
+    return array(
+      'driver' => $driver,
+      'name' => $info['name'],
+      'requiredOptions' => $info['required'],
+      'optionalOptions' => $info['optional'],
+      'isAvailable' => count($missing) < 1,
+      'missingExtensions' => $missing
+    );
+  }
+  
+  /**
+   * Get an array of all drivers and their information.
+   * @return array An associative array of driver names and driver information
+   * as returned by {@see Database::checkDriver()}.
+   */
+  public function listDrivers() {
+    $drivers = array();
+    $files = scandir($this->drivers);
+    if ($files !== false) {
+      foreach ($files as $driver) {
+        if (is_dir($this->drivers . '/' . $driver)) {
+          try {
+            $drivers[$driver] = $this->checkDriver($driver);
+          }
+          catch (InvalidDriverException $e) {
+            $this->logger->warning($e->getMessage(), array('exception' => $e));
+          }
+        }
+      }
+    }
+    return $drivers;
   }
   
   /**
@@ -90,7 +171,7 @@ class Loader {
         'Database driver not set'
       ));
     try {
-      $driverInfo = $this->drivers->checkDriver($driver);
+      $driverInfo = $this->checkDriver($driver);
     }
     catch (InvalidDriverException $e) {
       throw new ConnectionException(tr('Invalid database driver: %1', $e->getMessage()), 0, $e);
