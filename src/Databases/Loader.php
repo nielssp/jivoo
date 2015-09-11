@@ -22,6 +22,9 @@ class Loader {
    */
   private $config;
   
+  /**
+   * @var string
+   */
   private $drivers;
   
   /**
@@ -32,9 +35,9 @@ class Loader {
   /**
    * Construct database loader.
    */
-  public function __construct(Document $config, $drivers) {
+  public function __construct(Document $config) {
     $this->config = $config;
-    $this->drivers = $drivers;
+    $this->drivers = dirname(__FILE__) . '/Drivers';
   }
 
   /**
