@@ -43,6 +43,13 @@ abstract class EventSubjectBase implements EventSubject {
   /**
    * {@inheritdoc}
    */
+  public function one($name, $callback) {
+    $this->e->attachHandler($name, $callback, true);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function attachEventListener(EventListener $listener) {
     $this->e->attachListener($listener);
   }

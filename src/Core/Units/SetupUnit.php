@@ -26,6 +26,8 @@ class SetupUnit extends UnitBase {
    */
   public function run(App $app, Document $config) {
     $app->m->Setup = new Setup($app);
-    $app->m->Setup->runInit();
+    $this->m->units->one('unitDone', function() use($app) {
+      $app->m->Setup->runInit();
+    });
   }
 }

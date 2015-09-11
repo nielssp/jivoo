@@ -111,7 +111,7 @@ class DatabaseInstaller extends InstallerSnippet {
       if ($form->isValid()) {
         $class = 'Jivoo\Databases\Drivers\\' . $driver['driver'] . '\\' . $driver['driver'] . 'Database';
         try {
-          new $class($this->app, new DatabaseSchemaBuilder(), $form->getData());
+          new $class(new DatabaseSchemaBuilder(), $form->getData());
           $options = array_flip(
             array_merge(
               $driver['requiredOptions'],

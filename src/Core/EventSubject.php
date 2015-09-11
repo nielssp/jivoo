@@ -25,6 +25,16 @@ interface EventSubject {
    * {@see Event) as its first parameter.
    */
   public function on($name, $callback);
+
+  /**
+   * Attach an event handler to an event (shorter alternative to
+   * {@see attachEventHandler}. If the event is triggered more than once,
+   * the handler is only invoked once.
+   * @param string $name Name of event to handle.
+   * @param callback $callback Function to call. Function must accept an
+   * {@see Event) as its first parameter.
+   */
+  public function one($name, $callback);
   
   /**
    * Attach an event listener to object (i.e. multiple handlers to multiple

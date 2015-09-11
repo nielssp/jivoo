@@ -277,11 +277,11 @@ class UnitLoader extends Module {
       $this->states[$name] = UnitState::FAILED;
       throw $e;
     }
+    $this->states[$name] = UnitState::DONE;
     $this->triggerEvent('unitDone', new Event($this, array(
       'unitName' => $name,
       'unit' => $this->units[$name]
     )));
-    $this->states[$name] = UnitState::DONE;
     return true;
   }
   

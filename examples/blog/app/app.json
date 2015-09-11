@@ -2,25 +2,7 @@
   "name": "Jivoo Blog Example",
   "namespace": "Blog",
   "version": "1.0",
-  "init": ["Databases", "Migrations", "ActiveModels"],
-  "modules": [
-    "Assets",
-    "Helpers",
-    "Models",
-    "Routing",
-    "View",
-    "Controllers",
-    "Snippets",
-    "Databases",
-    "ActiveModels",
-    "Migrations",
-    "Setup",
-    "Console",
-    "AccessControl",
-    "Jtk",
-    "Console",
-    "Extensions"
-  ],
+  "init": ["Databases", "Migrations", "ActiveModels", "Setup"],
   "install": "Jivoo\\Setup\\DefaultInstaller",
   "update": "Jivoo\\Setup\\DefaultUpdater"
 }

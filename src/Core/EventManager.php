@@ -50,14 +50,26 @@ class EventManager {
    * @param string $name Name of event to handle.
    * @param callback $callback Function to call. Function must accept an
    * {@see Event} as its first parameter.
+   * @param bool $once Whether to invoke the handler only the first time the
+   * event is triggered.
    */
-  public function attachHandler($name, $callback) {
+  public function attachHandler($name, $callback, $once = false) {
     if (!isset($this->events[$name])) {
       if (strpos($name, '.') === false)
         throw new EventException(tr('Event subject "%1" does not have event "%2"', $this->subjectClass, $name));
       $this->events[$name] = array();
     }
-    $this->events[$name][] = $callback;
+    if ($once) {
+      $self = $this; // 5.3 compatibility
+      $this->events[$name][] = function($event) use($self, $name, $callback) {
+        $ret = call_user_func($callback, $event);
+        $self->detachHandler($name, $callback);
+        return $ret;
+      };
+    }
+    else {
+      $this->events[$name][] = $callback;
+    }
   }
   
   /**
