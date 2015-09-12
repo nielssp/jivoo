@@ -142,15 +142,36 @@ class Loader {
     }
     return $drivers;
   }
+
+
+  /**
+   * Read schema classes from a namespace.
+   * @param string $namespace Namespace of schema classes.
+   * @param string $dir Location of schema classes.
+   * @return DatabaseSchemaBuilder Database schema.
+   */
+  public function readSchema($namespace, $dir) {
+    $dbSchema = new DatabaseSchemaBuilder();
+    if (isset($schemasDir) and is_dir($schemasDir)) {
+      $files = scandir($schemasDir);
+      if ($files !== false) {
+        foreach ($files as $file) {
+          $split = explode('.', $file);
+          if (isset($split[1]) and $split[1] == 'php') {
+            $class = $this->app->n('Schemas\\' . $split[0]);
+            Assume::isSubclassOf($class, 'Jivoo\Databases\SchemaBuilder');
+            $dbSchema->addSchema(new $class());
+          }
+        }
+      }
+    }
+    return $dbSchema;
+  }
   
   /**
    * Make a database connection.
-   * @param string|Document $options Associative array of database settings.
-   * @param (string|Schema)[] $schemas An array of table/schema-names and
-   * schemas to be attached to the database .
-   * @param string $name An optional name for database connection, if the name
-   * is provided, the connection and the associated tables will be added to 
-   * this Databases-object .
+   * @param string $name Name of database connection.
+   * @param DatabaseSchema $schema Database schema (collecton of table schemas).
    * @throws ConfigurationException If the $options-array does not
    * contain the necessary information for a connection to be made.
    * @throws InvalidSchemaException If one of the schema names listed
@@ -158,17 +179,14 @@ class Loader {
    * @throws ConnectionException If the connection fails.
    * @return LoadableDatabase A database object.
    */
-  public function connect($options, $schemas, $name = null) {
-    if (is_string($options)) {
-      $name = $options;
-      if (!isset($this->config[$name])) {
-        throw new ConfigurationException(
-          tr('Database "%1" not configured', $name)
-        );
-      }
-      $options = $this->config->getSubset($name);
+  public function connect($name, DatabaseSchema $schema = null) {
+    if (!isset($this->config[$name])) {
+      throw new ConfigurationException(
+        tr('Database "%1" not configured', $name)
+      );
     }
-    $driver = $options->get('driver', null);
+    $config = $this->config->getSubset($name);
+    $driver = $config->get('driver', null);
     if (!isset($driver))
       throw new ConfigurationException(tr(
         'Database driver not set'
@@ -180,7 +198,7 @@ class Loader {
       throw new ConnectionException(tr('Invalid database driver: %1', $e->getMessage()), 0, $e);
     }
     foreach ($driverInfo['requiredOptions'] as $option) {
-      if (!isset($options[$option])) {
+      if (!isset($config[$option])) {
         throw new ConfigurationException(
           tr('Database option missing: "%1"', $option)
         );
@@ -189,20 +207,10 @@ class Loader {
     try {
       $class = 'Jivoo\Databases\Drivers\\' . $driver  . '\\' . $driver . 'Database';
       Assume::isSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
-      $dbSchema = new DatabaseSchemaBuilder();
-      foreach ($schemas as $schema) {
-        if (is_string($schema)) {
-          $name = $schema;
-          $schema = $this->getSchema($name);
-          if (!isset($schema)) {
-            throw new InvalidSchemaException(
-              tr('Missing schema: "%1"', $name)
-            );
-          }
-        }
-        $dbSchema->addSchema($schema);
+      if (!isset($dbSchema)) {
+        $dbSchema = new DatabaseSchemaBuilder(array());
       }
-      $object = new $class($dbSchema, $options);
+      $object = new $class($dbSchema, $config);
       if (isset($name)) {
         $this->connections[$name] = new DatabaseConnection($object);
       }
