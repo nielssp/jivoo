@@ -16,7 +16,7 @@ use Jivoo\InvalidPropertyException;
  */
 class SchemaBuilder implements Schema {
   /**
-   * @var string[] List of column names.
+   * @var DataType[] List of column names.
    */
   private $_fields = array();
   
@@ -318,77 +318,5 @@ class SchemaBuilder implements Schema {
    */
   public function getIndex($name) {
     return $this->_indexes[$name];
-  }
-  
-  /**
-   * Export schema to PHP class.
-   * @param string $package Package (for documentation).
-   * @return string PHP source.
-   */
-  public function export($package = 'Jivoo') {
-    $source = '<?php' . PHP_EOL;
-    $source .= '/**' . PHP_EOL;
-    $source .= ' * Automatically generated schema for ' . $this->_name
-    . ' table' . PHP_EOL;
-    $source .= ' * @package ' . $package . PHP_EOL;
-    $source .= ' */' . PHP_EOL;
-    $source .= 'class ' . $this->_name . 'Schema extends Schema {' . PHP_EOL;
-    $source .= '  protected function createSchema() {' . PHP_EOL;
-    foreach ($this->_schema as $column => $info) {
-      $source .= '    $this->add' . ucfirst($info['type']) . '(';
-      $source .= var_export($column, true);
-      if ($info['type'] == 'string') {
-        $source .= ', ' . var_export($info['length'], true);
-      }
-      $flags = array();
-      if (isset($info['autoIncrement']) AND $info['autoIncrement']) {
-        $flags[] = 'Schema::AUTO_INCREMENT';
-      }
-      if (isset($info['null']) AND !$info['null']) {
-        $flags[] = 'Schema::NOT_NULL';
-      }
-      if (isset($info['unsigned']) AND $info['unsigned']) {
-        $flags[] = 'Schema::UNSIGNED';
-      }
-      if (!empty($flags) OR isset($info['default'])) {
-        if (empty($flags)) {
-          $source .= ', 0';
-        }
-        else {
-          $source .= ', ' . implode(' | ', $flags);
-        } 
-        if (isset($info['default'])) {
-          $source .= ', ' . var_export($info['default'], true);
-        }
-      }
-      $source .= ');' . PHP_EOL;
-    }
-  
-    if (isset($this->_indexes['PRIMARY'])) {
-      $primaryKeyColumns = array();
-      foreach ($this->_indexes['PRIMARY']['columns'] as $column) {
-        $primaryKeyColumns[] = var_export($column, true);
-      }
-      $source .= '    $this->setPrimaryKey(' . implode(', ', $primaryKeyColumns);
-      $source .= ');' . PHP_EOL;
-    }
-    foreach ($this->_indexes as $index => $info) {
-      if ($index == 'PRIMARY') {
-        continue;
-      }
-      if ($info['unique']) {
-        $source .= '    $this->addUnique(' . var_export($index, true);
-      }
-      else {
-        $source .= '    $this->addIndex(' . var_export($index, true);
-      }
-      foreach ($info['columns'] as $column) {
-        $source .= ', ' . var_export($column, true);
-      }
-      $source .= ');' . PHP_EOL;
-    }
-    $source .= '  }' . PHP_EOL;
-    $source .= '}' . PHP_EOL;
-    return $source;
   }
 }
