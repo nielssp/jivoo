@@ -24,7 +24,7 @@ interface Schema {
   public function __isset($field);
   
   /**
-   * Make a copy of this schema with a neew name.
+   * Make a copy of this schema with a new name.
    * @param string $newName New name.
    * @return Schema New schema.
    */

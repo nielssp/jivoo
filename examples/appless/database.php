@@ -3,6 +3,8 @@
 
 use Jivoo\Databases\Loader;
 use Jivoo\Core\Store\Document;
+use Jivoo\Databases\EmptySchema;
+use Jivoo\Databases\DatabaseSchemaBuilder;
 
 // Include Jivoo by either using composer or including the bootstrap script:
 require '../../src/bootstrap.php';
@@ -19,8 +21,12 @@ $config['default'] = array(
 // Initialize database loader with the above configuration:
 $loader = new Loader($config);
 
+$schema = new DatabaseSchemaBuilder(array(
+  new EmptySchema('User')
+));
+
 // Connect to "default":
-$db = $loader->connect('default');
+$db = $loader->connect('default', $schema);
 
 // Get all usernames:
-var_dump($db->User->select('username'));
+var_dump($db->User->first());
