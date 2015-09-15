@@ -103,6 +103,13 @@ class SchemaBuilder implements Schema {
     $new->_name = $newName;
     return $new;
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function filter($data) {
+    return $data;
+  }
 
   /**
    * Add an unsigned auto increment integer.

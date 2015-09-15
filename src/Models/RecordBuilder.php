@@ -66,7 +66,7 @@ class RecordBuilder implements Record {
    * @return RecordBuilder A new record.
    */
   public static function createNew(Model $model, $data = array(), $allowedFields = null) {
-    $record = new RecordBuilder($model, $data, $allowedFields);
+    $record = new RecordBuilder($model, $model->getSchema()->filter($data), $allowedFields);
     $record->new = true;
     $record->saved = false;
     return $record;
@@ -80,7 +80,7 @@ class RecordBuilder implements Record {
    * @return RecordBuilder An existing record.
    */
   public static function createExisting(Model $model, $data = array(), $virtual = array()) {
-    $record = new RecordBuilder($model, $data);
+    $record = new RecordBuilder($model, $model->getSchema()->filter($data));
     $record->updatedData = array();
     $record->virtual = $virtual;
     return $record;

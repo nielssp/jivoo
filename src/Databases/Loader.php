@@ -208,7 +208,7 @@ class Loader {
       $class = 'Jivoo\Databases\Drivers\\' . $driver  . '\\' . $driver . 'Database';
       Assume::isSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
       if (!isset($schema)) {
-        $schema = new DatabaseSchemaBuilder(array());
+        $schema = new DynamicDatabaseSchema();
       }
       $object = new $class($schema, $config);
       if (isset($name)) {

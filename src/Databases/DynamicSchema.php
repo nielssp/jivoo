@@ -14,13 +14,15 @@ use Jivoo\InvalidPropertyException;
 /**
  * Represents a database table schema.
  */
-class EmptySchema implements Schema {  
+class DynamicSchema implements Schema {  
   /**
    * @var string Name of table.
    */
   private $name = 'undefined';
   
   private $text;
+  
+  private $fields = array();
 
   /**
    * Constructor
@@ -51,12 +53,20 @@ class EmptySchema implements Schema {
   public function copy($newName) {
     return new self($newName);
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function filter($data) {
+    $this->fields = array_unique(array_merge(array_keys($data), $this->fields));
+    return $data;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function getFields() {
-    return array();
+    return $this->fields;
   }
 
   /**

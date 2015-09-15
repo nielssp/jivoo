@@ -8,9 +8,11 @@ namespace Jivoo\Databases;
 use Jivoo\Models\Schema;
 
 /**
- * A database schema.
+ * A dynamic database schema (does not require prior knowledge of the database
+ * structure). Table schemas are automatically created as instances of
+ * {@see DynamicSchema}.
  */
-class DatabaseSchemaBuilder implements DatabaseSchema {
+class DynamicDatabaseSchema implements DatabaseSchema {
   /**
    * @var Schema[] Associative array of names and schema.
    */
@@ -20,15 +22,6 @@ class DatabaseSchemaBuilder implements DatabaseSchema {
    * @var string[] List of table names.
    */
   private $tables = array();
-  
-  /**
-   * Construct database schema.
-   * @param Schema[] $schemas Table schemas.
-   */
-  public function __construct($schemas = array()) {
-    foreach ($schemas as $schema)
-      $this->addSchema($schema);
-  }
 
   /**
    * {@inheritdoc}
@@ -41,9 +34,9 @@ class DatabaseSchemaBuilder implements DatabaseSchema {
    * {@inheritdoc}
    */
   public function getSchema($table) {
-    if (isset($this->schemas[$table]))
-      return $this->schemas[$table];
-    return null;
+    if (!isset($this->schemas[$table]))
+      $this->schemas[$table] = new DynamicSchema($table);
+    return $this->schemas[$table];
   }
 
   /**

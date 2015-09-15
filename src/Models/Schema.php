@@ -41,6 +41,13 @@ interface Schema {
    * @return string[] List of field names.
    */
   public function getFields();
+  
+  /**
+   * Process data before creating record object.
+   * @param array $data Record data.
+   * @return array Record data.
+   */
+  public function filter($data);
 
   /**
    * Get fields of primary key.
