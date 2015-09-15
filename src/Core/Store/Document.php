@@ -55,9 +55,11 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   
   /**
    * Construct empty document.
+   * @param array $data Optional content of document.
    */
-  public function __construct() {
+  public function __construct($data = array()) {
     $this->root = $this;
+    $this->data = $data;
   }
   
   /**
