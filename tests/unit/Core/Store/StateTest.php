@@ -17,11 +17,10 @@ class StateTest extends \Jivoo\Test {
   }
   
   public function testRead() {
-    try {
-      $state = new State($this->store, false);
-      $this->fail('AccessException not thrown');
-    }
-    catch (AccessException $e) { }
+    $store = $this->store;
+    $this->assertThrows('Jivoo\Core\Store\AccessException', function() use($store) {
+      $state = new State($store, false);
+    });
     $this->store->touch();
     $state = new State($this->store, false);
     $this->assertEquals(array(), $state->toArray());
@@ -36,11 +35,9 @@ class StateTest extends \Jivoo\Test {
     $state->close();
 
     $this->assertFalse($state->isOpen());
-    try {
+    $this->assertThrows('Jivoo\Core\Store\NotOpenException', function() use($state) {
       $state->close();
-      $this->fail('NotOpenException not thrown');
-    }
-    catch (NotOpenException $e) { }
+    });
   }
   
   public function testWrite() {

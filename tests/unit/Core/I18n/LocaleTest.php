@@ -140,11 +140,9 @@ class LocaleTest extends \Jivoo\Test {
     $this->assertEquals(3, $l->plurals);
     $this->assertEquals('return $n%3;', $l->pluralExpr);
 
-    try {
+    $this->assertThrows('Jivoo\InvalidArgumentException', function() use($l) {
       $l->pluralForms = 'nplurals=3 plural=n % 3;';
-      $this->fail('InvalidArgumentException not thrown');
-    }
-    catch (InvalidArgumentException $e) {}
+    });
   }
   
   public function testConvertExpr() {
@@ -162,12 +160,10 @@ class LocaleTest extends \Jivoo\Test {
   
   public function testMagicGettersAndSetters() {
     $l = new Locale();
-    
-    try {
+
+    $this->assertThrows('Jivoo\InvalidPropertyException', function() use($l) {
       $l->notAProperty;
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
+    });
   }
   
   public function testReadPo() {
@@ -199,17 +195,13 @@ class LocaleTest extends \Jivoo\Test {
     $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
     
     // not a MO file:
-    try {
+    $this->assertThrows('PHPUnit_Framework_Exception', function() {
       $l = Locale::readMo('tests/_data/Core/I18n/da.po');
-      $this->fail('error not generated');
-    }
-    catch (\PHPUnit_Framework_Exception $e) {}
+    });
 
     // not a MO file:
-    try {
+    $this->assertThrows('PHPUnit_Framework_Exception', function() {
       $l = Locale::readMo('tests/_data/Core/I18n/notafile');
-      $this->fail('error not generated');
-    }
-    catch (\PHPUnit_Framework_Exception $e) {}
+    });
   }
 }

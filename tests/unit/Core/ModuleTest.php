@@ -73,31 +73,21 @@ class ModuleTest extends \Jivoo\Test {
           return $moduleLoader;
       }));;
     $m = new A($app);
-    try {
+    $this->assertThrows('Jivoo\InvalidPropertyException', function() use($m) {
       $m->invalidProp;
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
-    try {
-      $m->invalidProp =  true;
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
-    try {
+    });
+    $this->assertThrows('Jivoo\InvalidPropertyException', function() use($m) {
+      $m->invalidProp = true;
+    });
+    $this->assertThrows('Jivoo\InvalidPropertyException', function() use($m) {
       unset($m->invalidProp);
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
-    try {
+    });
+    $this->assertThrows('Jivoo\InvalidPropertyException', function() use($m) {
       isset($m->invalidProp);
-      $this->fail('InvalidPropertyException not thrown');
-    }
-    catch (InvalidPropertyException $e) {}
-    try {
+    });
+    $this->assertThrows('Jivoo\InvalidMethodException', function() use($m) {
       $m->invalidMethod();
-      $this->fail('InvalidMethodException not thrown');
-    }
-    catch (InvalidMethodException $e) {}
+    });
   }
   
   public function testInheritElements() {

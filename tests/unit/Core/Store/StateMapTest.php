@@ -16,11 +16,10 @@ class StateMapTest extends \Jivoo\Test {
   }
   
   public function testRead() {
-    try {
-      $this->state['test'];
-      $this->fail('NotOpenException not thrown');
-    }
-    catch (NotOpenException $e) { }
+    $state = $this->state;
+    $this->assertThrows('Jivoo\Core\Store\NotOpenException', function() use($state) {
+      $state['test'];
+    });
     
     $s = $this->state->read('test');
     $this->assertEquals(array(), $s->toArray());

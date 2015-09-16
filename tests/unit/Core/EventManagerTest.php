@@ -26,16 +26,13 @@ class EventManagerTest extends \Jivoo\Test {
     $this->assertFalse($em2->trigger(get_class($subject1) . '.someEvent'));
     $em2->detachHandler(get_class($subject1) . '.someEvent', $c);
     $this->assertTrue($em2->trigger(get_class($subject1) . '.someEvent'));
-    try {
+
+    $this->assertThrows('Jivoo\Core\EventException', function() use($em1) {
       $em1->attachHandler('someOtherEvent', null);
-      $this->fail('EventException not thrown');
-    }
-    catch (EventException $e) {}
-    try {
+    });
+    $this->assertThrows('Jivoo\Core\EventException', function() use($em1) {
       $em1->trigger('someOtherEvent');
-      $this->fail('EventException not thrown');
-    }
-    catch (EventException $e) {}
+    });
   }
   
   public function testListener() {
