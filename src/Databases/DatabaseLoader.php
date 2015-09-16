@@ -143,6 +143,7 @@ class DatabaseLoader extends Module {
         $dbSchema->addSchema($schema);
       }
       $object = new $class($dbSchema, $options);
+      $object->setLogger($this->logger);
       if (isset($name)) {
         $this->connections[$name] = new DatabaseConnection($object);
       }
