@@ -3,7 +3,10 @@
 // Copyright (c) 2015 Niels Sonnich Poulsen (http://nielssp.dk)
 // Licensed under the MIT license.
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
-namespace Jivoo\ActiveModels;
+namespace Jivoo\Content;
+
+use Jivoo\ActiveModels\ActiveModelMixin;
+use Jivoo\ActiveModels\ActiveModelEvent;
 
 /**
  * Mixin for automatically compiling content fields.
@@ -29,7 +32,7 @@ class ContentMixin extends ActiveModelMixin {
    */
   public function init() {
     $helper = $this->helper('Content');
-    foreach ($this->options['fields'] as $field) {
+    foreach ($this->options['fields'] as $field)
       $helper->register($this->model, $field);
   }
 
@@ -51,7 +54,6 @@ class ContentMixin extends ActiveModelMixin {
         $event->record->$textField = strip_tags($html); 
       }
     }
-  }
   }
 
   /**

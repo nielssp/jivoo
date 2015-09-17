@@ -52,6 +52,8 @@ class Content extends LoadableModule {
    */
   protected function init() {
     $this->vendor->import('ezyang/htmlpurifier');
+
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Content\ContentHelper');
     
     $this->m->lazy('Helpers')->addHelper('Jivoo\Content\EditorHelper');
     $this->m->lazy('Helpers')->addHelper('Jivoo\Content\FormatHelper');

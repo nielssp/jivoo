@@ -24,6 +24,7 @@ use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\RecordBuilder;
 use Jivoo\Databases\InvalidTableException;
 use Jivoo\Databases\DatabaseLoader;
+use Jivoo\Core\Assume;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -239,11 +240,13 @@ abstract class ActiveModel extends ModelBase implements EventListener {
         $mixin = $options;
         $options = array();
       }
-      $mixin = 'Jivoo\ActiveModels\\' . $mixin . 'Mixin';
-      if (!class_exists($mixin))
-        throw new InvalidMixinException(tr('Mixin class not found: %1', $mixin));
-      if (!is_subclass_of($mixin, 'Jivoo\ActiveModels\ActiveModelMixin'))
-        throw new InvalidMixinException(tr('Mixin class %1 must extend ActiveModelMixin', $mixin));
+      if (class_exists('Jivoo\ActiveModels\\' . $mixin . 'Mixin'))
+        $mixin = 'Jivoo\ActiveModels\\' . $mixin . 'Mixin';
+      else if (class_exists($mixin . 'Mixin'))
+        $mixin .= 'Mixin';
+      else if (!class_exists($mixin))
+        throw new InvalidMixinException('Mixin class not found: ' . $mixin);
+      Assume::isSubclassOf($mixin, 'Jivoo\ActiveModels\ActiveModelMixin');
       $mixin = new $mixin($this->app, $this, $options);
       $this->attachEventListener($mixin);
       $this->mixinObjects[] = $mixin;

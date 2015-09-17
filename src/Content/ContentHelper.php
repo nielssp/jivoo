@@ -15,12 +15,12 @@ use Jivoo\Routing\InvalidRouteException;
  */
 class ContentHelper extends Helper {
   
-  private $models = array();
+  private $registered = array();
   
   public function register(Model $model, $field) {
     $name = $model->getName();
     if (!isset($this->models[$name]))
-      $this->models[$name] = array();
-    $this->models[$name][$field] = true;
+      $this->registered[$name] = array();
+    $this->registered[$name][$field] = true;
   }
 }

@@ -14,7 +14,12 @@ use Jivoo\Content\Content;
 /**
  * Initializes the Content system.
  */
-class ContentUnit extends UnitBase {  
+class ContentUnit extends UnitBase {
+  /**
+   * {@inheritdoc}
+   */
+  protected $before = array('ActiveModels');
+  
   /**
    * {@inheritdoc}
    */
