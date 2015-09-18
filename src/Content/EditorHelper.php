@@ -21,6 +21,15 @@ class EditorHelper extends Helper {
    * {@inheritdoc}
    */
   protected $helpers = array('Form', 'Format');
+  
+  private $editors = array();
+  
+  public function add(Editor $editor) {
+    $editor->getFormat();
+    if (!isset($this->editors[get_class($format)]))
+      $this->editors[get_class($format)] = array();
+    $this->editors[get_class($format)][] = $editor;
+  }
 
   /**
    * Set editor for model field.

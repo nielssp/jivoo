@@ -17,10 +17,26 @@ class ContentHelper extends Helper {
   
   private $registered = array();
   
+  private $formats = array();
+  
   public function register(Model $model, $field) {
     $name = $model->getName();
     if (!isset($this->models[$name]))
       $this->registered[$name] = array();
     $this->registered[$name][$field] = true;
+  }
+  
+  public function getFormat($name) {
+    if (!isset($this->formats)) {
+      if (!class_exists($name))
+        return null;
+      $this->formats[$name] = new $name();
+    }
+    return $this->formats[$name];
+  }
+  
+  public function addFormat(Format $format, $name = null) {
+    if (!isset($name))
+      $name = get_class($format);
   }
 }
