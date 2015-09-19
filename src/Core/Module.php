@@ -48,25 +48,36 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
    */
   public function __construct(App $app = null) {
     if (isset($app)) {
-      $this->inheritElements('modules');
-      $this->app = $app;
-      $this->config = $app->config;
-      $this->logger = $app->logger;
-      if (isset($app->m)) {
-        $this->m = $app->m;
-        foreach ($this->modules as $module) {
-          if (!isset($this->m->$module))
-            throw new InvalidModuleException('Module "' . $module . '" not loaded. Required by ' . get_class($this));
-          $this->m->__get($module);
-        }
-      }
-  
-      $this->e = new EventManager($this, $this->app->eventManager);
+      $this->setApp($app);
     }
     else {
+      parent::__construct();
       $this->logger = new NullLogger();
       $this->config = new Document();
     }
+  }
+  
+  /**
+   * Associate module with application and find dependencies.
+   * @param App $app Application.
+   * @throws InvalidModuleException If a module in the {@see $modules} array
+   * is not available.
+   */
+  public function setApp(App $app) {
+    $this->inheritElements('modules');
+    $this->app = $app;
+    $this->config = $app->config;
+    $this->logger = $app->logger;
+    if (isset($app->m)) {
+      $this->m = $app->m;
+      foreach ($this->modules as $module) {
+        if (!isset($this->m->$module))
+          throw new InvalidModuleException('Module "' . $module . '" not loaded. Required by ' . get_class($this));
+        $this->m->__get($module);
+      }
+    }
+
+    $this->e = new EventManager($this, $this->app->eventManager);
   }
   
   /**
