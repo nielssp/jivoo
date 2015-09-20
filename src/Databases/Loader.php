@@ -211,9 +211,7 @@ class Loader {
         $schema = new DynamicDatabaseSchema();
       }
       $object = new $class($schema, $config);
-      if (isset($name)) {
-        $this->connections[$name] = new DatabaseConnection($object);
-      }
+      $this->connections[$name] = new DatabaseConnection($object);
       return $object;
     }
     catch (ConnectionException $exception) {
