@@ -1,19 +1,5 @@
 {
   "name": "JTK demo",
   "version": "1.0",
-  "modules": [
-    "Routing",
-    "Assets",
-    "View",
-    "Controllers",
-    "Snippets",
-    "Setup",
-    "Models",
-    "Content",
-    "Helpers",
-    "Extensions",
-    "Themes",
-    "Jtk",
-    "Console"
-  ]
+  "init": ["Setup", "Jtk", "Themes"]
 }
