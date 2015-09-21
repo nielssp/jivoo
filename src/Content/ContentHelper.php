@@ -19,6 +19,32 @@ class ContentHelper extends Helper {
   
   private $formats = array();
   
+  /**
+   * @var ContentExtensions Collection of content extensions.
+   */
+  private $extensions;
+  
+  protected function init() {
+    $this->extensions = new ContentExtensions();
+    
+    $this->extensions->inline(
+      'link', array('route' => null), 
+      array('Jivoo\Content\ContentExtensions', 'linkFunction')
+    );
+    $this->extensions->block(
+      'break', array(),
+      array('Jivoo\Content\ContentExtensions', 'breakFunction')
+    );
+    $this->extensions->block(
+      'page', array('name' => null), 
+      array('Jivoo\Content\ContentExtensions', 'pageFunction')
+    );
+    $this->extensions->block(
+      'pagebreak', array(), 
+      array('Jivoo\Content\ContentExtensions', 'pageBreakFunction')
+    );
+  }
+  
   public function register(Model $model, $field) {
     $name = $model->getName();
     if (!isset($this->models[$name]))

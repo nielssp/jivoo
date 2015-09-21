@@ -65,10 +65,10 @@ class Content extends LoadableModule {
     $this->addEditor(new TextareaEditor('html'));
     $this->addEditor(new TextareaEditor('text'));
     
-    $this->extensions->add('link', array('route' => null), array($this, 'linkFunction'));
-    $this->extensions->add('break', array(), array($this, 'breakFunction'));
-    $this->extensions->add('page', array('name' => null), array($this, 'pageFunction'));
-    $this->extensions->add('pagebreak', array(), array($this, 'pageBreakFunction'));
+    $this->extensions->inline('link', array('route' => null), array($this, 'linkFunction'));
+    $this->extensions->block('break', array(), array($this, 'breakFunction'));
+    $this->extensions->block('page', array('name' => null), array($this, 'pageFunction'));
+    $this->extensions->block('pagebreak', array(), array($this, 'pageBreakFunction'));
   }
   
   /**

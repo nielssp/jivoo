@@ -11,14 +11,9 @@ namespace Jivoo\Content;
  */
 class ContentExtensions {
   /**
-   * @var string Reglar expression used to match inline extensions.
-   */
-  const INLINE_REGEX = '/\{\{\s*([a-z]+)((?:\s+([a-z]+=)?"(?:[^\\\\"]|\\\\.)*")*)\s*\}\}/im';
-  
-  /**
    * @var string Regular expression used to match block extensions.
    */
-  const BLOCK_REGEX = '/(?:<p>\s*)\{\{\{\s*([a-z]+)((?:\s+([a-z]+=)?"(?:[^\\\\"]|\\\\.)*")*)\s*\}\}\}(?:\s*<\/p>)/im';
+  const REGEX = '/(<p>\s*)?\{\{\s*([a-z]+)((?:\s+([a-z]+=)?"(?:[^\\\\"]|\\\\.)*")*)\s*\}\}(\s*<\/p>)?/im';
 
   /**
    * @var array Extension functions.
@@ -26,16 +21,32 @@ class ContentExtensions {
   private $functions = array();
   
   /**
-   * Add a content extension.
+   * Add a inline content extension.
    * @param string $function Name of extension.
    * @param array $parameters Associative array of default paramters.
    * @param callback $callback Callback for extension.
    */
-  public function add($function, $parameters, $callback) {
+  public function inline($function, $parameters, $callback) {
     $this->functions[$function] = array(
       'defaults' => $parameters,
       'parameters' => array_keys($parameters),
-      'callback' => $callback
+      'callback' => $callback,
+      'inline' => true
+    );
+  }
+  
+  /**
+   * Add a block content extension.
+   * @param string $function Name of extension.
+   * @param array $parameters Associative array of default paramters.
+   * @param callback $callback Callback for extension.
+   */
+  public function block($function, $parameters, $callback) {
+    $this->functions[$function] = array(
+      'defaults' => $parameters,
+      'parameters' => array_keys($parameters),
+      'callback' => $callback,
+      'inline' => false
     );
   }
 
@@ -45,10 +56,11 @@ class ContentExtensions {
    * @return string Extension replacement.
    */
   private function replace($matches) {
-    $function = $matches[1];
+    $block = ($matches[1] != '' and isset($matches[4]));
+    $function = $matches[2];
     if (!isset($this->functions[$function]))
       return $matches[0];
-    preg_match_all('/\s+(?:([a-z]+)=)?"((?:[^\\\\"]|\\\\.)*)"/im', $matches[2], $parameterMatches);
+    preg_match_all('/\s+(?:([a-z]+)=)?"((?:[^\\\\"]|\\\\.)*)"/im', $matches[3], $parameterMatches);
     $unnamedCount = 0;
     $formalParameters = $this->functions[$function]['parameters'];
     $actualParameters = $this->functions[$function]['defaults'];
@@ -64,10 +76,14 @@ class ContentExtensions {
         $actualParameters[$parameterMatches[1][$i]] = $parameterMatches[2][$i];
       }
     }
-    return call_user_func(
+    if (!$this->functions[$function]['inline'] and $block) {
+      $matches[1] = '';
+      $matches[4] = '';
+    }
+    return $matches[1] . call_user_func(
       $this->functions[$function]['callback'],
       $actualParameters
-    ); 
+    ) . $matches[4]; 
   }
   
   /**
@@ -77,13 +93,53 @@ class ContentExtensions {
    */
   public function compile($content) {
     return preg_replace_callback(
-      self::INLINE_REGEX,
+      self::REGEX,
       array($this, 'replace'),
-      preg_replace_callback(
-        self::BLOCK_REGEX,
-        array($this, 'replace'),
-        $content
-      )
+      $content
     );
+  }
+  
+  /**
+   * Insert link for route.
+   * @param array $params Content extension parameters.
+   * @return string Link.
+   */
+  public static function linkFunction($params) {
+    try {
+      return $this->m->Routing->getLink($params['route']);
+    }
+    catch (InvalidRouteException $e) {
+      return 'invalid link';
+    }
+  }
+  
+  /**
+   * Create a break between summary and full content.
+   * @param array $params Content extension parameters.
+   * @return string Break div.
+   */
+  public static function breakFunction($params) {
+    return '<div class="break"></div>';
+  }
+
+  /**
+   * Create a page break.
+   * @param array $params Content extension parameters.
+   * @return string Page break div.
+   */
+  public static function pageBreakFunction($params) {
+    return '<div class="page-break"></div>';
+  }
+
+  /**
+   * Name the current content page.
+   * @param array $params Content extension parameters.
+   * @return string Page name div.
+   */
+  public static function pageFunction($params) {
+    if (isset($params['name']))
+      return '<div class="page-name" data-name="' . h($params['name']) . '"></div>';
+    else
+      return '<div class="page-name"></div>';
   }
 }
