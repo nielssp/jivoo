@@ -9,13 +9,14 @@ use Jivoo\Helpers\Helper;
 use Jivoo\Models\Model;
 use Jivoo\Models\BasicRecord;
 use Jivoo\Routing\InvalidRouteException;
+use Jivoo\Core\Assume;
 
 /**
  * Content helper.
  */
 class ContentHelper extends Helper {
   
-  private $registered = array();
+  private $purifierConfigs = array();
   
   private $formats = array();
   
@@ -25,6 +26,8 @@ class ContentHelper extends Helper {
   private $extensions;
   
   protected function init() {
+    $this->vendor->import('ezyang/htmlpurifier');
+    
     $this->extensions = new ContentExtensions();
     
     $this->extensions->inline(
@@ -45,11 +48,26 @@ class ContentHelper extends Helper {
     );
   }
   
+  public function __get($property) {
+    switch ($property) {
+      case 'extensions':
+        return $this->$property;
+    }
+    return parent::__get($property);
+  }
+  
   public function register(Model $model, $field) {
     $name = $model->getName();
     if (!isset($this->models[$name]))
-      $this->registered[$name] = array();
-    $this->registered[$name][$field] = true;
+      $this->purifierConfigs[$name] = array();
+    $this->purifierConfigs[$name][$field] = \HTMLPurifier_Config::createDefault();
+  }
+  
+  public function getPurifierConfig(Model $model, $field) {
+    $name = $model->getName();
+    Assume::hasKey($this->purifierConfigs, $name);
+    Assume::hasKey($this->purifierConfigs[$name], $field);
+    return $this->purifierConfigs[$name][$field];
   }
   
   public function getFormat($name) {

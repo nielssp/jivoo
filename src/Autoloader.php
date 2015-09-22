@@ -21,6 +21,16 @@ class Autoloader {
   private $paths = array();
   
   /**
+   * @var bool
+   */
+  private $psr0 = true;
+
+  /**
+   * @var string[][]
+   */
+  private $psr0Paths = array();
+  
+  /**
    * Get singleton autoloader instance.
    * @return Autoloader Autoloader.
    */
@@ -52,8 +62,9 @@ class Autoloader {
    * @param string $path Directory path.
    * @param bool $prepend If true, the path will be prepended instead of
    * appended.
+   * @param bool $psr0 Whether to use PSR-0 instead of PSR-4 for this path.
    */
-  public function addPath($namespace, $path, $prepend = false) {
+  public function addPath($namespace, $path, $prepend = false, $psr0 = false) {
     $namespace = '\\' . trim($namespace, '\\');
 
     if (!isset($this->paths[$namespace]))
@@ -61,6 +72,10 @@ class Autoloader {
     
     if ($path != '')
       $path = rtrim(str_replace('\\', '/', $path), '/') . '/';
+    if ($psr0) {
+      $this->psr0 = true;
+      $path = rtrim($path . trim(str_replace('\\', '/', $namespace), '/'), '/') . '/';
+    }
     
     if ($prepend)
       array_unshift($this->paths[$namespace], $path);
@@ -80,14 +95,19 @@ class Autoloader {
       if ($this->loadFrom($classPath, $namespace))
         return true;
       $pos = strpos($classPath, '/');
-      if ($pos === false)
-        break;;
+      if ($pos === false) {
+        if (!$this->psr0)
+          break;
+        $pos = strpos($classPath, '_');
+        if ($pos === false)
+          break;
+      }
       $namespace = rtrim($namespace, '\\') . '\\' . substr($classPath, 0, $pos);
       $classPath = substr($classPath, $pos + 1);
     }
     return false;
   }
-  
+
   /**
    * @param string $classPath
    * @param string $namespace
@@ -101,6 +121,13 @@ class Autoloader {
       if (file_exists($file)) {
         require $file;
         return true;
+      }
+      else if ($this->psr0) {
+        $file = $path . str_replace('_', '\\', $classPath);
+        if (file_exists($file)) {
+          require $file;
+          return true;
+        }
       }
     }
   }

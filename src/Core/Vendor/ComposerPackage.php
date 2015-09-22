@@ -37,15 +37,14 @@ class ComposerPackage implements Package {
       }
     }
     if (isset($this->manifest['autoload']['psr-0'])) {
-      // TODO: add real PSR-0 support
       assume(is_array($this->manifest['autoload']['psr-0']));
       foreach ($this->manifest['autoload']['psr-0'] as $namespace => $path) {
         if (is_array($path)) {
           foreach ($path as $p)
-            $autoloader->addPath($namespace, $this->path . '/' . trim($p, '/'));
+            $autoloader->addPath($namespace, $this->path . '/' . trim($p, '/'), false, true);
         }
         else {
-          $autoloader->addPath($namespace, $this->path . '/' . trim($path, '/'));
+          $autoloader->addPath($namespace, $this->path . '/' . trim($path, '/'), false, true);
         }
       }
     }
