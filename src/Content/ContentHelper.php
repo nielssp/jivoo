@@ -13,6 +13,7 @@ use Jivoo\Core\Assume;
 
 /**
  * Content helper.
+ * @property-read ContentExtensions $extensions Collection of content extensions.
  */
 class ContentHelper extends Helper {
   
@@ -21,7 +22,7 @@ class ContentHelper extends Helper {
   private $formats = array();
   
   /**
-   * @var ContentExtensions Collection of content extensions.
+   * @var ContentExtensions
    */
   private $extensions;
   
@@ -32,19 +33,19 @@ class ContentHelper extends Helper {
     
     $this->extensions->inline(
       'link', array('route' => null), 
-      array('Jivoo\Content\ContentExtensions', 'linkFunction')
+      array($this, 'linkFunction')
     );
     $this->extensions->block(
       'break', array(),
-      array('Jivoo\Content\ContentExtensions', 'breakFunction')
+      array($this, 'breakFunction')
     );
     $this->extensions->block(
       'page', array('name' => null), 
-      array('Jivoo\Content\ContentExtensions', 'pageFunction')
+      array($this, 'pageFunction')
     );
     $this->extensions->block(
       'pagebreak', array(), 
-      array('Jivoo\Content\ContentExtensions', 'pageBreakFunction')
+      array($this, 'pageBreakFunction')
     );
   }
   
@@ -82,5 +83,51 @@ class ContentHelper extends Helper {
   public function addFormat(Format $format, $name = null) {
     if (!isset($name))
       $name = get_class($format);
+  }
+  
+
+
+  /**
+   * Insert link for route.
+   * @param array $params Content extension parameters.
+   * @return string Link.
+   */
+  public function linkFunction($params) {
+    try {
+      return $this->m->Routing->getLink($params['route']);
+    }
+    catch (InvalidRouteException $e) {
+      return 'invalid link';
+    }
+  }
+  
+  /**
+   * Create a break between summary and full content.
+   * @param array $params Content extension parameters.
+   * @return string Break div.
+   */
+  public function breakFunction($params) {
+    return '<div class="break"></div>';
+  }
+  
+  /**
+   * Create a page break.
+   * @param array $params Content extension parameters.
+   * @return string Page break div.
+   */
+  public function pageBreakFunction($params) {
+    return '<div class="page-break"></div>';
+  }
+  
+  /**
+   * Name the current content page.
+   * @param array $params Content extension parameters.
+   * @return string Page name div.
+   */
+  public function pageFunction($params) {
+    if (isset($params['name']))
+      return '<div class="page-name" data-name="' . h($params['name']) . '"></div>';
+    else
+      return '<div class="page-name"></div>';
   }
 }

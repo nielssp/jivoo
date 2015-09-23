@@ -48,11 +48,11 @@ class ContentMixin extends ActiveModelMixin {
       $format = $this->helper('Content')->getFormat($event->record->$formatField);
       if (isset($format)) {
         $html = $format->toHtml($content);
-        // TODO: Enable content extensions
       }
       else {
         $html = $content;
       }
+      $html = $this->helper('Content')->extensions->compile($html);
       if ($this->options['html']) {
         $htmlField =  $field . 'Html';
         $event->record->$htmlField = $html; 

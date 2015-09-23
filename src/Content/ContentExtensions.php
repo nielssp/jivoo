@@ -98,48 +98,4 @@ class ContentExtensions {
       $content
     );
   }
-  
-  /**
-   * Insert link for route.
-   * @param array $params Content extension parameters.
-   * @return string Link.
-   */
-  public static function linkFunction($params) {
-    try {
-      return $this->m->Routing->getLink($params['route']);
-    }
-    catch (InvalidRouteException $e) {
-      return 'invalid link';
-    }
-  }
-  
-  /**
-   * Create a break between summary and full content.
-   * @param array $params Content extension parameters.
-   * @return string Break div.
-   */
-  public static function breakFunction($params) {
-    return '<div class="break"></div>';
-  }
-
-  /**
-   * Create a page break.
-   * @param array $params Content extension parameters.
-   * @return string Page break div.
-   */
-  public static function pageBreakFunction($params) {
-    return '<div class="page-break"></div>';
-  }
-
-  /**
-   * Name the current content page.
-   * @param array $params Content extension parameters.
-   * @return string Page name div.
-   */
-  public static function pageFunction($params) {
-    if (isset($params['name']))
-      return '<div class="page-name" data-name="' . h($params['name']) . '"></div>';
-    else
-      return '<div class="page-name"></div>';
-  }
 }
