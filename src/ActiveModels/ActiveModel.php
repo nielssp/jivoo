@@ -9,7 +9,6 @@ use Jivoo\Core\EventListener;
 use Jivoo\Core\Event;
 use Jivoo\Models\ModelBase;
 use Jivoo\Core\App;
-use Jivoo\Databases\Databases;
 use Jivoo\Core\Utilities;
 use Jivoo\Models\Selection\UpdateSelectionBuilder;
 use Jivoo\Models\Selection\DeleteSelectionBuilder;
@@ -23,8 +22,8 @@ use Jivoo\Models\Selection\SelectionBuilder;
 use Jivoo\Models\Selection\ReadSelection;
 use Jivoo\Models\RecordBuilder;
 use Jivoo\Databases\InvalidTableException;
-use Jivoo\Databases\DatabaseLoader;
 use Jivoo\Core\Assume;
+use Jivoo\Databases\Loader;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -181,7 +180,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * @throws InvalidAssociationException If association models are invalid.
    * @throws InvalidMixinException If a mixin is invalid.
    */
-  public final function __construct(App $app, DatabaseLoader $databases) {
+  public final function __construct(App $app, Loader $databases) {
     parent::__construct($app);
     $databaseName = $this->database;
     $database = $databases->$databaseName;
@@ -201,6 +200,10 @@ abstract class ActiveModel extends ModelBase implements EventListener {
     $this->source = $this->database->$table;
 
     $this->schema = $this->source->getSchema();
+    if (!isset($this->schema))
+      throw new InvalidTableException(
+        'Schema for table "' . $table . '" not found'
+      );
     $pk = $this->schema->getPrimaryKey();
     if (count($pk) == 1) {
       $pk = $pk[0];

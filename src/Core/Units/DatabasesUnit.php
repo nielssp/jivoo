@@ -10,6 +10,7 @@ use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Core\LoadableModule;
 use Jivoo\Databases\DatabaseLoader;
+use Jivoo\Databases\Loader;
 
 /**
  * Initializes the database system.
@@ -29,16 +30,20 @@ class DatabasesUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->db = new DatabaseLoader($app);
+    $app->m->db = new Loader($app->config->getSubset('Databases'));
+    $app->m->db->setLogger($this->logger);
     $app->m->Databases = $app->m->db;
+    
 
     if (isset($app->manifest['databases'])) {
       foreach ($app->manifest['databases'] as $name) {
-        $app->m->db->attachDatabase($name, $this->p('app/Schemas/' . $name));
+        $schema = $this->m->db->readSchema($this->app->n('Schemas\\' . $name), $this->p('app/Schemas/' . $name));
+        $app->m->db->connect($name, $schema);
       }
     }
     else {
-      $app->m->db->attachDatabase('default', $this->p('app/Schemas'));
+      $schema = $this->m->db->readSchema($this->app->n('Schemas'), $this->p('app/Schemas'));
+      $app->m->db->connect('default', $schema);
     }
   }
 }

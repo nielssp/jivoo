@@ -12,11 +12,14 @@ use Jivoo\Core\Assume;
 use Jivoo\Core\Store\Document;
 use Jivoo\InvalidPropertyException;
 use Jivoo\Core\Json;
+use Psr\Log\LoggerAwareInterface as LoggerAware;
+use Psr\Log\LoggerInterface as Logger;
+use Jivoo\Core\Log\NullLogger;
 
 /**
  * Connects to databases.
  */
-class Loader {
+class Loader implements LoggerAware {
   /**
    * @var Document
    */
@@ -31,13 +34,26 @@ class Loader {
    * @var LodableDatabase[] Named database connections.
    */
   private $connections = array();
+  
+  /**
+   * @var Logger
+   */
+  private $logger;
 
   /**
    * Construct database loader.
    */
   public function __construct(Document $config) {
+    $this->logger = new NullLogger();
     $this->config = $config;
     $this->drivers = dirname(__FILE__) . '/Drivers';
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function setLogger(Logger $logger) {
+    $this->logger = $logger;
   }
 
   /**
@@ -152,16 +168,15 @@ class Loader {
    */
   public function readSchema($namespace, $dir) {
     $dbSchema = new DatabaseSchemaBuilder();
-    if (isset($schemasDir) and is_dir($schemasDir)) {
-      $files = scandir($schemasDir);
-      if ($files !== false) {
-        foreach ($files as $file) {
-          $split = explode('.', $file);
-          if (isset($split[1]) and $split[1] == 'php') {
-            $class = $this->app->n('Schemas\\' . $split[0]);
-            Assume::isSubclassOf($class, 'Jivoo\Databases\SchemaBuilder');
-            $dbSchema->addSchema(new $class());
-          }
+    assume(is_dir($dir));
+    $files = scandir($dir);
+    if ($files !== false) {
+      foreach ($files as $file) {
+        $split = explode('.', $file);
+        if (isset($split[1]) and $split[1] == 'php') {
+          $class = rtrim($namespace, '\\') . '\\' . $split[0];
+          Assume::isSubclassOf($class, 'Jivoo\Databases\SchemaBuilder');
+          $dbSchema->addSchema(new $class());
         }
       }
     }
@@ -207,10 +222,10 @@ class Loader {
     try {
       $class = 'Jivoo\Databases\Drivers\\' . $driver  . '\\' . $driver . 'Database';
       Assume::isSubclassOf($class, 'Jivoo\Databases\LoadableDatabase');
-      if (!isset($schema)) {
+      if (!isset($schema))
         $schema = new DynamicDatabaseSchema();
-      }
       $object = new $class($schema, $config);
+      $object->setLogger($this->logger);
       $this->connections[$name] = new DatabaseConnection($object);
       return $object;
     }
