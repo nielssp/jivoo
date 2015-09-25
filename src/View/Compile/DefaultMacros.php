@@ -270,7 +270,7 @@ class DefaultMacros extends Macros {
       );
     }
     else {
-      $node->setAttribute('class', PhpNode::expr($value)->code);
+      $node->setAttribute('class', PhpNode::expr($value));
     }
   }
 

@@ -253,7 +253,7 @@
         </div>
       </div>
       
-      <div class="field" j:foreach="array('muted', 'primary', 'light', 'dark', 'info', 'success', 'warning', 'error') as $context" j:class="'field-' . $context">
+      <div class="field" j:foreach="{array('muted', 'primary', 'light', 'dark', 'info', 'success', 'warning', 'error') as $context}" j:class="{'field-' . $context}">
         <div class="input-group">
           <div class="input-group-text">http://</div>
           <input type="text" placeholder="domain" />

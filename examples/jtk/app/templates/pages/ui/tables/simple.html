@@ -37,11 +37,11 @@ $randomUsers = function($n = 5) use($Random) {
           </tr>
         </thead>
         <tbody>
-          <tr j:foreach="$randomUsers(5) as $user">
-            <td class="center" j:text="$user['id']">id</td>
-            <td scope="row" j:text="$user['name']">Name goes here</td>
+          <tr j:foreach="{$randomUsers(5) as $user}">
+            <td class="center" j:text="{$user['id']}">id</td>
+            <td scope="row" j:text="{$user['name']}">Name goes here</td>
             <td>
-              <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+              <span class="badge" j:class="{'badge-' . $user['context']}" j:text="{$user['role']}">
                 Role goes here
               </span>
             </td>
@@ -69,11 +69,11 @@ $randomUsers = function($n = 5) use($Random) {
           </tr>
         </thead>
         <tbody>
-          <tr j:foreach="$randomUsers(5) as $user" j:class="$user['context']">
-            <td class="center" j:text="$user['id']">id</td>
-            <td scope="row" j:text="$user['name']">Name goes here</td>
+          <tr j:foreach="{$randomUsers(5) as $user}" j:class="{$user['context']}">
+            <td class="center" j:text="{$user['id']}">id</td>
+            <td scope="row" j:text="{$user['name']}">Name goes here</td>
             <td>
-              <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+              <span class="badge" j:class="{'badge-' . $user['context']}" j:text="{$user['role']}">
                 Role goes here
               </span>
             </td>
@@ -105,11 +105,11 @@ $randomUsers = function($n = 5) use($Random) {
           </tr>
         </thead>
         <tbody>
-          <tr j:foreach="$randomUsers(5) as $user">
+          <tr j:foreach="{$randomUsers(5) as $user}">
             <td class="selection"><label><input type="checkbox" /></label></td>
-            <td scope="row" j:text="$user['name']">Name goes here</td>
+            <td scope="row" j:text="{$user['name']}">Name goes here</td>
             <td>
-              <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+              <span class="badge" j:class="{'badge-' . $user['context']}" j:text="{$user['role']}">
                 Role goes here
               </span>
             </td>
@@ -139,12 +139,12 @@ $randomUsers = function($n = 5) use($Random) {
             </tr>
           </thead>
           <tbody>
-            <tr j:foreach="$randomUsers(5) as $user">
-              <td class="center" j:text="$user['id']">id</td>
-              <td scope="row" j:text="$user['name']">Name goes here</td>
-              <td j:text="$user['email']">Email goes here</td>
+            <tr j:foreach="{$randomUsers(5) as $user}">
+              <td class="center" j:text="{$user['id']}">id</td>
+              <td scope="row" j:text="{$user['name']}">Name goes here</td>
+              <td j:text="{$user['email']}">Email goes here</td>
               <td>
-                <span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+                <span class="badge" j:class="{'badge-' . $user['context']}" j:text="{$user['role']}">
                   Role goes here
                 </span>
               </td>
@@ -175,20 +175,20 @@ $randomUsers = function($n = 5) use($Random) {
       </tr>
     </thead>
     <tbody>
-      <tr j:foreach="$randomUsers(5) as $user">
-        <td class="center" j:text="$user['id']">id</td>
+            <tr j:foreach="{$randomUsers(5) as $user}">
+        <td class="center" j:text="{$user['id']}">id</td>
         <td class="main" scope="row">
-          <strong j:text="$user['name']">Name goes here</strong>
+          <strong j:text="{$user['name']}">Name goes here</strong>
           <dl class="values">
             <dt>Email</dt>
-            <dd j:text="$user['email']">Email goes here</dd>
+            <dd j:text="{$user['email']}">Email goes here</dd>
             <dt>Role</dt>
-            <dd><span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+            <dd><span class="badge" j:class="{'badge-' . $user['context']}" j:text="{$user['role']}">
             Role goes here </span></dd>
           </dl>
         </td>
-        <td class="non-essential" j:text="$user['email']">Email goes here</td>
-        <td class="non-essential"><span class="badge" j:class="'badge-' . $user['context']" j:text="$user['role']">
+        <td class="non-essential" j:text="{$user['email']}">Email goes here</td>
+        <td class="non-essential"><span class="badge" j:class="{'badge-' . $user['context']}" j:text="{$user['role']}">
             Role goes here </span></td>
         <td class="center">
           <div class="button-group">
