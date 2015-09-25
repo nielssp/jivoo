@@ -84,8 +84,8 @@ $(function() {
       <div class="block-content">
       
         <div class="progress active"
-            j:foreach="array('default', 'primary', 'light', 'dark', 'info', 'success', 'warning', 'error') as $context"
-            j:class="$context" data-progress="50" data-class="<?php echo $context; ?> active">
+            j:foreach="{array('default', 'primary', 'light', 'dark', 'info', 'success', 'warning', 'error') as $context}"
+            j:class="{$context}" data-progress="50" data-class="<?php echo $context; ?> active">
           <div class="progress-bar" style="width:50%;">50%</div>
           <div class="label">Doing things&hellip;</div>
         </div>

@@ -48,6 +48,8 @@ class Config extends Document {
     }
     if (!isset($this->store))
       return;
+    if (!$this->store->touch())
+      return;
     try {
       $this->store->open(false);
       $this->data = $this->store->read();

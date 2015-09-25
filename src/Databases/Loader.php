@@ -64,7 +64,7 @@ class Loader implements LoggerAware {
   public function __get($name) {
     if (isset($this->connections[$name]))
       return $this->connections[$name];
-    throw new InvalidPropertyException('Undefined property: ' . $name);
+    throw new InvalidPropertyException('No connection named: ' . $name);
   }
 
   /**
