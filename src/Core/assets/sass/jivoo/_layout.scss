@@ -40,7 +40,8 @@ header {
   padding: 48px 12px 37px 12px;
 
   #main-container > h1:first-child {
-    background-color: #fbfbfb;
+    background-color: $mainHeaderBg;
+    color: $mainHeaderFg;
     margin: -48px -12px 24px -12px;
     padding: 56px 12px 24px 12px;
     font-size: 1.9em;

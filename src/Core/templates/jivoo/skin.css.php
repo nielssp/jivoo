@@ -35,7 +35,7 @@ $Skin->setDefault(array(
 $Skin->setDefault(array(
   'linkFg' => $Skin->primary,
   'linkHlFg' => $Skin->light,
-  'navBg' => '#eee',
+  'navBg' => '#d1d1d1',
   'navFg' => '#444',
   'navHlBg' => '#ddd',
   'navHlFg' => $Skin->primaryBg,
@@ -43,9 +43,11 @@ $Skin->setDefault(array(
   'navCuFg' => $Skin->primaryFg,
   'navDisBg' => '#f1f1f1',
   'navDisFg' => '#999',
-  'mainBg' => '#fff',
+  'mainBg' => '#f1f1f1',
   'mainFg' => '#333',
-  'subMenuBg' => '#f7f7f7',
+  'mainHeaderBg' => '#f5f5f5',
+  'mainHeaderFg' => '#666',
+  'subMenuBg' => '#c1c1c1',
   'subMenuFg' => '#333',
   'subMenuShadow' => '#ababab',
   'inputBorder' => '#d9d9d9',
@@ -208,6 +210,10 @@ $Css('header')->css(array(
   'color' => $Skin->headerFg
 ));
 $Css('#main')->backgroundColor = $Skin->mainBg;
+$Css('#main #main-container > h1:first-child')->css(array(
+  'background-color' => $Skin->mainHeaderBg,
+  'color' => $Skin->mainHeaderFg
+));
 $Css('footer')->borderTopColor = $Skin->navBg;
 
 // Form
