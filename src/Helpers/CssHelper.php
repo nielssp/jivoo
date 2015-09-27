@@ -326,7 +326,7 @@ class CssHelper extends Helper {
       $color = $this->hex($color);
     if (is_int($l))
       $l /= 100;
-    $color[2] = $$l;
+    $color[2] = $l;
     return $color;
   }
   

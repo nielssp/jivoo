@@ -35,9 +35,9 @@ $Skin->setDefault(array(
 $Skin->setDefault(array(
   'linkFg' => $Skin->primary,
   'linkHlFg' => $Skin->light,
-  'navBg' => '#d1d1d1',
+  'navBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 11), 85),
   'navFg' => '#444',
-  'navHlBg' => '#ddd',
+  'navHlBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 11), 90),
   'navHlFg' => $Skin->primaryBg,
   'navCuBg' => $Skin->primaryBg,
   'navCuFg' => $Skin->primaryFg,
