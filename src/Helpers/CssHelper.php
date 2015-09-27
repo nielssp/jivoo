@@ -308,6 +308,8 @@ class CssHelper extends Helper {
   public function setSaturation($color, $s) {
     if (is_string($color))
       $color = $this->hex($color);
+    if ($color[1] == 0.0)
+      return $color;
     if (is_int($s))
       $s /= 100;
     $color[1] = $s;

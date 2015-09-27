@@ -47,7 +47,7 @@ $Skin->setDefault(array(
   'mainFg' => '#333',
   'mainHeaderBg' => '#f5f5f5',
   'mainHeaderFg' => '#666',
-  'subMenuBg' => '#c1c1c1',
+  'subMenuBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 11), 76),
   'subMenuFg' => '#333',
   'subMenuShadow' => '#ababab',
   'inputBorder' => '#d9d9d9',
