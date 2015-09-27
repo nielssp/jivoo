@@ -57,7 +57,8 @@ $Skin->setDefault(array(
   'inputErrorBorder' => '#f55',
   'codeBg' => $Skin->navBg,
   'codeFg' => $Skin->warning,
-  'tableHlBg' => '#f7f7f7'
+  'tableHlBg' => '#f7f7f7',
+  'blockBg' => '#f7f7f7'
 ));
 
 $Css->addMixin('flashColor', function($flash, $color) use($Css) {
@@ -164,6 +165,7 @@ $Css('.bg-error, .badge-error')->backgroundColor = $Skin->error;
 // Blocks
 
 $block = $Css('.block');
+$block->backgroundColor = $Skin->blockBg;
 $block('&&-default > &-header, &&-muted > &-header')->backgroundColor = $Skin->grey;
 $block('&&-primary > &-header')->backgroundColor = $Skin->primary;
 $block('&&-light > &-header')->backgroundColor = $Skin->light;
