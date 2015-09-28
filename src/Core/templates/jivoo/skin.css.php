@@ -45,8 +45,6 @@ $Skin->setDefault(array(
   'navDisFg' => '#999',
   'mainBg' => '#f1f1f1',
   'mainFg' => '#333',
-  'mainHeaderBg' => '#f5f5f5',
-  'mainHeaderFg' => '#666',
   'subMenuBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 11), 76),
   'subMenuFg' => '#333',
   'subMenuShadow' => '#ababab',
@@ -58,7 +56,13 @@ $Skin->setDefault(array(
   'codeBg' => $Skin->navBg,
   'codeFg' => $Skin->warning,
   'tableHlBg' => '#f7f7f7',
-  'blockBg' => '#f7f7f7'
+  'blockBg' => '#f7f7f7',
+));
+
+$Skin->setDefault(array(
+  'mainHeaderBg' => $Skin->blockBg,
+  'mainHeaderFg' => '#666',
+  'mainHeaderShadow' => '#d8d8d8'
 ));
 
 $Css->addMixin('flashColor', function($flash, $color) use($Css) {
@@ -214,7 +218,8 @@ $Css('header')->css(array(
 $Css('#main')->backgroundColor = $Skin->mainBg;
 $Css('#main #main-container > h1:first-child')->css(array(
   'background-color' => $Skin->mainHeaderBg,
-  'color' => $Skin->mainHeaderFg
+  'color' => $Skin->mainHeaderFg,
+  'box-shadow' => '1px 1px 2px ' . $Css->toString($Skin->mainHeaderShadow)
 ));
 $Css('footer')->borderTopColor = $Skin->navBg;
 
