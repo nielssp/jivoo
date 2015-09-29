@@ -55,14 +55,14 @@ $Skin->setDefault(array(
   'inputErrorBorder' => '#f55',
   'codeBg' => $Skin->navBg,
   'codeFg' => $Skin->warning,
-  'tableHlBg' => '#f7f7f7',
   'blockBg' => '#f7f7f7',
 ));
 
 $Skin->setDefault(array(
   'mainHeaderBg' => $Skin->blockBg,
   'mainHeaderFg' => '#666',
-  'mainHeaderShadow' => '#d8d8d8'
+  'mainHeaderShadow' => '#d8d8d8',
+  'tableHlBg' => $Css->darken($Skin->mainBg, 3),
 ));
 
 $Css->addMixin('flashColor', function($flash, $color) use($Css) {
