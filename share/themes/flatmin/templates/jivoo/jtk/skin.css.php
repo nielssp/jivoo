@@ -23,6 +23,8 @@ $Css('.dropdown ul')->apply('dropdown')->css(array(
   'color' => $Skin->navHlFg
 ));
 
+$Css('.dropdown > a')->apply('button');
+
 $Css('.dropdown:hover > a')->css(array(
   'background-color' => $Skin->navHlBg,
   'color' => $Skin->navHlFg,

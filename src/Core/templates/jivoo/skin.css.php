@@ -41,7 +41,7 @@ $Skin->setDefault(array(
   'navHlFg' => $Skin->primaryBg,
   'navCuBg' => $Skin->primaryBg,
   'navCuFg' => $Skin->primaryFg,
-  'navDisBg' => '#f1f1f1',
+  'navDisBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 5), 92),
   'navDisFg' => '#999',
   'mainBg' => '#f1f1f1',
   'mainFg' => '#333',
@@ -109,7 +109,7 @@ $Css->addMixin('button', function($button) use($Skin, $Css) {
     'color' => $Skin->navHlFg
   ));
   $button('.active, &:active')->boxShadow = 'inset 0 4px 5px 0 rgba(0, 0, 0, 0.15)';
-  $button('&[disabled]')->css(array(
+  $button('&[disabled], &[disabled]:hover')->css(array(
     'background-color' => $Skin->navDisBg,
     'border-color' => $Skin->navDisFg,
     'color' => $Skin->navDisFg
