@@ -43,7 +43,7 @@ $Skin->setDefault(array(
   'navCuFg' => $Skin->primaryFg,
   'navDisBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 5), 92),
   'navDisFg' => '#999',
-  'mainBg' => '#f1f1f1',
+  'mainBg' => '#f7f7f7',
   'mainFg' => '#333',
   'subMenuBg' => $Css->setLightness($Css->setSaturation($Skin->primary, 11), 76),
   'subMenuFg' => '#333',
@@ -55,7 +55,7 @@ $Skin->setDefault(array(
   'inputErrorBorder' => '#f55',
   'codeBg' => $Skin->navBg,
   'codeFg' => $Skin->warning,
-  'blockBg' => '#f7f7f7',
+  'blockBg' => '#ffffff',
 ));
 
 $Skin->setDefault(array(
