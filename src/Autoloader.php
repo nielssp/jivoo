@@ -123,7 +123,7 @@ class Autoloader {
         return true;
       }
       else if ($this->psr0) {
-        $file = $path . str_replace('_', '\\', $classPath);
+        $file = $path . str_replace('_', '/', $classPath);
         if (file_exists($file)) {
           require $file;
           return true;
