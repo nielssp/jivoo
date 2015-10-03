@@ -49,7 +49,7 @@ $codeFg: $warning;
 
 // blocks
 
-$blockBg: #f7f7f7;
+$blockBg: #fff;
 $blockShadow: darken($mainBg, 10%);
 $blockHeaderFg: #727272;
 $blockHeaderFgSmall: #939393;
@@ -58,8 +58,8 @@ $blockFooterBorder: #ddd;
 
 $blockToolbarFg: rgba(0,0,0,0.4);
 
-$blockSubBg: lighten($blockBg, 5%);
-$blockSubShadow: lighten($blockBg, 10%);
+$blockSubBg: darken($blockBg, 3%);
+$blockSubShadow: darken($blockBg, 10%);
 
 $blockAcceptBorder: darken($mainBg, 50%);
 $blockDraggingBorder: darken($mainBg, 30%);
