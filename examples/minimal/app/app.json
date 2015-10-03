@@ -1,17 +1,5 @@
 {
   "name": "Minimal Jivoo example application",
   "namespace": "Minimal",
-  "version": "1.0",
-  "modules": [
-    "Routing",
-    "Assets",
-    "View",
-    "Controllers",
-    "Setup",
-    "Models",
-    "Content",
-    "Snippets",
-    "Extensions",
-    "Helpers"
-  ]
+  "version": "1.0"
 }

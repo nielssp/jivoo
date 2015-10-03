@@ -2,22 +2,7 @@
   "name": "Jivoo chat application",
   "namespace": "Chat",
   "version": "1.0",
-  "modules": [
-    "Routing",
-    "AccessControl",
-    "Assets",
-    "View",
-    "Controllers",
-    "Snippets",
-    "Models",
-    "Content",
-    "Helpers",
-    "Extensions",
-    "Databases",
-    "ActiveModels",
-    "Migrations",
-    "Setup"
-  ],
+  "init": ["Setup", "Databases", "Migrations", "ActiveModels"],
   "extensions": [
     "jquery",
     "eventsource"

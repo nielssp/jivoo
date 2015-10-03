@@ -3,24 +3,6 @@
   "namespace": "Chat",
   "version": "1.0",
   "init": ["Setup", "Databases", "Migrations", "ActiveModels"],
-  "modules": [
-    "Routing",
-    "AccessControl",
-    "Assets",
-    "View",
-    "Controllers",
-    "Snippets",
-    "Models",
-    "Content",
-    "Helpers",
-    "Extensions",
-    "Databases",
-    "ActiveModels",
-    "Migrations",
-    "Setup",
-    "Jtk",
-    "Console"
-  ],
   "extensions": [
     "jquery"
   ],
