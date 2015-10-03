@@ -35,7 +35,6 @@ abstract class LoadableDatabase extends Module implements MigratableDatabase {
   
   /**
    * Construct database.
-   * @param App $app Associated application.
    * @param DatabaseSchema $schema Database schema.
    * @param array $options Associative array of options for driver.
    */
