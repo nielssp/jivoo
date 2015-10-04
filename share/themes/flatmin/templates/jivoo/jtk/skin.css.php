@@ -10,7 +10,7 @@ $Css->addMixin('dropdown', function($Css) use ($Skin) {
   ));
   $Css('li ul li')->color = $Skin->subMenuFg;
   $Css('li ul li:hover')->css(array(
-    'background-color' => $Skin->navBg,
+    'background-color' => $Skin->subMenuHlBg,
     'color' => $Skin->navHlFg
   ));
 });
