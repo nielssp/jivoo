@@ -7,20 +7,40 @@ namespace Jivoo\Core\Vendor;
 
 use Jivoo\Autoloader;
 
+/**
+ * A composer package.
+ */
 class ComposerPackage implements Package {
+  /**
+   * @var array
+   */
   private $manifest;
   
+  /**
+   * @var string
+   */
   private $path;
   
+  /**
+   * Construct composer package.
+   * @param array $manifest Package manifest.
+   * @param string $path Package root.
+   */
   public function __construct($manifest, $path) {
     $this->manifest = $manifest;
     $this->path = $path;
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return $this->manifest['name'];
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function load(Autoloader $autoloader) {
     if (!isset($this->manifest['autoload']) or !is_array($this->manifest['autoload']))
       return;

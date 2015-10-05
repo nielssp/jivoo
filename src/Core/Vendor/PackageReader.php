@@ -6,7 +6,7 @@
 namespace Jivoo\Core\Vendor;
 
 /**
- * 
+ * Reads a third-pardy package.
  */
 interface PackageReader {
   /**

@@ -8,6 +8,9 @@ namespace Jivoo\Core\Vendor;
 use Jivoo\Core\Json;
 use Jivoo\Core\JsonException;
 
+/**
+ * Reads composer packages.
+ */
 class ComposerPackageReader implements PackageReader {
   /**
    * {@inheritdoc}
