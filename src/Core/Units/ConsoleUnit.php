@@ -18,7 +18,7 @@ class ConsoleUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('AppLogic', 'Routing', 'Extensions');
+  protected $requires = array('AppLogic', 'Routing', 'Extensions', 'Setup');
   
   /**
    * {@inheritdoc}

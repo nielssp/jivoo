@@ -73,7 +73,7 @@ class Init extends Module {
    */
   protected function development() {
     $this->production();
-    $this->m->units->enable('Console');
+    $this->m->units->enable(array('Setup', 'Console'));
   }
 
   /**

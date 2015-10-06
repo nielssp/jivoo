@@ -23,7 +23,7 @@ class ManifestInstaller extends InstallerSnippet {
   /**
    * {@inheritdoc}
    */
-  protected $helpers = array('Form', 'Jtk');
+  protected $helpers = array('Form');
 
   /**
    * {@inheritdoc}
