@@ -26,6 +26,7 @@ use Jivoo\Core\Log\ErrorException;
 use Jivoo\Core\Cli\Shell;
 use Psr\Cache\CacheItemPoolInterface;
 use Jivoo\Core\Cache\NullPool;
+use Jivoo\Core\Store\Document;
 
 /**
  * Application class for initiating Jivoo applications.
@@ -195,7 +196,8 @@ class App extends EventSubjectBase implements LoggerAware {
     $this->paths->Core = \Jivoo\PATH . '/Core';
 
     $file = new PhpStore($this->p('user/config.php'));
-    $this->config = new Config($file);
+    $this->config = new Document();
+    $this->config['user'] = new Config($file);
   }
 
   /**
@@ -485,14 +487,14 @@ class App extends EventSubjectBase implements LoggerAware {
     ob_start();
     
     // Set timezone (required by file logger)
-    if (!isset($this->config['i18n']['timeZone'])) {
+    if (!isset($this->config['user']['i18n']['timeZone'])) {
       $defaultTimeZone = 'UTC';
       $error = ErrorHandler::detect(function() use($defaultTimeZone) {
         $defaultTimeZone = @date_default_timezone_get();
       });
-      $this->config['i18n']['timeZone'] = $defaultTimeZone;
+      $this->config['user']['i18n']['timeZone'] = $defaultTimeZone;
     }
-    if (!date_default_timezone_set($this->config['i18n']['timeZone']))
+    if (!date_default_timezone_set($this->config['user']['i18n']['timeZone']))
       date_default_timezone_set('UTC');
 
     // Set up the default file loger    

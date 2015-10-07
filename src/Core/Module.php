@@ -66,7 +66,7 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
   public function setApp(App $app) {
     $this->inheritElements('modules');
     $this->app = $app;
-    $this->config = $app->config;
+    $this->config = $app->config['user'];
     $this->logger = $app->logger;
     if (isset($app->m)) {
       $this->m = $app->m;

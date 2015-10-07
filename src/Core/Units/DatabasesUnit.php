@@ -30,7 +30,7 @@ class DatabasesUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $app->m->db = new Loader($app->config->getSubset('Databases'));
+    $app->m->db = new Loader($this->config->getSubset('Databases'));
     $app->m->db->setLogger($this->logger);
     $app->m->Databases = $app->m->db;
     

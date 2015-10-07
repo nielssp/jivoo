@@ -23,7 +23,7 @@ use Jivoo\Core\Vendor\ComposerPackageReader;
  */
 class Init extends Module {
   /**
-   * @var string[] List of valid environments used by {@see boot} to select a
+   * @var string[] List of valid environments used by {@see init} to select a
    * method.
    */
   protected $environments = array('production', 'development', 'cli');
@@ -47,7 +47,7 @@ class Init extends Module {
       throw new InvalidEnvironmentException(tr('Undefined environment: %1', $environment));
 
     if (isset($this->app->manifest['defaultConfig']))
-      $this->config->defaults = $this->app->manifest['defaultConfig'];
+      $this->config['user']->defaults = $this->app->manifest['defaultConfig'];
     
     $this->m->units = new UnitLoader($this->app);
 
