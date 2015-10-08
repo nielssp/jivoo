@@ -69,7 +69,9 @@ abstract class ExtensionController extends ExtensionModule {
     if (isset($this->modelObjects[$name])) {
       return $this->modelObjects[$name];
     }
-    return $this->view->data->$name;
+    if (isset($this->view->data->$name))
+      return $this->view->data->$name;
+    return parent::__get($name);
   }
 
   /**
