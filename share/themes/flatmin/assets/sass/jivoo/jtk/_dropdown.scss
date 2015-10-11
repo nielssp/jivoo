@@ -69,10 +69,14 @@
   display: inline-block;
   position: relative;
   text-align: left;
+  margin: 2px 0;
 
   & > a {
     @include button;
     @include icon-size(12px);
+    &, &:link, &:active, &:visited, &:hover {
+      margin: 0;
+    }
     .icon {
       margin-right: 6px;
     }
