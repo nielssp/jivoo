@@ -72,9 +72,11 @@ class ContentHelper extends Helper {
   }
   
   public function getFormat($name) {
-    if (!isset($this->formats)) {
-      if (!class_exists($name))
+    if (!isset($this->formats[$name])) {
+      if (!class_exists($name)) {
+        $this->logger->error('Content format not found: {format}', array('format' => $name));
         return null;
+      }
       $this->formats[$name] = new $name();
     }
     return $this->formats[$name];
@@ -85,8 +87,6 @@ class ContentHelper extends Helper {
       $name = get_class($format);
   }
   
-
-
   /**
    * Insert link for route.
    * @param array $params Content extension parameters.
