@@ -70,10 +70,11 @@ class ContentMixin extends ActiveModelMixin {
   public function afterCreate(ActiveModelEvent $event) {
     if (!$this->options['format'])
       return;
-    // TODO: find editor/format
+    $helper = $this->helper('Content');
     foreach ($this->options['fields'] as $field) {
       $formatField = $field . 'Format';
-      $event->record->$formatField = 'html';
+      $editor = $helper->getEditor($event->record->getModel(), $field);
+      $event->record->$formatField = get_class($editor->getFormat());
     }
   }
 }

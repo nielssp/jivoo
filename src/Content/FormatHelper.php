@@ -30,6 +30,11 @@ class FormatHelper extends Helper {
   private $hasBreak = false;
   
   /**
+   * @var Format[] Formats.
+   */
+  private $formats = array();
+  
+  /**
    * Set encoder of field.
    * @param Model $model A model.
    * @param String $field Field name.
