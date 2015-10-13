@@ -73,7 +73,7 @@ class ContentHelper extends Helper {
   }
   
   public function purify(Record $record, $field) {
-    $purifier = new HTMLPurifier($this->getPurifierConfig($record->getModel(), $field));
+    $purifier = new \HTMLPurifier($this->getPurifierConfig($record->getModel(), $field));
     $htmlField = $field . 'Html';
     return $purifier->purify($record->$htmlField);
   }
