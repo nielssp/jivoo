@@ -10,6 +10,7 @@ use Jivoo\Models\Model;
 use Jivoo\Models\BasicRecord;
 use Jivoo\Routing\InvalidRouteException;
 use Jivoo\Core\Assume;
+use Jivoo\Models\Record;
 
 /**
  * Content helper.
@@ -69,6 +70,12 @@ class ContentHelper extends Helper {
     Assume::hasKey($this->purifierConfigs, $name);
     Assume::hasKey($this->purifierConfigs[$name], $field);
     return $this->purifierConfigs[$name][$field];
+  }
+  
+  public function purify(Record $record, $field) {
+    $purifier = new HTMLPurifier($this->getPurifierConfig($record->getModel(), $field));
+    $htmlField = $field . 'Html';
+    return $purifier->purify($record->$htmlField);
   }
   
   public function getFormat($name) {
