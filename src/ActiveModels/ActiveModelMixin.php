@@ -24,6 +24,11 @@ abstract class ActiveModelMixin extends Module implements EventListener {
   protected $options = array();
   
   /**
+   * @var string[] Array of mixin methods.
+   */
+  protected $methods = array();
+  
+  /**
    * Construct mixin.
    * @param App $app Association application.
    * @param ActiveModel $model Associated model.
@@ -44,6 +49,14 @@ abstract class ActiveModelMixin extends Module implements EventListener {
       'beforeSave','afterSave','beforeValidate','afterValidate',
       'afterCreate','afterLoad','beforeDelete','install'
     );
+  }
+  
+  /**
+   * Get model methods implemented by this mixin.
+   * @return callable[] Methods.
+   */
+  public function getMethods() {
+    return $this->methods;
   }
 
   /**

@@ -65,22 +65,28 @@ class Autoloader {
    * @param bool $psr0 Whether to use PSR-0 instead of PSR-4 for this path.
    */
   public function addPath($namespace, $path, $prepend = false, $psr0 = false) {
-    $namespace = '\\' . trim($namespace, '\\');
-
-    if (!isset($this->paths[$namespace]))
-      $this->paths[$namespace] = array();
-    
     if ($path != '')
       $path = rtrim(str_replace('\\', '/', $path), '/') . '/';
+    
     if ($psr0) {
       $this->psr0 = true;
-      $path = rtrim($path . trim(str_replace('\\', '/', $namespace), '/'), '/') . '/';
+      if (!isset($this->psr0Paths[$namespace]))
+        $this->psr0Paths[$namespace] = array();
+      if ($prepend)
+        array_unshift($this->psr0Paths[$namespace], $path);
+      else
+        array_push($this->psr0Paths[$namespace], $path);
     }
-    
-    if ($prepend)
-      array_unshift($this->paths[$namespace], $path);
-    else
-      array_push($this->paths[$namespace], $path);
+    else {
+      $namespace = '\\' . trim($namespace, '\\');
+  
+      if (!isset($this->paths[$namespace]))
+        $this->paths[$namespace] = array();
+      if ($prepend)
+        array_unshift($this->paths[$namespace], $path);
+      else
+        array_push($this->paths[$namespace], $path);
+    }
   }
   
   /**
@@ -89,6 +95,8 @@ class Autoloader {
    * @return bool True on success, false on failure.
    */
   public function load($class) {
+    if ($this->psr0 and $this->loadPsr0($class))
+      return true;
     $namespace = '\\';
     $classPath = str_replace('\\', '/', $class) . '.php';
     while (true) {
@@ -104,6 +112,22 @@ class Autoloader {
       }
       $namespace = rtrim($namespace, '\\') . '\\' . substr($classPath, 0, $pos);
       $classPath = substr($classPath, $pos + 1);
+    }
+    return false;
+  }
+  
+  public function loadPsr0($class) {
+    $classPath = str_replace('\\', '/', $class) . '.php';
+    foreach ($this->psr0Paths as $prefix => $paths) {
+      if (strncmp($prefix, $class, strlen($prefix)) === 0) {
+        foreach ($paths as $path) {
+          $file = $path . str_replace('_', '/', $classPath);
+          if (file_exists($file)) {
+            require $file;
+            return true;
+          }
+        }
+      }
     }
     return false;
   }

@@ -24,6 +24,7 @@ use Jivoo\Models\RecordBuilder;
 use Jivoo\Databases\InvalidTableException;
 use Jivoo\Core\Assume;
 use Jivoo\Databases\Loader;
+use Jivoo\InvalidMethodException;
 
 /**
  * An active model containing active records, see also {@see ActiveRecord}.
@@ -172,6 +173,11 @@ abstract class ActiveModel extends ModelBase implements EventListener {
   private $cache = array();
   
   /**
+   * @var callable[] Additional methods.
+   */
+  private $methods = array();
+  
+  /**
    * Construct active model.
    * @param App $app Associated application.
    * @param DatabaseLoader $databases Databases module.
@@ -253,6 +259,8 @@ abstract class ActiveModel extends ModelBase implements EventListener {
       $mixin = new $mixin($this->app, $this, $options);
       $this->attachEventListener($mixin);
       $this->mixinObjects[] = $mixin;
+      foreach ($mixin->getMethods() as $method)
+        $this->methods[$method] = array($mixin, $method);
     }
 
     $this->database->$table = $this;
@@ -265,6 +273,18 @@ abstract class ActiveModel extends ModelBase implements EventListener {
    * adding virtual collections or configuring mixins.
    */
   protected function init() { }
+  
+  /**
+   * Call a mixin method. See {@see ActiveModelMixin::$methods}.
+   * @param string $method Method name.
+   * @param array $parameters Parameters.
+   * @return mixed Return value. 
+   */
+  public function __call($method, $parameters) {
+    if (isset($this->methods[$method]))
+      return call_user_func_array($this->methods[$method], $parameters);
+    throw new InvalidMethodException('Invalid method: ' . $method);
+  }
 
   /**
    * {@inheritdoc}

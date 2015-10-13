@@ -7,6 +7,7 @@ namespace Jivoo\Content;
 
 use Jivoo\ActiveModels\ActiveModelMixin;
 use Jivoo\ActiveModels\ActiveModelEvent;
+use Jivoo\ActiveModels\ActiveRecord;
 
 /**
  * Mixin for automatically compiling content fields.
@@ -30,10 +31,23 @@ class ContentMixin extends ActiveModelMixin {
   /**
    * {@inheritdoc}
    */
+  protected $methods = array('recordDisplay');
+
+  /**
+   * {@inheritdoc}
+   */
   public function init() {
     $helper = $this->helper('Content');
     foreach ($this->options['fields'] as $field)
       $helper->register($this->model, $field);
+  }
+  
+  /**
+   * Purify HTML for field.
+   * @return string HTML.
+   */
+  public function recordDisplay(ActiveRecord $record, $field = 'content') {
+    return $this->helper('Content')->purify($record, $field);
   }
 
   /**
