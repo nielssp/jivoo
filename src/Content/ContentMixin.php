@@ -31,7 +31,7 @@ class ContentMixin extends ActiveModelMixin {
   /**
    * {@inheritdoc}
    */
-  protected $methods = array('recordDisplay');
+  protected $methods = array('recordDisplay', 'recordEditor');
 
   /**
    * {@inheritdoc}
@@ -48,6 +48,15 @@ class ContentMixin extends ActiveModelMixin {
    */
   public function recordDisplay(ActiveRecord $record, $field = 'content') {
     return $this->helper('Content')->purify($record, $field);
+  }
+  
+  /**
+   * Render editor for field.
+   * @return string HTML.
+   */
+  public function recordEditor(ActiveRecord $record, $field = 'content') {
+    $editor = $this->helper('Content')->getEditor($record->getModel(), $field);
+    return $editor($record, $field);
   }
 
   /**
