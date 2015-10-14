@@ -485,6 +485,11 @@ class App extends EventSubjectBase implements LoggerAware {
     
     // Force output buffereing (so that error-pages can clear it)
     ob_start();
+
+    // Load default configuration from application and/or Core
+    if (file_exists($this->p('app/config/default.php')))
+      $this->config->defaults = include $this->p('app/config/default.php');
+    $this->config->defaults = include $this->p('Core/config/default.php');
     
     // Set timezone (required by file logger)
     if (!isset($this->config['user']['i18n']['timeZone'])) {
@@ -502,7 +507,7 @@ class App extends EventSubjectBase implements LoggerAware {
       try {
         $this->logger->addHandler(new FileHandler(
           $this->p('log/' . $this->environment . '.log'),
-          $this->config['core']->get('logLevel', LogLevel::WARNING)
+          $this->config['system']->get('logLevel', LogLevel::WARNING)
         ));
       }
       catch (LogException $e) {
