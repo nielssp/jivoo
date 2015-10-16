@@ -60,22 +60,6 @@ class ContentHelper extends Helper {
   
   public function register(Model $model, $field) {
     $name = $model->getName();
-    if (!isset($this->models[$name]))
-      $this->purifierConfigs[$name] = array();
-    $this->purifierConfigs[$name][$field] = \HTMLPurifier_Config::createDefault();
-  }
-  
-  public function getPurifierConfig(Model $model, $field) {
-    $name = $model->getName();
-    Assume::hasKey($this->purifierConfigs, $name);
-    Assume::hasKey($this->purifierConfigs[$name], $field);
-    return $this->purifierConfigs[$name][$field];
-  }
-  
-  public function purify(Record $record, $field) {
-    $purifier = new \HTMLPurifier($this->getPurifierConfig($record->getModel(), $field));
-    $htmlField = $field . 'Html';
-    return $purifier->purify($record->$htmlField);
   }
   
   public function getFormat($name) {
