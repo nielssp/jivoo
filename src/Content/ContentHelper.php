@@ -17,6 +17,8 @@ use Jivoo\Models\Record;
  * @property-read ContentExtensions $extensions Collection of content extensions.
  */
 class ContentHelper extends Helper {
+
+  protected $helpers = array('Form');
   
   private $editors = array();
   
@@ -84,6 +86,17 @@ class ContentHelper extends Helper {
     if (isset($this->editors[$format]))
       return $this->editors[$format];
     return null;
+  }
+
+  /**
+   * Create select-element of available content formats.
+   * @param string $field Field name.
+   * @return string Select element HTML.
+   */
+  public function selectFormat($field) {
+    $options = array_keys($this->editors);
+    $options = array_combine($options, $options);
+    return $this->Form->selectOf($field . 'Format', $options);
   }
   
   /**

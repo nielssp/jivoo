@@ -33,12 +33,16 @@ class ContentMixin extends ActiveModelMixin {
    * {@inheritdoc}
    */
   protected $methods = array(
-    'recordDisplay', 'recordEditor', 'addFilter', 'getPurifierConfig'
+    'recordDisplay', 'recordEditor',
+    'getDefaultFormat', 'setDefaultFormat',
+    'addFilter', 'getPurifierConfig'
   );
   
   private $purifierConfigs = array();
   
   private $filters = array();
+
+  private $defaultFormat = 'html';
 
   /**
    * {@inheritdoc}
@@ -70,6 +74,8 @@ class ContentMixin extends ActiveModelMixin {
   public function recordEditor(ActiveRecord $record, $field = 'content', $options = array()) {
     $formatField = $field . 'Format';
     $editor = $this->helper('Content')->getEditor($record->$formatField);
+    if (!isset($editor))
+      return tr('Unknown content format: "%1"', $record->$formatField);
     return $editor->field($this->helper('Form'), $field, $options);
   }
   
@@ -110,6 +116,14 @@ class ContentMixin extends ActiveModelMixin {
     return $this->purifierConfigs[$field];
   }
 
+  public function getDefaultFormat() {
+    return $this->defaultFormat;
+  }
+
+  public function setDefaultFormat($format) {
+    $this->defaultFormat = $format;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -148,8 +162,7 @@ class ContentMixin extends ActiveModelMixin {
     $helper = $this->helper('Content');
     foreach ($this->options['fields'] as $field) {
       $formatField = $field . 'Format';
-      $editor = $helper->getEditor($event->record->getModel(), $field);
-      $event->record->$formatField = get_class($editor->getFormat());
+      $event->record->$formatField = $this->defaultFormat;
     }
   }
 }
