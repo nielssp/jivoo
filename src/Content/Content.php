@@ -60,11 +60,6 @@ class Content extends LoadableModule {
     
     $this->extensions = new ContentExtensions();
     
-    $this->addFormat(new Formats\HtmlFormat());
-    $this->addFormat(new Formats\TextFormat());
-    $this->addEditor(new TextareaEditor('html'));
-    $this->addEditor(new TextareaEditor('text'));
-    
     $this->extensions->inline('link', array('route' => null), array($this, 'linkFunction'));
     $this->extensions->block('break', array(), array($this, 'breakFunction'));
     $this->extensions->block('page', array('name' => null), array($this, 'pageFunction'));

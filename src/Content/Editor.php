@@ -12,8 +12,15 @@ use Jivoo\Helpers\FormHelper;
  */
 interface Editor {
   /**
-   * Get content format used by editor.
-   * @return ContentFormat Format object.
+   * Convert content of editor to HTML.
+   * @param string $content Editor content from form input.
+   * @return string HTML.
+   */
+  public function toHtml($content);
+
+  /**
+   * Return name of format used by editor.
+   * @return string Name.
    */
   public function getFormat();
 

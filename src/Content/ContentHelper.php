@@ -18,9 +18,7 @@ use Jivoo\Models\Record;
  */
 class ContentHelper extends Helper {
   
-  private $purifierConfigs = array();
-  
-  private $formats = array();
+  private $editors = array();
   
   /**
    * @var ContentExtensions
@@ -48,6 +46,10 @@ class ContentHelper extends Helper {
       'pagebreak', array(), 
       array($this, 'pageBreakFunction')
     );
+
+    $this->addEditor(new TextareaEditor('html', function($content) {
+      return html_entity_decode($content, null, 'UTF-8');
+    }));
   }
   
   public function __get($property) {
@@ -73,9 +75,15 @@ class ContentHelper extends Helper {
     return $this->formats[$name];
   }
   
-  public function addFormat(Format $format, $name = null) {
-    if (!isset($name))
-      $name = get_class($format);
+  public function addEditor(Editor $editor) {
+    $format = $editor->getFormat();
+    $this->editors[$format] = $editor;
+  }
+
+  public function getEditor($format) {
+    if (isset($this->editors[$format]))
+      return $this->editors[$format];
+    return null;
   }
   
   /**

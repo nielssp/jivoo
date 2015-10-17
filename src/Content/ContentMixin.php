@@ -67,9 +67,10 @@ class ContentMixin extends ActiveModelMixin {
    * Render editor for field.
    * @return string HTML.
    */
-  public function recordEditor(ActiveRecord $record, $field = 'content') {
-    $editor = $this->helper('Content')->getEditor($record->getModel(), $field);
-    return $editor($record, $field);
+  public function recordEditor(ActiveRecord $record, $field = 'content', $options = array()) {
+    $formatField = $field . 'Format';
+    $editor = $this->helper('Content')->getEditor($record->$formatField);
+    return $editor->field($this->helper('Form'), $field, $options);
   }
   
   /**
@@ -118,9 +119,9 @@ class ContentMixin extends ActiveModelMixin {
     foreach ($this->options['fields'] as $field) {
       $content = $this->applyFilters($field, 'preprocess', $event->record->$field);
       $formatField = $field . 'Format';
-      $format = $this->helper('Content')->getFormat($event->record->$formatField);
-      if (isset($format)) {
-        $html = $format->toHtml($content);
+      $editor = $this->helper('Content')->getEditor($event->record->$formatField);
+      if (isset($editor)) {
+        $html = $editor->toHtml($content);
       }
       else {
         $html = $content;

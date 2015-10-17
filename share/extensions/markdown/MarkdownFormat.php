@@ -1,19 +1,13 @@
 <?php
-use Jivoo\Content\ContentFormat;
 use Jivoo\Extensions\ExtensionModule;
 use Jivoo\Content\TextareaEditor;
 
-class MarkdownFormat extends ExtensionModule implements ContentFormat {
+class MarkdownFormat extends ExtensionModule {
   
-  protected $modules = array('Content');
+  protected $helpers = array('Content');
   
   protected function init() {
-    $this->m->Content->addFormat($this);
-    $this->m->Content->addEditor(new TextareaEditor('markdown'));
-  }
-  
-  public function getName() {
-    return 'markdown';
+    $this->helper('Content')->addEditor(new TextareaEditor('markdown', array($this, 'toHtml')));
   }
   
   public function toHtml($text) {

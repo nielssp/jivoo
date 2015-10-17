@@ -15,13 +15,24 @@ class TextareaEditor implements Editor {
    * @var string Name of content format.
    */
   private $format;
+
+  private $toHtml;
   
   /**
    * Construct textarea editor.
    * @param string $format Name of content format.
+   * @param callable $toHtml Converts editor content to HTML, see {@see Editor::toHtml}.
    */
-  public function __construct($format) {
+  public function __construct($format, $toHtml) {
     $this->format = $format;
+    $this->toHtml = $toHtml;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toHtml($content) {
+    return call_user_func($this->toHtml, $content);
   }
 
   /**
