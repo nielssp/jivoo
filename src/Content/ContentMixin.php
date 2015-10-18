@@ -33,7 +33,7 @@ class ContentMixin extends ActiveModelMixin {
    * {@inheritdoc}
    */
   protected $methods = array(
-    'recordDisplay', 'recordEditor',
+    'recordDisplay', 'recordEditor', 'recordHasBreak',
     'getDefaultFormat', 'setDefaultFormat',
     'addFilter', 'getPurifierConfig'
   );
@@ -60,10 +60,15 @@ class ContentMixin extends ActiveModelMixin {
    * Purify HTML for field.
    * @return string HTML.
    */
-  public function recordDisplay(ActiveRecord $record, $field = 'content') {
+  public function recordDisplay(ActiveRecord $record, $field = 'content', $options = array()) {
     $purifier = new \HTMLPurifier($this->getPurifierConfig($field));
     $htmlField = $field . 'Html';
-    $html = $this->applyFilters($field, 'prerender', $record->$htmlField);
+    $content = $record->$htmlField;
+    if (isset($options['break']) and $options['break']) {
+      $sections = explode('<div class="break"></div>', $content);
+      $content = $sections[0];
+    }
+    $html = $this->applyFilters($field, 'prerender', $content);
     return $purifier->purify($html);
   }
   
@@ -77,6 +82,13 @@ class ContentMixin extends ActiveModelMixin {
     if (!isset($editor))
       return tr('Unknown content format: "%1"', $record->$formatField);
     return $editor->field($this->helper('Form'), $field, $options);
+  }
+
+  public function recordHasBreak(ActiveRecord $record, $field = 'content') {
+    $htmlField = $field . 'Html';
+    $content = $record->$htmlField;
+    $sections = explode('<div class="break"></div>', $content);
+    return strpos($content, '<div class="break"></div>') !== false;
   }
   
   /**
@@ -101,6 +113,8 @@ class ContentMixin extends ActiveModelMixin {
    * @return Filtered content.
    */
   public function applyFilters($field, $stage, $content) {
+    if (!isset($this->filters[$field]) or !isset($this->filters[$field][$stage]))
+      return $content;
     foreach ($this->filters[$field][$stage] as $callable)
       $content = call_user_func_array($callable, $content);
     return $content;
