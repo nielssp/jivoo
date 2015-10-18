@@ -176,7 +176,8 @@ class ContentMixin extends ActiveModelMixin {
     $helper = $this->helper('Content');
     foreach ($this->options['fields'] as $field) {
       $formatField = $field . 'Format';
-      $event->record->$formatField = $this->defaultFormat;
+      if (!$event->record->hasChanged($formatField))
+        $event->record->$formatField = $this->defaultFormat;
     }
   }
 }

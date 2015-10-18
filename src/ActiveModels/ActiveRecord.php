@@ -81,6 +81,7 @@ class ActiveRecord implements Record, ActionRecord, Linkable {
     $this->data = array_fill_keys($model->getNonVirtualFields(), null);
     $this->virtualData = array_fill_keys($model->getVirtualFields(), null);
     $this->addData($model->getDefaults());
+    $this->updatedData = array();
     $this->addData($data, $allowedFields);
     $this->associations = $this->model->getAssociations();
     $this->getters = $this->model->getGetters();
@@ -344,12 +345,12 @@ class ActiveRecord implements Record, ActionRecord, Linkable {
    * @return bool True if successfully saved, false on errors.
    */
   public function save($validate = true) {
+    $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if ($validate and !$this->isValid()) {
       foreach ($this->getErrors() as $field => $error)
         $this->model->getLogger()->info(tr('Form error (%1): %2', $field, $error));
       return false;
     }
-    $this->model->triggerEvent('beforeSave', new ActiveModelEvent($this));
     if ($this->isNew()) {
       foreach ($this->data as $field => $value)
         $this->data[$field] = $this->model->getType($field)->convert($value);

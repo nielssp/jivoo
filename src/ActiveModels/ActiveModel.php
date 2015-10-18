@@ -311,6 +311,15 @@ abstract class ActiveModel extends ModelBase implements EventListener {
   }
 
   /**
+   * Set default value of a field.
+   * @param string $field Field name.
+   * @param mixed $value Default value.
+   */
+  public function setDefault($field, $value) {
+    $this->defaults[$field] = $value;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function create($data = array(), $allowedFields = null) {
