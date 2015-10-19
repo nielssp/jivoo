@@ -55,9 +55,6 @@ class Content extends LoadableModule {
 
     $this->m->lazy('Helpers')->addHelper('Jivoo\Content\ContentHelper');
     
-    $this->m->lazy('Helpers')->addHelper('Jivoo\Content\EditorHelper');
-    $this->m->lazy('Helpers')->addHelper('Jivoo\Content\FormatHelper');
-    
     $this->extensions = new ContentExtensions();
     
     $this->extensions->inline('link', array('route' => null), array($this, 'linkFunction'));
