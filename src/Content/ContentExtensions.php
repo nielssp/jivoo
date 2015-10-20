@@ -78,12 +78,12 @@ class ContentExtensions {
     }
     if (!$this->functions[$function]['inline'] and $block) {
       $matches[1] = '';
-      $matches[4] = '';
+      $matches[5] = '';
     }
     return $matches[1] . call_user_func(
       $this->functions[$function]['callback'],
       $actualParameters
-    ) . $matches[4]; 
+    ) . $matches[5]; 
   }
   
   /**

@@ -122,7 +122,7 @@ class ContentMixin extends ActiveModelMixin {
     if (!isset($this->filters[$field]) or !isset($this->filters[$field][$stage]))
       return $content;
     foreach ($this->filters[$field][$stage] as $callable)
-      $content = call_user_func_array($callable, $content);
+      $content = call_user_func($callable, $content);
     return $content;
   }
   

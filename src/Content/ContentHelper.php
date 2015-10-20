@@ -100,6 +100,27 @@ class ContentHelper extends Helper {
   }
   
   /**
+   * Content filter that replaces "jivoo:*" style links. 
+   * @param string $content Input content.
+   * @return string Output content.
+   */
+  public function linkFilter($content) {
+    $routing = $this->m->Routing;
+    return preg_replace_callback(
+      '/\bjivoo:([a-zA-Z0-9_]+:[-a-zA-Z0-9_\.~\\\\:\[\]?&+%\/=]+)/', 
+      function ($matches) use($routing) {
+        try {
+          return $routing->getLink($matches[1]);
+        }
+        catch (InvalidRouteException $e) {
+          return '#invalid-link';
+        }
+      },
+      $content
+    );
+  }
+  
+  /**
    * Insert link for route.
    * @param array $params Content extension parameters.
    * @return string Link.
