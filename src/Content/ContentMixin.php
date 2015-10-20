@@ -9,6 +9,7 @@ use Jivoo\ActiveModels\ActiveModelMixin;
 use Jivoo\ActiveModels\ActiveModelEvent;
 use Jivoo\ActiveModels\ActiveRecord;
 use Jivoo\Core\Assume;
+use Jivoo\Core\Unicode;
 
 /**
  * Mixin for automatically compiling content fields.
@@ -69,6 +70,11 @@ class ContentMixin extends ActiveModelMixin {
       $content = $sections[0];
     }
     $html = $this->applyFilters($field, 'prerender', $content);
+    if (isset($options['maxLength']) and Unicode::length($html) > $options['maxLength']) {
+      $html = Unicode::slice($html, 0, $options['maxLength']);
+      if (isset($options['append']))
+        $html .= $options['append'];
+    }
     return $purifier->purify($html);
   }
   
