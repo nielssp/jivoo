@@ -367,7 +367,7 @@ class App extends EventSubjectBase implements LoggerAware {
       }
       $this->stop(1);
     }
-    if ($this->config['core']['createCrashReports']) {
+    if ($this->config['system']['createCrashReports']) {
       $file = $exception->getFile();
       $line = $exception->getLine();
       $message = $exception->getMessage();
@@ -390,7 +390,7 @@ class App extends EventSubjectBase implements LoggerAware {
           $this->logger->alert(tr('Failed to create crash report "%1"', $name));
         }
       }
-      if (!$this->config['core']['showReference'])
+      if (!$this->config['system']['showReference'])
         $hash = null;
     }
     // Clean the view
@@ -398,7 +398,7 @@ class App extends EventSubjectBase implements LoggerAware {
       ob_end_clean();
     Http::setContentType('text/html');
     Http::setStatus(Http::INTERNAL_SERVER_ERROR);
-    if ($this->config['core']['showExceptions']) {
+    if ($this->config['system']['showExceptions']) {
       ob_start();
       $this->crashReport($exception);
       $body = ob_get_clean();

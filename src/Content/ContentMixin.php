@@ -28,6 +28,7 @@ class ContentMixin extends ActiveModelMixin {
     'text' => true,
     'html' => true,
     'format' => true,
+    'purifier' => array()
   );
 
   /**
@@ -53,6 +54,7 @@ class ContentMixin extends ActiveModelMixin {
     foreach ($this->options['fields'] as $field) {
       $helper->register($this->model, $field);
       $this->purifierConfigs[$field] = \HTMLPurifier_Config::createDefault();
+      $this->purifierConfigs[$field]->loadArray($this->options['purifier']);
       $this->filters[$field] = array();
     }
   }
