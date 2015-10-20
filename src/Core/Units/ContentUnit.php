@@ -24,7 +24,6 @@ class ContentUnit extends UnitBase {
    * {@inheritdoc}
    */
   public function run(App $app, Document $config) {
-    $this->m->Content = new Content($app);
-    $this->m->Content->runInit();
+    $this->m->lazy('Helpers')->addHelper('Jivoo\Content\ContentHelper');
   }
 }
