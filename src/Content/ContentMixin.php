@@ -28,6 +28,7 @@ class ContentMixin extends ActiveModelMixin {
     'text' => true,
     'html' => true,
     'format' => true,
+    'html5' => true,
     'purifier' => array()
   );
 
@@ -42,6 +43,8 @@ class ContentMixin extends ActiveModelMixin {
   
   private $purifierConfigs = array();
   
+  private $purifiers = array();
+  
   private $filters = array();
 
   private $defaultFormat = 'html';
@@ -53,9 +56,17 @@ class ContentMixin extends ActiveModelMixin {
     $helper = $this->helper('Content');
     foreach ($this->options['fields'] as $field) {
       $helper->register($this->model, $field);
-      $this->purifierConfigs[$field] = \HTMLPurifier_Config::createDefault();
-      $this->purifierConfigs[$field]->loadArray($this->options['purifier']);
       $this->filters[$field] = array();
+    }
+  }
+  
+  private static function html5Config(\HTMLPurifier_Config $config) {
+    $config->set('HTML.DefinitionID', 'jivoo.html5');
+    $config->set('HTML.DefinitionRev', 1);
+    $def = $config->maybeGetRawHTMLDefinition();
+    if ($def) {
+      $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
+      $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
     }
   }
   
@@ -64,7 +75,7 @@ class ContentMixin extends ActiveModelMixin {
    * @return string HTML.
    */
   public function recordDisplay(ActiveRecord $record, $field = 'content', $options = array()) {
-    $purifier = new \HTMLPurifier($this->getPurifierConfig($field));
+    $purifier = $this->getPurifier($field);
     $htmlField = $field . 'Html';
     $content = $record->$htmlField;
     if (isset($options['break']) and $options['break']) {
@@ -134,8 +145,21 @@ class ContentMixin extends ActiveModelMixin {
    * @return \HTMLPurifier_Config Purifier configuration object.
    */
   public function getPurifierConfig($field = 'content') {
-    Assume::hasKey($this->purifierConfigs, $field);
+    if (!isset($this->purifierConfigs[$field])) {
+      $this->purifierConfigs[$field] = \HTMLPurifier_Config::createDefault();
+      $this->purifierConfigs[$field]->loadArray($this->options['purifier']);
+    }
     return $this->purifierConfigs[$field];
+  }
+  
+  public function getPurifier($field = 'content') {
+    if (!isset($this->purifiers[$field])) {
+      $config = $this->getPurifierConfig($field);
+      if ($this->options['html5'] && !$config->isFinalized())
+        self::html5Config($config);
+      $this->purifiers[$field] = new \HTMLPurifier($config);
+    }
+    return $this->purifiers[$field];
   }
 
   public function getDefaultFormat() {
