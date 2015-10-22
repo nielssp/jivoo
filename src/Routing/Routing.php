@@ -5,10 +5,10 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Routing;
 
-use Jivoo\Core\LoadableModule;
 use Jivoo\Core\Event;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\App;
+use Jivoo\Core\Module;
 
 /**
  * Module for handling routes and HTTP requests.
@@ -75,7 +75,7 @@ use Jivoo\Core\App;
  * @property-read DispatcherCollection $dispatchers Collection of dispatchers.
  * @property-read RoutingTable $routes Routing table.
  */
-class Routing extends LoadableModule {
+class Routing extends Module {
   /**
    * @var DispatcherCollection Collection of dispatchers.
    */
