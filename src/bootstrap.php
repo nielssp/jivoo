@@ -11,7 +11,7 @@ if (defined('Jivoo\VERSION'))
 /**
  * @var string Jivoo framework version string.
  */
-const VERSION = '0.23.0';
+const VERSION = '0.23.1';
 
 /**
  * @var string Absolute path to Jivoo source directory.
