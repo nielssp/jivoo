@@ -111,8 +111,7 @@ abstract class Module extends EventSubjectBase implements LoggerAware {
    * @throws InvalidPropertyException If property is not defined.
    */
   public function __isset($property) {
-    $value = $this->__get($property);
-    return isset($value);
+    return $this->m->hasProperty($property);
   }
 
   /**

@@ -122,6 +122,10 @@ class ModuleLoader extends EventSubjectBase {
     throw new InvalidPropertyException(tr('Invalid property: %1', $property));
   }
   
+  public function hasProperty($property) {
+    return array_key_exists($property, $this->properties);
+  }
+  
   public function addMethod($method, $callable) {
     $this->methods[$method] = $callable;
   }

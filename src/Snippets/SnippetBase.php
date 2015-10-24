@@ -60,7 +60,7 @@ abstract class SnippetBase extends Module implements Snippet {
    * @var array Data for template.
    */
   protected $viewData = array();
-
+  
   /**
    * @var Response Response (the default value is a {@see ViewResponse}.
    */

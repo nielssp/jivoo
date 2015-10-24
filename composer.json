@@ -31,6 +31,7 @@
   },
   "require-dev": {
     "codeception/codeception": "*",
-    "squizlabs/php_codesniffer": "2.*"
+    "squizlabs/php_codesniffer": "2.*",
+    "apigen/apigen": "dev-master"
   }
 }

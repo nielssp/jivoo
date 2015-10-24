@@ -52,7 +52,7 @@ class FormHelper extends Helper {
   private $errors = array();
   
   protected function init() {
-    if (isset($this->view->compiler))
+    if (isset($this->view) and isset($this->view->compiler))
       $this->view->compiler->addMacros(new FormMacros());
   }
 
