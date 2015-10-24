@@ -68,22 +68,4 @@ class State extends Document {
     $this->store = null;
     $this->updated = false;
   }
-  
-  /**
-   * Create a persistent variable using this state document.
-   * @param mixed $default Default value.
-   * @return Statevar State variable. 
-   */
-  public function autoVar($default = null) {
-    $backtrace = debug_backtrace();
-    $name = '';
-    if (isset($backtrace[1]['class']))
-      $name = $backtrace[1]['class'] . '::';
-    $name .= $backtrace[1]['function'];
-    $name .= '(' . $backtrace[1]['line'] . ')';
-    $var = new StateVar($this, $name);
-    if (isset($default))
-      $var->setDefault($default);
-    return $var;
-  }
 }

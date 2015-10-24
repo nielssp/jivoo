@@ -281,6 +281,25 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   public function exists($key) {
     return isset($this->data[$key]);
   }
+
+
+  /**
+   * Create a persistent variable using this document.
+   * @param mixed $default Default value.
+   * @return Statevar State variable.
+   */
+  public function autoVar($default = null) {
+    $backtrace = debug_backtrace();
+    $name = '';
+    if (isset($backtrace[1]['class']))
+      $name = $backtrace[1]['class'] . '::';
+    $name .= $backtrace[1]['function'];
+    $name .= '(' . $backtrace[1]['line'] . ')';
+    $var = new DocumentVar($this, $name);
+    if (isset($default))
+      $var->setDefault($default);
+    return $var;
+  }
   
 
   /**

@@ -5,35 +5,35 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Core\Store;
 
-class StateVar {
+class DocumentVar {
   /**
-   * @var State
+   * @var Document
    */
-  private $state;
+  private $document;
   
   /**
    * @var string
    */
   private $var;
   
-  public function __construct(State $state, $var) {
-    $this->state = $state;
+  public function __construct(Document $document, $var) {
+    $this->document = $document;
     $this->var = $var;
   }
   
   public function get() {
-    return $this->state->get($this->var);
+    return $this->document->get($this->var);
   }
   
   public function setDefault($value) {
-    $this->state->setDefault($this->var, $value);
+    $this->document->setDefault($this->var, $value);
   }
   
   public function exists() {
-    return $this->state->exists($this->var);
+    return $this->document->exists($this->var);
   }
   
   public function set($value) {
-    $this->state->set($this->var, $value);
+    $this->document->set($this->var, $value);
   }
 }
