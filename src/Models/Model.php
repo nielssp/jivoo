@@ -6,7 +6,7 @@
 namespace Jivoo\Models;
 
 /**
- * A more advanced extension of {@see BasicRecord}.
+ * A more advanced extension of {@see BasicModel}.
  */
 interface Model extends Selection\Selection, BasicModel {
   /**

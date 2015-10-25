@@ -193,7 +193,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
     $this->name = Utilities::getClassName(get_class($this));
     if (!isset($database))
       throw new InvalidActiveModelException(tr(
-        'Database "%1" not found in model %2', $this->database, $this->name
+        'Database "%1" not found', $this->database
       ));
     $this->database = $database;
     if (!isset($this->table))
@@ -201,7 +201,7 @@ abstract class ActiveModel extends ModelBase implements EventListener {
     $table = $this->table;
     if (!isset($this->database->$table))
       throw new InvalidTableException(tr(
-        'Table "%1" not found in model %2', $table, $this->name
+        'Table "%1" not found in database', $table
       ));
     $this->source = $this->database->$table;
 
