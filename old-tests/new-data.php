@@ -13,7 +13,17 @@ interface Model extends Selection {
   public function commit();
 }
 
-class ModelBase {
+interface DataSource {
+  public function updateSelection(UpdateSelectionBuilder $selection);
+
+  public function deleteSelection(DeleteSelectionBuilder $selection);
+    
+  public function readCustom(ReadSelectionBuilder $selection);
+  
+  public function read(ReadSelectionBuilder $selection);
+}
+
+abstract class ModelBase {
   public abstract function getSource();
   // implements Selection using ArraySelections or something
 }
