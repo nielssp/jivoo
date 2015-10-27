@@ -2,6 +2,8 @@
 namespace Jivoo\Models;
 
 use Jivoo\Models\Selection\Selection;
+use Jivoo\Models\Selection\DeleteSelection;
+use Jivoo\Models\Selection\ReadSelection;
 
 interface Model extends Selection {
   public function getSchema();
@@ -13,14 +15,16 @@ interface Model extends Selection {
   public function commit();
 }
 
-interface DataSource {
-  public function updateSelection(UpdateSelectionBuilder $selection);
-
-  public function deleteSelection(DeleteSelectionBuilder $selection);
-    
-  public function readCustom(ReadSelectionBuilder $selection);
+interface Selectable {
   
-  public function read(ReadSelectionBuilder $selection);
+}
+
+interface DataSource {
+  public function update(UpdateSelection $selection);
+
+  public function delete(DeleteSelection $selection);
+    
+  public function read(ReadSelection $selection);
 }
 
 abstract class ModelBase {
