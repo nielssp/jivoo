@@ -82,9 +82,6 @@ class ModuleTest extends \Jivoo\Test {
     $this->assertThrows('Jivoo\InvalidPropertyException', function() use($m) {
       unset($m->invalidProp);
     });
-    $this->assertThrows('Jivoo\InvalidPropertyException', function() use($m) {
-      isset($m->invalidProp);
-    });
     $this->assertThrows('Jivoo\InvalidMethodException', function() use($m) {
       $m->invalidMethod();
     });
