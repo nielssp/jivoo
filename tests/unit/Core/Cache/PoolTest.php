@@ -20,14 +20,14 @@ abstract class PoolTest extends \Jivoo\Test {
     $this->assertNull($pool->get($key));
     $this->assertNull($pool->getItem($key)->get());
     $this->assertFalse($pool->getItem($key)->isHit());
-    $this->assertFalse($pool->itemExists($key));
+    $this->assertFalse($pool->hasItem($key));
   }
   
   protected function assertHit($expected, Pool $pool, $key) {
     $this->assertEquals($expected, $pool->get($key));
     $this->assertEquals($expected, $pool->getItem($key)->get());
     $this->assertTrue($pool->getItem($key)->isHit());
-    $this->assertTrue($pool->itemExists($key));
+    $this->assertTrue($pool->hasItem($key));
   }
   
   public function testEmptyPool() {
@@ -42,7 +42,7 @@ abstract class PoolTest extends \Jivoo\Test {
   
   public function testSave() {
     $pool = $this->getPool();
-    $this->assertSame($pool, $pool->save($pool->getItem('foo')->set('bar')));
+    $this->assertTrue($pool->save($pool->getItem('foo')->set('bar')));
 
     $this->assertHit('bar', $pool, 'foo');
 
@@ -62,7 +62,7 @@ abstract class PoolTest extends \Jivoo\Test {
     $pool->save($pool->getItem('foo')->set('bar'));
     $pool->save($pool->getItem('foobar')->set('baz'));
     
-    $this->assertSame($pool, $pool->deleteItems(array('foo', 'foobar')));
+    $this->assertTrue($pool->deleteItems(array('foo', 'foobar')));
 
     $this->assertMiss($pool, 'foo');
     $this->assertMiss($pool, 'foobar');
@@ -82,8 +82,8 @@ abstract class PoolTest extends \Jivoo\Test {
   
   public function testSaveDeferred() {
     $pool = $this->getPool();
-    $this->assertSame($pool, $pool->saveDeferred($pool->getItem('foo')->set('bar')));
-    $this->assertSame($pool, $pool->saveDeferred($pool->getItem('foobar')->set('baz')));
+    $this->assertTrue($pool->saveDeferred($pool->getItem('foo')->set('bar')));
+    $this->assertTrue($pool->saveDeferred($pool->getItem('foobar')->set('baz')));
 
     $this->assertTrue($pool->commit());
 

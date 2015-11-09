@@ -4,9 +4,9 @@
 // and https://github.com/php-fig/fig-standards/blob/master/proposed/cache-meta.md
 namespace Psr\Cache;
 
-interface InvalidArgumentException {}
-
 interface CacheException {}
+
+interface InvalidArgumentException extends CacheException {}
 
 interface CacheItemInterface {
   /**
@@ -59,9 +59,10 @@ interface CacheItemPoolInterface {
   
   /**
    * @param string $key
+   * @throws \Psr\Cache\InvalidArgumentException
    * @return bool
    */
-  public function itemExists($key);
+  public function hasItem($key);
 
   /**
    * @return bool
@@ -69,20 +70,28 @@ interface CacheItemPoolInterface {
   public function clear();
 
   /**
+   * @param string $key
+   * @throws \Psr\Cache\InvalidArgumentException
+   * @return bool
+   */
+  public function deleteItem($key);
+
+  /**
    * @param array $keys
+   * @throws \Psr\Cache\InvalidArgumentException
    * @return static
    */
   public function deleteItems(array $keys);
 
   /**
    * @param CacheItemInterface $item
-   * @return static
+   * @return bool
    */
   public function save(CacheItemInterface $item);
 
   /**
    * @param CacheItemInterface $item
-   * @return static
+   * @return bool
    */
   public function saveDeferred(CacheItemInterface $item);
 

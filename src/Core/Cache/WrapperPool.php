@@ -42,8 +42,8 @@ class WrapperPool extends PoolBase {
   /**
    * {@inheritdoc}
    */
-  public function itemExists($key) {
-    return $this->pool->itemExists($key);
+  public function hasItem($key) {
+    return $this->pool->hasItem($key);
   }
 
   /**
@@ -56,32 +56,35 @@ class WrapperPool extends PoolBase {
   /**
    * {@inheritdoc}
    */
+  public function deleteItem($key) {
+    return $this->pool->deleteItem($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function deleteItems(array $keys) {
-    $this->pool->deleteItems($keys);
-    return $this;
+    return $this->pool->deleteItems($keys);
   }
 
   /**
    * {@inheritdoc}
    */
   public function save(CacheItem $item) {
-    $this->pool->save($item);
-    return $this;
+    return $this->pool->save($item);
   }
 
   /**
    * {@inheritdoc}
    */
   public function saveDeferred(CacheItem $item) {
-    $this->pool->saveDeferred($item);
-    return $this;
+    return $this->pool->saveDeferred($item);
   }
 
   /**
    * {@inheritdoc}
    */
   public function commit() {
-    $this->pool->commit();
-    return $this;
+    return $this->pool->commit();
   }
 }

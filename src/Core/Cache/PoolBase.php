@@ -21,7 +21,7 @@ abstract class PoolBase implements Pool {
   /**
    * {@inheritdoc}
    */
-  public function itemExists($key) {
+  public function hasItem($key) {
     return $this->getItem($key)->isHit();
   }
   
@@ -29,8 +29,7 @@ abstract class PoolBase implements Pool {
    * {@inheritdoc}
    */
   public function saveDeferred(CacheItem $item) {
-    $this->save($item);
-    return $this;
+    return $this->save($item);
   }
 
   /**
@@ -128,7 +127,17 @@ abstract class PoolBase implements Pool {
    * {@inheritdoc}
    */
   public function delete($key) {
-    $this->deleteItems(array($key));
+    $this->deleteItem($key);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteItems(array $keys) {
+    $ret = true;
+    foreach ($keys as $key)
+      $ret = $ret && $this->deleteItem($key);
+    return $ret;
   }
   
   /**

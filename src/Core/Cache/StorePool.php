@@ -74,7 +74,7 @@ class StorePool extends PoolBase {
   /**
    * {@inheritdoc}
    */
-  public function itemExists($key) {
+  public function hasItem($key) {
     if (!isset($this->data))
       $this->read();
     return array_key_exists($key, $this->data);
@@ -91,14 +91,12 @@ class StorePool extends PoolBase {
   /**
    * {@inheritdoc}
    */
-  public function deleteItems(array $keys) {
+  public function deleteItem($key) {
     if (!isset($this->data))
       $this->read();
-    foreach ($keys as $key) {
-      if (isset($this->data[$key]))
-        unset($this->data[$key]);
-    }
-    return $this;
+    if (isset($this->data[$key]))
+      unset($this->data[$key]);
+    return true;
   }
 
   /**
@@ -107,7 +105,7 @@ class StorePool extends PoolBase {
   public function save(CacheItem $item) {
     $this->saveDeferred($item);
     $this->commit();
-    return $this;
+    return true;
   }
 
   /**
@@ -121,7 +119,7 @@ class StorePool extends PoolBase {
     if (isset($expiration))
       $expiration = $expiration->getTimestamp();
     $this->data[$item->getKey()] = array($item->get(), $expiration);
-    return $this;
+    return true;
   }
 
   /**
