@@ -195,12 +195,12 @@ class LocaleTest extends \Jivoo\TestCase {
     $this->assertEquals('Der er 2 brugere', $l->nget('There are %1 users', 'There is %1 user', 2));
     
     // not a MO file:
-    $this->assertThrows('PHPUnit_Framework_Exception', function() {
+    $this->assertThrows('ErrorException', function() {
       $l = Locale::readMo('tests/_data/Core/I18n/da.po');
     });
 
     // not a MO file:
-    $this->assertThrows('PHPUnit_Framework_Exception', function() {
+    $this->assertThrows('ErrorException', function() {
       $l = Locale::readMo('tests/_data/Core/I18n/notafile');
     });
   }

@@ -7,12 +7,12 @@ class PhpStoreTest extends \Jivoo\TestCase {
   private $file;
   private $store;
 
-  protected function _before() {
+  protected function setUp() {
     $this->file = 'tests/_data/store.php';
     $this->store = new PhpStore($this->file);
   }
 
-  protected function _after() {
+  protected function tearDown() {
     unlink($this->file);
   }
   
@@ -29,7 +29,7 @@ class PhpStoreTest extends \Jivoo\TestCase {
     $this->store->close();
     $this->assertFalse($this->store->isOpen());
     
-    $this->tester->writeToFile($this->file, '<?php return null;');
+    file_put_contents($this->file, '<?php return null;');
     $this->store->open(false);
     $store = $this->store;
     $this->assertThrows('Jivoo\Core\Store\AccessException', function() use($store) {

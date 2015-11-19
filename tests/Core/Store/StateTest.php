@@ -7,13 +7,13 @@ class StateTest extends \Jivoo\TestCase {
   private $file;
   private $store;
   
-  protected function _before() {
+  protected function setUp() {
     $this->file = 'tests/_data/state.php';
     $this->store = new PhpStore($this->file);
   }
   
-  protected function _after() {
-    $this->tester->deleteFile($this->file);
+  protected function tearDown() {
+    unlink($this->file);
   }
   
   public function testRead() {

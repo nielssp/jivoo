@@ -7,12 +7,12 @@ class StateMapTest extends \Jivoo\TestCase {
   private $dir = 'tests/_data/state';
   private $state;
   
-  protected function _before() {
+  protected function setUp() {
     $this->state = new StateMap($this->dir);
   }
 
-  protected function _after() {
-    $this->tester->deleteDir($this->dir);
+  protected function tearDown() {
+    rmdir($this->dir);
   }
   
   public function testRead() {

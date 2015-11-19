@@ -7,10 +7,10 @@ class StorePoolTest extends PoolTest {
   
   private $file = 'tests/_data/cache.json';
   
-  protected function _before() {
+  protected function setUp() {
   }
 
-  protected function _after() {
+  protected function tearDown() {
     unlink($this->file);
   }
 
