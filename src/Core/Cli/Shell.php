@@ -130,6 +130,17 @@ class Shell extends CommandBase {
       $this->handleException($e);
     }
   }
+
+  public function autoComplete($command) {
+    $length = strlen($command);
+    $results = array();
+    foreach ($this->commands as $name => $c) {
+      if (strncmp($command, $name, $length) == 0) {
+        $results[] = $name;
+      }
+    }
+    return $results;
+  }
   
   public function showTrace() {
     if (!isset($this->lastError))
@@ -270,6 +281,9 @@ class Shell extends CommandBase {
     $this->logger->addHandler(new StreamHandler(STDERR, $level));
     while (ob_get_level() > 0)
       ob_end_clean();
+    if (function_exists('readline_completion_function')) {
+      readline_completion_function(array($this, 'autoComplete'));
+    }
     while (true) {
       try {
         $line = $this->get($this->app->name . '> ');
