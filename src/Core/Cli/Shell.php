@@ -240,11 +240,17 @@ class Shell extends CommandBase {
   }
   
   /**
-   * Get a line of user input from standard input.
+   * Read a line of user input from standard input. Uses {@see readline} if
+   * available.
    * @param string $prompt Optional prompt.
    * @return string User input.
    */
   public function get($prompt = '') {
+    if (function_exists('readline')) {
+      $line = readline($prompt);
+      readline_add_history($line);
+      return $line;
+    }
     $this->put($prompt, '');
     return trim(fgets(STDIN));
   }
@@ -267,7 +273,11 @@ class Shell extends CommandBase {
     while (true) {
       try {
         $line = $this->get($this->app->name . '> ');
-        if ($line == '')
+        if (!is_string($line)) {
+          $this->stop();
+          return;
+        }
+        if ($line === '')
           continue;
         if ($line[0] == '!') {
           $command = substr($line, 1);
