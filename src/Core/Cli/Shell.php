@@ -15,11 +15,19 @@ use Jivoo\Core\Log\StreamHandler;
  * Command-line interface for Jivoo applications.
  */
 class Shell extends CommandBase {
-  
+  /**
+   * @var string
+   */
   private $name;
   
+  /**
+   * @var Exception|null
+   */
   private $lastError = null;
 
+  /**
+   * @var array
+   */
   private $options = array();
   
   public function __construct(App $app) {
