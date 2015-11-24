@@ -47,7 +47,7 @@ class Init extends Module {
       throw new InvalidEnvironmentException(tr('Undefined environment: %1', $environment));
 
     if (isset($this->app->manifest['defaultConfig']))
-      $this->config['user']->defaults = $this->app->manifest['defaultConfig'];
+      $this->config->defaults = $this->app->manifest['defaultConfig'];
     
     $this->m->units = new UnitLoader($this->app);
 
