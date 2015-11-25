@@ -9,12 +9,19 @@ use Jivoo\Core\App;
 use Jivoo\Core\Module;
 use Jivoo\Core\Paths;
 use Jivoo\Core\Utilities;
+use Jivoo\Core\Json;
 
 class BuildScript extends Module {
   public $name = '';
   public $version = '';
   
   protected $sources = array();
+  
+  protected $build = null;
+  
+  protected $install = null;
+  
+  public $manifest = array();
   
   private $buildPath;
   
@@ -37,8 +44,12 @@ class BuildScript extends Module {
     }
   }
   
-  protected function install($src, $dest) {
-    
+  protected function installFile($file) {
+    $src = $this->buildPath . '/' . $file;
+    $dest = $this->installPath . '/' . $file;
+    if (!copy($src, $dest)) {
+      throw new \Exception('Failed downloading source: ' . $src);
+    }
   }
   
   public function run($root) {
@@ -51,5 +62,13 @@ class BuildScript extends Module {
       throw new \Exception('Could not create install directory: ' . $this->installPath);
     }
     $this->fetchSources();
+    if (isset($this->build))
+      call_user_func($this->build, $this);
+    if (isset($this->install))
+      call_user_func($this->install, $this);
+    $this->manifest['name'] = $this->name;
+    $this->manifest['version'] = $this->version;
+    $manifestFile = $this->installPath . '/extension.json';
+    file_put_contents($manifestFile, Json::prettyPrint($this->manifest));
   }
 }

@@ -29,9 +29,16 @@ class ExtensionCommand extends CommandBase {
       return;
     }
     $name = $parameters[0];
+    // TODO: search all extension paths
     $path = $this->p('share/extensions/' . $name . '/build.php');
     $script = new BuildScript($this->app, $path);
     $this->put('Building ' . $script->name . ' ' . $script->version . '...');
-    $script->run($this->p('extensions'));
+    if (isset($options['user']))
+      $dest = $this->p('extensions');
+    else if (isset($options['share']))
+      $dest = $this->p('share/extensions');
+    else
+      $dest = $this->p('app/extensions');
+    $script->run($dest);
   }
 }

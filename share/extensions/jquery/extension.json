@@ -1,13 +1,13 @@
 {
   "library": true,
-  "name": "jQuery",
-  "version": "1.11.2",
-  "website": "http://jquery.com",
+  "website": "http:\/\/jquery.com",
   "category": "JavaScript",
   "resources": {
     "jquery.js": {
-      "file": "jquery-$version.min.js",
-      "cdn": "//code.jquery.com/jquery-$version.min.js"
+      "file": "jquery-1.11.3.min.js",
+      "cdn": "\/\/code.jquery.com\/jquery-1.11.3.min.js"
     }
-  }
+  },
+  "name": "jquery",
+  "version": "1.11.3"
 }
