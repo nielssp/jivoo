@@ -75,6 +75,35 @@ abstract class CommandBase extends Module implements Command {
     call_user_func($this->commands[$command], $parameters, $this->options);
   }
   
+
+  /**
+   * Print a line of text to standard error.
+   * @param string $line Line.
+   * @param string $eol Line ending, set to '' to prevent line break.
+   */
+  protected function error($line, $eol = PHP_EOL) {
+    $this->m->shell->error($line, $eol);
+  }
+  
+  /**
+   * Print a line of text to standard output.
+   * @param string $line Line.
+   * @param string $eol Line ending, set to '' to prevent line break.
+   */
+  protected function put($line = '', $eol = PHP_EOL) {
+    $this->m->shell->put($line, $eol);
+  }
+  
+  /**
+   * Read a line of user input from standard input. Uses {@see readline} if
+   * available.
+   * @param string $prompt Optional prompt.
+   * @return string User input.
+   */
+  protected function get($prompt = '') {
+    $this->m->shell->get($prompt);
+  }
+  
   public function getDescription($option = null) {
     return null;
   }
@@ -108,5 +137,11 @@ abstract class CommandBase extends Module implements Command {
   public function __invoke(array $parameters, array $options) {
     if (count($parameters) == 0)
       return $this->onEmpty();
+    $command = array_shift($parameters);
+    if (!isset($this->commands[$command])) {
+      $this->m->shell->put(tr('Unknown command: %1', $command));
+      return;
+    }
+    call_user_func($this->commands[$command], $parameters, $options);
   }
 }

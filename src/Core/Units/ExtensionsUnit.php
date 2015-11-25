@@ -18,7 +18,12 @@ class ExtensionsUnit extends UnitBase {
   /**
    * {@inheritdoc}
    */
-  protected $requires = array('Vendor', 'Routing');
+  protected $requires = array('Vendor');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $after = array('Shell');
   
   /**
    * {@inheritdoc}

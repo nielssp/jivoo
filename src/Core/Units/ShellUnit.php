@@ -24,8 +24,8 @@ class ShellUnit extends UnitBase {
    */
   public function run(App $app, Document $config) {
     $app->m->shell = new Shell($app);
-    $app->m->shell->parseArguments();
     $app->on('ready', function() use($app) {
+      $app->m->shell->parseArguments();
       $app->m->shell->run();
     });
   }

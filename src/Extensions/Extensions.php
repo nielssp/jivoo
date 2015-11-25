@@ -88,6 +88,9 @@ class Extensions extends LoadableModule {
       'disableBuggy' => true
     );
     
+    if (isset($this->m->shell))
+      $this->m->shell->addCommand('extension', new ExtensionCommand($this->app));
+    
     
     if (isset($this->app->manifest['extensions']))
       $this->importList = $this->app->manifest['extensions'];
