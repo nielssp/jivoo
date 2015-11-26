@@ -17,6 +17,8 @@ class BuildScript extends Module {
   
   protected $sources = array();
   
+  protected $prepare = null;
+  
   protected $build = null;
   
   protected $install = null;
@@ -69,13 +71,19 @@ class BuildScript extends Module {
     if (!Utilities::dirExists($this->installPath, true, true)) {
       throw new InstallException('Could not create install directory: ' . $this->installPath);
     }
+    if (isset($this->prepare)) {
+      $this->info(tr('Preparing...'));
+      call_user_func($this->prepare, $this);
+    }
     $this->fetchSources();
-    $this->info(tr('Building...'));
-    if (isset($this->build))
+    if (isset($this->build)) {
+      $this->info(tr('Building...'));
       call_user_func($this->build, $this);
-    $this->info(tr('Installing...'));
-    if (isset($this->install))
+    }
+    if (isset($this->install)) {
+      $this->info(tr('Installing...')); 
       call_user_func($this->install, $this);
+    }
     $this->manifest['name'] = $this->name;
     $this->manifest['version'] = $this->version;
     if (isset($this->manifestFile) and isset($this->manifest)) {
