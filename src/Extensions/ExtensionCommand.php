@@ -31,6 +31,10 @@ class ExtensionCommand extends CommandBase {
     $name = $parameters[0];
     // TODO: search all extension paths
     $path = $this->p('share/extensions/' . $name . '/build.php');
+    if (!file_exists($path)) {
+      $this->error('Build script not found: ' . $path);
+      return;
+    }
     $script = new BuildScript($this->app, $path);
     $this->put('Building ' . $script->name . ' ' . $script->version . '...');
     if (isset($options['user']))

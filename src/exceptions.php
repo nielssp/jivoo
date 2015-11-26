@@ -237,6 +237,12 @@ namespace Jivoo\Extensions {
    */
   class InvalidExtensionException extends \RuntimeException
     implements \Jivoo\Exception {}
+  
+  /**
+   * Thrown when a build or install fails.
+   */
+  class InstallException extends \RuntimeException
+    implements \Jivoo\Exception {}
 }
 
 namespace Jivoo\Helpers  {
