@@ -30,6 +30,17 @@ class ObjectMacro implements \ArrayAccess {
     $this->actions[] = array('call', $method, $args);
     return $this;
   }
+
+  /**
+   * Record a nested object.
+   * @param string $property Property name.
+   * @return ObjectMacro Object property.
+   */
+  public function __get($property) {
+    $object = new ObjectMacro();
+    $this->actions[] = array('get', $property, $object);
+    return $object;
+  }
   
   /**
    * Record the setting of a property.
@@ -98,6 +109,10 @@ class ObjectMacro implements \ArrayAccess {
           $result = call_user_func_array(array($object, $action[1]), $action[2]);
           if ($chain)
             $object = $result;
+          break;
+        case 'get':
+          $property = $action[1];
+          $action[2]->playMacro($object->$property);
           break;
         case 'set':
           $property = $action[1];
