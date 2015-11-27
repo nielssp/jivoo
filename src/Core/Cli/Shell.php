@@ -10,16 +10,25 @@ use Jivoo\Core\Log\ErrorHandler;
 use Jivoo\Core\Log\FileHandler;
 use Psr\Log\LogLevel;
 use Jivoo\Core\Log\StreamHandler;
+use Jivoo\Core\Log\ShellHandler;
 
 /**
  * Command-line interface for Jivoo applications.
  */
 class Shell extends CommandBase {
-  
+  /**
+   * @var string
+   */
   private $name;
   
+  /**
+   * @var Exception|null
+   */
   private $lastError = null;
 
+  /**
+   * @var array
+   */
   private $options = array();
   
   public function __construct(App $app) {
@@ -275,13 +284,14 @@ class Shell extends CommandBase {
   }
   
   public function run() {
-    $level = LogLevel::WARNING;
+    $level = LogLevel::INFO;
     if (isset($this->options['debug']))
       $level = LogLevel::DEBUG;
-    $this->logger->addHandler(new StreamHandler(STDERR, $level));
     $prompt = $this->app->name . '> ';
+    $this->logger->addHandler(new ShellHandler($this, $level));
     while (ob_get_level() > 0)
       ob_end_clean();
+    $this->parseArguments();
     if (function_exists('readline_completion_function')) {
       readline_completion_function(array($this, 'autoComplete'));
     }

@@ -88,6 +88,9 @@ class Extensions extends LoadableModule {
       'disableBuggy' => true
     );
     
+    if (isset($this->m->shell))
+      $this->m->shell->addCommand('extension', new ExtensionCommand($this->app));
+    
     
     if (isset($this->app->manifest['extensions']))
       $this->importList = $this->app->manifest['extensions'];
@@ -283,12 +286,16 @@ class Extensions extends LoadableModule {
    * @param string $extension Extension name.
    */
   public function import($extension) {
-    if (isset($this->imported[$extension]))
+    if (isset($this->imported[$extension])) {
+      if (!$this->imported[$extension])
+        throw new InvalidExtensionException(tr('Extension not found or invalid: "%1"', $extension));
       return;
+    }
     $this->imported[$extension] = false;
     $extensionInfo = $this->getInfo($extension);
-    if (!isset($extensionInfo))
+    if (!isset($extensionInfo)) {
       throw new InvalidExtensionException(tr('Extension not found or invalid: "%1"', $extension));
+    }
     if (isset($extensionInfo->namespace))
       Autoloader::getInstance()->addPath($extensionInfo->namespace, $extensionInfo->p($this->app, ''));
     else
