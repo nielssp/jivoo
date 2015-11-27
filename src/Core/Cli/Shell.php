@@ -279,6 +279,7 @@ class Shell extends CommandBase {
     if (isset($this->options['debug']))
       $level = LogLevel::DEBUG;
     $this->logger->addHandler(new StreamHandler(STDERR, $level));
+    $prompt = $this->app->name . '> ';
     while (ob_get_level() > 0)
       ob_end_clean();
     if (function_exists('readline_completion_function')) {
@@ -286,7 +287,7 @@ class Shell extends CommandBase {
     }
     while (true) {
       try {
-        $line = $this->get($this->app->name . '> ');
+        $line = $this->get($prompt);
         if (!is_string($line)) {
           $this->stop();
           return;
