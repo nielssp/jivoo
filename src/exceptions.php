@@ -127,12 +127,6 @@ namespace Jivoo\Core {
     implements CoreException {}
   
   /**
-   * Thrown when a third-party library could not be imported.
-   */
-  class VendorException extends \UnexpectedValueException
-    implements CoreException {}
-  
-  /**
    * Thrown when configuration is invalid or missing.
    */
   class ConfigurationException extends \UnexpectedValueException
@@ -408,6 +402,16 @@ namespace Jivoo\Themes {
    * Thrown when a theme is invalid or could not be found.
    */
   class InvalidThemeException extends InvalidExtensionException {}
+}
+
+namespace Jivoo\Vendor {
+  use Jivoo\Exception;
+
+  /**
+   * Thrown when a third-party library could not be imported.
+   */
+  class VendorException extends \UnexpectedValueException
+    implements Exception {}
 }
 
 namespace Jivoo\View {

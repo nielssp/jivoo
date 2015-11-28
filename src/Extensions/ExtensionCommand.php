@@ -14,6 +14,7 @@ class ExtensionCommand extends CommandBase {
     $this->addCommand('update', array($this, 'update'), tr('Update one or more extensions'));
     $this->addCommand('install', array($this, 'install'), tr('Download and install extension'));
     $this->addCommand('remove', array($this, 'remove'), tr('Remove an extension'));
+    $this->addCommand('list', array($this, 'list_'), tr('List installed/available extensions'));
     
     $this->addOption('user');
     $this->addOption('share');
@@ -23,7 +24,15 @@ class ExtensionCommand extends CommandBase {
     return tr('Manage extensions');
   }
   
-  public function update($parameters, $options) {
+  public function list_($paramters, $options) {
+    foreach ($this->m->Extensions->listAllExtensions() as $extension) {
+      if (!isset($paramters[0]) or stripos($extension->name, $paramters[0]) !== false) {
+        $this->put($extension->name . ' ' . $extension->version);
+      }
+    }
+  }
+  
+  protected function update($parameters, $options) {
     if (!count($parameters)) {
       $this->put('usage: extension update [--user|--share] NAME');
       return;

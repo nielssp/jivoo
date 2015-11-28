@@ -13,7 +13,7 @@ use Jivoo\Core\Store\SerializedStore;
 use Jivoo\Core\Cache\StorePool;
 use Jivoo\Core\Store\PhpSessionStore;
 use Jivoo\Core\Store\Session;
-use Jivoo\Core\Vendor\ComposerPackageReader;
+use Jivoo\Vendor\ComposerPackageReader;
 
 /**
  * The default application initialization class. Extend this class and override

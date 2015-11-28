@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Jivoo\Core\Log\FileLogger;
 use Jivoo\Core\Log\LogException;
-use Jivoo\Core\Vendor\VendorLoader;
+use Jivoo\Vendor\VendorLoader;
 use Jivoo\Core\Log\ErrorHandler;
 use Jivoo\Core\Log\Logger;
 use Jivoo\Core\Log\FileHandler;

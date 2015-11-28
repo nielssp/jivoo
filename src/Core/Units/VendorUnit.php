@@ -8,8 +8,8 @@ namespace Jivoo\Core\Units;
 use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
-use Jivoo\Core\Vendor\ComposerPackageReader;
-use Jivoo\Core\Vendor\VendorLoader;
+use Jivoo\Vendor\ComposerPackageReader;
+use Jivoo\Vendor\VendorLoader;
 
 /**
  * Initializes the third-party library loading system.
