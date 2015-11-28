@@ -276,6 +276,34 @@ class Shell extends CommandBase {
   }
   
   /**
+   * Ask for confirmation.
+   * @param string $prompt Question.
+   * @param boolean|null $default Default choice or null for no default.
+   * @return boolean True for "yes", false for "no". 
+   */
+  public function confirm($prompt, $default = null) {
+    $prompt .= ' [';
+    $prompt .= $default === true ? 'Y' : 'y';
+    $prompt .= '/';
+    $prompt .= $default === false ? 'N' : 'n';
+    $prompt .= '] ';
+    while (true) {
+      $input = $this->get(':: ' . $prompt);
+      if (!is_string($input))
+        return false;
+      if ($input == '') {
+        if (is_bool($default))
+          return $default;
+        continue;
+      }
+      $input = strtolower($input);
+      if ($input == 'yes' or $input == 'y')
+        return true;
+      return false;
+    }
+  }
+  
+  /**
    * Stop shell.
    * @param int $status Status code, 0 for success.
    */

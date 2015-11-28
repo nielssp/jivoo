@@ -28,26 +28,67 @@ class VendorCommand extends CommandBase {
     
   }
   
-  public function update($parameters, $options) {
+  private function removeDir($dir) {
+    $files = scandir($dir);
+    foreach ($files as $file) {
+      if ($file != '.' and $file != '..') {
+        $path = $dir . '/' . $file;
+        if (is_dir($path))
+          $this->removeDir($path);
+        else
+          unlink($path);
+      }
+    }
+    rmdir($dir);
+  }
+  
+  public function remove($parameters, $options) {
     if (!count($parameters)) {
-      $this->put('usage: extension update [--user|--share] NAME');
+      $this->put('usage: vendor remove [--user|--share] NAME');
       return;
     }
     $name = $parameters[0];
-    // TODO: search all extension paths
-    $path = $this->p('share/vendor/' . $name . '/build.php');
-    if (!file_exists($path)) {
-      $this->error('Build script not found: ' . $path);
+    if (isset($options['user']))
+      $dir = $this->p('vendor/' . $name);
+    else if (isset($options['share']))
+      $dir = $this->p('share/vendor/' . $name);
+    else
+      $dir = $this->p('app/vendor/' . $name);
+    if (!file_exists($dir)) {
+      $this->error('Directory not found: ' . $dir);
       return;
     }
-    $script = new BuildScript($this->app, $path);
-    $this->put('Building ' . $script->name . ' ' . $script->version . '...');
-    if (isset($options['user']))
-      $dest = $this->p('vendor');
-    else if (isset($options['share']))
-      $dest = $this->p('share/vendor');
-    else
-      $dest = $this->p('app/vendor');
-    $script->run($dest);
+    $this->put(tr('The following directory will be deleted:'));
+    $this->put('  - ' . $dir);
+    $this->put();
+    $confirm = $this->confirm(tr('Remove %1?', $name), true);
+    if ($confirm) {
+      $this->put(tr('Removing %1...', $name));
+      $this->removeDir($dir);
+    }
+  }
+  
+  public function update($parameters, $options) {
+    if (!count($parameters)) {
+      $this->put('usage: vendor update [--user|--share] NAME [NAMES...]');
+      return;
+    }
+    foreach ($parameters as $name) {
+      // TODO: search all extension paths
+      $path = $this->p('share/vendor/' . $name . '/build.php');
+      if (!file_exists($path)) {
+        $this->error('Build script not found: ' . $path);
+        return;
+      }
+      $script = new BuildScript($this->app, $path);
+      $this->put('Building ' . $script->name . ' ' . $script->version . '...');
+      if (isset($options['user']))
+        $dest = $this->p('vendor');
+      else if (isset($options['share']))
+        $dest = $this->p('share/vendor');
+      else
+        $dest = $this->p('app/vendor');
+      $script->run($dest);
+    }
   }
 }

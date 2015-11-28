@@ -101,7 +101,17 @@ abstract class CommandBase extends Module implements Command {
    * @return string User input.
    */
   protected function get($prompt = '') {
-    $this->m->shell->get($prompt);
+    return $this->m->shell->get($prompt);
+  }
+
+  /**
+   * Ask for confirmation.
+   * @param string $prompt Question.
+   * @param boolean|null $default Default choice or null for no default.
+   * @return boolean True for "yes", false for "no".
+   */
+  protected function confirm($prompt, $default = null) {
+    return $this->m->shell->confirm($prompt, $default);
   }
   
   public function getDescription($option = null) {
