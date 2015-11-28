@@ -71,7 +71,7 @@ class VendorLoader {
       }
     }
     if (!isset($manifest))
-      throw new VendorException(tr('Could not import library: %1', $name));
+      throw new ImportException(tr('Could not import library: %1', $name));
     $manifest->load(Autoloader::getInstance());
     $this->imported[$name] = true;
   }

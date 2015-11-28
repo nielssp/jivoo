@@ -10,6 +10,7 @@ use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Vendor\ComposerPackageReader;
 use Jivoo\Vendor\VendorLoader;
+use Jivoo\Vendor\VendorCommand;
 
 /**
  * Initializes the third-party library loading system.
@@ -28,5 +29,7 @@ class VendorUnit extends UnitBase {
       $app->m->vendor->addPath($vendor, new ComposerPackageReader());
     
     $app->m->addProperty('vendor', $app->m->vendor);
+    
+    $this->m->lazy('shell')->addCommand('vendor', new VendorCommand($app));
   }
 }

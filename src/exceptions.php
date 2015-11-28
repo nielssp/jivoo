@@ -405,13 +405,17 @@ namespace Jivoo\Themes {
 }
 
 namespace Jivoo\Vendor {
-  use Jivoo\Exception;
-
   /**
    * Thrown when a third-party library could not be imported.
    */
-  class VendorException extends \UnexpectedValueException
-    implements Exception {}
+  class ImportException extends \UnexpectedValueException
+    implements \Jivoo\Exception {}
+
+  /**
+   * Thrown when a build or install fails.
+   */
+  class InstallException extends \RuntimeException
+    implements \Jivoo\Exception {}
 }
 
 namespace Jivoo\View {
