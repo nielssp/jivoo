@@ -12,14 +12,14 @@ use Jivoo\Autoloader;
  */
 class ComposerPackage implements Package {
   /**
-   * @var array
+   * @var array Manifest.
    */
-  private $manifest;
+  protected $manifest;
   
   /**
-   * @var string
+   * @var string Package root.
    */
-  private $path;
+  protected $path;
   
   /**
    * Construct composer package.
@@ -36,6 +36,13 @@ class ComposerPackage implements Package {
    */
   public function getName() {
     return $this->manifest['name'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getManifest() {
+    return $this->manifest;
   }
 
   /**

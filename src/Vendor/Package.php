@@ -16,6 +16,12 @@ interface Package {
    * @return string Name.
    */
   public function getName();
+
+  /**
+   * Get content of package manifest.
+   * @return array Manifest object.
+   */
+  public function getManifest();
   
   /**
    * Load content of package (e.g. classes, includes etc.).
