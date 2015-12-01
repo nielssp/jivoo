@@ -17,4 +17,24 @@ class ExtensionPackage extends ComposerPackage {
   public function load(Autoloader $autoloader) {
     parent::load($autoloader);
   }
+  
+  
+  /**
+   * Replace PHP-style variables in a string if they correspond to keys in the
+   * manifest.
+   * @param string $string String containing variables.
+   * @return string String with known variables replaced.
+   */
+  public function replaceVariables($string) {
+    $manifest = $this->manifest;
+    return preg_replace_callback(
+      '/\$([a-z0-9]+)/i', 
+      function ($matches) use ($manifest) {
+        if (isset($manifest[$matches[1]]))
+          return $manifest[$matches[1]];
+        return $matches[0];
+      },
+      $string
+    );
+  }
 }

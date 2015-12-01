@@ -76,7 +76,16 @@ class VendorLoader {
     $this->imported[$name] = true;
   }
   
-  public function getLibraries(PackageReader $reader = null) {
-    
+  public function getPackages(PackageReader $reader = null) {
+    $packages = array();
+    foreach ($this->paths as $path => $reader) {
+      $path = $path . '/' . $name;
+      if (is_dir($path)) {
+        $manifest = $reader->read($name, $path);
+        if (isset($manifest))
+          $packages[$name] = $manifest;
+      }
+    }
+    return $packages;
   }
 }

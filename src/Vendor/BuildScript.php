@@ -11,6 +11,9 @@ use Jivoo\Core\Paths;
 use Jivoo\Core\Utilities;
 use Jivoo\Core\Json;
 
+/**
+ * A build script.
+ */
 class BuildScript extends Module {
   public $name = '';
   public $version = '';
