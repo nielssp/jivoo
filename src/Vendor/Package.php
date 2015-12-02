@@ -24,6 +24,18 @@ interface Package {
   public function getManifest();
   
   /**
+   * Get list of package dependencies.
+   * @return Dependency[]
+   */
+  public function getDependencies();
+  
+  /**
+   * Get list of package conflicts.
+   * @return Dependency[]
+   */
+  public function getConflicts();
+  
+  /**
    * Load content of package (e.g. classes, includes etc.).
    * @param Autoloader $autoloader Class autoloader.
    */

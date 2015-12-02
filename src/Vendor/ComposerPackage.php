@@ -48,6 +48,30 @@ class ComposerPackage implements Package {
   /**
    * {@inheritdoc}
    */
+  public function getDependencies() {
+    if (!isset($this->manifest['require']))
+      return array();
+    $deps = array();
+    foreach ($this->manifest['require'] as $name => $constraint)
+      $deps[] = new ComposerDependency($name, $constraint);
+    return $deps;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConflicts() {
+    if (!isset($this->manifest['conflict']))
+      return array();
+    $deps = array();
+    foreach ($this->manifest['conflict'] as $name => $constraint)
+      $deps[] = new ComposerDependency($name, $constraint);
+    return $deps;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function load(Autoloader $autoloader) {
     if (!isset($this->manifest['autoload']) or !is_array($this->manifest['autoload']))
       return;
