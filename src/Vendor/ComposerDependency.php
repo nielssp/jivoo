@@ -6,6 +6,7 @@
 namespace Jivoo\Vendor;
 
 use Jivoo\Autoloader;
+use Jivoo\Core\Parse\ParseInput;
 
 /**
  * A composer dependency.
@@ -32,11 +33,173 @@ class ComposerDependency implements Dependency {
   public function getName() {
     return $this->name;
   }
+  
+  /**
+   * @param ParseInput $input 
+   */
+  private function parseWhitespace(ParseInput $input) {
+    while ($input->accept(' ') or $input->accept("\t")) {
+    }
+  }
+  
+  /**
+   * @param ParseInput $input
+   * @param string $version
+   * @return bool
+   */
+  private function parseDisjunction(ParseInput $input, $version) {
+    while (true) {
+      if ($this->parseConjunction($input, $version))
+        return true;
+      $this->parseWhitespace($input);
+      if (!$input->accept('|'))
+        return false;
+      $input->expect('|');
+      $this->parseWhitespace($input);
+    }
+  }
 
+  /**
+   * @param ParseInput $input
+   * @param string $version
+   * @return bool
+   */
+  private function parseConjunction(ParseInput $input, $version) {
+    while (true) {
+      if (!$this->parseRange($input, $version))
+        return false;
+      $this->parseWhitespace($input);
+      if ($this->peek() === null)
+        return true;
+      if ($input->accept(','))
+        $this->parseWhitespace($input);
+    }
+  }
+
+  /**
+   * @param ParseInput $input
+   * @param string $version
+   * @return bool
+   */
+  private function parseRange(ParseInput $input, $version) {
+    $a = $this->parseExact($input);
+    $this->parseWhitespace($input);
+    if (!$this->accept('-'))
+      return $a;
+    $this->parseWhitespace($input);
+    $b = $this->parseExact($input);
+    return version_compare($version, $a, '>=')
+      and version_compare($version, $b, '<');
+  }
+
+  /**
+   * @param ParseInput $input
+   * @param string $version
+   * @return bool
+   */
+  private function parseVersion(ParseInput $input, $version) {
+    $op = $this->parseOperator($input);
+    if (isset($op)) {
+      $a = $this->parseExact($input);
+      if ($op == '~')
+        return false; //TODO
+      if ($op == '^')
+        return false; //TODO
+      return version_compare($version, $a, $op);
+    }
+    return $this->parseWildcard($input, $version);
+  }
+
+  /**
+   * @param ParseInput $input
+   * @param string $version
+   * @return bool
+   */
+  private function parseWildcard(ParseInput $input, $version) {
+    while (true) {
+      $int = $this->parseInt($input);
+      if (!isset($int)) {
+        $input->expect('*');
+      }
+      else {
+        
+      }
+    }
+  }
+
+  /**
+   * @param ParseInput $input
+   * @return string
+   */
+  private function parseExact(ParseInput $input) {
+    $this->parseWhitespace($input);
+    //TODO
+  }
+
+  /**
+   * @param ParseInput $input
+   * @return string
+   */
+  private function parseInt(ParseInput $input) {
+    $this->parseWhitespace($input);
+    $int = '';
+    while (is_numeric($input->peek())) {
+      $int .= $input->pop();
+    }
+    if ($int == '')
+      return null;
+    return $int;
+  }
+
+  /**
+   * @param ParseInput $input
+   * @return string
+   */
+  private function parseOperator(ParseInput $input) {
+    $this->parseWhitespace($input);
+    if ($input->accept('<')) {
+      if ($input->accept('='))
+        return '<=';
+      return '<';
+    }
+    if ($input->accept('>')) {
+      if ($input->accept('='))
+        return '>=';
+      return '>';
+    }
+    if ($input->accept('!')) {
+      $input->expect('=');
+      return '!=';
+    }
+    if ($input->accept('~'))
+      return '~';
+    if ($input->accept('^'))
+      return '^';
+    return null;
+  }
+  
   /**
    * {@inheritDoc}
    */
   public function checkVersion($version) {
+    // Grammar:
+    //
+    // disjunction   ::= conjunction "||" disjunction
+    //                 | conjunction
+    // conjunction   ::= range [","] conjunction
+    //                 | range
+    // range         ::= exact ["-" exact]
+    //                 | version
+    // version       ::= (>|>=|<|<=|!=|~|^) exact
+    //                 | wildcard
+    // exact         ::= int {"." int} ["-" stability]
+    // wildcard      ::= intx {"." intx} ["-" stability]
+    
+    // int           ::= digit {digit}
+    // intx          ::= int | "*"
+    // digit         ::= "0" | ... | "9"
+  
+    
     return true;
   }
 }

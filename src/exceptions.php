@@ -174,6 +174,16 @@ namespace Jivoo\Core\Store  {
     implements StoreException {}
 }
 
+namespace Jivoo\Core\Parse  {
+  use Jivoo\Core\CoreException;
+  
+  /**
+   * Thrown when a parser fails.
+   */
+  class ParseException extends \UnexpectedValueException
+    implements CoreException {}
+}
+
 namespace Jivoo\Databases  {
   use Jivoo\InvalidClassException;
     
