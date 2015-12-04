@@ -5,7 +5,6 @@
 // See the LICENSE file or http://opensource.org/licenses/MIT for more information.
 namespace Jivoo\Vendor;
 
-use Jivoo\Autoloader;
 use Jivoo\Core\Parse\ParseInput;
 
 /**
@@ -116,10 +115,17 @@ class ComposerDependency implements Dependency {
    * @return bool
    */
   private function parseWildcard(ParseInput $input, $version) {
+    $this->parseWhitespace($input);
+    $int = '';
     while (true) {
-      $int = $this->parseInt($input);
-      if (!isset($int)) {
-        $input->expect('*');
+      $part = $this->parseVersionPart($input);
+      if (!isset($part)) {
+        if ($input->accept('*')) {
+          
+        }
+        else {
+          break;
+        }
       }
       else {
         
@@ -133,7 +139,45 @@ class ComposerDependency implements Dependency {
    */
   private function parseExact(ParseInput $input) {
     $this->parseWhitespace($input);
-    //TODO
+    $version = '';
+    while (true) {
+      $part = $this->parseVersionPart($input);
+      if (!isset($part))
+        break;
+      if ($version != '')
+        $version .= '.';
+      $version .= $int;
+      $input->accept('.') or $this->accept('-');
+    }
+    return $version;
+  }
+  
+  private function parseVersionPart(ParseInput $input) {
+    $part = $this->parseInt($input);
+    if (!isset($part)) {
+      $part = $this->parseNonInt($input);
+      if (!isset($part))
+        return null;
+    }
+    return $part;
+  }
+
+  /**
+   * @param ParseInput $input
+   * @return string
+   */
+  private function parseNonInt(ParseInput $input) {
+    $str = '';
+    while (true) {
+      $c = $input->peek();
+      if ($c == ' ' or $c == "\t" or $c == '-' or $c == '.' or is_numeric($c)) {
+        break;
+      }
+      $str .= $input->pop();
+    }
+    if ($str == '')
+      return null;
+    return $str;
   }
 
   /**
@@ -141,8 +185,6 @@ class ComposerDependency implements Dependency {
    * @return string
    */
   private function parseInt(ParseInput $input) {
-    $this->parseWhitespace($input);
-    $int = '';
     while (is_numeric($input->peek())) {
       $int .= $input->pop();
     }
