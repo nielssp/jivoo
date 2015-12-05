@@ -26,7 +26,8 @@
   "require": {
     "php": ">=5.3.0",
     "ext-json": "*",
-    "psr/log": "1.0"
+    "psr/log": "1.0",
+    "composer/semver": "^1.2"
   },
   "suggest": {
     "ezyang/htmlpurifier": "Required by the Content module.",

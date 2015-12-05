@@ -6,6 +6,7 @@
 namespace Jivoo\Vendor;
 
 use Jivoo\Core\Parse\ParseInput;
+use Composer\Semver\Semver;
 
 /**
  * A composer dependency.
@@ -116,21 +117,29 @@ class ComposerDependency implements Dependency {
    */
   private function parseWildcard(ParseInput $input, $version) {
     $this->parseWhitespace($input);
-    $int = '';
+    $wildcard = '';
+    $next = '';
     while (true) {
       $part = $this->parseVersionPart($input);
       if (!isset($part)) {
         if ($input->accept('*')) {
-          
+          $wildcard .= '0';
+          return version_compare($version, $wildcard, '>=')
+            and version_compare($version, $next, '<');
         }
         else {
           break;
         }
       }
       else {
-        
+        if ($wildcard != '')
+          $wildcard .= '.';
+        $next = $wildcard . ($part + 1);
+        $wildcard .= $part;
       }
+      $input->accept('.') or $input->accept('-');
     }
+    return version_compare($version, $wildcard, '==');
   }
 
   /**
@@ -146,8 +155,8 @@ class ComposerDependency implements Dependency {
         break;
       if ($version != '')
         $version .= '.';
-      $version .= $int;
-      $input->accept('.') or $this->accept('-');
+      $version .= $part;
+      $input->accept('.') or $input->accept('-');
     }
     return $version;
   }
@@ -170,7 +179,7 @@ class ComposerDependency implements Dependency {
     $str = '';
     while (true) {
       $c = $input->peek();
-      if ($c == ' ' or $c == "\t" or $c == '-' or $c == '.' or is_numeric($c)) {
+      if ($c === ' ' or $c === "\t" or $c === '-' or $c === '.' or is_numeric($c)) {
         break;
       }
       $str .= $input->pop();
@@ -224,24 +233,6 @@ class ComposerDependency implements Dependency {
    * {@inheritDoc}
    */
   public function checkVersion($version) {
-    // Grammar:
-    //
-    // disjunction   ::= conjunction "||" disjunction
-    //                 | conjunction
-    // conjunction   ::= range [","] conjunction
-    //                 | range
-    // range         ::= exact ["-" exact]
-    //                 | version
-    // version       ::= (>|>=|<|<=|!=|~|^) exact
-    //                 | wildcard
-    // exact         ::= int {"." int} ["-" stability]
-    // wildcard      ::= intx {"." intx} ["-" stability]
-    
-    // int           ::= digit {digit}
-    // intx          ::= int | "*"
-    // digit         ::= "0" | ... | "9"
-  
-    
-    return true;
+    return Semver::satisfies($version, $this->constraint);
   }
 }
