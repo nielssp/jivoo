@@ -11,22 +11,18 @@ use Jivoo\Core\JsonException;
 /**
  * Reads composer packages.
  */
-class ComposerPackageReader implements PackageReader {
+class ComposerPackageReader extends JsonPackageReader{
   /**
    * {@inheritdoc}
    */
-  public function read($name, $path) {
-    $file = $path . '/composer.json';
-    if (!file_exists($file))
-      return null;
-    try {
-      $manifest = Json::decodeFile($file);
-    }
-    catch (JsonException $e) {
-      return null;
-    }
-    if (!isset($manifest['name']))
-      $manifest['name'] = $name;
+  public function getFileName() {
+    return 'composer.json';
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getPackage(array $manifest, $path) {
     return new ComposerPackage($manifest, $path);
   }
 }
