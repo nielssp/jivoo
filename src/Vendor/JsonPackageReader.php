@@ -41,6 +41,6 @@ abstract class JsonPackageReader implements PackageReader {
     }
     if (!isset($manifest['name']))
       $manifest['name'] = $name;
-    return $this->getPackage($manifest);
+    return $this->getPackage($manifest, $path);
   }
 }

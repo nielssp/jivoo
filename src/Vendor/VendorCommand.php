@@ -15,6 +15,7 @@ class VendorCommand extends CommandBase {
     $this->addCommand('install', array($this, 'install'), tr('Download and install libraries'));
     $this->addCommand('remove', array($this, 'remove'), tr('Remove a library'));
     $this->addCommand('list', array($this, 'list_'), tr('List installed/available libraries'));
+    $this->addCommand('search', array($this, 'search'), tr('Search for libraries in available repositories'));
     
     $this->addOption('user');
     $this->addOption('share');
@@ -89,6 +90,22 @@ class VendorCommand extends CommandBase {
       else
         $dest = $this->p('app/vendor');
       $script->run($dest);
+    }
+  }
+  
+  public function install($parameters, $options) {
+    if (!count($parameters)) {
+      $this->put('usage: vendor install [--user|--share] NAME [NAMES...]');
+      return;
+    }
+    foreach ($parameters as $name) {
+    }
+  }
+  
+  public function search($parameters, $options) {
+    if (!count($parameters)) {
+      $this->put('usage: vendor search QUERY');
+      return;
     }
   }
 }
