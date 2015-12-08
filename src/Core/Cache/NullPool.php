@@ -35,6 +35,13 @@ class NullPool extends PoolBase {
   /**
    * {@inheritdoc}
    */
+  public function deleteItem($key) {
+    return true;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function save(CacheItem $item) {
     return $this;
   }

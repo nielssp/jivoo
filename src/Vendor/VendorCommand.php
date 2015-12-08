@@ -9,8 +9,15 @@ use Jivoo\Core\App;
 use Jivoo\Core\Cli\CommandBase;
 
 class VendorCommand extends CommandBase {
+  /**
+   * @var Repository[]
+   */
+  private $repositories = array();
+  
   public function __construct(App $app) {
     parent::__construct($app);
+    $this->repositories['share'] = new LocalRepository($this->app, $this->p('share/vendor'));
+    
     $this->addCommand('update', array($this, 'update'), tr('Update one or more libraries'));
     $this->addCommand('install', array($this, 'install'), tr('Download and install libraries'));
     $this->addCommand('remove', array($this, 'remove'), tr('Remove a library'));
@@ -103,9 +110,20 @@ class VendorCommand extends CommandBase {
   }
   
   public function search($parameters, $options) {
-    if (!count($parameters)) {
-      $this->put('usage: vendor search QUERY');
-      return;
+    foreach ($this->repositories as $name => $repository) {
+      $packages = $repository->getPackages();
+      foreach ($packages as $package) {
+        $match = true;
+        foreach ($parameters as $word) {
+          if (stripos($package, $parameters[0]) === false) {
+            $match = false;
+            break;
+          }
+        }
+        if ($match) {
+          $this->put($package . ' (' . $name . ')');
+        }
+      }
     }
   }
 }
