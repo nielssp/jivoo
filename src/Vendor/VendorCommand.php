@@ -121,7 +121,16 @@ class VendorCommand extends CommandBase {
           }
         }
         if ($match) {
-          $this->put($package . ' (' . $name . ')');
+          $dir = $this->p('vendor/' . $package);
+          if (!is_dir($dir))
+            $dir = $this->p('app/vendor/' . $package);
+          if (!is_dir($dir))
+            $dir = $this->p('share/vendor/' . $package);
+          if (!is_dir($dir))
+            $installed = '';
+          else
+            $installed = '[installed]';
+          $this->put($package . ' (' . $name . ') ' . $installed);
         }
       }
     }
