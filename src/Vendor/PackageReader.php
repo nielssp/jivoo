@@ -10,6 +10,13 @@ namespace Jivoo\Vendor;
  */
 interface PackageReader {
   /**
+   * Get list of packages in path.
+   * @param string $path Path to package directory.
+   * @return Package[] List of package manifests.
+   */
+  public function getPackages($path);
+  
+  /**
    * Read a package.
    * @param string $name Package name.
    * @param string $path Path to package directory.

@@ -29,6 +29,27 @@ abstract class JsonPackageReader implements PackageReader {
   /**
    * {@inheritdoc}
    */
+  public function getPackages($path, $parent = '') {
+    $manifiestName = $this->getFileName();
+    $dir = $path . '/' . $parent;
+    $files = scandir($dir);
+    $manifests = array();
+    foreach ($files as $file) {
+      if ($file != '.' and $file != '..') {
+        if (file_exists($dir . $file . '/' . $manifiestName)) {
+          $manifests[] = $this->read($parent . $file, $dir . $file);
+        }
+        else if (is_dir($dir . $file) and $parent == '') {
+          $manifests = array_merge($manifests, $this->getPackages($file . '/'));
+        }
+      }
+    }
+    return $manifests;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function read($name, $path) {
     $file = $path . '/' . $this->getFileName();
     if (!file_exists($file))

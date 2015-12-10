@@ -9,14 +9,9 @@ use Jivoo\Core\App;
 use Jivoo\Core\Cli\CommandBase;
 
 class VendorCommand extends CommandBase {
-  /**
-   * @var Repository[]
-   */
-  private $repositories = array();
   
   public function __construct(App $app) {
     parent::__construct($app);
-    $this->repositories['share'] = new LocalRepository($this->app, $this->p('share/vendor'));
     
     $this->addCommand('update', array($this, 'update'), tr('Update one or more libraries'));
     $this->addCommand('install', array($this, 'install'), tr('Download and install libraries'));

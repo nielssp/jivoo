@@ -76,15 +76,22 @@ class VendorLoader {
     $this->imported[$name] = true;
   }
   
-  public function getPackages(PackageReader $reader = null) {
-    $packages = array();
+  public function getPackage($name) {
     foreach ($this->paths as $path => $reader) {
       $path = $path . '/' . $name;
       if (is_dir($path)) {
         $manifest = $reader->read($name, $path);
         if (isset($manifest))
-          $packages[$name] = $manifest;
+          return $manifest;
       }
+    }
+    return null;
+  }
+  
+  public function getPackages() {
+    $packages = array();
+    foreach ($this->paths as $path => $reader) {
+      $packages = array_merge($packages, $reader->getPackages($path));
     }
     return $packages;
   }
