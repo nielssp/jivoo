@@ -44,4 +44,6 @@ class VendorInstaller {
     if (isset($this->repositories[$name]))
       unset($this->repositories[$name]);
   }
+  
+  public function 
 }
