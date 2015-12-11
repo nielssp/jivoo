@@ -45,5 +45,38 @@ class VendorInstaller {
       unset($this->repositories[$name]);
   }
   
-  public function 
+  public function getRepositories() {
+    return $this->repositories;
+  }
+  
+  public function getPackages() {
+    $packages = array();
+    foreach ($this->repositories as $name => $repository) {
+      $packages[$name] = $repository->getPackages();
+    }
+    return $packages;
+  }
+  
+  public function isInstalled($package) {
+    return false;
+  }
+  
+  public function search($query) {
+    $packages = array();
+    foreach ($this->repositories as $name => $repository) {
+      $packages[$name] = array();
+      foreach ($repository->getPackages() as $package) {
+        $match = true;
+        foreach ($query as $word) {
+          if (stripos($package, $word) === false) {
+            $match = false;
+            break;
+          }
+        }
+        if ($match)
+          $packages[$name][] = $package;
+      }
+    }
+    return $packages;
+  }
 }

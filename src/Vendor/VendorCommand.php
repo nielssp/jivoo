@@ -105,28 +105,10 @@ class VendorCommand extends CommandBase {
   }
   
   public function search($parameters, $options) {
-    foreach ($this->repositories as $name => $repository) {
-      $packages = $repository->getPackages();
+    $results = $this->m->vendorInstaller->search($parameters);
+    foreach ($results as $repo => $packages) {
       foreach ($packages as $package) {
-        $match = true;
-        foreach ($parameters as $word) {
-          if (stripos($package, $parameters[0]) === false) {
-            $match = false;
-            break;
-          }
-        }
-        if ($match) {
-          $dir = $this->p('vendor/' . $package);
-          if (!is_dir($dir))
-            $dir = $this->p('app/vendor/' . $package);
-          if (!is_dir($dir))
-            $dir = $this->p('share/vendor/' . $package);
-          if (!is_dir($dir))
-            $installed = '';
-          else
-            $installed = '[installed]';
-          $this->put($package . ' (' . $name . ') ' . $installed);
-        }
+        $this->put($package . ' (' . $repo . ')');
       }
     }
   }
