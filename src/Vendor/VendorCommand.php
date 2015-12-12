@@ -108,7 +108,11 @@ class VendorCommand extends CommandBase {
     $results = $this->m->vendorInstaller->search($parameters);
     foreach ($results as $repo => $packages) {
       foreach ($packages as $package) {
-        $this->put($package . ' (' . $repo . ')');
+        $this->put($package, '');
+        $this->put(' (' . $repo . ')', '');
+        if ($this->vendor->isInstalled($package))
+          $this->put(' [installed]', '');
+        $this->put();
       }
     }
   }

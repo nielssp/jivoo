@@ -57,10 +57,6 @@ class VendorInstaller {
     return $packages;
   }
   
-  public function isInstalled($package) {
-    return false;
-  }
-  
   public function search($query) {
     $packages = array();
     foreach ($this->repositories as $name => $repository) {

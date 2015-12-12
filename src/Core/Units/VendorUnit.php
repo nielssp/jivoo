@@ -26,6 +26,9 @@ class VendorUnit extends UnitBase {
     $vendor = $this->p('app/../vendor');
     if (is_dir($vendor))
       $app->m->vendor->addPath($vendor, new ComposerPackageReader());
+    $vendor = $this->p('app/vendor');
+    if (is_dir($vendor))
+      $app->m->vendor->addPath($vendor, new ComposerPackageReader());
     $vendor = $this->p('share/vendor');
     if (is_dir($vendor))
       $app->m->vendor->addPath($vendor, new ComposerPackageReader());
