@@ -52,7 +52,6 @@ abstract class JsonPackageReader implements PackageReader {
    */
   public function read($name, $path) {
     $file = $path . '/' . $this->getFileName();
-    echo $file . PHP_EOL;
     if (!file_exists($file))
       return null;
     try {
