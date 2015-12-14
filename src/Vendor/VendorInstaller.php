@@ -57,6 +57,15 @@ class VendorInstaller {
     return $packages;
   }
   
+  public function getBuildScript($package) {
+    foreach ($this->repositories as $name => $repository) {
+      $script = $repository->getBuildScript($package);
+      if (isset($script))
+        return $script;
+    }
+    return null;
+  }
+  
   public function search($query) {
     $packages = array();
     foreach ($this->repositories as $name => $repository) {

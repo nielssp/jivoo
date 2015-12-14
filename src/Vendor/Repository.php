@@ -18,7 +18,7 @@ interface Repository {
   /**
    * Load content of package (e.g. classes, includes etc.).
    * @param string $name Package name.
-   * @return BuildSCript Build script.
+   * @return BuildSCript|null Build script.
    */
   public function getBuildScript($name);
 }

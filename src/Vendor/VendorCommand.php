@@ -77,13 +77,11 @@ class VendorCommand extends CommandBase {
       return;
     }
     foreach ($parameters as $name) {
-      // TODO: search all extension paths
-      $path = $this->p('share/vendor/' . $name . '/build.php');
-      if (!file_exists($path)) {
-        $this->error('Build script not found: ' . $path);
+      $script = $this->m->vendorInstaller->getBuildScript($name);
+      if (!isset($script)) {
+        $this->error('Build script for ' . $name . ' not found');
         return;
       }
-      $script = new BuildScript($this->app, $path);
       $this->put('Building ' . $script->name . ' ' . $script->version . '...');
       if (isset($options['user']))
         $dest = $this->p('vendor');
