@@ -36,7 +36,7 @@ class VendorUnit extends UnitBase {
     $app->m->addProperty('vendor', $app->m->vendor);
 
     $app->m->vendorInstaller = new VendorInstaller($app);
-    $app->m->vendorInstaller->addRepository('share', new LocalRepository($this->app, $this->p('share/vendor')));
+    $app->m->vendorInstaller->addRepository('share', new LocalRepository($this->app, $this->p('share/packages')));
     
     $this->m->lazy('shell')->addCommand('vendor', new VendorCommand($app));
   }

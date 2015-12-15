@@ -16,6 +16,7 @@ class VendorCommand extends CommandBase {
     $this->addCommand('update', array($this, 'update'), tr('Update one or more libraries'));
     $this->addCommand('install', array($this, 'install'), tr('Download and install libraries'));
     $this->addCommand('remove', array($this, 'remove'), tr('Remove a library'));
+    $this->addCommand('info', array($this, 'info'), tr('Show library info'));
     $this->addCommand('list', array($this, 'list_'), tr('List installed/available libraries'));
     $this->addCommand('search', array($this, 'search'), tr('Search for libraries in available repositories'));
     
@@ -43,6 +44,25 @@ class VendorCommand extends CommandBase {
       }
     }
     rmdir($dir);
+  }
+  
+  public function info($parameters, $options) {
+    if (!count($parameters)) {
+      $this->put('usage: vendor info NAME');
+      return;
+    }
+    $name = $parameters[0];
+    $package = $this->m->vendor->getPackage($name);
+    if (!isset($package)) {
+      $this->error('Package not found: ' . $name);
+      return;
+    }
+    $this->put($package->getName(), '');
+    $manifest = $package->getManifest();
+    if (isset($manifest['version'])) {
+      $this->put(' ' . $manifest['version'], '');
+    }
+    $this->put();
   }
   
   public function remove($parameters, $options) {
