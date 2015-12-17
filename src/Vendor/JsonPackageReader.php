@@ -40,7 +40,7 @@ abstract class JsonPackageReader implements PackageReader {
           $manifests[] = $this->read($parent . $file, $dir . $file);
         }
         else if (is_dir($dir . $file) and $parent == '') {
-          $manifests = array_merge($manifests, $this->getPackages($file . '/'));
+          $manifests = array_merge($manifests, $this->getPackages($dir, $file . '/'));
         }
       }
     }

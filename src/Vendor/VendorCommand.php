@@ -92,8 +92,15 @@ class VendorCommand extends CommandBase {
   }
   
   public function update($parameters, $options) {
+    $packages = $this->m->vendor->getPackages();
+    foreach ($packages as $manifest) {
+      $this->put('Updating ' . $manifest->getName() . '...');
+    }
+  }
+  
+  public function install($parameters, $options) {
     if (!count($parameters)) {
-      $this->put('usage: vendor update [--user|--share] NAME [NAMES...]');
+      $this->put('usage: vendor install [--user|--share] NAME [NAMES...]');
       return;
     }
     foreach ($parameters as $name) {
@@ -110,15 +117,6 @@ class VendorCommand extends CommandBase {
       else
         $dest = $this->p('app/vendor');
       $script->run($dest);
-    }
-  }
-  
-  public function install($parameters, $options) {
-    if (!count($parameters)) {
-      $this->put('usage: vendor install [--user|--share] NAME [NAMES...]');
-      return;
-    }
-    foreach ($parameters as $name) {
     }
   }
   
