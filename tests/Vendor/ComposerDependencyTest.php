@@ -1,7 +1,7 @@
 <?php
-namespace Jivoo;
+namespace Jivoo\Vendor;
 
-use Jivoo\Vendor\ComposerDependency;
+use Jivoo\TestCase;
 
 class ComposerDependencyTest extends TestCase {
   public function testLessThan() {
