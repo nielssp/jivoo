@@ -157,7 +157,7 @@ class Version {
     $str = '';
     while (true) {
       $c = $input->peek();
-      if ($c === ' ' or $c === "\t" or $c === '-' or $c === '.' or is_numeric($c)) {
+      if ($c == null or $c === ' ' or $c === "\t" or $c === '-' or $c === '.' or is_numeric($c)) {
         break;
       }
       $str .= $input->pop();
