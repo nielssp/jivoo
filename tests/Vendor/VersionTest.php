@@ -65,6 +65,23 @@ class VersionTest extends TestCase {
     $this->assertEquals('1.12.beta', Version::parseExact($input));
     $this->assertEquals('a.b.c', Version::parseExact($input));
     $this->assertEquals('25.beta.1', Version::parseExact($input));
+  }
 
+  public function testParseWildcard() {
+    $input = new ParseInput(str_split('1.0.0'));
+    $this->assertTrue(Version::parseWildcard($input, '1.0.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseWildcard($input, '1.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseWildcard($input, '1.0.1'));
+
+    $input = new ParseInput(str_split('1.*'));
+    $this->assertTrue(Version::parseWildcard($input, '1.0'));
+    $input->reset();
+    $this->assertTrue(Version::parseWildcard($input, '1.5.1'));
+    $input->reset();
+    $this->assertFalse(Version::parseWildcard($input, '2.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseWildcard($input, '2.0.1'));
   }
 }

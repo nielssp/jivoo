@@ -95,29 +95,28 @@ class Version {
    */
   public static function parseWildcard(ParseInput $input, $version) {
     self::parseWhitespace($input);
-    $wildcard = '';
+    $wildcard = array('0');
+    $version = '0.' . $version;
     $next = '';
     while (true) {
       $part = self::parseVersionPart($input);
       if (!isset($part)) {
         if ($input->accept('*')) {
-          $wildcard .= '0';
-          return version_compare($version, $wildcard, '>=')
-            and version_compare($version, $next, '<');
+          $next = $wildcard;
+          $next[count($next) - 1] += 1;
+          return version_compare($version, implode('.', $wildcard), '>=')
+            and version_compare($version, implode('.', $next), '<');
         }
         else {
           break;
         }
       }
       else {
-        if ($wildcard != '')
-          $wildcard .= '.';
-        $next = $wildcard . ($part + 1);
-        $wildcard .= $part;
+        $wildcard[] = $part;
       }
       $input->accept('.') or $input->accept('-');
     }
-    return version_compare($version, $wildcard, '==');
+    return version_compare($version, implode('.', $wildcard), '==');
   }
 
   /**
@@ -157,7 +156,7 @@ class Version {
     $str = '';
     while (true) {
       $c = $input->peek();
-      if ($c == null or $c === ' ' or $c === "\t" or $c === '-' or $c === '.' or is_numeric($c)) {
+      if (is_numeric($c) or in_array($c, array(null, ' ', "\t", '-', '.', '*', '!', '=', '>', '<'))) {
         break;
       }
       $str .= $input->pop();

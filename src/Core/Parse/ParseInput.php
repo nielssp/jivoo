@@ -28,6 +28,13 @@ class ParseInput {
   }
 
   /**
+   * Reset input pointer.
+   */
+  public function reset() {
+    $this->pos = 0;
+  }
+
+  /**
    * Inspect the `$n`'th element in the sequence.
    * @param int $n
    * @return mixed|null The element or null if end of sequence.
