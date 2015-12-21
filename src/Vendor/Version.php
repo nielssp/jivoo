@@ -31,10 +31,11 @@ class Version {
         return true;
       self::parseWhitespace($input);
       if (!$input->accept('|'))
-        return false;
+        break;
       $input->expect('|');
       self::parseWhitespace($input);
     }
+    return false;
   }
 
   /**
@@ -47,11 +48,13 @@ class Version {
       if (!self::parseRange($input, $version))
         return false;
       self::parseWhitespace($input);
-      if (self::peek() === null)
-        return true;
       if ($input->accept(','))
         self::parseWhitespace($input);
+      $c = $input->peek();
+      if (in_array($c, array(null, '|')))
+        break;
     }
+    return true;
   }
 
   /**
@@ -62,8 +65,10 @@ class Version {
   public static function parseRange(ParseInput $input, $version) {
     $a = self::parseExact($input);
     self::parseWhitespace($input);
-    if (!self::accept('-'))
+    if (!$input->accept('-')) {
+      // TODO: do something
       return $a;
+    }
     self::parseWhitespace($input);
     $b = self::parseExact($input);
     return version_compare($version, $a, '>=')

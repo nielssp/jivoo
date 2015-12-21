@@ -84,4 +84,40 @@ class VersionTest extends TestCase {
     $input->reset();
     $this->assertFalse(Version::parseWildcard($input, '2.0.1'));
   }
+
+  public function testParseVersion() {
+  }
+
+  public function testParseRange() {
+    $input = new ParseInput(str_split('1.0 - 2.0'));
+    $this->assertTrue(Version::parseRange($input, '1.0.0'));
+    $input->reset();
+    $this->assertTrue(Version::parseRange($input, '1.9'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '0.9'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '2.0'));
+  }
+
+  public function testParseConjunction() {
+    $input = new ParseInput(str_split('1.0 - 1.2, 1.1 - 1.3'));
+    $this->assertTrue(Version::parseConjunction($input, '1.1'));
+    $input->reset();
+    $this->assertFalse(Version::parseConjunction($input, '1.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseConjunction($input, '1.2'));
+  }
+
+  public function testParseDisjunction() {
+    $input = new ParseInput(str_split('1.0 - 1.2 || 1.6 - 1.8'));
+    $this->assertTrue(Version::parseDisjunction($input, '1.1'));
+    $input->reset();
+    $this->assertTrue(Version::parseDisjunction($input, '1.7'));
+    $input->reset();
+    $this->assertFalse(Version::parseDisjunction($input, '0.9'));
+    $input->reset();
+    $this->assertFalse(Version::parseDisjunction($input, '1.2'));
+    $input->reset();
+    $this->assertFalse(Version::parseDisjunction($input, '1.8'));
+  }
 }
