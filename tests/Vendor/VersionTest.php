@@ -59,22 +59,15 @@ class VersionTest extends TestCase {
 
   public function testParseExact() {
     $input = new ParseInput(array());
-    $this->assertEquals('', Version::parseExact($input));
+    $this->assertEquals(array(), Version::parseExact($input));
 
     $input = new ParseInput(str_split(' 1.12-beta a-b-c 25beta.1'));
-    $this->assertEquals('1.12.beta', Version::parseExact($input));
-    $this->assertEquals('a.b.c', Version::parseExact($input));
-    $this->assertEquals('25.beta.1', Version::parseExact($input));
+    $this->assertEquals(array('1', '12', 'beta'), Version::parseExact($input));
+    $this->assertEquals(array('a', 'b', 'c'), Version::parseExact($input));
+    $this->assertEquals(array('25', 'beta', '1'), Version::parseExact($input));
   }
 
   public function testParseWildcard() {
-    $input = new ParseInput(str_split('1.0.0'));
-    $this->assertTrue(Version::parseWildcard($input, '1.0.0'));
-    $input->reset();
-    $this->assertFalse(Version::parseWildcard($input, '1.0'));
-    $input->reset();
-    $this->assertFalse(Version::parseWildcard($input, '1.0.1'));
-
     $input = new ParseInput(str_split('1.*'));
     $this->assertTrue(Version::parseWildcard($input, '1.0'));
     $input->reset();
@@ -83,9 +76,6 @@ class VersionTest extends TestCase {
     $this->assertFalse(Version::parseWildcard($input, '2.0'));
     $input->reset();
     $this->assertFalse(Version::parseWildcard($input, '2.0.1'));
-  }
-
-  public function testParseVersion() {
   }
 
   public function testParseRange() {
@@ -97,6 +87,35 @@ class VersionTest extends TestCase {
     $this->assertFalse(Version::parseRange($input, '0.9'));
     $input->reset();
     $this->assertFalse(Version::parseRange($input, '2.0'));
+
+    $input = new ParseInput(str_split('1.0.0'));
+    $this->assertTrue(Version::parseRange($input, '1.0.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '1.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '1.0.1'));
+
+    $input = new ParseInput(str_split('~0.2'));
+    $this->assertTrue(Version::parseRange($input, '0.2'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '1.0'));
+
+    $input = new ParseInput(str_split('^0.2.2'));
+    $this->assertTrue(Version::parseRange($input, '0.2.2'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '0.3'));
+
+    $input = new ParseInput(str_split('^1.2.2'));
+    $this->assertTrue(Version::parseRange($input, '1.2.2'));
+    $input->reset();
+    $this->assertTrue(Version::parseRange($input, '1.3'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '2.0'));
+
+    $input = new ParseInput(str_split('<1.2.2'));
+    $this->assertTrue(Version::parseRange($input, '1.2.0'));
+    $input->reset();
+    $this->assertFalse(Version::parseRange($input, '1.2.2'));
   }
 
   public function testParseConjunction() {

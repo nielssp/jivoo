@@ -63,52 +63,63 @@ class Version {
    * @return bool
    */
   public static function parseRange(ParseInput $input, $version) {
-    $a = self::parseExact($input);
-    self::parseWhitespace($input);
-    if (!$input->accept('-')) {
-      // TODO: do something
-      return $a;
-    }
-    self::parseWhitespace($input);
-    $b = self::parseExact($input);
-    return version_compare($version, $a, '>=')
-      and version_compare($version, $b, '<');
-  }
-
-  /**
-   * @param ParseInput $input
-   * @param string $version
-   * @return bool
-   */
-  public static function parseVersion(ParseInput $input, $version) {
     $op = self::parseOperator($input);
     if (isset($op)) {
       $a = self::parseExact($input);
-      if ($op == '~')
-        return false; //TODO
-      if ($op == '^')
-        return false; //TODO
-      return version_compare($version, $a, $op);
+      if ($op == '~') {
+        if (version_compare($version, implode('.', $a), '<'))
+          return false;
+        if (count($a) < 2)
+          return true;
+        $a[count($a) - 2] += 1; // TODO: increment part
+        $a[count($a) - 1] = 0;
+        return version_compare($version, implode('.', $a), '<');
+      }
+      if ($op == '^') {
+        if (version_compare($version, implode('.', $a), '<'))
+          return false;
+        if (count($a) < 2)
+          return true;
+        if ($a[0] < 1) {
+          $a = array($a[0], $a[1] + 1);
+          return version_compare($version, implode('.', $a), '<');
+        }
+        else {
+          $a = array($a[0] + 1, 0);
+          return version_compare($version, implode('.', $a), '<');
+        }
+      }
+      return version_compare($version, implode('.', $a), $op);
     }
-    return self::parseWildcard($input, $version);
+    $a = self::parseWildcard($input);
+    if (is_bool($a)) // is wildcard
+      return $a;
+    self::parseWhitespace($input);
+    if (!$input->accept('-')) {
+      return version_compare($version, implode('.', $a), '==');
+    }
+    self::parseWhitespace($input);
+    $b = self::parseExact($input);
+    return version_compare($version, implode('.', $a), '>=')
+      and version_compare($version, implode('.', $b), '<');
   }
 
   /**
    * @param ParseInput $input
    * @param string $version
-   * @return bool
+   * @return bool|string[]
    */
   public static function parseWildcard(ParseInput $input, $version) {
     self::parseWhitespace($input);
-    $wildcard = array('0');
-    $version = '0.' . $version;
-    $next = '';
+    $wildcard = array();
     while (true) {
       $part = self::parseVersionPart($input);
       if (!isset($part)) {
         if ($input->accept('*')) {
+          $wildcard = array_merge(array(0), $wildcard);
+          $version = '0.' . $version;
           $next = $wildcard;
-          $next[count($next) - 1] += 1;
+          $next[count($next) - 1] += 1; // TODO: increment part
           return version_compare($version, implode('.', $wildcard), '>=')
             and version_compare($version, implode('.', $next), '<');
         }
@@ -121,23 +132,21 @@ class Version {
       }
       $input->accept('.') or $input->accept('-');
     }
-    return version_compare($version, implode('.', $wildcard), '==');
+    return $wildcard;
   }
 
   /**
    * @param ParseInput $input
-   * @return string
+   * @return string[]
    */
   public static function parseExact(ParseInput $input) {
     self::parseWhitespace($input);
-    $version = '';
+    $version = array();
     while (true) {
       $part = self::parseVersionPart($input);
       if (!isset($part))
         break;
-      if ($version != '')
-        $version .= '.';
-      $version .= $part;
+      $version[]= $part;
       $input->accept('.') or $input->accept('-');
     }
     return $version;
