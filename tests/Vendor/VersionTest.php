@@ -139,4 +139,13 @@ class VersionTest extends TestCase {
     $input->reset();
     $this->assertFalse(Version::parseDisjunction($input, '1.8'));
   }
+
+  public function testCompare() {
+    $this->assertTrue(Version::compare('1.2.3', '1.2.3'));
+    $this->assertTrue(Version::compare('1.2.3', '>1.2'));
+    $this->assertTrue(Version::compare('1.2.2', '1 - 2'));
+    $this->assertTrue(Version::compare('1.2.2', '~1.2'));
+    $this->assertTrue(Version::compare('1.2.2', '^1.2'));
+    $this->assertTrue(Version::compare('1.2.2', '1.2.*'));
+  }
 }

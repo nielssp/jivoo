@@ -91,7 +91,7 @@ class Version {
       }
       return version_compare($version, implode('.', $a), $op);
     }
-    $a = self::parseWildcard($input);
+    $a = self::parseWildcard($input, $version);
     if (is_bool($a)) // is wildcard
       return $a;
     self::parseWhitespace($input);
@@ -222,23 +222,12 @@ class Version {
 
   /**
    * Perform a version comparison.
-   * @param string $actualVersion Actual version, see {@see version_compare()}
+   * @param string $version Version to test, see {@see version_compare()}
    * for valid version strings.
-   * @param string $versionComparison Version comparison: an operator followed
-   * by a valid version string. Supported opertors are: <>, <=, >=, ==, !=, <,
-   * >, and =.
+   * @param string $constraint Version constraint.
    * @return boolean
    */
-  public static function compare($actualVersion, $versionComparison) {
-    while (!empty($versionComparison)) {
-      if (preg_match('/^ *(<>|<=|>=|==|!=|<|>|=) *([^ <>=!]+) *(.*)$/', $versionComparison, $matches) !== 1)
-        return false;
-      $operator = $matches[1];
-      $expectedVersion = $matches[2];
-      if (!version_compare($actualVersion, $expectedVersion, $operator))
-        return false;
-      $versionComparison = $matches[3];
-    }
-    return true;
+  public static function compare($version, $constraint) {
+    return self::parseDisjunction(new ParseInput(str_split($constraint)), $version);
   }
 }
