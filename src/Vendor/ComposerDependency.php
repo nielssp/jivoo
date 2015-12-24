@@ -38,6 +38,6 @@ class ComposerDependency implements Dependency {
    * {@inheritDoc}
    */
   public function checkVersion($version) {
-    return Semver::satisfies($version, $this->constraint);
+    return Version::compare($version, $this->constraint);
   }
 }
