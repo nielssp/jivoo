@@ -147,5 +147,7 @@ class VersionTest extends TestCase {
     $this->assertTrue(Version::compare('1.2.2', '~1.2'));
     $this->assertTrue(Version::compare('1.2.2', '^1.2'));
     $this->assertTrue(Version::compare('1.2.2', '1.2.*'));
+    $this->assertTrue(Version::compare('1.2-beta', '<1.2'));
+    $this->assertTrue(Version::compare('1.2-beta', '>1.2-alpha'));
   }
 }

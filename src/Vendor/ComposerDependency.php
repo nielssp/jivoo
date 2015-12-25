@@ -6,7 +6,6 @@
 namespace Jivoo\Vendor;
 
 use Jivoo\Core\Parse\ParseInput;
-use Composer\Semver\Semver;
 
 /**
  * A composer dependency.
