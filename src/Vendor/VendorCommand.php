@@ -8,8 +8,14 @@ namespace Jivoo\Vendor;
 use Jivoo\Core\App;
 use Jivoo\Core\Cli\CommandBase;
 
+/**
+ * Shell command for vendor packages.
+ */
 class VendorCommand extends CommandBase {
-  
+  /**
+   * Construct
+   * @param App $app Application.
+   */
   public function __construct(App $app) {
     parent::__construct($app);
     
@@ -24,6 +30,9 @@ class VendorCommand extends CommandBase {
     $this->addOption('share');
   }
   
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription($option = null) {
     return tr('Manage third-party libraries');
   }
@@ -32,6 +41,9 @@ class VendorCommand extends CommandBase {
     
   }
   
+  /**
+   * @param string $dir
+   */
   private function removeDir($dir) {
     $files = scandir($dir);
     foreach ($files as $file) {
@@ -46,6 +58,11 @@ class VendorCommand extends CommandBase {
     rmdir($dir);
   }
   
+  /**
+   * Package info.
+   * @param string[] $parameters Parameters.
+   * @param string[] $options Options.
+   */
   public function info($parameters, $options) {
     if (!count($parameters)) {
       $this->put('usage: vendor info NAME');
@@ -65,6 +82,12 @@ class VendorCommand extends CommandBase {
     $this->put();
   }
   
+  
+  /**
+   * Remove package.
+   * @param string[] $parameters Parameters.
+   * @param string[] $options Options.
+   */
   public function remove($parameters, $options) {
     if (!count($parameters)) {
       $this->put('usage: vendor remove [--user|--share] NAME');
@@ -91,6 +114,11 @@ class VendorCommand extends CommandBase {
     }
   }
   
+  /**
+   * Update package(s).
+   * @param string[] $parameters Parameters.
+   * @param string[] $options Options.
+   */
   public function update($parameters, $options) {
     $packages = $this->m->vendor->getPackages();
     foreach ($packages as $manifest) {
@@ -98,6 +126,11 @@ class VendorCommand extends CommandBase {
     }
   }
   
+  /**
+   * Install package..
+   * @param string[] $parameters Parameters.
+   * @param string[] $options Options.
+   */
   public function install($parameters, $options) {
     if (!count($parameters)) {
       $this->put('usage: vendor install [--user|--share] NAME [NAMES...]');
@@ -120,6 +153,11 @@ class VendorCommand extends CommandBase {
     }
   }
   
+  /**
+   * Search for package.
+   * @param string[] $parameters Parameters.
+   * @param string[] $options Options.
+   */
   public function search($parameters, $options) {
     $results = $this->m->vendorInstaller->search($parameters);
     foreach ($results as $repo => $packages) {
