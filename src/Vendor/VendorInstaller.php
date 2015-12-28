@@ -23,6 +23,10 @@ class VendorInstaller {
    */
   private $repositories = array();
   
+  /**
+   * Construct vendor installer.
+   * @param App $app Application.
+   */
   public function __construct(App $app) {
     $this->app = $app;
   }
@@ -45,10 +49,18 @@ class VendorInstaller {
       unset($this->repositories[$name]);
   }
   
+  /**
+   * Get repositories.
+   * @return Repository[] Map of repositories.
+   */
   public function getRepositories() {
     return $this->repositories;
   }
   
+  /**
+   * Get packages from all repositories.
+   * 
+   */
   public function getPackages() {
     $packages = array();
     foreach ($this->repositories as $name => $repository) {
