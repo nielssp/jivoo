@@ -59,7 +59,7 @@ class VendorInstaller {
   
   /**
    * Get packages from all repositories.
-   * 
+   * @return string[][] Map of repository names and lists of package names.
    */
   public function getPackages() {
     $packages = array();
@@ -69,6 +69,11 @@ class VendorInstaller {
     return $packages;
   }
   
+  /**
+   * Search available repositories for a build script.
+   * @param string $package Package name.
+   * @return BuildScript|null Build script if found.
+   */
   public function getBuildScript($package) {
     foreach ($this->repositories as $name => $repository) {
       $script = $repository->getBuildScript($package);
