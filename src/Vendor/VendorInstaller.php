@@ -83,6 +83,11 @@ class VendorInstaller {
     return null;
   }
   
+  /**
+   * Search available repositories for packages.
+   * @param string[] $query Search keywords.
+   * @return string[][] Map of repositoriy names and lists of package names.
+   */
   public function search($query) {
     $packages = array();
     foreach ($this->repositories as $name => $repository) {
