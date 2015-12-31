@@ -76,6 +76,11 @@ class VendorLoader {
     $this->imported[$name] = true;
   }
   
+  /**
+   * Whether a package is installed.
+   * @param string $name Package name.
+   * @return bool True if installed, false otherwise.
+   */
   public function isInstalled($name) {
     foreach ($this->paths as $path => $reader) {
       $path = $path . '/' . $name;
@@ -88,6 +93,11 @@ class VendorLoader {
     return false;
   }
   
+  /**
+   * Get the manfiest of an installed package.
+   * @param string $name Package name.
+   * @return Package|null Package manifest if installed, null otherwise.
+   */
   public function getPackage($name) {
     foreach ($this->paths as $path => $reader) {
       $path = $path . '/' . $name;
@@ -100,6 +110,10 @@ class VendorLoader {
     return null;
   }
   
+  /**
+   * Get all installed packages.
+   * @return Package[] List of package manifests.
+   */
   public function getPackages() {
     $packages = array();
     foreach ($this->paths as $path => $reader) {
