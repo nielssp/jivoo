@@ -15,30 +15,70 @@ use Jivoo\Core\Json;
  * A build script.
  */
 class BuildScript extends Module {
+  /**
+   * @var string Package name.
+   */
   public $name = '';
+  
+  /**
+   * @var string Package version.
+   */
   public $version = '';
   
+  /**
+   * @var string[] List of sources.
+   */
   protected $sources = array();
   
+  /**
+   * @var callable Prepare method.
+   */
   protected $prepare = null;
-  
+
+  /**
+   * @var callable Build method.
+   */
   protected $build = null;
-  
+
+  /**
+   * @var callable Install method.
+   */
   protected $install = null;
   
+  /**
+   * @var string Name of manifest file.
+   */
   public $manifestFile = 'extension.json';
-  
+
+  /**
+   * @var array Content of manifest file.
+   */
   public $manifest = array();
   
+  /**
+   * @var string
+   */
   private $buildPath;
-  
+
+  /**
+   * @var string
+   */
   private $installPath;
   
+  /**
+   * Construct build script.
+   * @param App $app Application.
+   * @param string $path Script path.
+   */
   public function __construct(App $app, $path) {
     parent::__construct($app);
     require $path;
   }
   
+  /**
+   * Log.
+   * @param string $info Log message.
+   */
   protected function info($info) {
     $this->logger->info('[' . $this->name . '] ' . $info);
   }
@@ -50,13 +90,24 @@ class BuildScript extends Module {
       $this->downloadFile($source, $this->buildPath . '/' . basename($source));
     }
   }
-  
+
+  /**
+   * Download a file.
+   * @param string $src File source.
+   * @param string $dest File destination.
+   * @throws InstallException if file could not be installed.
+   */
   protected function downloadFile($src, $dest) {
     if (!copy($src, $dest)) {
       throw new InstallException('Failed downloading source: ' . $src);
     }
   }
   
+  /**
+   * Install a file from the build path into the install path.
+   * @param string $file File name.
+   * @throws InstallException if file could not be downloaded.
+   */
   protected function installFile($file) {
     $src = $this->buildPath . '/' . $file;
     $dest = $this->installPath . '/' . $file;
@@ -65,6 +116,11 @@ class BuildScript extends Module {
     }
   }
   
+  /**
+   * Run build script.
+   * @param string $root Package root.
+   * @throws InstallException on failure.
+   */
   public function run($root) {
     $this->buildPath = $this->p('tmp/build/' . $this->name);
     if (!Utilities::dirExists($this->buildPath, true, true)) {
