@@ -506,12 +506,13 @@ abstract class ActiveModel extends ModelBase implements EventListener {
         if (strcmp($this->table, $otherTable) < 0)
           $options['join'] = $this->table .  $otherTable;
       }
-      if (!isset($this->database->$options['join'])) {
+      $join = $options['join'];
+      if (!isset($this->database->$join)) {
         throw new InvalidAssociationException(tr(
-          'Association data source "%1" not found', $options['join']
+          'Association data source "%1" not found', $join
         ));
       }
-      $options['join'] = $this->database->$options['join'];
+      $options['join'] = $this->database->$join;
     }
     $this->associations[$name] = $options;
   }

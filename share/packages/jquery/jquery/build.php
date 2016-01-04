@@ -29,14 +29,14 @@ $this->install = function(BuildScript $build) {
   $build->installFile('jquery-' . $build->version . '.min.js');
 
   $build->manifest = array(
-      'library' => true,
-      'website' => 'http://jquery.com',
-      'category' => 'JavaScript',
-      'resources' => array(
-          'jquery.js' => array(
-              'file' => 'jquery-' . $build->version . '.min.js',
-              'cdn' => '//code.jquery.com/jquery-' . $build->version . '.min.js'
-          )
+    'library' => true,
+    'website' => 'http://jquery.com',
+    'category' => 'JavaScript',
+    'resources' => array(
+      'jquery.js' => array(
+        'file' => 'jquery-' . $build->version . '.min.js',
+        'cdn' => '//code.jquery.com/jquery-' . $build->version . '.min.js'
       )
+    )
   );
 };
