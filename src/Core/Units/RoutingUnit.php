@@ -9,14 +9,10 @@ use Jivoo\Core\UnitBase;
 use Jivoo\Core\App;
 use Jivoo\Core\Store\Document;
 use Jivoo\Controllers\ActionDispatcher;
-use Jivoo\Controllers\Controllers;
-use Jivoo\Core\LoadableModule;
 use Jivoo\Snippets\SnippetDispatcher;
-use Jivoo\Snippets\Snippets;
 use Jivoo\Routing\Routing;
 use Jivoo\Assets\Assets;
 use Jivoo\View\View;
-use Jivoo\Core\Module;
 
 /**
  * Initializes the routing module.
