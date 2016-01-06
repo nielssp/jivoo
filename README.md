@@ -6,6 +6,8 @@ Jivoo is an experimental web application framework for PHP.
 
 Although the framework is usable at the moment (currently used on [agendl.com](http://agendl.com), [nielssp.dk](http://nielssp.dk), and [apakoh.dk](http://apakoh.dk)), I do not recommend using it for anything important.
 
+Some examples of simple applications are available in the examples directory.
+
 ## Goals
 
 1. Portable: Applications should work on most web servers running at least PHP 5.3 using one of the supported database systems (MySQL, SQLite and PostgreSQL for the time being).
