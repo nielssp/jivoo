@@ -78,4 +78,30 @@ class ParseInput {
     if (!$this->accept($element))
       throw new ParseException('unexpected "' . $this->peek() . '", expected "' . $element . '"');
   }
+
+  /**
+   * Accept the current element if it is a token (as produced by
+   * {@see RegexLexer}) of the given type. 
+   * @param string $type Token type to accept.
+   * @return bool True if accepted, false otherwise.
+   */
+  public function acceptToken($type) {
+    $token = $this->peek();
+    if (!isset($token[0]) or $token[0] != $type)
+      return false;
+    $this->pop();
+    return true;
+  }
+
+  
+  /**
+   * Like {@see accept}, but throws an exception if the current element does not
+   * match. 
+   * @param string $type Token type to accept.
+   * @throws ParseException If comparison fails.
+   */
+  public function expectToken($type) {
+    if (!$this->acceptToken($type))
+      throw new ParseException('unexpected "' . $this->peek() . '", expected "' . $type . '"');
+  }
 }
