@@ -83,9 +83,10 @@ class ParseInput {
    * Accept the current element if it is a token (as produced by
    * {@see RegexLexer}) of the given type. 
    * @param string $type Token type to accept.
+   * @param array $token Output parameter for accepted token.
    * @return bool True if accepted, false otherwise.
    */
-  public function acceptToken($type) {
+  public function acceptToken($type, &$token = null) {
     $token = $this->peek();
     if (!isset($token[0]) or $token[0] != $type)
       return false;
@@ -98,10 +99,12 @@ class ParseInput {
    * Like {@see accept}, but throws an exception if the current element does not
    * match. 
    * @param string $type Token type to accept.
+   * @return array The accepted token.
    * @throws ParseException If comparison fails.
    */
   public function expectToken($type) {
-    if (!$this->acceptToken($type))
+    if (!$this->acceptToken($type, $token))
       throw new ParseException('unexpected "' . $this->peek() . '", expected "' . $type . '"');
+    return $token;
   }
 }

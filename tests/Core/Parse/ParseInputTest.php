@@ -36,4 +36,14 @@ class ParseInputTest extends TestCase {
     $this->assertFalse($input->accept('a'));
     $this->assertNull($input->peek());
   }
+  
+  public function testTokens() {
+    $input = new ParseInput(array(array('int', 5), array('op', '+'), array('int', 2)));
+    $this->assertTrue($input->acceptToken('int', $token));
+    $this->assertEquals(5, $token[1]);
+    $this->assertFalse($input->acceptToken('int', $token));
+    $this->assertThrows('Jivoo\Core\Parse\ParseException', function() use($input) {
+      $input->expectToken('int');
+    });
+  }
 }
