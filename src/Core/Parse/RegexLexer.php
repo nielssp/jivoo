@@ -21,27 +21,36 @@ class RegexLexer {
   private $rules = array();
   
   private $map = array();
+  
+  private $typeMap = array();
 
   /**
    */
   public function __construct($skipWhitespace = true, $flags = '') {
     $this->skipWhitespace = $skipWhitespace;
     $this->flags = $flags;
-    if ($this->skipWhitespace)
+    if ($this->skipWhitespace) {
       $this->rules['whitespace'] = '/^' . self::WHITESPACE . '/' . $flags;
+      $this->typeMap['whitespace'] = 'whitespace';
+    }
   }
   
-  public function __set($type, $regex) {
+  public function __set($rule, $regex) {
     $regex = str_replace('/', '\/', $regex);
-    $this->rules[$type] = '/^' . $regex . '/' . $this->flags;
+    $this->rules[$rule] = '/^(?:' . $regex . ')/' . $this->flags;
+    $this->typeMap[$rule] = $rule;
   }
   
   /**
    * @param string $type Token type.
    * @param callable $function Map function.
    */
-  public function map($type, $function) {
-    $this->map[$type] = $function;
+  public function map($rule, $function) {
+    $this->map[$rule] = $function;
+  }
+  
+  public function mapType($rule, $type) {
+    $this->typeMap[$rule] = $type;
   }
 
   public function __invoke($input) {
@@ -58,13 +67,14 @@ class RegexLexer {
     }
     while ($offset < $length) {
       $found = false;
-      foreach ($this->rules as $type => $regex) {
+      foreach ($this->rules as $rule => $regex) {
         $r = preg_match($regex, $input, $matches);
         if ($r === 1) {
           $value = $matches[0];
-          if (isset($this->map[$type])) {
-            $value = call_user_func($this->map[$type], $value, $matches, $offset);
+          if (isset($this->map[$rule])) {
+            $value = call_user_func($this->map[$rule], $value, $matches, $offset);
           }
+          $type = $this->typeMap[$rule];
           $tokens[] = array($type, $value, $matches, $offset);
           $skip = strlen($matches[0]);
           $input = substr($input, $skip);

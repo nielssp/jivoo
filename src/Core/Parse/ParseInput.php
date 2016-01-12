@@ -26,6 +26,14 @@ class ParseInput {
   public function __construct(array $input) {
     $this->input = $input;
   }
+  
+  /**
+   * Converts remaining input sequence to an array.
+   * @return array
+   */
+  public function toArray() {
+    return array_slice($this->input, $this->pos);
+  }
 
   /**
    * Reset input pointer.
