@@ -112,7 +112,7 @@ class ParseInput {
    */
   public function expectToken($type) {
     if (!$this->acceptToken($type, $token))
-      throw new ParseException('unexpected "' . $this->peek() . '", expected "' . $type . '"');
+      throw new ParseException('unexpected "' . $token[0] . '", expected "' . $type . '"');
     return $token;
   }
 }

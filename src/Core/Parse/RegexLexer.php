@@ -92,7 +92,7 @@ class RegexLexer {
         }
       }
       if (!$found) {
-        throw new ParseException('unexpected "' . $input[$offset] . '"');
+        throw new ParseException('unexpected "' . $input[$offset] . '" at ' . $offset);
       }
     }
     return $tokens;
