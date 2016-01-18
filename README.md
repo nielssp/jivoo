@@ -25,3 +25,89 @@ Some examples of simple applications are available in the examples directory.
 * Installation and update system
 * Extension system
 * Command line interface
+
+## Module overview
+
+### AccessControl
+
+Classes for authentication and authorization.
+
+### ActiveModels
+
+ActiveRecord/ActiveModel system.
+
+### Assets
+
+Asset system for static images, scripts, stylesheets, etc.
+
+### Console
+
+Development tools including a toolbar.
+
+### Content
+
+Content abstraction, e.g. formats and editors.
+
+### Control
+
+Supposed to combine and replace Controllers, Snippets, and Helpers.
+
+### Controllers
+
+MVC controller base class.
+
+### Core
+
+Core framework classes. Includes caching, I18n, CLI, logging, configuration, etc.
+
+### Data
+
+Data abstraction. Supposed to replace Models and parts of Databases.
+
+### Databases
+
+Database abstraction. Includes drivers for MySQL, PostgreSQL, and SQLite.
+
+### Extensions
+
+Enables application extensions and third-party libraries.
+
+### Helpers
+
+Application helpers.
+
+### Jtk
+
+A GUI toolkit for applications.
+
+### Migrations
+
+Migration system for databases.
+
+### Models
+
+Data abstraction and query system.
+
+### Routing
+
+Routing system and request/response abstraction.
+
+### Setup
+
+Interactive GUI-based installation/update system.
+
+### Snippets
+
+An alternative to controllers.
+
+### Themes
+
+A theme system.
+
+### Vendor
+
+Supposed to replace Extensions and Themes. Support for installing/updating third-party packages, and better integration with composer and possible other package managers.
+
+### View
+
+Presentation layer. Includes two template systems.
