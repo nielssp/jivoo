@@ -178,6 +178,9 @@ class Document implements \ArrayAccess, \IteratorAggregate {
     if (isset($this->data[$key])) {
       $oldValue = $this->data[$key];
     }
+    if ($value instanceof Document) {
+      $value = $value->toArray();
+    }
     if (isset($key) and isset($value) and $key !== '') {
       $this->data[$key] = $value;
     }
@@ -256,6 +259,10 @@ class Document implements \ArrayAccess, \IteratorAggregate {
   public function get($key, $default = null) {
     if (isset($this->data[$key])) {
       $value = $this->data[$key];
+      if ($value instanceof Document) {
+        unset($this->data[$key]);
+        return $this->get($key, $default);
+      }
     }
     else {
       if (isset($default))
@@ -318,6 +325,10 @@ class Document implements \ArrayAccess, \IteratorAggregate {
    */
   public function offsetGet($key) {
     if (!isset($this->data[$key]) or is_array($this->data[$key])) {
+      return $this->getSubset($key);
+    }
+    if ($this->data[$key] instanceof Document) {
+      unset($this->data[$key]);
       return $this->getSubset($key);
     }
     return $this->data[$key];

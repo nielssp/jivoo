@@ -320,7 +320,7 @@ class App extends EventSubjectBase implements LoggerAware {
    * template stored in 'app/templates/error/exception.php'.
    * @param \Exception $exception \Exception to report.
    */
-  public function crashReport(\Exception $exception) {
+  public function crashReport($exception) {
     $app = $this->name;
     $version = $this->version;
     if ($exception instanceof \ErrorException)
@@ -571,7 +571,7 @@ class ShowExceptionEvent extends Event {
    * @param \Exception $exception The exception.
    * @param string $body The response body.
    */
-  public function __construct($sender, \Exception $exception, $body) {
+  public function __construct($sender, $exception, $body) {
     parent::__construct($sender);
     $this->exception = $exception;
     $this->body = $body;
