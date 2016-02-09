@@ -78,7 +78,7 @@ $Css->addMixin('flashColor', function($flash, $color) use($Css) {
 $Css->addMixin('buttonColor', function($button, $color) use($Css) {
   $button->css(array(
     'background-color' => $Css->desaturate($Css->lighten($color, 10), 20),
-    'border-color' => $Css->darken($color, 30),
+    'border-color' => $Css->desaturate($color, 20),
     'color' => '#fff'
   ));
   $button('&:hover, &.active')->css(array(
@@ -88,7 +88,7 @@ $Css->addMixin('buttonColor', function($button, $color) use($Css) {
   ));
   $button('&[disabled]')->find('&, &:hover, &:active')->css(array(
     'background-color' => $Css->desaturate($Css->lighten($color, 20), 50),
-    'border-color' => $Css->desaturate($color, 50),
+    'border-color' => $Css->desaturate($Css->lighten($color, 10), 50),
     'color' => '#eee'
   ));
 });
@@ -96,7 +96,7 @@ $Css->addMixin('buttonColor', function($button, $color) use($Css) {
 $Css->addMixin('button', function($button) use($Skin, $Css) {
   $button('&, &:link, &:visited')->css(array(
     'background-color' => $Skin->navBg,
-    'border-color' => $Skin->navFg,
+    'border-color' => $Css->darken($Skin->navBg, 10),
     'color' => $Skin->navFg
   ));
   $button('&:hover, &.active')->css(array(
@@ -112,7 +112,7 @@ $Css->addMixin('button', function($button) use($Skin, $Css) {
   $button('.active, &:active')->boxShadow = 'inset 0 4px 5px 0 rgba(0, 0, 0, 0.15)';
   $button('&[disabled], &[disabled]:hover')->css(array(
     'background-color' => $Skin->navDisBg,
-    'border-color' => $Skin->navDisFg,
+    'border-color' => $Css->darken($Skin->navDisBg, 10),
     'color' => $Skin->navDisFg
   ));
   $button('&.button-primary')->apply('buttonColor', $Skin->primary);
